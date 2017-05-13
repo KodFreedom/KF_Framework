@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{6F13F60E-AEA8-43A6-ADFD-674D33BD009C}</ProjectGuid>
+    <ProjectGuid>{F97D3872-566C-4FFC-99DC-5DFA475A0FBA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>KF_Framework</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
@@ -30,14 +30,16 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -72,12 +74,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\</OutDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(DXSDK_DIR)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\</OutDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(DXSDK_DIR)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -89,6 +99,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,6 +151,56 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="gameObject.cpp" />
+    <ClCompile Include="gameObject2D.cpp" />
+    <ClCompile Include="gameObject3D.cpp" />
+    <ClCompile Include="gameObjectManager.cpp" />
+    <ClCompile Include="gameObjectModel.cpp" />
+    <ClCompile Include="inputDX.cpp" />
+    <ClCompile Include="KF_Math.cpp" />
+    <ClCompile Include="KF_UtilityDX.cpp" />
+    <ClCompile Include="lightManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="materialManager.cpp" />
+    <ClCompile Include="meshCube.cpp" />
+    <ClCompile Include="meshField.cpp" />
+    <ClCompile Include="mode.cpp" />
+    <ClCompile Include="modeDemo.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="modelCharacterX.cpp" />
+    <ClCompile Include="modelManager.cpp" />
+    <ClCompile Include="modelX.cpp" />
+    <ClCompile Include="rendererDX.cpp" />
+    <ClCompile Include="skyBox.cpp" />
+    <ClCompile Include="textureManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="gameObject.h" />
+    <ClInclude Include="gameObject2D.h" />
+    <ClInclude Include="gameObject3D.h" />
+    <ClInclude Include="gameObjectModel.h" />
+    <ClInclude Include="gameObjectManager.h" />
+    <ClInclude Include="inputDX.h" />
+    <ClInclude Include="KF_Math.h" />
+    <ClInclude Include="KF_UtilityDX.h" />
+    <ClInclude Include="lightManager.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="manager.h" />
+    <ClInclude Include="materialManager.h" />
+    <ClInclude Include="meshCube.h" />
+    <ClInclude Include="meshField.h" />
+    <ClInclude Include="mode.h" />
+    <ClInclude Include="modeDemo.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="modelCharacterX.h" />
+    <ClInclude Include="modelManager.h" />
+    <ClInclude Include="modelX.h" />
+    <ClInclude Include="rendererDX.h" />
+    <ClInclude Include="skyBox.h" />
+    <ClInclude Include="textureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
