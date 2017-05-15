@@ -102,6 +102,9 @@ public:
 
 	CKFVec3 operator*(const CKFVec3 &vValue) const;
 	void operator*=(const CKFVec3 &vValue);
+
+	CKFVec3 operator/(const float &fValue) const;
+	void operator/=(const float &fValue);
 };
 
 //--------------------------------------------------------------------------------
@@ -120,9 +123,11 @@ public:
 
 	float m_af[4][4];
 
+	//ÉLÉÉÉXÉg
+	operator D3DXMATRIX() const;
+
 	//éZèpââéZéq
 	CKFMtx44 &operator=(const CKFMtx44 &mtxValue);
-
 	CKFMtx44 operator*(const CKFMtx44 &mtxValue) const;
 	void operator*=(const CKFMtx44 &mtxValue);
 };
@@ -174,11 +179,31 @@ public:
 };
 
 //--------------------------------------------------------------------------------
+//  Ray
+//--------------------------------------------------------------------------------
+class CKFRay
+{
+public:
+	CKFRay() : m_vOrigin(CKFVec3(0.0f)), m_vDirection(CKFVec3(0.0f)) {}
+	~CKFRay() {}
+
+	CKFVec3 m_vOrigin;
+	CKFVec3 m_vDirection;
+};
+
+//--------------------------------------------------------------------------------
 //  åvéZéÆ
 //--------------------------------------------------------------------------------
 class CKFMath
 {
 public:
+	//ÉåÉCÇ∆ÉXÉtÉBÉAÇÃìñÇΩÇËèÓïÒ
+	struct RTS_INFO
+	{
+		bool bIsContact;
+		float fTimingMin;
+	};
+
 	CKFMath() {}
 	~CKFMath() {}
 
@@ -187,11 +212,30 @@ public:
 	static float	VecMagnitude(const CKFVec3 &vValue);
 	static void		VecNormalize(CKFVec2 *pVec);
 	static void		VecNormalize(CKFVec3 *pVec);
+	static float	Vec3Dot(const CKFVec3 &vVecL, const CKFVec3 &vVecR);
+	static float	VecDistance(const CKFVec3 &vVecL, const CKFVec3 &vVecR);
+	static void		Vec3TransformCoord(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
+	static void		Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
 
 	//MatrixåvéZ
+	static CKFMtx44	ChangeDXMtxToMtx44(const D3DXMATRIX &mtx);
 	static void		MtxIdentity(CKFMtx44 *pMtx);
 	static void		MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &fAngle);
-	static void		Vec3TransformCoord(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
+	static void		MtxRotationYawPitchRoll(CKFMtx44 *pMtxRot, const CKFVec3 &vRot);
+	static void		MtxTranslation(CKFMtx44 *pMtxTrans, const CKFVec3 &vPos);
+
+	//RayåvéZ
+	static CKFRay	CalculatePickingRay(const CKFVec2 &vScreenPos, const float &fViewportWidth, const float &fViewportHeight, const float &fProjMtx00, const float &fProjMtx11, const CKFMtx44 &mtxViewInverse);
+	static CKFRay	ChangePosToRay(const CKFVec2 &vScreenPos, const float &fViewportWidth, const float &fViewportHeight, const float &fProjMtx00, const float &fProjMtx11);
+	static void		TransformRay(CKFRay *pRay, const CKFMtx44 &mtxTrans);
+	static RTS_INFO	ContactRayToSphere(const CKFRay &ray, const CKFVec3 &vSpherePos, const float &fRadius);
+
+	//ÇŸÇ©ÇÃåvéZ
+	static void		NormalizeRotInTwoPi(float* pRot);
+	static void		NormalizeRotInTwoPi(CKFVec3* pRot);
+	static void		NormalizeRotInPi(float* pRot);
+	static void		NormalizeRotInPi(CKFVec3* pRot);
+	static float	CalculateZDepth(const CKFVec3 &vPos, const CKFVec3 &vCameraEye, const CKFVec3 &vCameraAt);
 };
 
 #endif

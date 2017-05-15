@@ -26,7 +26,7 @@
 #include "meshCube.h"
 #include "gameObject2D.h"
 #include "gameObjectModel.h"
-
+#include "gameObjectCharacter.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -65,6 +65,7 @@ void CModeDemo::Init(void)
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
 	CSkyBox::Create();
+	CGameObjectCharacter::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_PLAYER);
 }
 
 //--------------------------------------------------------------------------------

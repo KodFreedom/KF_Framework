@@ -1,67 +1,64 @@
 //--------------------------------------------------------------------------------
 //
-//　model.h
+//　gameObjectCharacter.h
 //	Author : Xu Wenjie
-//	Date   : 2017-01-24
+//	Date   : 2017-05-15
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
-#ifndef _MODEL_H_
-#define _MODEL_H_
+#ifndef _GAMEOBJECT_CHARACTER_H_
+#define _GAMEOBJECT_CHARACTER_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "gameObjectModel.h"
 #include "modelManager.h"
-#include "materialManager.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
+#include "modelCharacterX.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CModel
+class CGameObjectCharacter : public CGameObjectModel
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	CModel() {}
-	~CModel() {}
+	CGameObjectCharacter();
+	~CGameObjectCharacter() {};
 
-	virtual HRESULT Init(void) { return S_OK; }
-	virtual void	Uninit(void) = 0;
-	virtual void	Draw(void) {};
+	void	Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
+	void	Uninit(void);
+	void	Update(void);
+	void	LateUpdate(void);
+	void	Draw(void);
 
-	const CMOM::MODEL_TYPE GetModelType(void) const { return m_modelType; }
+	static CGameObjectCharacter*	Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
 
-protected:
+private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct XFILE
+	enum MOTION
 	{
-		std::vector<LPDIRECT3DTEXTURE9>	vectorTexture;	//textureインターフェース
-		LPD3DXMESH						pMesh;			//メッシュ情報インターフェイス
-		LPD3DXBUFFER					pBufferMaterial;//マテリアル情報　動的メモリ
-		DWORD							dwNumMaterial;	//モデルのマテリアル数
+		MOTION_NEUTAL = 0,
+		MOTION_MOVE,
+		MOTION_ATTACK,
+		MOTION_JUMP,
+		MOTION_LANDING,
+		MOTION_MAX
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	static KFRESULT LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath);
-	static void		DrawXFile(const XFILE &XFile);
-	static void		DrawXFile(const XFILE &XFile, const CMM::MATERIAL &matType);
-	static void		ReleaseXFile(XFILE* pXFile);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CMOM::MODEL_TYPE m_modelType;
+	MOTION	m_motionNow;	//今のモーション
+	int		m_nKeyNow;		//今のキーフレーム
+	int		m_nCntFrame;	//今のフレーム
+	std::vector<CModelCharacterX::PARTS_INFO>	m_vectorPartsInfo;	// パーツ情報
 };
 
 #endif

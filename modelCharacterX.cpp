@@ -12,7 +12,8 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "model.h"
+#include "manager.h"
+#include "rendererDX.h"
 #include "modelCharacterX.h"
 
 //--------------------------------------------------------------------------------
@@ -23,7 +24,9 @@
 //--------------------------------------------------------------------------------
 CModelCharacterX::CModelCharacterX()
 {
-	m_vectorParts.clear();
+	m_charInfo.vectorPartsInfoDefault.clear();
+	m_charInfo.vectorPartsMotionInfo.clear();
+	m_charInfo.vectorPartsXFileInfo.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 
 	if (pFile != NULL)
 	{
-		//Num Model
+		//パーツ数の読み込み
 		char strComp1[] = "NUM_MODEL = ";
 		bool bFind = false;
 
@@ -64,10 +67,10 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 
 		int nNumParts = atoi(strNum);
 
-		//model path
+		//XFileの読み込み
 		for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 		{
-			PARTS parts;
+			XFILE XFile;
 			char strComp2[] = "MODEL_FILENAME = ";
 			bFind = false;
 
@@ -90,11 +93,13 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 				strPath[nCntPath] = strRead[nCnt];
 			}
 
-			LoadXFile(&parts.XFileInfo, strPath);
-			m_vectorParts.push_back(parts);
+			LoadXFile(&XFile, strPath);
+
+			//Save XFile
+			m_charInfo.vectorPartsXFileInfo.push_back(XFile);
 		}
 
-		//character set
+		//character情報の読み込み
 		char strComp0[] = "CHARACTERSET";
 		bFind = false;
 
@@ -138,9 +143,10 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 		}
 		m_fRadius = (float)atof(strRadius);
 
-		//parts set
+		//parts infoの読み込み
 		for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 		{
+			PARTS_INFO partsInfo;
 			char strComp2[] = "\tPARTSSET";
 			bFind = false;
 
@@ -168,7 +174,7 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 				strParent[nCntParent] = strRead[nCnt];
 			}
 
-			m_vectorParts[nCntPart].nParentID = atoi(strParent);
+			partsInfo.nParentID = atoi(strParent);
 
 			//Pos
 			fgets(strRead, sizeof(strRead), pFile);
@@ -188,7 +194,7 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 				nCntPos++;
 			}
 
-			m_vectorParts[nCntPart].vPos = CKFVec3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
+			partsInfo.vPos = CKFVec3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 			//Rot
 			fgets(strRead, sizeof(strRead), pFile);
@@ -208,10 +214,20 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 				nCntRot++;
 			}
 
-			m_vectorParts[nCntPart].vRot = CKFVec3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
+			partsInfo.vRot = CKFVec3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
+
+			//Save PartsInfo
+			m_charInfo.vectorPartsInfoDefault.push_back(partsInfo);
 		}
 
-		//motion
+		//motionの読み込み
+		VEC_MOTION vectorMotion;
+		vectorMotion.clear();
+		for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
+		{
+			m_charInfo.vectorPartsMotionInfo.push_back(vectorMotion);
+		}
+
 		int nCntMotion = 0;
 		fgets(strRead, sizeof(strRead), pFile);
 		while (1)
@@ -251,10 +267,10 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 
 			for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 			{
-				m_vectorParts[nCntPart].vectorMotion.push_back(motion);
+				m_charInfo.vectorPartsMotionInfo[nCntPart].push_back(motion);
 			}
 
-			//Num Key
+			//キーフレーム数取得
 			fgets(strRead, sizeof(strRead), pFile);
 			char strKey[2] = {};
 			for (unsigned int nCnt = strlen("\tNUM_KEY = "), nCntKey = 0; strRead[nCnt] != '\t'; nCnt++, nCntKey++)
@@ -264,7 +280,7 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 
 			int nNumKey = atoi(strKey);
 
-			//Key set
+			//キーフレームの読み込み
 			for (int nCntKey = 0; nCntKey < nNumKey; nCntKey++)
 			{
 				char strComp3[] = "\tKEYSET";
@@ -355,7 +371,7 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 					keyFrame.nFrame = nFrame;
 					keyFrame.vPos = vPos;
 					keyFrame.vRot = vRot;
-					m_vectorParts[nCntPart].vectorMotion[nCntMotion].vectorKeyFrame.push_back(keyFrame);
+					m_charInfo.vectorPartsMotionInfo[nCntPart][nCntMotion].vectorKeyFrame.push_back(keyFrame);
 				}
 			}
 			nCntMotion++;
@@ -373,59 +389,117 @@ KFRESULT CModelCharacterX::Init(const LPCSTR &pTxtPath)
 //--------------------------------------------------------------------------------
 void CModelCharacterX::Uninit(void)
 {
-	for(int nCntParts = 0;nCntParts < (int)m_vectorParts.size();nCntParts++)
+	int nNumParts = (int)m_charInfo.vectorPartsInfoDefault.size();
+	for(int nCntParts = 0;nCntParts < nNumParts;nCntParts++)
 	{
-		for (int nCntMotion = 0; nCntMotion < (int)m_vectorParts[nCntParts].vectorMotion.size(); nCntMotion++)
+		int nNumMotion = (int)m_charInfo.vectorPartsMotionInfo[nCntParts].size();
+		for (int nCntMotion = 0; nCntMotion < nNumMotion; nCntMotion++)
 		{
-			m_vectorParts[nCntParts].vectorMotion[nCntMotion].vectorKeyFrame.clear();
+			m_charInfo.vectorPartsMotionInfo[nCntParts][nCntMotion].vectorKeyFrame.clear();
 		}
 
-		m_vectorParts[nCntParts].vectorMotion.clear();
-		ReleaseXFile(&m_vectorParts[nCntParts].XFileInfo);
+		m_charInfo.vectorPartsMotionInfo[nCntParts].clear();
+		ReleaseXFile(&m_charInfo.vectorPartsXFileInfo[nCntParts]);
 	}
 
-	m_vectorParts.clear();
+	m_charInfo.vectorPartsInfoDefault.clear();
+	m_charInfo.vectorPartsMotionInfo.clear();
+	m_charInfo.vectorPartsXFileInfo.clear();
 }
 
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void CModelCharacterX::Draw(const CKFVec3 &vPosParents, const CKFVec3 &vRotParents, const MOTION_INFO &info)
+void CModelCharacterX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts)
 {
-	//int nFrame;
-	//int nNumKey;
-	//bool bLoop;
-
-	////パーツ更新
-	//for (int nCntPart = 0; nCntPart < m_nNumParts; nCntPart++)
-	//{
-	//	D3DXVECTOR3 vPartPos = m_apParts[nCntPart]->GetPos();
-	//	D3DXVECTOR3 vPartRot = m_apParts[nCntPart]->GetRot();
-
-	//	D3DXVECTOR3 vKeyPos = m_apMotion[nCntPart][m_nMotionNow]->GetKey(m_nKeyNow)->GetPos();
-	//	D3DXVECTOR3 vKeyRot = m_apMotion[nCntPart][m_nMotionNow]->GetKey(m_nKeyNow)->GetRot();
-	//	D3DXVECTOR3 vChangeRot = CalculateRotChange(vKeyRot, vPartRot);
-
-	//	nFrame = m_apMotion[nCntPart][m_nMotionNow]->GetKey(m_nKeyNow)->GetFrame();
-	//	nNumKey = m_apMotion[nCntPart][m_nMotionNow]->GetNumKey();
-	//	bLoop = m_apMotion[nCntPart][m_nMotionNow]->GetLoop();
-
-	//	if ((nFrame - m_nCntFrame) != 0)
-	//	{
-	//		vPartPos += (vKeyPos - vPartPos) / (float)(nFrame - m_nCntFrame);
-	//		vPartRot += vChangeRot / (float)(nFrame - m_nCntFrame);
-	//	}
-
-	//	CKFMath::NormalizeRot(&vPartRot);
-	//	m_apParts[nCntPart]->SetPos(vPartPos);
-	//	m_apParts[nCntPart]->SetRot(vPartRot);
-	//}
+	Draw(mtxWorldParents, vectorParts, CMM::MAT_MAX);
 }
 
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void CModelCharacterX::Draw(const CKFVec3 &vPosParents, const CKFVec3 &vRotParents, const MOTION_INFO &info, const CMM::MATERIAL &matType)
+void CModelCharacterX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType)
 {
+	//パーツ数を比較する
+	if (m_charInfo.vectorPartsInfoDefault.size() != vectorParts.size()) { return; }
 
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+
+	for (int nCntParts = 0; nCntParts < (int)vectorParts.size(); nCntParts++)
+	{
+		CKFMtx44 mtxRot;
+		CKFMtx44 mtxPos;
+
+		//単位行列に初期化
+		CKFMath::MtxIdentity(&vectorParts[nCntParts].mtxWorld);
+
+		//モーション行列
+		//回転(Y->X->Z)
+		CKFMath::MtxRotationYawPitchRoll(&mtxRot, vectorParts[nCntParts].vRot);
+		vectorParts[nCntParts].mtxWorld *= mtxRot;
+
+		//平行移動
+		CKFMath::MtxTranslation(&mtxPos, vectorParts[nCntParts].vPos);
+		vectorParts[nCntParts].mtxWorld *= mtxPos;
+
+		//親に対する相対位置行列
+		//回転(Y->X->Z)
+		CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_charInfo.vectorPartsInfoDefault[nCntParts].vRot);
+		vectorParts[nCntParts].mtxWorld *= mtxRot;
+
+		//平行移動
+		CKFMath::MtxTranslation(&mtxPos, m_charInfo.vectorPartsInfoDefault[nCntParts].vPos);
+		vectorParts[nCntParts].mtxWorld *= mtxPos;
+
+		//親パーツチェック
+		if (vectorParts[nCntParts].nParentID == -1)
+		{//親がないの場合引数のワールド行列をかける
+			vectorParts[nCntParts].mtxWorld *= mtxWorldParents;
+		}
+		else
+		{//親のワールド行列をかける
+			vectorParts[nCntParts].mtxWorld *= vectorParts[vectorParts[nCntParts].nParentID].mtxWorld;
+		}
+
+		//デバイスに設定
+		D3DXMATRIX mtx = vectorParts[nCntParts].mtxWorld;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+
+		if (matType == CMM::MAT_MAX)
+		{
+			DrawXFile(m_charInfo.vectorPartsXFileInfo[nCntParts]);
+		}
+		else
+		{
+			DrawXFile(m_charInfo.vectorPartsXFileInfo[nCntParts], matType);
+		}	
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  初期状態のパーツ情報を取得する
+//--------------------------------------------------------------------------------
+std::vector<CModelCharacterX::PARTS_INFO> CModelCharacterX::GetDefaultPartsInfo(void) const
+{
+	return m_charInfo.vectorPartsInfoDefault;
+}
+
+//--------------------------------------------------------------------------------
+//  モーション情報を取得する
+//--------------------------------------------------------------------------------
+const std::vector<CModelCharacterX::VEC_MOTION>	&CModelCharacterX::GetPartsMotionInfo(void) const
+{
+	return m_charInfo.vectorPartsMotionInfo;
+}
+
+//--------------------------------------------------------------------------------
+//  生成処理
+//--------------------------------------------------------------------------------
+CModelCharacterX *CModelCharacterX::Create(const LPCSTR &pTxtPath)
+{
+	CModelCharacterX *pChar = NULL;
+	pChar = new CModelCharacterX;
+	pChar->Init(pTxtPath);
+	pChar->m_modelType = CMOM::XFILE_MOTION;
+	return pChar;
 }

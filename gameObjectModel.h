@@ -15,6 +15,7 @@
 //--------------------------------------------------------------------------------
 #include "gameObject.h"
 #include "modelManager.h"
+#include "materialManager.h"
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -25,18 +26,18 @@ public:
 	CGameObjectModel();
 	~CGameObjectModel();
 
-	void	Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
-	void	Uninit(void);
-	void	Update(void);
-	void	LateUpdate(void);
-	void	Draw(void);
+	virtual void	Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
+	virtual void	Uninit(void);
+	virtual void	Update(void);
+	virtual void	LateUpdate(void);
+	virtual void	Draw(void);
 
 	static CGameObjectModel*	Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
 
 protected:
-	void				SetMatrix(void);
-	void				SetRenderState(void);
-	void				ResetRenderState(void);
+	virtual void		SetMatrix(void);
+	virtual void		SetRenderState(void);
+	virtual void		ResetRenderState(void);
 
 	CKFVec3				m_vRot;			// âÒì]
 	CMOM::MODEL_NAME	m_modelName;	// ÉÇÉfÉã

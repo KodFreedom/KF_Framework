@@ -155,6 +155,7 @@
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="gameObject2D.cpp" />
     <ClCompile Include="gameObject3D.cpp" />
+    <ClCompile Include="gameObjectCharacter.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gameObjectModel.cpp" />
     <ClCompile Include="inputDX.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="gameObject2D.h" />
     <ClInclude Include="gameObject3D.h" />
+    <ClInclude Include="gameObjectCharacter.h" />
     <ClInclude Include="gameObjectModel.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="inputDX.h" />

@@ -141,6 +141,9 @@
     <ClCompile Include="model.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
+    <ClCompile Include="gameObjectCharacter.cpp">
+      <Filter>ソース ファイル\GameObject\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="modelCharacterX.h">
       <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectCharacter.h">
+      <Filter>ヘッダー ファイル\GameObject\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -52,10 +52,9 @@ KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 	pMat = (D3DXMATERIAL*)pXFile->pBufferMaterial->GetBufferPointer();
 	for (int nCnt = 0; nCnt < (int)pXFile->dwNumMaterial; nCnt++)
 	{
+		LPDIRECT3DTEXTURE9 pTexture = NULL;
 		if (pMat[nCnt].pTextureFilename != NULL)
 		{
-			LPDIRECT3DTEXTURE9 pTexture = NULL;
-
 			//ハードディスクからTextureの読み込み
 			//※エラーチェック必須
 			hr = D3DXCreateTextureFromFile(pDevice,
@@ -68,9 +67,8 @@ KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 				wsprintf(aStr, "CModel %d番のテクスチャ ERROR!", nCnt);
 				MessageBox(NULL, aStr, "エラー", MB_OK | MB_ICONWARNING);
 			}
-
-			pXFile->vectorTexture.push_back(pTexture);
 		}
+		pXFile->vectorTexture.push_back(pTexture);
 	}
 
 	return KF_SUCCEEDED;
@@ -96,7 +94,10 @@ void CModel::DrawXFile(const XFILE &XFile)
 		pDevice->SetMaterial(&pMat[nCnt].MatD3D);
 
 		//Texture
-		pDevice->SetTexture(0, XFile.vectorTexture[nCnt]);
+		if (nCnt < (int)XFile.vectorTexture.size())
+		{
+			pDevice->SetTexture(0, XFile.vectorTexture[nCnt]);
+		}
 
 		//メッシュの描画
 		XFile.pMesh->DrawSubset(nCnt);

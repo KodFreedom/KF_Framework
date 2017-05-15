@@ -22,6 +22,7 @@
 #include "meshField.h"
 #include "skyBox.h"
 #include "gameObjectModel.h"
+#include "gameObjectCharacter.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX

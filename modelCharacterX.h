@@ -13,6 +13,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "model.h"
 #include "materialManager.h"
 
 //--------------------------------------------------------------------------------
@@ -25,29 +26,6 @@
 class CModelCharacterX : public CModel
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	struct MOTION_INFO
-	{
-		int nMotionNow;		//今のモーション
-		int nKeyNow;		//今のキーフレーム
-		int nCntFrame;
-	};
-
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	CModelCharacterX();
-	~CModelCharacterX() {}
-
-	KFRESULT	Init(const LPCSTR &pTxtPath);
-	void		Uninit(void);
-	void		Draw(const CKFVec3 &vPosParents, const CKFVec3 &vRotParents, const MOTION_INFO &info);
-	void		Draw(const CKFVec3 &vPosParents, const CKFVec3 &vRotParents, const MOTION_INFO &info, const CMM::MATERIAL &matType);
-
-	static CModelCharacterX *Create(const LPCSTR pTxtPath);
-private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
@@ -64,26 +42,50 @@ private:
 		std::vector<KEY_FRAME>	vectorKeyFrame;	//Key Frame情報
 	};
 
-	struct PARTS
+	typedef std::vector<MOTION>	VEC_MOTION;		//モーションの動的配列
+
+	struct PARTS_INFO
 	{
-		std::vector<MOTION>	vectorMotion;	//Motion情報
-		XFILE				XFileInfo;		//Xfile情報
 		CKFVec3				vPos;			//位置
 		CKFVec3				vRot;			//回転
+		CKFMtx44			mtxWorld;		//自分のワールドマトリクス
 		int					nParentID;		//親のID
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
+	CModelCharacterX();
+	~CModelCharacterX() {}
+
+	KFRESULT	Init(const LPCSTR &pTxtPath);
+	void		Uninit(void);
+	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts);
+	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType);
 	
+	//Get関数
+	std::vector<PARTS_INFO>			GetDefaultPartsInfo(void) const;
+	const std::vector<VEC_MOTION>	&GetPartsMotionInfo(void) const;
+
+	static CModelCharacterX *Create(const LPCSTR &pTxtPath);
+private:
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct CHARACTER
+	{
+		std::vector<PARTS_INFO> vectorPartsInfoDefault;
+		std::vector<VEC_MOTION>	vectorPartsMotionInfo;
+		std::vector<XFILE>		vectorPartsXFileInfo;
+	};
+
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	std::vector<PARTS>		m_vectorParts;			//パーツ
-	float					m_fMoveSpeed;
-	float					m_fJumpSpeed;
-	float					m_fRadius;
+	CHARACTER	m_charInfo;			//初期状態のパーツ
+	float		m_fMoveSpeed;
+	float		m_fJumpSpeed;
+	float		m_fRadius;
 };
 
 #endif

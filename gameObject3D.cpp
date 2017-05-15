@@ -191,22 +191,24 @@ void CGameObject3D::SetMatrix(void)
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
 	//ワールド相対座標
-	D3DXMATRIX mtxWorld;
-	D3DXMATRIX mtxRot;
-	D3DXMATRIX mtxPos;
+	CKFMtx44 mtxWorld;
+	CKFMtx44 mtxRot;
+	CKFMtx44 mtxPos;
 
 	//単位行列に初期化
-	D3DXMatrixIdentity(&mtxWorld);
+	CKFMath::MtxIdentity(&mtxWorld);
 
 	//回転(Y->X->Z)
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_vRot.m_fY, m_vRot.m_fX, m_vRot.m_fZ);
+	CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_vRot);
 	mtxWorld *= mtxRot;
 
 	//平行移動
-	D3DXMatrixTranslation(&mtxPos, m_vPos.m_fX, m_vPos.m_fY, m_vPos.m_fZ);
+	CKFMath::MtxTranslation(&mtxPos, m_vPos);
 	mtxWorld *= mtxPos;
 
-	pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
+	//デバイスに設定
+	D3DXMATRIX mtx = mtxWorld;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
 }
 
 //--------------------------------------------------------------------------------
