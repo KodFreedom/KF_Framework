@@ -23,7 +23,7 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CModelCharacterX : public CModel
+class CModelActorX : public CModel
 {
 public:
 	//--------------------------------------------------------------------------------
@@ -55,11 +55,11 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CModelCharacterX();
-	~CModelCharacterX() {}
+	CModelActorX();
+	~CModelActorX() {}
 
 	KFRESULT	Init(const LPCSTR &pTxtPath);
-	void		Uninit(void);
+	void		Uninit(void) override;
 	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts);
 	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType);
 	
@@ -67,12 +67,12 @@ public:
 	std::vector<PARTS_INFO>			GetDefaultPartsInfo(void) const;
 	const std::vector<VEC_MOTION>	&GetPartsMotionInfo(void) const;
 
-	static CModelCharacterX *Create(const LPCSTR &pTxtPath);
+	static CModelActorX *Create(const LPCSTR &pTxtPath);
 private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct CHARACTER
+	struct ACTOR
 	{
 		std::vector<PARTS_INFO> vectorPartsInfoDefault;
 		std::vector<VEC_MOTION>	vectorPartsMotionInfo;
@@ -82,7 +82,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CHARACTER	m_charInfo;			//初期状態のパーツ
+	ACTOR		m_actorInfo;	//初期状態のパーツ
 	float		m_fMoveSpeed;
 	float		m_fJumpSpeed;
 	float		m_fRadius;

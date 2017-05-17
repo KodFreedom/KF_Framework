@@ -18,6 +18,42 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//	CKFMaterial
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+CKFMaterial::CKFMaterial()
+	: m_cAmbient(CKFColor(0.0f))
+	, m_cDiffuse(CKFColor(0.0f))
+	, m_cEmissive(CKFColor(0.0f))
+	, m_cSpecular(CKFColor(0.0f))
+	, m_fPower(0.0f)
+{
+
+}
+
+//--------------------------------------------------------------------------------
+//  キャスト(D3DMATERIAL9)
+//	DXの環境のため(マテリアル)オーバーロードする
+//--------------------------------------------------------------------------------
+CKFMaterial::operator D3DMATERIAL9() const
+{
+	D3DMATERIAL9 vAnswer;
+
+	vAnswer.Ambient = m_cAmbient;
+	vAnswer.Diffuse = m_cDiffuse;
+	vAnswer.Emissive = m_cEmissive;
+	vAnswer.Specular = m_cSpecular;
+	vAnswer.Power = m_fPower;
+
+	return vAnswer;
+}
+
+//--------------------------------------------------------------------------------
+//	CMaterialManager
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
 void CMaterialManager::Init(void)
@@ -32,7 +68,7 @@ void CMaterialManager::Init(void)
 //--------------------------------------------------------------------------------
 //  マテリアル取得
 //--------------------------------------------------------------------------------
-D3DMATERIAL9 CMaterialManager::GetMaterial(const MATERIAL &mat)
+CKFMaterial CMaterialManager::GetMaterial(const MATERIAL &mat)
 {
 	return m_aMaterial[mat];
 }
@@ -40,13 +76,13 @@ D3DMATERIAL9 CMaterialManager::GetMaterial(const MATERIAL &mat)
 //--------------------------------------------------------------------------------
 //  マテリアル設定
 //--------------------------------------------------------------------------------
-D3DMATERIAL9 CMaterialManager::InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
+CKFMaterial CMaterialManager::InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
 {
-	D3DMATERIAL9 mat;
-	mat.Ambient = cAmbient;		// 環境光の反射率
-	mat.Diffuse = cDiffuse;		// 漫射光の反射率
-	mat.Specular = cSpecular;	// 鏡面光の反射率
-	mat.Emissive = cEmissive;	// 自発光
-	mat.Power = fPower;			// ハイライトのシャープネス
+	CKFMaterial mat;
+	mat.m_cAmbient = cAmbient;		// 環境光の反射率
+	mat.m_cDiffuse = cDiffuse;		// 漫射光の反射率
+	mat.m_cSpecular = cSpecular;	// 鏡面光の反射率
+	mat.m_cEmissive = cEmissive;	// 自発光
+	mat.m_fPower = fPower;			// ハイライトのシャープネス
 	return mat;
 }

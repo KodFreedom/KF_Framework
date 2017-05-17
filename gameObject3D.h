@@ -27,10 +27,10 @@ public:
 	~CGameObject3D();
 
 	virtual KFRESULT	Init(const int &nVtxNum, const int &nIdxNum, const int &nPolygonNum);
-	virtual void		Uninit(void);
-	virtual void		Update(void);
-	virtual void		LateUpdate(void);
-	virtual void		Draw(void);
+	virtual void		Uninit(void) override;
+	virtual void		Update(void) override;
+	virtual void		LateUpdate(void) override;
+	virtual void		Draw(void) override;
 
 protected:
 	virtual void			SetMatrix(void);

@@ -26,10 +26,10 @@ public:
 	~CGameObject2D();
 
 	KFRESULT	Init(const CKFVec3 &vPos, const float &fRot, const CKFVec2 &vSize, const CTM::TEX_NAME &texName);
-	void		Uninit(void);
-	void		Update(void);
-	void		LateUpdate(void);
-	void		Draw(void);
+	void		Uninit(void) override;
+	void		Update(void) override;
+	void		LateUpdate(void) override;
+	void		Draw(void) override;
 
 	static CGameObject2D* Create(const CKFVec3 &vPos, const float &fRot, const CKFVec2 &vSize, const CTM::TEX_NAME &texName);
 protected:

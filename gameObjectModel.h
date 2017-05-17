@@ -27,10 +27,10 @@ public:
 	~CGameObjectModel();
 
 	virtual void	Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
-	virtual void	Uninit(void);
-	virtual void	Update(void);
-	virtual void	LateUpdate(void);
-	virtual void	Draw(void);
+	virtual void	Uninit(void) override;
+	virtual void	Update(void) override;
+	virtual void	LateUpdate(void) override;
+	virtual void	Draw(void) override;
 
 	static CGameObjectModel*	Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
 

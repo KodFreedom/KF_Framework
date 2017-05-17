@@ -1,38 +1,38 @@
 //--------------------------------------------------------------------------------
 //
-//　gameObjectCharacter.h
+//　gameObjectActor.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-15
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
-#ifndef _GAMEOBJECT_CHARACTER_H_
-#define _GAMEOBJECT_CHARACTER_H_
+#ifndef _GAMEOBJECT_ACTOR_H_
+#define _GAMEOBJECT_ACTOR_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectModel.h"
 #include "modelManager.h"
-#include "modelCharacterX.h"
+#include "modelActorX.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObjectCharacter : public CGameObjectModel
+class CGameObjectActor : public CGameObjectModel
 {
 public:
-	CGameObjectCharacter();
-	~CGameObjectCharacter() {};
+	CGameObjectActor();
+	~CGameObjectActor() {};
 
 	void	Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
-	void	Uninit(void);
-	void	Update(void);
-	void	LateUpdate(void);
-	void	Draw(void);
+	void	Uninit(void) override;
+	void	Update(void) override;
+	void	LateUpdate(void) override;
+	void	Draw(void) override;
 
-	static CGameObjectCharacter*	Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
+	static CGameObjectActor*	Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CMOM::MODEL_NAME &modelName);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -51,6 +51,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
+	void	UpdateMotion(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -58,7 +59,7 @@ private:
 	MOTION	m_motionNow;	//今のモーション
 	int		m_nKeyNow;		//今のキーフレーム
 	int		m_nCntFrame;	//今のフレーム
-	std::vector<CModelCharacterX::PARTS_INFO>	m_vectorPartsInfo;	// パーツ情報
+	std::vector<CModelActorX::PARTS_INFO>	m_vectorPartsInfo;	// パーツ情報
 };
 
 #endif

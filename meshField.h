@@ -29,7 +29,7 @@ public:
 	~CMeshField();
 
 	KFRESULT	Init(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot);
-	void		Update(void);
+	void		Update(void) override;
 
 	static CMeshField*	Create(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot);
 private:

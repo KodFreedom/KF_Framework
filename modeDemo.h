@@ -26,10 +26,10 @@ public:
 	CModeDemo();
 	~CModeDemo();
 
-	void	Init(void);
-	void	Uninit(void);
-	void	Update(void);
-	void	LateUpdate(void);
+	void	Init(void) override;
+	void	Uninit(void) override;
+	void	Update(void) override;
+	void	LateUpdate(void) override;
 
 private:
 };

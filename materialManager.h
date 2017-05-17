@@ -18,6 +18,28 @@
 //--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	マテリアル
+//--------------------------------------------------------------------------------
+class CKFMaterial
+{
+public:
+	CKFMaterial();
+	~CKFMaterial() {}
+
+	CKFColor	m_cAmbient;		// 環境光の反射率
+	CKFColor	m_cDiffuse;		// 漫射光の反射率
+	CKFColor	m_cSpecular;	// 鏡面光の反射率
+	CKFColor	m_cEmissive;	// 自発光
+	float		m_fPower;		// ハイライトのシャープネス
+
+								//キャスト
+	operator D3DMATERIAL9 () const;
+};
+
+//--------------------------------------------------------------------------------
+//	マテリアルマネージャ
+//--------------------------------------------------------------------------------
 class CMaterialManager
 {
 public:
@@ -32,11 +54,11 @@ public:
 
 	void Init(void);
 
-	D3DMATERIAL9 GetMaterial(const MATERIAL &mat);
+	CKFMaterial GetMaterial(const MATERIAL &mat);
 private:
-	D3DMATERIAL9 InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
+	CKFMaterial InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
 
-	D3DMATERIAL9 m_aMaterial[MAT_MAX];
+	CKFMaterial m_aMaterial[MAT_MAX];
 };
 
 #endif

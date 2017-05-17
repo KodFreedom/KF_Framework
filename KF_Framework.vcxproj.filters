@@ -135,14 +135,14 @@
     <ClCompile Include="skyBox.cpp">
       <Filter>ソース ファイル\GameObject\3D</Filter>
     </ClCompile>
-    <ClCompile Include="modelCharacterX.cpp">
-      <Filter>ソース ファイル\Model</Filter>
-    </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
-    <ClCompile Include="gameObjectCharacter.cpp">
+    <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="modelActorX.cpp">
+      <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,11 +215,11 @@
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="modelCharacterX.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectCharacter.h">
+    <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="modelActorX.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

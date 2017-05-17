@@ -15,7 +15,7 @@
 #include "modelManager.h"
 #include "model.h"
 #include "modelX.h"
-#include "modelCharacterX.h"
+#include "modelActorX.h"
 
 //--------------------------------------------------------------------------------
 //  íËêîíËã`
@@ -101,7 +101,7 @@ void CModelManager::Load(const MODEL_NAME &modelBegin, const MODEL_NAME &modelEn
 				pModel = CModelX::Create(m_apModelInfo[nCnt].path);
 				break;
 			case XFILE_MOTION:
-				pModel = CModelCharacterX::Create(m_apModelInfo[nCnt].path);
+				pModel = CModelActorX::Create(m_apModelInfo[nCnt].path);
 				break;
 			default:
 				break;

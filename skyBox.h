@@ -30,8 +30,8 @@ public:
 	static CSkyBox*	Create(const CKFVec3 &vPos, const CKFVec3 &vSize);
 private:
 	void		MakeVertex(void);
-	void		SetRenderState(void);
-	void		ResetRenderState(void);
+	void		SetRenderState(void) override;
+	void		ResetRenderState(void) override;
 
 	CKFVec3		m_vSize;
 };
