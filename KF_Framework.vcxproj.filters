@@ -67,6 +67,36 @@
     <Filter Include="ソース ファイル\GameObject\Model">
       <UniqueIdentifier>{bc6a448f-c272-45e6-9dcc-ec474bea4493}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component">
+      <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Input">
+      <UniqueIdentifier>{010c689e-36e5-45ce-bb20-b1dd88a17d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Draw">
+      <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Physics">
+      <UniqueIdentifier>{4dfeab76-87b5-4f7f-9bdb-4dcd6105f1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Renderer">
+      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Mesh">
+      <UniqueIdentifier>{1de6bf1c-e0b1-4d43-a5f7-4daca6978706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Collision">
+      <UniqueIdentifier>{ea32dd07-68f8-4c62-af8b-4eb1bf160764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component">
+      <UniqueIdentifier>{db3c6369-d237-4a86-b146-db91a518b1b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Mesh">
+      <UniqueIdentifier>{bda8fd06-b5f6-4d17-9e81-62ead9c4f049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Draw">
+      <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -144,15 +174,18 @@
     <ClCompile Include="modelActorX.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
+    <ClCompile Include="2DMeshComponent.cpp">
+      <Filter>ソース ファイル\Component\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="2DDrawComponent.cpp">
+      <Filter>ソース ファイル\Component\Draw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="rendererDX.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="gameObject.h">
@@ -220,6 +253,39 @@
     </ClInclude>
     <ClInclude Include="modelActorX.h">
       <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="inputComponent.h">
+      <Filter>ヘッダー ファイル\Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="drawComponent.h">
+      <Filter>ヘッダー ファイル\Component\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="physicComponent.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="rendererDX.h">
+      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="meshComponent.h">
+      <Filter>ヘッダー ファイル\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="2DMeshComponent.h">
+      <Filter>ヘッダー ファイル\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="2DDrawComponent.h">
+      <Filter>ヘッダー ファイル\Component\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="3DMeshComponent.h">
+      <Filter>ヘッダー ファイル\Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="3DDrawComponent.h">
+      <Filter>ヘッダー ファイル\Component\Draw</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

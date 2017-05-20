@@ -1,59 +1,53 @@
 //--------------------------------------------------------------------------------
 //
-//　gameObjManager.h
+//　component.h
 //	Author : Xu Wenjie
-//	Date   : 2017-5-10
+//	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
-#ifndef _GAME_OBJECT_MANAGER_H_
-#define _GAME_OBJECT_MANAGER_H_
+#ifndef _COMPONENT_H_
+#define _COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-#define GOM CGameObjectManager	//GameObjectManagerの略称
+#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObjectManager
+class CComponent
 {
 public:
-	enum PRIORITY
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	enum MESSAGE
 	{
-		PRI_3D,
-		PRI_3D_ALPHA,
-		PRI_2D,
-		PRI_MAX
+		M_MAX
 	};
 
-	CGameObjectManager();
-	~CGameObjectManager() {}
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CComponent() {}
+	~CComponent() {}
 
-	void	Init(void);
-	void	Uninit(void);
+	virtual KFRESULT	Init(void) = 0;
+	virtual void		Uninit(void) = 0;
+	virtual void		Release(void)
+	{
+		Uninit();
+		delete this;
+	}
 
-	void	ReleaseAll(void);
-	void	UpdateAll(void);
-	void	LateUpdateAll(void);
-	void	DrawAll(void);
-
-	void	SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj);
-	void	ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj);
-
-private:
-	std::vector<CGameObject*>	m_avectorGameObj[PRI_MAX];
+	virtual void		ReceiveMsg(const MESSAGE &msg) = 0;
 };
 
 #endif

@@ -1,67 +1,64 @@
 //--------------------------------------------------------------------------------
 //
-//　model.h
+//　collisionComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-01-24
+//	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
-#ifndef _MODEL_H_
-#define _MODEL_H_
+#ifndef _COLLISION_COMPONENT_H_
+#define _COLLISION_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "modelManager.h"
-#include "materialManager.h"
+#include "component.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CModel
+//--------------------------------------------------------------------------------
+//  コリジョンコンポネントクラス
+//--------------------------------------------------------------------------------
+class CCollisionComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CModel() {}
-	~CModel() {}
+	CCollisionComponent() {}
+	~CCollisionComponent() {}
 
-	virtual KFRESULT	Init(void) { return KF_SUCCEEDED; }
+	virtual KFRESULT	Init(void) = 0;
 	virtual void		Uninit(void) = 0;
-	virtual void		Draw(void) {};
+	virtual void		Update(CGameObject &gameObj) = 0;
+	virtual void		Release(void) = 0;
+	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
+};
 
-	const CMOM::MODEL_TYPE GetModelType(void) const { return m_modelType; }
-
-protected:
-	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	struct XFILE
-	{
-		std::vector<LPDIRECT3DTEXTURE9>	vectorTexture;	//textureインターフェース
-		LPD3DXMESH						pMesh;			//メッシュ情報インターフェイス
-		LPD3DXBUFFER					pBufferMaterial;//マテリアル情報　動的メモリ
-		DWORD							dwNumMaterial;	//モデルのマテリアル数
-	};
-
+//--------------------------------------------------------------------------------
+//  ヌルコリジョンコンポネント
+//--------------------------------------------------------------------------------
+class CNullCollisionComponent : public CCollisionComponent
+{
+public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	static KFRESULT LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath);
-	static void		DrawXFile(const XFILE &XFile);
-	static void		DrawXFile(const XFILE &XFile, const CMM::MATERIAL &matType);
-	static void		ReleaseXFile(XFILE* pXFile);
+	CNullCollisionComponent() {}
+	~CNullCollisionComponent() {}
 
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	CMOM::MODEL_TYPE m_modelType;
+	KFRESULT	Init(void) override {}
+	void		Uninit(void) override {}
+	void		Update(CGameObject &gameObj) override {}
+	void		Release(void) override {}
+	void		ReceiveMsg(const MESSAGE &msg) override {}
 };
 
 #endif

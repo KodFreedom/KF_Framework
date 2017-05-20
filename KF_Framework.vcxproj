@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="2DDrawComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="gameObject2D.cpp" />
@@ -173,18 +174,26 @@
     <ClCompile Include="modelActorX.cpp" />
     <ClCompile Include="modelManager.cpp" />
     <ClCompile Include="modelX.cpp" />
+    <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="rendererDX.cpp" />
     <ClCompile Include="skyBox.cpp" />
     <ClCompile Include="textureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="2DDrawComponent.h" />
+    <ClInclude Include="3DDrawComponent.h" />
+    <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="collisionComponent.h" />
+    <ClInclude Include="component.h" />
+    <ClInclude Include="drawComponent.h" />
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="gameObject2D.h" />
     <ClInclude Include="gameObject3D.h" />
     <ClInclude Include="gameObjectActor.h" />
     <ClInclude Include="gameObjectModel.h" />
     <ClInclude Include="gameObjectManager.h" />
+    <ClInclude Include="inputComponent.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="KF_Math.h" />
     <ClInclude Include="KF_UtilityDX.h" />
@@ -198,8 +207,11 @@
     <ClInclude Include="modeDemo.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelActorX.h" />
+    <ClInclude Include="meshComponent.h" />
     <ClInclude Include="modelManager.h" />
     <ClInclude Include="modelX.h" />
+    <ClInclude Include="physicComponent.h" />
+    <ClInclude Include="2DMeshComponent.h" />
     <ClInclude Include="rendererDX.h" />
     <ClInclude Include="skyBox.h" />
     <ClInclude Include="textureManager.h" />

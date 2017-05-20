@@ -1,60 +1,59 @@
 //--------------------------------------------------------------------------------
 //
-//　gameObject.cpp
+//　physicComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-04-26
+//	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
+#ifndef _PHYSIC_COMPONENT_H_
+#define _PHYSIC_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
-#include "gameObject.h"
+#include "component.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  前方宣言
 //--------------------------------------------------------------------------------
+class CGameObject;
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  クラス宣言
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOM::PRIORITY &pri = GOM::PRI_3D)
-	: m_pri(pri)
-	, m_bActive(true)
-	, m_bAlive(true)
-	, m_pInput(&s_nullInput)
-	, m_pPhysic(&s_nullPhysic)
-	, m_pCollision(&s_nullCollision)
-	, m_pMesh(&s_nullMesh)
-	, m_pDraw(&s_nullDraw)
-	, m_vPos(CKFVec3(0.0f))
-	, m_vPosNext(CKFVec3(0.0f))
-	, m_vRot(CKFVec3(0.0f))
-	, m_vRotNext(CKFVec3(0.0f))
-	, m_vScale(CKFVec3(0.0f))
-	, m_vScaleNext(CKFVec3(0.0f))
+//--------------------------------------------------------------------------------
+//  物理コンポネントクラス
+//--------------------------------------------------------------------------------
+class CPhysicComponent : public CComponent
 {
-	GetManager()->GetGameObjectManager()->SaveGameObj(m_pri, this);
-}
+public:
+	CPhysicComponent() {}
+	~CPhysicComponent() {}
+	
+	virtual KFRESULT	Init(void) = 0;
+	virtual void		Uninit(void) = 0;
+	virtual void		Update(CGameObject &gameObj) = 0;
+	virtual void		Release(void) = 0;
+	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
+};
 
 //--------------------------------------------------------------------------------
-//  破棄処理
+//  ヌル物理コンポネント
 //--------------------------------------------------------------------------------
-void CGameObject::Release(void)
+class CNullPhysicComponent : public CPhysicComponent
 {
-	GetManager()->GetGameObjectManager()->ReleaseGameObj(m_pri, this);
-}
+public:
+	CNullPhysicComponent() {}
+	~CNullPhysicComponent() {}
 
-//--------------------------------------------------------------------------------
-//  パラメーター交換処理
-//--------------------------------------------------------------------------------
-void CGameObject::SwitchParam(void)
-{
-	m_vPos = m_vPosNext;
-	m_vRot = m_vRotNext;
-	m_vScale = m_vScaleNext;
-}
+	KFRESULT	Init(void) override {}
+	void		Uninit(void) override {}
+	void		Update(CGameObject &gameObj) override {}
+	void		Release(void) override {}
+	void		ReceiveMsg(const MESSAGE &msg) override {}
+	
+};
+
+#endif

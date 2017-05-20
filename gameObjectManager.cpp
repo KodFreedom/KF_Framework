@@ -132,7 +132,7 @@ void CGameObjectManager::DrawAll(void)
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトの確保
 //--------------------------------------------------------------------------------
-int CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
+void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
 	//配列の間に空きがある場合
 	for (int nCnt = 0; nCnt < (int)m_avectorGameObj[pri].size(); nCnt++)
@@ -140,27 +140,30 @@ int CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 		if (m_avectorGameObj[pri][nCnt] == NULL)
 		{
 			m_avectorGameObj[pri][nCnt] = pGameObj;
-			return nCnt;
+			return;
 		}
 	}
 
 	//配列の間に空きがない場合
 	m_avectorGameObj[pri].push_back(pGameObj);
-	return (int)m_avectorGameObj[pri].size();
+
 }
 
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトの破棄
 //--------------------------------------------------------------------------------
-void CGameObjectManager::ReleaseGameObj(const PRIORITY &pri, const int &nID)
+void CGameObjectManager::ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
 	PRIORITY priCopy = pri;
-	int nIDCopy = nID;
 
-	if (m_avectorGameObj[priCopy][nIDCopy] != NULL)
+	for (int nCnt = 0; nCnt < (int)m_avectorGameObj[pri].size(); nCnt++)
 	{
-		m_avectorGameObj[priCopy][nIDCopy]->Uninit();
-		delete m_avectorGameObj[priCopy][nIDCopy];
-		m_avectorGameObj[priCopy][nIDCopy] = NULL;
+		if (m_avectorGameObj[pri][nCnt] == pGameObj)
+		{
+			m_avectorGameObj[pri][nCnt]->Uninit();
+			delete m_avectorGameObj[pri][nCnt];
+			m_avectorGameObj[pri][nCnt] = NULL;
+			return;
+		}
 	}
 }

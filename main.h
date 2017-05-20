@@ -14,22 +14,26 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include <Windows.h>
-#include <d3dx9.h>
+#include "KF_Math.h"
 
+#ifdef USING_DIRECTX9
+#include <d3dx9.h>
 #define DIRECTINPUT_VERSION (0x0800)
 #include <dinput.h>
 #include <XAudio2.h>//sound
-
-#include "KF_Math.h"
 #include "KF_UtilityDX.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  ライブラリ読み込み
 //--------------------------------------------------------------------------------
+#ifdef USING_DIRECTX9
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dinput8.lib")
+#endif
+
 #pragma comment(lib,"winmm.lib")	//システム時刻取得に必要
 
 //--------------------------------------------------------------------------------
@@ -38,10 +42,13 @@
 #define SCREEN_WIDTH	(800)															//ウインドウ幅
 #define SCREEN_HEIGHT	(600)															//ウインドウ高さ
 #define TIMER_INTERVAL	(1000/60)														//更新間隔
+#define CLASS_NAME		"KF_Framework"													//クラスの名前
+#define WINDOW_NAME		"フレームワーク"
+
+#ifdef USING_DIRECTX9
 #define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 )	//3D頂点フォーマット
-#define CLASS_NAME		"KF_Framework"													//クラスの名前
-#define WINDOW_NAME		"フレームワーク"												//ウインドウの名前
+#endif											//ウインドウの名前
 
 //--------------------------------------------------------------------------------
 //  前方宣言

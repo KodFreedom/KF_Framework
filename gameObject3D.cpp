@@ -27,6 +27,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CGameObject3D::CGameObject3D() :CGameObject()
+	: m_pInput(&s_nullInput)
+	, m_pDraw(&s_nullDraw)
 	, m_pIdxBuffer(NULL)
 	, m_texName(CTM::TEX_MAX)
 	, m_matType(CMM::MAT_NORMAL)
@@ -35,13 +37,6 @@ CGameObject3D::CGameObject3D() :CGameObject()
 	, m_nVtxNum(0)
 	, m_vRot(CKFVec3(0.0f))
 	, m_vScale(CKFVec3(1.0f))
-{
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CGameObject3D::~CGameObject3D()
 {
 }
 

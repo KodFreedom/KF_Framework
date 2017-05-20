@@ -16,6 +16,7 @@
 #include "gameObject.h"
 #include "textureManager.h"
 #include "materialManager.h"
+#include "modelManager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -24,31 +25,16 @@ class CGameObject3D : public CGameObject
 {
 public:
 	CGameObject3D();
-	~CGameObject3D();
+	CGameObject3D(const GOM::PRIORITY &pri);
+	~CGameObject3D() {}
 
-	virtual KFRESULT	Init(const int &nVtxNum, const int &nIdxNum, const int &nPolygonNum);
-	virtual void		Uninit(void) override;
-	virtual void		Update(void) override;
-	virtual void		LateUpdate(void) override;
-	virtual void		Draw(void) override;
-
+	static CGameObject3D* Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale, const CTM::TEX_NAME &texName, const CMM::MATERIAL &matType, const CMOM::MODEL_NAME &modelName);
 protected:
-	virtual void			SetMatrix(void);
-	virtual void			SetRenderState(void);
-	virtual void			ResetRenderState(void);
 
-	CKFVec3					m_vRot;			// 回転
-	CKFVec3					m_vScale;		// 拡大率
-	LPDIRECT3DINDEXBUFFER9	m_pIdxBuffer;	// インデックスへのポインタ
-	CTM::TEX_NAME			m_texName;		// テクスチャ
-	CMM::MATERIAL			m_matType;		// マテリアル
+	CGameObject3D*	m_pParent;	//親パーツ
 
-private:
-	KFRESULT	CreateBuffer(void);
-	
-	int			m_nVtxNum;		// 頂点数
-	int			m_nIdxNum;		// インデックス数
-	int			m_nPolygonNum;	// ポリゴン数
+	//ヌルゲームオブジェクト
+	static CNullGameObject	m_nullGameObj;
 };
 
 #endif

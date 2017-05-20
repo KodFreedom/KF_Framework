@@ -10,6 +10,7 @@
 #ifndef _KF_MATH_H_
 #define _KF_MATH_H_
 
+#define USING_DIRECTX9
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -18,14 +19,15 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+
+#ifdef USING_DIRECTX9
 #include <d3dx9.h>
+#endif
 
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-
-//円周率
-#define KF_PI (3.1415926358979f)
+#define KF_PI (3.1415926358979f)	//円周率
 
 //--------------------------------------------------------------------------------
 //  列挙型定義
@@ -58,7 +60,9 @@ public:
 	float m_fY;
 
 	//キャスト
+#ifdef USING_DIRECTX9
 	operator D3DXVECTOR2() const;
+#endif
 
 	//算術演算子
 	CKFVec2 &operator=(const CKFVec2 &vValue);
@@ -84,7 +88,10 @@ public:
 	float m_fZ;
 
 	//キャスト
+	operator CKFVec2() const;
+#ifdef USING_DIRECTX9
 	operator D3DXVECTOR3() const;
+#endif
 
 	//算術演算子
 	CKFVec3 &operator=(const CKFVec3 &vValue);
@@ -124,7 +131,9 @@ public:
 	float m_af[4][4];
 
 	//キャスト
+#ifdef USING_DIRECTX9
 	operator D3DXMATRIX() const;
+#endif
 
 	//算術演算子
 	CKFMtx44 &operator=(const CKFMtx44 &mtxValue);
@@ -170,8 +179,10 @@ public:
 	float m_fA;
 
 	//キャスト
+#ifdef USING_DIRECTX9
 	operator D3DCOLORVALUE () const;
 	operator unsigned long () const;
+#endif
 
 	//算術演算子
 	CKFColor &operator=(const CKFColor &vValue);
@@ -218,11 +229,13 @@ public:
 	static void		Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
 
 	//Matrix計算
-	static CKFMtx44	ChangeDXMtxToMtx44(const D3DXMATRIX &mtx);
 	static void		MtxIdentity(CKFMtx44 *pMtx);
 	static void		MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &fAngle);
 	static void		MtxRotationYawPitchRoll(CKFMtx44 *pMtxRot, const CKFVec3 &vRot);
 	static void		MtxTranslation(CKFMtx44 *pMtxTrans, const CKFVec3 &vPos);
+#ifdef USING_DIRECTX9
+	static CKFMtx44	ChangeDXMtxToMtx44(const D3DXMATRIX &mtx);
+#endif
 
 	//Ray計算
 	static CKFRay	CalculatePickingRay(const CKFVec2 &vScreenPos, const float &fViewportWidth, const float &fViewportHeight, const float &fProjMtx00, const float &fProjMtx11, const CKFMtx44 &mtxViewInverse);
