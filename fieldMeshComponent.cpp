@@ -1,56 +1,27 @@
 //--------------------------------------------------------------------------------
-//
-//　meshField.h
+//	フィールドメッシュコンポネント
+//　fieldMeshComponent.cpp
 //	Author : Xu Wenjie
-//	Date   : 2016-12-13
+//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
-#include "meshField.h"
+#include "fieldMeshComponent.h"
 
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//  クラス
 //--------------------------------------------------------------------------------
-CMeshField::CMeshField() : CGameObject3D()
-	, m_nNumBlockX(0)
-	, m_nNumBlockZ(0)
-	, m_vBlockSize(CKFVec2(0.0f, 0.0f))
+//--------------------------------------------------------------------------------
+//  初期化処理
+//--------------------------------------------------------------------------------
+KFRESULT CFieldMeshComponent::Init(void)
 {
+	m_meshInfo.nNumVtx = (m_nNumBlockX + 1) * (m_nNumBlockZ + 1);
+	m_meshInfo.nNumIdx = ((m_nNumBlockX + 1) * 2 + 2) * m_nNumBlockZ - 1;
+	m_meshInfo.nNumPolygon = (m_nNumBlockX + 2) * 2 * m_nNumBlockZ - 4;
 
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CMeshField::~CMeshField()
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  初期化
-//--------------------------------------------------------------------------------
-KFRESULT CMeshField::Init(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot)
-{
-	m_vPos = vPos;
-	m_vRot = vRot;
-	m_nNumBlockX = nNumBlockX;
-	m_nNumBlockZ = nNumBlockZ;
-	m_vBlockSize = vBlockSize;
-	m_texName = CTM::TEX_DEMO_ROAD;
-
-	int nVtxNum = (m_nNumBlockX + 1) * (m_nNumBlockZ + 1);
-	int nIdxNum = ((m_nNumBlockX + 1) * 2 + 2) * m_nNumBlockZ - 1;
-	int nPolygonNum = (m_nNumBlockX + 2) * 2 * m_nNumBlockZ - 4;
-
-	if (CGameObject3D::Init(nVtxNum, nIdxNum, nPolygonNum) == KF_FAILED)
+	if (C3DMeshComponent::CreateBuffer() == KF_FAILED)
 	{
 		return KF_FAILED;
 	}
@@ -61,25 +32,16 @@ KFRESULT CMeshField::Init(const int &nNumBlockX, const int &nNumBlockZ, const CK
 }
 
 //--------------------------------------------------------------------------------
-//  更新処理
+//  頂点生成処理
 //--------------------------------------------------------------------------------
-void CMeshField::Update(void)
+void CFieldMeshComponent::MakeVertex(void)
 {
-	
-}
-
-
-//--------------------------------------------------------------------------------
-//  頂点作成
-//--------------------------------------------------------------------------------
-void CMeshField::MakeVertex(void)
-{
+#ifdef USING_DIRECTX9
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-
+	m_meshInfo.pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	CKFVec3 vStartPos = CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 
 	for (int nCntZ = 0; nCntZ < m_nNumBlockZ + 1; nCntZ++)
@@ -95,11 +57,11 @@ void CMeshField::MakeVertex(void)
 	}
 
 	//仮想アドレス解放
-	m_pVtxBuffer->Unlock();
+	m_meshInfo.pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	m_meshInfo.pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
 	for (int nCntZ = 0; nCntZ < m_nNumBlockZ; nCntZ++)
 	{
@@ -116,18 +78,6 @@ void CMeshField::MakeVertex(void)
 		}
 	}
 
-	m_pIdxBuffer->Unlock();
-}
-
-//--------------------------------------------------------------------------------
-//  生成
-//--------------------------------------------------------------------------------
-CMeshField* CMeshField::Create(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot)
-{
-	CMeshField* pField = NULL;
-	pField = new CMeshField;
-	pField->Init(nNumBlockX, nNumBlockZ, vBlockSize, vPos, vRot);
-	pField->m_pri = GOM::PRI_3D;
-	pField->m_nID = GetManager()->GetGameObjectManager()->SaveGameObj(GOM::PRI_3D, pField);
-	return pField;
+	m_meshInfo.pIdxBuffer->Unlock();
+#endif
 }

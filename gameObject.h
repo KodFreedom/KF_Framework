@@ -77,6 +77,7 @@ public:
 	CKFVec3				GetPosNext(void) const { return m_vPosNext; }
 	CKFVec3				GetRotNext(void) const { return m_vRotNext; }
 	CKFVec3				GetScaleNext(void) const { return m_vScaleNext; }
+	CKFMtx44			GetMatrix(void) const { return m_mtxThis; }
 
 	//Set関数
 	void				SetPos(const CKFVec3 &vPos) { m_vPos = vPos; }
@@ -85,6 +86,7 @@ public:
 	void				SetPosNext(const CKFVec3 &vPosNext) { m_vPosNext = vPosNext; }
 	void				SetRotNext(const CKFVec3 &vRotNext) { m_vRotNext = vRotNext; }
 	void				SetScaleNext(const CKFVec3 &vScaleNext) { m_vScaleNext = vScaleNext; }
+	void				SetMatrix(const CKFMtx44 &mtx) { m_mtxThis = mtx; }
 
 protected:
 	virtual void		SwitchParam(void);
@@ -97,13 +99,14 @@ protected:
 	CDrawComponent*			m_pDraw;		//描画処理パーツ
 
 	//パラメーター
-	CKFVec3	m_vPos;			//オブジェクト位置
-	CKFVec3	m_vRot;			//オブジェクト回転
-	CKFVec3	m_vScale;		//オブジェクトサイズ
-	CKFVec3	m_vPosNext;		//次のオブジェクト位置
-	CKFVec3	m_vRotNext;		//次のオブジェクト回転
-	CKFVec3	m_vScaleNext;	//次のオブジェクトサイズ
-	
+	CKFVec3		m_vPos;			//オブジェクト位置
+	CKFVec3		m_vRot;			//オブジェクト回転
+	CKFVec3		m_vScale;		//オブジェクトサイズ
+	CKFVec3		m_vPosNext;		//次のオブジェクト位置
+	CKFVec3		m_vRotNext;		//次のオブジェクト回転
+	CKFVec3		m_vScaleNext;	//次のオブジェクトサイズ
+	CKFMtx44	m_mtxThis;		//自分の回転平行移動行列
+
 private:
 	//パラメーター(管理用)
 	bool				m_bActive;		//活動フラグ

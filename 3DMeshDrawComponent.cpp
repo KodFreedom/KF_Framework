@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------------
-//	2D描画コンポネント
-//　2DDrawComponent.h
+//	3Dメッシュ描画コンポネント
+//　3DMeshDrawComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "2DDrawComponent.h"
-#include "2DMeshComponent.h"
+#include "3DMeshDrawComponent.h"
+#include "3DMeshComponent.h"
 #include "gameObject.h"
 #include "manager.h"
 #include "textureManager.h"
@@ -23,36 +23,55 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void C2DDrawComponent::Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent)
+void C3DMeshDrawComponent::Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent)
 {
-	C2DMeshComponent *pMesh = (C2DMeshComponent*)&meshComponent;
+	C3DMeshComponent *pMesh = (C3DMeshComponent*)&meshComponent;
+	CKFMtx44& mtxWorld = gameObj.GetMatrix();
+	CTM::TEX_NAME texName = pMesh->GetTexName();
+	CMM::MATERIAL matType = pMesh->GetMatType();
+	C3DMeshComponent::MESH3D meshInfo = pMesh->GetMeshInfo();
 
 #ifdef USING_DIRECTX9
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
-	// レンダーステート設定
+	//RenderState設定
 	m_pRenderState->SetRenderState();
+
+	//マトリックス設定
+	D3DXMATRIX mtx = mtxWorld;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,						//ストリーム番号
-		pMesh->GetVtxBuffer(),	//頂点バッファ
-		0,						//オフセット
-		sizeof(VERTEX_2D));		//ストライド量
+		meshInfo.pVtxBuffer,	//頂点バッファ
+		0,						//オフセット（開始位置）
+		sizeof(VERTEX_3D));		//ストライド量
+
+	// 頂点インデックスの設定
+	pDevice->SetIndices(meshInfo.pIdxBuffer);
 
 	// 頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_2D);
+	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(pMesh->GetTexName());
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
 	pDevice->SetTexture(0, pTexture);
 
-	// ポリゴンの描画
-	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
-		0,							//オフセット
-		pMesh->GetNumPolygon());	//ポリゴン数
+	// マテリアルの設定
+	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(matType);
+	pDevice->SetMaterial(&mat);
 
-	// レンダーステートリセット
+	//プリミティブ描画
+	pDevice->DrawIndexedPrimitive(
+		D3DPT_TRIANGLESTRIP,
+		0,
+		0,
+		meshInfo.nNumVtx,
+		0,
+		meshInfo.nNumPolygon);
+
+	//RenderState戻す
 	m_pRenderState->ResetRenderState();
 #endif
 }

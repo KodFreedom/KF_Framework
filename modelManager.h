@@ -34,6 +34,7 @@ public:
 	{
 		XFILE,
 		XFILE_MOTION,
+		MESH,
 	};
 
 	enum MODEL_NAME

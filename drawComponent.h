@@ -11,6 +11,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
+#include "renderState.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -27,13 +28,31 @@ class CMeshComponent;
 class CDrawComponent : public CComponent
 {
 public:
-	CDrawComponent() {}
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CDrawComponent() 
+		: m_pRenderState(&s_nullRenderState)
+	{}
+
 	~CDrawComponent() {}
 
 	virtual KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	virtual void		Uninit(void) override {};
 	virtual void		Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent) = 0;
 	virtual void		ReceiveMsg(const MESSAGE &msg) override {}
+
+	//Set関数
+	void				SetRenderState(CRenderState* pRenderState) { m_pRenderState = pRenderState; }
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	static CLightOffRenderState	s_lightOffRenderState;
+	static CNullRenderState		s_nullRenderState;
+
+protected:
+	CRenderState*		m_pRenderState;
 };
 
 //--------------------------------------------------------------------------------

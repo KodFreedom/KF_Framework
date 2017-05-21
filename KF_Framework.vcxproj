@@ -152,7 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2DDrawComponent.cpp" />
+    <ClCompile Include="3DMeshDrawComponent.cpp" />
+    <ClCompile Include="3DMeshComponent.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cubeMeshComponent.cpp" />
+    <ClCompile Include="fieldMeshComponent.cpp" />
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="gameObject2D.cpp" />
     <ClCompile Include="gameObject3D.cpp" />
@@ -166,8 +170,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="materialManager.cpp" />
-    <ClCompile Include="meshCube.cpp" />
-    <ClCompile Include="meshField.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="modeDemo.cpp" />
     <ClCompile Include="model.cpp" />
@@ -176,17 +178,20 @@
     <ClCompile Include="modelX.cpp" />
     <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="rendererDX.cpp" />
-    <ClCompile Include="skyBox.cpp" />
+    <ClCompile Include="renderState.cpp" />
+    <ClCompile Include="skyBoxMeshComponent.cpp" />
     <ClCompile Include="textureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2DDrawComponent.h" />
-    <ClInclude Include="3DDrawComponent.h" />
+    <ClInclude Include="3DMeshDrawComponent.h" />
     <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collisionComponent.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="cubeMeshComponent.h" />
     <ClInclude Include="drawComponent.h" />
+    <ClInclude Include="fieldMeshComponent.h" />
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="gameObject2D.h" />
     <ClInclude Include="gameObject3D.h" />
@@ -201,8 +206,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="materialManager.h" />
-    <ClInclude Include="meshCube.h" />
-    <ClInclude Include="meshField.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
     <ClInclude Include="model.h" />
@@ -213,7 +216,8 @@
     <ClInclude Include="physicComponent.h" />
     <ClInclude Include="2DMeshComponent.h" />
     <ClInclude Include="rendererDX.h" />
-    <ClInclude Include="skyBox.h" />
+    <ClInclude Include="renderState.h" />
+    <ClInclude Include="skyBoxMeshComponent.h" />
     <ClInclude Include="textureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

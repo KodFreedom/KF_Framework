@@ -28,13 +28,17 @@ public:
 	CGameObject3D(const GOM::PRIORITY &pri);
 	~CGameObject3D() {}
 
-	static CGameObject3D* Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale, const CTM::TEX_NAME &texName, const CMM::MATERIAL &matType, const CMOM::MODEL_NAME &modelName);
+	//Get関数
+	//const CGameObject3D& GetParents(void) const { return *m_pParents; }
+
+	//生成関数
+	static CGameObject3D* CreateSkyBox(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	static CGameObject3D* CreateField(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	static CGameObject3D* CreateCube(const CKFVec3 &vSize, const CKFColor &cColor, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+
 protected:
 
-	CGameObject3D*	m_pParent;	//親パーツ
-
-	//ヌルゲームオブジェクト
-	static CNullGameObject	m_nullGameObj;
+	//CGameObject3D*	m_pParents;	//親パーツ
 };
 
 #endif

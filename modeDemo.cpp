@@ -21,10 +21,8 @@
 #include "camera.h"
 
 //gameobject
-#include "meshField.h"
-#include "skyBox.h"
-#include "meshCube.h"
 #include "gameObject2D.h"
+#include "gameObject3D.h"
 #include "gameObjectModel.h"
 #include "gameObjectActor.h"
 
@@ -60,12 +58,12 @@ void CModeDemo::Init(void)
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CMeshField::Create(4, 4, CKFVec2(1.0f, 1.0f), CKFVec3(0.0f), CKFVec3(0.0f));
-	CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec2(256.0f, 256.0f), CTM::TEX_DEMO_TEST);
+	CGameObject3D::CreateField(4, 4, CKFVec2(1.0f, 1.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec3(256.0f, 256.0f, 0.0f), CTM::TEX_DEMO_TEST);
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
-	CSkyBox::Create();
-	CGameObjectActor::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_PLAYER);
+	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	//CGameObjectActor::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_PLAYER);
 }
 
 //--------------------------------------------------------------------------------

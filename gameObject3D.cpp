@@ -12,9 +12,11 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "rendererDX.h"
 #include "gameObject3D.h"
+#include "skyBoxMeshComponent.h"
+#include "fieldMeshComponent.h"
+#include "cubeMeshComponent.h"
+#include "3DMeshDrawComponent.h"
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -26,198 +28,89 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject3D::CGameObject3D() :CGameObject()
-	: m_pInput(&s_nullInput)
-	, m_pDraw(&s_nullDraw)
-	, m_pIdxBuffer(NULL)
-	, m_texName(CTM::TEX_MAX)
-	, m_matType(CMM::MAT_NORMAL)
-	, m_nIdxNum(0)
-	, m_nPolygonNum(0)
-	, m_nVtxNum(0)
-	, m_vRot(CKFVec3(0.0f))
-	, m_vScale(CKFVec3(1.0f))
+CGameObject3D::CGameObject3D() : CGameObject(GOM::PRI_3D)
 {
 }
 
 //--------------------------------------------------------------------------------
-//  初期化
+//  コンストラクタ
 //--------------------------------------------------------------------------------
-KFRESULT CGameObject3D::Init(const int &nVtxNum, const int &nIdxNum, const int &nPolygonNum)
+CGameObject3D::CGameObject3D(const GOM::PRIORITY &pri) : CGameObject(pri)
 {
-	m_nVtxNum = nVtxNum;
-	m_nIdxNum = nIdxNum;
-	m_nPolygonNum = nPolygonNum;
-
-	KFRESULT result = CreateBuffer();
-	
-	return result;
 }
 
 //--------------------------------------------------------------------------------
-// 終了処理
+//  SkyBox生成処理
 //--------------------------------------------------------------------------------
-void CGameObject3D::Uninit(void)
+CGameObject3D* CGameObject3D::CreateSkyBox(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale)
 {
-	// 頂点バッファの破棄
-	if (m_pVtxBuffer != NULL)
-	{
-		m_pVtxBuffer->Release();
-		m_pVtxBuffer = NULL;
-	}
+	//生成
+	CGameObject3D* pObj = new CGameObject3D;
 
-	// インデックスバッファの破棄
-	if (m_pIdxBuffer != NULL)
-	{
-		m_pIdxBuffer->Release();
-		m_pIdxBuffer = NULL;
-	}
+	//コンポネント
+	CSkyBoxMeshComponent *pMesh = new CSkyBoxMeshComponent;
+	pMesh->SetTexName(CTM::TEX_DEMO_SKY);
+	pObj->m_pMesh = pMesh;
+	pObj->m_pDraw = new C3DMeshDrawComponent;
+	pObj->m_pDraw->SetRenderState(&CDrawComponent::s_lightOffRenderState);
+
+	//パラメーター
+	pObj->m_vPos = pObj->m_vPosNext = vPos;
+	pObj->m_vRot = pObj->m_vRotNext = vRot;
+	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+
+	//初期化
+	pObj->Init();
+
+	return pObj;
 }
 
 //--------------------------------------------------------------------------------
-// 更新処理
+//  MeshField生成処理
 //--------------------------------------------------------------------------------
-void CGameObject3D::Update(void)
+CGameObject3D* CGameObject3D::CreateField(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale)
 {
+	//生成
+	CGameObject3D* pObj = new CGameObject3D;
 
+	//コンポネント
+	CFieldMeshComponent *pMesh = new CFieldMeshComponent(nNumBlockX, nNumBlockZ, vBlockSize);
+	pMesh->SetTexName(CTM::TEX_DEMO_ROAD);
+	pObj->m_pMesh = pMesh;
+	pObj->m_pDraw = new C3DMeshDrawComponent;
+
+	//パラメーター
+	pObj->m_vPos = pObj->m_vPosNext = vPos;
+	pObj->m_vRot = pObj->m_vRotNext = vRot;
+	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+
+	//初期化
+	pObj->Init();
+
+	return pObj;
 }
 
 //--------------------------------------------------------------------------------
-// 更新処理(描画直前)
+//  Cube生成処理
 //--------------------------------------------------------------------------------
-void CGameObject3D::LateUpdate(void)
+CGameObject3D* CGameObject3D::CreateCube(const CKFVec3 &vSize, const CKFColor &cColor, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale)
 {
+	//生成
+	CGameObject3D* pObj = new CGameObject3D;
 
-}
+	//コンポネント
+	CCubeMeshComponent *pMesh = new CCubeMeshComponent(vSize, cColor);
+	pMesh->SetTexName(CTM::TEX_DEMO_POLYGON);
+	pObj->m_pMesh = pMesh;
+	pObj->m_pDraw = new C3DMeshDrawComponent;
 
-//--------------------------------------------------------------------------------
-// 描画処理
-//--------------------------------------------------------------------------------
-void CGameObject3D::Draw(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	//パラメーター
+	pObj->m_vPos = pObj->m_vPosNext = vPos;
+	pObj->m_vRot = pObj->m_vRotNext = vRot;
+	pObj->m_vScale = pObj->m_vScaleNext = vScale;
 
-	//RenderState設定
-	SetRenderState();
+	//初期化
+	pObj->Init();
 
-	//マトリックス設定
-	SetMatrix();
-
-	// 頂点バッファをデータストリームに設定
-	pDevice->SetStreamSource(
-		0,						//ストリーム番号
-		m_pVtxBuffer,			//頂点バッファ
-		0,						//オフセット（開始位置）
-		sizeof(VERTEX_3D));		//ストライド量
-
-	// 頂点インデックスの設定
-	pDevice->SetIndices(m_pIdxBuffer);
-
-	// 頂点フォーマットの設定
-	pDevice->SetFVF(FVF_VERTEX_3D);
-
-	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(m_texName);
-	pDevice->SetTexture(0, pTexture);
-
-	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(m_matType);
-	pDevice->SetMaterial(&mat);
-
-	//プリミティブ描画
-	pDevice->DrawIndexedPrimitive(
-		D3DPT_TRIANGLESTRIP,
-		0,
-		0,
-		m_nVtxNum,
-		0,
-		m_nPolygonNum);
-
-	//RenderState戻す
-	ResetRenderState();
-}
-
-//--------------------------------------------------------------------------------
-// バッファ生成
-//--------------------------------------------------------------------------------
-KFRESULT CGameObject3D::CreateBuffer(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-	HRESULT hr;
-
-	//頂点バッファ
-	hr = pDevice->CreateVertexBuffer(
-		sizeof(VERTEX_3D) * m_nVtxNum,	//作成したい頂点バッファのサイズ
-		D3DUSAGE_WRITEONLY,				//頂点バッファの使用方法
-		FVF_VERTEX_3D,					//書かなくても大丈夫
-		D3DPOOL_MANAGED,				//メモリ管理方法(managed：デバイスにお任せ)
-		&m_pVtxBuffer,					//頂点バッファのポインタ
-		NULL);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "GameObject3D : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return KF_FAILED;
-	}
-
-	//インデックスバッファの作成
-	hr = pDevice->CreateIndexBuffer(
-		sizeof(WORD) * m_nIdxNum,
-		D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,
-		D3DPOOL_MANAGED,
-		&m_pIdxBuffer,
-		NULL);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "GameObject3D : CreateIndexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return KF_FAILED;
-	}
-
-	return KF_SUCCEEDED;
-}
-
-//--------------------------------------------------------------------------------
-// SetWorldMatrix
-//--------------------------------------------------------------------------------
-void CGameObject3D::SetMatrix(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-
-	//ワールド相対座標
-	CKFMtx44 mtxWorld;
-	CKFMtx44 mtxRot;
-	CKFMtx44 mtxPos;
-
-	//単位行列に初期化
-	CKFMath::MtxIdentity(&mtxWorld);
-
-	//回転(Y->X->Z)
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_vRot);
-	mtxWorld *= mtxRot;
-
-	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, m_vPos);
-	mtxWorld *= mtxPos;
-
-	//デバイスに設定
-	D3DXMATRIX mtx = mtxWorld;
-	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-}
-
-//--------------------------------------------------------------------------------
-// SetRenderState
-//--------------------------------------------------------------------------------
-void CGameObject3D::SetRenderState(void)
-{
-
-}
-
-//--------------------------------------------------------------------------------
-// ResetRenderState
-//--------------------------------------------------------------------------------
-void CGameObject3D::ResetRenderState(void)
-{
-
+	return pObj;
 }

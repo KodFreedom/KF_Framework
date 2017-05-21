@@ -1,49 +1,27 @@
 //--------------------------------------------------------------------------------
-//
-//　meshCube.cpp
+//	キューブドメッシュコンポネント
+//　cubeMeshComponent.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-04-27
+//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
-#include "meshCube.h"
+#include "cubeMeshComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CMeshCube::CMeshCube() : CGameObject3D()
-	, m_vSize(CKFVec3(1.0f))
-	, m_cColor(CKFColor(1.0f))
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-KFRESULT CMeshCube::Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vSize, const CKFColor &cColor)
+KFRESULT CCubeMeshComponent::Init(void)
 {
-	m_vPos = vPos;
-	m_vRot = vRot;
-	m_vSize = vSize;
-	m_cColor = cColor;
-	m_texName = CTM::TEX_DEMO_POLYGON;
+	m_meshInfo.nNumVtx = 6 * 4;
+	m_meshInfo.nNumIdx = 6 * 4 + 5 * 2;
+	m_meshInfo.nNumPolygon = 6 * 2 + 5 * 4;
 
-	int nNumVtx = 6 * 4;
-	int nNumIdx = 6 * 4 + 5 * 2;
-	int nNumPolygon = 6 * 2 + 5 * 4;
-
-	if (CGameObject3D::Init(nNumVtx, nNumIdx, nNumPolygon) == KF_FAILED)
+	if (C3DMeshComponent::CreateBuffer() == KF_FAILED)
 	{
 		return KF_FAILED;
 	}
@@ -54,15 +32,16 @@ KFRESULT CMeshCube::Init(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3
 }
 
 //--------------------------------------------------------------------------------
-//  頂点生成
+//  頂点生成処理
 //--------------------------------------------------------------------------------
-void CMeshCube::MakeVertex(void)
+void CCubeMeshComponent::MakeVertex(void)
 {
+#ifdef USING_DIRECTX9
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	m_meshInfo.pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	CKFVec3 vHalfSize = m_vSize * 0.5f;
 	int nCntVtx = 0;
 
@@ -145,11 +124,11 @@ void CMeshCube::MakeVertex(void)
 	}
 
 	//仮想アドレス解放
-	m_pVtxBuffer->Unlock();
+	m_meshInfo.pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	m_meshInfo.pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
 	for (int nCnt = 0; nCnt < 6 * 4 + 5 * 2; nCnt++)
 	{
@@ -163,18 +142,6 @@ void CMeshCube::MakeVertex(void)
 		}
 	}
 
-	m_pIdxBuffer->Unlock();
-}
-
-//--------------------------------------------------------------------------------
-//  生成
-//--------------------------------------------------------------------------------
-CMeshCube *CMeshCube::Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vSize, const CKFColor &cColor)
-{
-	CMeshCube *pCube = NULL;
-	pCube = new CMeshCube;
-	pCube->Init(vPos, vRot, vSize, cColor);
-	pCube->m_pri = GOM::PRI_3D;
-	pCube->m_nID = GetManager()->GetGameObjectManager()->SaveGameObj(GOM::PRI_3D, pCube);
-	return pCube;
+	m_meshInfo.pIdxBuffer->Unlock();
+#endif
 }

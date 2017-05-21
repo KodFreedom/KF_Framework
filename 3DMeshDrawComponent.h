@@ -1,16 +1,19 @@
 //--------------------------------------------------------------------------------
-//	3D描画コンポネント
-//　3DDrawComponent.h
+//	3Dメッシュ描画コンポネント
+//　3DMeshDrawComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
-#ifndef _3D_DRAW_COMPONENT_H_
-#define _3D_DRAW_COMPONENT_H_
+#ifndef _3D_MESH_DRAW_COMPONENT_H_
+#define _3D_MESH_DRAW_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "drawComponent.h"
+#include "textureManager.h"
+#include "materialManager.h"
+#include "modelManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -22,11 +25,11 @@
 //--------------------------------------------------------------------------------
 //  3D描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class C3DDrawComponent : public CDrawComponent
+class C3DMeshDrawComponent : public CDrawComponent
 {
 public:
-	C3DDrawComponent() : CDrawComponent() {}
-	~C3DDrawComponent() {}
+	C3DMeshDrawComponent() : CDrawComponent() {}
+	~C3DMeshDrawComponent() {}
 
 	void	Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent);
 };

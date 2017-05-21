@@ -1,37 +1,40 @@
 //--------------------------------------------------------------------------------
-//
-//　meshField.h
+//	フィールドメッシュコンポネント
+//　fieldMeshComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2016-12-13
+//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _MESH_FIELD_H_
-#define _MESH_FIELD_H_
+#ifndef _FIELD_MESH_COMPONENT_H_
+#define _FIELD_MESH_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "gameObject3D.h"
+#include "3DMeshComponent.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  前方宣言
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-//  プロトタイプ宣言
+//  クラス宣言
 //--------------------------------------------------------------------------------
-class CMeshField : public CGameObject3D
+//--------------------------------------------------------------------------------
+//  フィールドメッシュコンポネントクラス
+//--------------------------------------------------------------------------------
+class CFieldMeshComponent : public C3DMeshComponent
 {
 public:
-	CMeshField();
-	~CMeshField();
+	CFieldMeshComponent(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize) : C3DMeshComponent()
+		, m_nNumBlockX(nNumBlockX)
+		, m_nNumBlockZ(nNumBlockZ)
+		, m_vBlockSize(vBlockSize)
+	{}
 
-	KFRESULT	Init(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot);
-	void		Update(void) override;
+	~CFieldMeshComponent() {}
 
-	static CMeshField*	Create(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot);
+	KFRESULT	Init(void) override;
+
 private:
 	void		MakeVertex(void);
 
