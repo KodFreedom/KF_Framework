@@ -131,7 +131,7 @@ CKFVec3 &CKFVec3::operator=(const CKFVec3 &vValue)
 //--------------------------------------------------------------------------------
 //  operator==
 //--------------------------------------------------------------------------------
-bool CKFVec3::operator==(const CKFVec3 &vValue)
+bool CKFVec3::operator==(const CKFVec3 &vValue) const
 {
 	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY && m_fZ == vValue.m_fZ)
 	{
@@ -144,7 +144,7 @@ bool CKFVec3::operator==(const CKFVec3 &vValue)
 //--------------------------------------------------------------------------------
 //  operator!=
 //--------------------------------------------------------------------------------
-bool CKFVec3::operator!=(const CKFVec3 &vValue)
+bool CKFVec3::operator!=(const CKFVec3 &vValue) const
 {
 	if (m_fX != vValue.m_fX || m_fY != vValue.m_fY || m_fZ != vValue.m_fZ)
 	{
@@ -533,6 +533,65 @@ CKFColor::operator unsigned long() const
 //  CKFMath
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  Random
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  ƒ‰ƒ“ƒ_ƒ€ƒVƒXƒeƒ€‰Šú‰»
+//--------------------------------------------------------------------------------
+void CKFMath::InitRandom(void)
+{
+	srand((unsigned)time(NULL));
+}
+
+//--------------------------------------------------------------------------------
+//  GetRandomInt
+//--------------------------------------------------------------------------------
+int	CKFMath::GetRandomInt(const int &nMin, const int &nMax)
+{
+	if (nMin >= nMax)
+	{
+		return nMin;
+	}
+
+	int nWork = rand() % (nMax - nMin);
+
+	nWork = nWork + nMin;
+
+	return nWork;
+}
+
+//--------------------------------------------------------------------------------
+//  GetRandomFloat
+//--------------------------------------------------------------------------------
+float CKFMath::GetRandomFloat(const float &fMin, const float &fMax)
+{
+	if (fMin >= fMax)
+	{
+		return fMin;
+	}
+
+	float fWork = (rand() % 10000) * 0.0001f;
+
+	fWork = fWork * (fMax - fMin) + fMin;
+
+	return fWork;
+}
+
+//--------------------------------------------------------------------------------
+//  GetRandomVec3
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::GetRandomVec3(const CKFVec3 &vMin, const CKFVec3 &vMax)
+{
+	CKFVec3 vWork;
+
+	vWork.m_fX = GetRandomFloat(vMin.m_fX, vMax.m_fX);
+	vWork.m_fY = GetRandomFloat(vMin.m_fY, vMax.m_fY);
+	vWork.m_fZ = GetRandomFloat(vMin.m_fZ, vMax.m_fZ);
+
+	return vWork;
+}
+
+//--------------------------------------------------------------------------------
 //  Vector
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -642,6 +701,49 @@ void CKFMath::Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot)
 }
 
 //--------------------------------------------------------------------------------
+//  RadianBetweenVec3
+//	‰ñ“]s—ñ‚É‚Æ‚Á‚ÄVec3(ƒxƒNƒgƒ‹)‚ğ‰ñ“]‚·‚é
+//--------------------------------------------------------------------------------
+float CKFMath::RadianBetweenVec3(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
+{
+	float fLengthL = VecMagnitude(vVecL);
+	float fLengthR = VecMagnitude(vVecR);
+	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
+
+	CKFVec3 vRot;
+	float fRot = 0.0f;
+	float fWork;
+	CKFMtx44 mtxRot;
+
+	//¶‰E”»’f
+	fWork = vVecR.m_fZ * vVecL.m_fX - vVecR.m_fX * vVecL.m_fZ;
+	if (fWork >= 0.0f)
+	{
+		fWork = 1.0f;
+	}
+	else
+	{
+		fWork = -1.0f;
+	}
+
+	//ƒxƒNƒgƒ‹‚Ì¬‚·Šp“x‚ÌZo
+	fRot = acosf(Vec3Dot(vVecL, vVecR) / (fLengthL * fLengthR));
+	fRot *= fWork;
+
+	//-nan(ind)–h~
+	if (abs(fRot) >= 0.0f)
+	{
+		fRot = fRot;
+	}
+	else
+	{
+		fRot = 0.0f;
+	}
+
+	return fRot;
+}
+
+//--------------------------------------------------------------------------------
 //  Matrix
 //--------------------------------------------------------------------------------
 #ifdef USING_DIRECTX9
@@ -698,7 +800,7 @@ void CKFMath::MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &f
 	float fB = vAxisCpy.m_fY;  
 	float fC = vAxisCpy.m_fZ;     
 	float fD = cosf(fAngle);  
-	float fT =  (1 - fD) / (fLength * fLength);  
+	float fT = fLength == 0 ? 0 : (1 - fD) / (fLength * fLength);
 	
 	*pMtxRot = CKFMtx44(
 		fA * fT * fA + fD, fB * fT * fA + fC, fC * fT * fA - fB, 0.0f,
@@ -713,6 +815,14 @@ void CKFMath::MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &f
 //--------------------------------------------------------------------------------
 void CKFMath::MtxRotationYawPitchRoll(CKFMtx44 *pMtxRot, const CKFVec3 &vRot)
 {
+
+	//CKFMtx44 mtx, mtxX, mtxY, mtxZ;
+	//MtxRotAxis(&mtxX, CKFVec3(1.0f, 0.0f, 0.0f), vRot.m_fX);
+	//MtxRotAxis(&mtxY, CKFVec3(0.0f, 1.0f, 0.0f), vRot.m_fY);
+	//MtxRotAxis(&mtxZ, CKFVec3(0.0f, 0.0f, 1.0f), vRot.m_fZ);
+
+	//mtx = mtxZ * mtxX * mtxY;
+
 	float fSinX = sinf(vRot.m_fX); 
 	float fCosX = cosf(vRot.m_fX); 
 	float fSinY = sinf(vRot.m_fY);
@@ -720,16 +830,16 @@ void CKFMath::MtxRotationYawPitchRoll(CKFMtx44 *pMtxRot, const CKFVec3 &vRot)
 	float fSinZ = sinf(vRot.m_fZ);
 	float fCosZ = cosf(vRot.m_fZ);
 
-	pMtxRot->m_af[0][0] = fCosZ * fCosY - fSinX * fSinY * fSinZ;
-	pMtxRot->m_af[0][1] = fCosY * fSinZ + fSinX * fSinY * fCosZ;
-	pMtxRot->m_af[0][2] = -fSinY * fCosX;
+	pMtxRot->m_af[0][0] = fCosY * fCosZ + fSinX * fSinY * fSinZ;
+	pMtxRot->m_af[0][1] = fCosX * fSinZ;
+	pMtxRot->m_af[0][2] = -fSinY * fCosZ + fSinX * fCosY * fSinZ;
 	pMtxRot->m_af[0][3] = 0.0f;
-	pMtxRot->m_af[1][0] = -fCosX * fSinZ;
+	pMtxRot->m_af[1][0] = -fCosY * fSinZ + fSinX * fSinY * fCosZ;
 	pMtxRot->m_af[1][1] = fCosX * fCosZ;
-	pMtxRot->m_af[1][2] = fSinX;
+	pMtxRot->m_af[1][2] = fSinY * fSinZ + fSinX * fCosY * fCosZ;
 	pMtxRot->m_af[1][3] = 0.0f;
-	pMtxRot->m_af[2][0] = fSinY * fCosZ + fSinX * fCosY * fSinZ;
-	pMtxRot->m_af[2][1] = fSinY * fSinZ - fSinX * fCosY * fCosZ;
+	pMtxRot->m_af[2][0] = fCosX * fSinY;
+	pMtxRot->m_af[2][1] = -fSinX;
 	pMtxRot->m_af[2][2] = fCosX * fCosY;
 	pMtxRot->m_af[2][3] = 0.0f;
 	pMtxRot->m_af[3][0] = 0.0f;

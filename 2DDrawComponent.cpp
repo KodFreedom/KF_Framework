@@ -23,7 +23,7 @@
 //--------------------------------------------------------------------------------
 //  ï`âÊèàóù
 //--------------------------------------------------------------------------------
-void C2DDrawComponent::Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent)
+void C2DDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &meshComponent)
 {
 	C2DMeshComponent *pMesh = (C2DMeshComponent*)&meshComponent;
 

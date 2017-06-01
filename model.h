@@ -14,6 +14,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "modelManager.h"
+#include "textureManager.h"
 #include "materialManager.h"
 
 //--------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ public:
 
 	virtual KFRESULT	Init(void) { return KF_SUCCEEDED; }
 	virtual void		Uninit(void) = 0;
-	virtual void		Draw(void) {};
+	virtual void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) = 0;
 
 	const CMOM::MODEL_TYPE GetModelType(void) const { return m_modelType; }
 
@@ -54,8 +55,10 @@ protected:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	static KFRESULT LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath);
-	static void		DrawXFile(const XFILE &XFile);
-	static void		DrawXFile(const XFILE &XFile, const CMM::MATERIAL &matType);
+	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents);
+	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType);
+	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CTM::TEX_NAME &texName);
+	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName);
 	static void		ReleaseXFile(XFILE* pXFile);
 
 	//--------------------------------------------------------------------------------

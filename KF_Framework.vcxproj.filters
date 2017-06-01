@@ -49,12 +49,6 @@
     <Filter Include="ソース ファイル\Model">
       <UniqueIdentifier>{ad0e8577-7c31-4a40-9db8-3700936a726c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\GameObject\Model">
-      <UniqueIdentifier>{cab99e0c-de04-449e-aee2-6a27bd8df32f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\GameObject\Model">
-      <UniqueIdentifier>{bc6a448f-c272-45e6-9dcc-ec474bea4493}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
     </Filter>
@@ -93,6 +87,12 @@
     </Filter>
     <Filter Include="ソース ファイル\Component\Mesh\3D">
       <UniqueIdentifier>{810aeb35-7774-4f4a-96a7-490e7b3cfd65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Input">
+      <UniqueIdentifier>{dab21625-d229-4fe3-a011-f7f79b6740b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Physics">
+      <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,17 +138,11 @@
     <ClCompile Include="modelX.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
-    <ClCompile Include="gameObjectModel.cpp">
-      <Filter>ソース ファイル\GameObject\Model</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>ソース ファイル\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectActor.cpp">
-      <Filter>ソース ファイル\GameObject\Model</Filter>
     </ClCompile>
     <ClCompile Include="modelActorX.cpp">
       <Filter>ソース ファイル\Model</Filter>
@@ -185,6 +179,27 @@
     </ClCompile>
     <ClCompile Include="gameObject3D.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="actorMeshComponent.cpp">
+      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="modelMeshDrawComponent.cpp">
+      <Filter>ソース ファイル\Component\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="actorMeshDrawComponent.cpp">
+      <Filter>ソース ファイル\Component\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObjectActor.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="drawComponent.cpp">
+      <Filter>ソース ファイル\Component\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="playerInputComponent.cpp">
+      <Filter>ソース ファイル\Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="3DPhysicsComponent.cpp">
+      <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,14 +248,8 @@
     <ClInclude Include="model.h">
       <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
-    <ClInclude Include="gameObjectModel.h">
-      <Filter>ヘッダー ファイル\GameObject\Model</Filter>
-    </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectActor.h">
-      <Filter>ヘッダー ファイル\GameObject\Model</Filter>
     </ClInclude>
     <ClInclude Include="modelActorX.h">
       <Filter>ヘッダー ファイル\Model</Filter>
@@ -253,9 +262,6 @@
     </ClInclude>
     <ClInclude Include="drawComponent.h">
       <Filter>ヘッダー ファイル\Component\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="physicComponent.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="rendererDX.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
@@ -295,6 +301,30 @@
     </ClInclude>
     <ClInclude Include="gameObject2D.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="modelMeshComponent.h">
+      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="actorMeshComponent.h">
+      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="modelMeshDrawComponent.h">
+      <Filter>ヘッダー ファイル\Component\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="actorMeshDrawComponent.h">
+      <Filter>ヘッダー ファイル\Component\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectActor.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="playerInputComponent.h">
+      <Filter>ヘッダー ファイル\Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="3DPhysicsComponent.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsComponent.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

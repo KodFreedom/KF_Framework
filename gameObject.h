@@ -13,7 +13,7 @@
 #include "gameObjectManager.h"
 #include "inputComponent.h"
 #include "drawComponent.h"
-#include "physicComponent.h"
+#include "physicsComponent.h"
 #include "meshComponent.h"
 #include "collisionComponent.h"
 
@@ -35,7 +35,7 @@ public:
 	{ 
 		m_pInput->Init();
 		m_pCollision->Init();
-		m_pPhysic->Init();
+		m_pPhysics->Init();
 		m_pMesh->Init();
 		m_pDraw->Init();
 		return KF_SUCCEEDED;
@@ -45,21 +45,21 @@ public:
 	{
 		m_pInput->Release();
 		m_pCollision->Release();
-		m_pPhysic->Release();
+		m_pPhysics->Release();
 		m_pMesh->Release();
 		m_pDraw->Release();
 	}
 
 	virtual void		Update(void)
 	{
-		SwitchParam();
+		SwapParam();
 		m_pInput->Update(*this);
 	}
 
 	virtual void		LateUpdate(void)
 	{
 		m_pCollision->Update(*this);
-		m_pPhysic->Update(*this);
+		m_pPhysics->Update(*this);
 		m_pMesh->Update(*this);
 	}
 
@@ -78,6 +78,8 @@ public:
 	CKFVec3				GetRotNext(void) const { return m_vRotNext; }
 	CKFVec3				GetScaleNext(void) const { return m_vScaleNext; }
 	CKFMtx44			GetMatrix(void) const { return m_mtxThis; }
+	CMeshComponent*		GetMeshComponent(void) { return m_pMesh; }
+	CPhysicsComponent*	GetPhysicsComponent(void) { return m_pPhysics; }
 
 	//Set関数
 	void				SetPos(const CKFVec3 &vPos) { m_vPos = vPos; }
@@ -89,11 +91,11 @@ public:
 	void				SetMatrix(const CKFMtx44 &mtx) { m_mtxThis = mtx; }
 
 protected:
-	virtual void		SwitchParam(void);
+	virtual void		SwapParam(void);
 
 	//コンポネント
 	CInputComponent*		m_pInput;		//入力によるの処理パーツ
-	CPhysicComponent*		m_pPhysic;		//物理処理パーツ
+	CPhysicsComponent*		m_pPhysics;		//物理処理パーツ
 	CCollisionComponent*	m_pCollision;	//コリジョンパーツ
 	CMeshComponent*			m_pMesh;		//メッシュパーツ
 	CDrawComponent*			m_pDraw;		//描画処理パーツ
@@ -115,7 +117,7 @@ private:
 
 	//ヌルコンポネント
 	static CNullInputComponent		s_nullInput;
-	static CNullPhysicComponent		s_nullPhysic;
+	static CNullPhysicsComponent	s_nullPhysics;
 	static CNullCollisionComponent	s_nullCollision;
 	static CNullMeshComponent		s_nullMesh;
 	static CNullDrawComponent		s_nullDraw;

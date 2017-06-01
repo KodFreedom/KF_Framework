@@ -11,9 +11,6 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "drawComponent.h"
-#include "textureManager.h"
-#include "materialManager.h"
-#include "modelManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -31,7 +28,7 @@ public:
 	C3DMeshDrawComponent() : CDrawComponent() {}
 	~C3DMeshDrawComponent() {}
 
-	void	Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent);
+	void	Draw(CGameObject &gameObj, const CMeshComponent &meshComponent);
 };
 
 #endif

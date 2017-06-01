@@ -34,6 +34,7 @@ public:
 	~CFieldMeshComponent() {}
 
 	KFRESULT	Init(void) override;
+	float		GetHeight(const CKFVec3 &vPos);
 
 private:
 	void		MakeVertex(void);

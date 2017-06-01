@@ -67,6 +67,9 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return KF_FAILED;
 	}
 
+	//ƒ‰ƒ“ƒ_ƒ€
+	CKFMath::InitRandom();
+
 	//“ü—Í‚Ì¶¬
 	m_pKeyboard = new CKeyboardDX;
 	m_pKeyboard->Init(hInstance, hWnd);

@@ -35,10 +35,9 @@ public:
 	CInputComponent() {}
 	~CInputComponent() {}
 
-	virtual KFRESULT	Init(void) = 0;
-	virtual void		Uninit(void) = 0;
+	virtual KFRESULT	Init(void) { return KF_SUCCEEDED; }
+	virtual void		Uninit(void) {}
 	virtual void		Update(CGameObject &gameObj) = 0;
-	virtual void		Release(void) = 0;
 	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
 };
 
@@ -54,7 +53,7 @@ public:
 	CNullInputComponent() {}
 	~CNullInputComponent() {}
 
-	KFRESULT	Init(void) override {}
+	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Update(CGameObject &gameObj) override {}
 	void		Release(void) override {}

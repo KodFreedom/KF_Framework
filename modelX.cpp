@@ -10,8 +10,11 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "rendererDX.h"
 #include "modelX.h"
+
+#ifdef USING_DIRECTX9
+#include "rendererDX.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
@@ -44,17 +47,24 @@ void CModelX::Uninit(void)
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void CModelX::Draw(void)
+void CModelX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
 {
-	DrawXFile(m_XFileInfo);
-}
-
-//--------------------------------------------------------------------------------
-//  描画処理(マテリアル指定)
-//--------------------------------------------------------------------------------
-void CModelX::Draw(const CMM::MATERIAL &matType)
-{
-	DrawXFile(m_XFileInfo, matType);
+	if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
+	{
+		DrawXFile(m_XFileInfo, mtxWorldParents);
+	}
+	else if (texName == CTM::TEX_NONE)
+	{
+		DrawXFile(m_XFileInfo, mtxWorldParents, matType);
+	}
+	else if (matType == CMM::MAT_NORMAL)
+	{
+		DrawXFile(m_XFileInfo, mtxWorldParents, texName);
+	}
+	else
+	{
+		DrawXFile(m_XFileInfo, mtxWorldParents, matType, texName);
+	}
 }
 
 //--------------------------------------------------------------------------------

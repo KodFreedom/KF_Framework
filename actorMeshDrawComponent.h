@@ -1,43 +1,34 @@
 //--------------------------------------------------------------------------------
-//
-//　modeDemo.h
+//	アクター描画コンポネント
+//　actorMeshDrawComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-04-28
+//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _MODEDEMO_H_
-#define _MODEDEMO_H_
+#ifndef _ACTOR_MESH_DRAW_COMPONENT_H_
+#define _ACTOR_MESH_DRAW_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "mode.h"
+#include "drawComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject3D;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CModeDemo : public CMode
+//--------------------------------------------------------------------------------
+//  アクター描画コンポネントクラス
+//--------------------------------------------------------------------------------
+class CActorMeshDrawComponent : public CDrawComponent
 {
 public:
-	CModeDemo();
-	~CModeDemo();
+	CActorMeshDrawComponent() : CDrawComponent() {}
+	~CActorMeshDrawComponent() {}
 
-	void	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
-
-	//ここからはworld用関数
-	float	GetHeight(const CKFVec3 &vPos);
-private:
-	CGameObject3D* m_pMeshField;
+	void	Draw(CGameObject &gameObj, const CMeshComponent &meshComponent);
 };
 
 #endif

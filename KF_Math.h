@@ -19,6 +19,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <time.h>
 
 #ifdef USING_DIRECTX9
 #include <d3dx9.h>
@@ -95,8 +96,8 @@ public:
 
 	//éZèpââéZéq
 	CKFVec3 &operator=(const CKFVec3 &vValue);
-	bool operator==(const CKFVec3 &vValue);
-	bool operator!=(const CKFVec3 &vValue);
+	bool operator==(const CKFVec3 &vValue) const;
+	bool operator!=(const CKFVec3 &vValue) const;
 
 	CKFVec3 operator+(const CKFVec3 &vValue) const;
 	void operator+=(const CKFVec3 &vValue);
@@ -218,6 +219,12 @@ public:
 	CKFMath() {}
 	~CKFMath() {}
 
+	//Random
+	static void		InitRandom(void);
+	static int		GetRandomInt(const int &nMin, const int &nMax);
+	static float	GetRandomFloat(const float &fMin, const float &fMax);
+	static CKFVec3	GetRandomVec3(const CKFVec3 &vMin, const CKFVec3 &vMax);
+
 	//VectoråvéZ
 	static float	VecMagnitude(const CKFVec2 &vValue);
 	static float	VecMagnitude(const CKFVec3 &vValue);
@@ -227,6 +234,7 @@ public:
 	static float	VecDistance(const CKFVec3 &vVecL, const CKFVec3 &vVecR);
 	static void		Vec3TransformCoord(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
 	static void		Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot);
+	static float	RadianBetweenVec3(const CKFVec3 &vVecL, const CKFVec3 &vVecR);
 
 	//MatrixåvéZ
 	static void		MtxIdentity(CKFMtx44 *pMtx);

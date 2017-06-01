@@ -39,11 +39,18 @@ public:
 
 	virtual KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	virtual void		Uninit(void) override {};
-	virtual void		Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent) = 0;
+	virtual void		Draw(CGameObject &gameObj, const CMeshComponent &meshComponent) = 0;
 	virtual void		ReceiveMsg(const MESSAGE &msg) override {}
 
 	//Setä÷êî
-	void				SetRenderState(CRenderState* pRenderState) { m_pRenderState = pRenderState; }
+	void				SetRenderState(CRenderState* pRenderState) 
+	{
+		if (pRenderState == NULL)
+		{
+			m_pRenderState = &s_nullRenderState;
+		}
+		m_pRenderState = pRenderState; 
+	}
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
@@ -67,7 +74,7 @@ public:
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Release(void) override {}
-	void		Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent) override {}
+	void		Draw(CGameObject &gameObj, const CMeshComponent &meshComponent) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
 };
 

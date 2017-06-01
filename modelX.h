@@ -31,8 +31,7 @@ public:
 
 	KFRESULT	Init(const LPCSTR &pXFilePath);
 	void		Uninit(void) override;
-	void		Draw(void) override;
-	void		Draw(const CMM::MATERIAL &matType);
+	void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) override;
 
 	static CModelX* Create(const LPCSTR &pXFilePath);
 

@@ -1,34 +1,42 @@
 //--------------------------------------------------------------------------------
-//	2D描画コンポネント
-//　2DDrawComponent.h
+//
+//　playerInputComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-21	
+//	Date   : 2017-05-31
 //--------------------------------------------------------------------------------
-#ifndef _2D_DRAW_COMPONENT_H_
-#define _2D_DRAW_COMPONENT_H_
+#ifndef _PLAYER_INPUT_COMPONENT_H_
+#define _PLAYER_INPUT_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "inputComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  描画コンポネントクラス
+//  プレイヤー入力コンポネントクラス
 //--------------------------------------------------------------------------------
-class C2DDrawComponent : public CDrawComponent
+class CPlayerInputComponent : public CInputComponent
 {
 public:
-	C2DDrawComponent() : CDrawComponent() {}
-	~C2DDrawComponent() {}
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CPlayerInputComponent() {}
+	~CPlayerInputComponent() {}
 
-	void	Draw(CGameObject &gameObj, const CMeshComponent &meshComponent);
+	void		Update(CGameObject &gameObj) override;
+	void		ReceiveMsg(const MESSAGE &msg) override {};
+
+private:
+	const float c_fSpeed = 2.0f / 60.0f;
 };
 
 #endif

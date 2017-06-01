@@ -16,18 +16,23 @@
 #include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
+CNullInputComponent		CGameObject::s_nullInput;
+CNullPhysicsComponent	CGameObject::s_nullPhysics;
+CNullCollisionComponent	CGameObject::s_nullCollision;
+CNullMeshComponent		CGameObject::s_nullMesh;
+CNullDrawComponent		CGameObject::s_nullDraw;
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOM::PRIORITY &pri = GOM::PRI_3D)
+CGameObject::CGameObject(const GOM::PRIORITY &pri)
 	: m_pri(pri)
 	, m_bActive(true)
 	, m_bAlive(true)
 	, m_pInput(&s_nullInput)
-	, m_pPhysic(&s_nullPhysic)
+	, m_pPhysics(&s_nullPhysics)
 	, m_pCollision(&s_nullCollision)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)
@@ -53,7 +58,7 @@ void CGameObject::Release(void)
 //--------------------------------------------------------------------------------
 //  パラメーター交換処理
 //--------------------------------------------------------------------------------
-void CGameObject::SwitchParam(void)
+void CGameObject::SwapParam(void)
 {
 	m_vPos = m_vPosNext;
 	m_vRot = m_vRotNext;

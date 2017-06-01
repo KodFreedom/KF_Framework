@@ -43,23 +43,7 @@ void C3DMeshComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void C3DMeshComponent::Update(CGameObject &gameObj)
 {
-	//マトリクス算出
-	CKFMtx44 mtxWorld;
-	CKFMtx44 mtxRot;
-	CKFMtx44 mtxPos;
-
-	//単位行列に初期化
-	CKFMath::MtxIdentity(&mtxWorld);
-
-	//回転(Y->X->Z)
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, gameObj.GetRot());
-	mtxWorld *= mtxRot;
-
-	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, gameObj.GetPos());
-	mtxWorld *= mtxPos;
-
-	gameObj.SetMatrix(mtxWorld);
+	
 }
 
 //--------------------------------------------------------------------------------

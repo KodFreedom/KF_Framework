@@ -54,7 +54,7 @@ public:
 	CNullCollisionComponent() {}
 	~CNullCollisionComponent() {}
 
-	KFRESULT	Init(void) override {}
+	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Update(CGameObject &gameObj) override {}
 	void		Release(void) override {}

@@ -77,10 +77,15 @@ KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 //--------------------------------------------------------------------------------
 //  XFileの描画
 //--------------------------------------------------------------------------------
-void CModel::DrawXFile(const XFILE &XFile)
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents)
 {
-	//現在デバイスに設定されてるマテリアル情報を取得
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	
+	//マトリックス設定
+	D3DXMATRIX mtx = mtxWorldParents;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+	
+	//現在デバイスに設定されてるマテリアル情報を取得
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
@@ -109,10 +114,15 @@ void CModel::DrawXFile(const XFILE &XFile)
 //--------------------------------------------------------------------------------
 //  XFileの描画(Material指定)
 //--------------------------------------------------------------------------------
-void CModel::DrawXFile(const XFILE &XFile, const CMM::MATERIAL &matType)
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType)
 {
-	//現在デバイスに設定されてるマテリアル情報を取得
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+
+	//マトリックス設定
+	D3DXMATRIX mtx = mtxWorldParents;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+
+	//現在デバイスに設定されてるマテリアル情報を取得
 	D3DMATERIAL9 matDef;
 	pDevice->GetMaterial(&matDef);
 
@@ -123,8 +133,78 @@ void CModel::DrawXFile(const XFILE &XFile, const CMM::MATERIAL &matType)
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
 	{
 		//Texture
-		pDevice->SetTexture(0, XFile.vectorTexture[nCnt]);
+		if (nCnt < (int)XFile.vectorTexture.size())
+		{
+			pDevice->SetTexture(0, XFile.vectorTexture[nCnt]);
+		}
 
+		//メッシュの描画
+		XFile.pMesh->DrawSubset(nCnt);
+	}
+
+	pDevice->SetMaterial(&matDef);
+}
+
+//--------------------------------------------------------------------------------
+//  XFileの描画(Texture指定)
+//--------------------------------------------------------------------------------
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CTM::TEX_NAME &texName)
+{
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+
+	//マトリックス設定
+	D3DXMATRIX mtx = mtxWorldParents;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+
+	//現在デバイスに設定されてるマテリアル情報を取得
+	D3DMATERIAL9 matDef;
+	pDevice->GetMaterial(&matDef);
+
+	//マテリアル情報を受け取る
+	D3DXMATERIAL *pMat;
+	pMat = (D3DXMATERIAL*)XFile.pBufferMaterial->GetBufferPointer();
+
+	// テクスチャの設定
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
+	pDevice->SetTexture(0, pTexture);
+
+	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
+	{
+		//マテリアルの設定
+		pDevice->SetMaterial(&pMat[nCnt].MatD3D);
+
+		//メッシュの描画
+		XFile.pMesh->DrawSubset(nCnt);
+	}
+
+	pDevice->SetMaterial(&matDef);
+}
+
+//--------------------------------------------------------------------------------
+//  XFileの描画(MaterialとTexture指定)
+//--------------------------------------------------------------------------------
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
+{
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+
+	//マトリックス設定
+	D3DXMATRIX mtx = mtxWorldParents;
+	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+
+	//現在デバイスに設定されてるマテリアル情報を取得
+	D3DMATERIAL9 matDef;
+	pDevice->GetMaterial(&matDef);
+
+	// マテリアルの設定
+	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(matType);
+	pDevice->SetMaterial(&mat);
+
+	// テクスチャの設定
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
+	pDevice->SetTexture(0, pTexture);
+
+	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
+	{
 		//メッシュの描画
 		XFile.pMesh->DrawSubset(nCnt);
 	}

@@ -189,7 +189,7 @@ void CRendererDX::Update(void)
 #ifdef _DEBUG
 	CKeyboardDX *pKeyboard = GetManager()->GetKeyboard();
 	
-	if (pKeyboard->GetKeyPress(DIK_W))
+	if (pKeyboard->GetKeyPress(DIK_Q))
 	{
 		SetRenderMode(RM_WIREFRAME);
 	}

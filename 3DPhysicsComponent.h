@@ -1,34 +1,50 @@
 //--------------------------------------------------------------------------------
-//	2D描画コンポネント
-//　2DDrawComponent.h
+//
+//　3DPhysicsComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-21	
+//	Date   : 2017-05-31
 //--------------------------------------------------------------------------------
-#ifndef _2D_DRAW_COMPONENT_H_
-#define _2D_DRAW_COMPONENT_H_
+#ifndef _3D_PHYSICS_COMPONENT_H_
+#define _3D_PHYSICS_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "physicsComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  描画コンポネントクラス
+//  3D物理コンポネントクラス
 //--------------------------------------------------------------------------------
-class C2DDrawComponent : public CDrawComponent
+class C3DPhysicsComponent : public CPhysicsComponent
 {
 public:
-	C2DDrawComponent() : CDrawComponent() {}
-	~C2DDrawComponent() {}
+	C3DPhysicsComponent();
+	~C3DPhysicsComponent() {}
 
-	void	Draw(CGameObject &gameObj, const CMeshComponent &meshComponent);
+	KFRESULT	Init(void) { return KF_SUCCEEDED; }
+	void		Uninit(void) {}
+	void		Update(CGameObject &gameObj);
+	void		ReceiveMsg(const MESSAGE &msg) override {}
+
+	//Set関数
+	void		MovePosByRot(const float &fMovement, const float &fRot) 
+	{ 
+		m_fMovement = fMovement; 
+		m_fRot = fRot;
+	}
+
+private:
+	float		m_fMovement;
+	float		m_fRot;
+
 };
 
 #endif

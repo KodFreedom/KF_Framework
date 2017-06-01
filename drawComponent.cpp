@@ -1,36 +1,16 @@
 //--------------------------------------------------------------------------------
-//	アクター
-//　gameObjectActor.h
+//	描画コンポネント
+//　drawComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
-#ifndef _GAMEOBJECT_ACTOR_H_
-#define _GAMEOBJECT_ACTOR_H_
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "gameObject3D.h"
-#include "modelManager.h"
+#include "drawComponent.h"
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
-class CGameObjectActor : public CGameObject3D
-{
-public:
-	CGameObjectActor();
-	CGameObjectActor(const GOM::PRIORITY &pri);
-	~CGameObjectActor() {}
-
-	//Get関数
-	
-	//Set関数
-
-	//生成関数
-	static CGameObjectActor* CreatePlayer(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-
-private:
-};
-
-#endif
+CLightOffRenderState	CDrawComponent::s_lightOffRenderState;
+CNullRenderState		CDrawComponent::s_nullRenderState;

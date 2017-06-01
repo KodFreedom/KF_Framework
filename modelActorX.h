@@ -60,8 +60,8 @@ public:
 
 	KFRESULT	Init(const LPCSTR &pTxtPath);
 	void		Uninit(void) override;
-	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts);
-	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType);
+	void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) override;
+	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName);
 	
 	//Getä÷êî
 	std::vector<PARTS_INFO>			GetDefaultPartsInfo(void) const;

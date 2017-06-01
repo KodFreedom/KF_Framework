@@ -12,6 +12,7 @@
 #include "gameObject.h"
 #include "manager.h"
 #include "textureManager.h"
+#include "materialManager.h"
 
 #ifdef USING_DIRECTX9
 #include "rendererDX.h"
@@ -23,13 +24,28 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void C3DMeshDrawComponent::Draw(const CGameObject &gameObj, const CMeshComponent &meshComponent)
+void C3DMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &meshComponent)
 {
-	C3DMeshComponent *pMesh = (C3DMeshComponent*)&meshComponent;
-	CKFMtx44& mtxWorld = gameObj.GetMatrix();
-	CTM::TEX_NAME texName = pMesh->GetTexName();
-	CMM::MATERIAL matType = pMesh->GetMatType();
-	C3DMeshComponent::MESH3D meshInfo = pMesh->GetMeshInfo();
+	C3DMeshComponent* pMesh = (C3DMeshComponent*)&meshComponent;
+	const C3DMeshComponent::MESH3D& meshInfo = pMesh->GetMeshInfo();
+
+	//マトリクス算出
+	CKFMtx44 mtxWorld;
+	CKFMtx44 mtxRot;
+	CKFMtx44 mtxPos;
+
+	//単位行列に初期化
+	CKFMath::MtxIdentity(&mtxWorld);
+
+	//回転(Y->X->Z)
+	CKFMath::MtxRotationYawPitchRoll(&mtxRot, gameObj.GetRot());
+	mtxWorld *= mtxRot;
+
+	//平行移動
+	CKFMath::MtxTranslation(&mtxPos, gameObj.GetPos());
+	mtxWorld *= mtxPos;
+
+	gameObj.SetMatrix(mtxWorld);
 
 #ifdef USING_DIRECTX9
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
@@ -55,11 +71,11 @@ void C3DMeshDrawComponent::Draw(const CGameObject &gameObj, const CMeshComponent
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(pMesh->GetTexName());
 	pDevice->SetTexture(0, pTexture);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(matType);
+	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(pMesh->GetMatType());
 	pDevice->SetMaterial(&mat);
 
 	//プリミティブ描画

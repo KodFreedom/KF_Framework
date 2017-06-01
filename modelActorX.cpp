@@ -13,8 +13,11 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "rendererDX.h"
 #include "modelActorX.h"
+
+#ifdef USING_DIRECTX9
+#include "rendererDX.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -408,18 +411,77 @@ void CModelActorX::Uninit(void)
 }
 
 //--------------------------------------------------------------------------------
-//  描画処理
+//  描画処理(モーションなし)
 //--------------------------------------------------------------------------------
-void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts)
+void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
 {
-	Draw(mtxWorldParents, vectorParts, CMM::MAT_MAX);
+#ifdef USING_DIRECTX9
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	int nNumParts = (int)m_actorInfo.vectorPartsInfoDefault.size();
+	CKFMtx44* pMtxWorld = new CKFMtx44[nNumParts];
+
+	for (int nCntParts = 0; nCntParts < nNumParts; nCntParts++)
+	{
+		CKFMtx44 mtxRot;
+		CKFMtx44 mtxPos;
+		
+		//単位行列に初期化
+		CKFMath::MtxIdentity(&pMtxWorld[nCntParts]);
+
+		//親に対する相対位置行列
+		//回転(Y->X->Z)
+		CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_actorInfo.vectorPartsInfoDefault[nCntParts].vRot);
+		pMtxWorld[nCntParts] *= mtxRot;
+
+		//平行移動
+		CKFMath::MtxTranslation(&mtxPos, m_actorInfo.vectorPartsInfoDefault[nCntParts].vPos);
+		pMtxWorld[nCntParts] *= mtxPos;
+
+		//親パーツチェック
+		int nParentID = m_actorInfo.vectorPartsInfoDefault[nCntParts].nParentID;
+		if (nParentID == -1)
+		{//親がないの場合引数のワールド行列をかける
+			pMtxWorld[nCntParts] *= mtxWorldParents;
+		}
+		else
+		{//親のワールド行列をかける
+			pMtxWorld[nCntParts] *= pMtxWorld[nParentID];
+		}
+
+		//デバイスに設定
+		D3DXMATRIX mtx = pMtxWorld[nCntParts];
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+
+		if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents);
+		}
+		else if (texName == CTM::TEX_NONE)
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, matType);
+		}
+		else if (matType == CMM::MAT_NORMAL)
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, texName);
+		}
+		else
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, matType, texName);
+		}
+	}
+
+	delete[] pMtxWorld;
+#endif
 }
 
+
+
 //--------------------------------------------------------------------------------
-//  描画処理
+//  描画処理(モーション)
 //--------------------------------------------------------------------------------
-void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType)
+void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
 {
+#ifdef USING_DIRECTX9
 	//パーツ数を比較する
 	if (m_actorInfo.vectorPartsInfoDefault.size() != vectorParts.size()) { return; }
 
@@ -461,19 +523,24 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO>
 			vectorParts[nCntParts].mtxWorld *= vectorParts[vectorParts[nCntParts].nParentID].mtxWorld;
 		}
 
-		//デバイスに設定
-		D3DXMATRIX mtx = vectorParts[nCntParts].mtxWorld;
-		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-
-		if (matType == CMM::MAT_MAX)
+		if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts]);
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld);
+		}
+		else if (texName == CTM::TEX_NONE)
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, matType);
+		}
+		else if (matType == CMM::MAT_NORMAL)
+		{
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, texName);
 		}
 		else
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], matType);
-		}	
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, matType, texName);
+		}
 	}
+#endif
 }
 
 //--------------------------------------------------------------------------------

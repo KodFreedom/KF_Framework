@@ -1,14 +1,14 @@
 //--------------------------------------------------------------------------------
 //
-//　physicComponent.h
+//　physicsComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
 //  Update : 
 //	
 //--------------------------------------------------------------------------------
-#ifndef _PHYSIC_COMPONENT_H_
-#define _PHYSIC_COMPONENT_H_
+#ifndef _PHYSICS_COMPONENT_H_
+#define _PHYSICS_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -26,29 +26,28 @@ class CGameObject;
 //--------------------------------------------------------------------------------
 //  物理コンポネントクラス
 //--------------------------------------------------------------------------------
-class CPhysicComponent : public CComponent
+class CPhysicsComponent : public CComponent
 {
 public:
-	CPhysicComponent() {}
-	~CPhysicComponent() {}
+	CPhysicsComponent() {}
+	~CPhysicsComponent() {}
 	
-	virtual KFRESULT	Init(void) = 0;
-	virtual void		Uninit(void) = 0;
+	virtual KFRESULT	Init(void) override = 0;
+	virtual void		Uninit(void) override = 0;
 	virtual void		Update(CGameObject &gameObj) = 0;
-	virtual void		Release(void) = 0;
 	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌル物理コンポネント
 //--------------------------------------------------------------------------------
-class CNullPhysicComponent : public CPhysicComponent
+class CNullPhysicsComponent : public CPhysicsComponent
 {
 public:
-	CNullPhysicComponent() {}
-	~CNullPhysicComponent() {}
+	CNullPhysicsComponent() {}
+	~CNullPhysicsComponent() {}
 
-	KFRESULT	Init(void) override {}
+	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Update(CGameObject &gameObj) override {}
 	void		Release(void) override {}

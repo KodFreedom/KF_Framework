@@ -18,10 +18,6 @@
 #include "gameObject.h"
 #include "gameObject2D.h"
 #include "gameObject3D.h"
-#include "meshCube.h"
-#include "meshField.h"
-#include "skyBox.h"
-#include "gameObjectModel.h"
 #include "gameObjectActor.h"
 
 //--------------------------------------------------------------------------------
