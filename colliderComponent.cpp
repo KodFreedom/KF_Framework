@@ -1,34 +1,38 @@
 //--------------------------------------------------------------------------------
-//	モデルメッシュ描画コンポネント
-//　modelMeshDrawComponent.h
+//	コリジョンコンポネント
+//　collisionComponent.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2017-06-04
 //--------------------------------------------------------------------------------
-#ifndef _MODEL_MESH_DRAW_COMPONENT_H_
-#define _MODEL_MESH_DRAW_COMPONENT_H_
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "colliderComponent.h"
+#include "manager.h"
+#include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  モデル描画コンポネントクラス
+//  コンストラクタ
 //--------------------------------------------------------------------------------
-class CModelMeshDrawComponent : public CDrawComponent
+CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode) : CComponent(pGameObj)
+	, m_type(type)
+	, m_mode(mode)
 {
-public:
-	CModelMeshDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
-	~CModelMeshDrawComponent() {}
+	m_itr = GetManager()->GetColliderManager()->SaveCollider(mode, type, this);
+}
 
-	void	Draw(void) override;
-};
-
-#endif
+//--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void CColliderComponent::Uninit(void)
+{
+	GetManager()->GetColliderManager()->ReleaseCollider(m_mode, m_type, m_itr);
+}

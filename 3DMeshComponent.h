@@ -45,7 +45,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	C3DMeshComponent() : CMeshComponent()
+	C3DMeshComponent(CGameObject* const pGameObj, const MESH_TYPE& type = MESH_3D) : CMeshComponent(pGameObj, type)
 		, m_texName(CTM::TEX_NONE)
 		, m_matType(CMM::MAT_NORMAL)
 	{
@@ -60,7 +60,7 @@ public:
 
 	virtual KFRESULT		Init(void) override = 0;
 	void					Uninit(void) override;
-	void					Update(CGameObject &gameObj) override;
+	void					Update(void) override;
 
 	//Getä÷êî
 	const CTM::TEX_NAME&	GetTexName(void) const { return m_texName; }

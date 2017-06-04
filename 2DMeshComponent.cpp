@@ -62,7 +62,7 @@ void C2DMeshComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void C2DMeshComponent::Update(CGameObject &gameObj)
+void C2DMeshComponent::Update(void)
 {
 #ifdef USING_DIRECTX9
 	// 頂点情報を設定
@@ -73,9 +73,9 @@ void C2DMeshComponent::Update(CGameObject &gameObj)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点位置設定
-	CKFVec2 vSize = gameObj.GetScale();
-	CKFVec3 vPos = gameObj.GetPos();
-	CKFVec3 vRot = gameObj.GetRot();
+	CKFVec2 vSize = m_pGameObj->GetScale();
+	CKFVec3 vPos = m_pGameObj->GetPos();
+	CKFVec3 vRot = m_pGameObj->GetRot();
 	float fLength = CKFMath::VecMagnitude(vSize) * 0.5f;
 	float fAngle = atan2f(vSize.m_fY, vSize.m_fX);
 

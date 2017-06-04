@@ -15,7 +15,6 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -29,11 +28,10 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPlayerInputComponent() {}
+	CPlayerInputComponent(CGameObject* const pGameObj) : CInputComponent(pGameObj) {}
 	~CPlayerInputComponent() {}
 
-	void		Update(CGameObject &gameObj) override;
-	void		ReceiveMsg(const MESSAGE &msg) override {};
+	void	Update(void) override;
 
 private:
 	const float c_fSpeed = 2.0f / 60.0f;

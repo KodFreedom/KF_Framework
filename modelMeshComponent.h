@@ -28,17 +28,18 @@
 class CModelMeshComponent : public CMeshComponent
 {
 public:
-	CModelMeshComponent() : CMeshComponent()
+	CModelMeshComponent(CGameObject* const pGameObj, const MESH_TYPE& type = MESH_MODEL) : CMeshComponent(pGameObj, type)
 		, m_modelName(CMOM::MODEL_NONE)
 		, m_texName(CTM::TEX_NONE)
 		, m_matType(CMM::MAT_NORMAL)
-	{}
+	{
+	}
 
 	~CModelMeshComponent() {}
 
 	virtual KFRESULT		Init(void) override { return KF_SUCCEEDED; }
 	virtual void			Uninit(void) override {}
-	virtual void			Update(CGameObject &gameObj) override {}
+	virtual void			Update(void) override {}
 
 	//Get関数
 	const CMOM::MODEL_NAME& GetModelName(void) const { return m_modelName; }
@@ -51,9 +52,9 @@ public:
 	void					SetMatType(const CMM::MATERIAL& matType) { m_matType = matType; }
 
 protected:
-	CMOM::MODEL_NAME	m_modelName;	//モデル
-	CTM::TEX_NAME		m_texName;		//テクスチャ
-	CMM::MATERIAL		m_matType;		//マテリアル
+	CMOM::MODEL_NAME		m_modelName;	//モデル
+	CTM::TEX_NAME			m_texName;		//テクスチャ
+	CMM::MATERIAL			m_matType;		//マテリアル
 };
 
 #endif

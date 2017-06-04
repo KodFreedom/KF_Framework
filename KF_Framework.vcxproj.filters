@@ -67,9 +67,6 @@
     <Filter Include="ヘッダー ファイル\Component\Mesh">
       <UniqueIdentifier>{1de6bf1c-e0b1-4d43-a5f7-4daca6978706}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Collision">
-      <UniqueIdentifier>{ea32dd07-68f8-4c62-af8b-4eb1bf160764}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component">
       <UniqueIdentifier>{db3c6369-d237-4a86-b146-db91a518b1b6}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,18 @@
     </Filter>
     <Filter Include="ソース ファイル\Component\Physics">
       <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Collider">
+      <UniqueIdentifier>{ea32dd07-68f8-4c62-af8b-4eb1bf160764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Collider">
+      <UniqueIdentifier>{e578c92c-cbc4-473d-ad6b-c39718114fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Manager\Collider">
+      <UniqueIdentifier>{e2e89db9-a85d-4081-8938-854e3504bf87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Manager\Collider">
+      <UniqueIdentifier>{320a4804-a74d-42c5-92ae-8325102c6eca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +210,15 @@
     <ClCompile Include="3DPhysicsComponent.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="component.cpp">
+      <Filter>ソース ファイル\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="colliderComponent.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="colliderManager.cpp">
+      <Filter>ソース ファイル\Base\Manager\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -269,9 +287,6 @@
     <ClInclude Include="meshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="collisionComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="2DMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh</Filter>
     </ClInclude>
@@ -325,6 +340,18 @@
     </ClInclude>
     <ClInclude Include="physicsComponent.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="KF_Collision.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="colliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="colliderManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="sphereColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

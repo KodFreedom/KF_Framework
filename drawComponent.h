@@ -16,8 +16,6 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
-class CMeshComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -31,24 +29,25 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CDrawComponent() 
-		: m_pRenderState(&s_nullRenderState)
+	CDrawComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
+		,m_pRenderState(&s_nullRenderState)
 	{}
 
 	~CDrawComponent() {}
 
 	virtual KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	virtual void		Uninit(void) override {};
-	virtual void		Draw(CGameObject &gameObj, const CMeshComponent &meshComponent) = 0;
-	virtual void		ReceiveMsg(const MESSAGE &msg) override {}
+	virtual void		Draw(void) = 0;
 
 	//Set関数
-	void				SetRenderState(CRenderState* pRenderState) 
+	void				SetRenderState(CRenderState* const pRenderState) 
 	{
 		if (pRenderState == NULL)
 		{
 			m_pRenderState = &s_nullRenderState;
+			return;
 		}
+
 		m_pRenderState = pRenderState; 
 	}
 
@@ -59,7 +58,15 @@ public:
 	static CNullRenderState		s_nullRenderState;
 
 protected:
-	CRenderState*		m_pRenderState;
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CDrawComponent() : CComponent() {}
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	CRenderState*	m_pRenderState;
 };
 
 //--------------------------------------------------------------------------------
@@ -68,13 +75,13 @@ protected:
 class CNullDrawComponent : public CDrawComponent
 {
 public:
-	CNullDrawComponent() {}
+	CNullDrawComponent() : CDrawComponent() {}
 	~CNullDrawComponent() {}
 
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Release(void) override {}
-	void		Draw(CGameObject &gameObj, const CMeshComponent &meshComponent) override {}
+	void		Draw(void) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
 };
 

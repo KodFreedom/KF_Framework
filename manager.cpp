@@ -18,6 +18,7 @@
 #include "lightManager.h"
 #include "materialManager.h"
 #include "gameObjectManager.h"
+#include "colliderManager.h"
 #include "rendererDX.h"
 #include "inputDX.h"
 #include "mode.h"
@@ -42,6 +43,7 @@ CManager::CManager()
 	, m_pMaterialManager(NULL)
 	, m_pModelManager(NULL)
 	, m_pGameObjectManager(NULL)
+	, m_pColliderManager(NULL)
 	, m_mode(MODE_DEMO)
 {
 	for (int nCntMode = 0; nCntMode < MODE_MAX; nCntMode++)
@@ -94,6 +96,10 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pMaterialManager = new CMaterialManager;
 	m_pMaterialManager->Init();
 
+	//コリジョンマネージャの生成
+	m_pColliderManager = new CColliderManager;
+	m_pColliderManager->Init();
+
 	//ゲームオブジェクトマネージャの生成
 	m_pGameObjectManager = new CGameObjectManager;
 	m_pGameObjectManager->Init();
@@ -132,6 +138,14 @@ void CManager::Uninit(void)
 		m_pGameObjectManager->Uninit();
 		delete m_pGameObjectManager;
 		m_pGameObjectManager = NULL;
+	}
+
+	//コリジョンマネージャの破棄
+	if (m_pColliderManager != NULL)
+	{
+		m_pColliderManager->Uninit();
+		delete m_pColliderManager;
+		m_pColliderManager = NULL;
 	}
 
 	//マテリアルマネージャの破棄
@@ -217,6 +231,12 @@ void CManager::Update(void)
 	if (m_apMode[m_mode] != NULL)
 	{
 		m_apMode[m_mode]->Update();
+	}
+
+	//コリジョン更新
+	if (m_pColliderManager != NULL)
+	{
+		m_pColliderManager->Update();
 	}
 }
 

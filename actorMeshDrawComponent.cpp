@@ -22,8 +22,13 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void CActorMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &meshComponent)
+void CActorMeshDrawComponent::Draw(void)
 {
+	//チェックMeshComponentのタイプ
+	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
+	if (pMesh->GetType() != CMeshComponent::MESH_ACTOR) { return; }
+	CActorMeshComponent* pActorMesh = (CActorMeshComponent*)pMesh;
+
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
 	CKFMtx44 mtxRot;
@@ -33,20 +38,19 @@ void CActorMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &m
 	CKFMath::MtxIdentity(&mtxWorld);
 
 	//回転(Y->X->Z)
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, gameObj.GetRot());
+	CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_pGameObj->GetRot());
 	mtxWorld *= mtxRot;
 
 	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, gameObj.GetPos());
+	CKFMath::MtxTranslation(&mtxPos, m_pGameObj->GetPos());
 	mtxWorld *= mtxPos;
 
-	gameObj.SetMatrix(mtxWorld);
+	m_pGameObj->SetMatrix(mtxWorld);
 
-	CActorMeshComponent* pMesh = (CActorMeshComponent*)&meshComponent;
-	const CTM::TEX_NAME& texName = pMesh->GetTexName();
-	const CMM::MATERIAL& matType = pMesh->GetMatType();
-	const CMOM::MODEL_NAME& modelName = pMesh->GetModelName();
-	CActorMeshComponent::ACTOR_MOTION_INFO& info = pMesh->GetMotionInfo();
+	const CTM::TEX_NAME& texName = pActorMesh->GetTexName();
+	const CMM::MATERIAL& matType = pActorMesh->GetMatType();
+	const CMOM::MODEL_NAME& modelName = pActorMesh->GetModelName();
+	CActorMeshComponent::ACTOR_MOTION_INFO& info = pActorMesh->GetMotionInfo();
 
 	//モデルの取得
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(modelName);

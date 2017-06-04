@@ -15,7 +15,6 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -26,13 +25,12 @@ class CGameObject;
 class C3DPhysicsComponent : public CPhysicsComponent
 {
 public:
-	C3DPhysicsComponent();
+	C3DPhysicsComponent(CGameObject* const pGameObj);
 	~C3DPhysicsComponent() {}
 
-	KFRESULT	Init(void) { return KF_SUCCEEDED; }
-	void		Uninit(void) {}
-	void		Update(CGameObject &gameObj);
-	void		ReceiveMsg(const MESSAGE &msg) override {}
+	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
+	void		Uninit(void) override {}
+	void		Update(void) override;
 
 	//Setä÷êî
 	void		MovePosByRot(const float &fMovement, const float &fRot) 

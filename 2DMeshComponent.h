@@ -26,19 +26,20 @@
 class C2DMeshComponent : public CMeshComponent
 {
 public:
-	C2DMeshComponent() : CMeshComponent()
+	C2DMeshComponent(CGameObject* pGameObj) : CMeshComponent(pGameObj, MESH_2D)
 		, m_cColor(CKFColor(1.0f))
 		, m_texName(CTM::TEX_NONE)
 #ifdef USING_DIRECTX9
 		, m_pVtxBuffer(NULL)
 #endif
-	{}
+	{
+	}
 
 	~C2DMeshComponent() {}
 
 	KFRESULT	Init(void) override;
 	void		Uninit(void) override;
-	void		Update(CGameObject &gameObj) override;
+	void		Update(void) override;
 
 	//Getä÷êî
 	const CTM::TEX_NAME&	GetTexName(void) const { return m_texName; }

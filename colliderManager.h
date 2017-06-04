@@ -1,78 +1,75 @@
 //--------------------------------------------------------------------------------
-//	物理コンポネント
-//　physicsComponent.h
+//	コリジョンマネージャ
+//　colliderManager.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-18
+//	Date   : 2017-06-04
 //--------------------------------------------------------------------------------
-#ifndef _PHYSICS_COMPONENT_H_
-#define _PHYSICS_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "component.h"
+#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CColliderComponent;
+class CSphereColliderComponent;
+class CFieldColliderComponent;
+
+//--------------------------------------------------------------------------------
+//  定数定義
+//--------------------------------------------------------------------------------
+#define CM CColliderManager	//CColliderManagerの略称
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  物理コンポネントクラス
-//--------------------------------------------------------------------------------
-class CPhysicsComponent : public CComponent
+class CColliderManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	enum PSY_TYPE
+	enum MODE
 	{
-		PSY_NULL = 0,
-		PSY_3D
+		STATIC = 0,
+		DYNAMIC,
+		MODE_MAX
 	};
 
+	enum COL_TYPE
+	{
+		COL_NULL = 0,
+		COL_FIELD,
+		COL_SPHERE,
+		COL_MAX
+	};
+
+	typedef std::list<CColliderComponent*>::iterator COL_ITR;
+
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPhysicsComponent(CGameObject* const pGameObj, const PSY_TYPE& type) : CComponent(pGameObj) , m_type(type) {}
-	~CPhysicsComponent() {}
-	
-	virtual KFRESULT	Init(void) override = 0;
-	virtual void		Uninit(void) override = 0;
-	virtual void		Update(void) = 0;
+	CColliderManager();
+	~CColliderManager() {}
 
-	//Get関数
-	const PSY_TYPE		GetType(void) const { return m_type; }
+	void		Init(void);
+	void		Uninit(void);
+	void		Update(void);
 
-protected:
+	COL_ITR		SaveCollider(const MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
+	void		ReleaseCollider(const MODE& mode, const COL_TYPE& type, const COL_ITR& itr);
+
+private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPhysicsComponent() : CComponent() , m_type(PSY_NULL) {}
+	void		CheckInStatic(const CSphereColliderComponent& sphere);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	PSY_TYPE m_type;
+	std::list<CColliderComponent*> m_alistCollider[MODE_MAX][COL_MAX];
 };
-
-//--------------------------------------------------------------------------------
-//  ヌル物理コンポネント
-//--------------------------------------------------------------------------------
-class CNullPhysicsComponent : public CPhysicsComponent
-{
-public:
-	CNullPhysicsComponent() : CPhysicsComponent() {}
-	~CNullPhysicsComponent() {}
-
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override {}
-	void		Release(void) override {}
-	void		ReceiveMsg(const MESSAGE &msg) override {}
-};
-
-#endif

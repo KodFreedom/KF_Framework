@@ -24,8 +24,7 @@
 class CGameObject3D : public CGameObject
 {
 public:
-	CGameObject3D();
-	CGameObject3D(const GOM::PRIORITY &pri);
+	CGameObject3D(const GOM::PRIORITY& pri = GOM::PRI_3D);
 	~CGameObject3D() {}
 
 	//Getä÷êî
@@ -38,18 +37,18 @@ public:
 	//const CGameObject3D& GetParents(void) const { return *m_pParents; }
 
 	//Setä÷êî
-	void	SetForward(const CKFVec3 &vForward) { m_vForward = vForward; }
-	void	SetUp(const CKFVec3 &vUp) { m_vUp = vUp; }
-	void	SetRight(const CKFVec3 &vRight) { m_vRight = vRight; }
-	void	SetForwardNext(const CKFVec3 &vForward) { m_vForwardNext = vForward; }
-	void	SetUpNext(const CKFVec3 &vUp) { m_vUpNext = vUp; }
-	void	SetRightNext(const CKFVec3 &vRight) { m_vRightNext = vRight; }
+	void	SetForward(const CKFVec3& vForward) { m_vForward = vForward; }
+	void	SetUp(const CKFVec3& vUp) { m_vUp = vUp; }
+	void	SetRight(const CKFVec3& vRight) { m_vRight = vRight; }
+	void	SetForwardNext(const CKFVec3& vForward) { m_vForwardNext = vForward; }
+	void	SetUpNext(const CKFVec3& vUp) { m_vUpNext = vUp; }
+	void	SetRightNext(const CKFVec3& vRight) { m_vRightNext = vRight; }
 
 	//ê∂ê¨ä÷êî
-	static CGameObject3D* CreateSkyBox(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObject3D* CreateField(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObject3D* CreateCube(const CKFVec3 &vSize, const CKFColor &cColor, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObject3D* CreateModel(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	static CGameObject3D* CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject3D* CreateField(const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject3D* CreateCube(const CKFVec3& vSize, const CKFColor& cColor, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject3D* CreateModel(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
 
 protected:
 	virtual void SwapParam(void) override;

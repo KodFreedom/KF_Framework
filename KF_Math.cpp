@@ -789,24 +789,48 @@ void CKFMath::MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &f
 	CKFVec3 vAxisCpy = vAxis;
 	VecNormalize(&vAxisCpy);
 
-	//âÒì]ÇÃãóó£éZèo
-	float fLength = sinf(fAngle);   
+	//åvéZópïœêî
+	float fX = vAxisCpy.m_fX;
+	float fY = vAxisCpy.m_fY;
+	float fZ = vAxisCpy.m_fZ;
+	float fSin = sinf(fAngle);
+	float fCos = cosf(fAngle);
 
-	//é≤Ç…ãóó£ÇÇ©ÇØÇÈ
-	vAxisCpy *= fLength;
+	pMtxRot->m_af[0][0] = fCos + fX * fX * (1 - fCos);
+	pMtxRot->m_af[0][1] = fX * fY * (1 - fCos) + fZ * fSin;
+	pMtxRot->m_af[0][2] = fX * fZ * (1 - fCos) - fY * fSin;
+	pMtxRot->m_af[0][3] = 0.0f;
+	pMtxRot->m_af[1][0] = fX * fY * (1 - fCos) - fZ * fSin;
+	pMtxRot->m_af[1][1] = fCos + fY * fY * (1 - fCos);
+	pMtxRot->m_af[1][2] = fZ * fY * (1 - fCos) + fX * fSin;
+	pMtxRot->m_af[1][3] = 0.0f;
+	pMtxRot->m_af[2][0] = fX * fZ * (1 - fCos) + fY * fSin;
+	pMtxRot->m_af[2][1] = fY * fZ * (1 - fCos) - fX * fSin;
+	pMtxRot->m_af[2][2] = fCos + fZ * fZ * (1 - fCos);
+	pMtxRot->m_af[2][3] = 0.0f;
+	pMtxRot->m_af[3][0] = 0.0f;
+	pMtxRot->m_af[3][1] = 0.0f;
+	pMtxRot->m_af[3][2] = 0.0f;
+	pMtxRot->m_af[3][3] = 1.0f;
+
+	////âÒì]ÇÃãóó£éZèo
+	//float fLength = sinf(fAngle);   
+
+	////é≤Ç…ãóó£ÇÇ©ÇØÇÈ
+	//vAxisCpy *= fLength;
 
 	//åvéZópïœêî
-	float fA = vAxisCpy.m_fX;
-	float fB = vAxisCpy.m_fY;  
-	float fC = vAxisCpy.m_fZ;     
-	float fD = cosf(fAngle);  
-	float fT = fLength == 0 ? 0 : (1 - fD) / (fLength * fLength);
-	
-	*pMtxRot = CKFMtx44(
-		fA * fT * fA + fD, fB * fT * fA + fC, fC * fT * fA - fB, 0.0f,
-		fA * fT * fB - fC, fB * fT * fB + fD, fC * fT * fB + fA, 0.0f,
-		fA * fT * fC + fB, fB * fT * fC - fA, fC * fT * fC + fD, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f);
+	//float fA = vAxisCpy.m_fX;
+	//float fB = vAxisCpy.m_fY;  
+	//float fC = vAxisCpy.m_fZ;     
+	//float fD = cosf(fAngle);  
+	//float fT = fLength == 0 ? 0 : (1 - fD) / (fLength * fLength);
+	//
+	//*pMtxRot = CKFMtx44(
+	//	fA * fT * fA + fD, fB * fT * fA + fC, fC * fT * fA - fB, 0.0f,
+	//	fA * fT * fB - fC, fB * fT * fB + fD, fC * fT * fB + fA, 0.0f,
+	//	fA * fT * fC + fB, fB * fT * fC - fA, fC * fT * fC + fD, 0.0f,
+	//	0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -815,14 +839,6 @@ void CKFMath::MtxRotAxis(CKFMtx44 *pMtxRot, const CKFVec3 &vAxis, const float &f
 //--------------------------------------------------------------------------------
 void CKFMath::MtxRotationYawPitchRoll(CKFMtx44 *pMtxRot, const CKFVec3 &vRot)
 {
-
-	//CKFMtx44 mtx, mtxX, mtxY, mtxZ;
-	//MtxRotAxis(&mtxX, CKFVec3(1.0f, 0.0f, 0.0f), vRot.m_fX);
-	//MtxRotAxis(&mtxY, CKFVec3(0.0f, 1.0f, 0.0f), vRot.m_fY);
-	//MtxRotAxis(&mtxZ, CKFVec3(0.0f, 0.0f, 1.0f), vRot.m_fZ);
-
-	//mtx = mtxZ * mtxX * mtxY;
-
 	float fSinX = sinf(vRot.m_fX); 
 	float fCosX = cosf(vRot.m_fX); 
 	float fSinY = sinf(vRot.m_fY);

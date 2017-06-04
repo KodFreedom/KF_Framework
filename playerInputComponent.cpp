@@ -20,10 +20,14 @@
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CPlayerInputComponent::Update(CGameObject &gameObj)
+void CPlayerInputComponent::Update(void)
 {
 	CKeyboardDX* pKeyboard = GetManager()->GetKeyboard();
-	CGameObjectActor *pObjActor = (CGameObjectActor*)&gameObj;
+
+	//コンポネント
+	CPhysicsComponent* pPhysics = m_pGameObj->GetPhysicsComponent();
+	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
+	if (pPhysics->GetType() != CPhysicsComponent::PSY_3D) { return; }
 
 	bool bMove = false;		//移動フラッグ
 	bool bInverse = false;	//後ろキーフラッグ
@@ -72,17 +76,23 @@ void CPlayerInputComponent::Update(CGameObject &gameObj)
 	if (bMove)
 	{
 		//移動設定
-		C3DPhysicsComponent *pPhysicsComponent = (C3DPhysicsComponent*)pObjActor->GetPhysicsComponent();
-		pPhysicsComponent->MovePosByRot(c_fSpeed, fRot);
+		C3DPhysicsComponent *p3DPhysics = (C3DPhysicsComponent*)pPhysics;
+		p3DPhysics->MovePosByRot(c_fSpeed, fRot);
 
 		//移動モーション設定
-		CActorMeshComponent *pActorComponent = (CActorMeshComponent*)pObjActor->GetMeshComponent();
-		pActorComponent->SetMotionNext(CActorMeshComponent::MOTION_MOVE);
+		if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
+		{
+			CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
+			pActor->SetMotionNext(CActorMeshComponent::MOTION_MOVE);
+		}
 	}
 	else
 	{
-		//移動モーション設定
-		CActorMeshComponent *pActorComponent = (CActorMeshComponent*)pObjActor->GetMeshComponent();
-		pActorComponent->SetMotionNext(CActorMeshComponent::MOTION_NEUTAL);
+		//モーション設定
+		if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
+		{
+			CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
+			pActor->SetMotionNext(CActorMeshComponent::MOTION_NEUTAL);
+		}
 	}
 }

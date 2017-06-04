@@ -41,13 +41,13 @@ void CActorMeshComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 // 更新処理
 //--------------------------------------------------------------------------------
-void CActorMeshComponent::Update(CGameObject &gameObj)
+void CActorMeshComponent::Update(void)
 {
 	//モーション情報取得
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel == NULL) { return; }
 	CModelActorX* pModelActor = (CModelActorX*)pModel;
-	const std::vector<CModelActorX::VEC_MOTION> &vectorMotion = pModelActor->GetPartsMotionInfo();
+	const std::vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
 
 	//パーツ更新
 	int nFrame;
@@ -56,8 +56,8 @@ void CActorMeshComponent::Update(CGameObject &gameObj)
 	int nNumParts = (int)m_motionInfo.vectorPartsInfo.size();
 	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 	{
-		CKFVec3 &vPartPos = m_motionInfo.vectorPartsInfo[nCntPart].vPos;
-		CKFVec3 &vPartRot = m_motionInfo.vectorPartsInfo[nCntPart].vRot;
+		CKFVec3& vPartPos = m_motionInfo.vectorPartsInfo[nCntPart].vPos;
+		CKFVec3& vPartRot = m_motionInfo.vectorPartsInfo[nCntPart].vRot;
 		CKFVec3 vKeyPos = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vPos;
 		CKFVec3 vKeyRot = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vRot;
 		CKFVec3 vRotDifference = vKeyRot - vPartRot;
@@ -99,7 +99,7 @@ void CActorMeshComponent::Update(CGameObject &gameObj)
 //--------------------------------------------------------------------------------
 // 更新処理
 //--------------------------------------------------------------------------------
-void CActorMeshComponent::SetMotionNext(const MOTION &motion)
+void CActorMeshComponent::SetMotionNext(const MOTION& motion)
 {
 	if (motion >= MOTION_MAX || motion == m_motionInfo.motionNow) { return; }
 
@@ -121,7 +121,7 @@ void CActorMeshComponent::SetMotionNext(const MOTION &motion)
 //--------------------------------------------------------------------------------
 // モーション設定
 //--------------------------------------------------------------------------------
-void CActorMeshComponent::SetMotionAtNow(const MOTION &motion)
+void CActorMeshComponent::SetMotionAtNow(const MOTION& motion)
 {
 	m_motionInfo.motionNow = motion;
 	m_motionInfo.nCntFrame = 0;
@@ -130,14 +130,14 @@ void CActorMeshComponent::SetMotionAtNow(const MOTION &motion)
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel == NULL) { return; }
 	CModelActorX* pModelActor = (CModelActorX*)pModel;
-	const std::vector<CModelActorX::VEC_MOTION> &vectorMotion = pModelActor->GetPartsMotionInfo();
+	const std::vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
 
 	//パーツ更新
 	int nNumParts = (int)m_motionInfo.vectorPartsInfo.size();
 	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 	{
-		CKFVec3 &vPartPos = m_motionInfo.vectorPartsInfo[nCntPart].vPos;
-		CKFVec3 &vPartRot = m_motionInfo.vectorPartsInfo[nCntPart].vRot;
+		CKFVec3& vPartPos = m_motionInfo.vectorPartsInfo[nCntPart].vPos;
+		CKFVec3& vPartRot = m_motionInfo.vectorPartsInfo[nCntPart].vRot;
 		CKFVec3 vKeyPos = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vPos;
 		CKFVec3 vKeyRot = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vRot;
 		

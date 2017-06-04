@@ -25,7 +25,7 @@
 class CSkyBoxMeshComponent : public C3DMeshComponent
 {
 public:
-	CSkyBoxMeshComponent() : C3DMeshComponent() {}
+	CSkyBoxMeshComponent(CGameObject* const pGameObj) : C3DMeshComponent(pGameObj) {}
 	~CSkyBoxMeshComponent() {}
 
 	KFRESULT	Init(void) override;

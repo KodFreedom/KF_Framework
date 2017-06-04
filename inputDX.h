@@ -57,7 +57,7 @@ public:
 	BOOL GetKeyRelease(int nKey);
 	BOOL GetKeyRepeat(int nKey);
 	void FlushKeyTrigger(int nKey);
-
+	
 private:
 	static const int m_nNumKeyMax = 256;		// キー最大数
 	BYTE	m_aKeyState[m_nNumKeyMax];			// キーボードの状態を受け取るワーク

@@ -25,7 +25,7 @@
 class CFieldMeshComponent : public C3DMeshComponent
 {
 public:
-	CFieldMeshComponent(const int &nNumBlockX, const int &nNumBlockZ, const CKFVec2 &vBlockSize) : C3DMeshComponent()
+	CFieldMeshComponent(CGameObject* const pGameObj, const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize) : C3DMeshComponent(pGameObj)
 		, m_nNumBlockX(nNumBlockX)
 		, m_nNumBlockZ(nNumBlockZ)
 		, m_vBlockSize(vBlockSize)
@@ -34,7 +34,7 @@ public:
 	~CFieldMeshComponent() {}
 
 	KFRESULT	Init(void) override;
-	float		GetHeight(const CKFVec3 &vPos);
+	float		GetHeight(const CKFVec3& vPos);
 
 private:
 	void		MakeVertex(void);

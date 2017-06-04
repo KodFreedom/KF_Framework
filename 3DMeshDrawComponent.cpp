@@ -24,10 +24,13 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void C3DMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &meshComponent)
+void C3DMeshDrawComponent::Draw(void)
 {
-	C3DMeshComponent* pMesh = (C3DMeshComponent*)&meshComponent;
-	const C3DMeshComponent::MESH3D& meshInfo = pMesh->GetMeshInfo();
+	//チェックMeshComponentのタイプ
+	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
+	if (pMesh->GetType() != CMeshComponent::MESH_3D) { return; }
+	C3DMeshComponent* p3DMesh = (C3DMeshComponent*)pMesh;
+	const C3DMeshComponent::MESH3D& meshInfo = p3DMesh->GetMeshInfo();
 
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
@@ -38,14 +41,14 @@ void C3DMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &mesh
 	CKFMath::MtxIdentity(&mtxWorld);
 
 	//回転(Y->X->Z)
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, gameObj.GetRot());
+	CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_pGameObj->GetRot());
 	mtxWorld *= mtxRot;
 
 	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, gameObj.GetPos());
+	CKFMath::MtxTranslation(&mtxPos, m_pGameObj->GetPos());
 	mtxWorld *= mtxPos;
 
-	gameObj.SetMatrix(mtxWorld);
+	m_pGameObj->SetMatrix(mtxWorld);
 
 #ifdef USING_DIRECTX9
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
@@ -71,11 +74,11 @@ void C3DMeshDrawComponent::Draw(CGameObject &gameObj, const CMeshComponent &mesh
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(pMesh->GetTexName());
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(p3DMesh->GetTexName());
 	pDevice->SetTexture(0, pTexture);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(pMesh->GetMatType());
+	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(p3DMesh->GetMatType());
 	pDevice->SetMaterial(&mat);
 
 	//プリミティブ描画

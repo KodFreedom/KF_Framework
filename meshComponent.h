@@ -15,7 +15,6 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -27,15 +26,40 @@ class CMeshComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	enum MESH_TYPE
+	{
+		MESH_NULL = 0,
+		MESH_2D,
+		MESH_3D,
+		MESH_MODEL,
+		MESH_ACTOR
+	};
+
+	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMeshComponent() : CComponent() {}
+	CMeshComponent(CGameObject* const pGameObj, const MESH_TYPE& type) : CComponent(pGameObj) , m_type(type) {}
 	~CMeshComponent() {}
 
 	virtual KFRESULT	Init(void) override = 0;
 	virtual void		Uninit(void) override = 0;
-	virtual void		Update(CGameObject &gameObj) = 0;
-	virtual void		ReceiveMsg(const MESSAGE &msg) override {}
+	virtual void		Update(void) = 0;
+
+	//Get関数
+	const MESH_TYPE		GetType(void) const { return m_type; }
+
+protected:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CMeshComponent() : CComponent() , m_type(MESH_NULL) {}
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	MESH_TYPE m_type;
 };
 
 //--------------------------------------------------------------------------------
@@ -47,12 +71,12 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CNullMeshComponent() {}
+	CNullMeshComponent() : CMeshComponent() {}
 	~CNullMeshComponent() {}
 
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
-	void		Update(CGameObject &gameObj) override {}
+	void		Update(void) override {}
 	void		Release(void) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
 };

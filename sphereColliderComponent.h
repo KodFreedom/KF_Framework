@@ -1,34 +1,25 @@
 //--------------------------------------------------------------------------------
-//	モデルメッシュ描画コンポネント
-//　modelMeshDrawComponent.h
+//	sphereColliderコンポネント
+//　sphereColliderComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
-#ifndef _MODEL_MESH_DRAW_COMPONENT_H_
-#define _MODEL_MESH_DRAW_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
+#include "colliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  モデル描画コンポネントクラス
+//  sphereColliderポネントクラス
 //--------------------------------------------------------------------------------
-class CModelMeshDrawComponent : public CDrawComponent
+class CSphereColliderComponent : public CColliderComponent
 {
 public:
-	CModelMeshDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
-	~CModelMeshDrawComponent() {}
-
-	void	Draw(void) override;
+	KFRESULT	Init(void) override;
+	void		Update(void);
 };
-
-#endif

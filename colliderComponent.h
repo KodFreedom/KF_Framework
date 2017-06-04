@@ -1,64 +1,73 @@
 //--------------------------------------------------------------------------------
-//
-//　collisionComponent.h
+//	colliderコンポネント
+//　colliderComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _COLLISION_COMPONENT_H_
-#define _COLLISION_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
+#include "colliderManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コリジョンコンポネントクラス
+//  Colliderポネントクラス
 //--------------------------------------------------------------------------------
-class CCollisionComponent : public CComponent
+class CColliderComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CCollisionComponent() {}
-	~CCollisionComponent() {}
+	CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode);
+	~CColliderComponent() {}
 
-	virtual KFRESULT	Init(void) = 0;
-	virtual void		Uninit(void) = 0;
-	virtual void		Update(CGameObject &gameObj) = 0;
-	virtual void		Release(void) = 0;
-	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
+	virtual KFRESULT	Init(void) override = 0;
+	virtual void		Uninit(void) override;
+	virtual void		Update(void) = 0;
+
+	//Get関数
+	const CM::COL_TYPE	GetType(void) const { return m_type; }
+
+protected:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CColliderComponent() : CComponent() , m_type(CM::COL_NULL) {}
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	CM::COL_TYPE	m_type;
+	CM::COL_ITR		m_itr;
+	CM::MODE		m_mode;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌルコリジョンコンポネント
 //--------------------------------------------------------------------------------
-class CNullCollisionComponent : public CCollisionComponent
+class CNullColliderComponent : public CColliderComponent
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	CNullCollisionComponent() {}
-	~CNullCollisionComponent() {}
+	CNullColliderComponent() : CColliderComponent() {}
+	~CNullColliderComponent() {}
 
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
-	void		Update(CGameObject &gameObj) override {}
+	void		Update(void) override {}
 	void		Release(void) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
 };
-
-#endif

@@ -25,10 +25,10 @@
 class CActorMeshDrawComponent : public CDrawComponent
 {
 public:
-	CActorMeshDrawComponent() : CDrawComponent() {}
+	CActorMeshDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
 	~CActorMeshDrawComponent() {}
 
-	void	Draw(CGameObject &gameObj, const CMeshComponent &meshComponent);
+	void	Draw(void) override;
 };
 
 #endif

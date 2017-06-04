@@ -25,6 +25,7 @@ class CLightManager;
 class CMaterialManager;
 class CModelManager;
 class CGameObjectManager;
+class CColliderManager;
 class CMode;
 
 //--------------------------------------------------------------------------------
@@ -57,6 +58,7 @@ public:
 	CMaterialManager*	GetMaterialManager(void) { return m_pMaterialManager; }
 	CModelManager*		GetModelManager(void) { return m_pModelManager; }
 	CGameObjectManager*	GetGameObjectManager(void) { return m_pGameObjectManager; }
+	CColliderManager*	GetColliderManager(void) { return m_pColliderManager; }
 	CMode*				GetModeNow(void) { return m_apMode[m_mode]; }
 
 private:
@@ -68,6 +70,7 @@ private:
 	CMaterialManager*	m_pMaterialManager;
 	CModelManager*		m_pModelManager;
 	CGameObjectManager*	m_pGameObjectManager;
+	CColliderManager*	m_pColliderManager;
 	CMode*				m_apMode[MODE_MAX];
 	MODE				m_mode;
 };

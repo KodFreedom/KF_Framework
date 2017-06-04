@@ -15,7 +15,7 @@
 #include "drawComponent.h"
 #include "physicsComponent.h"
 #include "meshComponent.h"
-#include "collisionComponent.h"
+#include "colliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -28,13 +28,14 @@ class CGameObject
 	friend class CGameObjectManager;
 
 public:
-	CGameObject(const GOM::PRIORITY &pri = GOM::PRI_3D);
+	CGameObject();
+	CGameObject(const GOM::PRIORITY &pri);
 	~CGameObject() {}
 	
 	virtual KFRESULT	Init(void) 
 	{ 
 		m_pInput->Init();
-		m_pCollision->Init();
+		m_pCollider->Init();
 		m_pPhysics->Init();
 		m_pMesh->Init();
 		m_pDraw->Init();
@@ -44,7 +45,7 @@ public:
 	virtual void		Uninit(void)
 	{
 		m_pInput->Release();
-		m_pCollision->Release();
+		m_pCollider->Release();
 		m_pPhysics->Release();
 		m_pMesh->Release();
 		m_pDraw->Release();
@@ -53,22 +54,22 @@ public:
 	virtual void		Update(void)
 	{
 		SwapParam();
-		m_pInput->Update(*this);
+		m_pInput->Update();
 	}
 
 	virtual void		LateUpdate(void)
 	{
-		m_pCollision->Update(*this);
-		m_pPhysics->Update(*this);
-		m_pMesh->Update(*this);
+		m_pCollider->Update();
+		m_pPhysics->Update();
+		m_pMesh->Update();
 	}
 
 	virtual void		Draw(void)
 	{
-		m_pDraw->Draw(*this, *m_pMesh);
+		m_pDraw->Draw();
 	}
 
-	void				Release(void);
+	virtual void		Release(void);
 
 	//Get関数
 	CKFVec3				GetPos(void) const { return m_vPos; }
@@ -96,7 +97,7 @@ protected:
 	//コンポネント
 	CInputComponent*		m_pInput;		//入力によるの処理パーツ
 	CPhysicsComponent*		m_pPhysics;		//物理処理パーツ
-	CCollisionComponent*	m_pCollision;	//コリジョンパーツ
+	CColliderComponent*		m_pCollider;	//コリジョンパーツ
 	CMeshComponent*			m_pMesh;		//メッシュパーツ
 	CDrawComponent*			m_pDraw;		//描画処理パーツ
 
@@ -118,7 +119,7 @@ private:
 	//ヌルコンポネント
 	static CNullInputComponent		s_nullInput;
 	static CNullPhysicsComponent	s_nullPhysics;
-	static CNullCollisionComponent	s_nullCollision;
+	static CNullColliderComponent	s_nullCollision;
 	static CNullMeshComponent		s_nullMesh;
 	static CNullDrawComponent		s_nullDraw;
 };
@@ -136,6 +137,7 @@ public:
 	void	Update(void) override {}
 	void	LateUpdate(void) override {}
 	void	Draw(void) override {}
+	void	Release(void) override {}
 };
 
 #endif

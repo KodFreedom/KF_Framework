@@ -25,7 +25,7 @@
 class CCubeMeshComponent : public C3DMeshComponent
 {
 public:
-	CCubeMeshComponent(const CKFVec3 &vSize, const CKFColor &cColor) : C3DMeshComponent()
+	CCubeMeshComponent(CGameObject* const pGameObj, const CKFVec3& vSize, const CKFColor& cColor) : C3DMeshComponent(pGameObj)
 		, m_vSize(vSize)
 		, m_cColor(cColor)
 	{}

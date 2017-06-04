@@ -27,7 +27,7 @@ CGameObjectActor::CGameObjectActor() : CGameObject3D()
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOM::PRIORITY &pri) : CGameObject3D(pri)
+CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri) : CGameObject3D(pri)
 {
 
 }
@@ -35,17 +35,17 @@ CGameObjectActor::CGameObjectActor(const GOM::PRIORITY &pri) : CGameObject3D(pri
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale)
+CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
 	CGameObjectActor* pObj = new CGameObjectActor;
 
 	//コンポネント
-	pObj->m_pInput = new CPlayerInputComponent;
-	pObj->m_pPhysics = new C3DPhysicsComponent;
-	CActorMeshComponent* pMesh = new CActorMeshComponent;
+	pObj->m_pInput = new CPlayerInputComponent(pObj);
+	pObj->m_pPhysics = new C3DPhysicsComponent(pObj);
+	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new CActorMeshDrawComponent;
+	pObj->m_pDraw = new CActorMeshDrawComponent(pObj);
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;

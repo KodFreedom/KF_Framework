@@ -51,7 +51,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CActorMeshComponent() : CModelMeshComponent()
+	CActorMeshComponent(CGameObject* const pGameObj) : CModelMeshComponent(pGameObj, MESH_ACTOR)
 	{
 		m_motionInfo.nCntFrame = 0;
 		m_motionInfo.nKeyNow = 0;
@@ -63,15 +63,15 @@ public:
 
 	virtual KFRESULT		Init(void) override;
 	virtual void			Uninit(void) override;
-	virtual void			Update(CGameObject &gameObj) override;
+	virtual void			Update(void) override;
 
 	//Getä÷êî
 	ACTOR_MOTION_INFO& GetMotionInfo(void) { return m_motionInfo; }
 	MOTION				GetMotionNow(void) const { return m_motionInfo.motionNow; }
 
 	//Setä÷êî
-	void SetMotionNext(const MOTION &motion);
-	void SetMotionAtNow(const MOTION &motion);
+	void SetMotionNext(const MOTION& motion);
+	void SetMotionAtNow(const MOTION& motion);
 
 private:
 	//--------------------------------------------------------------------------------

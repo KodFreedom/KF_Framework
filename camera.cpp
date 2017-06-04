@@ -123,8 +123,8 @@ void CCamera::Set(void)
 
 	//View行列
 	D3DXMATRIX mtxView;
-	D3DXMatrixLookAtLH(&mtxView, &(D3DXVECTOR3)m_vPosEye, &(D3DXVECTOR3)m_vPosAt, &(D3DXVECTOR3)m_vVecUp);//左手座標系
-	pDevice->SetTransform(D3DTS_VIEW, &mtxView);
+	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)m_vPosEye,& (D3DXVECTOR3)m_vPosAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
+	pDevice->SetTransform(D3DTS_VIEW,& mtxView);
 
 	//プロジェクション行列
 	D3DXMATRIX mtxProjection;
@@ -133,7 +133,7 @@ void CCamera::Set(void)
 		(float)SCREEN_WIDTH / SCREEN_HEIGHT,//アスペクト比
 		0.01f,//near 0.0fより大きい値
 		m_fFar);//far nearより大きい値
-	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
+	pDevice->SetTransform(D3DTS_PROJECTION,& mtxProjection);
 
 	//逆view
 	UpdateViewInverse(mtxView);
@@ -142,9 +142,9 @@ void CCamera::Set(void)
 //--------------------------------------------------------------------------------
 //  View行列の逆行列を計算する
 //--------------------------------------------------------------------------------
-void CCamera::UpdateViewInverse(const D3DXMATRIX &mtxView)
+void CCamera::UpdateViewInverse(const D3DXMATRIX& mtxView)
 {
-	D3DXMatrixInverse(&m_mtxViewInverse, NULL, &mtxView);
+	D3DXMatrixInverse(&m_mtxViewInverse, NULL,& mtxView);
 
 	//移動量をカットする
 	//m_mtxViewInverse._41 = 0.0f;
@@ -163,7 +163,7 @@ D3DXMATRIX CCamera::GetMtxViewInverse(void)
 //--------------------------------------------------------------------------------
 //  移動処理
 //--------------------------------------------------------------------------------
-void CCamera::MoveCamera(const CKFVec3 &vMovement)
+void CCamera::MoveCamera(const CKFVec3& vMovement)
 {
 	m_vPosEye += vMovement;
 	m_vPosAt += vMovement;
@@ -172,7 +172,7 @@ void CCamera::MoveCamera(const CKFVec3 &vMovement)
 //--------------------------------------------------------------------------------
 //  移動処理
 //--------------------------------------------------------------------------------
-void CCamera::LookAtHere(const CKFVec3 &vPos)
+void CCamera::LookAtHere(const CKFVec3& vPos)
 {
 	m_vMovement = vPos - m_vPosAt;
 }
@@ -220,7 +220,7 @@ CKFVec3 CCamera::GetPosEye(void)
 //--------------------------------------------------------------------------------
 //  カメラ設定
 //--------------------------------------------------------------------------------
-void CCamera::SetCamera(const CKFVec3 &vPosAt, const CKFVec3 &vPosEye, const CKFVec3 &vUp, const CKFVec3 &vRight)
+void CCamera::SetCamera(const CKFVec3& vPosAt, const CKFVec3& vPosEye, const CKFVec3& vUp, const CKFVec3& vRight)
 {
 	m_vPosAt = vPosAt;
 	m_vPosEye = vPosEye;
@@ -251,7 +251,7 @@ void CCamera::NormalizeCamera(void)
 //--------------------------------------------------------------------------------
 //  X軸(vVecRight)回転
 //--------------------------------------------------------------------------------
-void CCamera::Pitch(const float &fAngle)
+void CCamera::Pitch(const float& fAngle)
 {
 	CKFMtx44 mtxPitch;
 	CKFMath::MtxRotAxis(&mtxPitch, m_vVecRight, fAngle);
@@ -262,7 +262,7 @@ void CCamera::Pitch(const float &fAngle)
 //--------------------------------------------------------------------------------
 //  Y軸(vVecUp)回転
 //--------------------------------------------------------------------------------
-void CCamera::Yaw(const float &fAngle)
+void CCamera::Yaw(const float& fAngle)
 {
 	CKFMtx44 mtxYaw;
 	CKFVec3 vAxisY = CKFVec3(0.0f, 1.0f, 0.0f);
@@ -274,7 +274,7 @@ void CCamera::Yaw(const float &fAngle)
 //--------------------------------------------------------------------------------
 //  Z軸(vLook)回転
 //--------------------------------------------------------------------------------
-void CCamera::Roll(const float &fAngle)
+void CCamera::Roll(const float& fAngle)
 {
 	CKFMtx44 mtxRoll;
 	CKFMath::MtxRotAxis(&mtxRoll, m_vVecLook, fAngle);

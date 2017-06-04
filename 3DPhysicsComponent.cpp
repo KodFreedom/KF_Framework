@@ -19,7 +19,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-C3DPhysicsComponent::C3DPhysicsComponent() : CPhysicsComponent()
+C3DPhysicsComponent::C3DPhysicsComponent(CGameObject* const pGameObj) : CPhysicsComponent(pGameObj, PSY_3D)
 	, m_fMovement(0.0f)
 	, m_fRot(0.0f)
 {
@@ -28,9 +28,9 @@ C3DPhysicsComponent::C3DPhysicsComponent() : CPhysicsComponent()
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void C3DPhysicsComponent::Update(CGameObject &gameObj)
+void C3DPhysicsComponent::Update(void)
 {
-	CGameObject3D* pObj = (CGameObject3D*)&gameObj;
+	CGameObject3D* pObj = (CGameObject3D*)m_pGameObj;
 	CCamera* pCamera = GetManager()->GetModeNow()->GetCamera();
 
 	CKFVec3 vPos = pObj->GetPosNext();

@@ -25,7 +25,7 @@ public:
 	CGameObject2D() : CGameObject(GOM::PRI_2D) {}
 	~CGameObject2D() {}
 
-	static CGameObject2D* Create(const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vSize, const CTM::TEX_NAME &texName);
+	static CGameObject2D* Create(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vSize, const CTM::TEX_NAME& texName);
 };
 
 #endif

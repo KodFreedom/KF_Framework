@@ -18,7 +18,6 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -32,13 +31,15 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CInputComponent() {}
+	CInputComponent(CGameObject* const pGameObj) : CComponent(pGameObj) {}
 	~CInputComponent() {}
 
-	virtual KFRESULT	Init(void) { return KF_SUCCEEDED; }
-	virtual void		Uninit(void) {}
-	virtual void		Update(CGameObject &gameObj) = 0;
-	virtual void		ReceiveMsg(const MESSAGE &msg) override = 0;
+	virtual KFRESULT	Init(void) override { return KF_SUCCEEDED; }
+	virtual void		Uninit(void) override {}
+	virtual void		Update(void) = 0;
+
+protected:
+	CInputComponent() : CComponent() {}
 };
 
 //--------------------------------------------------------------------------------
@@ -50,12 +51,12 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CNullInputComponent() {}
+	CNullInputComponent() : CInputComponent() {}
 	~CNullInputComponent() {}
 
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
-	void		Update(CGameObject &gameObj) override {}
+	void		Update(void) override {}
 	void		Release(void) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
 };

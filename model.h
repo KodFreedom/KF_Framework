@@ -38,7 +38,6 @@ public:
 	virtual void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) = 0;
 
 	const CMOM::MODEL_TYPE GetModelType(void) const { return m_modelType; }
-
 protected:
 	//--------------------------------------------------------------------------------
 	//  ç\ë¢ëÃíËã`
