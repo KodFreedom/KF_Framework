@@ -19,6 +19,7 @@
 #include "modelMeshComponent.h"
 #include "3DMeshDrawComponent.h"
 #include "modelMeshDrawComponent.h"
+#include "fieldColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -84,6 +85,7 @@ CGameObject3D* CGameObject3D::CreateField(const int& nNumBlockX, const int& nNum
 	CGameObject3D* pObj = new CGameObject3D;
 
 	//コンポネント
+	pObj->m_pCollider = new CFieldColliderComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
 	CFieldMeshComponent* pMesh = new CFieldMeshComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
 	pMesh->SetTexName(CTM::TEX_DEMO_ROAD);
 	pObj->m_pMesh = pMesh;

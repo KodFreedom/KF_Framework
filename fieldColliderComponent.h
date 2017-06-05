@@ -1,78 +1,59 @@
 //--------------------------------------------------------------------------------
-//	物理コンポネント
-//　physicsComponent.h
+//	fieldColliderコンポネント
+//　fieldColliderComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-18
+//	Date   : 2017-06-05
 //--------------------------------------------------------------------------------
-#ifndef _PHYSICS_COMPONENT_H_
-#define _PHYSICS_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "component.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
+#include "colliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  物理コンポネントクラス
+//  fieldColliderポネントクラス
 //--------------------------------------------------------------------------------
-class CPhysicsComponent : public CComponent
+class CFieldColliderComponent : public CColliderComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	enum PSY_TYPE
+
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CFieldColliderComponent(CGameObject* const pGameObj, const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize)
+		: CColliderComponent(pGameObj, CM::COL_FIELD, CM::STATIC)
+		, m_nNumBlockX(nNumBlockX)
+		, m_nNumBlockZ(nNumBlockZ)
+		, m_vBlockSize(vBlockSize)
 	{
-		PSY_NULL = 0,
-		PSY_3D
-	};
+		m_vectorVtx.clear();
+	}
 
+	~CFieldColliderComponent() {}
+
+	KFRESULT	Init(void) override;
+	void		Uninit(void) override;
+	void		Update(void) override;
+	float		GetHeight(const CKFVec3& vPos);
+
+private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPhysicsComponent(CGameObject* const pGameObj, const PSY_TYPE& type) : CComponent(pGameObj) , m_type(type) {}
-	~CPhysicsComponent() {}
-	
-	virtual KFRESULT	Init(void) override = 0;
-	virtual void		Uninit(void) override = 0;
-	virtual void		Update(void) = 0;
-
-	//Get関数
-	const PSY_TYPE		GetType(void) const { return m_type; }
-
-protected:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	CPhysicsComponent() : CComponent() , m_type(PSY_NULL) {}
+	void		MakeVertex(void);	//将来はエディタで作る
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	PSY_TYPE m_type;
+	int						m_nNumBlockX;
+	int						m_nNumBlockZ;
+	CKFVec2					m_vBlockSize;
+	std::vector<CKFVec3>	m_vectorVtx;
 };
-
-//--------------------------------------------------------------------------------
-//  ヌル物理コンポネント
-//--------------------------------------------------------------------------------
-class CNullPhysicsComponent : public CPhysicsComponent
-{
-public:
-	CNullPhysicsComponent() : CPhysicsComponent() {}
-	~CNullPhysicsComponent() {}
-
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override {}
-	void		Release(void) override {}
-	void		ReceiveMsg(const MESSAGE &msg) override {}
-};
-
-#endif

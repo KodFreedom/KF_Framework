@@ -25,8 +25,23 @@
 CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode) : CComponent(pGameObj)
 	, m_type(type)
 	, m_mode(mode)
+	, m_vPos(CKFVec3(0.0f))
 {
-	m_itr = GetManager()->GetColliderManager()->SaveCollider(mode, type, this);
+	if (m_type < CM::COL_MAX)
+	{
+		m_itr = GetManager()->GetColliderManager()->SaveCollider(mode, type, this);
+	}
+	else
+	{
+		switch (m_type)
+		{
+		case CM::COL_FIELD:
+			m_itr = GetManager()->GetColliderManager()->SaveField(this);
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -34,5 +49,19 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::CO
 //--------------------------------------------------------------------------------
 void CColliderComponent::Uninit(void)
 {
-	GetManager()->GetColliderManager()->ReleaseCollider(m_mode, m_type, m_itr);
+	if (m_type < CM::COL_MAX)
+	{
+		GetManager()->GetColliderManager()->ReleaseCollider(m_mode, m_type, m_itr);
+	}
+	else
+	{
+		switch (m_type)
+		{
+		case CM::COL_FIELD:
+			GetManager()->GetColliderManager()->ReleaseField(m_itr);
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -48,6 +48,9 @@ public:
 
 	virtual void		ReceiveMsg(const MESSAGE &msg) {}
 
+	//GetŠÖ”
+	CGameObject* const	GetGameObject(void) const { return m_pGameObj; }
+
 protected:
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`

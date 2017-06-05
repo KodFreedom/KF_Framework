@@ -13,7 +13,18 @@
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
+class CSphereColliderComponent;
+class CFieldColliderComponent;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
 //--------------------------------------------------------------------------------
+class CKFCollision
+{
+public:
+	static void CheckContactSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
+
+private:
+	CKFCollision() {}
+	~CKFCollision() {}
+};

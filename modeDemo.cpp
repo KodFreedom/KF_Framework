@@ -25,9 +25,6 @@
 #include "gameObject3D.h"
 #include "gameObjectActor.h"
 
-//component
-#include "fieldMeshComponent.h"
-
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
@@ -35,7 +32,6 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CModeDemo::CModeDemo() : CMode()
-	, m_pMeshField(NULL)
 {
 
 }
@@ -61,7 +57,7 @@ void CModeDemo::Init(void)
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	m_pMeshField = CGameObject3D::CreateField(20, 20, CKFVec2(1.0f, 1.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject3D::CreateField(20, 20, CKFVec2(1.0f, 1.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec3(256.0f, 256.0f, 0.0f), CTM::TEX_DEMO_TEST);
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
@@ -95,10 +91,4 @@ void CModeDemo::Update(void)
 void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
-}
-
-float CModeDemo::GetHeight(const CKFVec3 &vPos)
-{
-	CFieldMeshComponent* pField = (CFieldMeshComponent*)m_pMeshField->GetMeshComponent();
-	return pField->GetHeight(vPos);
 }

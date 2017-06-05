@@ -53,7 +53,7 @@ CKFVec2 &CKFVec2::operator=(const CKFVec2 &vValue)
 //--------------------------------------------------------------------------------
 //  operator==
 //--------------------------------------------------------------------------------
-bool CKFVec2::operator==(const CKFVec2 &vValue)
+bool CKFVec2::operator==(const CKFVec2 &vValue) const
 {
 	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY)
 	{
@@ -83,6 +83,15 @@ void CKFVec2::operator+=(const CKFVec2 &vValue)
 {
 	m_fX += vValue.m_fX;
 	m_fY += vValue.m_fY;
+}
+
+//--------------------------------------------------------------------------------
+//  operator*
+//--------------------------------------------------------------------------------
+float CKFVec2::operator*(const CKFVec2& vValue) const
+{
+	float fAnswer = m_fX * vValue.m_fY - m_fY * vValue.m_fX;
+	return fAnswer;
 }
 
 //--------------------------------------------------------------------------------
@@ -701,19 +710,31 @@ void CKFMath::Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot)
 }
 
 //--------------------------------------------------------------------------------
+//  RadianBetweenVec
+//	Vec2(ベクトル)間の角度の算出
+//--------------------------------------------------------------------------------
+float CKFMath::RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR)
+{
+	float fLengthL = VecMagnitude(vVecL);
+	float fLengthR = VecMagnitude(vVecR);
+	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
+	float fCross = vVecL * vVecR;
+	float fRot = asinf(fCross / (fLengthL * fLengthR));
+	return fRot;
+}
+
+//--------------------------------------------------------------------------------
 //  RadianBetweenVec3
 //	回転行列にとってVec3(ベクトル)を回転する
 //--------------------------------------------------------------------------------
-float CKFMath::RadianBetweenVec3(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
+float CKFMath::RadianBetweenVec(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
 {
 	float fLengthL = VecMagnitude(vVecL);
 	float fLengthR = VecMagnitude(vVecR);
 	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
 
-	CKFVec3 vRot;
 	float fRot = 0.0f;
 	float fWork;
-	CKFMtx44 mtxRot;
 
 	//左右判断
 	fWork = vVecR.m_fZ * vVecL.m_fX - vVecR.m_fX * vVecL.m_fZ;
@@ -741,6 +762,50 @@ float CKFMath::RadianBetweenVec3(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
 	}
 
 	return fRot;
+}
+
+//--------------------------------------------------------------------------------
+//  LerpVec3
+//	Vector3を線形補間方式で移動する
+//--------------------------------------------------------------------------------
+CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo)
+{
+	CKFVec3 vRot;
+
+	//X軸回転
+	vRot.m_fX = RadianBetweenVec(CKFVec2(vVecFrom.m_fY, vVecFrom.m_fZ), CKFVec2(vVecTo.m_fY, vVecTo.m_fZ));
+
+	//Y軸回転
+	vRot.m_fY = RadianBetweenVec(CKFVec2(vVecFrom.m_fZ, vVecFrom.m_fX), CKFVec2(vVecTo.m_fZ, vVecTo.m_fX));
+
+	//Z軸回転
+	vRot.m_fZ = RadianBetweenVec(CKFVec2(vVecFrom.m_fX, vVecFrom.m_fY), CKFVec2(vVecTo.m_fX, vVecTo.m_fY));
+
+	return vRot;
+}
+
+//--------------------------------------------------------------------------------
+//  LerpVec3
+//	Vector3を線形補間方式で移動する
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime)
+{
+	float fPersent = fTime / 1.0f;
+	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
+	CKFVec3 vDelta = vVecTo - vVecFrom;
+	CKFVec3 vVec3 = vVecFrom + vDelta * fPersent;
+	return vVec3;
+}
+
+//--------------------------------------------------------------------------------
+//  LerpNormal
+//	法線を線形補間方式で回転する
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime)
+{
+	CKFVec3 vNormal = LerpVec3(vNormalFrom, vNormalTo, fTime);
+	VecNormalize(&vNormal);
+	return vNormal;
 }
 
 //--------------------------------------------------------------------------------

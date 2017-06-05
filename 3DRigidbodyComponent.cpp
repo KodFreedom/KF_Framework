@@ -1,48 +1,45 @@
 //--------------------------------------------------------------------------------
 //
-//　3DPhysicsComponent.h
+//　3DRigidbodyComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-31
 //--------------------------------------------------------------------------------
-#ifndef _3D_PHYSICS_COMPONENT_H_
-#define _3D_PHYSICS_COMPONENT_H_
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "physicsComponent.h"
+#include "3DRigidbodyComponent.h"
+#include "gameObject3D.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  クラス宣言
+//  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  3D物理コンポネントクラス
+//  コンストラクタ
 //--------------------------------------------------------------------------------
-class C3DPhysicsComponent : public CPhysicsComponent
+C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
+	: CRigidbodyComponent(pGameObj, RB_3D)
+	, m_fMass(1.0f)
+	, m_vMovement(CKFVec3(0.0f))
+	, m_vVelocity(CKFVec3(0.0f))
 {
-public:
-	C3DPhysicsComponent(CGameObject* const pGameObj);
-	~C3DPhysicsComponent() {}
+}
 
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override;
+//--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void C3DRigidbodyComponent::Update(void)
+{
+	CGameObject3D* pObj = (CGameObject3D*)m_pGameObj;
+	CKFVec3 vPos = pObj->GetPosNext();
 
-	//Set関数
-	void		MovePosByRot(const float &fMovement, const float &fRot) 
-	{ 
-		m_fMovement = fMovement; 
-		m_fRot = fRot;
-	}
+	//重力
+	m_vVelocity.m_fY -= 0.981f * m_fMass / TIMER_INTERVAL;
 
-private:
-	float		m_fMovement;
-	float		m_fRot;
+	vPos += m_vVelocity;
+	vPos += m_vMovement;
 
-};
-
-#endif
+	//処理完了
+	m_vVelocity *= 0.95f;
+	m_vMovement = CKFVec3(0.0f);
+	pObj->SetPosNext(vPos);
+}

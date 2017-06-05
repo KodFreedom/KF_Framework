@@ -34,10 +34,7 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 
-	//Ç±Ç±Ç©ÇÁÇÕworldópä÷êî
-	float	GetHeight(const CKFVec3 &vPos);
 private:
-	CGameObject3D* m_pMeshField;
 };
 
 #endif

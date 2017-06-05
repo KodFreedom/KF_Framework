@@ -19,7 +19,7 @@
 //  ê√ìIÉÅÉìÉoïœêî
 //--------------------------------------------------------------------------------
 CNullInputComponent		CGameObject::s_nullInput;
-CNullPhysicsComponent	CGameObject::s_nullPhysics;
+CNullRigidbodyComponent	CGameObject::s_nullRigidbody;
 CNullColliderComponent	CGameObject::s_nullCollision;
 CNullMeshComponent		CGameObject::s_nullMesh;
 CNullDrawComponent		CGameObject::s_nullDraw;
@@ -35,7 +35,7 @@ CGameObject::CGameObject()
 	, m_bActive(false)
 	, m_bAlive(false)
 	, m_pInput(&s_nullInput)
-	, m_pPhysics(&s_nullPhysics)
+	, m_pRigidbody(&s_nullRigidbody)
 	, m_pCollider(&s_nullCollision)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)
@@ -57,7 +57,7 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri)
 	, m_bActive(true)
 	, m_bAlive(true)
 	, m_pInput(&s_nullInput)
-	, m_pPhysics(&s_nullPhysics)
+	, m_pRigidbody(&s_nullRigidbody)
 	, m_pCollider(&s_nullCollision)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)

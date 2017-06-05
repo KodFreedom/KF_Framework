@@ -13,7 +13,7 @@
 #include "gameObjectManager.h"
 #include "inputComponent.h"
 #include "drawComponent.h"
-#include "physicsComponent.h"
+#include "rigidbodyComponent.h"
 #include "meshComponent.h"
 #include "colliderComponent.h"
 
@@ -35,8 +35,8 @@ public:
 	virtual KFRESULT	Init(void) 
 	{ 
 		m_pInput->Init();
+		m_pRigidbody->Init();
 		m_pCollider->Init();
-		m_pPhysics->Init();
 		m_pMesh->Init();
 		m_pDraw->Init();
 		return KF_SUCCEEDED;
@@ -45,8 +45,8 @@ public:
 	virtual void		Uninit(void)
 	{
 		m_pInput->Release();
+		m_pRigidbody->Release();
 		m_pCollider->Release();
-		m_pPhysics->Release();
 		m_pMesh->Release();
 		m_pDraw->Release();
 	}
@@ -55,12 +55,12 @@ public:
 	{
 		SwapParam();
 		m_pInput->Update();
+		m_pRigidbody->Update();
+		m_pCollider->Update();
 	}
 
 	virtual void		LateUpdate(void)
 	{
-		m_pCollider->Update();
-		m_pPhysics->Update();
 		m_pMesh->Update();
 	}
 
@@ -72,31 +72,31 @@ public:
 	virtual void		Release(void);
 
 	//Get関数
-	CKFVec3				GetPos(void) const { return m_vPos; }
-	CKFVec3				GetRot(void) const { return m_vRot; }
-	CKFVec3				GetScale(void) const { return m_vScale; }
-	CKFVec3				GetPosNext(void) const { return m_vPosNext; }
-	CKFVec3				GetRotNext(void) const { return m_vRotNext; }
-	CKFVec3				GetScaleNext(void) const { return m_vScaleNext; }
-	CKFMtx44			GetMatrix(void) const { return m_mtxThis; }
-	CMeshComponent*		GetMeshComponent(void) { return m_pMesh; }
-	CPhysicsComponent*	GetPhysicsComponent(void) { return m_pPhysics; }
+	CKFVec3					GetPos(void) const { return m_vPos; }
+	CKFVec3					GetRot(void) const { return m_vRot; }
+	CKFVec3					GetScale(void) const { return m_vScale; }
+	CKFVec3					GetPosNext(void) const { return m_vPosNext; }
+	CKFVec3					GetRotNext(void) const { return m_vRotNext; }
+	CKFVec3					GetScaleNext(void) const { return m_vScaleNext; }
+	CKFMtx44				GetMatrix(void) const { return m_mtxThis; }
+	CMeshComponent*			GetMeshComponent(void) { return m_pMesh; }
+	CRigidbodyComponent*	GetRigidbodyComponent(void) { return m_pRigidbody; }
 
 	//Set関数
-	void				SetPos(const CKFVec3 &vPos) { m_vPos = vPos; }
-	void				SetRot(const CKFVec3 &vRot) { m_vRot = vRot; }
-	void				SetScale(const CKFVec3 &vScale) { m_vScale = vScale; }
-	void				SetPosNext(const CKFVec3 &vPosNext) { m_vPosNext = vPosNext; }
-	void				SetRotNext(const CKFVec3 &vRotNext) { m_vRotNext = vRotNext; }
-	void				SetScaleNext(const CKFVec3 &vScaleNext) { m_vScaleNext = vScaleNext; }
-	void				SetMatrix(const CKFMtx44 &mtx) { m_mtxThis = mtx; }
+	void					SetPos(const CKFVec3 &vPos) { m_vPos = vPos; }
+	void					SetRot(const CKFVec3 &vRot) { m_vRot = vRot; }
+	void					SetScale(const CKFVec3 &vScale) { m_vScale = vScale; }
+	void					SetPosNext(const CKFVec3 &vPosNext) { m_vPosNext = vPosNext; }
+	void					SetRotNext(const CKFVec3 &vRotNext) { m_vRotNext = vRotNext; }
+	void					SetScaleNext(const CKFVec3 &vScaleNext) { m_vScaleNext = vScaleNext; }
+	void					SetMatrix(const CKFMtx44 &mtx) { m_mtxThis = mtx; }
 
 protected:
 	virtual void		SwapParam(void);
 
 	//コンポネント
 	CInputComponent*		m_pInput;		//入力によるの処理パーツ
-	CPhysicsComponent*		m_pPhysics;		//物理処理パーツ
+	CRigidbodyComponent*	m_pRigidbody;	//物理処理パーツ
 	CColliderComponent*		m_pCollider;	//コリジョンパーツ
 	CMeshComponent*			m_pMesh;		//メッシュパーツ
 	CDrawComponent*			m_pDraw;		//描画処理パーツ
@@ -118,7 +118,7 @@ private:
 
 	//ヌルコンポネント
 	static CNullInputComponent		s_nullInput;
-	static CNullPhysicsComponent	s_nullPhysics;
+	static CNullRigidbodyComponent	s_nullRigidbody;
 	static CNullColliderComponent	s_nullCollision;
 	static CNullMeshComponent		s_nullMesh;
 	static CNullDrawComponent		s_nullDraw;

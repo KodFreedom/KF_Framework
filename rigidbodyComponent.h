@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	colliderコンポネント
-//　colliderComponent.h
+//	リジッドボディコンポネント
+//　rigidbodyComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
@@ -10,7 +10,6 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
-#include "colliderManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -20,55 +19,57 @@
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  Colliderポネントクラス
+//  リジッドボディコンポネントクラス
 //--------------------------------------------------------------------------------
-class CColliderComponent : public CComponent
+class CRigidbodyComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
+	enum RB_TYPE
+	{
+		RB_NULL = 0,
+		RB_3D
+	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode);
-	~CColliderComponent() {}
+	CRigidbodyComponent(CGameObject* const pGameObj, const RB_TYPE& type) : CComponent(pGameObj), m_type(type) {}
+	~CRigidbodyComponent() {}
 
 	virtual KFRESULT	Init(void) override = 0;
-	virtual void		Uninit(void) override;
+	virtual void		Uninit(void) override = 0;
 	virtual void		Update(void) = 0;
 
 	//Get関数
-	const CM::COL_TYPE	GetType(void) const { return m_type; }
+	const RB_TYPE		GetType(void) const { return m_type; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CColliderComponent() : CComponent() , m_type(CM::COL_MAX) {}
+	CRigidbodyComponent() : CComponent(), m_type(RB_NULL) {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CM::COL_TYPE	m_type;		//colliderのタイプ
-	CM::COL_ITR		m_itr;		//マネージャlist中の位置
-	CM::MODE		m_mode;		//Static/Dynamic mode
-	CKFVec3			m_vPos;		//相対位置
+	RB_TYPE m_type;
 };
 
 //--------------------------------------------------------------------------------
-//  ヌルコリジョンコンポネント
+//  ヌルリジッドボディコンポネント
 //--------------------------------------------------------------------------------
-class CNullColliderComponent : public CColliderComponent
+class CNullRigidbodyComponent : public CRigidbodyComponent
 {
 public:
-	CNullColliderComponent() : CColliderComponent() {}
-	~CNullColliderComponent() {}
+	CNullRigidbodyComponent() : CRigidbodyComponent() {}
+	~CNullRigidbodyComponent() {}
 
 	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
 	void		Uninit(void) override {}
 	void		Update(void) override {}
 	void		Release(void) override {}
 	void		ReceiveMsg(const MESSAGE &msg) override {}
-};
+}; 

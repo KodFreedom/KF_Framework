@@ -9,9 +9,10 @@
 //--------------------------------------------------------------------------------
 #include "gameObjectActor.h"
 #include "playerInputComponent.h"
-#include "3DPhysicsComponent.h"
+#include "3DRigidbodyComponent.h"
 #include "actorMeshComponent.h"
 #include "actorMeshDrawComponent.h"
+#include "sphereColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -41,7 +42,8 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 
 	//コンポネント
 	pObj->m_pInput = new CPlayerInputComponent(pObj);
-	pObj->m_pPhysics = new C3DPhysicsComponent(pObj);
+	pObj->m_pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	pObj->m_pRigidbody = new C3DRigidbodyComponent(pObj);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;

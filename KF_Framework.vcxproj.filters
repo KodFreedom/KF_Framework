@@ -97,12 +97,6 @@
     <Filter Include="ソース ファイル\Component\Collider">
       <UniqueIdentifier>{e578c92c-cbc4-473d-ad6b-c39718114fdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Manager\Collider">
-      <UniqueIdentifier>{e2e89db9-a85d-4081-8938-854e3504bf87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Manager\Collider">
-      <UniqueIdentifier>{320a4804-a74d-42c5-92ae-8325102c6eca}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -207,17 +201,26 @@
     <ClCompile Include="playerInputComponent.cpp">
       <Filter>ソース ファイル\Component\Input</Filter>
     </ClCompile>
-    <ClCompile Include="3DPhysicsComponent.cpp">
-      <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="component.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
     <ClCompile Include="colliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="fieldColliderComponent.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="sphereColliderComponent.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="KF_Collision.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
     <ClCompile Include="colliderManager.cpp">
-      <Filter>ソース ファイル\Base\Manager\Collider</Filter>
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="3DRigidbodyComponent.cpp">
+      <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,23 +338,26 @@
     <ClInclude Include="playerInputComponent.h">
       <Filter>ヘッダー ファイル\Component\Input</Filter>
     </ClInclude>
-    <ClInclude Include="3DPhysicsComponent.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="physicsComponent.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="KF_Collision.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="colliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="colliderManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="sphereColliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="colliderManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="3DRigidbodyComponent.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbodyComponent.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
