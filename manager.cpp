@@ -23,6 +23,7 @@
 #include "inputDX.h"
 #include "mode.h"
 #include "modeDemo.h"
+#include "fade.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
@@ -44,12 +45,9 @@ CManager::CManager()
 	, m_pModelManager(NULL)
 	, m_pGameObjectManager(NULL)
 	, m_pColliderManager(NULL)
-	, m_mode(MODE_DEMO)
+	, m_pMode(NULL)
+	, m_pFade(NULL)
 {
-	for (int nCntMode = 0; nCntMode < MODE_MAX; nCntMode++)
-	{
-		m_apMode[nCntMode] = NULL;
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -104,14 +102,11 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pGameObjectManager = new CGameObjectManager;
 	m_pGameObjectManager->Init();
 
+	//Fadeの生成
+	m_pFade = CFade::Create();
+
 	//初期モード設定
-	m_mode = MODE_DEMO;
-
-	//各モード生成
-	m_apMode[MODE_DEMO] = new CModeDemo;
-
-	//初期モードの初期化
-	m_apMode[m_mode]->Init();
+	SetMode(new CModeDemo);
 
 	return KF_SUCCEEDED;
 }
@@ -122,14 +117,17 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void CManager::Uninit(void)
 {
 	//モードの破棄
-	for (int nCntMode = 0; nCntMode < MODE_MAX; nCntMode++)
+	if (m_pMode)
 	{
-		if (m_apMode[nCntMode] != NULL)
-		{
-			m_apMode[nCntMode]->Uninit();
-			delete m_apMode[nCntMode];
-			m_apMode[nCntMode] = NULL;
-		}
+		m_pMode->Release();
+		m_pMode = NULL;
+	}
+
+	//Fadeの破棄
+	if (m_pFade)
+	{
+		m_pFade->Release();
+		m_pFade = NULL;
 	}
 
 	//ゲームオブジェクトマネージャの破棄
@@ -210,31 +208,37 @@ void CManager::Uninit(void)
 void CManager::Update(void)
 {
 	//キーボード更新
-	if (m_pKeyboard != NULL)
+	if (m_pKeyboard)
 	{
 		m_pKeyboard->Update();
 	}
 
 	//マウス更新
-	if (m_pMouse != NULL)
+	if (m_pMouse)
 	{
 		m_pMouse->Update();
 	}
 
 	//レンダラー更新
-	if (m_pRenderer != NULL)
+	if (m_pRenderer)
 	{
 		m_pRenderer->Update();
 	}
 
 	//モード更新
-	if (m_apMode[m_mode] != NULL)
+	if (m_pMode)
 	{
-		m_apMode[m_mode]->Update();
+		m_pMode->Update();
+	}
+
+	//Fade更新
+	if (m_pFade)
+	{
+		m_pFade->Update();
 	}
 
 	//コリジョン更新
-	if (m_pColliderManager != NULL)
+	if (m_pColliderManager)
 	{
 		m_pColliderManager->Update();
 	}
@@ -246,9 +250,9 @@ void CManager::Update(void)
 void CManager::LateUpdate(void)
 {
 	//モード更新
-	if (m_apMode[m_mode] != NULL)
+	if (m_pMode)
 	{
-		m_apMode[m_mode]->LateUpdate();
+		m_pMode->LateUpdate();
 	}
 }
 
@@ -257,17 +261,41 @@ void CManager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CManager::Draw(void)
 {
-	if (m_pRenderer != NULL)
+	if (m_pRenderer)
 	{
 		if (m_pRenderer->BeginDraw() == KF_SUCCEEDED)
 		{
 			//モード描画
-			if (m_apMode[m_mode] != NULL)
+			if (m_pMode)
 			{
-				m_apMode[m_mode]->Draw();
+				m_pMode->Draw();
+			}
+
+			//Fade更新
+			if (m_pFade)
+			{
+				m_pFade->Draw();
 			}
 
 			m_pRenderer->EndDraw();
 		}
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  モード切り替え
+//--------------------------------------------------------------------------------
+void CManager::SetMode(CMode* pMode)
+{
+	if (m_pMode)
+	{
+		m_pMode->Release();
+	}
+
+	m_pMode = pMode;
+
+	if (m_pMode)
+	{
+		m_pMode->Init();
 	}
 }

@@ -1,17 +1,15 @@
 //--------------------------------------------------------------------------------
-//
+//	カメラクラス
 //　Camera.cpp
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
-//--------------------------------------------------------------------------------
-//  Update : 
-//	
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "camera.h"
 #include "manager.h"
 #include "rendererDX.h"
 #include "inputDX.h"
+#include "gameObject.h"
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -43,7 +41,7 @@
 CCamera::CCamera()
 	: m_vMovement(CKFVec3(0.0f))
 	, m_vPosAt(CKFVec3(0.0f))
-	, m_vPosEye(CKFVec3(0.0f, 1.0f, -1.0f))
+	, m_vPosEye(CKFVec3(0.0f, 5.0f, -5.0f))
 	, m_vVecLook(CKFVec3(0.0f))
 	, m_vVecUp(CKFVec3(0.0f, 1.0f, 0.0f))
 	, m_vVecRight(CKFVec3(1.0f, 0.0f, 0.0f))
@@ -51,6 +49,8 @@ CCamera::CCamera()
 	, m_fFovY((float)DEFAULT_FOV)
 	, m_fFar((float)DEFAULT_FAR)
 {
+	static CNullGameObject nullGameObject;
+	m_pTarget = &nullGameObject;
 }
 
 //--------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ void CCamera::Update(void)
 //--------------------------------------------------------------------------------
 void CCamera::LateUpdate(void)
 {
-	
+	m_vPosAt = m_pTarget->GetPos();
 }
 
 //--------------------------------------------------------------------------------
@@ -255,8 +255,8 @@ void CCamera::Pitch(const float& fAngle)
 {
 	CKFMtx44 mtxPitch;
 	CKFMath::MtxRotAxis(&mtxPitch, m_vVecRight, fAngle);
-	CKFMath::Vec3TransformCoord(&m_vVecUp, mtxPitch);
-	CKFMath::Vec3TransformCoord(&m_vVecLook, mtxPitch);
+	CKFMath::Vec3TransformNormal(&m_vVecUp, mtxPitch);
+	CKFMath::Vec3TransformNormal(&m_vVecLook, mtxPitch);
 }
 
 //--------------------------------------------------------------------------------
@@ -267,8 +267,8 @@ void CCamera::Yaw(const float& fAngle)
 	CKFMtx44 mtxYaw;
 	CKFVec3 vAxisY = CKFVec3(0.0f, 1.0f, 0.0f);
 	CKFMath::MtxRotAxis(&mtxYaw, vAxisY, fAngle);
-	CKFMath::Vec3TransformCoord(&m_vVecRight, mtxYaw);
-	CKFMath::Vec3TransformCoord(&m_vVecLook, mtxYaw);
+	CKFMath::Vec3TransformNormal(&m_vVecRight, mtxYaw);
+	CKFMath::Vec3TransformNormal(&m_vVecLook, mtxYaw);
 }
 
 //--------------------------------------------------------------------------------
@@ -278,6 +278,6 @@ void CCamera::Roll(const float& fAngle)
 {
 	CKFMtx44 mtxRoll;
 	CKFMath::MtxRotAxis(&mtxRoll, m_vVecLook, fAngle);
-	CKFMath::Vec3TransformCoord(&m_vVecUp, mtxRoll);
-	CKFMath::Vec3TransformCoord(&m_vVecRight, mtxRoll);
+	CKFMath::Vec3TransformNormal(&m_vVecUp, mtxRoll);
+	CKFMath::Vec3TransformNormal(&m_vVecRight, mtxRoll);
 }

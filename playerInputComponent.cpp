@@ -76,33 +76,25 @@ void CPlayerInputComponent::Update(void)
 	}
 
 	//‰ñ“]ŒvŽZ
-	CGameObject3D* pObj = (CGameObject3D*)m_pGameObj;
-	CKFVec3 vUp = pObj->GetUpNext();
-	CKFVec3 vForward = pObj->GetForwardNext();
-	CKFVec3 vRot = pObj->GetRotNext();
+	CKFVec3 vUp = m_pGameObj->GetUpNext();
+	CKFVec3 vForward = m_pGameObj->GetForwardNext();
+	CKFVec3 vRight = m_pGameObj->GetRightNext();
 
 	//ƒJƒƒ‰Œü‚«‚©‚çƒvƒŒƒCƒ„[‚ÌŽŸ‚ÌŒü‚«‚ðŽZo‚·‚é
-	CCamera* pCamera = GetManager()->GetModeNow()->GetCamera();
+	CCamera* pCamera = GetManager()->GetMode()->GetCamera();
 	CKFVec3 vForwardCamera = pCamera->GetVecLook();
-	vForwardCamera.m_fY = 0.0f;
-	CKFMtx44 mtxRot;
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, CKFVec3(vRot.m_fX, 0.0f, vRot.m_fZ));
-	CKFMath::Vec3TransformNormal(&vForwardCamera, mtxRot);
-	CKFMath::VecNormalize(&vForwardCamera);
+	CKFVec3 vForwardFinal = (vUp * vForwardCamera) * vUp;
 
 	if (fRot != 0.0f)
 	{//‘€ì‚æ‚ès‚­•ûŒü‚ð‰ñ“]‚·‚é
 		CKFMtx44 mtxYaw;
 		CKFMath::MtxRotAxis(&mtxYaw, vUp, fRot);
-		CKFMath::Vec3TransformNormal(&vForwardCamera, mtxYaw);
+		CKFMath::Vec3TransformNormal(&vForwardFinal, mtxYaw);
 	}
 
-	CKFVec3 vForwardNext = CKFMath::LerpNormal(vForward, vForwardCamera, 0.2f);
-	CKFVec3 vRotChanged = CKFMath::EulerBetweenVec3(vForward, vForwardNext);
-	vRot += vRotChanged;
-	CKFMath::NormalizeRotInTwoPi(&vRot);
-	pObj->SetRotNext(vRot);
-	pObj->SetForwardNext(vForwardNext);
+	CKFMath::VecNormalize(&vForwardFinal);
+	CKFVec3 vForwardNext = CKFMath::LerpNormal(vForward, vForwardFinal, 0.2f);
+	m_pGameObj->RotByForward(vForwardNext);
 
 	if (bMove)
 	{

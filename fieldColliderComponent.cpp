@@ -39,17 +39,23 @@ void CFieldColliderComponent::Update(void)
 }
 
 //--------------------------------------------------------------------------------
-//  fieldの高さ取得
+//  fieldの情報取得
 //--------------------------------------------------------------------------------
-float CFieldColliderComponent::GetHeight(const CKFVec3 &vPos)
+CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec3& vPos)
 {
+	INFO info;
+	info.bInTheField = false;
+	info.fHeight = 0.0f;
+	info.vFaceNormal = CKFVec3(0.0f);
+
 	CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
 	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 
+	//フィールドの範囲外だったら処理終了
 	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
 	{
-		return 0.0f;
+		return info;
 	}
 
 	int nXRightDown = nXLeftUp + 1;
@@ -64,26 +70,78 @@ float CFieldColliderComponent::GetHeight(const CKFVec3 &vPos)
 	CKFVec3 vTL = vPosTarget - vPLeftUp;
 	CKFVec3 vCross = vTL * vMid;
 	int nXSide, nZSide;
+	int nSign = 0;
 	if (vCross.m_fY >= 0.0f)
 	{//LeftSide
 		nXSide = nXLeftUp + 1;
 		nZSide = nZLeftUp;
+		nSign = -1;
 	}
 	else
 	{//RightSide
 		nXSide = nXLeftUp;
 		nZSide = nZLeftUp + 1;
+		nSign = 1;
 	}
 	CKFVec3 vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
 	CKFVec3 vLS = vPLeftUp - vPSide;
 	CKFVec3 vRS = vPRightDown - vPSide;
-	CKFVec3 vNormal = vLS * vRS;
+	CKFVec3 vNormal = (vLS * vRS) * (float)nSign;
 	CKFMath::VecNormalize(&vNormal);
 
-	float fY = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
+	info.bInTheField = true;
+	info.fHeight = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
+	info.vFaceNormal = vNormal;
 
-	return fY;
+	return info;
 }
+
+////--------------------------------------------------------------------------------
+////  fieldの高さ取得
+////--------------------------------------------------------------------------------
+//float CFieldColliderComponent::GetHeight(const CKFVec3 &vPos)
+//{
+//	CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+//	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+//	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+//
+//	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
+//	{
+//		return 0.0f;
+//	}
+//
+//	int nXRightDown = nXLeftUp + 1;
+//	int nZRightDown = nZLeftUp + 1;
+//
+//	CKFVec3 vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fY);
+//	CKFVec3 vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
+//	CKFVec3 vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
+//
+//	//Check Side
+//	CKFVec3 vMid = vPRightDown - vPLeftUp;
+//	CKFVec3 vTL = vPosTarget - vPLeftUp;
+//	CKFVec3 vCross = vTL * vMid;
+//	int nXSide, nZSide;
+//	if (vCross.m_fY >= 0.0f)
+//	{//LeftSide
+//		nXSide = nXLeftUp + 1;
+//		nZSide = nZLeftUp;
+//	}
+//	else
+//	{//RightSide
+//		nXSide = nXLeftUp;
+//		nZSide = nZLeftUp + 1;
+//	}
+//	CKFVec3 vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
+//	CKFVec3 vLS = vPLeftUp - vPSide;
+//	CKFVec3 vRS = vPRightDown - vPSide;
+//	CKFVec3 vNormal = vLS * vRS;
+//	CKFMath::VecNormalize(&vNormal);
+//
+//	float fY = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
+//
+//	return fY;
+//}
 
 //--------------------------------------------------------------------------------
 //  頂点生成
@@ -100,11 +158,11 @@ void CFieldColliderComponent::MakeVertex(void)
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
 		{
-			fHeight -= 1.0f;
+			fHeight -= 0.5f;
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
 		{
-			fHeight += 1.0f;
+			fHeight += 0.5f;
 		}
 		else
 		{

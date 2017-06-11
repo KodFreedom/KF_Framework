@@ -38,7 +38,7 @@ CHARACTERSET
 		INDEX = 0		# ëÃ
 		PARENT = -1		# (êe)NULL
 		POS = 0.0 0.6 0.0
-		ROT = 0.0 0.0 0.0
+		ROT = 0.0 3.14 0.0
 	END_PARTSSET
 
 	PARTSSET

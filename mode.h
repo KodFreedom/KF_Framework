@@ -32,6 +32,11 @@ public:
 	virtual void	Update(void);
 	virtual void	LateUpdate(void);
 	virtual void	Draw(void);
+	void			Release(void)
+	{
+		Uninit();
+		delete this;
+	}
 
 	//Getä÷êî
 	CCamera*		GetCamera(void) { return m_pCamera; }

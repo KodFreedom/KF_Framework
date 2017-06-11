@@ -4,12 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _KF_MATH_H_
-#define _KF_MATH_H_
-
+#pragma once
 #define USING_DIRECTX9
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -227,10 +222,13 @@ public:
 	//Vector計算
 	static float	VecMagnitude(const CKFVec2& vValue);
 	static float	VecMagnitude(const CKFVec3& vValue);
+	static float	VecMagnitudeSquare(const CKFVec3& vValue);
 	static void		VecNormalize(CKFVec2* pVec);
 	static void		VecNormalize(CKFVec3* pVec);
+	static float	Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR);
 	static float	Vec3Dot(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static float	VecDistance(const CKFVec3& vVecL, const CKFVec3& vVecR);
+	static float	VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static void		Vec3TransformCoord(CKFVec3* pVec, const CKFMtx44& mtxRot);
 	static void		Vec3TransformNormal(CKFVec3* pVec, const CKFMtx44& mtxRot);
 	static float	RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
@@ -259,11 +257,11 @@ public:
 	static void		NormalizeRotInTwoPi(CKFVec3* pRot);
 	static void		NormalizeRotInPi(float* pRot);
 	static void		NormalizeRotInPi(CKFVec3* pRot);
+	static void		NormalizeRotInZeroToTwoPi(float& fRot);
+	static void		NormalizeRotInZeroToTwoPi(CKFVec3& vRot);
 	static float	CalculateZDepth(const CKFVec3& vPos, const CKFVec3& vCameraEye, const CKFVec3& vCameraAt);
 
 private:
 	CKFMath() {}
 	~CKFMath() {}
 };
-
-#endif

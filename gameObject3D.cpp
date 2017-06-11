@@ -32,24 +32,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CGameObject3D::CGameObject3D(const GOM::PRIORITY& pri) : CGameObject(pri)
-	, m_vForward(CKFVec3(0.0f, 0.0f, -1.0f))
-	, m_vUp(CKFVec3(0.0f, 1.0f, 0.0f))
-	, m_vRight(CKFVec3(-1.0f, 0.0f, 0.0f))
-	, m_vForwardNext(CKFVec3(0.0f, 0.0f, -1.0f))
-	, m_vUpNext(CKFVec3(0.0f, 1.0f, 0.0f))
-	, m_vRightNext(CKFVec3(-1.0f, 0.0f, 0.0f))
 {
-}
 
-//--------------------------------------------------------------------------------
-//  パラメーター交換処理
-//--------------------------------------------------------------------------------
-void CGameObject3D::SwapParam(void)
-{
-	CGameObject::SwapParam();
-	m_vForward = m_vForwardNext;
-	m_vRight = m_vRightNext;
-	m_vUp = m_vUpNext;
 }
 
 //--------------------------------------------------------------------------------
@@ -61,15 +45,15 @@ CGameObject3D* CGameObject3D::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& v
 
 	//コンポネント
 	CSkyBoxMeshComponent* pMesh = new CSkyBoxMeshComponent(pObj);
-	pMesh->SetTexName(CTM::TEX_DEMO_SKY);
+	pMesh->SetTexName(CTM::TEX_SKY);
 	pObj->m_pMesh = pMesh;
 	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
 	pObj->m_pDraw->SetRenderState(&CDrawComponent::s_lightOffRenderState);
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vRot = pObj->m_vRotNext = vRot;
 	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -87,14 +71,14 @@ CGameObject3D* CGameObject3D::CreateField(const int& nNumBlockX, const int& nNum
 	//コンポネント
 	pObj->m_pCollider = new CFieldColliderComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
 	CFieldMeshComponent* pMesh = new CFieldMeshComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
-	pMesh->SetTexName(CTM::TEX_DEMO_ROAD);
+	pMesh->SetTexName(CTM::TEX_ROAD);
 	pObj->m_pMesh = pMesh;
 	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vRot = pObj->m_vRotNext = vRot;
 	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -111,14 +95,14 @@ CGameObject3D* CGameObject3D::CreateCube(const CKFVec3& vSize, const CKFColor& c
 
 	//コンポネント
 	CCubeMeshComponent* pMesh = new CCubeMeshComponent(pObj, vSize, cColor);
-	pMesh->SetTexName(CTM::TEX_DEMO_POLYGON);
+	pMesh->SetTexName(CTM::TEX_POLYGON);
 	pObj->m_pMesh = pMesh;
 	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vRot = pObj->m_vRotNext = vRot;
 	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -141,8 +125,8 @@ CGameObject3D* CGameObject3D::CreateModel(const CMOM::MODEL_NAME &modelName, con
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vRot = pObj->m_vRotNext = vRot;
 	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();

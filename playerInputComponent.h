@@ -1,11 +1,10 @@
 //--------------------------------------------------------------------------------
-//
+//　プレイヤーの入力処理
 //　playerInputComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-31
 //--------------------------------------------------------------------------------
-#ifndef _PLAYER_INPUT_COMPONENT_H_
-#define _PLAYER_INPUT_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -34,7 +33,5 @@ public:
 	void	Update(void) override;
 
 private:
-	const float c_fSpeed = 2.0f / 60.0f;
+	const float c_fSpeed = 4.0f / 60.0f;
 };
-
-#endif

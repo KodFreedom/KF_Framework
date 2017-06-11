@@ -4,9 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹
@@ -86,7 +83,7 @@ void CKFVec2::operator+=(const CKFVec2 &vValue)
 }
 
 //--------------------------------------------------------------------------------
-//  operator*
+//  operator*(ŠOÏ)
 //--------------------------------------------------------------------------------
 float CKFVec2::operator*(const CKFVec2& vValue) const
 {
@@ -628,6 +625,18 @@ float CKFMath::VecMagnitude(const CKFVec3 &vValue)
 }
 
 //--------------------------------------------------------------------------------
+//  MagnitudeSquare(Vector3)
+//--------------------------------------------------------------------------------
+float CKFMath::VecMagnitudeSquare(const CKFVec3 &vValue)
+{
+	float fMagnitudeSquare;
+
+	fMagnitudeSquare = vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY + vValue.m_fZ * vValue.m_fZ;
+
+	return fMagnitudeSquare;
+}
+
+//--------------------------------------------------------------------------------
 //  Normalize(Vector2)
 //--------------------------------------------------------------------------------
 void CKFMath::VecNormalize(CKFVec2 *pVec)
@@ -657,6 +666,15 @@ void CKFMath::VecNormalize(CKFVec3 *pVec)
 }
 
 //--------------------------------------------------------------------------------
+//  æŽZ(Dot)(Vector2)
+//--------------------------------------------------------------------------------
+float CKFMath::Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR)
+{
+	float fDot = vVecL.m_fX * vVecR.m_fX + vVecL.m_fY * vVecR.m_fY;
+	return fDot;
+}
+
+//--------------------------------------------------------------------------------
 //  æŽZ(Dot)(Vector3)
 //--------------------------------------------------------------------------------
 float CKFMath::Vec3Dot(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
@@ -676,6 +694,16 @@ float CKFMath::VecDistance(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
 	CKFVec3 vDis = vVecL - vVecR;
 	float fDis = VecMagnitude(vDis);
 	return fDis;
+}
+
+//--------------------------------------------------------------------------------
+//  VecDistanceSquare(Vector3)
+//--------------------------------------------------------------------------------
+float CKFMath::VecDistanceSquare(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
+{
+	CKFVec3 vDis = vVecL - vVecR;
+	float fDisSquare = VecMagnitudeSquare(vDis);
+	return fDisSquare;
 }
 
 //--------------------------------------------------------------------------------
@@ -718,8 +746,10 @@ float CKFMath::RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR)
 	float fLengthL = VecMagnitude(vVecL);
 	float fLengthR = VecMagnitude(vVecR);
 	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
+	float fDot = Vec2Dot(vVecL, vVecR);
 	float fCross = vVecL * vVecR;
-	float fRot = asinf(fCross / (fLengthL * fLengthR));
+	float fSign = fCross >= 0.0f ? 1.0f : -1.0f;
+	float fRot = acosf(fDot / (fLengthL * fLengthR)) * fSign;
 	return fRot;
 }
 
@@ -765,8 +795,8 @@ float CKFMath::RadianBetweenVec(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
 }
 
 //--------------------------------------------------------------------------------
-//  LerpVec3
-//	Vector3‚ðüŒ`•âŠÔ•ûŽ®‚ÅˆÚ“®‚·‚é
+//  EulerBetweenVec3
+//	Vector3ŠÔ‚ÌŠp“x‚ðx,y,z‰ñ“]Ž®‚ÅŽZo
 //--------------------------------------------------------------------------------
 CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo)
 {
@@ -1085,6 +1115,34 @@ void CKFMath::NormalizeRotInPi(CKFVec3* pRot)
 	NormalizeRotInPi(&pRot->m_fX);
 	NormalizeRotInPi(&pRot->m_fY);
 	NormalizeRotInPi(&pRot->m_fZ);
+}
+
+//--------------------------------------------------------------------------------
+//  NormalizeRotInPi(Vec3)
+//	‰ñ“]‚ð-Pi‚©‚çPi‚ÌŠÔ‚É‚·‚é
+//--------------------------------------------------------------------------------
+void CKFMath::NormalizeRotInZeroToTwoPi(float& fRot)
+{
+	while (fRot >= KF_PI * 2.0f)
+	{
+		fRot -= KF_PI * 2.0f;
+	}
+
+	while (fRot < 0.0f)
+	{
+		fRot += KF_PI * 2.0f;
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  NormalizeRotInPi(Vec3)
+//	‰ñ“]‚ð-Pi‚©‚çPi‚ÌŠÔ‚É‚·‚é
+//--------------------------------------------------------------------------------
+void CKFMath::NormalizeRotInZeroToTwoPi(CKFVec3& vRot)
+{
+	NormalizeRotInZeroToTwoPi(vRot.m_fX);
+	NormalizeRotInZeroToTwoPi(vRot.m_fY);
+	NormalizeRotInZeroToTwoPi(vRot.m_fZ);
 }
 
 //--------------------------------------------------------------------------------

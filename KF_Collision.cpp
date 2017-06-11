@@ -24,13 +24,23 @@ void CKFCollision::CheckContactSphereWithField(CSphereColliderComponent& sphere,
 {
 	CKFVec3 vSpherePos = sphere.GetGameObject()->GetPosNext();
 	float fSphereRadius = sphere.GetRadius();
-	float fFieldHeight = field.GetHeight(vSpherePos);
+	CFieldColliderComponent::INFO info = field.GetPointInfo(vSpherePos);
 
-	if (fFieldHeight >= vSpherePos.m_fY - fSphereRadius)
+	if (info.bInTheField == false) { return; }
+
+	if (info.fHeight >= vSpherePos.m_fY - fSphereRadius)
 	{
-		vSpherePos.m_fY = fFieldHeight + fSphereRadius;
-		sphere.GetGameObject()->SetPosNext(vSpherePos);
+		CGameObject* pSphereObj = sphere.GetGameObject();
 
+		//ˆÊ’u’²ß
+		vSpherePos.m_fY = info.fHeight + fSphereRadius;
+		pSphereObj->SetPosNext(vSpherePos);
+
+		//‰ñ“]’²ß
+		CKFVec3 vUpNext = CKFMath::LerpNormal(pSphereObj->GetUpNext(), info.vFaceNormal, 0.2f);
+		pSphereObj->RotByUp(vUpNext);
+
+		//‘¬“x’²ß
 		CRigidbodyComponent* pRB = sphere.GetGameObject()->GetRigidbodyComponent();
 		if (pRB->GetType() == CRigidbodyComponent::RB_3D)
 		{

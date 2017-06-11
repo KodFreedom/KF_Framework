@@ -24,7 +24,7 @@ void				CloseApp(HWND hWnd);
 //--------------------------------------------------------------------------------
 //  グローバル変数
 //--------------------------------------------------------------------------------
-CManager	*g_pManager = NULL;	//Game Manager
+CManager*	g_pManager = NULL;	//Game Manager
 
 #ifdef _DEBUG
 int			g_nCntFPS = 0;		//FPSカウンタ
@@ -201,11 +201,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);	//WM_QUITというメッセージを呼ぶ
 		break;
 	case WM_ACTIVATEAPP:
-		if (g_pManager != NULL)
+		if (g_pManager)
 		{
 			BOOL bActive = (BOOL)GetActiveWindow();
-			CKeyboardDX *pKeyboard = g_pManager->GetKeyboard();
-			CMouseDX *pMouse = g_pManager->GetMouse();
+			CKeyboardDX* pKeyboard = g_pManager->GetKeyboard();
+			CMouseDX* pMouse = g_pManager->GetMouse();
 
 			if (bActive)
 			{
@@ -218,7 +218,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if (pMouse) pMouse->Unacquire();
 			}
 		}
-		
 		break;
 	default:
 		break;

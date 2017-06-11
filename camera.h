@@ -1,14 +1,10 @@
 //--------------------------------------------------------------------------------
-//
+//	カメラクラス
 //　Camera.h
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _CAMERA_H_
-#define _CAMERA_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -58,7 +54,7 @@ public:
 	void MoveCamera(const CKFVec3& vMovement);
 	void LookAtHere(const CKFVec3& vPos);
 	void SetCamera(const CKFVec3& vPosAt, const CKFVec3& vPosEye, const CKFVec3& vUp, const CKFVec3& vRight);
-	void SetTarget(const CGameObject* pTarget);
+	void SetTarget(CGameObject* pTarget) { m_pTarget = pTarget; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -85,4 +81,3 @@ private:
 	float			m_fFar;				//最大距離
 	CGameObject*	m_pTarget;			//カメラが見てるターゲット
 };
-#endif

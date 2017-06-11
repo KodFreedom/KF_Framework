@@ -51,8 +51,8 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 
 	//パラメーター
 	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vRot = pObj->m_vRotNext = vRot;
 	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();

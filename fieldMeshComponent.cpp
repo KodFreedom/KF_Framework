@@ -53,11 +53,11 @@ void CFieldMeshComponent::MakeVertex(void)
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
 		{
-			fHeight -= 1.0f;
+			fHeight -= 0.5f;
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
 		{
-			fHeight += 1.0f;
+			fHeight += 0.5f;
 		}
 		else
 		{

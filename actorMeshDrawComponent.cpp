@@ -38,7 +38,8 @@ void CActorMeshDrawComponent::Draw(void)
 	CKFMath::MtxIdentity(&mtxWorld);
 
 	//‰ñ“](Y->X->Z)
-	CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_pGameObj->GetRot());
+	//CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_pGameObj->GetRot());
+	mtxRot = m_pGameObj->GetMatrixRot();
 	mtxWorld *= mtxRot;
 
 	//•½sˆÚ“®

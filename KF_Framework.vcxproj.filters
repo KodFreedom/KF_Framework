@@ -97,6 +97,9 @@
     <Filter Include="ソース ファイル\Component\Collider">
       <UniqueIdentifier>{e578c92c-cbc4-473d-ad6b-c39718114fdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Transform">
+      <UniqueIdentifier>{050bec36-49d9-4b74-b5ee-4d35e1238d05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -221,6 +224,9 @@
     </ClCompile>
     <ClCompile Include="3DRigidbodyComponent.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="rigidbodyComponent.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

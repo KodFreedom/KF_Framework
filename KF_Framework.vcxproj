@@ -163,6 +163,7 @@
     <ClCompile Include="component.cpp" />
     <ClCompile Include="cubeMeshComponent.cpp" />
     <ClCompile Include="drawComponent.cpp" />
+    <ClCompile Include="fade.cpp" />
     <ClCompile Include="fieldColliderComponent.cpp" />
     <ClCompile Include="fieldMeshComponent.cpp" />
     <ClCompile Include="gameObject.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="cubeMeshComponent.h" />
     <ClInclude Include="drawComponent.h" />
+    <ClInclude Include="fade.h" />
     <ClInclude Include="fieldColliderComponent.h" />
     <ClInclude Include="fieldMeshComponent.h" />
     <ClInclude Include="gameObject.h" />

@@ -20,6 +20,9 @@
 class CSphereColliderComponent : public CColliderComponent
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”’è‹`
+	//--------------------------------------------------------------------------------
 	CSphereColliderComponent(CGameObject* const pGameObj, const CM::MODE& mode, const float& fRadius)
 		: CColliderComponent(pGameObj, CM::COL_SPHERE, mode)
 		, m_fRadius(fRadius)
@@ -35,5 +38,8 @@ public:
 	float		GetRadius(void) { return m_fRadius; }
 
 private:
+	//--------------------------------------------------------------------------------
+	//  ’è”’è‹`
+	//--------------------------------------------------------------------------------
 	float		m_fRadius;	//”¼Œa
 };

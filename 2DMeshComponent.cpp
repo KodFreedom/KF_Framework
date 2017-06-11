@@ -75,7 +75,7 @@ void C2DMeshComponent::Update(void)
 	//’¸“_ˆÊ’uÝ’è
 	CKFVec2 vSize = m_pGameObj->GetScale();
 	CKFVec3 vPos = m_pGameObj->GetPos();
-	CKFVec3 vRot = m_pGameObj->GetRot();
+	CKFVec3 vRot = CKFVec3(0.0f);
 	float fLength = CKFMath::VecMagnitude(vSize) * 0.5f;
 	float fAngle = atan2f(vSize.m_fY, vSize.m_fX);
 

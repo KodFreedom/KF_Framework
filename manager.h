@@ -27,6 +27,7 @@ class CModelManager;
 class CGameObjectManager;
 class CColliderManager;
 class CMode;
+class CFade;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -34,12 +35,6 @@ class CMode;
 class CManager
 {
 public:
-	enum MODE
-	{
-		MODE_DEMO,
-		MODE_MAX
-	};
-
 	CManager();
 	~CManager() {}
 
@@ -48,6 +43,9 @@ public:
 	void		Update(void);
 	void		LateUpdate(void);
 	void		Draw(void);
+
+	//Setä÷êî
+	void				SetMode(CMode* pMode);
 
 	//Getä÷êî
 	CRendererDX*		GetRenderer(void) { return m_pRenderer; }
@@ -59,7 +57,8 @@ public:
 	CModelManager*		GetModelManager(void) { return m_pModelManager; }
 	CGameObjectManager*	GetGameObjectManager(void) { return m_pGameObjectManager; }
 	CColliderManager*	GetColliderManager(void) { return m_pColliderManager; }
-	CMode*				GetModeNow(void) { return m_apMode[m_mode]; }
+	CMode*				GetMode(void) { return m_pMode; }
+	CFade*				GetFade(void) { return m_pFade; }
 
 private:
 	CRendererDX*		m_pRenderer;
@@ -71,8 +70,8 @@ private:
 	CModelManager*		m_pModelManager;
 	CGameObjectManager*	m_pGameObjectManager;
 	CColliderManager*	m_pColliderManager;
-	CMode*				m_apMode[MODE_MAX];
-	MODE				m_mode;
+	CMode*				m_pMode;
+	CFade*				m_pFade;
 };
 
 #endif

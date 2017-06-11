@@ -1,68 +1,86 @@
 //--------------------------------------------------------------------------------
-//	fieldColliderコンポネント
-//　fieldColliderComponent.h
+//
+//　fade.h
 //	Author : Xu Wenjie
-//	Date   : 2017-06-05
+//	Date   : 2017-06-09
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "colliderComponent.h"
+#include "main.h"
+
+//--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
+class CMode;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  fieldColliderポネントクラス
-//--------------------------------------------------------------------------------
-class CFieldColliderComponent : public CColliderComponent
+class CFade
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	struct INFO
+	CFade()
+		: m_fade(FADE_IN)
+		, m_pModeNext(NULL)
+		, m_cColor(CKFColor(0.0f, 0.0f, 0.0f, 1.0f))
+		, m_nCnt(0)
+#ifdef USING_DIRECTX9
+		, m_pVtxBuffer(NULL)
+#endif
+	{}
+
+	~CFade() {}
+
+	void	Init(void);
+	void	Uninit(void);
+	void	Update(void);
+	void	Draw(void);
+	void	Release(void)
 	{
-		bool	bInTheField;
-		float	fHeight;
-		CKFVec3	vFaceNormal;
+		Uninit();
+		delete this;
+	}
+
+	void	FadeToMode(CMode* pModeNext);
+
+	static CFade *Create(void);
+private:
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
+	enum FADE
+	{//フェイドの状態
+		FADE_NONE = 0,
+		FADE_IN,
+		FADE_OUT,
+		FADE_MAX
 	};
 
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  定数定義
 	//--------------------------------------------------------------------------------
-	CFieldColliderComponent(CGameObject* const pGameObj, const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize)
-		: CColliderComponent(pGameObj, CM::COL_FIELD, CM::STATIC)
-		, m_nNumBlockX(nNumBlockX)
-		, m_nNumBlockZ(nNumBlockZ)
-		, m_vBlockSize(vBlockSize)
-	{
-		m_vectorVtx.clear();
-	}
-
-	~CFieldColliderComponent() {}
-
-	KFRESULT	Init(void) override;
-	void		Uninit(void) override;
-	void		Update(void) override;
-
-	//Get関数
-	INFO		GetPointInfo(const CKFVec3& vPos);
-	//float		GetHeight(const CKFVec3& vPos);
-
-private:
+	static const float sc_fFadeRate;
+	
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		MakeVertex(void);	//将来はエディタで作る
+	void SetColorFade(const CKFColor &cColor);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	int						m_nNumBlockX;
-	int						m_nNumBlockZ;
-	CKFVec2					m_vBlockSize;
-	std::vector<CKFVec3>	m_vectorVtx;
+	CKFColor					m_cColor;
+	FADE						m_fade;
+	CMode*						m_pModeNext;
+	int							m_nCnt;
+
+#ifdef USING_DIRECTX9
+	LPDIRECT3DVERTEXBUFFER9		m_pVtxBuffer;	//頂点バッファ管理インターフェースポインタ
+#endif
 };

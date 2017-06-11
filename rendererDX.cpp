@@ -16,18 +16,6 @@
 #endif
 
 //--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  プロトタイプ宣言
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  構造体定義
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
 //---------------------------------------
@@ -139,8 +127,12 @@ KFRESULT CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);	// テクスチャ縮小時の補間設定
 
 	// テクスチャステージステートの設定
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);		// 最初のアルファ引数(初期値はD3DTA_TEXTURE、テクスチャがない場合はD3DTA_DIFFUSE)
+	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);		// ２番目のアルファ引数(初期値はD3DTA_CURRENT)
 
 #ifdef _DEBUG

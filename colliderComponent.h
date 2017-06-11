@@ -38,6 +38,7 @@ public:
 	virtual KFRESULT	Init(void) override = 0;
 	virtual void		Uninit(void) override;
 	virtual void		Update(void) = 0;
+	virtual void		OnCollision(CColliderComponent& collider) {}
 
 	//Getä÷êî
 	const CM::COL_TYPE	GetType(void) const { return m_type; }
