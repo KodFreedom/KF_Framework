@@ -18,8 +18,7 @@
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
 class CRendererDX;
-class CKeyboardDX;
-class CMouseDX;
+class CInputManager;
 class CTextureManager;
 class CLightManager;
 class CMaterialManager;
@@ -49,8 +48,7 @@ public:
 
 	//GetŠÖ”
 	CRendererDX*		GetRenderer(void) { return m_pRenderer; }
-	CKeyboardDX*		GetKeyboard(void) { return m_pKeyboard; }
-	CMouseDX*			GetMouse(void) { return m_pMouse; }
+	CInputManager*		GetInputManager(void) { return m_pInputManager; }
 	CTextureManager*	GetTextureManager(void) { return m_pTextureManager; }
 	CLightManager*		GetLightManager(void) { return m_pLightManager; }
 	CMaterialManager*	GetMaterialManager(void) { return m_pMaterialManager; }
@@ -62,8 +60,7 @@ public:
 
 private:
 	CRendererDX*		m_pRenderer;
-	CKeyboardDX*		m_pKeyboard;
-	CMouseDX*			m_pMouse;
+	CInputManager*		m_pInputManager;
 	CTextureManager*	m_pTextureManager;
 	CLightManager*		m_pLightManager;
 	CMaterialManager*	m_pMaterialManager;

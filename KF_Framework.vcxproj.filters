@@ -100,6 +100,12 @@
     <Filter Include="ヘッダー ファイル\Component\Transform">
       <UniqueIdentifier>{050bec36-49d9-4b74-b5ee-4d35e1238d05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Camera">
+      <UniqueIdentifier>{f546005a-d83c-4e4c-92bf-fdc1a32fe586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Camera">
+      <UniqueIdentifier>{98aa7b80-43e9-410b-8b93-021c210129d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -110,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="gameObject.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="modeDemo.cpp">
       <Filter>ソース ファイル\Mode</Filter>
@@ -228,6 +231,15 @@
     <ClCompile Include="fade.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="actionGameCamera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="inputManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -238,9 +250,6 @@
     </ClInclude>
     <ClInclude Include="gameObject.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="modeDemo.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -367,6 +376,18 @@
     </ClInclude>
     <ClInclude Include="fade.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="actionGameCamera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="editorCamera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="inputManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

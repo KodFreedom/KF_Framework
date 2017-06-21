@@ -45,6 +45,7 @@ void CKFCollision::CheckContactSphereWithField(CSphereColliderComponent& sphere,
 		if (pRB->GetType() == CRigidbodyComponent::RB_3D)
 		{
 			C3DRigidbodyComponent* p3DRB = (C3DRigidbodyComponent*)pRB;
+			p3DRB->SetOnGround(true);
 			CKFVec3 vVelocity = p3DRB->GetVelocity();
 			vVelocity.m_fY = 0.0f;
 			p3DRB->SetVelocity(vVelocity);

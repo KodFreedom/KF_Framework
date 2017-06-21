@@ -28,7 +28,7 @@ LPCSTR CTextureManager::m_apTexPath[TEX_MAX] = {
 	NULL,										//先頭のテクスチャはNull
 	"data/TEXTURE/sample.png",					//Test Texture
 	"data/TEXTURE/polygon.jpg",					//Test Texture
-	"data/TEXTURE/road_stone.jpg",				//Field Texture
+	"data/TEXTURE/RockCliff.jpg",				//Field Texture
 	"data/TEXTURE/skybox000.jpg",				//Sky Texture
 };
 

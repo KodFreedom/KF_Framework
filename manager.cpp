@@ -13,6 +13,7 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
+#include "inputManager.h"
 #include "textureManager.h"
 #include "modelManager.h"
 #include "lightManager.h"
@@ -20,7 +21,6 @@
 #include "gameObjectManager.h"
 #include "colliderManager.h"
 #include "rendererDX.h"
-#include "inputDX.h"
 #include "mode.h"
 #include "modeDemo.h"
 #include "fade.h"
@@ -37,8 +37,7 @@
 //--------------------------------------------------------------------------------
 CManager::CManager()
 	: m_pRenderer(NULL)
-	, m_pKeyboard(NULL)
-	, m_pMouse(NULL)
+	, m_pInputManager(NULL)
 	, m_pTextureManager(NULL)
 	, m_pLightManager(NULL)
 	, m_pMaterialManager(NULL)
@@ -71,10 +70,8 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CKFMath::InitRandom();
 
 	//入力の生成
-	m_pKeyboard = new CKeyboardDX;
-	m_pKeyboard->Init(hInstance, hWnd);
-	m_pMouse = new CMouseDX;
-	m_pMouse->Init(hInstance, hWnd);
+	m_pInputManager = new CInputManager;
+	m_pInputManager->Init(hInstance, hWnd);
 
 	//モデルマネージャの生成
 	m_pModelManager = new CModelManager;
@@ -177,20 +174,12 @@ void CManager::Uninit(void)
 		m_pModelManager = NULL;
 	}
 
-	//キーボードの破棄
-	if (m_pKeyboard != NULL)
+	//入力マネージャの破棄
+	if (m_pInputManager != NULL)
 	{
-		m_pKeyboard->Uninit();
-		delete m_pKeyboard;
-		m_pKeyboard = NULL;
-	}
-
-	//マウスの破棄
-	if (m_pMouse != NULL)
-	{
-		m_pMouse->Uninit();
-		delete m_pMouse;
-		m_pMouse = NULL;
+		m_pInputManager->Uninit();
+		delete m_pInputManager;
+		m_pInputManager = NULL;
 	}
 
 	//レンダラーの破棄
@@ -207,16 +196,10 @@ void CManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void CManager::Update(void)
 {
-	//キーボード更新
-	if (m_pKeyboard)
+	//入力更新
+	if (m_pInputManager)
 	{
-		m_pKeyboard->Update();
-	}
-
-	//マウス更新
-	if (m_pMouse)
-	{
-		m_pMouse->Update();
+		m_pInputManager->Update();
 	}
 
 	//レンダラー更新

@@ -24,8 +24,9 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CMode::CMode()
-	: m_pCamera(NULL)
 {
+	static CNullCamera nullCamera;
+	m_pCamera = &nullCamera;
 }
 
 //--------------------------------------------------------------------------------
@@ -34,12 +35,8 @@ CMode::CMode()
 void CMode::Uninit(void)
 {
 	//カメラの破棄
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Uninit();
-		delete m_pCamera;
-		m_pCamera = NULL;
-	}
+	m_pCamera->Release();
+	m_pCamera = NULL;
 
 	//オブジェクトの破棄
 	GetManager()->GetGameObjectManager()->ReleaseAll();
@@ -51,10 +48,7 @@ void CMode::Uninit(void)
 void CMode::Update(void)
 {
 	//カメラの更新
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Update();
-	}
+	m_pCamera->Update();
 	
 	//オブジェクトの更新
 	GetManager()->GetGameObjectManager()->UpdateAll();
@@ -66,10 +60,7 @@ void CMode::Update(void)
 void CMode::LateUpdate(void)
 {
 	//カメラの更新
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->LateUpdate();
-	}
+	m_pCamera->LateUpdate();
 
 	//オブジェクトの更新
 	GetManager()->GetGameObjectManager()->LateUpdateAll();
@@ -81,10 +72,7 @@ void CMode::LateUpdate(void)
 void CMode::Draw(void)
 {
 	//カメラのセット
-	if (m_pCamera != NULL)
-	{
-		m_pCamera->Set();
-	}
+	m_pCamera->Set();
 
 	//オブジェクトの描画
 	GetManager()->GetGameObjectManager()->DrawAll();

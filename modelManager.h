@@ -41,7 +41,6 @@ public:
 	{
 		MODEL_NONE,
 		MODEL_CUBE,
-		MODEL_ROBOT,
 		MODEL_PLAYER,
 		MODEL_MAX
 	};

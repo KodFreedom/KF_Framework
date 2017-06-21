@@ -15,7 +15,7 @@
 #include "lightManager.h"
 #include "mode.h"
 #include "modeDemo.h"
-#include "camera.h"
+#include "actionGameCamera.h"
 
 //gameobject
 #include "gameObject2D.h"
@@ -50,11 +50,11 @@ void CModeDemo::Init(void)
 	GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
-	m_pCamera = new CCamera;
+	m_pCamera = new CActionGameCamera;
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CGameObject3D::CreateField(20, 20, CKFVec2(2.0f, 2.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject3D::CreateField(100, 100, CKFVec2(5.0f, 5.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec3(256.0f, 256.0f, 0.0f), CTM::TEX_TEST);
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);

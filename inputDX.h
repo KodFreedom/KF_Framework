@@ -4,11 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _INPUT_DX_H_
-#define _INPUT_DX_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -35,7 +31,8 @@ public:
 	void Unacquire(void) { if (m_pDIDevice) { m_pDIDevice->Unacquire(); } }
 
 protected:
-	static LPDIRECTINPUT8	m_pDInput;	// DirectInputオブジェクト
+	static const int sc_nCntForRepeat = 20; // リピート待ち時間
+	static LPDIRECTINPUT8	m_pDInput;		// DirectInputオブジェクト
 	LPDIRECTINPUTDEVICE8	m_pDIDevice;	// Deviceオブジェクト(入力に必要)
 };
 
@@ -48,9 +45,8 @@ public:
 	CKeyboardDX();
 	~CKeyboardDX() {}
 
-	HRESULT Init(HINSTANCE hInst, HWND hWnd);
-	void Uninit(void);
-	void Update(void);
+	HRESULT Init(HINSTANCE hInst, HWND hWnd) override;
+	void Update(void) override;
 
 	BOOL GetKeyPress(int nKey);
 	BOOL GetKeyTrigger(int nKey);
@@ -59,12 +55,12 @@ public:
 	void FlushKeyTrigger(int nKey);
 	
 private:
-	static const int m_nNumKeyMax = 256;		// キー最大数
-	BYTE	m_aKeyState[m_nNumKeyMax];			// キーボードの状態を受け取るワーク
-	BYTE	m_aKeyStateTrigger[m_nNumKeyMax];	// トリガーワーク
-	BYTE	m_aKeyStateRelease[m_nNumKeyMax];	// リリースワーク
-	BYTE	m_aKeyStateRepeat[m_nNumKeyMax];	// リピートワーク
-	int		m_aKeyStateRepeatCnt[m_nNumKeyMax];	// リピートカウンタ
+	static const int sc_nNumKeyMax = 256;			// キー最大数
+	BYTE	m_aKeyState[sc_nNumKeyMax];				// キーボードの状態を受け取るワーク
+	BYTE	m_aKeyStateTrigger[sc_nNumKeyMax];		// トリガーワーク
+	BYTE	m_aKeyStateRelease[sc_nNumKeyMax];		// リリースワーク
+	BYTE	m_aKeyStateRepeat[sc_nNumKeyMax];		// リピートワーク
+	int		m_aKeyStateRepeatCnt[sc_nNumKeyMax];	// リピートカウンタ
 };
 
 //--------------------------------------------------------------------------------
@@ -73,6 +69,9 @@ private:
 class CMouseDX : public CInputDX
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
 	enum MOUSE_BUTTON 
 	{
 		MOUSE_LEFT = 0,
@@ -81,31 +80,117 @@ public:
 		MOUSE_MAX
 	};
 
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
 	CMouseDX();
 	~CMouseDX() {}
 
-	HRESULT Init(HINSTANCE hInst, HWND hWnd);
-	void Update(void);
+	HRESULT Init(HINSTANCE hInst, HWND hWnd) override;
+	void Update(void) override;
 
 	BOOL GetMousePress(int nButton);
 	BOOL GetMouseTrigger(int nButton);
 	BOOL GetMouseRelease(int nButton);
-	BOOL GetMouseRepeat(int nButton);
+	//BOOL GetMouseRepeat(int nButton);
 	void FlushMouseTrigger(int nButton);
 	LONG GetMouseAxisX(void);
 	LONG GetMouseAxisY(void);
 	LONG GetMouseAxisZ(void);
 
 private:
-	static const int m_nNumMBMax = 8;				// マウスボタン最大数
-	BYTE	m_aMouseState[m_nNumMBMax];				// キーボードの状態を受け取るワーク
-	BYTE	m_aMouseStateTrigger[m_nNumMBMax];		// トリガーワーク
-	BYTE	m_aMouseStateRelease[m_nNumMBMax];		// リリースワーク
-	BYTE	m_aMouseStateRepeat[m_nNumMBMax];		// リピートワーク
-	int		m_aMouseStateRepeatCnt[m_nNumMBMax];	// リピートカウンタ
-	LONG	m_lMouseX;
-	LONG	m_lMouseY;
-	LONG	m_lMouseZ;
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	DIMOUSESTATE2	m_mouseState;
+	DIMOUSESTATE2	m_mouseStateTrigger;
+	DIMOUSESTATE2	m_mouseStateRelease;
 };
 
-#endif
+//--------------------------------------------------------------------------------
+// ジョイスティック入力クラス
+//--------------------------------------------------------------------------------
+class CJoystickDX : public CInputDX
+{
+public:
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
+	enum XBOX_BUTTON
+	{
+		B_A = 0,
+		B_B = 1,
+		B_X = 2,
+		B_Y = 3,
+		B_LB = 4,
+		B_RB = 5,
+		B_BACK = 6,
+		B_MENU = 7,
+		B_LS = 8,
+		B_RS = 9
+	};
+
+	enum XBOX_CROSS_KEY
+	{
+		K_UP = 0,
+		K_DOWN = 18000,
+		K_LEFT = 27000,
+		K_RIGHT = 9000
+	};
+
+	enum XBOX_STICK
+	{
+		S_UP = -1000,
+		S_DOWN = 1000,
+		S_LEFT = -1000,
+		S_RIGHT = 1000
+	};
+
+	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	static const int sc_nStickAxisMax = 1000;
+
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CJoystickDX();
+	~CJoystickDX() {}
+	
+	HRESULT Init(HINSTANCE hInst, HWND hWnd) override;
+	void Update(void) override;
+
+	BOOL GetButtonPress(const XBOX_BUTTON& button);
+	BOOL GetButtonTrigger(const XBOX_BUTTON& button);
+	BOOL GetButtonRelease(const XBOX_BUTTON& button);
+
+	BOOL GetCrossKeyPress(const XBOX_CROSS_KEY& key);
+	BOOL GetCrossKeyTrigger(const XBOX_CROSS_KEY& key);
+	BOOL GetCrossKeyRelease(const XBOX_CROSS_KEY& key);
+
+	LONG GetLStickAxisX(void);
+	LONG GetLStickAxisY(void);
+	LONG GetLTandRT(void);
+	LONG GetRStickAxisX(void);
+	LONG GetRStickAxisY(void);
+	LONG GetRudder(void);
+
+	bool GetAttached(void) { return m_bAttached; }
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	HRESULT	AttachJoystick(void);
+	static BOOL CALLBACK EnumJoyCallback(const DIDEVICEINSTANCE *pDidInstance, VOID *pContext);
+	static BOOL CALLBACK EnumAxesCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef);
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	DIJOYSTATE2 m_joyState;
+	DIJOYSTATE2 m_joyStateTrigger;
+	DIJOYSTATE2 m_joyStateRelease;
+	HWND		m_hWnd;
+	bool		m_bAttached;
+};

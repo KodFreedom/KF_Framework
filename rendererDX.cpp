@@ -12,6 +12,7 @@
 
 #ifdef _DEBUG
 #include "manager.h"
+#include "inputManager.h"
 #include "inputDX.h"
 #endif
 
@@ -179,7 +180,7 @@ void CRendererDX::Uninit(void)
 void CRendererDX::Update(void)
 {
 #ifdef _DEBUG
-	CKeyboardDX *pKeyboard = GetManager()->GetKeyboard();
+	CKeyboardDX *pKeyboard = GetManager()->GetInputManager()->GetKeyboard();
 	
 	if (pKeyboard->GetKeyPress(DIK_Q))
 	{

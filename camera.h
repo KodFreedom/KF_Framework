@@ -36,10 +36,16 @@ public:
 	CCamera();
 	~CCamera();
 
-	void Init(void);
-	void Uninit(void);
-	void Update(void);
-	void LateUpdate(void);
+	virtual void Init(void);
+	virtual void Uninit(void);
+	virtual void Update(void);
+	virtual void LateUpdate(void);
+	virtual void Release(void)
+	{
+		Uninit();
+		delete this;
+	}
+
 	void Set(void);
 
 	//Get関数
@@ -54,17 +60,29 @@ public:
 	void MoveCamera(const CKFVec3& vMovement);
 	void LookAtHere(const CKFVec3& vPos);
 	void SetCamera(const CKFVec3& vPosAt, const CKFVec3& vPosEye, const CKFVec3& vUp, const CKFVec3& vRight);
-	void SetTarget(CGameObject* pTarget) { m_pTarget = pTarget; }
+	virtual void SetTarget(CGameObject* pTarget) {}
 
-private:
+protected:
+	////--------------------------------------------------------------------------------
+	////  定数定義
+	////--------------------------------------------------------------------------------
+	//static const float sc_fRotSpeed;		//カメラ回転速度
+	//static const float sc_fStartRotMin;		//カメラ回転開始のスティック最小値
+	//static const float sc_fRotLerpTime;		//カメラ回転速度遅延処理係数
+	//static const float sc_fZoomSpeed;		//ズーム速度
+	//static const float sc_fDistanceMin;		//注視点と注目点の最小距離
+	//static const float sc_fDistanceMax;		//注視点と注目点の最大距離
+	//static const float sc_fZoomLerpTime;	//ズーム遅延処理係数
+	//static const float sc_fDisToTarget;		//注視点とターゲットとの距離
+
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	void UpdateViewInverse(const D3DXMATRIX& mtxView);
-	void Pitch(const float& fAngle);	//X軸(vVecRight)回転
-	void Yaw(const float& fAngle);		//Y軸(vVecUp)回転
-	void Roll(const float& fAngle);		//Z軸(vLook)回転
-	void NormalizeCamera(void);
+	virtual void Pitch(const float& fAngle);	
+	virtual void Yaw(const float& fAngle);		
+	virtual void Roll(const float& fAngle);		
+	virtual void NormalizeCamera(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -79,5 +97,20 @@ private:
 	float			m_fDistance;		//AtとEyeの距離
 	float			m_fFovY;			//画角
 	float			m_fFar;				//最大距離
-	CGameObject*	m_pTarget;			//カメラが見てるターゲット
+};
+
+//--------------------------------------------------------------------------------
+//  ヌルクラス
+//--------------------------------------------------------------------------------
+class CNullCamera : public CCamera
+{
+public:
+	CNullCamera() : CCamera() {}
+	~CNullCamera() {}
+
+	void Init(void) override {}
+	void Uninit(void) override {}
+	void Update(void) override {}
+	void LateUpdate(void) override {}
+	void Release(void) override {}
 };

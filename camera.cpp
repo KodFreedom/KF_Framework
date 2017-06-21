@@ -4,21 +4,20 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------
+//  ÉCÉìÉNÉãÅ[ÉhÉtÉ@ÉCÉã
+//--------------------------------------------------------------------------------
 #include "main.h"
 #include "camera.h"
 #include "manager.h"
 #include "rendererDX.h"
-#include "inputDX.h"
-#include "gameObject.h"
 
 //--------------------------------------------------------------------------------
 //  íËêîíËã`
 //--------------------------------------------------------------------------------
 //#define CAMERA_MOVE_SPEED (1.0f)
-#define ROT_SPEED (0.5f)
 //#define RETURN_SPEED (0.95f)
-#define ZOOM_SPEED (0.5f)
-#define DISTANCE_MIN (1.0f)
 //#define FLOAT_MIN (0.001f)
 //#define WORLD_ROT_DEFAULT (CKFVec3(0.0f, 0.0f, 0.0f))
 //#define CAMERA_FOV_DEFAULT (75.0f * D3DX_PI / 180.0f)
@@ -49,8 +48,6 @@ CCamera::CCamera()
 	, m_fFovY((float)DEFAULT_FOV)
 	, m_fFar((float)DEFAULT_FAR)
 {
-	static CNullGameObject nullGameObject;
-	m_pTarget = &nullGameObject;
 }
 
 //--------------------------------------------------------------------------------
@@ -83,24 +80,64 @@ void CCamera::Uninit(void)
 //--------------------------------------------------------------------------------
 void CCamera::Update(void)
 {
-	CMouseDX *pMouse = GetManager()->GetMouse();
-
-	//íçñ⁄ì_âÒì]
-	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisX() != 0)
-	{
-		Yaw(ROT_SPEED * ((float)pMouse->GetMouseAxisX() / MOUSE_AXIS_MAX));
-	}
-	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisY() != 0)
-	{
-		Pitch(ROT_SPEED * ((float)pMouse->GetMouseAxisY() / MOUSE_AXIS_MAX));
-	}
-
-	//ägëÂèkè¨
-	if (pMouse->GetMouseAxisZ() != 0 && pMouse->GetMouseAxisZ() <= MOUSE_AXIS_MAX && pMouse->GetMouseAxisZ() >= -MOUSE_AXIS_MAX)
-	{
-		m_fDistance -= ZOOM_SPEED * (float)pMouse->GetMouseAxisZ() / MOUSE_AXIS_MAX;
-		m_fDistance = m_fDistance < DISTANCE_MIN ? DISTANCE_MIN : m_fDistance;
-	}
+//	CMouseDX *pMouse = GetManager()->GetMouse();
+//	CJoystickDX* pJoystick = GetManager()->GetJoystickDX();
+//	CKFVec3 vRot = CKFVec3(0.0f);
+//	float fZoomSpeed = 0.0f;
+//
+//	//íçñ⁄ì_âÒì]
+//	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisX() != 0)
+//	{
+//		vRot.m_fY = KF_PI * ((float)pMouse->GetMouseAxisX() / SCREEN_WIDTH);
+//	}
+//	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisY() != 0)
+//	{
+//		vRot.m_fX = KF_PI * ((float)pMouse->GetMouseAxisY() / SCREEN_HEIGHT);
+//	}
+//
+//	//ägëÂèkè¨
+//	if (pMouse->GetMouseAxisZ() != 0 /*&& pMouse->GetMouseAxisZ() <= MOUSE_AXIS_MAX && pMouse->GetMouseAxisZ() >= -MOUSE_AXIS_MAX*/)
+//	{
+//		fZoomSpeed = -sc_fZoomSpeed * (float)pMouse->GetMouseAxisZ() / MOUSE_AXIS_MAX;
+//	}
+//
+//	if (pJoystick->GetAttached())
+//	{
+//		float fRAxisX = (float)pJoystick->GetRStickAxisX() / CJoystickDX::sc_nStickAxisMax;
+//		float fRAxisY = (float)pJoystick->GetRStickAxisY() / CJoystickDX::sc_nStickAxisMax;
+//		float fLTRT = (float)pJoystick->GetLTandRT() / CJoystickDX::sc_nStickAxisMax;
+//
+//#ifdef _DEBUG
+//			//char aBuf[256] = {};
+//			//sprintf(aBuf, "AxisX : %f\tAxisY : %f\n", fRAxisX, fRAxisY);
+//			//OutputDebugString(aBuf);
+//#endif
+//		//íçñ⁄ì_âÒì]
+//		if (fabsf(fRAxisX) > sc_fStartRotMin)
+//		{//Yé≤âÒì]
+//			vRot.m_fY = sc_fRotSpeed * fRAxisX;
+//		}
+//		if (fabsf(fRAxisY) > sc_fStartRotMin)
+//		{//Xé≤âÒì]
+//			vRot.m_fX = sc_fRotSpeed * fRAxisY;
+//		}
+//
+//		//ägëÂèkè¨
+//		if (fabsf(fLTRT) > sc_fStartRotMin)
+//		{
+//			fZoomSpeed = sc_fZoomSpeed * fLTRT;
+//		}
+//	}
+//
+//	//íçñ⁄ì_âÒì]
+//	m_vRotSpeed = CKFMath::LerpVec3(m_vRotSpeed, vRot, sc_fRotLerpTime);
+//	Yaw(m_vRotSpeed.m_fY);
+//	Pitch(m_vRotSpeed.m_fX);
+//
+//	//ÉYÅ[ÉÄ
+//	m_fZoomSpeed = CKFMath::LerpFloat(m_fZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
+//	m_fDistance += m_fZoomSpeed;
+//	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
 }
 
 //--------------------------------------------------------------------------------
@@ -108,7 +145,6 @@ void CCamera::Update(void)
 //--------------------------------------------------------------------------------
 void CCamera::LateUpdate(void)
 {
-	m_vPosAt = m_pTarget->GetPos();
 }
 
 //--------------------------------------------------------------------------------
@@ -116,10 +152,11 @@ void CCamera::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CCamera::Set(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-
 	NormalizeCamera();
 	m_vPosEye = m_vPosAt - m_vVecLook * m_fDistance;
+
+#ifdef USING_DIRECTX9
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
 	//ViewçsóÒ
 	D3DXMATRIX mtxView;
@@ -137,6 +174,7 @@ void CCamera::Set(void)
 
 	//ãtview
 	UpdateViewInverse(mtxView);
+#endif
 }
 
 //--------------------------------------------------------------------------------

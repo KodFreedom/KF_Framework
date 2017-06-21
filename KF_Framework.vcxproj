@@ -155,6 +155,7 @@
     <ClCompile Include="3DMeshDrawComponent.cpp" />
     <ClCompile Include="3DMeshComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
+    <ClCompile Include="actionGameCamera.cpp" />
     <ClCompile Include="actorMeshComponent.cpp" />
     <ClCompile Include="actorMeshDrawComponent.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="gameObjectActor.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="inputDX.cpp" />
+    <ClCompile Include="inputManager.cpp" />
     <ClCompile Include="KF_Collision.cpp" />
     <ClCompile Include="KF_Math.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="cubeMeshComponent.h" />
     <ClInclude Include="drawComponent.h" />
+    <ClInclude Include="editorCamera.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="fieldColliderComponent.h" />
     <ClInclude Include="fieldMeshComponent.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="inputComponent.h" />
     <ClInclude Include="inputDX.h" />
+    <ClInclude Include="inputManager.h" />
     <ClInclude Include="KF_Collision.h" />
     <ClInclude Include="KF_Math.h" />
     <ClInclude Include="KF_UtilityDX.h" />
@@ -241,6 +245,7 @@
     <ClInclude Include="skyBoxMeshComponent.h" />
     <ClInclude Include="sphereColliderComponent.h" />
     <ClInclude Include="textureManager.h" />
+    <ClInclude Include="actionGameCamera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

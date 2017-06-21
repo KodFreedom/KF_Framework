@@ -231,11 +231,10 @@ public:
 	static float	VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static void		Vec3TransformCoord(CKFVec3* pVec, const CKFMtx44& mtxRot);
 	static void		Vec3TransformNormal(CKFVec3* pVec, const CKFMtx44& mtxRot);
+	static float	Vec2Radian(const CKFVec2& vValue);
 	static float	RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
 	static float	RadianBetweenVec(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static CKFVec3	EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo);
-	static CKFVec3	LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime);
-	static CKFVec3	LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime);
 
 	//MatrixåvéZ
 	static void		MtxIdentity(CKFMtx44* pMtx);
@@ -251,6 +250,11 @@ public:
 	static CKFRay	ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11);
 	static void		TransformRay(CKFRay* pRay, const CKFMtx44& mtxTrans);
 	static RTS_INFO	ContactRayToSphere(const CKFRay& ray, const CKFVec3& vSpherePos, const float& fRadius);
+
+	//Lerpä÷êî
+	static CKFVec3	LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime);
+	static CKFVec3	LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime);
+	static float	LerpFloat(const float& fFrom, const float& fTo, const float& fTime);
 
 	//ÇŸÇ©ÇÃåvéZ
 	static void		NormalizeRotInTwoPi(float* pRot);

@@ -33,13 +33,23 @@ public:
 
 	//Get関数
 	CKFVec3		GetVelocity(void) const { return m_vVelocity; }
+	bool		IsOnGround(void) const { return m_bOnGround; }
 
 	//Set関数
 	void		MovePos(const CKFVec3& vMovement) { m_vMovement = vMovement; }
+	void		SetMass(const float& fMass);
 	void		SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }
+	void		SetOnGround(const bool& bValue) { m_bOnGround = bValue; }
+	void		AddForce(const CKFVec3& vForce) { m_vForceAccum += vForce; }
 
 private:
-	float	m_fMass;
-	CKFVec3 m_vMovement;
-	CKFVec3 m_vVelocity;
+	float		m_fMass;		//質量
+	float		m_fInverseMass;	//質量の逆数
+	float		m_fDrag;		//抵抗係数
+	CKFVec3		m_vGravity;		//重力
+	CKFVec3		m_vMovement;	//移動量
+	CKFVec3		m_vVelocity;	//速度
+	CKFVec3		m_vForceAccum;	//合わせた作用力
+	CKFVec3		m_vAcceleration;//加速度
+	bool		m_bOnGround;	//着陸フラッグ
 };

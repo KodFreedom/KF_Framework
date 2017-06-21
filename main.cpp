@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "inputDX.h"
+#include "inputManager.h"
 
 //--------------------------------------------------------------------------------
 //  ’è”’è‹`
@@ -204,18 +204,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (g_pManager)
 		{
 			BOOL bActive = (BOOL)GetActiveWindow();
-			CKeyboardDX* pKeyboard = g_pManager->GetKeyboard();
-			CMouseDX* pMouse = g_pManager->GetMouse();
+			CInputManager* pInput = g_pManager->GetInputManager();
 
 			if (bActive)
 			{
-				if (pKeyboard) pKeyboard->Acquire();
-				if (pMouse) pMouse->Acquire();
+				pInput->Acquire();
 			}
 			else
 			{
-				if (pKeyboard) pKeyboard->Unacquire();
-				if (pMouse) pMouse->Unacquire();
+				pInput->Unacquire();
 			}
 		}
 		break;

@@ -8,6 +8,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "KF_Math.h"
 
 //--------------------------------------------------------------------------------
@@ -738,6 +739,15 @@ void CKFMath::Vec3TransformNormal(CKFVec3 *pVec, const CKFMtx44 &mtxRot)
 }
 
 //--------------------------------------------------------------------------------
+//  Vector2の値から角度を計算する
+//--------------------------------------------------------------------------------
+float CKFMath::Vec2Radian(const CKFVec2& vValue)
+{
+	float fValue = atan2f(vValue.m_fY, vValue.m_fX);
+	return fValue;
+}
+
+//--------------------------------------------------------------------------------
 //  RadianBetweenVec
 //	Vec2(ベクトル)間の角度の算出
 //--------------------------------------------------------------------------------
@@ -812,30 +822,6 @@ CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo
 	vRot.m_fZ = RadianBetweenVec(CKFVec2(vVecFrom.m_fX, vVecFrom.m_fY), CKFVec2(vVecTo.m_fX, vVecTo.m_fY));
 
 	return vRot;
-}
-
-//--------------------------------------------------------------------------------
-//  LerpVec3
-//	Vector3を線形補間方式で移動する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime)
-{
-	float fPersent = fTime / 1.0f;
-	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
-	CKFVec3 vDelta = vVecTo - vVecFrom;
-	CKFVec3 vVec3 = vVecFrom + vDelta * fPersent;
-	return vVec3;
-}
-
-//--------------------------------------------------------------------------------
-//  LerpNormal
-//	法線を線形補間方式で回転する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime)
-{
-	CKFVec3 vNormal = LerpVec3(vNormalFrom, vNormalTo, fTime);
-	VecNormalize(&vNormal);
-	return vNormal;
 }
 
 //--------------------------------------------------------------------------------
@@ -1057,6 +1043,46 @@ CKFMath::RTS_INFO CKFMath::ContactRayToSphere(const CKFRay &ray, const CKFVec3 &
 	}
 
 	return info;
+}
+
+//--------------------------------------------------------------------------------
+//  Lerp
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  LerpVec3
+//	Vector3を線形補間方式で移動する
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime)
+{
+	float fPersent = fTime;
+	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
+	CKFVec3 vDelta = vVecTo - vVecFrom;
+	CKFVec3 vVec3 = vVecFrom + vDelta * fPersent;
+	return vVec3;
+}
+
+//--------------------------------------------------------------------------------
+//  LerpNormal
+//	法線を線形補間方式で回転する
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime)
+{
+	CKFVec3 vNormal = LerpVec3(vNormalFrom, vNormalTo, fTime);
+	VecNormalize(&vNormal);
+	return vNormal;
+}
+
+//--------------------------------------------------------------------------------
+//  LerpFloat
+//	Floatを線形補間方式で回転する
+//--------------------------------------------------------------------------------
+float CKFMath::LerpFloat(const float& fFrom, const float& fTo, const float& fTime)
+{
+	float fPersent = fTime;
+	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
+	float fDelta = fTo - fFrom;
+	float fAnswer = fFrom + fDelta * fPersent;
+	return fAnswer;
 }
 
 //--------------------------------------------------------------------------------

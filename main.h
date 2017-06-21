@@ -39,11 +39,13 @@
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define SCREEN_WIDTH	(800)															//ウインドウ幅
-#define SCREEN_HEIGHT	(600)															//ウインドウ高さ
-#define TIMER_INTERVAL	(1000/60)														//更新間隔
-#define CLASS_NAME		"KF_Framework"													//クラスの名前
-#define WINDOW_NAME		"フレームワーク"
+#define SCREEN_WIDTH		(800)							//ウインドウ幅
+#define SCREEN_HEIGHT		(600)							//ウインドウ高さ
+#define FRAME_PER_SECOND	(60)
+#define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)	//更新間隔
+#define DELTA_TIME			(TIMER_INTERVAL * 0.001f)		//更新間隔(秒単位)
+#define CLASS_NAME			"KF_Framework"					//クラスの名前
+#define WINDOW_NAME			"フレームワーク"
 
 #ifdef USING_DIRECTX9
 #define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット

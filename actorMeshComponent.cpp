@@ -103,19 +103,35 @@ void CActorMeshComponent::SetMotionNext(const MOTION& motion)
 {
 	if (motion >= MOTION_MAX || motion == m_motionInfo.motionNow) { return; }
 
-	m_motionInfo.motionNow = motion;
-	m_motionInfo.nCntFrame = 0;
-	m_motionInfo.nKeyNow = 0;
-
 	switch (motion)
 	{
 	case MOTION_JUMP:
 		m_motionInfo.motionNext = MOTION_LANDING;
 		break;
+	case MOTION_MOVE:
+		if (m_motionInfo.motionNow != MOTION_NEUTAL
+			&& m_motionInfo.motionNow != MOTION_MOVE) 
+		{
+			return;
+		}
+		m_motionInfo.motionNext = MOTION_NEUTAL;
+		break;
+	case MOTION_NEUTAL:
+		if (m_motionInfo.motionNow != MOTION_NEUTAL
+			&& m_motionInfo.motionNow != MOTION_MOVE)
+		{
+			return;
+		}
+		m_motionInfo.motionNext = MOTION_NEUTAL;
+		break;
 	default:
 		m_motionInfo.motionNext = MOTION_NEUTAL;
 		break;
 	}
+
+	m_motionInfo.motionNow = motion;
+	m_motionInfo.nCntFrame = 0;
+	m_motionInfo.nKeyNow = 0;
 }
 
 //--------------------------------------------------------------------------------

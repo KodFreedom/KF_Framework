@@ -49,11 +49,11 @@ void CFieldMeshComponent::MakeVertex(void)
 	{
 		if (nCntZ <= (m_nNumBlockZ + 1) / 4)
 		{
-			fHeight += 0.5f;
+			fHeight += 0.25f;
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
 		{
-			fHeight -= 0.5f;
+			fHeight -= 0.25f;
 		}
 		else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
 		{
@@ -65,24 +65,6 @@ void CFieldMeshComponent::MakeVertex(void)
 		}
 		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
 		{
-			if (nCntX <= (m_nNumBlockX + 1) / 4)
-			{
-				fHeight += 0.1f;
-			}
-			else if (nCntX <= (m_nNumBlockX + 1) / 2)
-			{
-				fHeight -= 0.1f;
-			}
-			else if (nCntX <= (m_nNumBlockX + 1) * 3 / 4)
-			{
-				fHeight += 0.1f;
-			}
-			else
-			{
-				fHeight -= 0.1f;
-			}
-			//float fHeight = CKFMath::GetRandomFloat(-0.2f, 0.2f);
-
 			pVtx[nCntZ * (m_nNumBlockX + 1) + nCntX].vPos = vStartPos
 				+ CKFVec3(nCntX * m_vBlockSize.m_fX, fHeight, -nCntZ * m_vBlockSize.m_fY);
 			pVtx[nCntZ * (m_nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f, nCntZ * 1.0f);

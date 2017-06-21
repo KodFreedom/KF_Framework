@@ -27,11 +27,12 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CPlayerInputComponent(CGameObject* const pGameObj) : CInputComponent(pGameObj) {}
+	CPlayerInputComponent(CGameObject* const pGameObj, const float& fMoveSpeed = 0.075f, const float& fJumpForce = 2.0f);
 	~CPlayerInputComponent() {}
 
 	void	Update(void) override;
 
 private:
-	const float c_fSpeed = 4.0f / 60.0f;
+	const float c_fSpeed;
+	const float c_fJumpForce;;
 };
