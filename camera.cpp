@@ -65,7 +65,7 @@ void CCamera::Init(void)
 	m_vVecLook = m_vPosAt - m_vPosEye;
 	CKFMath::VecNormalize(&m_vVecLook);
 	m_fDistance = CKFMath::VecMagnitude(m_vPosEye - m_vPosAt);
-	NormalizeCamera();
+	CCamera::NormalizeCamera();
 }
 
 //--------------------------------------------------------------------------------
@@ -145,6 +145,8 @@ void CCamera::Update(void)
 //--------------------------------------------------------------------------------
 void CCamera::LateUpdate(void)
 {
+	NormalizeCamera();
+	m_vPosEye = m_vPosAt - m_vVecLook * m_fDistance;
 }
 
 //--------------------------------------------------------------------------------
@@ -152,9 +154,6 @@ void CCamera::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CCamera::Set(void)
 {
-	NormalizeCamera();
-	m_vPosEye = m_vPosAt - m_vVecLook * m_fDistance;
-
 #ifdef USING_DIRECTX9
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 

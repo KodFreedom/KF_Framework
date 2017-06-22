@@ -42,7 +42,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 
 	//コンポネント
 	pObj->m_pInput = new CPlayerInputComponent(pObj);
-	pObj->m_pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	pObj->m_pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.6f);
 	pObj->m_pRigidbody = new C3DRigidbodyComponent(pObj);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);

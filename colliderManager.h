@@ -54,6 +54,12 @@ public:
 		std::list<COL_TYPE> listTargetType;	//Colliderがどのタイプと当たり判定するか
 	};
 
+	struct HIT_INFO
+	{
+		CKFVec3 vPos;
+		CKFVec3	vNormal;
+	};
+
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
@@ -68,6 +74,10 @@ public:
 	void		ReleaseCollider(const MODE& mode, const COL_TYPE& type, const COL_ITR& itr);
 	COL_ITR		SaveField(CColliderComponent* pCollider);
 	void		ReleaseField(const COL_ITR& itr);
+
+	//臨時採用
+	bool		SphereCast(const CKFVec3& vCenter, const float& fRadius, HIT_INFO& hitInfoOut);
+	bool		RayCast(const CKFRay& ray, const float& fLength, HIT_INFO& hitInfoOut);
 
 private:
 	//--------------------------------------------------------------------------------

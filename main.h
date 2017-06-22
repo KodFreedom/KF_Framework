@@ -39,8 +39,8 @@
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define SCREEN_WIDTH		(800)							//ウインドウ幅
-#define SCREEN_HEIGHT		(600)							//ウインドウ高さ
+#define SCREEN_WIDTH		(1280)							//ウインドウ幅
+#define SCREEN_HEIGHT		(720)							//ウインドウ高さ
 #define FRAME_PER_SECOND	(60)
 #define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)	//更新間隔
 #define DELTA_TIME			(TIMER_INTERVAL * 0.001f)		//更新間隔(秒単位)

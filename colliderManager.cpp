@@ -11,6 +11,7 @@
 #include "colliderManager.h"
 #include "colliderComponent.h"
 #include "sphereColliderComponent.h"
+#include "fieldColliderComponent.h"
 #include "KF_Collision.h"
 
 //--------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ void CColliderManager::CheckWithField(CSphereColliderComponent& sphere)
 		for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
 		{
 			CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
-			CKFCollision::CheckContactSphereWithField(sphere, *pField);
+			CKFCollision::CheckCollisionSphereWithField(sphere, *pField);
 		}
 	}
 }
@@ -136,4 +137,27 @@ CColliderManager::COL_ITR CColliderManager::SaveField(CColliderComponent* pColli
 void CColliderManager::ReleaseField(const COL_ITR& itr)
 {
 	m_listField.erase(itr);
+}
+
+//--------------------------------------------------------------------------------
+//  スフィア当たり判定
+//--------------------------------------------------------------------------------
+bool CColliderManager::SphereCast(const CKFVec3& vCenter, const float& fRadius, HIT_INFO& hitInfoOut)
+{
+	if (!m_listField.empty())
+	{
+		for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
+		{
+			CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
+			CFieldColliderComponent::INFO info = pField->GetPointInfo(vCenter);
+			if (!info.bInTheField) { continue; }
+			if (info.fHeight > vCenter.m_fY - fRadius)
+			{
+				hitInfoOut.vNormal = info.vFaceNormal;
+				hitInfoOut.vPos = CKFVec3(vCenter.m_fX, info.fHeight, vCenter.m_fZ);
+				return true;
+			}
+		}
+	}
+	return false;
 }

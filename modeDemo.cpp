@@ -59,7 +59,7 @@ void CModeDemo::Init(void)
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
 	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	CGameObject* pPlayer = CGameObjectActor::CreatePlayer(CMOM::MODEL_PLAYER, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject* pPlayer = CGameObjectActor::CreatePlayer(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject* pPlayer = CGameObject3D::CreateModel(CMOM::MODEL_CUBE, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	m_pCamera->SetTarget(pPlayer);
 }

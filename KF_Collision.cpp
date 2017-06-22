@@ -20,7 +20,7 @@
 //--------------------------------------------------------------------------------
 //  スフィアとフィールドの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollision::CheckContactSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
+void CKFCollision::CheckCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
 	CKFVec3 vSpherePos = sphere.GetGameObject()->GetPosNext();
 	float fSphereRadius = sphere.GetRadius();

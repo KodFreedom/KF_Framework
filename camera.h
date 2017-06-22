@@ -63,18 +63,6 @@ public:
 	virtual void SetTarget(CGameObject* pTarget) {}
 
 protected:
-	////--------------------------------------------------------------------------------
-	////  定数定義
-	////--------------------------------------------------------------------------------
-	//static const float sc_fRotSpeed;		//カメラ回転速度
-	//static const float sc_fStartRotMin;		//カメラ回転開始のスティック最小値
-	//static const float sc_fRotLerpTime;		//カメラ回転速度遅延処理係数
-	//static const float sc_fZoomSpeed;		//ズーム速度
-	//static const float sc_fDistanceMin;		//注視点と注目点の最小距離
-	//static const float sc_fDistanceMax;		//注視点と注目点の最大距離
-	//static const float sc_fZoomLerpTime;	//ズーム遅延処理係数
-	//static const float sc_fDisToTarget;		//注視点とターゲットとの距離
-
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
