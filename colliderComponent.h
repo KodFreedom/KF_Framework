@@ -39,9 +39,14 @@ public:
 	virtual void		Uninit(void) override;
 	virtual void		Update(void) = 0;
 	virtual void		OnCollision(CColliderComponent& collider) {}
+	virtual void		OnTrigger(CColliderComponent& collider) {}
+
+	//Set関数
+	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
 
 	//Get関数
 	const CM::COL_TYPE	GetType(void) const { return m_type; }
+	const bool			IsTrigger(void) { return m_bTrigger; }
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -55,21 +60,6 @@ protected:
 	CM::COL_TYPE	m_type;		//colliderのタイプ
 	CM::COL_ITR		m_itr;		//マネージャlist中の位置
 	CM::MODE		m_mode;		//Static/Dynamic mode
+	bool			m_bTrigger;	//Trigger Flag
 	CKFVec3			m_vPos;		//相対位置
-};
-
-//--------------------------------------------------------------------------------
-//  ヌルコリジョンコンポネント
-//--------------------------------------------------------------------------------
-class CNullColliderComponent : public CColliderComponent
-{
-public:
-	CNullColliderComponent() : CColliderComponent() {}
-	~CNullColliderComponent() {}
-
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override {}
-	void		Release(void) override {}
-	void		ReceiveMsg(const MESSAGE &msg) override {}
 };

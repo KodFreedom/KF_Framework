@@ -97,6 +97,26 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 }
 
 //--------------------------------------------------------------------------------
+//  fieldの情報取得
+//--------------------------------------------------------------------------------
+std::list<CFieldColliderComponent::INFO> CFieldColliderComponent::GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd)
+{
+	std::list<INFO> listInfo;
+
+	//書き出す範囲を算出する
+	CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	int nXLeftUpBegin = (int)(((vBegin.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZLeftUpBegin = -(int)(((vBegin.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	int nXLeftUpEnd = (int)(((vEnd.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZLeftUpEnd = -(int)(((vEnd.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	
+	//範囲内フィールドがあるかどうかをチェック
+
+
+	return listInfo;
+}
+
+//--------------------------------------------------------------------------------
 //  頂点生成
 //--------------------------------------------------------------------------------
 void CFieldColliderComponent::MakeVertex(void)

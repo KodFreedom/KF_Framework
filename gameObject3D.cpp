@@ -69,7 +69,8 @@ CGameObject3D* CGameObject3D::CreateField(const int& nNumBlockX, const int& nNum
 	CGameObject3D* pObj = new CGameObject3D;
 
 	//コンポネント
-	pObj->m_pCollider = new CFieldColliderComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
+	CFieldColliderComponent* pCollider = new CFieldColliderComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
+	pObj->m_apCollider.push_back(pCollider);
 	CFieldMeshComponent* pMesh = new CFieldMeshComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
 	pMesh->SetTexName(CTM::TEX_ROAD);
 	pObj->m_pMesh = pMesh;

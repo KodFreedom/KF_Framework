@@ -60,6 +60,7 @@ void CModeDemo::Init(void)
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
 	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CGameObject* pPlayer = CGameObjectActor::CreatePlayer(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 5.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
 	//CGameObject* pPlayer = CGameObject3D::CreateModel(CMOM::MODEL_CUBE, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	m_pCamera->SetTarget(pPlayer);
 }

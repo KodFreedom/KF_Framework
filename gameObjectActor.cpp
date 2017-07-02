@@ -41,9 +41,40 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 	CGameObjectActor* pObj = new CGameObjectActor;
 
 	//コンポネント
-	pObj->m_pInput = new CPlayerInputComponent(pObj);
-	pObj->m_pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.6f);
-	pObj->m_pRigidbody = new C3DRigidbodyComponent(pObj);
+	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
+	pObj->m_pRigidbody = pRb;
+	pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	pObj->m_apCollider.push_back(pCollider);
+	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
+	pMesh->SetModelName(modelName);
+	pObj->m_pMesh = pMesh;
+	pObj->m_pDraw = new CActorMeshDrawComponent(pObj);
+
+	//パラメーター
+	pObj->m_vPos = pObj->m_vPosNext = vPos;
+	pObj->m_vScale = pObj->m_vScaleNext = vScale;
+	pObj->RotByEuler(vRot);
+
+	//初期化
+	pObj->Init();
+
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
+//  生成処理
+//--------------------------------------------------------------------------------
+CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+{
+	CGameObjectActor* pObj = new CGameObjectActor;
+
+	//コンポネント
+	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
+	pObj->m_pRigidbody = pRb;
+	//pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	pObj->m_apCollider.push_back(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;

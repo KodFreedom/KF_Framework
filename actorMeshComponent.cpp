@@ -50,9 +50,9 @@ void CActorMeshComponent::Update(void)
 	const std::vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
 
 	//パーツ更新
-	int nFrame;
-	int nNumKey;
-	bool bLoop;
+	int nFrame = 0;
+	int nNumKey = 0;
+	bool bLoop = false;
 	int nNumParts = (int)m_motionInfo.vectorPartsInfo.size();
 	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
 	{
@@ -63,7 +63,7 @@ void CActorMeshComponent::Update(void)
 		CKFVec3 vRotDifference = vKeyRot - vPartRot;
 		CKFMath::NormalizeRotInPi(&vRotDifference);
 
-		nFrame = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].nFrame;
+		nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].nFrame;
 		nNumKey = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame.size();
 		bLoop = vectorMotion[nCntPart][m_motionInfo.motionNow].bLoop;
 
@@ -75,63 +75,37 @@ void CActorMeshComponent::Update(void)
 
 		CKFMath::NormalizeRotInTwoPi(&vPartRot);
 	}
-	
-	//モーション更新
+
+	//フレームカウント
 	m_motionInfo.nCntFrame++;
 
+	//キーフレーム切り替え
 	if (m_motionInfo.nCntFrame == nFrame)
 	{
+		m_status = MS_NORMAL;
 		m_motionInfo.nCntFrame = 0;
 		m_motionInfo.nKeyNow++;
 
+		//モーション切り替え
 		if (m_motionInfo.nKeyNow == nNumKey)
 		{
 			m_motionInfo.nKeyNow = 0;
 
 			if (bLoop != true)
 			{
-				SetMotionNext(m_motionInfo.motionNext);
+				ChangeMotion(m_motionInfo.motionNext);
 			}
 		}
 	}
 }
 
 //--------------------------------------------------------------------------------
-// 更新処理
+// モーション設定
 //--------------------------------------------------------------------------------
-void CActorMeshComponent::SetMotionNext(const MOTION& motion)
+void CActorMeshComponent::SetMotion(const MOTION& motion)
 {
-	if (motion >= MOTION_MAX || motion == m_motionInfo.motionNow) { return; }
-
-	switch (motion)
-	{
-	case MOTION_JUMP:
-		m_motionInfo.motionNext = MOTION_LANDING;
-		break;
-	case MOTION_MOVE:
-		if (m_motionInfo.motionNow != MOTION_NEUTAL
-			&& m_motionInfo.motionNow != MOTION_MOVE) 
-		{
-			return;
-		}
-		m_motionInfo.motionNext = MOTION_NEUTAL;
-		break;
-	case MOTION_NEUTAL:
-		if (m_motionInfo.motionNow != MOTION_NEUTAL
-			&& m_motionInfo.motionNow != MOTION_MOVE)
-		{
-			return;
-		}
-		m_motionInfo.motionNext = MOTION_NEUTAL;
-		break;
-	default:
-		m_motionInfo.motionNext = MOTION_NEUTAL;
-		break;
-	}
-
-	m_motionInfo.motionNow = motion;
-	m_motionInfo.nCntFrame = 0;
-	m_motionInfo.nKeyNow = 0;
+	if (!CanChangeMotion(motion)) { return; }
+	ChangeMotion(motion);
 }
 
 //--------------------------------------------------------------------------------
@@ -139,9 +113,8 @@ void CActorMeshComponent::SetMotionNext(const MOTION& motion)
 //--------------------------------------------------------------------------------
 void CActorMeshComponent::SetMotionAtNow(const MOTION& motion)
 {
-	m_motionInfo.motionNow = motion;
-	m_motionInfo.nCntFrame = 0;
-	m_motionInfo.nKeyNow = 0;
+	ChangeMotion(motion);
+	m_status = MS_NORMAL;
 
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel == NULL) { return; }
@@ -160,4 +133,49 @@ void CActorMeshComponent::SetMotionAtNow(const MOTION& motion)
 		vPartPos = vKeyPos;
 		vPartRot = vKeyRot;
 	}
+}
+
+//--------------------------------------------------------------------------------
+// モーションの切り替え
+//--------------------------------------------------------------------------------
+void  CActorMeshComponent::ChangeMotion(const MOTION& motion)
+{
+	m_status = MS_CHANGE;
+	m_motionInfo.motionNow = motion;
+	m_motionInfo.nCntFrame = 0;
+	m_motionInfo.nKeyNow = 0;
+
+	//Motion Next
+	switch (motion)
+	{
+	case MOTION_JUMP:
+		m_motionInfo.motionNext = MOTION_LANDING;
+		break;
+	default:
+		m_motionInfo.motionNext = MOTION_NEUTAL;
+		break;
+	}
+}
+
+//--------------------------------------------------------------------------------
+// モーションの変更できるかをチェック
+//--------------------------------------------------------------------------------
+bool  CActorMeshComponent::CanChangeMotion(const MOTION& motion)
+{
+	if (m_motionInfo.motionNow == motion) { return false; }
+
+	switch (m_motionInfo.motionNow)
+	{
+	case MOTION_JUMP:
+		return false;
+	case MOTION_LANDING:
+		if (motion == MOTION_NEUTAL) { return false; }
+		return true;
+	case MOTION_ATTACK:
+		return false;
+	default:
+		break;
+	}
+
+	return true;
 }

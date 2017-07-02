@@ -82,7 +82,6 @@ public:
 	void		Uninit(void) override {}
 	void		Release(void) override {}
 	void		Draw(void) override {}
-	void		ReceiveMsg(const MESSAGE &msg) override {}
 };
 
 #endif

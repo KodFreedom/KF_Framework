@@ -14,6 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class C3DRigidbodyComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -27,12 +28,17 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPlayerInputComponent(CGameObject* const pGameObj, const float& fMoveSpeed = 0.075f, const float& fJumpForce = 2.0f);
+	CPlayerInputComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody, const float& fMoveSpeed = 0.075f, const float& fJumpForce = 20.0f);
 	~CPlayerInputComponent() {}
 
 	void	Update(void) override;
 
 private:
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
 	const float c_fSpeed;
-	const float c_fJumpForce;;
+	const float c_fJumpForce;
+
+	C3DRigidbodyComponent* const m_pRigidbody;
 };

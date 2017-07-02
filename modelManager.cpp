@@ -29,6 +29,7 @@ CModelManager::MODEL_INFO CModelManager::m_apModelInfo[MODEL_MAX] =
 	{ XFILE, NULL },									//NULL
 	{ XFILE, "data/MODEL/cube.x" },						//cube					//robot
 	{ XFILE_MOTION, "data/MODEL/motionPlayer.txt" },	//player
+	//{ XFILE_MOTION, "data/MODEL/motionEnemy.txt" },		//enemy
 };
 
 //--------------------------------------------------------------------------------

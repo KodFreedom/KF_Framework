@@ -71,5 +71,4 @@ public:
 	void		Uninit(void) override {}
 	void		Update(void) override {}
 	void		Release(void) override {}
-	void		ReceiveMsg(const MESSAGE &msg) override {}
 }; 

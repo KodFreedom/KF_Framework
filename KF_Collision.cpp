@@ -30,6 +30,15 @@ void CKFCollision::CheckCollisionSphereWithField(CSphereColliderComponent& spher
 
 	if (info.fHeight >= vSpherePos.m_fY - fSphereRadius)
 	{
+		if (sphere.IsTrigger())
+		{
+			sphere.OnTrigger(field);
+			return;
+		}
+
+		sphere.OnCollision(field);
+		field.OnCollision(sphere);
+
 		CGameObject* pSphereObj = sphere.GetGameObject();
 
 		//à íuí≤êﬂ

@@ -35,7 +35,7 @@ public:
 	{ 
 		m_pInput->Init();
 		m_pRigidbody->Init();
-		m_pCollider->Init();
+		for (auto itr = m_apCollider.begin(); itr != m_apCollider.end(); itr++) { (*itr)->Init(); }
 		m_pMesh->Init();
 		m_pDraw->Init();
 		return KF_SUCCEEDED;
@@ -45,7 +45,8 @@ public:
 	{
 		m_pInput->Release();
 		m_pRigidbody->Release();
-		m_pCollider->Release();
+		for (auto itr = m_apCollider.begin(); itr != m_apCollider.end(); itr++) { (*itr)->Release(); }
+		m_apCollider.clear();
 		m_pMesh->Release();
 		m_pDraw->Release();
 	}
@@ -55,7 +56,7 @@ public:
 		SwapParam();
 		m_pInput->Update();
 		m_pRigidbody->Update();
-		m_pCollider->Update();
+		for (auto itr = m_apCollider.begin(); itr != m_apCollider.end(); itr++) { (*itr)->Update(); }
 	}
 
 	virtual void		LateUpdate(void)
@@ -116,11 +117,11 @@ protected:
 	virtual void			SwapParam(void);
 
 	//コンポネント
-	CInputComponent*		m_pInput;		//入力によるの処理パーツ
-	CRigidbodyComponent*	m_pRigidbody;	//物理処理パーツ
-	CColliderComponent*		m_pCollider;	//コリジョンパーツ
-	CMeshComponent*			m_pMesh;		//メッシュパーツ
-	CDrawComponent*			m_pDraw;		//描画処理パーツ
+	CInputComponent*				m_pInput;		//入力によるの処理パーツ
+	CRigidbodyComponent*			m_pRigidbody;	//物理処理パーツ
+	std::list<CColliderComponent*>	m_apCollider;	//コリジョンパーツ
+	CMeshComponent*					m_pMesh;		//メッシュパーツ
+	CDrawComponent*					m_pDraw;		//描画処理パーツ
 
 	//パラメーター
 	CKFVec3		m_vPos;			//オブジェクト位置
@@ -149,7 +150,6 @@ private:
 	//ヌルコンポネント
 	static CNullInputComponent		s_nullInput;
 	static CNullRigidbodyComponent	s_nullRigidbody;
-	static CNullColliderComponent	s_nullCollision;
 	static CNullMeshComponent		s_nullMesh;
 	static CNullDrawComponent		s_nullDraw;
 };

@@ -105,7 +105,7 @@ CColliderManager::COL_ITR CColliderManager::SaveCollider(const MODE& mode, const
 {
 	COL_ITR itr;
 	if (mode < 0 || mode >= MODE_MAX || type < 0 || type >= COL_MAX) { return itr; }
-	m_alistCollider[mode][type].push_back(pCollider);
+	m_alistCollider[mode][type].push_front(pCollider);
 	itr = m_alistCollider[mode][type].begin();
 	return itr;
 }
@@ -157,6 +157,24 @@ bool CColliderManager::SphereCast(const CKFVec3& vCenter, const float& fRadius, 
 				hitInfoOut.vPos = CKFVec3(vCenter.m_fX, info.fHeight, vCenter.m_fZ);
 				return true;
 			}
+		}
+	}
+	return false;
+}
+
+//--------------------------------------------------------------------------------
+//  ƒŒƒC“–‚½‚è”»’è
+//--------------------------------------------------------------------------------
+bool CColliderManager::RayCast(const CKFRay& ray, const float& fLength, HIT_INFO& hitInfoOut)
+{
+	CKFVec3 vBegin = ray.m_vOrigin;
+	CKFVec3 vEnd = ray.m_vOrigin + ray.m_vDirection * fLength;
+
+	if (!m_listField.empty())
+	{
+		for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
+		{
+			CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
 		}
 	}
 	return false;

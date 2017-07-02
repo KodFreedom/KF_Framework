@@ -102,8 +102,8 @@ void CInputManager::Update(void)
 void CInputManager::UpdateInputInfo(void)
 {
 	//Move
-	float fKAxisX = (float)-m_pKeyboard->GetKeyPress(DIK_A) + (float)m_pKeyboard->GetKeyPress(DIK_D);
-	float fKAxisY = (float)-m_pKeyboard->GetKeyPress(DIK_W) + (float)m_pKeyboard->GetKeyPress(DIK_S);
+	float fKAxisX = -(float)m_pKeyboard->GetKeyPress(DIK_A) + (float)m_pKeyboard->GetKeyPress(DIK_D);
+	float fKAxisY = -(float)m_pKeyboard->GetKeyPress(DIK_W) + (float)m_pKeyboard->GetKeyPress(DIK_S);
 	float fJLAxisX = (float)m_pJoystick->GetLStickAxisX() / CJoystickDX::sc_nStickAxisMax;
 	float fJLAxisY = (float)m_pJoystick->GetLStickAxisY() / CJoystickDX::sc_nStickAxisMax;
 	m_fMoveHorizontal = fabsf(fKAxisX) > fabsf(fJLAxisX) ? fKAxisX : fJLAxisX;
@@ -123,9 +123,20 @@ void CInputManager::UpdateInputInfo(void)
 	m_fZoom = fabsf(fMAxisZ) > fabsf(fJAxisZ) ? fMAxisZ : fJAxisZ;
 
 	//Key
+	//Jump
+	bool bJumpPress = m_pKeyboard->GetKeyPress(DIK_SPACE) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_A);
+	bool bJumpTrigger = m_pKeyboard->GetKeyTrigger(DIK_SPACE) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_A);
+	bool bJumpRelease = m_pKeyboard->GetKeyRelease(DIK_SPACE) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_A);
+	bool bAttackPress = m_pKeyboard->GetKeyPress(DIK_J) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_B);
+	bool bAttackTrigger = m_pKeyboard->GetKeyTrigger(DIK_J) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_B);
+	bool bAttackRelease = m_pKeyboard->GetKeyRelease(DIK_J) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_B);
+
+	m_lKeysPress = (LONG)bJumpPress | (bAttackPress << 1);
+	m_lKeysTrigger = (LONG)bJumpTrigger | (bAttackTrigger << 1);
+	m_lKeysRelease = (LONG)bJumpRelease | (bAttackRelease << 1);
 	
 #ifdef _DEBUG
-	char str[512];
+	//char str[512];
 	//sprintf(str, "MX : %f\tMY : %f\tMZ : %f\n", fMAxisX, fMAxisY, fMAxisZ);
 	//sprintf(str, "JRX : %f\tJRY : %f\tJRZ : %f\n", fJRAxisX, fJRAxisY, fJAxisZ);
 	/*sprintf(str, "JLX : %f\tJLY : %f\t\n", fJLAxisX, fJLAxisY);

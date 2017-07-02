@@ -42,6 +42,7 @@ public:
 		MODEL_NONE,
 		MODEL_CUBE,
 		MODEL_PLAYER,
+		//MODEL_ENEMY,
 		MODEL_MAX
 	};
 

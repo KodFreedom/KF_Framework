@@ -49,7 +49,8 @@ public:
 	void		Update(void) override;
 
 	//Getä÷êî
-	INFO		GetPointInfo(const CKFVec3& vPos);
+	INFO			GetPointInfo(const CKFVec3& vPos);
+	std::list<INFO> GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd);
 	//float		GetHeight(const CKFVec3& vPos);
 
 private:

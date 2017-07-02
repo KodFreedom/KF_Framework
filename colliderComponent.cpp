@@ -25,6 +25,7 @@
 CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode) : CComponent(pGameObj)
 	, m_type(type)
 	, m_mode(mode)
+	, m_bTrigger(false)
 	, m_vPos(CKFVec3(0.0f))
 {
 	if (m_type < CM::COL_MAX)

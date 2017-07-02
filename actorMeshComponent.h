@@ -52,6 +52,8 @@ public:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CActorMeshComponent(CGameObject* const pGameObj) : CModelMeshComponent(pGameObj, MESH_ACTOR)
+		, m_status(MS_NORMAL)
+		, m_nCntChangeFrame(0)
 	{
 		m_motionInfo.nCntFrame = 0;
 		m_motionInfo.nKeyNow = 0;
@@ -66,18 +68,40 @@ public:
 	virtual void			Update(void) override;
 
 	//Get関数
-	ACTOR_MOTION_INFO& GetMotionInfo(void) { return m_motionInfo; }
+	ACTOR_MOTION_INFO&	GetMotionInfo(void) { return m_motionInfo; }
 	MOTION				GetMotionNow(void) const { return m_motionInfo.motionNow; }
 
 	//Set関数
-	void SetMotionNext(const MOTION& motion);
+	void SetMotion(const MOTION& motion);
 	void SetMotionAtNow(const MOTION& motion);
 
 private:
 	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
+	enum MOTION_STATUS
+	{
+		MS_NORMAL,
+		MS_CHANGE
+	};
+
+	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	static const int	sc_nChangeFrame = 10;
+
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	void ChangeMotion(const MOTION& motion);
+	bool CanChangeMotion(const MOTION& motion);
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	ACTOR_MOTION_INFO m_motionInfo;
+	MOTION_STATUS		m_status;
+	int					m_nCntChangeFrame;
+	ACTOR_MOTION_INFO	m_motionInfo;
 };
 
 #endif

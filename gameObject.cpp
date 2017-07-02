@@ -24,7 +24,7 @@
 //--------------------------------------------------------------------------------
 CNullInputComponent		CGameObject::s_nullInput;
 CNullRigidbodyComponent	CGameObject::s_nullRigidbody;
-CNullColliderComponent	CGameObject::s_nullCollision;
+//CNullColliderComponent	CGameObject::s_nullCollision;
 CNullMeshComponent		CGameObject::s_nullMesh;
 CNullDrawComponent		CGameObject::s_nullDraw;
 
@@ -40,7 +40,6 @@ CGameObject::CGameObject()
 	, m_bAlive(false)
 	, m_pInput(&s_nullInput)
 	, m_pRigidbody(&s_nullRigidbody)
-	, m_pCollider(&s_nullCollision)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)
 	, m_vPos(CKFVec3(0.0f))
@@ -54,6 +53,7 @@ CGameObject::CGameObject()
 	, m_vUpNext(CKFVec3(0.0f, 1.0f, 0.0f))
 	, m_vRightNext(CKFVec3(1.0f, 0.0f, 0.0f))
 {
+	m_apCollider.clear();
 	CKFMath::MtxIdentity(&m_mtxThis);
 }
 
@@ -66,7 +66,6 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri)
 	, m_bAlive(true)
 	, m_pInput(&s_nullInput)
 	, m_pRigidbody(&s_nullRigidbody)
-	, m_pCollider(&s_nullCollision)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)
 	, m_vPos(CKFVec3(0.0f))
@@ -80,6 +79,7 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri)
 	, m_vUpNext(CKFVec3(0.0f, 1.0f, 0.0f))
 	, m_vRightNext(CKFVec3(1.0f, 0.0f, 0.0f))
 {
+	m_apCollider.clear();
 	CKFMath::MtxIdentity(&m_mtxThis);
 	GetManager()->GetGameObjectManager()->SaveGameObj(m_pri, this);
 }
@@ -221,7 +221,7 @@ void CGameObject::DrawNormal(void)
 	VERTEX_3D vtx[2];
 	vtx[0].vPos = m_vPos;
 	vtx[0].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-	vtx[1].vPos = m_vPos + m_vUp * 10.0f;
+	vtx[1].vPos = m_vPos + m_vUp * 2.0f;
 	vtx[1].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	//プリミティブ描画

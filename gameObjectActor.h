@@ -29,7 +29,7 @@ public:
 
 	//ê∂ê¨ä÷êî
 	static CGameObjectActor* CreatePlayer(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-
+	static CGameObjectActor* CreateEnemy(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
 private:
 };
 
