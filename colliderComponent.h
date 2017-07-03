@@ -32,7 +32,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode);
+	CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode, const CKFVec3& vPos = CKFVec3(0.0f));
 	~CColliderComponent() {}
 
 	virtual KFRESULT	Init(void) override = 0;
@@ -45,6 +45,8 @@ public:
 	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
 
 	//Getä÷êî
+	const CKFVec3		GetLocalPos(void) const { return m_vPos; }
+	const CKFVec3		GetWorldPos(void) const;
 	const CM::COL_TYPE	GetType(void) const { return m_type; }
 	const bool			IsTrigger(void) { return m_bTrigger; }
 

@@ -134,11 +134,11 @@ void CCubeMeshComponent::MakeVertex(void)
 	{
 		if (nCnt % 6 < 4)
 		{
-			pIdx[nCnt] = (nCnt / 6) * 4 + (nCnt % 6) % 4;
+			pIdx[nCnt] = (WORD)((nCnt / 6) * 4 + (nCnt % 6) % 4);
 		}
 		else
 		{//k‘Þ
-			pIdx[nCnt] = (nCnt / 6) * 4 + (nCnt % 2) + 3;
+			pIdx[nCnt] = (WORD)((nCnt / 6) * 4 + (nCnt % 2) + 3);
 		}
 	}
 

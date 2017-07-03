@@ -54,7 +54,7 @@ void CModeDemo::Init(void)
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CGameObject3D::CreateField(100, 100, CKFVec2(5.0f, 5.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject3D::CreateField(100, 100, CKFVec2(1.0f, 1.0f), CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec3(256.0f, 256.0f, 0.0f), CTM::TEX_TEST);
 	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
 	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);

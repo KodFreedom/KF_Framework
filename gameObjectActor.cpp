@@ -20,15 +20,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor() : CGameObject3D()
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri) : CGameObject3D(pri)
+CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri, const OBJ_TYPE& type) : CGameObject3D(pri, type)
 {
 
 }
@@ -38,13 +30,13 @@ CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri) : CGameObject3D(pri
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	CGameObjectActor* pObj = new CGameObjectActor;
+	CGameObjectActor* pObj = new CGameObjectActor(GOM::PRI_3D, OT_PLAYER);
 
 	//コンポネント
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
 	pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
 	pObj->m_apCollider.push_back(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
@@ -67,13 +59,13 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	CGameObjectActor* pObj = new CGameObjectActor;
+	CGameObjectActor* pObj = new CGameObjectActor(GOM::PRI_3D, OT_ENEMY);
 
 	//コンポネント
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
 	//pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, 0.0f);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
 	pObj->m_apCollider.push_back(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);

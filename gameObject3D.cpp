@@ -31,9 +31,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject3D::CGameObject3D(const GOM::PRIORITY& pri) : CGameObject(pri)
+CGameObject3D::CGameObject3D(const GOM::PRIORITY& pri, const OBJ_TYPE& type) : CGameObject(pri, type)
 {
-
 }
 
 //--------------------------------------------------------------------------------

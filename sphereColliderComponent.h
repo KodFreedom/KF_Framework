@@ -23,8 +23,8 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CSphereColliderComponent(CGameObject* const pGameObj, const CM::MODE& mode, const float& fRadius)
-		: CColliderComponent(pGameObj, CM::COL_SPHERE, mode)
+	CSphereColliderComponent(CGameObject* const pGameObj, const CM::MODE& mode, const CKFVec3& vPos, const float& fRadius)
+		: CColliderComponent(pGameObj, CM::COL_SPHERE, mode, vPos)
 		, m_fRadius(fRadius)
 	{
 	}

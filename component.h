@@ -46,7 +46,7 @@ public:
 		delete this;
 	}
 
-	virtual void		ReceiveMsg(const MESSAGE &msg) {}
+	//virtual void		ReceiveMsg(const MESSAGE &msg) {}
 
 	//Getä÷êî
 	CGameObject* const	GetGameObject(void) const { return m_pGameObj; }

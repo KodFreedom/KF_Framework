@@ -22,11 +22,11 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode) : CComponent(pGameObj)
+CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode, const CKFVec3& vPos) : CComponent(pGameObj)
 	, m_type(type)
 	, m_mode(mode)
 	, m_bTrigger(false)
-	, m_vPos(CKFVec3(0.0f))
+	, m_vPos(vPos)
 {
 	if (m_type < CM::COL_MAX)
 	{
@@ -65,4 +65,15 @@ void CColliderComponent::Uninit(void)
 			break;
 		}
 	}
+}
+
+//--------------------------------------------------------------------------------
+//  ワールド座標取得
+//--------------------------------------------------------------------------------
+const CKFVec3 CColliderComponent::GetWorldPos(void) const
+{
+	CKFMtx44 mtx = GetGameObject()->GetMatrixNext();
+	CKFVec3 vPos = m_vPos;
+	CKFMath::Vec3TransformCoord(&vPos, mtx);
+	return vPos;
 }

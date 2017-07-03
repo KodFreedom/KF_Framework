@@ -18,11 +18,49 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  スフィアとスフィアの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollision::CheckCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
+{
+	CKFVec3 vSLPos = sphereL.GetWorldPos();
+	float fSLRadius = sphereL.GetRadius();
+	CKFVec3 vSRPos = sphereR.GetWorldPos();
+	float fSRRadius = sphereR.GetRadius();
+
+	float fDisMin = fSLRadius + fSRRadius;
+	float fDisSqr = CKFMath::VecMagnitudeSquare(vSLPos - vSRPos);
+
+	if (fDisSqr < fDisMin * fDisMin)
+	{
+		if (sphereL.IsTrigger() || sphereR.IsTrigger())
+		{//トリガーだったら物理処理しない
+			sphereL.OnTrigger(sphereR);
+			sphereR.OnTrigger(sphereL);
+			return;
+		}
+
+		sphereL.OnCollision(sphereR);
+		sphereR.OnCollision(sphereL);
+
+		//臨時処理
+		CKFVec3 vCenter = (vSLPos + vSRPos) * 0.5f;
+		CKFVec3 vDir = vSLPos - vSRPos;
+		CKFMath::VecNormalize(&vDir);
+
+		//L
+		sphereL.GetGameObject()->MovePosNext(vCenter + vDir * fSLRadius - vSLPos);
+
+		//R
+		sphereR.GetGameObject()->MovePosNext(vCenter - vDir * fSRRadius - vSRPos);
+	}
+}
+
+//--------------------------------------------------------------------------------
 //  スフィアとフィールドの当たり判定
 //--------------------------------------------------------------------------------
 void CKFCollision::CheckCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
-	CKFVec3 vSpherePos = sphere.GetGameObject()->GetPosNext();
+	CKFVec3 vSpherePos = sphere.GetWorldPos();
 	float fSphereRadius = sphere.GetRadius();
 	CFieldColliderComponent::INFO info = field.GetPointInfo(vSpherePos);
 
@@ -42,12 +80,12 @@ void CKFCollision::CheckCollisionSphereWithField(CSphereColliderComponent& spher
 		CGameObject* pSphereObj = sphere.GetGameObject();
 
 		//位置調節
-		vSpherePos.m_fY = info.fHeight + fSphereRadius;
-		pSphereObj->SetPosNext(vSpherePos);
+		CKFVec3 vMovement = CKFVec3(0.0f, info.fHeight + fSphereRadius - vSpherePos.m_fY, 0.0f);
+		pSphereObj->MovePosNext(vMovement);
 
 		//回転調節
-		CKFVec3 vUpNext = CKFMath::LerpNormal(pSphereObj->GetUpNext(), info.vFaceNormal, 0.2f);
-		pSphereObj->RotByUp(vUpNext);
+		//CKFVec3 vUpNext = CKFMath::LerpNormal(pSphereObj->GetUpNext(), info.vFaceNormal, 0.2f);
+		//pSphereObj->RotByUp(vUpNext);
 
 		//速度調節
 		CRigidbodyComponent* pRB = sphere.GetGameObject()->GetRigidbodyComponent();

@@ -22,7 +22,7 @@ class CFieldColliderComponent;
 class CKFCollision
 {
 public:
-
+	static void CheckCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR);
 	static void CheckCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
 
 private:

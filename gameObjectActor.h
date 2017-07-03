@@ -19,8 +19,7 @@
 class CGameObjectActor : public CGameObject3D
 {
 public:
-	CGameObjectActor();
-	CGameObjectActor(const GOM::PRIORITY &pri);
+	CGameObjectActor(const GOM::PRIORITY &pri, const OBJ_TYPE& type);
 	~CGameObjectActor() {}
 
 	//Getä÷êî

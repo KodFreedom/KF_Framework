@@ -36,6 +36,7 @@ CNullDrawComponent		CGameObject::s_nullDraw;
 //--------------------------------------------------------------------------------
 CGameObject::CGameObject()
 	: m_pri(GOM::PRI_MAX)
+	, m_type(OT_DEFAULT)
 	, m_bActive(false)
 	, m_bAlive(false)
 	, m_pInput(&s_nullInput)
@@ -60,8 +61,9 @@ CGameObject::CGameObject()
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOM::PRIORITY &pri)
+CGameObject::CGameObject(const GOM::PRIORITY &pri, const OBJ_TYPE& type)
 	: m_pri(pri)
+	, m_type(type)
 	, m_bActive(true)
 	, m_bAlive(true)
 	, m_pInput(&s_nullInput)
@@ -97,17 +99,57 @@ void CGameObject::Release(void)
 //--------------------------------------------------------------------------------
 CKFMtx44 CGameObject::GetMatrixRot(void)
 {
-	m_mtxRot.m_af[0][0] = m_vRight.m_fX;
-	m_mtxRot.m_af[0][1] = m_vRight.m_fY;
-	m_mtxRot.m_af[0][2] = m_vRight.m_fZ;
-	m_mtxRot.m_af[1][0] = m_vUp.m_fX;
-	m_mtxRot.m_af[1][1] = m_vUp.m_fY;
-	m_mtxRot.m_af[1][2] = m_vUp.m_fZ;
-	m_mtxRot.m_af[2][0] = m_vForward.m_fX;
-	m_mtxRot.m_af[2][1] = m_vForward.m_fY;
-	m_mtxRot.m_af[2][2] = m_vForward.m_fZ;
+	CKFMtx44 mtxRot;
+	mtxRot.m_af[0][0] = m_vRight.m_fX;
+	mtxRot.m_af[0][1] = m_vRight.m_fY;
+	mtxRot.m_af[0][2] = m_vRight.m_fZ;
+	mtxRot.m_af[1][0] = m_vUp.m_fX;
+	mtxRot.m_af[1][1] = m_vUp.m_fY;
+	mtxRot.m_af[1][2] = m_vUp.m_fZ;
+	mtxRot.m_af[2][0] = m_vForward.m_fX;
+	mtxRot.m_af[2][1] = m_vForward.m_fY;
+	mtxRot.m_af[2][2] = m_vForward.m_fZ;
+	return mtxRot;
+}
 
-	return m_mtxRot;
+//--------------------------------------------------------------------------------
+//	回転行列の取得
+//--------------------------------------------------------------------------------
+CKFMtx44 CGameObject::GetMatrixRotNext(void)
+{
+	CKFMtx44 mtxRot;
+	mtxRot.m_af[0][0] = m_vRightNext.m_fX;
+	mtxRot.m_af[0][1] = m_vRightNext.m_fY;
+	mtxRot.m_af[0][2] = m_vRightNext.m_fZ;
+	mtxRot.m_af[1][0] = m_vUpNext.m_fX;
+	mtxRot.m_af[1][1] = m_vUpNext.m_fY;
+	mtxRot.m_af[1][2] = m_vUpNext.m_fZ;
+	mtxRot.m_af[2][0] = m_vForwardNext.m_fX;
+	mtxRot.m_af[2][1] = m_vForwardNext.m_fY;
+	mtxRot.m_af[2][2] = m_vForwardNext.m_fZ;
+	return mtxRot;
+}
+
+//--------------------------------------------------------------------------------
+//	行列の取得
+//--------------------------------------------------------------------------------
+CKFMtx44 CGameObject::GetMatrixNext(void)
+{
+	//マトリクス算出
+	CKFMtx44 mtxWorld;
+	CKFMtx44 mtxPos;
+
+	//単位行列に初期化
+	CKFMath::MtxIdentity(&mtxWorld);
+
+	//回転(Y->X->Z)
+	mtxWorld *= GetMatrixRotNext();
+
+	//平行移動
+	CKFMath::MtxTranslation(&mtxPos, m_vPosNext);
+	mtxWorld *= mtxPos;
+
+	return mtxWorld;
 }
 
 //--------------------------------------------------------------------------------

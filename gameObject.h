@@ -27,8 +27,21 @@ class CGameObject
 	friend class CGameObjectManager;
 
 public:
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
+	enum OBJ_TYPE
+	{
+		OT_DEFAULT,
+		OT_PLAYER,
+		OT_ENEMY
+	};
+
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
 	CGameObject();
-	CGameObject(const GOM::PRIORITY &pri);
+	CGameObject(const GOM::PRIORITY& pri, const OBJ_TYPE& type = OT_DEFAULT);
 	~CGameObject() {}
 	
 	virtual KFRESULT	Init(void) 
@@ -87,22 +100,26 @@ public:
 	CKFVec3					GetRight(void) const { return m_vRight; }
 	CKFVec3					GetRightNext(void) const { return m_vRightNext; }
 	CKFMtx44				GetMatrixRot(void);
+	CKFMtx44				GetMatrixRotNext(void);
 	CKFMtx44				GetMatrix(void) const { return m_mtxThis; }
+	CKFMtx44				GetMatrixNext(void);
 	CMeshComponent*			GetMeshComponent(void) { return m_pMesh; }
 	CRigidbodyComponent*	GetRigidbodyComponent(void) { return m_pRigidbody; }
+	OBJ_TYPE				GetObjType(void) { return m_type; }
 
 	//Set関数
-	void					SetPos(const CKFVec3 &vPos) { m_vPos = vPos; }
-	void					SetPosNext(const CKFVec3 &vPosNext) { m_vPosNext = vPosNext; }
-	void					SetScale(const CKFVec3 &vScale) { m_vScale = vScale; }
-	void					SetScaleNext(const CKFVec3 &vScaleNext) { m_vScaleNext = vScaleNext; }
+	void					SetPos(const CKFVec3& vPos) { m_vPos = vPos; }
+	void					SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
+	void					MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
+	void					SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
+	void					SetScaleNext(const CKFVec3& vScaleNext) { m_vScaleNext = vScaleNext; }
 	void					SetForward(const CKFVec3& vForward) { m_vForward = vForward; }
 	void					SetForwardNext(const CKFVec3& vForward) { m_vForwardNext = vForward; }
 	void					SetUp(const CKFVec3& vUp) { m_vUp = vUp; }
 	void					SetUpNext(const CKFVec3& vUp) { m_vUpNext = vUp; }
 	void					SetRight(const CKFVec3& vRight) { m_vRight = vRight; }
 	void					SetRightNext(const CKFVec3& vRight) { m_vRightNext = vRight; }
-	void					SetMatrix(const CKFMtx44 &mtx) { m_mtxThis = mtx; }
+	void					SetMatrix(const CKFMtx44& mtx) { m_mtxThis = mtx; }
 
 	//回転関数
 	void					RotByEuler(const CKFVec3& vRot);
@@ -114,8 +131,14 @@ public:
 	void					RotByRight(const CKFVec3& vRight);
 
 protected:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
 	virtual void			SwapParam(void);
 
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
 	//コンポネント
 	CInputComponent*				m_pInput;		//入力によるの処理パーツ
 	CRigidbodyComponent*			m_pRigidbody;	//物理処理パーツ
@@ -134,7 +157,6 @@ protected:
 	CKFVec3		m_vUpNext;		//次のオブジェクトの上方向
 	CKFVec3		m_vRight;		//オブジェクトの右方向
 	CKFVec3		m_vRightNext;	//次のオブジェクトの右方向
-	CKFMtx44	m_mtxRot;		//自分の回転行列
 	CKFMtx44	m_mtxThis;		//自分の回転平行移動行列
 
 private:
@@ -146,6 +168,7 @@ private:
 	bool				m_bActive;		//活動フラグ
 	bool				m_bAlive;		//生きるフラグ
 	GOM::PRIORITY		m_pri;			//優先度
+	OBJ_TYPE			m_type;			//タイプ
 
 	//ヌルコンポネント
 	static CNullInputComponent		s_nullInput;

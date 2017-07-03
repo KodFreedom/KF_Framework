@@ -24,7 +24,7 @@
 class CGameObject3D : public CGameObject
 {
 public:
-	CGameObject3D(const GOM::PRIORITY& pri = GOM::PRI_3D);
+	CGameObject3D(const GOM::PRIORITY& pri = GOM::PRI_3D, const OBJ_TYPE& type = OT_DEFAULT);
 	~CGameObject3D() {}
 
 	//Getä÷êî

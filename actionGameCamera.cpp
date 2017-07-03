@@ -165,6 +165,7 @@ void CActionGameCamera::Yaw(const float& fAngle)
 	CKFMath::MtxRotAxis(&mtxYaw, vAxisY, fAngle);
 	CKFMath::Vec3TransformNormal(&m_vVecRightNext, mtxYaw);
 	CKFMath::Vec3TransformNormal(&m_vVecLookNext, mtxYaw);
+	ReCalcDefault();
 }
 
 //--------------------------------------------------------------------------------
@@ -176,6 +177,7 @@ void CActionGameCamera::Pitch(const float& fAngle)
 	CKFMath::MtxRotAxis(&mtxPitch, m_vVecRightNext, fAngle);
 	CKFMath::Vec3TransformNormal(&m_vVecUpNext, mtxPitch);
 	CKFMath::Vec3TransformNormal(&m_vVecLookNext, mtxPitch);
+	ReCalcDefault();
 }
 
 //--------------------------------------------------------------------------------
@@ -196,7 +198,7 @@ void CActionGameCamera::NormalizeCamera(void)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::ReCalcDefault(void)
 {
-	m_vDefaultLook = m_vVecRight * (m_vDefaultLook * m_vVecRight);
+	m_vDefaultLook = m_vVecRightNext * (m_vDefaultLook * m_vVecRightNext);
 	CKFMath::VecNormalize(&m_vDefaultLook);
 }
 

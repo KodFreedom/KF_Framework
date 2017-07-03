@@ -83,6 +83,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
+	void		CheckWithSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere);
 	void		CheckWithField(CSphereColliderComponent& sphere);
 
 	//--------------------------------------------------------------------------------

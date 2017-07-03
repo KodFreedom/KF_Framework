@@ -73,6 +73,7 @@ void CColliderManager::Update(void)
 			CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
 
 			//Dynamic
+			CheckWithSphere(itr, *pSphere);
 
 			//Static
 
@@ -82,6 +83,22 @@ void CColliderManager::Update(void)
 	}
 }
 
+//--------------------------------------------------------------------------------
+//  スフィアとスフィアの当たり判定
+//--------------------------------------------------------------------------------
+void CColliderManager::CheckWithSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere)
+{
+	if (!m_alistCollider[DYNAMIC][COL_SPHERE].empty())
+	{
+		for (auto itr = itrBegin; itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+		{
+			//同じオブジェクトに付いているなら判定しない
+			if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
+			CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
+			CKFCollision::CheckCollisionSphereWithSphere(sphere, *pSphere);
+		}
+	}
+}
 
 //--------------------------------------------------------------------------------
 //  スフィアとフィールドの当たり判定
@@ -167,15 +184,15 @@ bool CColliderManager::SphereCast(const CKFVec3& vCenter, const float& fRadius, 
 //--------------------------------------------------------------------------------
 bool CColliderManager::RayCast(const CKFRay& ray, const float& fLength, HIT_INFO& hitInfoOut)
 {
-	CKFVec3 vBegin = ray.m_vOrigin;
-	CKFVec3 vEnd = ray.m_vOrigin + ray.m_vDirection * fLength;
+	//CKFVec3 vBegin = ray.m_vOrigin;
+	//CKFVec3 vEnd = ray.m_vOrigin + ray.m_vDirection * fLength;
 
-	if (!m_listField.empty())
-	{
-		for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
-		{
-			CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
-		}
-	}
+	//if (!m_listField.empty())
+	//{
+	//	for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
+	//	{
+	//		CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
+	//	}
+	//}
 	return false;
 }
