@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-#ifndef _ACTOR_MESH_DRAW_COMPONENT_H_
-#define _ACTOR_MESH_DRAW_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -15,6 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CActorMeshComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -25,10 +25,12 @@
 class CActorMeshDrawComponent : public CDrawComponent
 {
 public:
-	CActorMeshDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
+	CActorMeshDrawComponent(CActorMeshComponent* const pMesh, CGameObject* const pGameObj)
+		: CDrawComponent(pGameObj), c_pMesh(pMesh) {}
 	~CActorMeshDrawComponent() {}
 
 	void	Draw(void) override;
-};
 
-#endif
+private:
+	CActorMeshComponent* const c_pMesh;
+};

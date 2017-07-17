@@ -10,7 +10,7 @@
 #include "2DmeshComponent.h"
 #include "gameObject.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "manager.h"
 #include "rendererDX.h"
 #endif
@@ -21,9 +21,9 @@
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-KFRESULT C2DMeshComponent::Init(void)
+bool C2DMeshComponent::Init(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
@@ -39,10 +39,10 @@ KFRESULT C2DMeshComponent::Init(void)
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "C2DMeshComponent : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return KF_FAILED;
+		return false;
 	}
 #endif
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ KFRESULT C2DMeshComponent::Init(void)
 //--------------------------------------------------------------------------------
 void C2DMeshComponent::Uninit(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	if (m_pVtxBuffer != NULL)
 	{
 		m_pVtxBuffer->Release();
@@ -64,7 +64,7 @@ void C2DMeshComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void C2DMeshComponent::Update(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	// 頂点情報を設定
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_2D *pVtx;
@@ -73,8 +73,8 @@ void C2DMeshComponent::Update(void)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点位置設定
-	CKFVec2 vSize = m_pGameObj->GetScale();
-	CKFVec3 vPos = m_pGameObj->GetPos();
+	CKFVec2 vSize = m_pGameObj->GetTransformComponent()->GetScale();
+	CKFVec3 vPos = m_pGameObj->GetTransformComponent()->GetPos();
 	CKFVec3 vRot = CKFVec3(0.0f);
 	float fLength = CKFMath::VecMagnitude(vSize) * 0.5f;
 	float fAngle = atan2f(vSize.m_fY, vSize.m_fX);

@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21
 //--------------------------------------------------------------------------------
-#ifndef _MESH_COMPONENT_H_
-#define _MESH_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -26,40 +25,21 @@ class CMeshComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	enum MESH_TYPE
-	{
-		MESH_NULL = 0,
-		MESH_2D,
-		MESH_3D,
-		MESH_MODEL,
-		MESH_ACTOR
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMeshComponent(CGameObject* const pGameObj, const MESH_TYPE& type) : CComponent(pGameObj) , m_type(type) {}
+	CMeshComponent(CGameObject* const pGameObj)
+		: CComponent(pGameObj) {}
 	~CMeshComponent() {}
 
-	virtual KFRESULT	Init(void) override = 0;
-	virtual void		Uninit(void) override = 0;
-	virtual void		Update(void) = 0;
-
-	//Get関数
-	const MESH_TYPE		GetType(void) const { return m_type; }
+	virtual bool	Init(void) override = 0;
+	virtual void	Uninit(void) override = 0;
+	virtual void	Update(void) = 0;
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMeshComponent() : CComponent() , m_type(MESH_NULL) {}
-
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	MESH_TYPE m_type;
+	CMeshComponent() : CComponent() {}
 };
 
 //--------------------------------------------------------------------------------
@@ -74,10 +54,8 @@ public:
 	CNullMeshComponent() : CMeshComponent() {}
 	~CNullMeshComponent() {}
 
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override {}
-	void		Release(void) override {}
+	bool	Init(void) override { return true; }
+	void	Uninit(void) override {}
+	void	Update(void) override {}
+	void	Release(void) override {}
 };
-
-#endif

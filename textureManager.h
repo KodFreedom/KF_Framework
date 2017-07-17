@@ -4,11 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-1-23
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _TEXTURE_MANAGER_H_
-#define _TEXTURE_MANAGER_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -17,7 +13,6 @@
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define CTM CTextureManager	//CTextureManagerの略称
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -25,28 +20,35 @@
 class CTextureManager
 {
 public:
-	typedef enum
-	{
-		TEX_NONE,
-		TEX_TEST,
-		TEX_POLYGON,
-		TEX_ROAD,
-		TEX_SKY,
-		TEX_MAX
-	}TEX_NAME;
-
-	CTextureManager();
+	//--------------------------------------------------------------------------------
+	//  関数宣言
+	//--------------------------------------------------------------------------------
+	CTextureManager() { m_umTexture.clear(); }
 	~CTextureManager() {}
 
-	void					Init(void);
-	void					LoadAll(void);
-	void					UnloadAll(void);
-	LPDIRECT3DTEXTURE9		GetTexture(const TEX_NAME& texName);
-private:
-	void Load(const TEX_NAME& texBegin, const TEX_NAME& texEnd);
+	void				Release(void) { UnloadAll(); delete this; }
+	void				UnloadAll(void);
+	void				UseTexture(const string& strName);
+	void				DisuseTexture(const string& strName);
 
-	std::vector<LPDIRECT3DTEXTURE9>	m_vectorTexture;
-	static LPCSTR					m_apTexPath[TEX_MAX];
-};
-
+#ifdef USING_DIRECTX
+	LPDIRECT3DTEXTURE9	GetTexture(const string& strName) { return m_umTexture.at(strName).pTexture; }
 #endif
+
+private:
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct TEXTURE
+	{
+		unsigned short		usNumUsers;	//今使ってるオブジェクト数
+#ifdef USING_DIRECTX
+		LPDIRECT3DTEXTURE9	pTexture;	//テクスチャ
+#endif
+	};
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	unordered_map<string, TEXTURE> m_umTexture;
+};

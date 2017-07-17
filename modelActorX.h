@@ -4,11 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-01-23
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _MODEL_CHARACTOR_H_
-#define _MODEL_CHARACTOR_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -38,11 +34,11 @@ public:
 
 	struct MOTION
 	{
-		bool					bLoop;			//ループフラッグ
-		std::vector<KEY_FRAME>	vectorKeyFrame;	//Key Frame情報
+		bool				bLoop;			//ループフラッグ
+		vector<KEY_FRAME>	vectorKeyFrame;	//Key Frame情報
 	};
 
-	typedef std::vector<MOTION>	VEC_MOTION;		//モーションの動的配列
+	typedef vector<MOTION>	VEC_MOTION;		//モーションの動的配列
 
 	struct PARTS_INFO
 	{
@@ -58,14 +54,14 @@ public:
 	CModelActorX();
 	~CModelActorX() {}
 
-	KFRESULT	Init(const LPCSTR &pTxtPath);
-	void		Uninit(void) override;
-	void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) override;
-	void		Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName);
+	bool	Init(const LPCSTR &pTxtPath);
+	void	Uninit(void) override;
+	void	Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName) override;
+	void	Draw(const CKFMtx44 &mtxWorldParents, vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const string& strTexName);
 	
 	//Get関数
-	std::vector<PARTS_INFO>			GetDefaultPartsInfo(void) const;
-	const std::vector<VEC_MOTION>	&GetPartsMotionInfo(void) const;
+	vector<PARTS_INFO>			GetDefaultPartsInfo(void) const;
+	const vector<VEC_MOTION>	&GetPartsMotionInfo(void) const;
 
 	static CModelActorX *Create(const LPCSTR &pTxtPath);
 private:
@@ -74,9 +70,9 @@ private:
 	//--------------------------------------------------------------------------------
 	struct ACTOR
 	{
-		std::vector<PARTS_INFO> vectorPartsInfoDefault;
-		std::vector<VEC_MOTION>	vectorPartsMotionInfo;
-		std::vector<XFILE>		vectorPartsXFileInfo;
+		vector<PARTS_INFO>	vectorPartsInfoDefault;
+		vector<VEC_MOTION>	vectorPartsMotionInfo;
+		vector<XFILE>		vectorPartsXFileInfo;
 	};
 
 	//--------------------------------------------------------------------------------
@@ -87,5 +83,3 @@ private:
 	float		m_fJumpSpeed;
 	float		m_fRadius;
 };
-
-#endif

@@ -5,18 +5,14 @@
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
 #pragma once
-#define USING_DIRECTX9
+#define USING_DIRECTX
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include <math.h>
-#include <list>
-#include <vector>
-#include <string>
-#include <algorithm>
 #include <time.h>
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include <d3dx9.h>
 #endif
 
@@ -28,13 +24,6 @@
 //--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-
-//成功か失敗かの結果を表す列挙型
-enum KFRESULT
-{
-	KF_SUCCEEDED = 0,
-	KF_FAILED = 1
-};
 
 //--------------------------------------------------------------------------------
 //  クラス定義
@@ -49,6 +38,7 @@ class CKFVec2
 {
 public:
 	CKFVec2() : m_fX(0.0f), m_fY(0.0f) {}
+	CKFVec2(const float& fValue) : m_fX(fValue), m_fY(fValue) {}
 	CKFVec2(const float& fX, const float& fY) : m_fX(fX), m_fY(fY) {}
 	~CKFVec2() {}
 
@@ -56,7 +46,7 @@ public:
 	float m_fY;
 
 	//キャスト
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	operator D3DXVECTOR2() const;
 #endif
 
@@ -67,6 +57,8 @@ public:
 	CKFVec2 operator+(const CKFVec2& vValue) const;
 	void operator+=(const CKFVec2& vValue);
 	
+	CKFVec2 operator*(const float& fValue) const;
+	void operator*=(const float& fValue);
 	float operator*(const CKFVec2& vValue) const;
 };
 
@@ -87,7 +79,7 @@ public:
 
 	//キャスト
 	operator CKFVec2() const;
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	operator D3DXVECTOR3() const;
 #endif
 
@@ -129,7 +121,7 @@ public:
 	float m_af[4][4];
 
 	//キャスト
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	operator D3DXMATRIX() const;
 #endif
 
@@ -161,6 +153,37 @@ public:
 };
 
 //--------------------------------------------------------------------------------
+//  Quaternion
+//--------------------------------------------------------------------------------
+class CKFQuaternion
+{
+public:
+	CKFQuaternion() : m_fX(0.0f), m_fY(0.0f), m_fZ(0.0f), m_fW(1.0f) {}
+	~CKFQuaternion() {}
+
+	float m_fX;
+	float m_fY;
+	float m_fZ;
+	float m_fW;
+
+	//キャスト
+#ifdef USING_DIRECTX
+	operator D3DXQUATERNION () const;
+#endif
+
+	//算術演算子
+	CKFQuaternion operator+(const CKFQuaternion& qValue) const;
+	void operator+=(const CKFQuaternion& qValue);
+	CKFQuaternion operator-(const CKFQuaternion& qValue) const;
+	void operator-=(const CKFQuaternion& qValue);
+	CKFQuaternion operator*(const float& fValue) const;
+	void operator*=(const float& fValue);
+	void operator/=(const float& fValue);
+	/*CKFQuaternion operator*(const CKFQuaternion& qValue) const;
+	void operator*=(const CKFQuaternion& qValue);*/
+};
+
+//--------------------------------------------------------------------------------
 //  Color
 //--------------------------------------------------------------------------------
 class CKFColor
@@ -177,14 +200,23 @@ public:
 	float m_fA;
 
 	//キャスト
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	operator D3DCOLORVALUE () const;
 	operator unsigned long () const;
 #endif
 
 	//算術演算子
-	CKFColor& operator=(const CKFColor& vValue);
-	bool operator==(const CKFColor& vValue);
+	CKFColor& operator=(const CKFColor& cValue);
+	bool operator==(const CKFColor& cValue);
+
+	CKFColor operator+(const CKFColor& cValue) const;
+	void operator+=(const CKFColor& cValue);
+
+	CKFColor operator-(const CKFColor& cValue) const;
+	void operator-=(const CKFColor& cValue);
+
+	CKFColor operator*(const float& fValue) const;
+	void operator*=(const float& fValue);
 };
 
 //--------------------------------------------------------------------------------
@@ -214,56 +246,73 @@ public:
 	};
 
 	//Random
-	static void		InitRandom(void);
-	static int		GetRandomInt(const int& nMin, const int& nMax);
-	static float	GetRandomFloat(const float& fMin, const float& fMax);
-	static CKFVec3	GetRandomVec3(const CKFVec3& vMin, const CKFVec3& vMax);
+	static void				InitRandom(void);
+	static int				GetRandomInt(const int& nMin, const int& nMax);
+	static float			GetRandomFloat(const float& fMin, const float& fMax);
+	static CKFVec3			GetRandomVec3(const CKFVec3& vMin, const CKFVec3& vMax);
 
 	//Vector計算
-	static float	VecMagnitude(const CKFVec2& vValue);
-	static float	VecMagnitude(const CKFVec3& vValue);
-	static float	VecMagnitudeSquare(const CKFVec3& vValue);
-	static void		VecNormalize(CKFVec2* pVec);
-	static void		VecNormalize(CKFVec3* pVec);
-	static float	Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR);
-	static float	Vec3Dot(const CKFVec3& vVecL, const CKFVec3& vVecR);
-	static float	VecDistance(const CKFVec3& vVecL, const CKFVec3& vVecR);
-	static float	VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
-	static void		Vec3TransformCoord(CKFVec3* pVec, const CKFMtx44& mtxRot);
-	static void		Vec3TransformNormal(CKFVec3* pVec, const CKFMtx44& mtxRot);
-	static float	Vec2Radian(const CKFVec2& vValue);
-	static float	RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
-	static float	RadianBetweenVec(const CKFVec3& vVecL, const CKFVec3& vVecR);
-	static CKFVec3	EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo);
+	static float			VecMagnitude(const CKFVec2& vValue);
+	static float			VecMagnitude(const CKFVec3& vValue);
+	static float			VecMagnitudeSquare(const CKFVec3& vValue);
+	static void				VecNormalize(CKFVec2& vVec);
+	static void				VecNormalize(CKFVec3& vVec);
+	static float			Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR);
+	static float			Vec3Dot(const CKFVec3& vVecL, const CKFVec3& vVecR);
+	static float			VecDistance(const CKFVec3& vVecL, const CKFVec3& vVecR);
+	static float			VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
+	static void				Vec3TransformCoord(CKFVec3& vVec, const CKFMtx44& mtxRot);
+	static void				Vec3TransformNormal(CKFVec3& vVec, const CKFMtx44& mtxRot);
+	static float			Vec2Radian(const CKFVec2& vValue);
+	static float			RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
+	static float			RadianBetweenVec(const CKFVec3& vVecL, const CKFVec3& vVecR);
+	static CKFVec3			EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo);
 
 	//Matrix計算
-	static void		MtxIdentity(CKFMtx44* pMtx);
-	static void		MtxRotAxis(CKFMtx44* pMtxRot, const CKFVec3& vAxis, const float& fAngle);
-	static void		MtxRotationYawPitchRoll(CKFMtx44* pMtxRot, const CKFVec3& vRot);
-	static void		MtxTranslation(CKFMtx44* pMtxTrans, const CKFVec3& vPos);
-#ifdef USING_DIRECTX9
-	static CKFMtx44	ChangeDXMtxToMtx44(const D3DXMATRIX& mtx);
+	static void				MtxIdentity(CKFMtx44& mtx);
+	static void				MtxRotAxis(CKFMtx44& mtxRot, const CKFVec3& vAxis, const float& fAngle);
+	static void				MtxRotationYawPitchRoll(CKFMtx44& mtxRot, const CKFVec3& vRot);
+	static void				MtxTranslation(CKFMtx44& mtxTrans, const CKFVec3& vPos);
+
+#ifdef USING_DIRECTX
+	static CKFMtx44			ChangeDXMtxToMtx44(const D3DXMATRIX& mtx);
 #endif
 
+	//Quaternion計算
+	static void				QuaternionIdentity(CKFQuaternion& qValue);
+	static float			QuaternionMagnitudeSquare(const CKFQuaternion& qValue);
+	static float			QuaternionMagnitude(const CKFQuaternion& qValue);
+	static void				QuaternionNormalize(CKFQuaternion& qValue);
+	static float			QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR);
+	static CKFVec3			QuaternionToEuler(const CKFQuaternion& quaternion);
+	static CKFQuaternion	Vec3ToQuaternion(const CKFVec3& vVec);
+	static CKFQuaternion	MtxToQuaternion(const CKFMtx44& mtxRot);
+	
 	//Ray計算
-	static CKFRay	CalculatePickingRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11, const CKFMtx44& mtxViewInverse);
-	static CKFRay	ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11);
-	static void		TransformRay(CKFRay* pRay, const CKFMtx44& mtxTrans);
-	static RTS_INFO	ContactRayToSphere(const CKFRay& ray, const CKFVec3& vSpherePos, const float& fRadius);
+	static CKFRay			CalculatePickingRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11, const CKFMtx44& mtxViewInverse);
+	static CKFRay			ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11);
+	static void				TransformRay(CKFRay& ray, const CKFMtx44& mtxTrans);
+	static RTS_INFO			ContactRayToSphere(const CKFRay& ray, const CKFVec3& vSpherePos, const float& fRadius);
 
 	//Lerp関数
-	static CKFVec3	LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime);
-	static CKFVec3	LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime);
-	static float	LerpFloat(const float& fFrom, const float& fTo, const float& fTime);
+	static CKFVec3			LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime);
+	static CKFVec3			LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime);
+	static float			LerpFloat(const float& fFrom, const float& fTo, const float& fTime);
+	static CKFColor			LerpColor(const CKFColor& cFrom, const CKFColor& cTo, const float& fTime);
+	static CKFQuaternion	SlerpQuaternion(const CKFQuaternion& qFrom, const CKFQuaternion& qTo, const float& fTime);
+
+	//Clamp関数
+	static void				ClampFloat(float& fValue, const float& fMin, const float& fMax);
 
 	//ほかの計算
-	static void		NormalizeRotInTwoPi(float* pRot);
-	static void		NormalizeRotInTwoPi(CKFVec3* pRot);
-	static void		NormalizeRotInPi(float* pRot);
-	static void		NormalizeRotInPi(CKFVec3* pRot);
-	static void		NormalizeRotInZeroToTwoPi(float& fRot);
-	static void		NormalizeRotInZeroToTwoPi(CKFVec3& vRot);
-	static float	CalculateZDepth(const CKFVec3& vPos, const CKFVec3& vCameraEye, const CKFVec3& vCameraAt);
+	static void				NormalizeColor(CKFColor& cColor);
+	static void				NormalizeRotInTwoPi(float& fRot);
+	static void				NormalizeRotInTwoPi(CKFVec3& vRot);
+	static void				NormalizeRotInPi(float& fRot);
+	static void				NormalizeRotInPi(CKFVec3& vRot);
+	static void				NormalizeRotInZeroToTwoPi(float& fRot);
+	static void				NormalizeRotInZeroToTwoPi(CKFVec3& vRot);
+	static float			CalculateZDepth(const CKFVec3& vPos, const CKFVec3& vCameraEye, const CKFVec3& vCameraAt);
 
 private:
 	CKFMath() {}

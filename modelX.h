@@ -29,9 +29,9 @@ public:
 	CModelX();
 	~CModelX() {}
 
-	KFRESULT	Init(const LPCSTR &pXFilePath);
-	void		Uninit(void) override;
-	void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) override;
+	bool	Init(const LPCSTR &pXFilePath);
+	void	Uninit(void) override;
+	void	Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName) override;
 
 	static CModelX* Create(const LPCSTR &pXFilePath);
 

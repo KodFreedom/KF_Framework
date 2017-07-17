@@ -10,8 +10,9 @@
 #include "fade.h"
 #include "manager.h"
 #include "textureManager.h"
+#include "mode.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -28,9 +29,11 @@ const float CFade::sc_fFadeRate = 1.0f / (120.0f * 0.5f);
 //--------------------------------------------------------------------------------
 void CFade::Init(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
+
+	GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
 
 	//頂点バッファ
 	hr = pDevice->CreateVertexBuffer(
@@ -88,12 +91,9 @@ void CFade::Init(void)
 //--------------------------------------------------------------------------------
 void CFade::Uninit(void)
 {
-#ifdef USING_DIRECTX9
-	if (m_pVtxBuffer != NULL)
-	{
-		m_pVtxBuffer->Release();
-		m_pVtxBuffer = NULL;
-	}
+#ifdef USING_DIRECTX
+	GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
+	SAFE_RELEASE(m_pVtxBuffer);
 #endif
 }
 
@@ -143,7 +143,7 @@ void CFade::Update(void)
 //--------------------------------------------------------------------------------
 void CFade::Draw(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
 	// 頂点バッファをデータストリームに設定
@@ -153,7 +153,7 @@ void CFade::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(CTM::TEX_POLYGON);
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
 	pDevice->SetTexture(0, pTexture);
 
 	// ポリゴンの描画
@@ -166,7 +166,11 @@ void CFade::Draw(void)
 //--------------------------------------------------------------------------------
 void CFade::FadeToMode(CMode* pModeNext)
 {
-	if (m_fade == FADE_OUT) { return; }
+	if (m_fade == FADE_OUT) 
+	{
+		delete pModeNext;
+		return;
+	}
 
 	m_fade = FADE_OUT;
 	m_pModeNext = pModeNext;
@@ -178,7 +182,7 @@ void CFade::FadeToMode(CMode* pModeNext)
 //--------------------------------------------------------------------------------
 void CFade::SetColorFade(const CKFColor &cColor)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_2D *pVtx = NULL;
 

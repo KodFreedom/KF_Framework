@@ -11,7 +11,7 @@
 #include "renderState.h"
 #include "manager.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 void CLightOffRenderState::SetRenderState(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 #endif
@@ -37,7 +37,7 @@ void CLightOffRenderState::SetRenderState(void)
 //--------------------------------------------------------------------------------
 void CLightOffRenderState::ResetRenderState(void)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 #endif

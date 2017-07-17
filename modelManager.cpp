@@ -37,7 +37,7 @@ CModelManager::MODEL_INFO CModelManager::m_apModelInfo[MODEL_MAX] =
 //--------------------------------------------------------------------------------
 CModelManager::CModelManager()
 {
-
+	m_umapModel.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -71,6 +71,13 @@ void CModelManager::UnloadAll(void)
 		}
 	}
 
+	for (auto itr = m_umapModel.begin(); itr != m_umapModel.end(); itr++)
+	{
+		itr->second->Uninit();
+		delete itr->second;
+	}
+
+	m_umapModel.clear();
 	m_vectorModel.clear();
 }
 
@@ -110,4 +117,10 @@ void CModelManager::Load(const MODEL_NAME &modelBegin, const MODEL_NAME &modelEn
 
 		m_vectorModel.push_back(pModel);
 	}
+}
+
+void CModelManager::BindModel(const string& modelPath)
+{
+	CModel* pModel = CModelX::Create(modelPath.c_str());
+	m_umapModel.emplace(modelPath, pModel);
 }

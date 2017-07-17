@@ -41,7 +41,7 @@ void CLight::Init(const int &nID, const CKFVec3 &vDir)
 	m_nID = nID;
 
 	m_vDirection = vDir;
-	CKFMath::VecNormalize(&m_vDirection);
+	CKFMath::VecNormalize(m_vDirection);
 
 	SetLight();
 }
@@ -62,7 +62,7 @@ void CLight::Uninit(void)
 void CLight::SetDirection(const CKFVec3 &vDir)
 {
 	m_vDirection = vDir;
-	CKFMath::VecNormalize(&m_vDirection);
+	CKFMath::VecNormalize(m_vDirection);
 
 	SetLight();
 }
@@ -150,7 +150,7 @@ void CLightManager::TurnAllLightOn(void)
 //--------------------------------------------------------------------------------
 void CLightManager::ReleaseAll(void)
 {
-	std::for_each(m_listLight.begin(), m_listLight.end(), [](CLight *pLight)
+	for_each(m_listLight.begin(), m_listLight.end(), [](CLight *pLight)
 	{
 		if (pLight != NULL)
 		{
@@ -182,7 +182,7 @@ int CLightManager::CreateDirectionalLight(const CKFVec3 &vDir)
 //--------------------------------------------------------------------------------
 void CLightManager::SetLightDirection(const int &nLightID, const CKFVec3 &vDir)
 {
-	std::list<CLight*>::iterator itr = m_listLight.begin();
-	std::advance(itr, nLightID);
+	list<CLight*>::iterator itr = m_listLight.begin();
+	advance(itr, nLightID);
 	(*itr)->SetDirection(vDir);
 }

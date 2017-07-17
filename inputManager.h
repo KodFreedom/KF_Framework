@@ -25,8 +25,8 @@ public:
 	enum KEY
 	{
 		K_JUMP = 0x01,
-		K_SUBMIT = 0x01,
 		K_ATTACK = 0x02,
+		K_SUBMIT = 0x04,
 		K_CANCEL = 0x02,
 	};
 
@@ -36,7 +36,7 @@ public:
 	CInputManager();
 	~CInputManager();
 
-	KFRESULT		Init(HINSTANCE hInst, HWND hWnd);
+	bool		Init(HINSTANCE hInst, HWND hWnd);
 	void			Uninit(void);
 	void			Update(void);
 

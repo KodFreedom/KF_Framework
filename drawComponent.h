@@ -4,14 +4,14 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
-#ifndef _DRAW_COMPONENT_H_
-#define _DRAW_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
 #include "renderState.h"
+#include "materialManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -30,19 +30,21 @@ public:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CDrawComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-		,m_pRenderState(&s_nullRenderState)
-	{}
+		,m_pRenderState(&s_nullRenderState), m_matType(CMM::MAT_NORMAL) 
+	{
+		m_strTexName.clear();
+	}
 
 	~CDrawComponent() {}
 
-	virtual KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	virtual void		Uninit(void) override {};
-	virtual void		Draw(void) = 0;
+	virtual bool	Init(void) override { return true; }
+	virtual void	Uninit(void) override;
+	virtual void	Draw(void) = 0;
 
 	//Set関数
-	void				SetRenderState(CRenderState* const pRenderState) 
+	void			SetRenderState(CRenderState* const pRenderState) 
 	{
-		if (pRenderState == NULL)
+		if (!pRenderState)
 		{
 			m_pRenderState = &s_nullRenderState;
 			return;
@@ -50,6 +52,8 @@ public:
 
 		m_pRenderState = pRenderState; 
 	}
+	void			SetTexName(const string& strTexName);
+	void			SetMatType(const CMM::MATERIAL& matType) { m_matType = matType; }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -66,7 +70,9 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CRenderState*	m_pRenderState;
+	string			m_strTexName;	//テクスチャ
+	CMM::MATERIAL	m_matType;		//マテリアル
+	CRenderState*	m_pRenderState;	//レンダーステート
 };
 
 //--------------------------------------------------------------------------------
@@ -78,10 +84,8 @@ public:
 	CNullDrawComponent() : CDrawComponent() {}
 	~CNullDrawComponent() {}
 
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Release(void) override {}
-	void		Draw(void) override {}
+	bool	Init(void) override { return true; }
+	void	Uninit(void) override {}
+	void	Release(void) override {}
+	void	Draw(void) override {}
 };
-
-#endif

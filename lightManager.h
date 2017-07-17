@@ -50,6 +50,6 @@ public:
 	void	SetLightDirection(const int &nLightID, const CKFVec3 &vDir);
 
 private:
-	std::list<CLight*> m_listLight;
+	list<CLight*> m_listLight;
 };
 #endif

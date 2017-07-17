@@ -23,21 +23,24 @@
 //--------------------------------------------------------------------------------
 //  オブジェクトの生成
 //--------------------------------------------------------------------------------
-CGameObject2D* CGameObject2D::Create(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vSize, const CTM::TEX_NAME& texName)
+CGameObject2D* CGameObject2D::Create(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vSize, const string& strTexName)
 {
 	//生成
 	CGameObject2D* pObj = new CGameObject2D;
 
 	//コンポネント
 	C2DMeshComponent* pMesh = new C2DMeshComponent(pObj);
-	pMesh->SetTexName(CTM::TEX_TEST);
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new C2DDrawComponent(pObj);
+	pObj->m_pDraw = new C2DDrawComponent(pMesh, pObj);
+	pObj->m_pDraw->SetTexName(strTexName);
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vSize;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vSize);
+	pTrans->SetScaleNext(vSize);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();

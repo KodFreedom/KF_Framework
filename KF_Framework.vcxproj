@@ -96,7 +96,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -152,21 +152,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2DDrawComponent.cpp" />
+    <ClCompile Include="2DUIObject.cpp" />
     <ClCompile Include="3DMeshDrawComponent.cpp" />
     <ClCompile Include="3DMeshComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="actionGameCamera.cpp" />
     <ClCompile Include="actorMeshComponent.cpp" />
     <ClCompile Include="actorMeshDrawComponent.cpp" />
+    <ClCompile Include="animatorComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
     <ClCompile Include="colliderManager.cpp" />
     <ClCompile Include="component.cpp" />
-    <ClCompile Include="cubeMeshComponent.cpp" />
     <ClCompile Include="drawComponent.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="fieldColliderComponent.cpp" />
-    <ClCompile Include="fieldMeshComponent.cpp" />
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="gameObject2D.cpp" />
     <ClCompile Include="gameObject3D.cpp" />
@@ -174,78 +174,96 @@
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="inputDX.cpp" />
     <ClCompile Include="inputManager.cpp" />
-    <ClCompile Include="KF_Collision.cpp" />
+    <ClCompile Include="KF_CollisionSystem.cpp" />
     <ClCompile Include="KF_Math.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="materialManager.cpp" />
+    <ClCompile Include="meshComponent.cpp" />
+    <ClCompile Include="meshManager.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="modeDemo.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelActorX.cpp" />
-    <ClCompile Include="modelMeshDrawComponent.cpp" />
     <ClCompile Include="modelManager.cpp" />
     <ClCompile Include="modelX.cpp" />
     <ClCompile Include="2DMeshComponent.cpp" />
-    <ClCompile Include="playerInputComponent.cpp" />
+    <ClCompile Include="modeResult.cpp" />
+    <ClCompile Include="modeTitle.cpp" />
+    <ClCompile Include="playerBehaviorComponent.cpp" />
+    <ClCompile Include="playerUIObject.cpp" />
     <ClCompile Include="rendererDX.cpp" />
     <ClCompile Include="renderState.cpp" />
-    <ClCompile Include="skyBoxMeshComponent.cpp" />
+    <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="sphereColliderComponent.cpp" />
     <ClCompile Include="textureManager.cpp" />
+    <ClCompile Include="transformComponent.cpp" />
+    <ClCompile Include="UIObject.cpp" />
+    <ClCompile Include="UISystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2DDrawComponent.h" />
+    <ClInclude Include="2DUIObject.h" />
     <ClInclude Include="3DMeshDrawComponent.h" />
     <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
     <ClInclude Include="actorMeshDrawComponent.h" />
     <ClInclude Include="actorMeshComponent.h" />
+    <ClInclude Include="animatorComponent.h" />
+    <ClInclude Include="behaviorComponent.h" />
+    <ClInclude Include="bone.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="colliderComponent.h" />
     <ClInclude Include="colliderManager.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="cubeMeshComponent.h" />
     <ClInclude Include="drawComponent.h" />
     <ClInclude Include="editorCamera.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="fieldColliderComponent.h" />
-    <ClInclude Include="fieldMeshComponent.h" />
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="gameObject2D.h" />
     <ClInclude Include="gameObject3D.h" />
     <ClInclude Include="gameObjectActor.h" />
     <ClInclude Include="gameObjectManager.h" />
-    <ClInclude Include="inputComponent.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="inputManager.h" />
-    <ClInclude Include="KF_Collision.h" />
+    <ClInclude Include="KF_CollisionSystem.h" />
     <ClInclude Include="KF_Math.h" />
     <ClInclude Include="KF_UtilityDX.h" />
     <ClInclude Include="lightManager.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="materialManager.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="modelActor.h" />
     <ClInclude Include="modelActorX.h" />
     <ClInclude Include="meshComponent.h" />
-    <ClInclude Include="modelMeshDrawComponent.h" />
     <ClInclude Include="modelManager.h" />
     <ClInclude Include="modelMeshComponent.h" />
     <ClInclude Include="modelX.h" />
     <ClInclude Include="2DMeshComponent.h" />
-    <ClInclude Include="playerInputComponent.h" />
+    <ClInclude Include="modeResult.h" />
+    <ClInclude Include="modeTitle.h" />
+    <ClInclude Include="motion.h" />
+    <ClInclude Include="motionInfo.h" />
+    <ClInclude Include="playerBehaviorComponent.h" />
+    <ClInclude Include="playerUIObject.h" />
     <ClInclude Include="rendererDX.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbodyComponent.h" />
-    <ClInclude Include="skyBoxMeshComponent.h" />
+    <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereColliderComponent.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="actionGameCamera.h" />
+    <ClInclude Include="transformComponent.h" />
+    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="UISystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

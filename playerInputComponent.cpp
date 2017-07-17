@@ -15,6 +15,7 @@
 #include "gameObjectActor.h"
 #include "actorMeshComponent.h"
 #include "3DRigidbodyComponent.h"
+#include "sphereColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -39,10 +40,7 @@ void CPlayerInputComponent::Update(void)
 	CInputManager* pInput = GetManager()->GetInputManager();
 	bool bCanControl = true;
 
-	if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
-	{
-		if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
-	}
+	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
 
 	if (bCanControl)
 	{
@@ -51,11 +49,12 @@ void CPlayerInputComponent::Update(void)
 		if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
 		{
 			float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
+			CTransformComponent* pTrans = m_pGameObj->GetTransformComponent();
 
 			//回転計算
-			CKFVec3 vUp = m_pGameObj->GetUpNext();
-			CKFVec3 vForward = m_pGameObj->GetForwardNext();
-			CKFVec3 vRight = m_pGameObj->GetRightNext();
+			CKFVec3 vUp = pTrans->GetUpNext();
+			CKFVec3 vForward = pTrans->GetForwardNext();
+			CKFVec3 vRight = pTrans->GetRightNext();
 
 			//カメラ向きを算出する
 			CCamera* pCamera = GetManager()->GetMode()->GetCamera();
@@ -65,30 +64,24 @@ void CPlayerInputComponent::Update(void)
 			if (fRot != 0.0f)
 			{//操作より行く方向を回転する
 				CKFMtx44 mtxYaw;
-				CKFMath::MtxRotAxis(&mtxYaw, vUp, fRot);
-				CKFMath::Vec3TransformNormal(&vForwardNext, mtxYaw);
+				CKFMath::MtxRotAxis(mtxYaw, vUp, fRot);
+				CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
 			}
 
-			CKFMath::VecNormalize(&vForwardNext);
+			CKFMath::VecNormalize(vForwardNext);
 			vForwardNext = CKFMath::LerpNormal(vForward, vForwardNext, 0.2f);
-			m_pGameObj->RotByForward(vForwardNext);
+			pTrans->RotByForward(vForwardNext);
 
 			//移動設定
 			m_pRigidbody->MovePos(vForwardNext * c_fSpeed);
 
 			//移動モーション設定
-			if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
-			{
-				pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
-			}
+			pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
 		}
 		else
 		{
 			//ニュートラルモーション設定
-			if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
-			{
-				pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
-			}
+			pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
 		}
 
 		//ジャンプ
@@ -99,20 +92,14 @@ void CPlayerInputComponent::Update(void)
 			m_pRigidbody->SetOnGround(false);
 
 			//ジャンプモーション設定
-			if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
-			{
-				pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
-			}
+			pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
 		}
 
 		//攻撃
 		if (pInput->GetKeyTrigger(CInputManager::KEY::K_ATTACK))
 		{
 			//ジャンプモーション設定
-			if (pMesh->GetType() == CMeshComponent::MESH_ACTOR)
-			{
-				pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
-			}
+			pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
 		}
 	}
 }

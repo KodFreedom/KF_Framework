@@ -8,11 +8,12 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectActor.h"
-#include "playerInputComponent.h"
+#include "playerBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "actorMeshComponent.h"
 #include "actorMeshDrawComponent.h"
 #include "sphereColliderComponent.h"
+#include "playerUIObject.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -35,21 +36,28 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 	//コンポネント
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
-	pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
+	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, pRb);
+	pObj->m_listpBehavior.push_back(pPb);
 	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
-	pObj->m_apCollider.push_back(pCollider);
+	pObj->AddCollider(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new CActorMeshDrawComponent(pObj);
+	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
+
+	//UI
+	CPlayerUIObject::Create(pPb);
 
 	return pObj;
 }
@@ -66,16 +74,19 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelNam
 	pObj->m_pRigidbody = pRb;
 	//pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
 	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
-	pObj->m_apCollider.push_back(pCollider);
+	pObj->AddCollider(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new CActorMeshDrawComponent(pObj);
+	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();

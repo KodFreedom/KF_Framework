@@ -4,15 +4,12 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-#ifndef _MODEL_MESH_COMPONENT_H_
-#define _MODEL_MESH_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "meshComponent.h"
-#include "textureManager.h"
-#include "materialManager.h"
 #include "modelManager.h"
 
 //--------------------------------------------------------------------------------
@@ -28,33 +25,27 @@
 class CModelMeshComponent : public CMeshComponent
 {
 public:
-	CModelMeshComponent(CGameObject* const pGameObj, const MESH_TYPE& type = MESH_MODEL) : CMeshComponent(pGameObj, type)
+	CModelMeshComponent(CGameObject* const pGameObj) : CMeshComponent(pGameObj)
 		, m_modelName(CMOM::MODEL_NONE)
-		, m_texName(CTM::TEX_NONE)
-		, m_matType(CMM::MAT_NORMAL)
 	{
+		m_strModelPath.clear();
 	}
 
 	~CModelMeshComponent() {}
 
-	virtual KFRESULT		Init(void) override { return KF_SUCCEEDED; }
+	virtual bool			Init(void) override { return true; }
 	virtual void			Uninit(void) override {}
 	virtual void			Update(void) override {}
 
 	//Get関数
+	const string&			GetModelPath(void) const { return m_strModelPath; }
 	const CMOM::MODEL_NAME& GetModelName(void) const { return m_modelName; }
-	const CTM::TEX_NAME&	GetTexName(void) const { return m_texName; }
-	const CMM::MATERIAL&	GetMatType(void) const { return m_matType; }
 
 	//Set関数
+	void					SetModelPath(const string& strPath) { m_strModelPath = strPath; }
 	void					SetModelName(const CMOM::MODEL_NAME& modelName) { m_modelName = modelName; }
-	void					SetTexName(const CTM::TEX_NAME& texName) { m_texName = texName; }
-	void					SetMatType(const CMM::MATERIAL& matType) { m_matType = matType; }
 
 protected:
+	string					m_strModelPath;
 	CMOM::MODEL_NAME		m_modelName;	//モデル
-	CTM::TEX_NAME			m_texName;		//テクスチャ
-	CMM::MATERIAL			m_matType;		//マテリアル
 };
-
-#endif

@@ -39,12 +39,12 @@ public:
 	CRigidbodyComponent(CGameObject* const pGameObj, const RB_TYPE& type) : CComponent(pGameObj), m_type(type) {}
 	~CRigidbodyComponent() {}
 
-	virtual KFRESULT	Init(void) override = 0;
-	virtual void		Uninit(void) override = 0;
-	virtual void		Update(void) = 0;
+	virtual bool	Init(void) override = 0;
+	virtual void	Uninit(void) override = 0;
+	virtual void	Update(void) = 0;
 
 	//Getä÷êî
-	const RB_TYPE		GetType(void) const { return m_type; }
+	const RB_TYPE	GetType(void) const { return m_type; }
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ public:
 	CNullRigidbodyComponent() : CRigidbodyComponent() {}
 	~CNullRigidbodyComponent() {}
 
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Uninit(void) override {}
-	void		Update(void) override {}
-	void		Release(void) override {}
+	bool	Init(void) override { return true; }
+	void	Uninit(void) override {}
+	void	Update(void) override {}
+	void	Release(void) override {}
 }; 

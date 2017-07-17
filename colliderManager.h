@@ -46,12 +46,12 @@ public:
 		COL_FIELD
 	};
 
-	typedef std::list<CColliderComponent*>::iterator COL_ITR;
+	typedef list<CColliderComponent*>::iterator COL_ITR;
 
 	struct COL_INFO
 	{//まだ使わない、当たり判定タイプが指定できる仕様
 		CColliderComponent* pCollider;		//Colliderのポインタ
-		std::list<COL_TYPE> listTargetType;	//Colliderがどのタイプと当たり判定するか
+		list<COL_TYPE> listTargetType;	//Colliderがどのタイプと当たり判定するか
 	};
 
 	struct HIT_INFO
@@ -70,6 +70,10 @@ public:
 	void		Uninit(void);
 	void		Update(void);
 
+#ifdef _DEBUG
+	void		DrawCollider(void);
+#endif
+
 	COL_ITR		SaveCollider(const MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
 	void		ReleaseCollider(const MODE& mode, const COL_TYPE& type, const COL_ITR& itr);
 	COL_ITR		SaveField(CColliderComponent* pCollider);
@@ -83,12 +87,13 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		CheckWithSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere);
+	void		CheckWithDynamicSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere);
+	void		CheckWithStaticSphere(CSphereColliderComponent& sphere);
 	void		CheckWithField(CSphereColliderComponent& sphere);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	std::list<CColliderComponent*> m_alistCollider[MODE_MAX][COL_MAX];
-	std::list<CColliderComponent*> m_listField;
+	list<CColliderComponent*> m_alistCollider[MODE_MAX][COL_MAX];
+	list<CColliderComponent*> m_listField;
 };

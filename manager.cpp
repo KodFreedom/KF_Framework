@@ -14,12 +14,14 @@
 #include "main.h"
 #include "manager.h"
 #include "inputManager.h"
+#include "meshManager.h"
 #include "textureManager.h"
 #include "modelManager.h"
 #include "lightManager.h"
 #include "materialManager.h"
 #include "gameObjectManager.h"
 #include "colliderManager.h"
+#include "UISystem.h"
 #include "rendererDX.h"
 #include "mode.h"
 #include "modeDemo.h"
@@ -36,23 +38,25 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CManager::CManager()
-	: m_pRenderer(NULL)
-	, m_pInputManager(NULL)
-	, m_pTextureManager(NULL)
-	, m_pLightManager(NULL)
-	, m_pMaterialManager(NULL)
-	, m_pModelManager(NULL)
-	, m_pGameObjectManager(NULL)
-	, m_pColliderManager(NULL)
-	, m_pMode(NULL)
-	, m_pFade(NULL)
+	: m_pRenderer(nullptr)
+	, m_pInputManager(nullptr)
+	, m_pMeshManager(nullptr)
+	, m_pTextureManager(nullptr)
+	, m_pLightManager(nullptr)
+	, m_pMaterialManager(nullptr)
+	, m_pModelManager(nullptr)
+	, m_pGameObjectManager(nullptr)
+	, m_pColliderManager(nullptr)
+	, m_pUISystem(nullptr)
+	, m_pMode(nullptr)
+	, m_pFade(nullptr)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
+bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 {
 	HRESULT hr;
 
@@ -63,7 +67,7 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "m_pRenderer->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return KF_FAILED;
+		return false;
 	}
 
 	//ランダム
@@ -73,6 +77,9 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pInputManager = new CInputManager;
 	m_pInputManager->Init(hInstance, hWnd);
 
+	//メッシュマネージャの生成
+	m_pMeshManager = new CMeshManager;
+
 	//モデルマネージャの生成
 	m_pModelManager = new CModelManager;
 	m_pModelManager->Init();
@@ -80,8 +87,6 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//テクスチャマネージャの生成
 	m_pTextureManager = new CTextureManager;
-	m_pTextureManager->Init();
-	m_pTextureManager->LoadAll();
 
 	//ライトマネージャの生成
 	m_pLightManager = new CLightManager;
@@ -99,13 +104,16 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pGameObjectManager = new CGameObjectManager;
 	m_pGameObjectManager->Init();
 
+	//UIシステムの生成
+	m_pUISystem = new CUISystem;
+
 	//Fadeの生成
 	m_pFade = CFade::Create();
 
 	//初期モード設定
 	SetMode(new CModeDemo);
 
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -114,21 +122,16 @@ KFRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 void CManager::Uninit(void)
 {
 	//モードの破棄
-	if (m_pMode)
-	{
-		m_pMode->Release();
-		m_pMode = NULL;
-	}
+	SAFE_RELEASE(m_pMode);
 
 	//Fadeの破棄
-	if (m_pFade)
-	{
-		m_pFade->Release();
-		m_pFade = NULL;
-	}
+	SAFE_RELEASE(m_pFade);
+
+	//UIシステムの破棄
+	SAFE_RELEASE(m_pUISystem);
 
 	//ゲームオブジェクトマネージャの破棄
-	if (m_pGameObjectManager != NULL)
+	if (m_pGameObjectManager)
 	{
 		m_pGameObjectManager->Uninit();
 		delete m_pGameObjectManager;
@@ -136,7 +139,7 @@ void CManager::Uninit(void)
 	}
 
 	//コリジョンマネージャの破棄
-	if (m_pColliderManager != NULL)
+	if (m_pColliderManager)
 	{
 		m_pColliderManager->Uninit();
 		delete m_pColliderManager;
@@ -144,14 +147,14 @@ void CManager::Uninit(void)
 	}
 
 	//マテリアルマネージャの破棄
-	if (m_pMaterialManager != NULL)
+	if (m_pMaterialManager)
 	{
 		delete m_pMaterialManager;
 		m_pMaterialManager = NULL;
 	}
 
 	//ライトマネージャの破棄
-	if (m_pLightManager != NULL)
+	if (m_pLightManager)
 	{
 		m_pLightManager->Uninit();
 		delete m_pLightManager;
@@ -159,23 +162,21 @@ void CManager::Uninit(void)
 	}
 
 	//テクスチャマネージャの破棄
-	if (m_pTextureManager != NULL)
-	{
-		m_pTextureManager->UnloadAll();
-		delete m_pTextureManager;
-		m_pTextureManager = NULL;
-	}
+	SAFE_RELEASE(m_pTextureManager);
 
 	//モデルマネージャの破棄
-	if (m_pModelManager != NULL)
+	if (m_pModelManager)
 	{
 		m_pModelManager->UnloadAll();
 		delete m_pModelManager;
 		m_pModelManager = NULL;
 	}
 
+	//メッシュマネージャの破棄
+	SAFE_RELEASE(m_pMeshManager);
+
 	//入力マネージャの破棄
-	if (m_pInputManager != NULL)
+	if (m_pInputManager)
 	{
 		m_pInputManager->Uninit();
 		delete m_pInputManager;
@@ -183,12 +184,7 @@ void CManager::Uninit(void)
 	}
 
 	//レンダラーの破棄
-	if (m_pRenderer != NULL)
-	{
-		m_pRenderer->Uninit();
-		delete m_pRenderer;
-		m_pRenderer = NULL;
-	}
+	SAFE_RELEASE(m_pRenderer);
 }
 
 //--------------------------------------------------------------------------------
@@ -197,34 +193,19 @@ void CManager::Uninit(void)
 void CManager::Update(void)
 {
 	//入力更新
-	if (m_pInputManager)
-	{
-		m_pInputManager->Update();
-	}
+	m_pInputManager->Update();
 
 	//レンダラー更新
-	if (m_pRenderer)
-	{
-		m_pRenderer->Update();
-	}
+	m_pRenderer->Update();
 
 	//モード更新
-	if (m_pMode)
-	{
-		m_pMode->Update();
-	}
+	m_pMode->Update();
 
 	//Fade更新
-	if (m_pFade)
-	{
-		m_pFade->Update();
-	}
+	m_pFade->Update();
 
 	//コリジョン更新
-	if (m_pColliderManager)
-	{
-		m_pColliderManager->Update();
-	}
+	m_pColliderManager->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -233,10 +214,10 @@ void CManager::Update(void)
 void CManager::LateUpdate(void)
 {
 	//モード更新
-	if (m_pMode)
-	{
-		m_pMode->LateUpdate();
-	}
+	m_pMode->LateUpdate();
+
+	//UI更新
+	m_pUISystem->UpdateAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -246,19 +227,19 @@ void CManager::Draw(void)
 {
 	if (m_pRenderer)
 	{
-		if (m_pRenderer->BeginDraw() == KF_SUCCEEDED)
+		if (m_pRenderer->BeginDraw() == true)
 		{
 			//モード描画
-			if (m_pMode)
-			{
-				m_pMode->Draw();
-			}
+			m_pMode->Draw();
 
-			//Fade更新
-			if (m_pFade)
-			{
-				m_pFade->Draw();
-			}
+#ifdef _DEBUG
+			m_pColliderManager->DrawCollider();
+#endif
+			//UI描画
+			m_pUISystem->DrawAll();
+
+			//Fade描画
+			m_pFade->Draw();
 
 			m_pRenderer->EndDraw();
 		}

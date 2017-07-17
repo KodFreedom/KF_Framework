@@ -52,9 +52,6 @@
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Input">
-      <UniqueIdentifier>{010c689e-36e5-45ce-bb20-b1dd88a17d81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Draw">
       <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
     </Filter>
@@ -85,9 +82,6 @@
     <Filter Include="ソース ファイル\Component\Mesh\3D">
       <UniqueIdentifier>{810aeb35-7774-4f4a-96a7-490e7b3cfd65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Component\Input">
-      <UniqueIdentifier>{dab21625-d229-4fe3-a011-f7f79b6740b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Physics">
       <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
     </Filter>
@@ -105,6 +99,42 @@
     </Filter>
     <Filter Include="ソース ファイル\Base\Camera">
       <UniqueIdentifier>{98aa7b80-43e9-410b-8b93-021c210129d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Transform">
+      <UniqueIdentifier>{7b78cae0-6569-487a-9041-e517daf4519a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior">
+      <UniqueIdentifier>{6eeec38e-963c-455e-a204-0b7665742d86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Animator">
+      <UniqueIdentifier>{5f0158e7-dc6d-47a9-9064-3433114e16a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Spawner">
+      <UniqueIdentifier>{668b0480-d542-491b-9834-5afd54ca9fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Animator">
+      <UniqueIdentifier>{e303acce-4c1a-4f78-9f63-9fb6ef063d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Motion">
+      <UniqueIdentifier>{dea147e3-4109-4939-8ad4-ddf15a8bf6a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Mesh">
+      <UniqueIdentifier>{3a61b526-0856-4ed6-a19b-481febd5fb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI">
+      <UniqueIdentifier>{c9948f76-6530-4a87-adf5-1614d1461ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI">
+      <UniqueIdentifier>{e61b84ce-404a-4320-a362-afe7fb577d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\UIObject">
+      <UniqueIdentifier>{71144254-1792-4758-82ba-bd69e5597eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\UIObject">
+      <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior">
+      <UniqueIdentifier>{d980ca8c-896c-4789-9255-ed456b26394a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,15 +204,6 @@
     <ClCompile Include="3DMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh\3D</Filter>
     </ClCompile>
-    <ClCompile Include="skyBoxMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="cubeMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
-    </ClCompile>
     <ClCompile Include="gameObject2D.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
@@ -192,9 +213,6 @@
     <ClCompile Include="actorMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh\3D</Filter>
     </ClCompile>
-    <ClCompile Include="modelMeshDrawComponent.cpp">
-      <Filter>ソース ファイル\Component\Draw</Filter>
-    </ClCompile>
     <ClCompile Include="actorMeshDrawComponent.cpp">
       <Filter>ソース ファイル\Component\Draw</Filter>
     </ClCompile>
@@ -203,9 +221,6 @@
     </ClCompile>
     <ClCompile Include="drawComponent.cpp">
       <Filter>ソース ファイル\Component\Draw</Filter>
-    </ClCompile>
-    <ClCompile Include="playerInputComponent.cpp">
-      <Filter>ソース ファイル\Component\Input</Filter>
     </ClCompile>
     <ClCompile Include="component.cpp">
       <Filter>ソース ファイル\Component</Filter>
@@ -218,9 +233,6 @@
     </ClCompile>
     <ClCompile Include="sphereColliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="KF_Collision.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
     <ClCompile Include="colliderManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -239,6 +251,45 @@
     </ClCompile>
     <ClCompile Include="inputManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="transformComponent.cpp">
+      <Filter>ソース ファイル\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="modeTitle.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="modeResult.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="animatorComponent.cpp">
+      <Filter>ソース ファイル\Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="meshManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="meshComponent.cpp">
+      <Filter>ソース ファイル\Component\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="soundManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="2DUIObject.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="playerUIObject.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="KF_CollisionSystem.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="playerBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,9 +344,6 @@
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="inputComponent.h">
-      <Filter>ヘッダー ファイル\Component\Input</Filter>
-    </ClInclude>
     <ClInclude Include="drawComponent.h">
       <Filter>ヘッダー ファイル\Component\Draw</Filter>
     </ClInclude>
@@ -320,15 +368,6 @@
     <ClInclude Include="3DMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
     </ClInclude>
-    <ClInclude Include="skyBoxMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="cubeMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
     <ClInclude Include="gameObject3D.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
@@ -341,20 +380,11 @@
     <ClInclude Include="actorMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
     </ClInclude>
-    <ClInclude Include="modelMeshDrawComponent.h">
-      <Filter>ヘッダー ファイル\Component\Draw</Filter>
-    </ClInclude>
     <ClInclude Include="actorMeshDrawComponent.h">
       <Filter>ヘッダー ファイル\Component\Draw</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="playerInputComponent.h">
-      <Filter>ヘッダー ファイル\Component\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="KF_Collision.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="colliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
@@ -388,6 +418,60 @@
     </ClInclude>
     <ClInclude Include="inputManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="transformComponent.h">
+      <Filter>ヘッダー ファイル\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="modeTitle.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="modeResult.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="animatorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="motionInfo.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="modelActor.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="bone.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="meshManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="behaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="soundManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="UISystem.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="2DUIObject.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="playerUIObject.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="KF_CollisionSystem.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="playerBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

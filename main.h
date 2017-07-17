@@ -14,20 +14,29 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include <Windows.h>
+
+//Include STL
+#include <list>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
+using namespace std;
+//Include STL
+
 #include "KF_Math.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include <d3dx9.h>
 #define DIRECTINPUT_VERSION (0x0800)
 #include <dinput.h>
 #include <XAudio2.h>//sound
-#include "KF_UtilityDX.h"
 #endif
 
 //--------------------------------------------------------------------------------
 //  ライブラリ読み込み
 //--------------------------------------------------------------------------------
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
@@ -39,15 +48,16 @@
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define SCREEN_WIDTH		(1280)							//ウインドウ幅
-#define SCREEN_HEIGHT		(720)							//ウインドウ高さ
+#define SAFE_RELEASE(p)		if(p){ p->Release(); p=nullptr; }	//safe release mode
+#define SCREEN_WIDTH		(1280)								//ウインドウ幅
+#define SCREEN_HEIGHT		(720)								//ウインドウ高さ
 #define FRAME_PER_SECOND	(60)
-#define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)	//更新間隔
-#define DELTA_TIME			(TIMER_INTERVAL * 0.001f)		//更新間隔(秒単位)
-#define CLASS_NAME			"KF_Framework"					//クラスの名前
+#define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)		//更新間隔
+#define DELTA_TIME			(TIMER_INTERVAL * 0.001f)			//更新間隔(秒単位)
+#define CLASS_NAME			"KF_Framework"						//クラスの名前
 #define WINDOW_NAME			"フレームワーク"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 )	//3D頂点フォーマット
 #endif											//ウインドウの名前

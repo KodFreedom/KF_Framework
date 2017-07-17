@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "actorMeshDrawComponent.h"
 #include "actorMeshComponent.h"
+#include "transformComponent.h"
 #include "manager.h"
 #include "textureManager.h"
 #include "materialManager.h"
@@ -24,34 +25,27 @@
 //--------------------------------------------------------------------------------
 void CActorMeshDrawComponent::Draw(void)
 {
-	//チェックMeshComponentのタイプ
-	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
-	if (pMesh->GetType() != CMeshComponent::MESH_ACTOR) { return; }
-	CActorMeshComponent* pActorMesh = (CActorMeshComponent*)pMesh;
-
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
 	CKFMtx44 mtxRot;
 	CKFMtx44 mtxPos;
 
 	//単位行列に初期化
-	CKFMath::MtxIdentity(&mtxWorld);
+	CKFMath::MtxIdentity(mtxWorld);
 
 	//回転(Y->X->Z)
 	//CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_pGameObj->GetRot());
-	mtxRot = m_pGameObj->GetMatrixRot();
+	mtxRot = m_pGameObj->GetTransformComponent()->GetMatrixRot();
 	mtxWorld *= mtxRot;
 
 	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, m_pGameObj->GetPos());
+	CKFMath::MtxTranslation(mtxPos, m_pGameObj->GetTransformComponent()->GetPos());
 	mtxWorld *= mtxPos;
 
-	m_pGameObj->SetMatrix(mtxWorld);
+	m_pGameObj->GetTransformComponent()->SetMatrix(mtxWorld);
 
-	const CTM::TEX_NAME& texName = pActorMesh->GetTexName();
-	const CMM::MATERIAL& matType = pActorMesh->GetMatType();
-	const CMOM::MODEL_NAME& modelName = pActorMesh->GetModelName();
-	CActorMeshComponent::ACTOR_MOTION_INFO& info = pActorMesh->GetMotionInfo();
+	const CMOM::MODEL_NAME& modelName = c_pMesh->GetModelName();
+	CActorMeshComponent::ACTOR_MOTION_INFO& info = c_pMesh->GetMotionInfo();
 
 	//モデルの取得
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(modelName);
@@ -61,7 +55,7 @@ void CActorMeshDrawComponent::Draw(void)
 	//RenderState設定
 	m_pRenderState->SetRenderState();
 
-	pModelActor->Draw(mtxWorld, info.vectorPartsInfo, matType, texName);
+	pModelActor->Draw(mtxWorld, info.vectorPartsInfo, m_matType, m_strTexName);
 
 	//RenderState戻す
 	m_pRenderState->ResetRenderState();

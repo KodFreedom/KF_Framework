@@ -52,9 +52,8 @@ CActionGameCamera::CActionGameCamera() : CCamera()
 	, m_vVecRightNext(CKFVec3(0.0f))
 	, m_fDistanceNext(0.0f)
 	, m_vDefaultLook(CKFVec3(0.0f))
+	, m_pTarget(nullptr)
 {
-	CNullGameObject nullGameObj;
-	m_pTarget = &nullGameObj;
 }
 
 //--------------------------------------------------------------------------------
@@ -74,7 +73,7 @@ void CActionGameCamera::Init(void)
 
 	//デフォルト角度設定
 	m_vDefaultLook = CKFVec3(0.0f, -tanf(sc_fRotXDefault), 1.0f);
-	CKFMath::VecNormalize(&m_vDefaultLook);
+	CKFMath::VecNormalize(m_vDefaultLook);
 }
 
 //--------------------------------------------------------------------------------
@@ -119,7 +118,7 @@ void CActionGameCamera::Update(void)
 	Pitch(m_vRotSpeed.m_fX);
 
 	//Target移動したらカメラの角度をデフォルトの角度にだんだん修正しに行く
-	if (m_pTarget->GetPos() != m_pTarget->GetPosNext())
+	if (m_pTarget && m_pTarget->GetTransformComponent()->GetPos() != m_pTarget->GetTransformComponent()->GetPosNext())
 	{
 		m_vVecLookNext = CKFMath::LerpNormal(m_vVecLookNext, m_vDefaultLook, sc_fReRotLerpTime);
 	}
@@ -148,7 +147,10 @@ void CActionGameCamera::Update(void)
 void CActionGameCamera::LateUpdate(void)
 {
 	//カメラ移動
-	m_vPosAtNext = CKFMath::LerpVec3(m_vPosAtNext, m_pTarget->GetPos() + CKFVec3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
+	if (m_pTarget)
+	{
+		m_vPosAtNext = CKFMath::LerpVec3(m_vPosAtNext, m_pTarget->GetTransformComponent()->GetPos() + CKFVec3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
+	}
 
 	//カメラノーマライズ
 	NormalizeCamera();
@@ -162,9 +164,9 @@ void CActionGameCamera::Yaw(const float& fAngle)
 {
 	CKFMtx44 mtxYaw;
 	CKFVec3 vAxisY = CKFVec3(0.0f, 1.0f, 0.0f);
-	CKFMath::MtxRotAxis(&mtxYaw, vAxisY, fAngle);
-	CKFMath::Vec3TransformNormal(&m_vVecRightNext, mtxYaw);
-	CKFMath::Vec3TransformNormal(&m_vVecLookNext, mtxYaw);
+	CKFMath::MtxRotAxis(mtxYaw, vAxisY, fAngle);
+	CKFMath::Vec3TransformNormal(m_vVecRightNext, mtxYaw);
+	CKFMath::Vec3TransformNormal(m_vVecLookNext, mtxYaw);
 	ReCalcDefault();
 }
 
@@ -174,9 +176,9 @@ void CActionGameCamera::Yaw(const float& fAngle)
 void CActionGameCamera::Pitch(const float& fAngle)
 {
 	CKFMtx44 mtxPitch;
-	CKFMath::MtxRotAxis(&mtxPitch, m_vVecRightNext, fAngle);
-	CKFMath::Vec3TransformNormal(&m_vVecUpNext, mtxPitch);
-	CKFMath::Vec3TransformNormal(&m_vVecLookNext, mtxPitch);
+	CKFMath::MtxRotAxis(mtxPitch, m_vVecRightNext, fAngle);
+	CKFMath::Vec3TransformNormal(m_vVecUpNext, mtxPitch);
+	CKFMath::Vec3TransformNormal(m_vVecLookNext, mtxPitch);
 	ReCalcDefault();
 }
 
@@ -185,11 +187,11 @@ void CActionGameCamera::Pitch(const float& fAngle)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::NormalizeCamera(void)
 {
-	CKFMath::VecNormalize(&m_vVecLookNext);
+	CKFMath::VecNormalize(m_vVecLookNext);
 	m_vVecUpNext = m_vVecLookNext * m_vVecRightNext;
-	CKFMath::VecNormalize(&m_vVecUpNext);
+	CKFMath::VecNormalize(m_vVecUpNext);
 	m_vVecRightNext = m_vVecUpNext * m_vVecLookNext;
-	CKFMath::VecNormalize(&m_vVecRightNext);
+	CKFMath::VecNormalize(m_vVecRightNext);
 	ReCalcDefault();
 }
 
@@ -199,7 +201,7 @@ void CActionGameCamera::NormalizeCamera(void)
 void CActionGameCamera::ReCalcDefault(void)
 {
 	m_vDefaultLook = m_vVecRightNext * (m_vDefaultLook * m_vVecRightNext);
-	CKFMath::VecNormalize(&m_vDefaultLook);
+	CKFMath::VecNormalize(m_vDefaultLook);
 }
 
 //--------------------------------------------------------------------------------

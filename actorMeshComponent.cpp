@@ -16,7 +16,7 @@
 //--------------------------------------------------------------------------------
 // 初期化処理
 //--------------------------------------------------------------------------------
-KFRESULT CActorMeshComponent::Init(void)
+bool CActorMeshComponent::Init(void)
 {
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel != NULL)
@@ -26,7 +26,7 @@ KFRESULT CActorMeshComponent::Init(void)
 		SetMotionAtNow(MOTION_NEUTAL);
 	}
 
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ void CActorMeshComponent::Update(void)
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel == NULL) { return; }
 	CModelActorX* pModelActor = (CModelActorX*)pModel;
-	const std::vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
+	const vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
 
 	//パーツ更新
 	int nFrame = 0;
@@ -61,7 +61,7 @@ void CActorMeshComponent::Update(void)
 		CKFVec3 vKeyPos = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vPos;
 		CKFVec3 vKeyRot = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].vRot;
 		CKFVec3 vRotDifference = vKeyRot - vPartRot;
-		CKFMath::NormalizeRotInPi(&vRotDifference);
+		CKFMath::NormalizeRotInPi(vRotDifference);
 
 		nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame[m_motionInfo.nKeyNow].nFrame;
 		nNumKey = vectorMotion[nCntPart][m_motionInfo.motionNow].vectorKeyFrame.size();
@@ -73,7 +73,7 @@ void CActorMeshComponent::Update(void)
 			vPartRot += vRotDifference / (float)(nFrame - m_motionInfo.nCntFrame);
 		}
 
-		CKFMath::NormalizeRotInTwoPi(&vPartRot);
+		CKFMath::NormalizeRotInTwoPi(vPartRot);
 	}
 
 	//フレームカウント
@@ -119,7 +119,7 @@ void CActorMeshComponent::SetMotionAtNow(const MOTION& motion)
 	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
 	if (pModel == NULL) { return; }
 	CModelActorX* pModelActor = (CModelActorX*)pModel;
-	const std::vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
+	const vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
 
 	//パーツ更新
 	int nNumParts = (int)m_motionInfo.vectorPartsInfo.size();

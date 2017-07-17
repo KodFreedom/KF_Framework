@@ -12,7 +12,7 @@
 #include "manager.h"
 #include "modelActorX.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -32,7 +32,7 @@ CModelActorX::CModelActorX()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-KFRESULT CModelActorX::Init(const LPCSTR &pTxtPath)
+bool CModelActorX::Init(const LPCSTR &pTxtPath)
 {
 	FILE *pFile;
 	char strRead[256];
@@ -378,10 +378,10 @@ KFRESULT CModelActorX::Init(const LPCSTR &pTxtPath)
 		}
 
 		fclose(pFile);
-		return KF_SUCCEEDED;
+		return true;
 	}
 
-	return KF_FAILED;
+	return false;
 }
 
 //--------------------------------------------------------------------------------
@@ -410,9 +410,9 @@ void CModelActorX::Uninit(void)
 //--------------------------------------------------------------------------------
 //  描画処理(モーションなし)
 //--------------------------------------------------------------------------------
-void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
+void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	int nNumParts = (int)m_actorInfo.vectorPartsInfoDefault.size();
 	CKFMtx44* pMtxWorld = new CKFMtx44[nNumParts];
@@ -423,15 +423,15 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &ma
 		CKFMtx44 mtxPos;
 		
 		//単位行列に初期化
-		CKFMath::MtxIdentity(&pMtxWorld[nCntParts]);
+		CKFMath::MtxIdentity(pMtxWorld[nCntParts]);
 
 		//親に対する相対位置行列
 		//回転(Y->X->Z)
-		CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_actorInfo.vectorPartsInfoDefault[nCntParts].vRot);
+		CKFMath::MtxRotationYawPitchRoll(mtxRot, m_actorInfo.vectorPartsInfoDefault[nCntParts].vRot);
 		pMtxWorld[nCntParts] *= mtxRot;
 
 		//平行移動
-		CKFMath::MtxTranslation(&mtxPos, m_actorInfo.vectorPartsInfoDefault[nCntParts].vPos);
+		CKFMath::MtxTranslation(mtxPos, m_actorInfo.vectorPartsInfoDefault[nCntParts].vPos);
 		pMtxWorld[nCntParts] *= mtxPos;
 
 		//親パーツチェック
@@ -449,21 +449,21 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &ma
 		D3DXMATRIX mtx = pMtxWorld[nCntParts];
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 
-		if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
+		if (strTexName.empty() && matType == CMM::MAT_NORMAL)
 		{
 			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents);
 		}
-		else if (texName == CTM::TEX_NONE)
+		else if (strTexName.empty())
 		{
 			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, matType);
 		}
 		else if (matType == CMM::MAT_NORMAL)
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, texName);
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, strTexName);
 		}
 		else
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, matType, texName);
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], mtxWorldParents, matType, strTexName);
 		}
 	}
 
@@ -476,9 +476,9 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &ma
 //--------------------------------------------------------------------------------
 //  描画処理(モーション)
 //--------------------------------------------------------------------------------
-void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
+void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, vector<PARTS_INFO> &vectorParts, const CMM::MATERIAL &matType, const string& strTexName)
 {
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	//パーツ数を比較する
 	if (m_actorInfo.vectorPartsInfoDefault.size() != vectorParts.size()) { return; }
 
@@ -490,24 +490,24 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO>
 		CKFMtx44 mtxPos;
 
 		//単位行列に初期化
-		CKFMath::MtxIdentity(&vectorParts[nCntParts].mtxWorld);
+		CKFMath::MtxIdentity(vectorParts[nCntParts].mtxWorld);
 
 		//モーション行列
 		//回転(Y->X->Z)
-		CKFMath::MtxRotationYawPitchRoll(&mtxRot, vectorParts[nCntParts].vRot);
+		CKFMath::MtxRotationYawPitchRoll(mtxRot, vectorParts[nCntParts].vRot);
 		vectorParts[nCntParts].mtxWorld *= mtxRot;
 
 		//平行移動
-		CKFMath::MtxTranslation(&mtxPos, vectorParts[nCntParts].vPos);
+		CKFMath::MtxTranslation(mtxPos, vectorParts[nCntParts].vPos);
 		vectorParts[nCntParts].mtxWorld *= mtxPos;
 
 		//親に対する相対位置行列
 		//回転(Y->X->Z)
-		CKFMath::MtxRotationYawPitchRoll(&mtxRot, m_actorInfo.vectorPartsInfoDefault[nCntParts].vRot);
+		CKFMath::MtxRotationYawPitchRoll(mtxRot, m_actorInfo.vectorPartsInfoDefault[nCntParts].vRot);
 		vectorParts[nCntParts].mtxWorld *= mtxRot;
 
 		//平行移動
-		CKFMath::MtxTranslation(&mtxPos, m_actorInfo.vectorPartsInfoDefault[nCntParts].vPos);
+		CKFMath::MtxTranslation(mtxPos, m_actorInfo.vectorPartsInfoDefault[nCntParts].vPos);
 		vectorParts[nCntParts].mtxWorld *= mtxPos;
 
 		//親パーツチェック
@@ -520,21 +520,21 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO>
 			vectorParts[nCntParts].mtxWorld *= vectorParts[vectorParts[nCntParts].nParentID].mtxWorld;
 		}
 
-		if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
+		if (strTexName.empty() && matType == CMM::MAT_NORMAL)
 		{
 			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld);
 		}
-		else if (texName == CTM::TEX_NONE)
+		else if (strTexName.empty())
 		{
 			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, matType);
 		}
 		else if (matType == CMM::MAT_NORMAL)
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, texName);
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, strTexName);
 		}
 		else
 		{
-			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, matType, texName);
+			DrawXFile(m_actorInfo.vectorPartsXFileInfo[nCntParts], vectorParts[nCntParts].mtxWorld, matType, strTexName);
 		}
 	}
 #endif
@@ -543,7 +543,7 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, std::vector<PARTS_INFO>
 //--------------------------------------------------------------------------------
 //  初期状態のパーツ情報を取得する
 //--------------------------------------------------------------------------------
-std::vector<CModelActorX::PARTS_INFO> CModelActorX::GetDefaultPartsInfo(void) const
+vector<CModelActorX::PARTS_INFO> CModelActorX::GetDefaultPartsInfo(void) const
 {
 	return m_actorInfo.vectorPartsInfoDefault;
 }
@@ -551,7 +551,7 @@ std::vector<CModelActorX::PARTS_INFO> CModelActorX::GetDefaultPartsInfo(void) co
 //--------------------------------------------------------------------------------
 //  モーション情報を取得する
 //--------------------------------------------------------------------------------
-const std::vector<CModelActorX::VEC_MOTION>	&CModelActorX::GetPartsMotionInfo(void) const
+const vector<CModelActorX::VEC_MOTION>	&CModelActorX::GetPartsMotionInfo(void) const
 {
 	return m_actorInfo.vectorPartsMotionInfo;
 }

@@ -11,10 +11,12 @@
 #include "3DMeshComponent.h"
 #include "gameObject.h"
 #include "manager.h"
+#include "meshManager.h"
 #include "textureManager.h"
 #include "materialManager.h"
+#include "mesh.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -26,11 +28,7 @@
 //--------------------------------------------------------------------------------
 void C3DMeshDrawComponent::Draw(void)
 {
-	//チェックMeshComponentのタイプ
-	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
-	if (pMesh->GetType() != CMeshComponent::MESH_3D) { return; }
-	C3DMeshComponent* p3DMesh = (C3DMeshComponent*)pMesh;
-	const C3DMeshComponent::MESH3D& meshInfo = p3DMesh->GetMeshInfo();
+	const CMesh* const pMeshInfo = GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
 
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
@@ -38,19 +36,19 @@ void C3DMeshDrawComponent::Draw(void)
 	CKFMtx44 mtxPos;
 
 	//単位行列に初期化
-	CKFMath::MtxIdentity(&mtxWorld);
+	CKFMath::MtxIdentity(mtxWorld);
 
 	//回転(Y->X->Z)
-	mtxRot = m_pGameObj->GetMatrixRot();
+	mtxRot = m_pGameObj->GetTransformComponent()->GetMatrixRot();
 	mtxWorld *= mtxRot;
 
 	//平行移動
-	CKFMath::MtxTranslation(&mtxPos, m_pGameObj->GetPos());
+	CKFMath::MtxTranslation(mtxPos, m_pGameObj->GetTransformComponent()->GetPos());
 	mtxWorld *= mtxPos;
 
-	m_pGameObj->SetMatrix(mtxWorld);
+	m_pGameObj->GetTransformComponent()->SetMatrix(mtxWorld);
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
 	//RenderState設定
@@ -63,22 +61,22 @@ void C3DMeshDrawComponent::Draw(void)
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,						//ストリーム番号
-		meshInfo.pVtxBuffer,	//頂点バッファ
+		pMeshInfo->m_pVtxBuffer,//頂点バッファ
 		0,						//オフセット（開始位置）
 		sizeof(VERTEX_3D));		//ストライド量
 
 	// 頂点インデックスの設定
-	pDevice->SetIndices(meshInfo.pIdxBuffer);
+	pDevice->SetIndices(pMeshInfo->m_pIdxBuffer);
 
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(p3DMesh->GetTexName());
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(p3DMesh->GetMatType());
+	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(m_matType);
 	pDevice->SetMaterial(&mat);
 
 	//プリミティブ描画
@@ -86,9 +84,9 @@ void C3DMeshDrawComponent::Draw(void)
 		D3DPT_TRIANGLESTRIP,
 		0,
 		0,
-		meshInfo.nNumVtx,
+		pMeshInfo->m_nNumVtx,
 		0,
-		meshInfo.nNumPolygon);
+		pMeshInfo->m_nNumPolygon);
 
 	//RenderState戻す
 	m_pRenderState->ResetRenderState();

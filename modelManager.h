@@ -53,6 +53,10 @@ public:
 	void	LoadAll(void);
 	void	UnloadAll(void);
 	CModel	*GetModel(const MODEL_NAME &modelName);
+
+	CModel* GetModel(const string& modelPath) { return m_umapModel.at(modelPath); }
+	void	BindModel(const string& modelPath);
+
 private:
 	struct MODEL_INFO
 	{
@@ -62,8 +66,10 @@ private:
 
 	void Load(const MODEL_NAME &modelBegin, const MODEL_NAME &modelEnd);
 
-	std::vector<CModel*>	m_vectorModel;
+	vector<CModel*>	m_vectorModel;
 	static MODEL_INFO		m_apModelInfo[MODEL_MAX];
+
+	unordered_map<string, CModel*> m_umapModel;
 };
 
 #endif

@@ -4,17 +4,12 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-01-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _MODEL_H_
-#define _MODEL_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "modelManager.h"
-#include "textureManager.h"
 #include "materialManager.h"
 
 //--------------------------------------------------------------------------------
@@ -33,9 +28,9 @@ public:
 	CModel() {}
 	~CModel() {}
 
-	virtual KFRESULT	Init(void) { return KF_SUCCEEDED; }
-	virtual void		Uninit(void) = 0;
-	virtual void		Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName) = 0;
+	virtual bool	Init(void) { return true; }
+	virtual void	Uninit(void) = 0;
+	virtual void	Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName) = 0;
 
 	const CMOM::MODEL_TYPE GetModelType(void) const { return m_modelType; }
 protected:
@@ -44,26 +39,24 @@ protected:
 	//--------------------------------------------------------------------------------
 	struct XFILE
 	{
-		std::vector<LPDIRECT3DTEXTURE9>	vectorTexture;	//textureインターフェース
-		LPD3DXMESH						pMesh;			//メッシュ情報インターフェイス
-		LPD3DXBUFFER					pBufferMaterial;//マテリアル情報　動的メモリ
-		DWORD							dwNumMaterial;	//モデルのマテリアル数
+		vector<LPDIRECT3DTEXTURE9>	vectorTexture;	//textureインターフェース
+		LPD3DXMESH					pMesh;			//メッシュ情報インターフェイス
+		LPD3DXBUFFER				pBufferMaterial;//マテリアル情報　動的メモリ
+		DWORD						dwNumMaterial;	//モデルのマテリアル数
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	static KFRESULT LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath);
-	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents);
-	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType);
-	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CTM::TEX_NAME &texName);
-	static void		DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName);
-	static void		ReleaseXFile(XFILE* pXFile);
+	static bool LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath);
+	static void	DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents);
+	static void	DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType);
+	static void	DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const string& strTexName);
+	static void	DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName);
+	static void	ReleaseXFile(XFILE* pXFile);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	CMOM::MODEL_TYPE m_modelType;
 };
-
-#endif

@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "manager.h"
 #include "gameObjectManager.h"
+#include "UISystem.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -40,6 +41,9 @@ void CMode::Uninit(void)
 
 	//オブジェクトの破棄
 	GetManager()->GetGameObjectManager()->ReleaseAll();
+
+	//UIの破棄
+	GetManager()->GetUISystem()->ReleaseAll();
 }
 
 //--------------------------------------------------------------------------------

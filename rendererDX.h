@@ -31,10 +31,10 @@ public:
 	CRendererDX();
 	~CRendererDX();
 
-	KFRESULT			Init(HWND hWnd,BOOL bWindow);
-	void				Uninit(void);
+	bool				Init(HWND hWnd,BOOL bWindow);
+	void				Release(void);
 	void				Update(void);
-	KFRESULT			BeginDraw(void);
+	bool				BeginDraw(void);
 	void				EndDraw(void);
 
 	//Get関数
@@ -47,7 +47,7 @@ private:
 		RM_WIREFRAME	//ワイヤーフレーム（デバッグ用）
 	};
 
-	void				SetRenderMode(const RENDER_MODE &rm);
+	void				SetRenderMode(const RENDER_MODE& rm);
 
 	LPDIRECT3D9			m_pD3D;			// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9	m_pD3DDevice;	// Deviceオブジェクト(描画に必要)

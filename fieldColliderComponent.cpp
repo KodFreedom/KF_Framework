@@ -15,10 +15,10 @@
 //--------------------------------------------------------------------------------
 //  èâä˙âªèàóù
 //--------------------------------------------------------------------------------
-KFRESULT CFieldColliderComponent::Init(void)
+bool CFieldColliderComponent::Init(void)
 {
 	MakeVertex();
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 	CKFVec3 vLS = vPLeftUp - vPSide;
 	CKFVec3 vRS = vPRightDown - vPSide;
 	CKFVec3 vNormal = (vLS * vRS) * (float)nSign;
-	CKFMath::VecNormalize(&vNormal);
+	CKFMath::VecNormalize(vNormal);
 
 	info.bInTheField = true;
 	info.fHeight = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
@@ -99,9 +99,9 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 //--------------------------------------------------------------------------------
 //  fieldÇÃèÓïÒéÊìæ
 //--------------------------------------------------------------------------------
-std::list<CFieldColliderComponent::INFO> CFieldColliderComponent::GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd)
+list<CFieldColliderComponent::INFO> CFieldColliderComponent::GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd)
 {
-	std::list<INFO> listInfo;
+	list<INFO> listInfo;
 
 	//èëÇ´èoÇ∑îÕàÕÇéZèoÇ∑ÇÈ
 	//CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);

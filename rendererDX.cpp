@@ -41,7 +41,7 @@ CRendererDX::~CRendererDX()
 //---------------------------------------
 //  初期化
 //---------------------------------------
-KFRESULT CRendererDX::Init(HWND hWnd, BOOL bWindow)
+bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 {
 	D3DPRESENT_PARAMETERS d3dpp;
 	D3DDISPLAYMODE d3ddm;
@@ -50,13 +50,13 @@ KFRESULT CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 	if (m_pD3D == NULL)
 	{
-		return KF_FAILED;
+		return false;
 	}
 
 	// 現在のディスプレイモードを取得
 	if (FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm)))
 	{
-		return KF_FAILED;
+		return false;
 	}
 
 	// デバイスのプレゼンテーションパラメータの設定
@@ -98,7 +98,7 @@ KFRESULT CRendererDX::Init(HWND hWnd, BOOL bWindow)
 				&d3dpp, &m_pD3DDevice)))
 			{
 				// 生成失敗
-				return KF_FAILED;
+				return false;
 			}
 		}
 	}
@@ -142,36 +142,26 @@ KFRESULT CRendererDX::Init(HWND hWnd, BOOL bWindow)
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
 #endif
 
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //---------------------------------------
 //  終了処理
 //---------------------------------------
-void CRendererDX::Uninit(void)
+void CRendererDX::Release(void)
 {
 #ifdef _DEBUG
 	// デバッグ情報表示用フォントの破棄
-	if (m_pFont != NULL)
-	{
-		m_pFont->Release();
-		m_pFont = NULL;
-	}
+	SAFE_RELEASE(m_pFont);
 #endif
 
 	// デバイスの破棄
-	if (m_pD3DDevice != NULL)
-	{
-		m_pD3DDevice->Release();
-		m_pD3DDevice = NULL;
-	}
+	SAFE_RELEASE(m_pD3DDevice);
 
 	// Direct3Dオブジェクトの破棄
-	if (m_pD3D != NULL)
-	{
-		m_pD3D->Release();
-		m_pD3D = NULL;
-	}
+	SAFE_RELEASE(m_pD3D);
+
+	delete this;
 }
 
 //---------------------------------------
@@ -197,7 +187,7 @@ void CRendererDX::Update(void)
 //---------------------------------------
 //  描画開始
 //---------------------------------------
-KFRESULT CRendererDX::BeginDraw(void)
+bool CRendererDX::BeginDraw(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
 	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(128, 0, 128, 255), 1.0f, 0);
@@ -205,9 +195,9 @@ KFRESULT CRendererDX::BeginDraw(void)
 	// Direct3Dによる描画の開始
 	HRESULT hr = m_pD3DDevice->BeginScene();
 
-	if (FAILED(hr)) { return KF_FAILED; }
+	if (FAILED(hr)) { return false; }
 
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //---------------------------------------

@@ -12,7 +12,10 @@
 #include "colliderComponent.h"
 #include "sphereColliderComponent.h"
 #include "fieldColliderComponent.h"
-#include "KF_Collision.h"
+#include "KF_CollisionSystem.h"
+#include "manager.h"
+#include "rendererDX.h"
+#include "textureManager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -73,9 +76,10 @@ void CColliderManager::Update(void)
 			CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
 
 			//Dynamic
-			CheckWithSphere(itr, *pSphere);
+			CheckWithDynamicSphere(itr, *pSphere);
 
 			//Static
+			CheckWithStaticSphere(*pSphere);
 
 			//Field
 			CheckWithField(*pSphere);
@@ -86,7 +90,7 @@ void CColliderManager::Update(void)
 //--------------------------------------------------------------------------------
 //  スフィアとスフィアの当たり判定
 //--------------------------------------------------------------------------------
-void CColliderManager::CheckWithSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere)
+void CColliderManager::CheckWithDynamicSphere(const COL_ITR& itrBegin, CSphereColliderComponent& sphere)
 {
 	if (!m_alistCollider[DYNAMIC][COL_SPHERE].empty())
 	{
@@ -95,7 +99,24 @@ void CColliderManager::CheckWithSphere(const COL_ITR& itrBegin, CSphereColliderC
 			//同じオブジェクトに付いているなら判定しない
 			if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
 			CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
-			CKFCollision::CheckCollisionSphereWithSphere(sphere, *pSphere);
+			CKFCollisionSystem::CheckCollisionSphereWithSphere(sphere, *pSphere);
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  スフィアとスフィアの当たり判定
+//--------------------------------------------------------------------------------
+void CColliderManager::CheckWithStaticSphere(CSphereColliderComponent& sphere)
+{
+	if (!m_alistCollider[STATIC][COL_SPHERE].empty())
+	{
+		for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); itr++)
+		{
+			//同じオブジェクトに付いているなら判定しない
+			if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
+			CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
+			CKFCollisionSystem::CheckCollisionSphereWithSphere(sphere, *pSphere);
 		}
 	}
 }
@@ -110,7 +131,7 @@ void CColliderManager::CheckWithField(CSphereColliderComponent& sphere)
 		for (COL_ITR itrField = m_listField.begin(); itrField != m_listField.end(); itrField++)
 		{
 			CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itrField);
-			CKFCollision::CheckCollisionSphereWithField(sphere, *pField);
+			CKFCollisionSystem::CheckCollisionSphereWithField(sphere, *pField);
 		}
 	}
 }
@@ -196,3 +217,29 @@ bool CColliderManager::RayCast(const CKFRay& ray, const float& fLength, HIT_INFO
 	//}
 	return false;
 }
+
+#ifdef _DEBUG
+void CColliderManager::DrawCollider(void)
+{
+	//LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	////sphere
+	//for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+	//{
+	//	D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
+	//	float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
+	//	LPD3DXMESH pMesh;
+	//	D3DXCreateSphere(pDevice, fRadius, 10, 10, &pMesh, NULL);
+	//	//マトリックス設定
+	//	D3DXMATRIX mtx,mtxPos;
+	//	D3DXMatrixIdentity(&mtx);
+	//	D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
+	//	mtx *= mtxPos;
+	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+	//	// テクスチャの設定
+	//	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(CTextureManager::TEX_ALPHA);
+	//	pDevice->SetTexture(0, pTexture);
+	//	pMesh->DrawSubset(0);
+	//	pMesh->Release();
+	//}
+}
+#endif

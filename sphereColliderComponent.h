@@ -25,17 +25,15 @@ public:
 	//--------------------------------------------------------------------------------
 	CSphereColliderComponent(CGameObject* const pGameObj, const CM::MODE& mode, const CKFVec3& vPos, const float& fRadius)
 		: CColliderComponent(pGameObj, CM::COL_SPHERE, mode, vPos)
-		, m_fRadius(fRadius)
-	{
-	}
+		, m_fRadius(fRadius) {}
 
 	~CSphereColliderComponent() {}
 
-	KFRESULT	Init(void) override { return KF_SUCCEEDED; }
-	void		Update(void) override {}
+	bool	Init(void) override { return true; }
+	void	Update(void) override {}
 
 	//Getä÷êî
-	float		GetRadius(void) { return m_fRadius; }
+	float	GetRadius(void) { return m_fRadius; }
 
 private:
 	//--------------------------------------------------------------------------------

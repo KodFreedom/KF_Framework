@@ -44,14 +44,13 @@ public:
 
 	~CFieldColliderComponent() {}
 
-	KFRESULT	Init(void) override;
-	void		Uninit(void) override;
-	void		Update(void) override;
+	bool	Init(void) override;
+	void	Uninit(void) override;
+	void	Update(void) override;
 
 	//Getä÷êî
-	INFO			GetPointInfo(const CKFVec3& vPos);
-	std::list<INFO> GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd);
-	//float		GetHeight(const CKFVec3& vPos);
+	INFO		GetPointInfo(const CKFVec3& vPos);
+	list<INFO>	GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -62,8 +61,8 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	int						m_nNumBlockX;
-	int						m_nNumBlockZ;
-	CKFVec2					m_vBlockSize;
-	std::vector<CKFVec3>	m_vectorVtx;
+	int				m_nNumBlockX;
+	int				m_nNumBlockZ;
+	CKFVec2			m_vBlockSize;
+	vector<CKFVec3>	m_vectorVtx;
 };

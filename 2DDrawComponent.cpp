@@ -13,7 +13,7 @@
 #include "manager.h"
 #include "textureManager.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -25,12 +25,7 @@
 //--------------------------------------------------------------------------------
 void C2DDrawComponent::Draw(void)
 {
-	//チェックMeshComponentのタイプ
-	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
-	if (pMesh->GetType() != CMeshComponent::MESH_2D) { return; }
-	C2DMeshComponent* p2DMesh = (C2DMeshComponent*)pMesh;
-
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
 	// レンダーステート設定
@@ -39,7 +34,7 @@ void C2DDrawComponent::Draw(void)
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,							//ストリーム番号
-		p2DMesh->GetVtxBuffer(),	//頂点バッファ
+		c_pMesh->GetVtxBuffer(),	//頂点バッファ
 		0,							//オフセット
 		sizeof(VERTEX_2D));			//ストライド量
 
@@ -47,13 +42,13 @@ void C2DDrawComponent::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(p2DMesh->GetTexName());
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
 		0,							//オフセット
-		p2DMesh->GetNumPolygon());	//ポリゴン数
+		c_pMesh->GetNumPolygon());	//ポリゴン数
 
 	// レンダーステートリセット
 	m_pRenderState->ResetRenderState();

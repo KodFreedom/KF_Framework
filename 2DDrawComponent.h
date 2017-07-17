@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
-#ifndef _2D_DRAW_COMPONENT_H_
-#define _2D_DRAW_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -15,6 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class C2DMeshComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -25,10 +25,13 @@
 class C2DDrawComponent : public CDrawComponent
 {
 public:
-	C2DDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
+	C2DDrawComponent(C2DMeshComponent* const pMesh, CGameObject* const pGameObj)
+		: CDrawComponent(pGameObj), c_pMesh(pMesh) {}
 	~C2DDrawComponent() {}
 
 	void	Draw(void) override;
+
+private:
+	C2DMeshComponent* const c_pMesh;
 };
 
-#endif

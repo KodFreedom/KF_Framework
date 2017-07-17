@@ -30,7 +30,7 @@ public:
 		, m_pModeNext(NULL)
 		, m_cColor(CKFColor(0.0f, 0.0f, 0.0f, 1.0f))
 		, m_nCnt(0)
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 		, m_pVtxBuffer(NULL)
 #endif
 	{}
@@ -80,7 +80,7 @@ private:
 	CMode*						m_pModeNext;
 	int							m_nCnt;
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DVERTEXBUFFER9		m_pVtxBuffer;	//頂点バッファ管理インターフェースポインタ
 #endif
 };

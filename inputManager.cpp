@@ -44,7 +44,7 @@ CInputManager::~CInputManager()
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
 //--------------------------------------------------------------------------------
-KFRESULT CInputManager::Init(HINSTANCE hInst, HWND hWnd)
+bool CInputManager::Init(HINSTANCE hInst, HWND hWnd)
 {
 	m_pKeyboard = new CKeyboardDX;
 	m_pKeyboard->Init(hInst, hWnd);
@@ -52,7 +52,7 @@ KFRESULT CInputManager::Init(HINSTANCE hInst, HWND hWnd)
 	m_pMouse->Init(hInst, hWnd);
 	m_pJoystick = new CJoystickDX;
 	m_pJoystick->Init(hInst, hWnd);
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -110,8 +110,8 @@ void CInputManager::UpdateInputInfo(void)
 	m_fMoveVertical = fabsf(fKAxisY) > fabsf(fJLAxisY) ? fKAxisY : fJLAxisY;
 
 	//Rot
-	float fMAxisX = (float)m_pMouse->GetMouseAxisX() * 0.1f;
-	float fMAxisY = (float)m_pMouse->GetMouseAxisY() * 0.1f;
+	float fMAxisX = 0.0f/*(float)m_pMouse->GetMouseAxisX() * 0.1f*/;
+	float fMAxisY = 0.0f/*(float)m_pMouse->GetMouseAxisY() * 0.1f*/;
 	float fJRAxisX = (float)m_pJoystick->GetRStickAxisX() / CJoystickDX::sc_nStickAxisMax;
 	float fJRAxisY = (float)m_pJoystick->GetRStickAxisY() / CJoystickDX::sc_nStickAxisMax;
 	m_fRotHorizontal = fabsf(fMAxisX) > fabsf(fJRAxisX) ? fMAxisX : fJRAxisX;
@@ -130,10 +130,13 @@ void CInputManager::UpdateInputInfo(void)
 	bool bAttackPress = m_pKeyboard->GetKeyPress(DIK_J) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_B);
 	bool bAttackTrigger = m_pKeyboard->GetKeyTrigger(DIK_J) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_B);
 	bool bAttackRelease = m_pKeyboard->GetKeyRelease(DIK_J) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_B);
+	bool bSubmitPress = m_pKeyboard->GetKeyPress(DIK_RETURN) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_MENU);
+	bool bSubmitTrigger = m_pKeyboard->GetKeyTrigger(DIK_RETURN) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_MENU);
+	bool bSubmitRelease = m_pKeyboard->GetKeyRelease(DIK_RETURN) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_MENU);
 
-	m_lKeysPress = (LONG)bJumpPress | (bAttackPress << 1);
-	m_lKeysTrigger = (LONG)bJumpTrigger | (bAttackTrigger << 1);
-	m_lKeysRelease = (LONG)bJumpRelease | (bAttackRelease << 1);
+	m_lKeysPress = (LONG)bJumpPress | (bAttackPress << 1) | (bSubmitPress << 2);
+	m_lKeysTrigger = (LONG)bJumpTrigger | (bAttackTrigger << 1) | (bSubmitTrigger << 2);
+	m_lKeysRelease = (LONG)bJumpRelease | (bAttackRelease << 1) | (bSubmitRelease << 2);
 	
 #ifdef _DEBUG
 	//char str[512];

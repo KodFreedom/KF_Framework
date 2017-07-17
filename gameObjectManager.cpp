@@ -27,7 +27,7 @@ CGameObjectManager::CGameObjectManager()
 {
 	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
 	{
-		m_avectorGameObj[nCntPri].clear();
+		m_alistGameObj[nCntPri].clear();
 	}
 }
 
@@ -36,10 +36,6 @@ CGameObjectManager::CGameObjectManager()
 //--------------------------------------------------------------------------------
 void CGameObjectManager::Init(void)
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
-	{
-		m_avectorGameObj[nCntPri].clear();
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -57,17 +53,22 @@ void CGameObjectManager::ReleaseAll(void)
 {
 	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
 	{
-		for (int nCnt = 0; nCnt < (int)m_avectorGameObj[nCntPri].size(); nCnt++)
+		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end();)
 		{
-
-			if (m_avectorGameObj[nCntPri][nCnt] != NULL)
-			{
-				m_avectorGameObj[nCntPri][nCnt]->Uninit();
-				delete m_avectorGameObj[nCntPri][nCnt];
-				m_avectorGameObj[nCntPri][nCnt] = NULL;
-			}
+			(*itr)->Uninit();
+			delete (*itr);
+			itr = m_alistGameObj[nCntPri].erase(itr);
 		}
-		m_avectorGameObj[nCntPri].clear();
+		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
+		//{
+		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
+		//	{
+		//		m_alistGameObj[nCntPri][nCnt]->Uninit();
+		//		delete m_alistGameObj[nCntPri][nCnt];
+		//		m_alistGameObj[nCntPri][nCnt] = NULL;
+		//	}
+		//}
+		//m_alistGameObj[nCntPri].clear();
 	}
 }
 
@@ -78,13 +79,17 @@ void CGameObjectManager::UpdateAll(void)
 {
 	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
 	{
-		for (int nCnt = 0; nCnt < (int)m_avectorGameObj[nCntPri].size(); nCnt++)
+		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
 		{
-			if (m_avectorGameObj[nCntPri][nCnt] != NULL)
-			{
-				m_avectorGameObj[nCntPri][nCnt]->Update();
-			}
+			(*itr)->Update();
 		}
+		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
+		//{
+		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
+		//	{
+		//		m_alistGameObj[nCntPri][nCnt]->Update();
+		//	}
+		//}
 	}
 }
 
@@ -95,13 +100,42 @@ void CGameObjectManager::LateUpdateAll(void)
 {
 	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
 	{
-		for (int nCnt = 0; nCnt < (int)m_avectorGameObj[nCntPri].size(); nCnt++)
+		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
 		{
-			if (m_avectorGameObj[nCntPri][nCnt] != NULL)
+			(*itr)->LateUpdate();
+		}
+		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
+		//{
+		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
+		//	{
+		//		m_alistGameObj[nCntPri][nCnt]->LateUpdate();
+		//	}
+		//}
+	}
+
+
+	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
+	{
+		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end();)
+		{
+			if (!(*itr)->m_bAlive)
+			{//生きてないオブジェクトを削除
+				(*itr)->Uninit();
+				delete (*itr);
+				itr = m_alistGameObj[nCntPri].erase(itr);
+			}
+			else
 			{
-				m_avectorGameObj[nCntPri][nCnt]->LateUpdate();
+				++itr;
 			}
 		}
+		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
+		//{
+		//	if (m_alistGameObj[nCntPri][nCnt] && !m_alistGameObj[nCntPri][nCnt]->m_bAlive)
+		//	{
+		//		ReleaseGameObj((PRIORITY)nCntPri, m_alistGameObj[nCntPri][nCnt]);
+		//	}
+		//}
 	}
 }
 
@@ -112,12 +146,9 @@ void CGameObjectManager::DrawAll(void)
 {
 	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
 	{
-		for (int nCnt = 0; nCnt < (int)m_avectorGameObj[nCntPri].size(); nCnt++)
+		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
 		{
-			if (m_avectorGameObj[nCntPri][nCnt] != NULL)
-			{
-				m_avectorGameObj[nCntPri][nCnt]->Draw();
-			}
+			(*itr)->Draw();
 		}
 	}
 }
@@ -127,19 +158,17 @@ void CGameObjectManager::DrawAll(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
-	//配列の間に空きがある場合
-	for (int nCnt = 0; nCnt < (int)m_avectorGameObj[pri].size(); nCnt++)
-	{
-		if (m_avectorGameObj[pri][nCnt] == NULL)
-		{
-			m_avectorGameObj[pri][nCnt] = pGameObj;
-			return;
-		}
-	}
-
-	//配列の間に空きがない場合
-	m_avectorGameObj[pri].push_back(pGameObj);
-
+	////配列の間に空きがある場合
+	//for (int nCnt = 0; nCnt < (int)m_alistGameObj[pri].size(); nCnt++)
+	//{
+	//	if (m_alistGameObj[pri][nCnt] == NULL)
+	//	{
+	//		m_alistGameObj[pri][nCnt] = pGameObj;
+	//		return;
+	//	}
+	//}
+	////配列の間に空きがない場合
+	m_alistGameObj[pri].push_back(pGameObj);
 }
 
 //--------------------------------------------------------------------------------
@@ -148,15 +177,18 @@ void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 void CGameObjectManager::ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
 	PRIORITY priCopy = pri;
+	pGameObj->Uninit();
+	delete pGameObj;
+	m_alistGameObj[priCopy].remove(pGameObj);
 
-	for (int nCnt = 0; nCnt < (int)m_avectorGameObj[pri].size(); nCnt++)
-	{
-		if (m_avectorGameObj[pri][nCnt] == pGameObj)
-		{
-			m_avectorGameObj[pri][nCnt]->Uninit();
-			delete m_avectorGameObj[pri][nCnt];
-			m_avectorGameObj[pri][nCnt] = NULL;
-			return;
-		}
-	}
+	//for (int nCnt = 0; nCnt < (int)m_alistGameObj[priCopy].size(); nCnt++)
+	//{
+	//	if (m_alistGameObj[priCopy][nCnt] == pGameObj)
+	//	{
+	//		m_alistGameObj[priCopy][nCnt]->Uninit();
+	//		delete m_alistGameObj[priCopy][nCnt];
+	//		m_alistGameObj[priCopy][nCnt] = NULL;
+	//		return;
+	//	}
+	//}
 }

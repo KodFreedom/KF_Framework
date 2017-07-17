@@ -4,11 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-5-10
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _GAME_OBJECT_MANAGER_H_
-#define _GAME_OBJECT_MANAGER_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -54,7 +50,5 @@ public:
 	void	ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj);
 
 private:
-	std::vector<CGameObject*>	m_avectorGameObj[PRI_MAX];
+	list<CGameObject*>	m_alistGameObj[PRI_MAX];
 };
-
-#endif

@@ -16,7 +16,6 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class CGameObject;
-class CNullGameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -29,6 +28,9 @@ public:
 	//--------------------------------------------------------------------------------
 	enum MESSAGE
 	{
+		M_MOVE,
+		M_JUMP,
+		M_LANDING,
 		M_MAX
 	};
 
@@ -38,9 +40,9 @@ public:
 	CComponent(CGameObject* const pGameObj) : m_pGameObj(pGameObj) {}
 	~CComponent() {}
 
-	virtual KFRESULT	Init(void) = 0;
-	virtual void		Uninit(void) = 0;
-	virtual void		Release(void)
+	virtual bool	Init(void) = 0;
+	virtual void	Uninit(void) = 0;
+	virtual void	Release(void)
 	{
 		Uninit();
 		delete this;
@@ -55,18 +57,12 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CComponent();
+	CComponent() : m_pGameObj(nullptr) {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	CGameObject* const m_pGameObj;
-
-private:
-	//--------------------------------------------------------------------------------
-	//  ヌルオブジェクト
-	//--------------------------------------------------------------------------------
-	static CNullGameObject s_nullGameObject;
 };
 
 #endif

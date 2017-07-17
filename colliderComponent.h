@@ -35,12 +35,10 @@ public:
 	CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode, const CKFVec3& vPos = CKFVec3(0.0f));
 	~CColliderComponent() {}
 
-	virtual KFRESULT	Init(void) override = 0;
+	virtual bool		Init(void) override = 0;
 	virtual void		Uninit(void) override;
 	virtual void		Update(void) = 0;
-	virtual void		OnCollision(CColliderComponent& collider) {}
-	virtual void		OnTrigger(CColliderComponent& collider) {}
-
+	
 	//Setä÷êî
 	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
 

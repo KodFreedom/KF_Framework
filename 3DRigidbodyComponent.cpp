@@ -46,7 +46,7 @@ void C3DRigidbodyComponent::SetMass(const float& fMass)
 void C3DRigidbodyComponent::Update(void)
 {
 	CGameObject3D* pObj = (CGameObject3D*)m_pGameObj;
-	CKFVec3 vPos = pObj->GetPosNext();
+	CKFVec3 vPos = pObj->GetTransformComponent()->GetPosNext();
 
 	//d—Í
 	m_vForceAccum += m_vGravity * m_fMass * DELTA_TIME;
@@ -62,5 +62,5 @@ void C3DRigidbodyComponent::Update(void)
 	m_vForceAccum = CKFVec3(0.0f);
 	m_vVelocity *= m_fDrag;
 	m_vMovement = CKFVec3(0.0f);
-	pObj->SetPosNext(vPos);
+	pObj->GetTransformComponent()->SetPosNext(vPos);
 }

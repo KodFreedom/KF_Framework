@@ -92,7 +92,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 	//Manager¶¬
 	g_pManager = new CManager;
 
-	if (g_pManager->Init(hInstance, hWnd, true) == KF_FAILED)
+	if (g_pManager->Init(hInstance, hWnd, true) == false)
 	{
 		return -1;
 	};

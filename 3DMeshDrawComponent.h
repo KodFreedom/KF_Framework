@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
-#ifndef _3D_MESH_DRAW_COMPONENT_H_
-#define _3D_MESH_DRAW_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -15,6 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class C3DMeshComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -25,10 +25,12 @@
 class C3DMeshDrawComponent : public CDrawComponent
 {
 public:
-	C3DMeshDrawComponent(CGameObject* const pGameObj) : CDrawComponent(pGameObj) {}
+	C3DMeshDrawComponent(C3DMeshComponent* const pMesh, CGameObject* const pGameObj)
+		: CDrawComponent(pGameObj), c_pMesh(pMesh) {}
 	~C3DMeshDrawComponent() {}
 
 	void	Draw(void) override;
-};
 
-#endif
+private:
+	C3DMeshComponent* const c_pMesh;
+};

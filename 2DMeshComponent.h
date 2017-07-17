@@ -11,7 +11,6 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "meshComponent.h"
-#include "textureManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -26,37 +25,32 @@
 class C2DMeshComponent : public CMeshComponent
 {
 public:
-	C2DMeshComponent(CGameObject* pGameObj) : CMeshComponent(pGameObj, MESH_2D)
+	C2DMeshComponent(CGameObject* pGameObj) : CMeshComponent(pGameObj)
 		, m_cColor(CKFColor(1.0f))
-		, m_texName(CTM::TEX_NONE)
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 		, m_pVtxBuffer(NULL)
 #endif
-	{
-	}
+	{}
 
 	~C2DMeshComponent() {}
 
-	KFRESULT	Init(void) override;
-	void		Uninit(void) override;
-	void		Update(void) override;
+	bool	Init(void) override;
+	void	Uninit(void) override;
+	void	Update(void) override;
 
 	//Get関数
-	const CTM::TEX_NAME&	GetTexName(void) const { return m_texName; }
 	const int&				GetNumVertex(void) const { return s_nNumVtx; }
 	const int&				GetNumPolygon(void) const { return s_nNumPolygon; }
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DVERTEXBUFFER9 GetVtxBuffer(void) const { return m_pVtxBuffer; }
 #endif
 
 	//Set関数
-	void					SetTexName(const CTM::TEX_NAME& texName) { m_texName = texName; }
 
 private:
 	CKFColor				m_cColor;		//カラー
-	CTM::TEX_NAME			m_texName;		//テクスチャ
 	
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;
 #endif
 	

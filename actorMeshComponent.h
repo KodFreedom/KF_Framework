@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-#ifndef _ACTOR_MESH_COMPONENT_H_
-#define _ACTOR_MESH_COMPONENT_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -45,13 +44,13 @@ public:
 		MOTION	motionNext;		//次のモーション
 		int		nKeyNow;		//今のキーフレーム
 		int		nCntFrame;		//今のフレーム
-		std::vector<CModelActorX::PARTS_INFO>	vectorPartsInfo;	// パーツ情報
+		vector<CModelActorX::PARTS_INFO>	vectorPartsInfo;	// パーツ情報
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CActorMeshComponent(CGameObject* const pGameObj) : CModelMeshComponent(pGameObj, MESH_ACTOR)
+	CActorMeshComponent(CGameObject* const pGameObj) : CModelMeshComponent(pGameObj)
 		, m_status(MS_NORMAL)
 		, m_nCntChangeFrame(0)
 	{
@@ -63,9 +62,9 @@ public:
 
 	~CActorMeshComponent() {}
 
-	virtual KFRESULT		Init(void) override;
-	virtual void			Uninit(void) override;
-	virtual void			Update(void) override;
+	virtual bool		Init(void) override;
+	virtual void		Uninit(void) override;
+	virtual void		Update(void) override;
 
 	//Get関数
 	ACTOR_MOTION_INFO&	GetMotionInfo(void) { return m_motionInfo; }
@@ -103,5 +102,3 @@ private:
 	int					m_nCntChangeFrame;
 	ACTOR_MOTION_INFO	m_motionInfo;
 };
-
-#endif

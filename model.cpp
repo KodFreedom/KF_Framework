@@ -4,15 +4,13 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-01-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
+#include "textureManager.h"
 #include "rendererDX.h"
 #include "model.h"
 
@@ -22,10 +20,10 @@
 //--------------------------------------------------------------------------------
 //  XFileの読み込み
 //--------------------------------------------------------------------------------
-KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
+bool CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 {
 	//チェックポインタ
-	if (pXFile == NULL) { return KF_FAILED; }
+	if (pXFile == NULL) { return false; }
 
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
@@ -43,7 +41,7 @@ KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "CModel : D3DXLoadMeshFromX ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return KF_FAILED;
+		return false;
 	}
 
 	//texture
@@ -71,7 +69,7 @@ KFRESULT CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 		pXFile->vectorTexture.push_back(pTexture);
 	}
 
-	return KF_SUCCEEDED;
+	return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -148,7 +146,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 //--------------------------------------------------------------------------------
 //  XFileの描画(Texture指定)
 //--------------------------------------------------------------------------------
-void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CTM::TEX_NAME &texName)
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const string& strTexName)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
@@ -165,7 +163,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 	pMat = (D3DXMATERIAL*)XFile.pBufferMaterial->GetBufferPointer();
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
@@ -183,7 +181,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 //--------------------------------------------------------------------------------
 //  XFileの描画(MaterialとTexture指定)
 //--------------------------------------------------------------------------------
-void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
+void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 
@@ -200,7 +198,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 	pDevice->SetMaterial(&mat);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(texName);
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)

@@ -11,6 +11,8 @@
 #include "colliderComponent.h"
 #include "manager.h"
 #include "gameObject.h"
+#include "fade.h"
+#include "modeResult.h"
 
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”
@@ -72,8 +74,8 @@ void CColliderComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 const CKFVec3 CColliderComponent::GetWorldPos(void) const
 {
-	CKFMtx44 mtx = GetGameObject()->GetMatrixNext();
+	CKFMtx44 mtx = GetGameObject()->GetTransformComponent()->GetMatrixNext();
 	CKFVec3 vPos = m_vPos;
-	CKFMath::Vec3TransformCoord(&vPos, mtx);
+	CKFMath::Vec3TransformCoord(vPos, mtx);
 	return vPos;
 }

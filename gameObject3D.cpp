@@ -13,12 +13,10 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "gameObject3D.h"
-#include "skyBoxMeshComponent.h"
-#include "fieldMeshComponent.h"
-#include "cubeMeshComponent.h"
+#include "3DMeshComponent.h"
 #include "modelMeshComponent.h"
 #include "3DMeshDrawComponent.h"
-#include "modelMeshDrawComponent.h"
+#include "sphereColliderComponent.h"
 #include "fieldColliderComponent.h"
 
 //--------------------------------------------------------------------------------
@@ -43,16 +41,20 @@ CGameObject3D* CGameObject3D::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& v
 	CGameObject3D* pObj = new CGameObject3D;
 
 	//コンポネント
-	CSkyBoxMeshComponent* pMesh = new CSkyBoxMeshComponent(pObj);
-	pMesh->SetTexName(CTM::TEX_SKY);
+	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	pMesh->SetMeshName("skyBox");
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
+	pObj->m_pDraw = new C3DMeshDrawComponent(pMesh, pObj);
 	pObj->m_pDraw->SetRenderState(&CDrawComponent::s_lightOffRenderState);
+	pObj->m_pDraw->SetTexName("skybox000.jpg");
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -63,22 +65,26 @@ CGameObject3D* CGameObject3D::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& v
 //--------------------------------------------------------------------------------
 //  MeshField生成処理
 //--------------------------------------------------------------------------------
-CGameObject3D* CGameObject3D::CreateField(const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject3D* CGameObject3D::CreateField(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
 	CGameObject3D* pObj = new CGameObject3D;
 
 	//コンポネント
-	CFieldColliderComponent* pCollider = new CFieldColliderComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
-	pObj->m_apCollider.push_back(pCollider);
-	CFieldMeshComponent* pMesh = new CFieldMeshComponent(pObj, nNumBlockX, nNumBlockZ, vBlockSize);
-	pMesh->SetTexName(CTM::TEX_ROAD);
+	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	pMesh->SetMeshName("field");
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
+	pObj->m_pDraw = new C3DMeshDrawComponent(pMesh, pObj);
+	pObj->m_pDraw->SetTexName("RockCliff.jpg");
+	CFieldColliderComponent* pCollider = new CFieldColliderComponent(pObj, 100, 100, CKFVec2(1.0f, 1.0f));
+	pObj->AddCollider(pCollider);
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -89,20 +95,26 @@ CGameObject3D* CGameObject3D::CreateField(const int& nNumBlockX, const int& nNum
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject3D* CGameObject3D::CreateCube(const CKFVec3& vSize, const CKFColor& cColor, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject3D* CGameObject3D::CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
 	CGameObject3D* pObj = new CGameObject3D;
 
 	//コンポネント
-	CCubeMeshComponent* pMesh = new CCubeMeshComponent(pObj, vSize, cColor);
-	pMesh->SetTexName(CTM::TEX_POLYGON);
+	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	pMesh->SetMeshName("cube");
 	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new C3DMeshDrawComponent(pObj);
+	pObj->m_pDraw = new C3DMeshDrawComponent(pMesh, pObj);
+	pObj->m_pDraw->SetTexName("nomal_cube.jpg");
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CColliderManager::STATIC, CKFVec3(0.0f), vScale.m_fX * 0.5f);
+	pObj->AddCollider(pCollider);
 
 	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -117,19 +129,22 @@ CGameObject3D* CGameObject3D::CreateModel(const CMOM::MODEL_NAME &modelName, con
 {
 	CGameObject3D* pObj = new CGameObject3D;
 
-	//コンポネント
-	CModelMeshComponent* pMesh = new CModelMeshComponent(pObj);
-	pMesh->SetModelName(modelName);
-	pObj->m_pMesh = pMesh;
-	pObj->m_pDraw = new CModelMeshDrawComponent(pObj);
+	////コンポネント
+	//CModelMeshComponent* pMesh = new CModelMeshComponent(pObj);
+	//pMesh->SetModelName(modelName);
+	//pObj->m_pMesh = pMesh;
+	//pObj->m_pDraw = new CModelMeshDrawComponent(pObj);
 
-	//パラメーター
-	pObj->m_vPos = pObj->m_vPosNext = vPos;
-	pObj->m_vScale = pObj->m_vScaleNext = vScale;
-	pObj->RotByEuler(vRot);
+	////パラメーター
+	//CTransformComponent* pTrans = pObj->GetTransformComponent();
+	//pTrans->SetPos(vPos);
+	//pTrans->SetPosNext(vPos);
+	//pTrans->SetScale(vScale);
+	//pTrans->SetScaleNext(vScale);
+	//pTrans->RotByEuler(vRot);
 
-	//初期化
-	pObj->Init();
+	////初期化
+	//pObj->Init();
 
 	return pObj;
 }

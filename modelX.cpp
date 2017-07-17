@@ -12,7 +12,7 @@
 #include "manager.h"
 #include "modelX.h"
 
-#ifdef USING_DIRECTX9
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 #endif
 
@@ -30,9 +30,9 @@ CModelX::CModelX() : CModel()
 //--------------------------------------------------------------------------------
 //  èâä˙âª
 //--------------------------------------------------------------------------------
-KFRESULT CModelX::Init(const LPCSTR &pXFilePath)
+bool CModelX::Init(const LPCSTR &pXFilePath)
 {
-	KFRESULT result = LoadXFile(&m_XFileInfo, pXFilePath);
+	bool result = LoadXFile(&m_XFileInfo, pXFilePath);
 	return result;
 }
 
@@ -47,23 +47,23 @@ void CModelX::Uninit(void)
 //--------------------------------------------------------------------------------
 //  ï`âÊèàóù
 //--------------------------------------------------------------------------------
-void CModelX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const CTM::TEX_NAME &texName)
+void CModelX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName)
 {
-	if (texName == CTM::TEX_NONE && matType == CMM::MAT_NORMAL)
+	if (strTexName.empty() && matType == CMM::MAT_NORMAL)
 	{
 		DrawXFile(m_XFileInfo, mtxWorldParents);
 	}
-	else if (texName == CTM::TEX_NONE)
+	else if (strTexName.empty())
 	{
 		DrawXFile(m_XFileInfo, mtxWorldParents, matType);
 	}
 	else if (matType == CMM::MAT_NORMAL)
 	{
-		DrawXFile(m_XFileInfo, mtxWorldParents, texName);
+		DrawXFile(m_XFileInfo, mtxWorldParents, strTexName);
 	}
 	else
 	{
-		DrawXFile(m_XFileInfo, mtxWorldParents, matType, texName);
+		DrawXFile(m_XFileInfo, mtxWorldParents, matType, strTexName);
 	}
 }
 
