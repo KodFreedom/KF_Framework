@@ -165,6 +165,7 @@
     <ClCompile Include="colliderManager.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="drawComponent.cpp" />
+    <ClCompile Include="enemyBehaviorComponent.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="fieldColliderComponent.cpp" />
     <ClCompile Include="gameObject.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="drawComponent.h" />
     <ClInclude Include="editorCamera.h" />
+    <ClInclude Include="enemyBehaviorComponent.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="fieldColliderComponent.h" />
     <ClInclude Include="gameObject.h" />

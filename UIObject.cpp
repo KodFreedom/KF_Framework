@@ -18,8 +18,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CUIObject::CUIObject(const unsigned short& usPriority)
-	: c_usPriority(usPriority)
+CUIObject::CUIObject(const unsigned short& usOrder)
+	: m_usOrder(usOrder)
 {
 	GetManager()->GetUISystem()->Register(this);
 }
@@ -30,4 +30,6 @@ CUIObject::CUIObject(const unsigned short& usPriority)
 void CUIObject::Release(void)
 {
 	GetManager()->GetUISystem()->Deregister(this);
+	Uninit();
+	delete this;
 }

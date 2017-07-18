@@ -14,6 +14,7 @@
 #include "modelManager.h"
 #include "lightManager.h"
 #include "inputManager.h"
+#include "soundManager.h"
 #include "mode.h"
 #include "modeDemo.h"
 #include "modeResult.h"
@@ -58,21 +59,21 @@ void CModeDemo::Init(void)
 
 	//ゲームオブジェクトの初期化
 	CGameObject3D::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.25f, SCREEN_HEIGHT * 0.25f, 0.0f), 0.0f, CKFVec3(256.0f, 256.0f, 0.0f), CTM::TEX_TEST);
-	//CMeshCube::Create(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f), CKFColor(1.0f));
-	//CGameObjectModel::Create(CKFVec3(0.0f), CKFVec3(0.0f), CMOM::MODEL_ROBOT);
-	for (int nCnt = 0; nCnt < 30; nCnt++)
+
+	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
-		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-5.0f, 2.0f, -5.0f), CKFVec3(5.0f, 3.0f, 5.0f));
+		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 4.0f, -10.0f), CKFVec3(10.0f, 5.0f, 10.0f));
 		CKFVec3 vRot = CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
-		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.0f));
+		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.2f));
 	}
 	
 	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CGameObject* pPlayer = CGameObjectActor::CreatePlayer(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 5.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
-	//CGameObject* pPlayer = CGameObject3D::CreateModel(CMOM::MODEL_CUBE, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
+
 	m_pCamera->SetTarget(pPlayer);
+
+	GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------
@@ -85,6 +86,9 @@ void CModeDemo::Uninit(void)
 
 	//ライトの破棄
 	GetManager()->GetLightManager()->ReleaseAll();
+
+	//BGMの停止
+	GetManager()->GetSoundManager()->StopAll();
 }
 
 //--------------------------------------------------------------------------------

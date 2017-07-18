@@ -21,6 +21,7 @@
 #include "materialManager.h"
 #include "gameObjectManager.h"
 #include "colliderManager.h"
+#include "soundManager.h"
 #include "UISystem.h"
 #include "rendererDX.h"
 #include "mode.h"
@@ -47,6 +48,7 @@ CManager::CManager()
 	, m_pModelManager(nullptr)
 	, m_pGameObjectManager(nullptr)
 	, m_pColliderManager(nullptr)
+	, m_pSoundManager(nullptr)
 	, m_pUISystem(nullptr)
 	, m_pMode(nullptr)
 	, m_pFade(nullptr)
@@ -107,6 +109,10 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//UIシステムの生成
 	m_pUISystem = new CUISystem;
 
+	//サウンドマネージャの生成
+	m_pSoundManager = new CSoundManager;
+	m_pSoundManager->LoadAll();
+
 	//Fadeの生成
 	m_pFade = CFade::Create();
 
@@ -127,30 +133,38 @@ void CManager::Uninit(void)
 	//Fadeの破棄
 	SAFE_RELEASE(m_pFade);
 
-	//UIシステムの破棄
-	SAFE_RELEASE(m_pUISystem);
+	//サウンドマネージャの破棄
+	if (m_pSoundManager)
+	{
+		m_pSoundManager->UnloadAll();
+		delete m_pSoundManager;
+		m_pSoundManager = nullptr;
+	}
 
 	//ゲームオブジェクトマネージャの破棄
 	if (m_pGameObjectManager)
 	{
 		m_pGameObjectManager->Uninit();
 		delete m_pGameObjectManager;
-		m_pGameObjectManager = NULL;
+		m_pGameObjectManager = nullptr;
 	}
+
+	//UIシステムの破棄
+	SAFE_RELEASE(m_pUISystem);
 
 	//コリジョンマネージャの破棄
 	if (m_pColliderManager)
 	{
 		m_pColliderManager->Uninit();
 		delete m_pColliderManager;
-		m_pColliderManager = NULL;
+		m_pColliderManager = nullptr;
 	}
 
 	//マテリアルマネージャの破棄
 	if (m_pMaterialManager)
 	{
 		delete m_pMaterialManager;
-		m_pMaterialManager = NULL;
+		m_pMaterialManager = nullptr;
 	}
 
 	//ライトマネージャの破棄
@@ -158,7 +172,7 @@ void CManager::Uninit(void)
 	{
 		m_pLightManager->Uninit();
 		delete m_pLightManager;
-		m_pLightManager = NULL;
+		m_pLightManager = nullptr;
 	}
 
 	//テクスチャマネージャの破棄
@@ -169,7 +183,7 @@ void CManager::Uninit(void)
 	{
 		m_pModelManager->UnloadAll();
 		delete m_pModelManager;
-		m_pModelManager = NULL;
+		m_pModelManager = nullptr;
 	}
 
 	//メッシュマネージャの破棄
@@ -180,7 +194,7 @@ void CManager::Uninit(void)
 	{
 		m_pInputManager->Uninit();
 		delete m_pInputManager;
-		m_pInputManager = NULL;
+		m_pInputManager = nullptr;
 	}
 
 	//レンダラーの破棄

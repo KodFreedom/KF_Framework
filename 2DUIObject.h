@@ -17,7 +17,7 @@
 class C2DUIObject : public CUIObject
 {
 public:
-	C2DUIObject(const unsigned short& usPriority = 0);
+	C2DUIObject(const unsigned short& usOrder = 0);
 	~C2DUIObject() {}
 
 	virtual bool Init(void) override = 0;

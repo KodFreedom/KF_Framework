@@ -42,6 +42,7 @@ public:
 	enum COL_TYPE
 	{
 		COL_SPHERE = 0,
+		COL_CYLINDER,
 		COL_MAX,		//ˆÈ‰º‚Í“Á•Ê‚ÈCollider(Static–”‚ÍDynamic‚Ì‚ÝŽg‚¤)
 		COL_FIELD
 	};

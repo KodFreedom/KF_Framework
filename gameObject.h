@@ -33,15 +33,13 @@ class CGameObject
 	friend CGameObjectManager;
 
 public:
-	//--------------------------------------------------------------------------------
-	//  óÒãìå^íËã`
-	//--------------------------------------------------------------------------------
 	enum OBJ_TYPE
 	{
 		OT_DEFAULT,
-		OT_PLAYER,
-		OT_ENEMY
+		OT_ENEMY,
+		OT_PLAYER
 	};
+
 
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
@@ -108,6 +106,7 @@ public:
 	list<CBehaviorComponent*>&	GetBehaviorComponent(void) { return m_listpBehavior; }
 	CMeshComponent*				GetMeshComponent(void) const { return m_pMesh; }
 	CRigidbodyComponent*		GetRigidbodyComponent(void) const { return m_pRigidbody; }
+	list<CColliderComponent*>&	GetColliderComponent(void) { return m_listpCollider; }
 	OBJ_TYPE					GetObjType(void) const { return m_type; }
 	
 	//Setä÷êî

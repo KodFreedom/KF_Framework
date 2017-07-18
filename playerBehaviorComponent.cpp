@@ -47,72 +47,71 @@ void CPlayerBehaviorComponent::Update(void)
 
 	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
 
-	if (bCanControl)
+	if (!bCanControl) { return; }
+
+	//移動
+	CKFVec2 vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
+	if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
 	{
-		//移動
-		CKFVec2 vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-		if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
-		{
-			float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
-			CTransformComponent* pTrans = m_pGameObj->GetTransformComponent();
+		float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
+		CTransformComponent* pTrans = m_pGameObj->GetTransformComponent();
 
-			//回転計算
-			CKFVec3 vUp = pTrans->GetUpNext();
-			CKFVec3 vForward = pTrans->GetForwardNext();
-			CKFVec3 vRight = pTrans->GetRightNext();
+		//回転計算
+		CKFVec3 vUp = pTrans->GetUpNext();
+		CKFVec3 vForward = pTrans->GetForwardNext();
+		CKFVec3 vRight = pTrans->GetRightNext();
 
-			//カメラ向きを算出する
-			CCamera* pCamera = GetManager()->GetMode()->GetCamera();
-			CKFVec3 vForwardCamera = pCamera->GetVecLook();
-			CKFVec3 vForwardNext = (vUp * vForwardCamera) * vUp;
+		//カメラ向きを算出する
+		CCamera* pCamera = GetManager()->GetMode()->GetCamera();
+		CKFVec3 vForwardCamera = pCamera->GetVecLook();
+		CKFVec3 vForwardNext = (vUp * vForwardCamera) * vUp;
 
-			if (fRot != 0.0f)
-			{//操作より行く方向を回転する
-				CKFMtx44 mtxYaw;
-				CKFMath::MtxRotAxis(mtxYaw, vUp, fRot);
-				CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
-			}
-
-			CKFMath::VecNormalize(vForwardNext);
-			vForwardNext = CKFMath::LerpNormal(vForward, vForwardNext, 0.2f);
-			pTrans->RotByForward(vForwardNext);
-
-			//移動設定
-			c_pRigidbody->MovePos(vForwardNext * c_fSpeed);
-
-			//移動モーション設定
-			pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
-		}
-		else
-		{
-			//ニュートラルモーション設定
-			pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
+		if (fRot != 0.0f)
+		{//操作より行く方向を回転する
+			CKFMtx44 mtxYaw;
+			CKFMath::MtxRotAxis(mtxYaw, vUp, fRot);
+			CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
 		}
 
-		//ジャンプ
-		if (pInput->GetKeyTrigger(CInputManager::KEY::K_JUMP) && c_pRigidbody->IsOnGround())
-		{
-			//上方向にジャンプ
-			c_pRigidbody->AddForce(CKFVec3(0.0f, 1.0f, 0.0f) * c_fJumpForce * DELTA_TIME);
-			c_pRigidbody->SetOnGround(false);
+		CKFMath::VecNormalize(vForwardNext);
+		vForwardNext = CKFMath::LerpNormal(vForward, vForwardNext, 0.2f);
+		pTrans->RotByForward(vForwardNext);
 
-			//ジャンプモーション設定
-			pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
-		}
+		//移動設定
+		c_pRigidbody->MovePos(vForwardNext * c_fSpeed);
 
-		//攻撃
-		if (pInput->GetKeyTrigger(CInputManager::KEY::K_ATTACK))
-		{
-			//ジャンプモーション設定
-			pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
-		}
+		//移動モーション設定
+		pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
+	}
+	else
+	{
+		//ニュートラルモーション設定
+		pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
+	}
+
+	//ジャンプ
+	if (pInput->GetKeyTrigger(CInputManager::KEY::K_JUMP) && c_pRigidbody->IsOnGround())
+	{
+		//上方向にジャンプ
+		c_pRigidbody->AddForce(CKFVec3(0.0f, 1.0f, 0.0f) * c_fJumpForce * DELTA_TIME);
+		c_pRigidbody->SetOnGround(false);
+
+		//ジャンプモーション設定
+		pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
+	}
+
+	//攻撃
+	if (pInput->GetKeyTrigger(CInputManager::KEY::K_ATTACK))
+	{
+		//ジャンプモーション設定
+		pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnTrigger(const CColliderComponent& collider)
+void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, const CColliderComponent& collider)
 {
 
 }
@@ -120,7 +119,7 @@ void CPlayerBehaviorComponent::OnTrigger(const CColliderComponent& collider)
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnCollision(const CCollisionInfo& collisionInfo)
+void CPlayerBehaviorComponent::OnCollision(CColliderComponent& colliderThis, const CCollisionInfo& collisionInfo)
 {
 
 }

@@ -22,6 +22,7 @@ class CMaterialManager;
 class CModelManager;
 class CGameObjectManager;
 class CColliderManager;
+class CSoundManager;
 class CUISystem;
 class CMode;
 class CFade;
@@ -54,6 +55,7 @@ public:
 	CModelManager*		GetModelManager(void) { return m_pModelManager; }
 	CGameObjectManager*	GetGameObjectManager(void) { return m_pGameObjectManager; }
 	CColliderManager*	GetColliderManager(void) { return m_pColliderManager; }
+	CSoundManager*		GetSoundManager(void) { return m_pSoundManager; }
 	CUISystem*			GetUISystem(void) { return m_pUISystem; }
 	CMode*				GetMode(void) { return m_pMode; }
 	CFade*				GetFade(void) { return m_pFade; }
@@ -68,6 +70,7 @@ private:
 	CModelManager*		m_pModelManager;
 	CGameObjectManager*	m_pGameObjectManager;
 	CColliderManager*	m_pColliderManager;
+	CSoundManager*		m_pSoundManager;
 	CUISystem*			m_pUISystem;
 	CMode*				m_pMode;
 	CFade*				m_pFade;

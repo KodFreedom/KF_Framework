@@ -38,13 +38,13 @@ void CKFCollisionSystem::CheckCollisionSphereWithSphere(CSphereColliderComponent
 			auto list = sphereL.GetGameObject()->GetBehaviorComponent();
 			for (auto itr = list.begin(); itr != list.end(); ++itr)
 			{
-				(*itr)->OnTrigger(sphereR);
+				(*itr)->OnTrigger(sphereL, sphereR);
 			}
 
 			list = sphereR.GetGameObject()->GetBehaviorComponent();
 			for (auto itr = list.begin(); itr != list.end(); ++itr)
 			{
-				(*itr)->OnTrigger(sphereL);
+				(*itr)->OnTrigger(sphereR, sphereL);
 			}
 			return;
 		}
@@ -92,7 +92,7 @@ void CKFCollisionSystem::CheckCollisionSphereWithField(CSphereColliderComponent&
 			auto list = sphere.GetGameObject()->GetBehaviorComponent();
 			for (auto itr = list.begin(); itr != list.end(); ++itr)
 			{
-				(*itr)->OnTrigger(field);
+				(*itr)->OnTrigger(sphere, field);
 			}
 			return;
 		}

@@ -427,7 +427,7 @@ void CMeshManager::CreateField(CMesh* pMesh)
 
 	//頂点バッファをロックして、仮想アドレスを取得する
 	float fHeight = 0.0f;
-	CKFVec2 vSize = CKFVec2(1.0f, 1.0f);
+	CKFVec2 vSize = CKFVec2(2.0f, 2.0f);
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	CKFVec3 vStartPos = CKFVec3(-nNumBlockX * 0.5f * vSize.m_fX, 0.0f, nNumBlockZ * 0.5f * vSize.m_fY);
 	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)

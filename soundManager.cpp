@@ -14,13 +14,7 @@
 //--------------------------------------------------------------------------------
 CSoundManager::SOUNDPARAM CSoundManager::m_aParam[CSoundManager::SL_MAX] =
 {
-	{ "data/BGM/title.wav", 0 },		// BGM0
-	{ "data/BGM/title_loop.wav",-1 },	// BGM1
-	{ "data/BGM/game.wav", 0 },			// BGM2
-	{ "data/BGM/game_loop.wav", -1 },	// BGM2
-	{ "data/SE/clickstart.wav", 0 },	// ƒqƒbƒg‰¹
-	{ "data/SE/colorchange.wav", 0 },	// ”š”­‰¹
-	{ "data/SE/UIClick.wav", 0 },		// ”š”­‰¹
+	{ "data/BGM/gameBGM.wav", -1 },	// BGM
 };
 
 //--------------------------------------------------------------------------------

@@ -22,7 +22,10 @@ class CPlayerBehaviorComponent;
 class CPlayerUIObject : public C2DUIObject
 {
 public:
-	CPlayerUIObject(CPlayerBehaviorComponent* const pPlayerBehavior) : m_pPlayerBehavior(pPlayerBehavior), m_vFaceUVBegin(CKFVec2(0.0f)) {}
+	CPlayerUIObject(CPlayerBehaviorComponent* const pPlayerBehavior)
+		: C2DUIObject(0)
+		, m_pPlayerBehavior(pPlayerBehavior)
+		, m_vFaceUVBegin(CKFVec2(0.0f)) {}
 	~CPlayerUIObject() {}
 
 	bool Init(void) override;
@@ -34,20 +37,21 @@ private:
 	//--------------------------------------------------------------------------------
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
-	static const float		c_fScreenRate;
-	static const CKFVec2	c_vLifeGaugeSize;
-	static const CKFVec2	c_vLifeGaugePosLeftTop;
-	static const CKFColor	c_cLifeGaugeColorMax;
-	static const CKFColor	c_cLifeGaugeColorMin;
-	static const CKFVec2	c_vCoverSize;
-	static const CKFVec2	c_vCoverPosCenter;
-	static const CKFVec2	c_vFaceSize;
-	static const CKFVec2	c_vFacePosCenter;
-	static const CKFVec2	c_vFaceUVSize;
+	static const float		sc_fScreenRate;
+	static const CKFVec2	sc_vLifeGaugeSize;
+	static const CKFVec2	sc_vLifeGaugePosLeftTop;
+	static const CKFColor	sc_cLifeGaugeColorMax;
+	static const CKFColor	sc_cLifeGaugeColorMin;
+	static const CKFVec2	sc_vCoverSize;
+	static const CKFVec2	sc_vCoverPosCenter;
+	static const CKFVec2	sc_vFaceSize;
+	static const CKFVec2	sc_vFacePosCenter;
+	static const CKFVec2	sc_vFaceUVSize;
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
+	static bool					s_bCreated;
 	CKFVec2						m_vFaceUVBegin;
 	CPlayerBehaviorComponent*	m_pPlayerBehavior;
 };

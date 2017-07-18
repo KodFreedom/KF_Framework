@@ -24,13 +24,7 @@ class CSoundManager
 public:
 	enum SOUND_LABEL
 	{
-		BGM_TITLE = 0,
-		BGM_TITLE_LOOP,
 		BGM_GAME,
-		BGM_GAME_LOOP,
-		SE_CLICKSTART,
-		SE_COLORCHANGE,
-		SE_UICLICK,
 		SL_MAX,
 	};
 

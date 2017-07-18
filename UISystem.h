@@ -27,7 +27,11 @@ public:
 	CUISystem() { m_listObj.clear(); }
 	~CUISystem() {}
 
-	void	Release(void) { ReleaseAll(); delete this; }
+	void	Release(void) 
+	{
+		ReleaseAll(); 
+		delete this; 
+	}
 	void	ReleaseAll(void);
 	void	UpdateAll(void);
 	void	DrawAll(void);
@@ -40,6 +44,7 @@ private:
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
 	static bool	Compare(CUIObject* pUIObjA, CUIObject* pUIObjB);
+	
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

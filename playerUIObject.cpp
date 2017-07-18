@@ -20,16 +20,17 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const float		CPlayerUIObject::c_fScreenRate = (float)SCREEN_WIDTH / 1920.0f;
-const CKFVec2	CPlayerUIObject::c_vLifeGaugeSize = CKFVec2(540.0f, 33.0f) * c_fScreenRate;
-const CKFVec2	CPlayerUIObject::c_vLifeGaugePosLeftTop = CKFVec2(287.0f, 960.0f) * c_fScreenRate;
-const CKFColor	CPlayerUIObject::c_cLifeGaugeColorMax = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
-const CKFColor	CPlayerUIObject::c_cLifeGaugeColorMin = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-const CKFVec2	CPlayerUIObject::c_vCoverSize = CKFVec2(804.0f, 179.0f) * c_fScreenRate;
-const CKFVec2	CPlayerUIObject::c_vCoverPosCenter = CKFVec2(35.0f, 883.0f) * c_fScreenRate + c_vCoverSize * 0.5f;
-const CKFVec2	CPlayerUIObject::c_vFaceSize = CKFVec2(153.0f, 169.0f) * c_fScreenRate;
-const CKFVec2	CPlayerUIObject::c_vFacePosCenter = CKFVec2(63.0f, 840.0f) * c_fScreenRate + c_vFaceSize * 0.5f;
-const CKFVec2	CPlayerUIObject::c_vFaceUVSize = CKFVec2(0.25f, 1.0f);
+const float		CPlayerUIObject::sc_fScreenRate = (float)SCREEN_WIDTH / 1920.0f;
+const CKFVec2	CPlayerUIObject::sc_vLifeGaugeSize = CKFVec2(540.0f, 33.0f) * sc_fScreenRate;
+const CKFVec2	CPlayerUIObject::sc_vLifeGaugePosLeftTop = CKFVec2(287.0f, 960.0f) * sc_fScreenRate;
+const CKFColor	CPlayerUIObject::sc_cLifeGaugeColorMax = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
+const CKFColor	CPlayerUIObject::sc_cLifeGaugeColorMin = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+const CKFVec2	CPlayerUIObject::sc_vCoverSize = CKFVec2(804.0f, 179.0f) * sc_fScreenRate;
+const CKFVec2	CPlayerUIObject::sc_vCoverPosCenter = CKFVec2(35.0f, 883.0f) * sc_fScreenRate + sc_vCoverSize * 0.5f;
+const CKFVec2	CPlayerUIObject::sc_vFaceSize = CKFVec2(153.0f, 169.0f) * sc_fScreenRate;
+const CKFVec2	CPlayerUIObject::sc_vFacePosCenter = CKFVec2(63.0f, 840.0f) * sc_fScreenRate + sc_vFaceSize * 0.5f;
+const CKFVec2	CPlayerUIObject::sc_vFaceUVSize = CKFVec2(0.25f, 1.0f);
+bool			CPlayerUIObject::s_bCreated = false;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -47,7 +48,7 @@ bool CPlayerUIObject::Init(void)
 	sHP.strTexName = "playerUILifeGauge.png";
 	pTexManager->UseTexture(sHP.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertexGauge(sHP.pVtxBuffer, c_vLifeGaugePosLeftTop, c_vLifeGaugeSize, c_cLifeGaugeColorMax);
+	CKFUtilityDX::MakeVertexGauge(sHP.pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, sc_cLifeGaugeColorMax);
 #endif
 	m_listSprite.push_back(sHP);
 
@@ -63,7 +64,7 @@ bool CPlayerUIObject::Init(void)
 	sCover.strTexName = "playerUICover.png";
 	pTexManager->UseTexture(sCover.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertex(sCover.pVtxBuffer, c_vCoverPosCenter, c_vCoverSize);
+	CKFUtilityDX::MakeVertex(sCover.pVtxBuffer, sc_vCoverPosCenter, sc_vCoverSize);
 #endif
 	m_listSprite.push_back(sCover);
 
@@ -73,7 +74,7 @@ bool CPlayerUIObject::Init(void)
 	sFace.strTexName = "playerUIFace.png";
 	pTexManager->UseTexture(sFace.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertex(sFace.pVtxBuffer, c_vFacePosCenter, c_vFaceSize, m_vFaceUVBegin, c_vFaceUVSize);
+	CKFUtilityDX::MakeVertex(sFace.pVtxBuffer, sc_vFacePosCenter, sc_vFaceSize, m_vFaceUVBegin, sc_vFaceUVSize);
 #endif
 	m_listSprite.push_back(sFace);
 
@@ -90,9 +91,9 @@ void CPlayerUIObject::Update(void)
 	//To do
 	//HPゲージ更新
 	float fLifeRate = m_pPlayerBehavior->GetLifeNow() / m_pPlayerBehavior->GetLifeMax();
-	CKFColor cColor = CKFMath::LerpColor(c_cLifeGaugeColorMin, c_cLifeGaugeColorMax, fLifeRate);
+	CKFColor cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, c_vLifeGaugePosLeftTop, c_vLifeGaugeSize, fLifeRate, cColor);
+	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);
 #endif
 	++itr;
 
@@ -112,7 +113,7 @@ void CPlayerUIObject::Update(void)
 	float fFaceU = 0.25f * (int)((0.75f - fLifeRate) * 4.0f);
 	fFaceU = fFaceU < 0.0f ? 0.0f : fFaceU;
 #ifdef USING_DIRECTX
-	CKFUtilityDX::UpdateUV(itr->pVtxBuffer, CKFVec2(fFaceU, 0.0f), c_vFaceUVSize);
+	CKFUtilityDX::UpdateUV(itr->pVtxBuffer, CKFVec2(fFaceU, 0.0f), sc_vFaceUVSize);
 #endif
 }
 
@@ -121,6 +122,8 @@ void CPlayerUIObject::Update(void)
 //--------------------------------------------------------------------------------
 CPlayerUIObject* CPlayerUIObject::Create(CPlayerBehaviorComponent* const pPlayerBehavior)
 {
+	if (s_bCreated) { return nullptr; }
+	s_bCreated = true;
 	CPlayerUIObject* pUI = new CPlayerUIObject(pPlayerBehavior);
 	pUI->Init();
 	return pUI;

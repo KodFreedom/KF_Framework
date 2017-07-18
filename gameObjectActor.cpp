@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "gameObjectActor.h"
 #include "playerBehaviorComponent.h"
+#include "enemyBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "actorMeshComponent.h"
 #include "actorMeshDrawComponent.h"
@@ -70,14 +71,28 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelNam
 	CGameObjectActor* pObj = new CGameObjectActor(GOM::PRI_3D, OT_ENEMY);
 
 	//コンポネント
+	//リジッドボディ
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
-	//pObj->m_pInput = new CPlayerInputComponent(pObj, pRb);
+
+	//ビヘイビア
+	CEnemyBehaviorComponent* pEb = new CEnemyBehaviorComponent(pObj, pRb);
+	pObj->m_listpBehavior.push_back(pEb);
+
+	//コライダー
 	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
+	CSphereColliderComponent* pDetector = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 6.0f);
+	pDetector->SetTrigger(true);
+	pDetector->SetTag("detector");
 	pObj->AddCollider(pCollider);
+	pObj->AddCollider(pDetector);
+
+	//メッシュ
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
 	pMesh->SetModelName(modelName);
 	pObj->m_pMesh = pMesh;
+
+	//ドロー
 	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
 	//パラメーター

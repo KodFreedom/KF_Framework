@@ -14,18 +14,7 @@
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  リリース
-//--------------------------------------------------------------------------------
-void CUISystem::ReleaseAll(void)
-{
-	for (auto itr = m_listObj.begin(); itr != m_listObj.end();)
-	{
-		(*itr)->Uninit();
-		delete (*itr);
-		itr = m_listObj.erase(itr);
-	}
-}
+
 
 //--------------------------------------------------------------------------------
 //  更新
@@ -63,8 +52,6 @@ void CUISystem::Register(CUIObject* pUIObj)
 //--------------------------------------------------------------------------------
 void CUISystem::Deregister(CUIObject* pUIObj)
 {
-	pUIObj->Uninit();
-	delete pUIObj;
 	m_listObj.remove(pUIObj);
 }
 
@@ -73,5 +60,18 @@ void CUISystem::Deregister(CUIObject* pUIObj)
 //--------------------------------------------------------------------------------
 bool CUISystem::Compare(CUIObject* pUIObjA, CUIObject* pUIObjB)
 {
-	return pUIObjA->c_usPriority < pUIObjB->c_usPriority;
+	return pUIObjA->m_usOrder < pUIObjB->m_usOrder;
+}
+
+//--------------------------------------------------------------------------------
+//  リリース
+//--------------------------------------------------------------------------------
+void CUISystem::ReleaseAll(void)
+{
+	for (auto itr = m_listObj.begin(); itr != m_listObj.end();)
+	{
+		(*itr)->Uninit();
+		delete (*itr);
+		itr = m_listObj.erase(itr);
+	}
 }

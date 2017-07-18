@@ -41,14 +41,21 @@ public:
 	
 	//Set関数
 	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
+	void				SetTag(const string& strTag) { m_strTag = strTag; }
 
 	//Get関数
 	const CKFVec3		GetLocalPos(void) const { return m_vPos; }
 	const CKFVec3		GetWorldPos(void) const;
 	const CM::COL_TYPE	GetType(void) const { return m_type; }
 	const bool			IsTrigger(void) { return m_bTrigger; }
+	const string&		GetTag(void) { return m_strTag; }
 
 protected:
+	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	
+
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
@@ -62,4 +69,5 @@ protected:
 	CM::MODE		m_mode;		//Static/Dynamic mode
 	bool			m_bTrigger;	//Trigger Flag
 	CKFVec3			m_vPos;		//相対位置
+	string			m_strTag;	//識別用タグ
 };
