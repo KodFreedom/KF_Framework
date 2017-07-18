@@ -1,5 +1,5 @@
 # KF_Framework
-DirectX\n
-A component framework\n
-コンポネント指向のフレームワーク\n
+DirectX<br />
+A component framework<br />
+コンポネント指向のフレームワーク<br />
 就職作品として制作中
