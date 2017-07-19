@@ -32,6 +32,8 @@ CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3
 	, c_fJumpForce(fJumpForce)
 	, m_fLifeNow(c_fLifeMax)
 	, m_pState(nullptr)
+	, m_pAttackCollider(nullptr)
+	, m_usCntWhosYourDaddy(0)
 {}
 
 //--------------------------------------------------------------------------------
@@ -53,6 +55,13 @@ void CEnemyBehaviorComponent::Uninit(void)
 		delete m_pState;
 		m_pState = nullptr;
 	}
+
+	if (m_pAttackCollider)
+	{
+		m_pGameObj->DeleteCollider(m_pAttackCollider);
+		m_pAttackCollider->Release();
+		m_pAttackCollider = nullptr;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -60,13 +69,14 @@ void CEnemyBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CEnemyBehaviorComponent::Update(void)
 {
+	if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	m_pState->Update(*this);
 }
 
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, const CColliderComponent& collider)
+void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
 {
 	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_PLAYER)
 	{//プレイヤー
@@ -75,13 +85,24 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, const 
 			m_pTarget = collider.GetGameObject();
 			ChangeState(new CAttackEnemyState);
 		}
+
+		if (!m_usCntWhosYourDaddy && collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		{
+			m_usCntWhosYourDaddy = 30;
+			m_fLifeNow -= 25.0f;
+			if (m_fLifeNow <= 0.0f)
+			{
+				m_pGameObj->SetAlive(false);
+				GetManager()->GetMode()->EndMode();
+			}
+		}
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnCollision(CColliderComponent& colliderThis, const CCollisionInfo& collisionInfo)
+void CEnemyBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo)
 {
 
 }
@@ -106,6 +127,12 @@ void CNormalEnemyState::Update(CEnemyBehaviorComponent& enemy)
 	bool bCanControl = true;
 	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
 	if (!bCanControl) { return; }
+	if (enemy.m_pAttackCollider)
+	{
+		enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
+		enemy.m_pAttackCollider->Release();
+		enemy.m_pAttackCollider = nullptr;
+	}
 
 	//ニュートラルモーション設定
 	pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
@@ -125,8 +152,23 @@ void CAttackEnemyState::Update(CEnemyBehaviorComponent& enemy)
 	CMeshComponent* pMesh = enemy.m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
 	bool bCanControl = true;
-	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
+	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK)
+	{
+		if (pActor->GetMotionInfo().nKeyNow == 3 && !enemy.m_pAttackCollider)
+		{
+			enemy.m_pAttackCollider = new CSphereColliderComponent(enemy.m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
+			enemy.m_pAttackCollider->SetTag("weapon");
+			enemy.m_pAttackCollider->SetTrigger(true);
+		}
+		bCanControl = false; 
+	}
 	if (!bCanControl) { return; }
+	if (enemy.m_pAttackCollider)
+	{
+		enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
+		enemy.m_pAttackCollider->Release();
+		enemy.m_pAttackCollider = nullptr;
+	}
 
 	CTransformComponent* pTransform = enemy.GetGameObject()->GetTransformComponent();
 	CKFVec3 vPosTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
@@ -146,7 +188,6 @@ void CAttackEnemyState::Update(CEnemyBehaviorComponent& enemy)
 			fDisMax = ((CSphereColliderComponent*)(*itr))->GetRadius();
 		}
 	}
-
 	
 	float fDisSquare = CKFMath::VecMagnitudeSquare(vDiff);
 	if (fDisSquare > fDisMax * fDisMax)

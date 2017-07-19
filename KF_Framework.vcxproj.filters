@@ -294,6 +294,9 @@
     <ClCompile Include="enemyBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="actorBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -477,6 +480,9 @@
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="enemyBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="actorBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>

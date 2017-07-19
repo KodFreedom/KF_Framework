@@ -31,6 +31,8 @@ CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, 
 	, c_fSpeed(fMoveSpeed)
 	, c_fJumpForce(fJumpForce)
 	, m_fLifeNow(c_fLifeMax)
+	, m_pAttackCollider(nullptr)
+	, m_usCntWhosYourDaddy(0)
 {}
 
 //--------------------------------------------------------------------------------
@@ -38,16 +40,31 @@ CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, 
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Update(void)
 {
-	m_fLifeNow -= 0.1f;
-	m_fLifeNow = m_fLifeNow < 0.0f ? 0.0f : m_fLifeNow;
+	if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
 	CInputManager* pInput = GetManager()->GetInputManager();
 	bool bCanControl = true;
 
-	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
+	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) 
+	{
+		if (pActor->GetMotionInfo().nKeyNow == 3 && !m_pAttackCollider)
+		{
+			m_pAttackCollider = new CSphereColliderComponent(m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
+			m_pAttackCollider->SetTag("weapon");
+			m_pAttackCollider->SetTrigger(true);
+		}
+		bCanControl = false; 
+	}
 
 	if (!bCanControl) { return; }
+
+	if (m_pAttackCollider)
+	{
+		m_pGameObj->DeleteCollider(m_pAttackCollider);
+		m_pAttackCollider->Release();
+		m_pAttackCollider = nullptr;
+	}
 
 	//移動
 	CKFVec2 vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
@@ -111,15 +128,27 @@ void CPlayerBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, const CColliderComponent& collider)
+void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
 {
-
+	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_ENEMY)
+	{//武器チェック
+		if (!m_usCntWhosYourDaddy && collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		{
+			m_fLifeNow -= 10.0f;
+			if (m_fLifeNow <= 0.0f)
+			{
+				m_fLifeNow = 0.0f;
+				GetManager()->GetMode()->EndMode();
+			}
+			m_usCntWhosYourDaddy = 30;
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnCollision(CColliderComponent& colliderThis, const CCollisionInfo& collisionInfo)
+void CPlayerBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo)
 {
 
 }

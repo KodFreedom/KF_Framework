@@ -41,7 +41,11 @@ CColliderManager::CColliderManager()
 //--------------------------------------------------------------------------------
 void CColliderManager::Init(void)
 {
-
+#ifdef _DEBUG
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	GetManager()->GetTextureManager()->UseTexture("polygon.png");
+	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, NULL);
+#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -58,6 +62,11 @@ void CColliderManager::Uninit(void)
 	}
 
 	m_listField.clear();
+
+#ifdef _DEBUG
+	SAFE_RELEASE(m_pMeshSphere);
+	GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
+#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -223,23 +232,20 @@ void CColliderManager::DrawCollider(void)
 {
 	//LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
 	////sphere
+	//LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.png");
 	//for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
 	//{
 	//	D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
 	//	float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
-	//	LPD3DXMESH pMesh;
-	//	D3DXCreateSphere(pDevice, fRadius, 10, 10, &pMesh, NULL);
-	//	//マトリックス設定
-	//	D3DXMATRIX mtx,mtxPos;
+	//	D3DXMATRIX mtx,mtxPos,mtxScale;
 	//	D3DXMatrixIdentity(&mtx);
+	//	D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+	//	mtx *= mtxScale;
 	//	D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
 	//	mtx *= mtxPos;
 	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	// テクスチャの設定
-	//	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(CTextureManager::TEX_ALPHA);
 	//	pDevice->SetTexture(0, pTexture);
-	//	pMesh->DrawSubset(0);
-	//	pMesh->Release();
+	//	m_pMeshSphere->DrawSubset(0);
 	//}
 }
 #endif

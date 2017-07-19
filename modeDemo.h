@@ -28,4 +28,8 @@ public:
 	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
+	void	EndMode(void) override { m_bEndMode = true; }
+
+private:
+	bool	m_bEndMode;
 };

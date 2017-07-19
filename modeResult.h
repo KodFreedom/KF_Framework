@@ -28,4 +28,5 @@ public:
 	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
+	void	EndMode(void) override {}
 };

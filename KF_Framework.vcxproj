@@ -157,6 +157,7 @@
     <ClCompile Include="3DMeshComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="actionGameCamera.cpp" />
+    <ClCompile Include="actorBehaviorComponent.cpp" />
     <ClCompile Include="actorMeshComponent.cpp" />
     <ClCompile Include="actorMeshDrawComponent.cpp" />
     <ClCompile Include="animatorComponent.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="3DMeshDrawComponent.h" />
     <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
+    <ClInclude Include="actorBehaviorComponent.h" />
     <ClInclude Include="actorMeshDrawComponent.h" />
     <ClInclude Include="actorMeshComponent.h" />
     <ClInclude Include="animatorComponent.h" />

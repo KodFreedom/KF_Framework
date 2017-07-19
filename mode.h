@@ -32,6 +32,7 @@ public:
 	virtual void	Update(void);
 	virtual void	LateUpdate(void);
 	virtual void	Draw(void);
+	virtual void	EndMode(void) = 0;
 	void			Release(void)
 	{
 		Uninit();

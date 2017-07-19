@@ -33,6 +33,7 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CModeDemo::CModeDemo() : CMode()
+	, m_bEndMode(false)
 {
 
 }
@@ -98,7 +99,7 @@ void CModeDemo::Update(void)
 {
 	CMode::Update();
 
-	if (GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (m_bEndMode || GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
 	{
 		GetManager()->GetFade()->FadeToMode(new CModeResult);
 	}

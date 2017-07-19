@@ -36,8 +36,8 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 			
-	void	OnTrigger(CColliderComponent& colliderThis, const CColliderComponent& collider) override;
-	void	OnCollision(CColliderComponent& colliderThis, const CCollisionInfo& collisionInfo) override;
+	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
+	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
 
 	//Getä÷êî
 	float	GetLifeMax(void) const { return c_fLifeMax; }
@@ -55,5 +55,6 @@ private:
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	float	m_fLifeNow;
-
+	unsigned int		m_usCntWhosYourDaddy;
+	CColliderComponent*	m_pAttackCollider;
 };

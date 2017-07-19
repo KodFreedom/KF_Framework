@@ -30,7 +30,6 @@ const CKFVec2	CPlayerUIObject::sc_vCoverPosCenter = CKFVec2(35.0f, 883.0f) * sc_
 const CKFVec2	CPlayerUIObject::sc_vFaceSize = CKFVec2(153.0f, 169.0f) * sc_fScreenRate;
 const CKFVec2	CPlayerUIObject::sc_vFacePosCenter = CKFVec2(63.0f, 840.0f) * sc_fScreenRate + sc_vFaceSize * 0.5f;
 const CKFVec2	CPlayerUIObject::sc_vFaceUVSize = CKFVec2(0.25f, 1.0f);
-bool			CPlayerUIObject::s_bCreated = false;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -122,8 +121,6 @@ void CPlayerUIObject::Update(void)
 //--------------------------------------------------------------------------------
 CPlayerUIObject* CPlayerUIObject::Create(CPlayerBehaviorComponent* const pPlayerBehavior)
 {
-	if (s_bCreated) { return nullptr; }
-	s_bCreated = true;
 	CPlayerUIObject* pUI = new CPlayerUIObject(pPlayerBehavior);
 	pUI->Init();
 	return pUI;

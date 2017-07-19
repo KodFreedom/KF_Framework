@@ -97,4 +97,7 @@ private:
 	//--------------------------------------------------------------------------------
 	list<CColliderComponent*> m_alistCollider[MODE_MAX][COL_MAX];
 	list<CColliderComponent*> m_listField;
+#ifdef _DEBUG
+	LPD3DXMESH m_pMeshSphere;
+#endif
 };
