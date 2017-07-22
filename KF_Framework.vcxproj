@@ -195,6 +195,7 @@
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
+    <ClCompile Include="playerNormalStatus.cpp" />
     <ClCompile Include="playerUIObject.cpp" />
     <ClCompile Include="rendererDX.cpp" />
     <ClCompile Include="renderState.cpp" />
@@ -256,13 +257,17 @@
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="motionInfo.h" />
+    <ClInclude Include="playerAttackStatus.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
+    <ClInclude Include="playerJumpStatus.h" />
+    <ClInclude Include="playerNormalStatus.h" />
     <ClInclude Include="playerUIObject.h" />
     <ClInclude Include="rendererDX.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbodyComponent.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereColliderComponent.h" />
+    <ClInclude Include="status.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="actionGameCamera.h" />
     <ClInclude Include="transformComponent.h" />

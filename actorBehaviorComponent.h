@@ -17,6 +17,7 @@
 class C3DRigidbodyComponent;
 class CActorMeshComponent;
 class CStatus;
+class CPlayerNormalStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -26,17 +27,22 @@ class CStatus;
 //--------------------------------------------------------------------------------
 class CActorBehaviorComponent : public CBehaviorComponent
 {
+	//--------------------------------------------------------------------------------
+	//  フレンドクラス
+	//--------------------------------------------------------------------------------
+	friend CPlayerNormalStatus;
+
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
-	~CActorBehaviorComponent() {}
+	~CActorBehaviorComponent();
 
 	virtual bool	Init(void) override = 0;
-	virtual void	Uninit(void) override = 0;
-	virtual void	Update(void) override = 0;
-	virtual void	LateUpdate(void) override = 0;
+	virtual void	Uninit(void) override;
+	virtual void	Update(void) override;
+	virtual void	LateUpdate(void) override;
 
 	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override = 0;
 	virtual void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override = 0;
@@ -55,10 +61,19 @@ public:
 	float	GetLifeMax(void) const { return m_fLifeMax; }
 	float	GetLifeNow(void) const { return m_fLifeNow; }
 
+	//状態の切り替え
+	void	ChangeStatus(CStatus* const pStatus)
+	{
+		if (!pStatus) { return; }
+		if (m_pStatus) { delete m_pStatus; }
+		m_pStatus = pStatus;
+	}
+
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
+	void	Stay(CActorMeshComponent *pActor);
 	void	Move(void);
 	void	Move(CActorMeshComponent *pActor);
 	void	Jump(void);
@@ -66,6 +81,7 @@ protected:
 	void	Attack(void);
 	void	Attack(CActorMeshComponent *pActor);
 	void	Turn(const CKFVec3& vForward);
+	void	Turn(const CKFVec3& vForward, CActorMeshComponent *pActor);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
