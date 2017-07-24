@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
-//	ステータスコンポネント
-//　statusComponent.h
+//	AIモード
+//　AIMode.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
+//	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 #pragma once
 
@@ -13,16 +13,15 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
+class CEnemyBehaviorComponent;
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  クラス
 //--------------------------------------------------------------------------------
-class CStatus
+class CAIMode
 {
 public:
-	CStatus() {}
-	virtual ~CStatus() {}
-	virtual void Update(CActorBehaviorComponent& actor) = 0;
-	virtual void LateUpdate(CActorBehaviorComponent& actor) = 0;
+	CAIMode() {}
+	virtual ~CAIMode() {}
+	virtual void Update(CEnemyBehaviorComponent& enemy) = 0;
 };

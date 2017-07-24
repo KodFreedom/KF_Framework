@@ -18,6 +18,9 @@ class C3DRigidbodyComponent;
 class CActorMeshComponent;
 class CStatus;
 class CPlayerNormalStatus;
+class CPlayerMoveStatus;
+class CPlayerJumpStatus;
+class CPlayerAttackStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -31,6 +34,9 @@ class CActorBehaviorComponent : public CBehaviorComponent
 	//  フレンドクラス
 	//--------------------------------------------------------------------------------
 	friend CPlayerNormalStatus;
+	friend CPlayerMoveStatus;
+	friend CPlayerJumpStatus;
+	friend CPlayerAttackStatus;
 
 public:
 	//--------------------------------------------------------------------------------
@@ -62,24 +68,19 @@ public:
 	float	GetLifeNow(void) const { return m_fLifeNow; }
 
 	//状態の切り替え
-	void	ChangeStatus(CStatus* const pStatus)
-	{
-		if (!pStatus) { return; }
-		if (m_pStatus) { delete m_pStatus; }
-		m_pStatus = pStatus;
-	}
+	void	ChangeStatus(CStatus* const pStatus);
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void	Stay(CActorMeshComponent *pActor);
-	void	Move(void);
-	void	Move(CActorMeshComponent *pActor);
-	void	Jump(void);
-	void	Jump(CActorMeshComponent *pActor);
+	void	Stay(CActorMeshComponent* pActor);
+	void	Move(void);				  
+	void	Move(CActorMeshComponent* pActor);
+	void	Jump(void);				  
+	void	Jump(CActorMeshComponent* pActor);
 	void	Attack(void);
-	void	Attack(CActorMeshComponent *pActor);
+	void	Attack(CActorMeshComponent* pActor);
 	void	Turn(const CKFVec3& vForward);
 	void	Turn(const CKFVec3& vForward, CActorMeshComponent *pActor);
 

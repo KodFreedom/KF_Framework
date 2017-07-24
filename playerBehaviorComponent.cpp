@@ -18,6 +18,7 @@
 #include "sphereColliderComponent.h"
 #include "colliderComponent.h"
 #include "KF_CollisionSystem.h"
+#include "playerNormalStatus.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -25,22 +26,41 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody, const float& fMoveSpeed, const float& fJumpForce)
-	: CBehaviorComponent(pGameObj)
-	, c_pRigidbody(pRigidbody)
-	, c_fSpeed(fMoveSpeed)
-	, c_fJumpForce(fJumpForce)
-	, m_fLifeNow(c_fLifeMax)
-	, m_pAttackCollider(nullptr)
+CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody)
+	: CActorBehaviorComponent(pGameObj, pRigidbody)
 	, m_usCntWhosYourDaddy(0)
 {}
+
+//--------------------------------------------------------------------------------
+//  初期化処理
+//--------------------------------------------------------------------------------
+bool CPlayerBehaviorComponent::Init(void)
+{
+	if (!m_pStatus) { m_pStatus = new CPlayerNormalStatus; }
+	m_fMovementSpeed = 0.075f;
+	m_fJumpForce = 20.0f;
+	m_fTurnRate = 0.2f;
+	m_fLifeMax = 100.0f;
+	m_fLifeNow = 100.0f;
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void CPlayerBehaviorComponent::Uninit(void)
+{
+	CActorBehaviorComponent::Uninit();
+}
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Update(void)
 {
-	if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
+	CActorBehaviorComponent::Update();
+	if (m_usCntWhosYourDaddy > 0) { m_usCntWhosYourDaddy--; }
+	/*if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
 	CInputManager* pInput = GetManager()->GetInputManager();
@@ -122,7 +142,15 @@ void CPlayerBehaviorComponent::Update(void)
 	{
 		//ジャンプモーション設定
 		pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
-	}
+	}*/
+}
+
+//--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void CPlayerBehaviorComponent::LateUpdate(void)
+{
+	CActorBehaviorComponent::LateUpdate();
 }
 
 //--------------------------------------------------------------------------------

@@ -9,12 +9,18 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "behaviorComponent.h"
+#include "actorBehaviorComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class C3DRigidbodyComponent;
+//class C3DRigidbodyComponent;
+//class CActorMeshComponent;
+//class CStatus;
+//class CPlayerNormalStatus;
+//class CPlayerMoveStatus;
+//class CPlayerJumpStatus;
+//class CPlayerAttackStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -22,39 +28,31 @@ class C3DRigidbodyComponent;
 //--------------------------------------------------------------------------------
 //  プレイヤー行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CPlayerBehaviorComponent : public CBehaviorComponent
+class CPlayerBehaviorComponent : public CActorBehaviorComponent
 {
+	//--------------------------------------------------------------------------------
+	//  フレンドクラス
+	//--------------------------------------------------------------------------------
+	//friend CPlayerNormalStatus;
+	//friend CPlayerMoveStatus;
+	//friend CPlayerJumpStatus;
+	//friend CPlayerAttackStatus;
+
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody, const float& fMoveSpeed = 0.075f, const float& fJumpForce = 20.0f);
+	CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
 	~CPlayerBehaviorComponent() {}
 
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override {}
+	bool	Init(void) override;
+	void	Uninit(void) override;
 	void	Update(void) override;
-	void	LateUpdate(void) override {}
+	void	LateUpdate(void) override;
 			
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
 	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
 
-	//Get関数
-	float	GetLifeMax(void) const { return c_fLifeMax; }
-	float	GetLifeNow(void) const { return m_fLifeNow; }
-
 private:
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	const float						c_fSpeed;
-	const float						c_fJumpForce;
-	C3DRigidbodyComponent* const	c_pRigidbody;
-	const float						c_fLifeMax = 100.0f;
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	float	m_fLifeNow;
-	unsigned int		m_usCntWhosYourDaddy;
-	CColliderComponent*	m_pAttackCollider;
+	unsigned int	m_usCntWhosYourDaddy;
 };

@@ -154,6 +154,12 @@
     <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\Status\Player">
       <UniqueIdentifier>{bfbaf041-83b6-48ca-8581-1d22cf8dee97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\AI">
+      <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\AI">
+      <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -317,6 +323,21 @@
     </ClCompile>
     <ClCompile Include="playerNormalStatus.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerMoveStatus.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerJumpStatus.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerAttackStatus.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyNormalMode.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyAttackMode.cpp">
+      <Filter>ソース ファイル\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +538,18 @@
     </ClInclude>
     <ClInclude Include="playerJumpStatus.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerMoveStatus.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMode.h">
+      <Filter>ヘッダー ファイル\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyNormalMode.h">
+      <Filter>ヘッダー ファイル\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyAttackMode.h">
+      <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

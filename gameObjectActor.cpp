@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectActor.h"
+#include "actorBehaviorComponent.h"
 #include "playerBehaviorComponent.h"
 #include "enemyBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"

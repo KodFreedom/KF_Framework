@@ -1,28 +1,23 @@
 //--------------------------------------------------------------------------------
-//	ステータスコンポネント
-//　statusComponent.h
+//	エネミーノーマルモード
+//　enemyNormalMode.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
+//	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "AIMode.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
+//  クラス
 //--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
-
-//--------------------------------------------------------------------------------
-//  クラス宣言
-//--------------------------------------------------------------------------------
-class CStatus
+class CEnemyNormalMode : public CAIMode
 {
 public:
-	CStatus() {}
-	virtual ~CStatus() {}
-	virtual void Update(CActorBehaviorComponent& actor) = 0;
-	virtual void LateUpdate(CActorBehaviorComponent& actor) = 0;
+	CEnemyNormalMode() : CAIMode() {}
+	~CEnemyNormalMode() override {}
+	void Update(CEnemyBehaviorComponent& enemy) override;
 };

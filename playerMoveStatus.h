@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	ステータスコンポネント
-//　statusComponent.h
+//	Player移動状態
+//　playerMoveStatus.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-19
 //--------------------------------------------------------------------------------
@@ -9,20 +9,16 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
+#include "status.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CStatus
+class CPlayerMoveStatus : public CStatus
 {
 public:
-	CStatus() {}
-	virtual ~CStatus() {}
-	virtual void Update(CActorBehaviorComponent& actor) = 0;
-	virtual void LateUpdate(CActorBehaviorComponent& actor) = 0;
+	CPlayerMoveStatus() : CStatus() {}
+	~CPlayerMoveStatus() override {}
+	void Update(CActorBehaviorComponent& actor) override;
+	void LateUpdate(CActorBehaviorComponent& actor) override;
 };

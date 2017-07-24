@@ -9,16 +9,16 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "behaviorComponent.h"
+#include "actorBehaviorComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent;
-class CEnemyState;
-class CNormalEnemyState;
-class CAttackEnemyState;
 class CColliderComponent;
+class CAIMode;
+class CEnemyNormalMode;
+class CEnemyAttackMode;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -26,16 +26,16 @@ class CColliderComponent;
 //--------------------------------------------------------------------------------
 //  プレイヤー行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CEnemyBehaviorComponent : public CBehaviorComponent
+class CEnemyBehaviorComponent : public CActorBehaviorComponent
 {
-	friend CNormalEnemyState;
-	friend CAttackEnemyState;
+	friend CEnemyNormalMode;
+	friend CEnemyAttackMode;
 
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody, const float& fMoveSpeed = 0.05f, const float& fJumpForce = 20.0f);
+	CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
 	~CEnemyBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -46,63 +46,12 @@ public:
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
 	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
 
-	//Get関数
-	float	GetLifeMax(void) const { return c_fLifeMax; }
-	float	GetLifeNow(void) const { return m_fLifeNow; }
-	
-	void	ChangeState(CEnemyState* pEnemyState);
-
+	void	ChangeMode(CAIMode* pAIMode);
 private:
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	const float						c_fSpeed;
-	const float						c_fJumpForce;
-	C3DRigidbodyComponent* const	c_pRigidbody;
-	const float						c_fLifeMax = 100.0f;
-	
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	float				m_fLifeNow;
 	CGameObject*		m_pTarget;
-	CEnemyState*		m_pState;
-	CColliderComponent*	m_pAttackCollider;
+	CAIMode*			m_pMode;
 	unsigned int		m_usCntWhosYourDaddy;
-};
-
-//--------------------------------------------------------------------------------
-//  エネミー状態
-//--------------------------------------------------------------------------------
-class CEnemyState
-{
-public:
-	CEnemyState() {}
-	~CEnemyState() {}
-
-	virtual void Update(CEnemyBehaviorComponent& enemy) = 0;
-};
-
-//--------------------------------------------------------------------------------
-//  普通状態
-//--------------------------------------------------------------------------------
-class CNormalEnemyState : public CEnemyState
-{
-public:
-	CNormalEnemyState() : CEnemyState() {}
-	~CNormalEnemyState() {}
-
-	void Update(CEnemyBehaviorComponent& enemy) override;
-};
-
-//--------------------------------------------------------------------------------
-//  攻撃状態
-//--------------------------------------------------------------------------------
-class CAttackEnemyState : public CEnemyState
-{
-public:
-	CAttackEnemyState() : CEnemyState() {}
-	~CAttackEnemyState() {}
-
-	void Update(CEnemyBehaviorComponent& enemy) override;
 };
