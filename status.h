@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
+class CPlayerBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
@@ -23,6 +23,6 @@ class CStatus
 public:
 	CStatus() {}
 	virtual ~CStatus() {}
-	virtual void Update(CActorBehaviorComponent& actor) = 0;
-	virtual void LateUpdate(CActorBehaviorComponent& actor) = 0;
+	virtual void Update(CPlayerBehaviorComponent& player) = 0;
+	virtual void LateUpdate(CPlayerBehaviorComponent& player) = 0;
 };

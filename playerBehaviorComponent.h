@@ -16,11 +16,11 @@
 //--------------------------------------------------------------------------------
 //class C3DRigidbodyComponent;
 //class CActorMeshComponent;
-//class CStatus;
-//class CPlayerNormalStatus;
-//class CPlayerMoveStatus;
-//class CPlayerJumpStatus;
-//class CPlayerAttackStatus;
+class CStatus;
+class CPlayerNormalStatus;
+class CPlayerMoveStatus;
+class CPlayerJumpStatus;
+class CPlayerAttackStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -33,10 +33,10 @@ class CPlayerBehaviorComponent : public CActorBehaviorComponent
 	//--------------------------------------------------------------------------------
 	//  フレンドクラス
 	//--------------------------------------------------------------------------------
-	//friend CPlayerNormalStatus;
-	//friend CPlayerMoveStatus;
-	//friend CPlayerJumpStatus;
-	//friend CPlayerAttackStatus;
+	friend CPlayerNormalStatus;
+	friend CPlayerMoveStatus;
+	friend CPlayerJumpStatus;
+	friend CPlayerAttackStatus;
 
 public:
 	//--------------------------------------------------------------------------------
@@ -53,6 +53,14 @@ public:
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
 	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
 
+	//状態の切り替え
+	void	ChangeStatus(CStatus* const pStatus);
+
 private:
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	CStatus*	m_pStatus;		//状態
+
 	unsigned int	m_usCntWhosYourDaddy;
 };

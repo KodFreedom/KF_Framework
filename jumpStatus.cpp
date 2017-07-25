@@ -1,18 +1,18 @@
 //--------------------------------------------------------------------------------
-//	プレイヤージャンプステータス
-//　playerJumpStatus.h
+//	ジャンプステータス
+//　jumpStatus.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-24
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "playerJumpStatus.h"
-#include "playerMoveStatus.h"
-#include "playerNormalStatus.h"
-#include "playerAttackStatus.h"
+#include "attackStatus.h"
+#include "jumpStatus.h"
+#include "moveStatus.h"
+#include "normalStatus.h"
 #include "gameObject.h"
-#include "playerBehaviorComponent.h"
+#include "actorBehaviorComponent.h"
 #include "actorMeshComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "mode.h"
@@ -26,15 +26,15 @@
 //--------------------------------------------------------------------------------
 //  更新
 //--------------------------------------------------------------------------------
-void CPlayerJumpStatus::Update(CPlayerBehaviorComponent& player)
+void CJumpStatus::Update(CActorBehaviorComponent& actor)
 {
 	//ジャンプ
 	if (m_bFirst)
 	{
 		m_bFirst = false;
-		CMeshComponent* pMesh = player.m_pGameObj->GetMeshComponent();
+		CMeshComponent* pMesh = actor.m_pGameObj->GetMeshComponent();
 		CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
-		player.Jump(pActor);
+		actor.Jump(pActor);
 		return;
 	}
 
@@ -44,7 +44,7 @@ void CPlayerJumpStatus::Update(CPlayerBehaviorComponent& player)
 	if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
 	{
 		float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
-		CTransformComponent* pTrans = player.m_pGameObj->GetTransformComponent();
+		CTransformComponent* pTrans = actor.m_pGameObj->GetTransformComponent();
 
 		//回転計算
 		CKFVec3 vUp = pTrans->GetUpNext();
@@ -66,23 +66,23 @@ void CPlayerJumpStatus::Update(CPlayerBehaviorComponent& player)
 		CKFMath::VecNormalize(vForwardNext);
 
 		//回転
-		player.Turn(vForwardNext);
+		actor.Turn(vForwardNext);
 
 		//移動設定
-		player.Move();
+		actor.Move();
 	}
 
 	//着陸シたらノーマルステータスに戻す
-	if (player.m_pRigidbody->IsOnGround())
+	if (actor.m_pRigidbody->IsOnGround())
 	{
-		player.ChangeStatus(new CPlayerNormalStatus);
+		actor.ChangeStatus(new CNormalStatus);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  更新
 //--------------------------------------------------------------------------------
-void CPlayerJumpStatus::LateUpdate(CPlayerBehaviorComponent& player)
+void CJumpStatus::LateUpdate(CActorBehaviorComponent& actor)
 {
 	
 }

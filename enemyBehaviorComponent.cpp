@@ -10,14 +10,11 @@
 #include "enemyBehaviorComponent.h"
 #include "manager.h"
 #include "mode.h"
-#include "camera.h"
-#include "inputManager.h"
 #include "gameObjectActor.h"
 #include "actorMeshComponent.h"
-#include "3DRigidbodyComponent.h"
-#include "sphereColliderComponent.h"
 #include "colliderComponent.h"
-#include "KF_CollisionSystem.h"
+#include "enemyNormalMode.h"
+#include "enemyAttackMode.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -25,14 +22,10 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody, const float& fMoveSpeed, const float& fJumpForce)
-	: CBehaviorComponent(pGameObj)
-	, c_pRigidbody(pRigidbody)
-	, c_fSpeed(fMoveSpeed)
-	, c_fJumpForce(fJumpForce)
-	, m_fLifeNow(c_fLifeMax)
-	, m_pState(nullptr)
-	, m_pAttackCollider(nullptr)
+CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody)
+	: CActorBehaviorComponent(pGameObj, pRigidbody)
+	, m_pTarget(nullptr)
+	, m_pMode(nullptr)
 	, m_usCntWhosYourDaddy(0)
 {}
 
@@ -41,7 +34,12 @@ CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3
 //--------------------------------------------------------------------------------
 bool CEnemyBehaviorComponent::Init(void)
 {
-	m_pState = new CNormalEnemyState;
+	m_pMode = new CEnemyNormalMode;
+	m_fMovementSpeed = 0.05f;
+	m_fJumpForce = 20.0f;
+	m_fTurnRate = 0.2f;
+	m_fLifeMax = 100.0f;
+	m_fLifeNow = 100.0f;
 	return true;
 }
 
@@ -50,17 +48,10 @@ bool CEnemyBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CEnemyBehaviorComponent::Uninit(void)
 {
-	if (m_pState)
+	if (m_pMode)
 	{
-		delete m_pState;
-		m_pState = nullptr;
-	}
-
-	if (m_pAttackCollider)
-	{
-		m_pGameObj->DeleteCollider(m_pAttackCollider);
-		m_pAttackCollider->Release();
-		m_pAttackCollider = nullptr;
+		delete m_pMode;
+		m_pMode = nullptr;
 	}
 }
 
@@ -69,8 +60,8 @@ void CEnemyBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CEnemyBehaviorComponent::Update(void)
 {
+	m_pMode->Update(*this);
 	if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
-	m_pState->Update(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -83,7 +74,7 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 		if (colliderThis.GetTag() == "detector")
 		{//敵検知範囲
 			m_pTarget = collider.GetGameObject();
-			ChangeState(new CAttackEnemyState);
+			ChangeMode(new CEnemyAttackMode);
 		}
 
 		if (!m_usCntWhosYourDaddy && collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
@@ -110,9 +101,9 @@ void CEnemyBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCol
 //--------------------------------------------------------------------------------
 //  ChangeState
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::ChangeState(CEnemyState* pEnemyState)
+void CEnemyBehaviorComponent::ChangeMode(CAIMode* pAIMode)
 {
-	if (!pEnemyState) { return; }
-	delete m_pState;
-	m_pState = pEnemyState;
+	if (!pAIMode) { return; }
+	delete m_pMode;
+	m_pMode = pAIMode;
 }

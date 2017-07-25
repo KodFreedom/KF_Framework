@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	プレイヤー攻撃ステータス
-//　playerAttackStatus.h
+//	攻撃ステータス
+//　attackStatus.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-19
 //--------------------------------------------------------------------------------
@@ -14,13 +14,13 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CPlayerAttackStatus : public CStatus
+class CAttackStatus : public CStatus
 {
 public:
-	CPlayerAttackStatus() : CStatus(), m_bFirst(true) {}
-	~CPlayerAttackStatus() override {}
-	void Update(CPlayerBehaviorComponent& player) override;
-	void LateUpdate(CPlayerBehaviorComponent& player) override;
+	CAttackStatus() : CStatus(), m_bFirst(true) {}
+	~CAttackStatus() override {}
+	void Update(CActorBehaviorComponent& actor) override;
+	void LateUpdate(CActorBehaviorComponent& actor) override;
 
 private:
 	bool m_bFirst;

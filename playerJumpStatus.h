@@ -19,8 +19,8 @@ class CPlayerJumpStatus : public CStatus
 public:
 	CPlayerJumpStatus() : CStatus(), m_bFirst(true) {}
 	~CPlayerJumpStatus() override {}
-	void Update(CActorBehaviorComponent& actor) override;
-	void LateUpdate(CActorBehaviorComponent& actor) override;
+	void Update(CPlayerBehaviorComponent& player) override;
+	void LateUpdate(CPlayerBehaviorComponent& player) override;
 
 private:
 	bool m_bFirst;

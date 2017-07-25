@@ -12,7 +12,6 @@
 #include "gameObject.h"
 #include "transformComponent.h"
 #include "actorMeshComponent.h"
-#include "status.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -31,7 +30,6 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fMovementSpeed(0.0f)
 	, m_fJumpForce(0.0f)
 	, m_fTurnRate(0.0f)
-	, m_pStatus(nullptr)
 	, m_pAttackCollider(nullptr)
 {
 }
@@ -48,11 +46,6 @@ CActorBehaviorComponent::~CActorBehaviorComponent()
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Uninit(void)
 {
-	if (m_pStatus)
-	{
-		delete m_pStatus;
-		m_pStatus = nullptr;
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -60,7 +53,6 @@ void CActorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Update(void)
 {
-	m_pStatus->Update(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -68,17 +60,6 @@ void CActorBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::LateUpdate(void)
 {
-	m_pStatus->LateUpdate(*this);
-}
-
-//--------------------------------------------------------------------------------
-//  状態更新
-//--------------------------------------------------------------------------------
-void CActorBehaviorComponent::ChangeStatus(CStatus* const pStatus)
-{
-	if (!pStatus) { return; }
-	if (m_pStatus) { delete m_pStatus; }
-	m_pStatus = pStatus;
 }
 
 //--------------------------------------------------------------------------------

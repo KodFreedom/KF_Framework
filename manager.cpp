@@ -4,10 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-11-22
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -27,6 +23,7 @@
 #include "mode.h"
 #include "modeDemo.h"
 #include "fade.h"
+#include "KF_PhysicsSystem.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
@@ -52,6 +49,7 @@ CManager::CManager()
 	, m_pUISystem(nullptr)
 	, m_pMode(nullptr)
 	, m_pFade(nullptr)
+	, m_pPhysicsSystem(nullptr)
 {
 }
 
@@ -74,6 +72,10 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//ランダム
 	CKFMath::InitRandom();
+
+	//物理演算システム
+	m_pPhysicsSystem = new CKFPhysicsSystem;
+	m_pPhysicsSystem->Init();
 
 	//入力の生成
 	m_pInputManager = new CInputManager;
@@ -197,6 +199,9 @@ void CManager::Uninit(void)
 		m_pInputManager = nullptr;
 	}
 
+	//物理演算システムの破棄
+	SAFE_RELEASE(m_pPhysicsSystem);
+
 	//レンダラーの破棄
 	SAFE_RELEASE(m_pRenderer);
 }
@@ -215,11 +220,11 @@ void CManager::Update(void)
 	//モード更新
 	m_pMode->Update();
 
-	//Fade更新
-	m_pFade->Update();
-
 	//コリジョン更新
 	m_pColliderManager->Update();
+
+	//物理演算更新
+	m_pPhysicsSystem->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -232,6 +237,9 @@ void CManager::LateUpdate(void)
 
 	//UI更新
 	m_pUISystem->UpdateAll();
+
+	//Fade更新
+	m_pFade->Update();
 }
 
 //--------------------------------------------------------------------------------

@@ -10,15 +10,10 @@
 #include "playerBehaviorComponent.h"
 #include "manager.h"
 #include "mode.h"
-#include "camera.h"
-#include "inputManager.h"
 #include "gameObjectActor.h"
-#include "actorMeshComponent.h"
-#include "3DRigidbodyComponent.h"
-#include "sphereColliderComponent.h"
 #include "colliderComponent.h"
-#include "KF_CollisionSystem.h"
 #include "playerNormalStatus.h"
+#include "status.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -28,6 +23,7 @@
 //--------------------------------------------------------------------------------
 CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody)
 	: CActorBehaviorComponent(pGameObj, pRigidbody)
+	, m_pStatus(nullptr)
 	, m_usCntWhosYourDaddy(0)
 {}
 
@@ -51,6 +47,12 @@ bool CPlayerBehaviorComponent::Init(void)
 void CPlayerBehaviorComponent::Uninit(void)
 {
 	CActorBehaviorComponent::Uninit();
+
+	if (m_pStatus)
+	{
+		delete m_pStatus;
+		m_pStatus = nullptr;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -59,6 +61,7 @@ void CPlayerBehaviorComponent::Uninit(void)
 void CPlayerBehaviorComponent::Update(void)
 {
 	CActorBehaviorComponent::Update();
+	m_pStatus->Update(*this);
 	if (m_usCntWhosYourDaddy > 0) { m_usCntWhosYourDaddy--; }
 	/*if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
@@ -151,6 +154,7 @@ void CPlayerBehaviorComponent::Update(void)
 void CPlayerBehaviorComponent::LateUpdate(void)
 {
 	CActorBehaviorComponent::LateUpdate();
+	m_pStatus->LateUpdate(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -179,4 +183,14 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 void CPlayerBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo)
 {
 
+}
+
+//--------------------------------------------------------------------------------
+//  状態更新
+//--------------------------------------------------------------------------------
+void CPlayerBehaviorComponent::ChangeStatus(CStatus* const pStatus)
+{
+	if (!pStatus) { return; }
+	if (m_pStatus) { delete m_pStatus; }
+	m_pStatus = pStatus;
 }

@@ -10,9 +10,6 @@
 #include "enemyAttackMode.h"
 #include "enemyNormalMode.h"
 #include "enemyBehaviorComponent.h"
-#include "manager.h"
-#include "mode.h"
-#include "camera.h"
 #include "gameObjectActor.h"
 #include "actorMeshComponent.h"
 #include "3DRigidbodyComponent.h"
@@ -88,6 +85,9 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	else
 	{//‘ŠŽè‚ÉŒü‚©‚Á‚ÄˆÚ“®‚·‚é
 	 //‘ŠŽè‚ÉŒü‚­
+	 //‰ñ“]ŒvŽZ
+		CKFVec3 vUp = pTransform->GetUpNext();
+		vDir = (vUp * vDir) * vUp;
 		enemy.Turn(vDir);
 
 		//ˆÚ“®

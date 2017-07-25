@@ -12,7 +12,7 @@
 #include "playerJumpStatus.h"
 #include "playerAttackStatus.h"
 #include "gameObject.h"
-#include "actorBehaviorComponent.h"
+#include "playerBehaviorComponent.h"
 #include "actorMeshComponent.h"
 #include "mode.h"
 #include "camera.h"
@@ -25,9 +25,9 @@
 //--------------------------------------------------------------------------------
 //  çXêV
 //--------------------------------------------------------------------------------
-void CPlayerMoveStatus::Update(CActorBehaviorComponent& actor)
+void CPlayerMoveStatus::Update(CPlayerBehaviorComponent& player)
 {
-	CMeshComponent* pMesh = actor.m_pGameObj->GetMeshComponent();
+	CMeshComponent* pMesh = player.m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
 	CInputManager* pInput = GetManager()->GetInputManager();
 
@@ -36,7 +36,7 @@ void CPlayerMoveStatus::Update(CActorBehaviorComponent& actor)
 	if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
 	{
 		float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
-		CTransformComponent* pTrans = actor.m_pGameObj->GetTransformComponent();
+		CTransformComponent* pTrans = player.m_pGameObj->GetTransformComponent();
 
 		//âÒì]åvéZ
 		CKFVec3 vUp = pTrans->GetUpNext();
@@ -58,27 +58,27 @@ void CPlayerMoveStatus::Update(CActorBehaviorComponent& actor)
 		CKFMath::VecNormalize(vForwardNext);
 
 		//âÒì]
-		actor.Turn(vForwardNext);
+		player.Turn(vForwardNext, pActor);
 
 		//à⁄ìÆê›íË
-		actor.Move(pActor);
+		player.Move(pActor);
 	}
 	else
 	{
-		actor.ChangeStatus(new CPlayerNormalStatus);
+		player.ChangeStatus(new CPlayerNormalStatus);
 	}
 
 	//ÉWÉÉÉìÉv
 	if (pInput->GetKeyTrigger(CInputManager::KEY::K_JUMP))
 	{
-		actor.ChangeStatus(new CPlayerJumpStatus);
+		player.ChangeStatus(new CPlayerJumpStatus);
 		return;
 	}
 
 	//çUåÇ
 	if (pInput->GetKeyTrigger(CInputManager::KEY::K_ATTACK))
 	{
-		actor.ChangeStatus(new CPlayerAttackStatus);
+		player.ChangeStatus(new CPlayerAttackStatus);
 		return;
 	}
 }
@@ -86,7 +86,7 @@ void CPlayerMoveStatus::Update(CActorBehaviorComponent& actor)
 //--------------------------------------------------------------------------------
 //  çXêV
 //--------------------------------------------------------------------------------
-void CPlayerMoveStatus::LateUpdate(CActorBehaviorComponent& actor)
+void CPlayerMoveStatus::LateUpdate(CPlayerBehaviorComponent& player)
 {
 
 }

@@ -19,6 +19,6 @@ class CPlayerMoveStatus : public CStatus
 public:
 	CPlayerMoveStatus() : CStatus() {}
 	~CPlayerMoveStatus() override {}
-	void Update(CActorBehaviorComponent& actor) override;
-	void LateUpdate(CActorBehaviorComponent& actor) override;
+	void Update(CPlayerBehaviorComponent& player) override;
+	void LateUpdate(CPlayerBehaviorComponent& player) override;
 };

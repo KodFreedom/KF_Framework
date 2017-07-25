@@ -19,6 +19,6 @@ class CPlayerNormalStatus : public CStatus
 public:
 	CPlayerNormalStatus() : CStatus() {}
 	~CPlayerNormalStatus() override {}
-	void Update(CActorBehaviorComponent& actor) override;
-	void LateUpdate(CActorBehaviorComponent& actor) override;
+	void Update(CPlayerBehaviorComponent& player) override;
+	void LateUpdate(CPlayerBehaviorComponent& player) override;
 };

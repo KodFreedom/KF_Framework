@@ -26,6 +26,7 @@ class CSoundManager;
 class CUISystem;
 class CMode;
 class CFade;
+class CKFPhysicsSystem;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -59,6 +60,7 @@ public:
 	CUISystem*			GetUISystem(void) { return m_pUISystem; }
 	CMode*				GetMode(void) { return m_pMode; }
 	CFade*				GetFade(void) { return m_pFade; }
+	CKFPhysicsSystem*	GetPhysicsSystem(void) { return m_pPhysicsSystem; }
 
 private:
 	CRendererDX*		m_pRenderer;
@@ -74,4 +76,5 @@ private:
 	CUISystem*			m_pUISystem;
 	CMode*				m_pMode;
 	CFade*				m_pFade;
+	CKFPhysicsSystem*	m_pPhysicsSystem;
 };

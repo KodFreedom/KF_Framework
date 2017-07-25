@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	プレイヤー攻撃ステータス
-//　playerAttackStatus.h
+//	移動状態
+//　moveStatus.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-19
 //--------------------------------------------------------------------------------
@@ -14,14 +14,11 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CPlayerAttackStatus : public CStatus
+class CMoveStatus : public CStatus
 {
 public:
-	CPlayerAttackStatus() : CStatus(), m_bFirst(true) {}
-	~CPlayerAttackStatus() override {}
-	void Update(CPlayerBehaviorComponent& player) override;
-	void LateUpdate(CPlayerBehaviorComponent& player) override;
-
-private:
-	bool m_bFirst;
+	CMoveStatus() : CStatus() {}
+	~CMoveStatus() override {}
+	void Update(CActorBehaviorComponent& actor) override;
+	void LateUpdate(CActorBehaviorComponent& actor) override;
 };

@@ -1,18 +1,18 @@
 //--------------------------------------------------------------------------------
-//	プレイヤー攻撃ステータス
-//　playerAttackStatus.h
+//	攻撃ステータス
+//　attackStatus.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-19
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "playerAttackStatus.h"
-#include "playerJumpStatus.h"
-#include "playerMoveStatus.h"
-#include "playerNormalStatus.h"
+#include "attackStatus.h"
+#include "jumpStatus.h"
+#include "moveStatus.h"
+#include "normalStatus.h"
 #include "gameObject.h"
-#include "playerBehaviorComponent.h"
+#include "actorBehaviorComponent.h"
 #include "actorMeshComponent.h"
 #include "sphereColliderComponent.h"
 
@@ -22,44 +22,44 @@
 //--------------------------------------------------------------------------------
 //  更新
 //--------------------------------------------------------------------------------
-void CPlayerAttackStatus::Update(CPlayerBehaviorComponent& player)
+void CAttackStatus::Update(CActorBehaviorComponent& actor)
 {
-	CMeshComponent* pMesh = player.m_pGameObj->GetMeshComponent();
+	CMeshComponent* pMesh = actor.m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
 
 	//攻撃
 	if (m_bFirst)
 	{
 		m_bFirst = false;
-		player.Attack(pActor);
+		actor.Attack(pActor);
 	}
 
 	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION_ATTACK)
 	{
-		if (pActor->GetMotionInfo().nKeyNow == 3 && !player.m_pAttackCollider)
+		if (pActor->GetMotionInfo().nKeyNow == 3 && !actor.m_pAttackCollider)
 		{
-			player.m_pAttackCollider = new CSphereColliderComponent(player.m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
-			player.m_pAttackCollider->SetTag("weapon");
-			player.m_pAttackCollider->SetTrigger(true);
+			actor.m_pAttackCollider = new CSphereColliderComponent(actor.m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
+			actor.m_pAttackCollider->SetTag("weapon");
+			actor.m_pAttackCollider->SetTrigger(true);
 		}
 	}
 	else
 	{//攻撃モーション終わったらノーマルステータスに戻る
-		if (player.m_pAttackCollider)
+		if (actor.m_pAttackCollider)
 		{
-			player.m_pGameObj->DeleteCollider(player.m_pAttackCollider);
-			player.m_pAttackCollider->Release();
-			player.m_pAttackCollider = nullptr;
+			actor.m_pGameObj->DeleteCollider(actor.m_pAttackCollider);
+			actor.m_pAttackCollider->Release();
+			actor.m_pAttackCollider = nullptr;
 		}
 
-		player.ChangeStatus(new CPlayerNormalStatus);
+		actor.ChangeStatus(new CNormalStatus);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  更新
 //--------------------------------------------------------------------------------
-void CPlayerAttackStatus::LateUpdate(CPlayerBehaviorComponent& player)
+void CAttackStatus::LateUpdate(CActorBehaviorComponent& actor)
 {
 
 }

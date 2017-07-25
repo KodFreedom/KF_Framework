@@ -98,11 +98,6 @@ void CModeDemo::Uninit(void)
 void CModeDemo::Update(void)
 {
 	CMode::Update();
-
-	if (m_bEndMode || GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
-	{
-		GetManager()->GetFade()->FadeToMode(new CModeResult);
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -111,4 +106,9 @@ void CModeDemo::Update(void)
 void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
+
+	if (m_bEndMode || GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	{
+		GetManager()->GetFade()->FadeToMode(new CModeResult);
+	}
 }

@@ -23,16 +23,16 @@ class CFieldColliderComponent;
 //--------------------------------------------------------------------------------
 //  コリジョン情報
 //--------------------------------------------------------------------------------
-class CCollisionInfo
-{
-public:
-	CCollisionInfo(const list<CKFVec3>& listPoints, CColliderComponent& collider)
-		: m_listPoints(listPoints), m_collider(collider) {}
-	~CCollisionInfo() {}
-
-	list<CKFVec3>		m_listPoints;	//当たったの頂点
-	CColliderComponent&	m_collider;		//相手のコライダー
-};
+//class CCollisionInfo
+//{
+//public:
+//	CCollisionInfo(const list<CKFVec3>& listPoints, CColliderComponent& collider)
+//		: m_listPoints(listPoints), m_collider(collider) {}
+//	~CCollisionInfo() {}
+//
+//	list<CKFVec3>		m_listPoints;	//当たったの頂点
+//	CColliderComponent&	m_collider;		//相手のコライダー
+//};
 
 //--------------------------------------------------------------------------------
 //  コリジョン判定システム

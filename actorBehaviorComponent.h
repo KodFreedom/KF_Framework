@@ -16,11 +16,11 @@
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent;
 class CActorMeshComponent;
-class CStatus;
-class CPlayerNormalStatus;
-class CPlayerMoveStatus;
-class CPlayerJumpStatus;
-class CPlayerAttackStatus;
+//class CStatus;
+//class CPlayerNormalStatus;
+//class CPlayerMoveStatus;
+//class CPlayerJumpStatus;
+//class CPlayerAttackStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -33,10 +33,10 @@ class CActorBehaviorComponent : public CBehaviorComponent
 	//--------------------------------------------------------------------------------
 	//  フレンドクラス
 	//--------------------------------------------------------------------------------
-	friend CPlayerNormalStatus;
-	friend CPlayerMoveStatus;
-	friend CPlayerJumpStatus;
-	friend CPlayerAttackStatus;
+	//friend CPlayerNormalStatus;
+	//friend CPlayerMoveStatus;
+	//friend CPlayerJumpStatus;
+	//friend CPlayerAttackStatus;
 
 public:
 	//--------------------------------------------------------------------------------
@@ -67,9 +67,6 @@ public:
 	float	GetLifeMax(void) const { return m_fLifeMax; }
 	float	GetLifeNow(void) const { return m_fLifeNow; }
 
-	//状態の切り替え
-	void	ChangeStatus(CStatus* const pStatus);
-
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
@@ -88,7 +85,6 @@ protected:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	C3DRigidbodyComponent*	m_pRigidbody;	//リジッドボディ
-	CStatus*				m_pStatus;		//状態
 
 	//一時採用
 	CColliderComponent*		m_pAttackCollider;

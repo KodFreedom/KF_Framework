@@ -180,6 +180,7 @@
     <ClCompile Include="inputManager.cpp" />
     <ClCompile Include="KF_CollisionSystem.cpp" />
     <ClCompile Include="KF_Math.cpp" />
+    <ClCompile Include="KF_PhysicsSystem.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="inputManager.h" />
     <ClInclude Include="KF_CollisionSystem.h" />
     <ClInclude Include="KF_Math.h" />
+    <ClInclude Include="KF_PhysicsSystem.h" />
     <ClInclude Include="KF_UtilityDX.h" />
     <ClInclude Include="lightManager.h" />
     <ClInclude Include="main.h" />
