@@ -8,6 +8,9 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "KF_PhysicsSystem.h"
+#include "gameObject.h"
+#include "transformComponent.h"
+#include "3DRigidbodyComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -42,50 +45,204 @@ void CKFPhysicsSystem::Release(void)
 //--------------------------------------------------------------------------------
 void CKFPhysicsSystem::Update(void)
 {
-	for (auto itr = m_listCollisionInfo.begin; itr != m_listCollisionInfo.end();)
+	for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 	{
 		Resolve(*itr);
-		itr = m_listCollisionInfo.erase(itr);
+		itr = m_listCollision.erase(itr);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  衝突情報のレジストリ
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::RegistryContact(CCollisionInfo& collisionInfo)
+void CKFPhysicsSystem::RegistryCollision(CCollision& collision)
 {
-	m_listCollisionInfo.push_back(collisionInfo);
+	m_listCollision.push_back(collision);
 }
 
 //--------------------------------------------------------------------------------
 //  衝突処理
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::Resolve(CCollisionInfo& collisionInfo)
+void CKFPhysicsSystem::Resolve(CCollision& collision)
 {
-	ResolveVelocity(collisionInfo);
-	ResolveInterpenetration(collisionInfo);
+	ResolveVelocity(collision);
+	ResolveInterpenetration(collision);
 }
 
 //--------------------------------------------------------------------------------
 //  反発速度の算出
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::ResolveVelocity(CCollisionInfo& collisionInfo)
+void CKFPhysicsSystem::ResolveVelocity(CCollision& collision)
 {
+	//変数宣言
+	CKFVec3	vAccCausedVelocity;				//衝突方向の作用力(加速度)
+	CKFVec3	vImpulsePerInverseMass;			//単位逆質量の衝突力
+	CKFVec3	vVelocity;						//変化した速度
+	CKFVec3	vForce;							//速度あたりの作用力
+	CKFVec3	vPosToCollisionPos;				//中心点と衝突点のベクトル
+	CKFVec3	vWork;							//計算用ベクトル
+	CKFVec3	vRotationForce;					//回転作用力
+	float	fSeparatingVelocity;			//分離速度
+	float	fNewSeparatingVelocity;			//新しい分離速度
+	float	fAccCausedSeparatingVelocity;	//衝突法線上の加速度
+	float	fDeltaVelocity;					//速度の変化量
+	float	fTotalInverseMass;				//質量の総和
+	float	fImpulse;						//衝突力
+	//float	fWorldAngle;					//全体的にとっての角度
+	float	fBounciness;					//跳ね返り係数
 
+	//分離速度計算
+	fSeparatingVelocity = CalculateSeparatingVelocity(collision);
+
+	//分離速度チェック
+	//衝突法線の逆方向になれば計算しない
+	if (fSeparatingVelocity > 0.0f) { return; }
+
+	//跳ね返り係数の算出
+	fBounciness = collision.m_pRigidBodyOne->m_fBounciness;
+	if (collision.m_pRigidBodyTwo)
+	{
+		fBounciness += collision.m_pRigidBodyTwo->m_fBounciness;
+		fBounciness *= 0.5f;
+	}
+
+	//跳ね返り速度の算出
+	fNewSeparatingVelocity = -fSeparatingVelocity * fBounciness;
+
+	//衝突方向に作用力を計算する
+	vAccCausedVelocity = collision.m_pRigidBodyOne->m_vAcceleration;
+	if (collision.m_pRigidBodyTwo)
+	{
+		vAccCausedVelocity -= collision.m_pRigidBodyTwo->m_vAcceleration;
+	}
+	fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.m_vCollisionNormal);
+
+	//衝突法線の逆方向になれば
+	if (fAccCausedSeparatingVelocity < 0.0f)
+	{
+		fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
+		if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
+	}
+
+	//速度差分計算
+	fDeltaVelocity = fNewSeparatingVelocity - fSeparatingVelocity;
+
+	//質量取得
+	fTotalInverseMass = collision.m_pRigidBodyOne->m_fInverseMass;
+	if (collision.m_pRigidBodyTwo)
+	{
+		fTotalInverseMass += collision.m_pRigidBodyTwo->m_fInverseMass;
+	}
+
+	//質量が無限大の場合計算しない
+	if (fTotalInverseMass <= 0.0f) { return; }
+
+	//衝突力計算
+	fImpulse = fDeltaVelocity / fTotalInverseMass;
+
+	//単位逆質量の衝突力
+	vImpulsePerInverseMass = collision.m_vCollisionNormal * fImpulse;
+
+	//速度計算
+	vVelocity = vImpulsePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
+	collision.m_pRigidBodyOne->m_vVelocity += vVelocity;
+
+	if (collision.m_pRigidBodyOne->m_bRotLock != C3DRigidbodyComponent::AXIS::XYZ)
+	{//回転制限が全部制限されていないの場合
+		////線速度力積
+		//vForce = vVelocity * collision.m_pRigidBodyOne->m_fMass;
+
+		////中心点と衝突点のベクトル
+		//vPosToCollisionPos = collision.m_pRigidBodyOne->m_pGameObj->GetTransformComponent()->GetPosNext()
+		//	- collision.m_vCollisionPos;
+
+		////ベクトルが世界軸にとっての角度
+		//fWorldAngle = atan2f(vPosToCollisionPos.y, vPosToCollisionPos.x);
+
+		////回転作用力計算
+		//vWork = D3DXVECTOR3(vForce.x * cosf(-fWorldAngle) - vForce.y * sinf(-fWorldAngle),
+		//	vForce.x * sinf(-fWorldAngle) + vForce.y * cosf(-fWorldAngle), 0.0f);
+		//vRotationForce = D3DXVECTOR3(0.0f, vWork.y, 0.0f);
+		//vRotationForce = D3DXVECTOR3(vRotationForce.x * cosf(fWorldAngle) - vRotationForce.y * sinf(fWorldAngle),
+		//	vRotationForce.x * sinf(fWorldAngle) + vRotationForce.y * cosf(fWorldAngle), 0.0f);
+
+		//g_aPCollision[nNumCollision].apBody[0]->AddForce(vRotationForce, g_aPCollision[nNumCollision].vCollisionPos);
+	}
+
+	if (collision.m_pRigidBodyTwo)
+	{
+		vVelocity = vImpulsePerInverseMass * -1.0f * collision.m_pRigidBodyTwo->m_fInverseMass;
+		collision.m_pRigidBodyTwo->m_vVelocity += vVelocity;
+
+		//if (g_aPCollision[nNumCollision].bRotation)
+		//{
+		//	//線速度力積
+		//	vForce = g_aPCollision[nNumCollision].apBody[1]->GetMass() * vVelocity / DURATION * ROTATION_DAMPING;
+
+		//	//中心点と衝突点のベクトル
+		//	vPosToCollisionPos = g_aPCollision[nNumCollision].apBody[1]->GetPosCenter() - g_aPCollision[nNumCollision].vCollisionPos;
+
+		//	//ベクトルが世界軸にとっての角度
+		//	fWorldAngle = atan2f(vPosToCollisionPos.y, vPosToCollisionPos.x);
+
+		//	//回転作用力計算
+		//	vWork = D3DXVECTOR3(vForce.x * cosf(-fWorldAngle) - vForce.y * sinf(-fWorldAngle),
+		//		vForce.x * sinf(-fWorldAngle) + vForce.y * cosf(-fWorldAngle), 0.0f);
+		//	vRotationForce = D3DXVECTOR3(0.0f, vWork.y, 0.0f);
+		//	vRotationForce = D3DXVECTOR3(vRotationForce.x * cosf(fWorldAngle) - vRotationForce.y * sinf(fWorldAngle),
+		//		vRotationForce.x * sinf(fWorldAngle) + vRotationForce.y * cosf(fWorldAngle), 0.0f);
+
+		//	g_aPCollision[nNumCollision].apBody[1]->AddForce(vRotationForce, g_aPCollision[nNumCollision].vCollisionPos);
+		//}
+	}
 }
 
 //--------------------------------------------------------------------------------
 //  めり込みの解決
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::ResolveInterpenetration(CCollisionInfo& collisionInfo)
+void CKFPhysicsSystem::ResolveInterpenetration(CCollision& collision)
 {
+	//衝突しない
+	if (collision.m_fPenetration <= 0) { return; }
 
+	//逆質量計算
+	float fTotalInverseMass = collision.m_pRigidBodyOne->m_fInverseMass;
+	if (collision.m_pRigidBodyTwo)
+	{
+		fTotalInverseMass += collision.m_pRigidBodyTwo->m_fInverseMass;
+	}
+
+	//質量が無限大の場合計算しない
+	if (fTotalInverseMass <= 0) { return; }
+
+	//質量単位戻り量計算
+	CKFVec3 vMovePerInverseMass = collision.m_vCollisionNormal * collision.m_fPenetration / fTotalInverseMass;
+
+	//各粒子戻り位置計算
+	CTransformComponent* pTrans = collision.m_pRigidBodyOne->m_pGameObj->GetTransformComponent();
+	collision.m_pRigidBodyOne->m_vMovement += vMovePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
+
+	if (collision.m_pRigidBodyTwo)
+	{
+		pTrans = collision.m_pRigidBodyTwo->m_pGameObj->GetTransformComponent();
+		collision.m_pRigidBodyTwo->m_vMovement -= vMovePerInverseMass * collision.m_pRigidBodyTwo->m_fInverseMass;
+	}
 }
 
 //--------------------------------------------------------------------------------
 //  分離速度の算出
 //--------------------------------------------------------------------------------
-float CKFPhysicsSystem::CalculateSeparatingVelocity(CCollisionInfo& collisionInfo)
+float CKFPhysicsSystem::CalculateSeparatingVelocity(CCollision& collision)
 {
+	CKFVec3 vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity;
 
+	//粒子と粒子の衝突
+	if (collision.m_pRigidBodyTwo)
+	{
+		vRelativeVelocity -= collision.m_pRigidBodyTwo->m_vVelocity;
+	}
+
+	//内積計算
+	float fDot = CKFMath::Vec3Dot(vRelativeVelocity, collision.m_vCollisionNormal);
+	return fDot;
 }

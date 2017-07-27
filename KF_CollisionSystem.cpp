@@ -8,7 +8,9 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+#include "manager.h"
 #include "KF_CollisionSystem.h"
+#include "KF_PhysicsSystem.h"
 #include "gameObject.h"
 #include "sphereColliderComponent.h"
 #include "fieldColliderComponent.h"
@@ -27,9 +29,9 @@ void CKFCollisionSystem::CheckCollisionSphereWithSphere(CSphereColliderComponent
 	float fSLRadius = sphereL.GetRadius();
 	CKFVec3 vSRPos = sphereR.GetWorldPos();
 	float fSRRadius = sphereR.GetRadius();
-
+	CKFVec3 vMidLine = vSLPos - vSRPos;
 	float fDisMin = fSLRadius + fSRRadius;
-	float fDisSqr = CKFMath::VecMagnitudeSquare(vSLPos - vSRPos);
+	float fDisSqr = CKFMath::VecMagnitudeSquare(vMidLine);
 
 	if (fDisSqr < fDisMin * fDisMin)
 	{
@@ -49,28 +51,55 @@ void CKFCollisionSystem::CheckCollisionSphereWithSphere(CSphereColliderComponent
 			return;
 		}
 
-		//sphereL.OnCollision(sphereR);
-		//sphereR.OnCollision(sphereL);
-
-		//臨時処理
-		CKFVec3 vCenter = (vSLPos + vSRPos) * 0.5f;
-		CKFVec3 vDir = vSLPos - vSRPos;
-		CKFMath::VecNormalize(vDir);
-
-		//L
-		CRigidbodyComponent* pRB = sphereL.GetGameObject()->GetRigidbodyComponent();
-		if (pRB->GetType() == CRigidbodyComponent::RB_3D)
-		{
-			sphereL.GetGameObject()->GetTransformComponent()->MovePosNext(vCenter + vDir * fSLRadius - vSLPos);
-		}
-
-		//R
-		pRB = sphereR.GetGameObject()->GetRigidbodyComponent();
-		if (pRB->GetType() == CRigidbodyComponent::RB_3D)
-		{
-			sphereR.GetGameObject()->GetTransformComponent()->MovePosNext(vCenter - vDir * fSRRadius - vSRPos);
-		}
+		CCollision collision;
 		
+		//衝突点の算出
+		collision.m_vCollisionPos = vSRPos + vMidLine * 0.5f;
+
+		//衝突深度の算出
+		float fDis = sqrtf(fDisSqr);
+		collision.m_fPenetration = fDisMin - fDis;
+
+		//衝突法線の算出
+		collision.m_vCollisionNormal = vMidLine / fDis;
+
+		//リジッドボディの取得
+		CRigidbodyComponent* pRBL = sphereL.GetGameObject()->GetRigidbodyComponent();
+		CRigidbodyComponent* pRBR = sphereR.GetGameObject()->GetRigidbodyComponent();
+		if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
+		{
+			collision.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
+
+			if (pRBR->GetType() == CRigidbodyComponent::RB_3D)
+			{
+				collision.m_pRigidBodyTwo = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
+			}
+		}
+		else
+		{//一番が持ってないなら衝突法線を反転する
+			collision.m_vCollisionNormal *= -1.0f;
+			collision.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
+		}
+
+		//物理演算システムにレジストリ
+		GetManager()->GetPhysicsSystem()->RegistryCollision(collision);
+
+		//OnCollision
+		CCollisionInfo info;
+		info.m_pRigidBodyOne = collision.m_pRigidBodyOne;
+		info.m_pRigidBodyTwo = collision.m_pRigidBodyTwo;
+		info.m_listCollision.push_back(&collision);
+		auto list = sphereL.GetGameObject()->GetBehaviorComponent();
+		for (auto itr = list.begin(); itr != list.end(); ++itr)
+		{
+			(*itr)->OnCollision(sphereL, info);
+		}
+
+		list = sphereR.GetGameObject()->GetBehaviorComponent();
+		for (auto itr = list.begin(); itr != list.end(); ++itr)
+		{
+			(*itr)->OnCollision(sphereR, info);
+		}
 	}
 }
 

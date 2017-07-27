@@ -285,6 +285,7 @@ public:
 	static void				QuaternionNormalize(CKFQuaternion& qValue);
 	static float			QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR);
 	static CKFVec3			QuaternionToEuler(const CKFQuaternion& quaternion);
+	static CKFMtx44			QuaternionToMtx(const CKFQuaternion& qValue);
 	static CKFQuaternion	Vec3ToQuaternion(const CKFVec3& vVec);
 	static CKFQuaternion	MtxToQuaternion(const CKFMtx44& mtxRot);
 	

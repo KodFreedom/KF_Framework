@@ -20,6 +20,28 @@ class C3DRigidbodyComponent;
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  コリジョン
+//--------------------------------------------------------------------------------
+class CCollision
+{
+public:
+	CCollision()
+		: m_pRigidBodyOne(nullptr)
+		, m_pRigidBodyTwo(nullptr)
+		, m_vCollisionNormal(CKFVec3(0.0f))
+		, m_vCollisionPos(CKFVec3(0.0f))
+		, m_fPenetration(0.0f)
+	{}
+	~CCollision() {}
+
+	C3DRigidbodyComponent*	m_pRigidBodyOne;
+	C3DRigidbodyComponent*	m_pRigidBodyTwo;
+	CKFVec3					m_vCollisionNormal;
+	CKFVec3					m_vCollisionPos;
+	float					m_fPenetration;
+};
+
+//--------------------------------------------------------------------------------
 //  コリジョン情報
 //--------------------------------------------------------------------------------
 class CCollisionInfo
@@ -27,16 +49,18 @@ class CCollisionInfo
 public:
 	CCollisionInfo()
 		: m_pRigidBodyOne(nullptr)
-		, m_pRigidBodyTwo(nullptr)
-		, m_vContactNormal(CKFVec3(0.0f))
-		, m_fPenetration(0.0f)
-	{}
-	~CCollisionInfo() {}
+		, m_pRigidBodyTwo(nullptr) 
+	{
+		m_listCollision.clear();
+	}
+	~CCollisionInfo() 
+	{
+		m_listCollision.clear();
+	}
 
 	C3DRigidbodyComponent*	m_pRigidBodyOne;
 	C3DRigidbodyComponent*	m_pRigidBodyTwo;
-	CKFVec3					m_vContactNormal;
-	float					m_fPenetration;
+	list<CCollision*>		m_listCollision;
 };
 
 //--------------------------------------------------------------------------------
@@ -48,7 +72,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CKFPhysicsSystem() { m_listCollisionInfo.clear(); }
+	CKFPhysicsSystem() { m_listCollision.clear(); }
 	~CKFPhysicsSystem() {}
 
 	bool	Init(void);
@@ -56,19 +80,19 @@ public:
 	void	Release(void);
 	void	Update(void);
 
-	void	RegistryContact(CCollisionInfo& collisionInfo);
+	void	RegistryCollision(CCollision& collision);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void	Resolve(CCollisionInfo& collisionInfo);
-	void	ResolveVelocity(CCollisionInfo& collisionInfo);
-	void	ResolveInterpenetration(CCollisionInfo& collisionInfo);
-	float	CalculateSeparatingVelocity(CCollisionInfo& collisionInfo);
+	void	Resolve(CCollision& collision);
+	void	ResolveVelocity(CCollision& collision);
+	void	ResolveInterpenetration(CCollision& collision);
+	float	CalculateSeparatingVelocity(CCollision& collision);
 
 	//--------------------------------------------------------------------------------
 	//  変数宣言
 	//--------------------------------------------------------------------------------
-	list<CCollisionInfo> m_listCollisionInfo;
+	list<CCollision> m_listCollision;
 };

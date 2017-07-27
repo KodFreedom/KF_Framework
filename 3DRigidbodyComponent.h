@@ -14,6 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CKFPhysicsSystem;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -23,6 +24,8 @@
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent : public CRigidbodyComponent
 {
+	friend CKFPhysicsSystem;
+
 public:
 	C3DRigidbodyComponent(CGameObject* const pGameObj);
 	~C3DRigidbodyComponent() {}
@@ -43,13 +46,31 @@ public:
 	void	AddForce(const CKFVec3& vForce) { m_vForceAccum += vForce; }
 
 private:
-	float	m_fMass;		//質量
-	float	m_fInverseMass;	//質量の逆数
-	float	m_fDrag;		//抵抗係数
-	CKFVec3	m_vGravity;		//重力
-	CKFVec3	m_vMovement;	//移動量
-	CKFVec3	m_vVelocity;	//速度
-	CKFVec3	m_vForceAccum;	//合わせた作用力
-	CKFVec3	m_vAcceleration;//加速度
-	bool	m_bOnGround;	//着陸フラッグ
+	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	enum AXIS
+	{
+		X = 0x01,
+		Y = 0x02,
+		Z = 0x04,
+		XYZ = 0x07
+	};
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	float	m_fMass;			//質量
+	float	m_fInverseMass;		//質量の逆数
+	float	m_fDrag;			//抵抗係数(空気抵抗)
+	float	m_fAngularDrag;		//回転抵抗係数
+	float	m_fFriction;		//摩擦係数
+	float	m_fBounciness;		//跳ね返り係数
+	CKFVec3	m_vGravity;			//重力
+	CKFVec3	m_vMovement;		//移動量
+	CKFVec3	m_vVelocity;		//速度
+	CKFVec3	m_vForceAccum;		//合わせた作用力
+	CKFVec3	m_vAcceleration;	//加速度
+	bool	m_bOnGround;		//着陸フラッグ
+	BYTE	m_bRotLock;			//回転制限のフラグ
 };

@@ -71,7 +71,8 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	d3dpp.Windowed						= bWindow;						// ウィンドウモード
 	d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;		// リフレッシュレート
 	d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
-	d3dpp.MultiSampleType				= D3DMULTISAMPLE_8_SAMPLES;		// アンチエイジングの使用
+	//抗劇歯
+	//d3dpp.MultiSampleType				= D3DMULTISAMPLE_8_SAMPLES;		// アンチエイジングの使用
 
 	// デバイスの生成
 	// ディスプレイアダプタを表すためのデバイスを作成
@@ -103,15 +104,16 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	if (FAILED(m_pD3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL,
-		D3DFMT_R8G8B8,
-		FALSE,
-		D3DMULTISAMPLE_2_SAMPLES,
-		NULL)))
-	{
-		//
-	}
+	//抗劇歯
+	//if (FAILED(m_pD3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
+	//	D3DDEVTYPE_HAL,
+	//	D3DFMT_R8G8B8,
+	//	FALSE,
+	//	D3DMULTISAMPLE_2_SAMPLES,
+	//	NULL)))
+	//{
+	//	//
+	//}
 
 	// レンダーステートの設定
 	SetRenderMode(RM_NORMAL);
@@ -119,7 +121,9 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
 	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
-	m_pD3DDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);			// アンチエイジング
+	
+	//抗劇歯
+	//m_pD3DDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);			// アンチエイジング
 
 	// サンプラーステートの設定
 	m_pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャＵ値の繰り返し設定

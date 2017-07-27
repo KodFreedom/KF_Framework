@@ -21,12 +21,16 @@ C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
 	, m_fMass(1.0f)
 	, m_fInverseMass(1.0f)
 	, m_fDrag(0.98f)
+	, m_fAngularDrag(1.0f)
+	, m_fFriction(1.0f)
+	, m_fBounciness(0.0f)
 	, m_vGravity(CKFVec3(0.0f, -0.5f, 0.0f))
 	, m_vMovement(CKFVec3(0.0f))
 	, m_vVelocity(CKFVec3(0.0f))
 	, m_vForceAccum(CKFVec3(0.0f))
 	, m_vAcceleration(CKFVec3(0.0f))
 	, m_bOnGround(false)
+	, m_bRotLock(0)
 {
 }
 

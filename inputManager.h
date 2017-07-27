@@ -36,7 +36,7 @@ public:
 	CInputManager();
 	~CInputManager();
 
-	bool		Init(HINSTANCE hInst, HWND hWnd);
+	bool			Init(HINSTANCE hInst, HWND hWnd);
 	void			Uninit(void);
 	void			Update(void);
 

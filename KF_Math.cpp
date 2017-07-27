@@ -1206,7 +1206,34 @@ CKFQuaternion CKFMath::MtxToQuaternion(const CKFMtx44& mtxRot)
 	qValue.m_fY = qDx.y;
 	qValue.m_fZ = qDx.z;
 	qValue.m_fW = qDx.w;
+
 	return qValue;
+}
+
+//--------------------------------------------------------------------------------
+//  QuaternionToMtx
+//	
+//--------------------------------------------------------------------------------
+CKFMtx44 CKFMath::QuaternionToMtx(const CKFQuaternion& qValue)
+{
+	CKFMtx44 mtx;
+	mtx.m_af[0][0] = 1.0f - (2.0f * qValue.m_fY * qValue.m_fY + 2.0f * qValue.m_fX * qValue.m_fX);
+	mtx.m_af[0][1] = 2.0f * qValue.m_fX * qValue.m_fY + 2.0f * qValue.m_fZ * qValue.m_fW;
+	mtx.m_af[0][2] = 2.0f * qValue.m_fX * qValue.m_fZ - 2.0f * qValue.m_fY * qValue.m_fW;
+	mtx.m_af[0][3] = 0.0f;
+	mtx.m_af[1][0] = 2.0f * qValue.m_fX * qValue.m_fY - 2.0f * qValue.m_fZ * qValue.m_fW;
+	mtx.m_af[1][1] = 1.0f - (2.0f * qValue.m_fX * qValue.m_fX + 2.0f * qValue.m_fZ * qValue.m_fZ);
+	mtx.m_af[1][2] = 2.0f * qValue.m_fY * qValue.m_fZ + 2.0f * qValue.m_fX * qValue.m_fW;
+	mtx.m_af[1][3] = 0.0f;
+	mtx.m_af[2][0] = 2.0f * qValue.m_fX * qValue.m_fZ + 2.0f * qValue.m_fY * qValue.m_fW;
+	mtx.m_af[2][1] = 2.0f * qValue.m_fY * qValue.m_fZ - 2.0f * qValue.m_fX * qValue.m_fW;
+	mtx.m_af[2][2] = 1.0f - (2.0f * qValue.m_fX * qValue.m_fX + 2.0f * qValue.m_fY * qValue.m_fY);
+	mtx.m_af[2][3] = 0.0f;
+	mtx.m_af[3][0] = 0.0f;
+	mtx.m_af[3][1] = 0.0f;
+	mtx.m_af[3][2] = 0.0f;
+	mtx.m_af[3][3] = 1.0f;
+	return mtx;
 }
 
 //--------------------------------------------------------------------------------
