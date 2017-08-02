@@ -261,19 +261,21 @@ public:
 	static float			Vec3Dot(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static float			VecDistance(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static float			VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
-	static void				Vec3TransformCoord(CKFVec3& vVec, const CKFMtx44& mtxRot);
-	static void				Vec3TransformNormal(CKFVec3& vVec, const CKFMtx44& mtxRot);
+	static CKFVec3			Vec3TransformCoord(const CKFVec3& vVec, const CKFMtx44& mtxRot);
+	static CKFVec3			Vec3TransformNormal(const CKFVec3& vVec, const CKFMtx44& mtxRot);
 	static float			Vec2Radian(const CKFVec2& vValue);
 	static float			RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
 	static float			RadianBetweenVec(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static CKFVec3			EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo);
+	static CKFVec3			TransformInverse(const CKFMtx44& mtx, const CKFVec3& vVec);
 
 	//MatrixåvéZ
 	static void				MtxIdentity(CKFMtx44& mtx);
 	static void				MtxRotAxis(CKFMtx44& mtxRot, const CKFVec3& vAxis, const float& fAngle);
 	static void				MtxRotationYawPitchRoll(CKFMtx44& mtxRot, const CKFVec3& vRot);
 	static void				MtxTranslation(CKFMtx44& mtxTrans, const CKFVec3& vPos);
-
+	static CKFMtx44			MtxTranspose(const CKFMtx44& mtx);
+	
 #ifdef USING_DIRECTX
 	static CKFMtx44			ChangeDXMtxToMtx44(const D3DXMATRIX& mtx);
 #endif

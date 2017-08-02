@@ -719,7 +719,6 @@ CKFColor::operator D3DCOLORVALUE() const
 	vAnswer.g = m_fG;
 	vAnswer.b = m_fB;
 	vAnswer.a = m_fA;
-
 	return vAnswer;
 }
 
@@ -994,6 +993,29 @@ CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo
 }
 
 //--------------------------------------------------------------------------------
+//  TransformInverse
+//	Vector3間の角度をx,y,z回転式で算出
+//--------------------------------------------------------------------------------
+CKFVec3	CKFMath::TransformInverse(const CKFMtx44& mtx, const CKFVec3& vVec)
+{
+	CKFVec3 vWork = vVec;
+	vWork.m_fX -= mtx.m_af[3][0];
+	vWork.m_fY -= mtx.m_af[3][1];
+	vWork.m_fZ -= mtx.m_af[3][2];
+	CKFVec3 vAnswer;
+	vAnswer.m_fX = vWork.m_fX * mtx.m_af[0][0] +
+		vWork.m_fY * mtx.m_af[0][1] +
+		vWork.m_fZ * mtx.m_af[0][2];
+	vAnswer.m_fY = vWork.m_fX * mtx.m_af[1][0] +
+		vWork.m_fY * mtx.m_af[1][1] +
+		vWork.m_fZ * mtx.m_af[1][2];
+	vAnswer.m_fZ = vWork.m_fX * mtx.m_af[2][0] +
+		vWork.m_fY * mtx.m_af[2][1] +
+		vWork.m_fZ * mtx.m_af[2][2];
+	return vAnswer;
+}
+
+//--------------------------------------------------------------------------------
 //  Matrix
 //--------------------------------------------------------------------------------
 #ifdef USING_DIRECTX
@@ -1118,6 +1140,23 @@ void CKFMath::MtxTranslation(CKFMtx44& mtxTrans, const CKFVec3 &vPos)
 }
 
 //--------------------------------------------------------------------------------
+//	MtxTranspose
+//	行列のトランスポース
+//--------------------------------------------------------------------------------
+CKFMtx44 CKFMath::MtxTranspose(const CKFMtx44& mtx)
+{
+	CKFMtx44 mtxOut;
+	for (int nCntY = 0; nCntY < 4; nCntY++)
+	{
+		for (int nCntX = 0; nCntX < 4; nCntX++)
+		{
+			mtxOut.m_af[nCntY][nCntX] = mtx.m_af[nCntX][nCntY];
+		}
+	}
+	return mtxOut;
+}
+
+//--------------------------------------------------------------------------------
 //  Quaternion
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -1206,7 +1245,6 @@ CKFQuaternion CKFMath::MtxToQuaternion(const CKFMtx44& mtxRot)
 	qValue.m_fY = qDx.y;
 	qValue.m_fZ = qDx.z;
 	qValue.m_fW = qDx.w;
-
 	return qValue;
 }
 

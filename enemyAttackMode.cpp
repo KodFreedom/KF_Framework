@@ -39,7 +39,8 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	{
 		if (pActor->GetMotionInfo().nKeyNow == 3 && !enemy.m_pAttackCollider)
 		{
-			enemy.m_pAttackCollider = new CSphereColliderComponent(enemy.m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
+			enemy.m_pAttackCollider = new CSphereColliderComponent(enemy.m_pGameObj, CS::DYNAMIC, 0.9f);
+			enemy.m_pAttackCollider->SetOffset(CKFVec3(0.0f, 0.6f, 2.1f));
 			enemy.m_pAttackCollider->SetTag("weapon");
 			enemy.m_pAttackCollider->SetTrigger(true);
 		}

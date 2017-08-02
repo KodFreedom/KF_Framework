@@ -61,7 +61,7 @@ void CModeDemo::Init(void)
 	//ゲームオブジェクトの初期化
 	CGameObject3D::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 
-	for (int nCnt = 0; nCnt < 10; nCnt++)
+	for (int nCnt = 0; nCnt < 1; nCnt++)
 	{
 		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 4.0f, -10.0f), CKFVec3(10.0f, 5.0f, 10.0f));
 		CKFVec3 vRot = CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
@@ -70,7 +70,7 @@ void CModeDemo::Init(void)
 	
 	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CGameObject* pPlayer = CGameObjectActor::CreatePlayer(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
+	//CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
 
 	m_pCamera->SetTarget(pPlayer);
 

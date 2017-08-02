@@ -86,6 +86,7 @@ public:
 
 	virtual void LateUpdate(void)
 	{
+		m_pRigidbody->LateUpdate();
 		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->LateUpdate(); }
 		m_pMesh->Update();
 	}

@@ -38,7 +38,8 @@ void CPlayerAttackStatus::Update(CPlayerBehaviorComponent& player)
 	{
 		if (pActor->GetMotionInfo().nKeyNow == 3 && !player.m_pAttackCollider)
 		{
-			player.m_pAttackCollider = new CSphereColliderComponent(player.m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
+			player.m_pAttackCollider = new CSphereColliderComponent(player.m_pGameObj, CS::DYNAMIC, 0.9f);
+			player.m_pAttackCollider->SetOffset(CKFVec3(0.0f, 0.6f, 2.1f));
 			player.m_pAttackCollider->SetTag("weapon");
 			player.m_pAttackCollider->SetTrigger(true);
 		}

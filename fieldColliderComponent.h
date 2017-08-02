@@ -34,7 +34,7 @@ public:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	CFieldColliderComponent(CGameObject* const pGameObj, const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize)
-		: CColliderComponent(pGameObj, CM::COL_FIELD, CM::STATIC)
+		: CColliderComponent(pGameObj, CS::COL_FIELD, CS::STATIC)
 		, m_nNumBlockX(nNumBlockX)
 		, m_nNumBlockZ(nNumBlockZ)
 		, m_vBlockSize(vBlockSize)
@@ -46,7 +46,6 @@ public:
 
 	bool	Init(void) override;
 	void	Uninit(void) override;
-	void	Update(void) override;
 
 	//Getä÷êî
 	INFO		GetPointInfo(const CKFVec3& vPos);

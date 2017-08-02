@@ -31,14 +31,6 @@ void CFieldColliderComponent::Uninit(void)
 }
 
 //--------------------------------------------------------------------------------
-//  çXêVèàóù
-//--------------------------------------------------------------------------------
-void CFieldColliderComponent::Update(void)
-{
-	
-}
-
-//--------------------------------------------------------------------------------
 //  fieldÇÃèÓïÒéÊìæ
 //--------------------------------------------------------------------------------
 CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec3& vPos)
@@ -47,8 +39,8 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 	info.bInTheField = false;
 	info.fHeight = 0.0f;
 	info.vFaceNormal = CKFVec3(0.0f);
-
-	CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	CKFVec3 vPosCenter = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
+	CKFVec3 vStartPos = vPosCenter + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
 	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 
@@ -122,7 +114,8 @@ list<CFieldColliderComponent::INFO> CFieldColliderComponent::GetRangeInfo(const 
 void CFieldColliderComponent::MakeVertex(void)
 {
 	float fHeight = 0.0f;
-	CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	CKFVec3 vPos = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
+	CKFVec3 vStartPos = vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	for (int nCntZ = 0; nCntZ < m_nNumBlockZ + 1; nCntZ++)
 	{
 		if (nCntZ <= (m_nNumBlockZ + 1) / 4)

@@ -163,7 +163,6 @@
     <ClCompile Include="animatorComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
-    <ClCompile Include="colliderManager.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="drawComponent.cpp" />
     <ClCompile Include="enemyAttackMode.cpp" />
@@ -218,6 +217,7 @@
     <ClInclude Include="3DMeshDrawComponent.h" />
     <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
+    <ClInclude Include="AABBColliderComponent.h" />
     <ClInclude Include="actorBehaviorComponent.h" />
     <ClInclude Include="actorMeshDrawComponent.h" />
     <ClInclude Include="actorMeshComponent.h" />
@@ -229,7 +229,6 @@
     <ClInclude Include="enemyAttackMode.h" />
     <ClInclude Include="enemyNormalMode.h" />
     <ClInclude Include="colliderComponent.h" />
-    <ClInclude Include="colliderManager.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="drawComponent.h" />
     <ClInclude Include="editorCamera.h" />
@@ -267,6 +266,8 @@
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="motionInfo.h" />
+    <ClInclude Include="OBBColliderComponent.h" />
+    <ClInclude Include="planeColliderComponent.h" />
     <ClInclude Include="playerAttackStatus.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerJumpStatus.h" />

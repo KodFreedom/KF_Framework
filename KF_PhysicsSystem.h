@@ -39,6 +39,7 @@ public:
 	CKFVec3					m_vCollisionNormal;
 	CKFVec3					m_vCollisionPos;
 	float					m_fPenetration;
+	CKFMtx44				m_mtxToWorld;
 };
 
 //--------------------------------------------------------------------------------
@@ -86,10 +87,11 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
-	void	Resolve(CCollision& collision);
-	void	ResolveVelocity(CCollision& collision);
-	void	ResolveInterpenetration(CCollision& collision);
-	float	CalculateSeparatingVelocity(CCollision& collision);
+	void	resolve(CCollision& collision);
+	void	resolveVelocity(CCollision& collision);
+	void	resolveInterpenetration(CCollision& collision);
+	float	calculateSeparatingVelocity(CCollision& collision);
+	void	calculateCollisionBasis(CCollision& collision);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîêÈåæ

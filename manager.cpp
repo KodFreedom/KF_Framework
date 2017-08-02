@@ -16,13 +16,13 @@
 #include "lightManager.h"
 #include "materialManager.h"
 #include "gameObjectManager.h"
-#include "colliderManager.h"
 #include "soundManager.h"
 #include "UISystem.h"
 #include "rendererDX.h"
 #include "mode.h"
 #include "modeDemo.h"
 #include "fade.h"
+#include "KF_CollisionSystem.h"
 #include "KF_PhysicsSystem.h"
 
 //--------------------------------------------------------------------------------
@@ -44,11 +44,11 @@ CManager::CManager()
 	, m_pMaterialManager(nullptr)
 	, m_pModelManager(nullptr)
 	, m_pGameObjectManager(nullptr)
-	, m_pColliderManager(nullptr)
 	, m_pSoundManager(nullptr)
 	, m_pUISystem(nullptr)
 	, m_pMode(nullptr)
 	, m_pFade(nullptr)
+	, m_pCollisionSystem(nullptr)
 	, m_pPhysicsSystem(nullptr)
 {
 }
@@ -73,10 +73,6 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//ランダム
 	CKFMath::InitRandom();
 
-	//物理演算システム
-	m_pPhysicsSystem = new CKFPhysicsSystem;
-	m_pPhysicsSystem->Init();
-
 	//入力の生成
 	m_pInputManager = new CInputManager;
 	m_pInputManager->Init(hInstance, hWnd);
@@ -100,9 +96,13 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pMaterialManager = new CMaterialManager;
 	m_pMaterialManager->Init();
 
-	//コリジョンマネージャの生成
-	m_pColliderManager = new CColliderManager;
-	m_pColliderManager->Init();
+	//コリジョンシステム
+	m_pCollisionSystem = new CKFCollisionSystem;
+	m_pCollisionSystem->Init();
+
+	//物理演算システム
+	m_pPhysicsSystem = new CKFPhysicsSystem;
+	m_pPhysicsSystem->Init();
 
 	//ゲームオブジェクトマネージャの生成
 	m_pGameObjectManager = new CGameObjectManager;
@@ -154,13 +154,11 @@ void CManager::Uninit(void)
 	//UIシステムの破棄
 	SAFE_RELEASE(m_pUISystem);
 
-	//コリジョンマネージャの破棄
-	if (m_pColliderManager)
-	{
-		m_pColliderManager->Uninit();
-		delete m_pColliderManager;
-		m_pColliderManager = nullptr;
-	}
+	//物理演算システムの破棄
+	SAFE_RELEASE(m_pPhysicsSystem);
+
+	//コリジョンシステムの破棄
+	SAFE_RELEASE(m_pCollisionSystem);
 
 	//マテリアルマネージャの破棄
 	if (m_pMaterialManager)
@@ -199,9 +197,6 @@ void CManager::Uninit(void)
 		m_pInputManager = nullptr;
 	}
 
-	//物理演算システムの破棄
-	SAFE_RELEASE(m_pPhysicsSystem);
-
 	//レンダラーの破棄
 	SAFE_RELEASE(m_pRenderer);
 }
@@ -221,7 +216,7 @@ void CManager::Update(void)
 	m_pMode->Update();
 
 	//コリジョン更新
-	m_pColliderManager->Update();
+	m_pCollisionSystem->Update();
 
 	//物理演算更新
 	m_pPhysicsSystem->Update();
@@ -234,6 +229,9 @@ void CManager::LateUpdate(void)
 {
 	//モード更新
 	m_pMode->LateUpdate();
+
+	//コリジョン更新
+	m_pCollisionSystem->LateUpdate();
 
 	//UI更新
 	m_pUISystem->UpdateAll();
@@ -255,7 +253,7 @@ void CManager::Draw(void)
 			m_pMode->Draw();
 
 #ifdef _DEBUG
-			m_pColliderManager->DrawCollider();
+			m_pCollisionSystem->DrawCollider();
 #endif
 			//UI描画
 			m_pUISystem->DrawAll();

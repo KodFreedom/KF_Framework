@@ -258,9 +258,6 @@
     <ClCompile Include="sphereColliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="colliderManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="3DRigidbodyComponent.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
@@ -446,9 +443,6 @@
     <ClInclude Include="fieldColliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="colliderManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="3DRigidbodyComponent.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
@@ -556,6 +550,15 @@
     </ClInclude>
     <ClInclude Include="KF_PhysicsSystem.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="planeColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="AABBColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="OBBColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

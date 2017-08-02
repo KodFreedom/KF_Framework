@@ -172,17 +172,20 @@ CKFMtx44 CTransformComponent::GetMatrixNext(void)
 {
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
-	CKFMtx44 mtxPos;
 
-	//単位行列に初期化
-	CKFMath::MtxIdentity(mtxWorld);
-
-	//回転(Y->X->Z)
-	mtxWorld *= GetMatrixRotNext();
+	//回転
+	mtxWorld = GetMatrixRotNext();
 
 	//平行移動
-	CKFMath::MtxTranslation(mtxPos, m_vPosNext);
-	mtxWorld *= mtxPos;
+	mtxWorld.m_af[3][0] = m_vPosNext.m_fX;
+	mtxWorld.m_af[3][1] = m_vPosNext.m_fY;
+	mtxWorld.m_af[3][2] = m_vPosNext.m_fZ;
+
+	//親のマトリクス取得
+	if (m_pParent)
+	{
+		mtxWorld *= m_pParent->GetMatrixNext();
+	}
 
 	return mtxWorld;
 }

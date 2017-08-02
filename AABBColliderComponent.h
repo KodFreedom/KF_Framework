@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
-//	sphereColliderコンポネント
-//　sphereColliderComponent.h
+//	AABBColliderコンポネント
+//　AABBColliderComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-06-04
+//	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
 #pragma once
 
@@ -15,28 +15,28 @@
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  sphereColliderポネントクラス
+//  AABBColliderポネントクラス
 //--------------------------------------------------------------------------------
-class CSphereColliderComponent : public CColliderComponent
+class CAABBColliderComponent : public CColliderComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CSphereColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const float& fRadius)
-		: CColliderComponent(pGameObj, CS::COL_SPHERE, mode)
-		, m_fRadius(fRadius) {}
+	CAABBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
+		: CColliderComponent(pGameObj, CS::COL_AABB, mode)
+		, m_vHalfSize(vHalfSize) {}
 
-	~CSphereColliderComponent() {}
+	~CAABBColliderComponent() {}
 
 	bool	Init(void) override { return true; }
 
 	//Get関数
-	float	GetRadius(void) { return m_fRadius; }
+	CKFVec3	GetHalfSize(void) { return m_vHalfSize; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	float		m_fRadius;	//半径
+	CKFVec3 m_vHalfSize;
 };

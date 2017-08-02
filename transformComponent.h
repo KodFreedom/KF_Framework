@@ -23,7 +23,7 @@ public:
 	CTransformComponent(CGameObject* const pGameObj);
 	~CTransformComponent() {}
 	
-	bool		Init(void) override { return true; }
+	bool			Init(void) override { return true; }
 	void			Uninit(void) override {}
 	void			UpdateMatrix(void);	
 	void			UpdateMatrix(const CKFMtx44& mtxParent);
@@ -33,10 +33,6 @@ public:
 	void			RegisterChild(CTransformComponent* pChild);
 	void			DeregisterChild(CTransformComponent* pChild);
 	void			RegisterParent(CTransformComponent* pParent, const CKFVec3& vOffsetPos = CKFVec3(0.0f), const CKFVec3& vOffsetRot = CKFVec3(0.0f));
-
-	//Matrix
-	void			CalculateMtxThis(void);
-	void			CalculateMtxThis(const CKFMtx44& mtxParent);
 
 	//Get関数
 	CKFVec3			GetPos(void) const { return m_vPos; }
@@ -81,6 +77,12 @@ public:
 
 private:
 	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	void			CalculateMtxThis(void);
+	void			CalculateMtxThis(const CKFMtx44& mtxParent);
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	//パラメーター
@@ -95,10 +97,10 @@ private:
 	CKFVec3		m_vRight;		//オブジェクトの右方向
 	CKFVec3		m_vRightNext;	//次のオブジェクトの右方向
 	CKFMtx44	m_mtxThis;		//自分の回転平行移動行列
-
+	
 	//親子関係
 	CTransformComponent*			m_pParent;
-	list<CTransformComponent*> m_listChildren;
+	list<CTransformComponent*>		m_listChildren;
 	CKFVec3							m_vOffsetPos;
 	CKFVec3							m_vOffsetRot;
 };

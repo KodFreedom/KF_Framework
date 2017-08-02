@@ -11,8 +11,6 @@
 #include "colliderComponent.h"
 #include "manager.h"
 #include "gameObject.h"
-#include "fade.h"
-#include "modeResult.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
@@ -24,27 +22,14 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::COL_TYPE& type, const CM::MODE& mode, const CKFVec3& vPos) : CComponent(pGameObj)
+CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode)
+	: CComponent(pGameObj)
 	, m_type(type)
 	, m_mode(mode)
 	, m_bTrigger(false)
-	, m_vPos(vPos)
 {
-	if (m_type < CM::COL_MAX)
-	{
-		m_itr = GetManager()->GetColliderManager()->SaveCollider(mode, type, this);
-	}
-	else
-	{
-		switch (m_type)
-		{
-		case CM::COL_FIELD:
-			m_itr = GetManager()->GetColliderManager()->SaveField(this);
-			break;
-		default:
-			break;
-		}
-	}
+	CKFMath::MtxIdentity(m_mtxWorld);
+	CKFMath::MtxIdentity(m_mtxOffset);
 }
 
 //--------------------------------------------------------------------------------
@@ -52,21 +37,36 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CM::CO
 //--------------------------------------------------------------------------------
 void CColliderComponent::Uninit(void)
 {
-	if (m_type < CM::COL_MAX)
-	{
-		GetManager()->GetColliderManager()->ReleaseCollider(m_mode, m_type, m_itr);
-	}
-	else
-	{
-		switch (m_type)
-		{
-		case CM::COL_FIELD:
-			GetManager()->GetColliderManager()->ReleaseField(m_itr);
-			break;
-		default:
-			break;
-		}
-	}
+}
+
+//--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void CColliderComponent::Update(void)
+{
+	m_mtxWorld = m_mtxOffset;
+	m_mtxWorld *= GetGameObject()->GetTransformComponent()->GetMatrixNext();
+	GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
+}
+
+//--------------------------------------------------------------------------------
+//  Offset設定
+//--------------------------------------------------------------------------------
+void CColliderComponent::SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
+{
+	CKFMath::MtxRotationYawPitchRoll(m_mtxOffset, vRot);
+	m_mtxOffset.m_af[3][0] = vPos.m_fX;
+	m_mtxOffset.m_af[3][1] = vPos.m_fY;
+	m_mtxOffset.m_af[3][2] = vPos.m_fZ;
+}
+
+//--------------------------------------------------------------------------------
+//  ローカル座標取得
+//--------------------------------------------------------------------------------
+const CKFVec3 CColliderComponent::GetLocalPos(void) const
+{
+	CKFVec3 vPos = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
+	return vPos;
 }
 
 //--------------------------------------------------------------------------------
@@ -74,8 +74,6 @@ void CColliderComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 const CKFVec3 CColliderComponent::GetWorldPos(void) const
 {
-	CKFMtx44 mtx = GetGameObject()->GetTransformComponent()->GetMatrixNext();
-	CKFVec3 vPos = m_vPos;
-	CKFMath::Vec3TransformCoord(vPos, mtx);
+	CKFVec3 vPos = CKFVec3(m_mtxWorld.m_af[3][0], m_mtxWorld.m_af[3][1], m_mtxWorld.m_af[3][2]);
 	return vPos;
 }

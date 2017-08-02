@@ -33,13 +33,14 @@ public:
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}
 	void	Update(void) override;
+	void	LateUpdate(void) override;
 
 	//GetŠÖ”
 	CKFVec3	GetVelocity(void) const { return m_vVelocity; }
 	bool	IsOnGround(void) const { return m_bOnGround; }
 
 	//SetŠÖ”
-	void	MovePos(const CKFVec3& vMovement) { m_vMovement = vMovement; }
+	void	MovePos(const CKFVec3& vMovement) { m_vMovement += vMovement; }
 	void	SetMass(const float& fMass);
 	void	SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }
 	void	SetOnGround(const bool& bValue) { m_bOnGround = bValue; }
@@ -60,17 +61,19 @@ private:
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`
 	//--------------------------------------------------------------------------------
-	float	m_fMass;			//¿—Ê
-	float	m_fInverseMass;		//¿—Ê‚Ì‹t”
-	float	m_fDrag;			//’ïRŒW”(‹ó‹C’ïR)
-	float	m_fAngularDrag;		//‰ñ“]’ïRŒW”
-	float	m_fFriction;		//–€CŒW”
-	float	m_fBounciness;		//’µ‚Ë•Ô‚èŒW”
-	CKFVec3	m_vGravity;			//d—Í
-	CKFVec3	m_vMovement;		//ˆÚ“®—Ê
-	CKFVec3	m_vVelocity;		//‘¬“x
-	CKFVec3	m_vForceAccum;		//‡‚í‚¹‚½ì—p—Í
-	CKFVec3	m_vAcceleration;	//‰Á‘¬“x
-	bool	m_bOnGround;		//’…—¤ƒtƒ‰ƒbƒO
-	BYTE	m_bRotLock;			//‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO
+	float		m_fMass;					//¿—Ê
+	float		m_fInverseMass;				//¿—Ê‚Ì‹t”
+	float		m_fDrag;					//’ïRŒW”(‹ó‹C’ïR)
+	float		m_fAngularDrag;				//‰ñ“]’ïRŒW”
+	float		m_fFriction;				//–€CŒW”
+	float		m_fBounciness;				//’µ‚Ë•Ô‚èŒW”
+	CKFVec3		m_vGravity;					//d—Í
+	CKFVec3		m_vMovement;				//ˆÚ“®—Ê
+	CKFVec3		m_vVelocity;				//‘¬“x
+	CKFVec3		m_vAngularVelocity;
+	CKFVec3		m_vForceAccum;				//‡‚í‚¹‚½ì—p—Í
+	CKFVec3		m_vTorqueAccum;				//‰ñ“]—Í
+	CKFMtx44	m_mtxInverseInertisTensor;	
+	bool		m_bOnGround;				//’…—¤ƒtƒ‰ƒbƒO
+	BYTE		m_bRotLock;					//‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO
 };

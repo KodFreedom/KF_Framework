@@ -21,11 +21,11 @@ class CLightManager;
 class CMaterialManager;
 class CModelManager;
 class CGameObjectManager;
-class CColliderManager;
 class CSoundManager;
 class CUISystem;
 class CMode;
 class CFade;
+class CKFCollisionSystem;
 class CKFPhysicsSystem;
 
 //--------------------------------------------------------------------------------
@@ -55,11 +55,11 @@ public:
 	CMaterialManager*	GetMaterialManager(void) { return m_pMaterialManager; }
 	CModelManager*		GetModelManager(void) { return m_pModelManager; }
 	CGameObjectManager*	GetGameObjectManager(void) { return m_pGameObjectManager; }
-	CColliderManager*	GetColliderManager(void) { return m_pColliderManager; }
 	CSoundManager*		GetSoundManager(void) { return m_pSoundManager; }
 	CUISystem*			GetUISystem(void) { return m_pUISystem; }
 	CMode*				GetMode(void) { return m_pMode; }
 	CFade*				GetFade(void) { return m_pFade; }
+	CKFCollisionSystem*	GetCollisionSystem(void) { return m_pCollisionSystem; }
 	CKFPhysicsSystem*	GetPhysicsSystem(void) { return m_pPhysicsSystem; }
 
 private:
@@ -71,10 +71,10 @@ private:
 	CMaterialManager*	m_pMaterialManager;
 	CModelManager*		m_pModelManager;
 	CGameObjectManager*	m_pGameObjectManager;
-	CColliderManager*	m_pColliderManager;
 	CSoundManager*		m_pSoundManager;
 	CUISystem*			m_pUISystem;
 	CMode*				m_pMode;
 	CFade*				m_pFade;
+	CKFCollisionSystem*	m_pCollisionSystem;
 	CKFPhysicsSystem*	m_pPhysicsSystem;
 };

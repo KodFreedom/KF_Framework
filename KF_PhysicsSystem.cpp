@@ -47,7 +47,7 @@ void CKFPhysicsSystem::Update(void)
 {
 	for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 	{
-		Resolve(*itr);
+		resolve(*itr);
 		itr = m_listCollision.erase(itr);
 	}
 }
@@ -63,16 +63,16 @@ void CKFPhysicsSystem::RegistryCollision(CCollision& collision)
 //--------------------------------------------------------------------------------
 //  衝突処理
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::Resolve(CCollision& collision)
+void CKFPhysicsSystem::resolve(CCollision& collision)
 {
-	ResolveVelocity(collision);
-	ResolveInterpenetration(collision);
+	resolveVelocity(collision);
+	resolveInterpenetration(collision);
 }
 
 //--------------------------------------------------------------------------------
 //  反発速度の算出
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::ResolveVelocity(CCollision& collision)
+void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 {
 	//変数宣言
 	CKFVec3	vAccCausedVelocity;				//衝突方向の作用力(加速度)
@@ -92,7 +92,7 @@ void CKFPhysicsSystem::ResolveVelocity(CCollision& collision)
 	float	fBounciness;					//跳ね返り係数
 
 	//分離速度計算
-	fSeparatingVelocity = CalculateSeparatingVelocity(collision);
+	fSeparatingVelocity = calculateSeparatingVelocity(collision);
 
 	//分離速度チェック
 	//衝突法線の逆方向になれば計算しない
@@ -200,7 +200,7 @@ void CKFPhysicsSystem::ResolveVelocity(CCollision& collision)
 //--------------------------------------------------------------------------------
 //  めり込みの解決
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::ResolveInterpenetration(CCollision& collision)
+void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 {
 	//衝突しない
 	if (collision.m_fPenetration <= 0) { return; }
@@ -232,7 +232,7 @@ void CKFPhysicsSystem::ResolveInterpenetration(CCollision& collision)
 //--------------------------------------------------------------------------------
 //  分離速度の算出
 //--------------------------------------------------------------------------------
-float CKFPhysicsSystem::CalculateSeparatingVelocity(CCollision& collision)
+float CKFPhysicsSystem::calculateSeparatingVelocity(CCollision& collision)
 {
 	CKFVec3 vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity;
 
@@ -245,4 +245,52 @@ float CKFPhysicsSystem::CalculateSeparatingVelocity(CCollision& collision)
 	//内積計算
 	float fDot = CKFMath::Vec3Dot(vRelativeVelocity, collision.m_vCollisionNormal);
 	return fDot;
+}
+
+//--------------------------------------------------------------------------------
+//  衝突法線をX軸として、衝突座標係の算出
+//--------------------------------------------------------------------------------
+void CKFPhysicsSystem::calculateCollisionBasis(CCollision& collision)
+{
+	CKFVec3 vAxisY, vAxisZ;
+
+	//衝突法線が世界X軸と世界Y軸どっちとの角度が近い
+	if (fabsf(collision.m_vCollisionNormal.m_fX) > fabsf(collision.m_vCollisionNormal.m_fY))
+	{//Y
+		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.m_fX * collision.m_vCollisionNormal.m_fX
+			+ collision.m_vCollisionNormal.m_fZ * collision.m_vCollisionNormal.m_fZ);
+
+		vAxisZ.m_fX = collision.m_vCollisionNormal.m_fZ * fScale;
+		vAxisZ.m_fY = 0.0f;
+		vAxisZ.m_fZ = collision.m_vCollisionNormal.m_fX * fScale;
+
+		vAxisY.m_fX = collision.m_vCollisionNormal.m_fY * vAxisZ.m_fX;
+		vAxisY.m_fY = collision.m_vCollisionNormal.m_fZ * vAxisZ.m_fX
+			- collision.m_vCollisionNormal.m_fX * vAxisZ.m_fZ;
+		vAxisY.m_fZ = -collision.m_vCollisionNormal.m_fY * vAxisZ.m_fX;
+	}
+	else
+	{//X
+		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.m_fY * collision.m_vCollisionNormal.m_fY
+			+ collision.m_vCollisionNormal.m_fZ * collision.m_vCollisionNormal.m_fZ);
+
+		vAxisZ.m_fX = 0.0f;
+		vAxisZ.m_fY = -collision.m_vCollisionNormal.m_fZ * fScale;
+		vAxisZ.m_fZ = collision.m_vCollisionNormal.m_fY * fScale;
+
+		vAxisY.m_fX = collision.m_vCollisionNormal.m_fY * vAxisZ.m_fZ
+			- collision.m_vCollisionNormal.m_fZ * vAxisZ.m_fY;
+		vAxisY.m_fY = -collision.m_vCollisionNormal.m_fX * vAxisZ.m_fZ;
+		vAxisY.m_fZ = collision.m_vCollisionNormal.m_fX * vAxisZ.m_fY;
+	}
+
+	collision.m_mtxToWorld.m_af[0][0] = collision.m_vCollisionNormal.m_fX;
+	collision.m_mtxToWorld.m_af[0][1] = collision.m_vCollisionNormal.m_fY;
+	collision.m_mtxToWorld.m_af[0][2] = collision.m_vCollisionNormal.m_fZ;
+	collision.m_mtxToWorld.m_af[1][0] = vAxisY.m_fX;
+	collision.m_mtxToWorld.m_af[1][1] = vAxisY.m_fY;
+	collision.m_mtxToWorld.m_af[1][2] = vAxisY.m_fZ;
+	collision.m_mtxToWorld.m_af[2][0] = vAxisZ.m_fX;
+	collision.m_mtxToWorld.m_af[2][1] = vAxisZ.m_fY;
+	collision.m_mtxToWorld.m_af[2][2] = vAxisZ.m_fZ;
 }

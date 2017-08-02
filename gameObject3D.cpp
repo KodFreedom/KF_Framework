@@ -17,6 +17,7 @@
 #include "modelMeshComponent.h"
 #include "3DMeshDrawComponent.h"
 #include "sphereColliderComponent.h"
+#include "OBBColliderComponent.h"
 #include "fieldColliderComponent.h"
 #include "3DRigidbodyComponent.h"
 
@@ -106,7 +107,7 @@ CGameObject3D* CGameObject3D::CreateCube(const CKFVec3& vPos, const CKFVec3& vRo
 	pObj->m_pMesh = pMesh;
 	pObj->m_pDraw = new C3DMeshDrawComponent(pMesh, pObj);
 	pObj->m_pDraw->SetTexName("nomal_cube.jpg");
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CColliderManager::DYNAMIC, CKFVec3(0.0f), vScale.m_fX * 0.5f);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, vScale.m_fX * 0.5f);
 	pObj->AddCollider(pCollider);
 	pObj->m_pRigidbody = new C3DRigidbodyComponent(pObj);
 

@@ -11,7 +11,6 @@
 #include "main.h"
 #include "actionGameCamera.h"
 #include "manager.h"
-#include "colliderManager.h"
 #include "rendererDX.h"
 #include "inputManager.h"
 #include "gameObject.h"
@@ -248,28 +247,28 @@ void CActionGameCamera::SwitchParam(void)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::CheckCollision(void)
 {
-	CColliderManager::HIT_INFO hitInfo;
-	m_vPosEyeNext = m_vPosAtNext - m_vVecLookNext * m_fDistanceNext;
+	//CColliderManager::HIT_INFO hitInfo;
+	//m_vPosEyeNext = m_vPosAtNext - m_vVecLookNext * m_fDistanceNext;
 
-	if (GetManager()->GetColliderManager()->SphereCast(m_vPosEyeNext, sc_fCollisionRadius, hitInfo))
-	{//衝突したら
-		//新しいカメラの算出-
-		CKFVec3 vNewPosEye = hitInfo.vPos + hitInfo.vNormal * sc_fCollisionRadius;
-		
-		//新しい前方向の算出
-		m_vVecLookNext = m_vPosAtNext - vNewPosEye;
+	//if (GetManager()->GetColliderManager()->SphereCast(m_vPosEyeNext, sc_fCollisionRadius, hitInfo))
+	//{//衝突したら
+	//	//新しいカメラの算出-
+	//	CKFVec3 vNewPosEye = hitInfo.vPos + hitInfo.vNormal * sc_fCollisionRadius;
+	//	
+	//	//新しい前方向の算出
+	//	m_vVecLookNext = m_vPosAtNext - vNewPosEye;
 
-		//新しい距離の算出
-		m_fDistanceNext = CKFMath::VecMagnitude(m_vVecLookNext);
+	//	//新しい距離の算出
+	//	m_fDistanceNext = CKFMath::VecMagnitude(m_vVecLookNext);
 
-		//if (m_vVecLookNext.m_fY != 0.0f)
-		//{
-		//	fNewDis = fabsf((vNewPos.m_fY - m_vPosAtNext.m_fY) / m_vVecLookNext.m_fY);
-		//}
-		//m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, fNewDis, sc_fZoomLerpTime);
-	}
-	else
-	{
-		m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, sc_fDistanceDef, sc_fZoomLerpTime);
-	}
+	//	//if (m_vVecLookNext.m_fY != 0.0f)
+	//	//{
+	//	//	fNewDis = fabsf((vNewPos.m_fY - m_vPosAtNext.m_fY) / m_vVecLookNext.m_fY);
+	//	//}
+	//	//m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, fNewDis, sc_fZoomLerpTime);
+	//}
+	//else
+	//{
+	//	m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, sc_fDistanceDef, sc_fZoomLerpTime);
+	//}
 }

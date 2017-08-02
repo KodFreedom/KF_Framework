@@ -40,7 +40,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 	pObj->m_pRigidbody = pRb;
 	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, pRb);
 	pObj->m_listpBehavior.push_back(pPb);
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
@@ -82,9 +82,9 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelNam
 	pObj->m_listpBehavior.push_back(pEb);
 
 	//コライダー
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 0.6f);
+	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
 	pCollider->SetTag("body");
-	CSphereColliderComponent* pDetector = new CSphereColliderComponent(pObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 0.0f), 6.0f);
+	CSphereColliderComponent* pDetector = new CSphereColliderComponent(pObj, CS::DYNAMIC, 6.0f);
 	pDetector->SetTrigger(true);
 	pDetector->SetTag("detector");
 	pObj->AddCollider(pCollider);

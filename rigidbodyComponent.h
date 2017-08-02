@@ -42,6 +42,7 @@ public:
 	virtual bool	Init(void) override = 0;
 	virtual void	Uninit(void) override = 0;
 	virtual void	Update(void) = 0;
+	virtual void	LateUpdate(void) = 0;
 
 	//Getä÷êî
 	const RB_TYPE	GetType(void) const { return m_type; }
@@ -70,5 +71,6 @@ public:
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}
 	void	Update(void) override {}
+	void	LateUpdate(void) override {}
 	void	Release(void) override {}
 }; 
