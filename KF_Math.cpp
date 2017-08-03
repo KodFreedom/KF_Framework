@@ -880,30 +880,34 @@ float CKFMath::VecDistanceSquare(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
 //  Vec3TransformCoord
 //	âÒì]çsóÒÇ…Ç∆Ç¡ÇƒVec3ÇâÒì]Ç∑ÇÈ
 //--------------------------------------------------------------------------------
-void CKFMath::Vec3TransformCoord(CKFVec3& vVec, const CKFMtx44 &mtxRot)
+CKFVec3 CKFMath::Vec3TransformCoord(const CKFVec3& vVec, const CKFMtx44 &mtxRot)
 {
 	CKFVec4 vVec4 = CKFVec4(vVec, 1.0f);
+	CKFVec3 vAnswer;
 	vVec4 *= mtxRot;
 
 	if (vVec4.m_fW != 0.0f)
 	{
-		vVec.m_fX = vVec4.m_fX / vVec4.m_fW;
-		vVec.m_fY = vVec4.m_fY / vVec4.m_fW;
-		vVec.m_fZ = vVec4.m_fZ / vVec4.m_fW;
+		vAnswer.m_fX = vVec4.m_fX / vVec4.m_fW;
+		vAnswer.m_fY = vVec4.m_fY / vVec4.m_fW;
+		vAnswer.m_fZ = vVec4.m_fZ / vVec4.m_fW;
 	}
+	return vAnswer;
 }
 
 //--------------------------------------------------------------------------------
 //  Vec3TransformNormal
 //	âÒì]çsóÒÇ…Ç∆Ç¡ÇƒVec3(ÉxÉNÉgÉã)ÇâÒì]Ç∑ÇÈ
 //--------------------------------------------------------------------------------
-void CKFMath::Vec3TransformNormal(CKFVec3& vVec, const CKFMtx44 &mtxRot)
+CKFVec3 CKFMath::Vec3TransformNormal(const CKFVec3& vVec, const CKFMtx44 &mtxRot)
 {
 	CKFVec4 vVec4 = CKFVec4(vVec, 0.0f);
+	CKFVec3 vAnswer;
 	vVec4 *= mtxRot;
-	vVec.m_fX = vVec4.m_fX;
-	vVec.m_fY = vVec4.m_fY;
-	vVec.m_fZ = vVec4.m_fZ;
+	vAnswer.m_fX = vVec4.m_fX;
+	vAnswer.m_fY = vVec4.m_fY;
+	vAnswer.m_fZ = vVec4.m_fZ;
+	return vAnswer;
 }
 
 //--------------------------------------------------------------------------------
@@ -1329,8 +1333,8 @@ CKFRay CKFMath::ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewport
 //--------------------------------------------------------------------------------
 void CKFMath::TransformRay(CKFRay& ray, const CKFMtx44& mtxTrans)
 {
-	Vec3TransformCoord(ray.m_vOrigin, mtxTrans);
-	Vec3TransformNormal(ray.m_vDirection, mtxTrans);
+	ray.m_vOrigin = Vec3TransformCoord(ray.m_vOrigin, mtxTrans);
+	ray.m_vDirection = Vec3TransformNormal(ray.m_vDirection, mtxTrans);
 	VecNormalize(ray.m_vDirection);
 }
 

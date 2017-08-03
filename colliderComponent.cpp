@@ -45,7 +45,7 @@ void CColliderComponent::Uninit(void)
 void CColliderComponent::Update(void)
 {
 	m_mtxWorld = m_mtxOffset;
-	m_mtxWorld *= GetGameObject()->GetTransformComponent()->GetMatrixNext();
+	m_mtxWorld *= GetGameObject()->GetTransformComponent()->GetMatrixWorldNext();
 	GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
 }
 
@@ -58,22 +58,4 @@ void CColliderComponent::SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
 	m_mtxOffset.m_af[3][0] = vPos.m_fX;
 	m_mtxOffset.m_af[3][1] = vPos.m_fY;
 	m_mtxOffset.m_af[3][2] = vPos.m_fZ;
-}
-
-//--------------------------------------------------------------------------------
-//  ローカル座標取得
-//--------------------------------------------------------------------------------
-const CKFVec3 CColliderComponent::GetLocalPos(void) const
-{
-	CKFVec3 vPos = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
-	return vPos;
-}
-
-//--------------------------------------------------------------------------------
-//  ワールド座標取得
-//--------------------------------------------------------------------------------
-const CKFVec3 CColliderComponent::GetWorldPos(void) const
-{
-	CKFVec3 vPos = CKFVec3(m_mtxWorld.m_af[3][0], m_mtxWorld.m_af[3][1], m_mtxWorld.m_af[3][2]);
-	return vPos;
 }

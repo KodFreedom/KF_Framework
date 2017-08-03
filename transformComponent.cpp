@@ -168,7 +168,7 @@ CKFMtx44 CTransformComponent::GetMatrixRotNext(void)
 //--------------------------------------------------------------------------------
 //	行列の取得
 //--------------------------------------------------------------------------------
-CKFMtx44 CTransformComponent::GetMatrixNext(void)
+CKFMtx44 CTransformComponent::GetMatrixWorldNext(void)
 {
 	//マトリクス算出
 	CKFMtx44 mtxWorld;
@@ -184,7 +184,7 @@ CKFMtx44 CTransformComponent::GetMatrixNext(void)
 	//親のマトリクス取得
 	if (m_pParent)
 	{
-		mtxWorld *= m_pParent->GetMatrixNext();
+		mtxWorld *= m_pParent->GetMatrixWorldNext();
 	}
 
 	return mtxWorld;
@@ -236,9 +236,9 @@ void CTransformComponent::RotByEuler(const CKFVec3& vRot)
 {
 	CKFMtx44 mtxRot;
 	CKFMath::MtxRotationYawPitchRoll(mtxRot, vRot);
-	CKFMath::Vec3TransformNormal(m_vUpNext, mtxRot);
-	CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRot);
-	CKFMath::Vec3TransformNormal(m_vRightNext, mtxRot);
+	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxRot);
+	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRot);
+	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxRot);
 }
 
 //--------------------------------------------------------------------------------
@@ -248,8 +248,8 @@ void CTransformComponent::RotByPitch(const float& fRadian)
 {
 	CKFMtx44 mtxPitch;
 	CKFMath::MtxRotAxis(mtxPitch, m_vRightNext, fRadian);
-	CKFMath::Vec3TransformNormal(m_vUpNext, mtxPitch);
-	CKFMath::Vec3TransformNormal(m_vForwardNext, mtxPitch);
+	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxPitch);
+	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxPitch);
 }
 
 //--------------------------------------------------------------------------------
@@ -259,8 +259,8 @@ void CTransformComponent::RotByYaw(const float& fRadian)
 {
 	CKFMtx44 mtxYaw;
 	CKFMath::MtxRotAxis(mtxYaw, m_vUpNext, fRadian);
-	CKFMath::Vec3TransformNormal(m_vRightNext, mtxYaw);
-	CKFMath::Vec3TransformNormal(m_vForwardNext, mtxYaw);
+	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxYaw);
+	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxYaw);
 }
 
 //--------------------------------------------------------------------------------
@@ -270,8 +270,8 @@ void CTransformComponent::RotByRoll(const float& fRadian)
 {
 	CKFMtx44 mtxRoll;
 	CKFMath::MtxRotAxis(mtxRoll, m_vForwardNext, fRadian);
-	CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRoll);
-	CKFMath::Vec3TransformNormal(m_vRightNext, mtxRoll);
+	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRoll);
+	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxRoll);
 }
 
 //--------------------------------------------------------------------------------

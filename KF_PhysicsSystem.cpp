@@ -75,7 +75,7 @@ void CKFPhysicsSystem::resolve(CCollision& collision)
 void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 {
 	//変数宣言
-	CKFVec3	vAccCausedVelocity;				//衝突方向の作用力(加速度)
+	//CKFVec3	vAccCausedVelocity;				//衝突方向の作用力(加速度)
 	CKFVec3	vImpulsePerInverseMass;			//単位逆質量の衝突力
 	CKFVec3	vVelocity;						//変化した速度
 	CKFVec3	vForce;							//速度あたりの作用力
@@ -84,7 +84,7 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	CKFVec3	vRotationForce;					//回転作用力
 	float	fSeparatingVelocity;			//分離速度
 	float	fNewSeparatingVelocity;			//新しい分離速度
-	float	fAccCausedSeparatingVelocity;	//衝突法線上の加速度
+	//float	fAccCausedSeparatingVelocity;	//衝突法線上の加速度
 	float	fDeltaVelocity;					//速度の変化量
 	float	fTotalInverseMass;				//質量の総和
 	float	fImpulse;						//衝突力
@@ -110,19 +110,19 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	fNewSeparatingVelocity = -fSeparatingVelocity * fBounciness;
 
 	//衝突方向に作用力を計算する
-	vAccCausedVelocity = collision.m_pRigidBodyOne->m_vAcceleration;
-	if (collision.m_pRigidBodyTwo)
-	{
-		vAccCausedVelocity -= collision.m_pRigidBodyTwo->m_vAcceleration;
-	}
-	fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.m_vCollisionNormal);
+	//vAccCausedVelocity = collision.m_pRigidBodyOne->m_vAcceleration;
+	//if (collision.m_pRigidBodyTwo)
+	//{
+	//	vAccCausedVelocity -= collision.m_pRigidBodyTwo->m_vAcceleration;
+	//}
+	//fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.m_vCollisionNormal);
 
-	//衝突法線の逆方向になれば
-	if (fAccCausedSeparatingVelocity < 0.0f)
-	{
-		fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
-		if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
-	}
+	////衝突法線の逆方向になれば
+	//if (fAccCausedSeparatingVelocity < 0.0f)
+	//{
+	//	fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
+	//	if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
+	//}
 
 	//速度差分計算
 	fDeltaVelocity = fNewSeparatingVelocity - fSeparatingVelocity;

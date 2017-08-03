@@ -15,6 +15,7 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class CKFPhysicsSystem;
+class CColliderComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -45,6 +46,7 @@ public:
 	void	SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }
 	void	SetOnGround(const bool& bValue) { m_bOnGround = bValue; }
 	void	AddForce(const CKFVec3& vForce) { m_vForceAccum += vForce; }
+	void	SetInertiaTensor(CColliderComponent* pCollider);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -59,6 +61,11 @@ private:
 	};
 
 	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	void		calculateInertiaTensorWorld(CKFMtx44& mtxIitWorld);
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	float		m_fMass;					//質量
@@ -70,10 +77,10 @@ private:
 	CKFVec3		m_vGravity;					//重力
 	CKFVec3		m_vMovement;				//移動量
 	CKFVec3		m_vVelocity;				//速度
-	CKFVec3		m_vAngularVelocity;
+	CKFVec3		m_vAngularVelocity;			//回転速度
 	CKFVec3		m_vForceAccum;				//合わせた作用力
 	CKFVec3		m_vTorqueAccum;				//回転力
-	CKFMtx44	m_mtxInverseInertisTensor;	
+	CKFMtx44	m_mtxInertisTensor;			//慣性テンソルの行列
 	bool		m_bOnGround;				//着陸フラッグ
 	BYTE		m_bRotLock;					//回転制限のフラグ
 };

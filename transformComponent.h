@@ -50,7 +50,7 @@ public:
 	CKFMtx44		GetMatrixRot(void);
 	CKFMtx44		GetMatrixRotNext(void);
 	CKFMtx44		GetMatrix(void) const { return m_mtxThis; }
-	CKFMtx44		GetMatrixNext(void);
+	CKFMtx44		GetMatrixWorldNext(void);
 
 	//Setä÷êî
 	void			SetPos(const CKFVec3& vPos) { m_vPos = vPos; }

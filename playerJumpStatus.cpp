@@ -60,7 +60,7 @@ void CPlayerJumpStatus::Update(CPlayerBehaviorComponent& player)
 		{//‘€ì‚æ‚ès‚­•ûŒü‚ğ‰ñ“]‚·‚é
 			CKFMtx44 mtxYaw;
 			CKFMath::MtxRotAxis(mtxYaw, vUp, fRot);
-			CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
+			vForwardNext = CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
 		}
 
 		CKFMath::VecNormalize(vForwardNext);
