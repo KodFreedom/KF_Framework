@@ -41,6 +41,7 @@ public:
 	bool	IsOnGround(void) const { return m_bOnGround; }
 
 	//Setä÷êî
+	void	SetDrag(const float& fDrag) { m_fDrag = fDrag; }
 	void	MovePos(const CKFVec3& vMovement) { m_vMovement += vMovement; }
 	void	SetMass(const float& fMass);
 	void	SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }

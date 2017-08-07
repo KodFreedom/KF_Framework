@@ -26,10 +26,7 @@ public:
 	CSphereColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const float& fRadius)
 		: CColliderComponent(pGameObj, CS::COL_SPHERE, mode)
 		, m_fRadius(fRadius) {}
-
 	~CSphereColliderComponent() {}
-
-	bool	Init(void) override { return true; }
 
 	//Getä÷êî
 	float	GetRadius(void) { return m_fRadius; }

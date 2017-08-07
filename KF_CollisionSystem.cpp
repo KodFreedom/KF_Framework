@@ -14,9 +14,12 @@
 #include "gameObject.h"
 #include "sphereColliderComponent.h"
 #include "fieldColliderComponent.h"
+#include "boxColliderComponent.h"
 #include "OBBColliderComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "behaviorComponent.h"
+#include "transformComponent.h"
+
 #ifdef _DEBUG
 #include "rendererDX.h"
 #include "textureManager.h"
@@ -91,16 +94,34 @@ void CKFCollisionSystem::Update(void)
 	//Sphere
 	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); ++itr)
 	{
-		CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
+		CSphereColliderComponent* pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
 
 		//Dynamic
-		CheckWithDynamicSphere(itr, *pSphere);
+		checkWithDynamicSphere(itr, *pSphere);
+		checkWithDynamicOBB(*pSphere);
 
 		//Static
-		CheckWithStaticSphere(*pSphere);
+		checkWithStaticSphere(*pSphere);
+		checkWithStaticOBB(*pSphere);
 
 		//Field
-		CheckWithField(*pSphere);
+		checkWithField(*pSphere);
+	}
+
+	//obb
+	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	{
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+
+		//Dynamic
+		checkWithDynamicOBB(itr, *pOBB);
+
+		//Static
+		checkWithStaticSphere(*pOBB);
+		checkWithStaticOBB(*pOBB);
+
+		//Field
+		checkWithField(*pOBB);
 	}
 }
 
@@ -150,19 +171,33 @@ void CKFCollisionSystem::RegisterCollider(const COL_MODE& mode, const COL_TYPE& 
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::DrawCollider(void)
 {
-	//LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-	////sphere
-	//LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.png");
-	//for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	//sphere
+	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.png");
+	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+	{
+		D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
+		float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
+		D3DXMATRIX mtx,mtxPos,mtxScale;
+		D3DXMatrixIdentity(&mtx);
+		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+		mtx *= mtxScale;
+		D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
+		mtx *= mtxPos;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		pDevice->SetTexture(0, pTexture);
+		m_pMeshSphere->DrawSubset(0);
+	}
+
+	////Cube
+	//for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); itr++)
 	//{
-	//	D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
-	//	float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
-	//	D3DXMATRIX mtx,mtxPos,mtxScale;
+	//	CKFVec3 vHalfSize = ((COBBColliderComponent*)(*itr))->GetHalfSize();
+	//	D3DXMATRIX mtx, mtxScale;
 	//	D3DXMatrixIdentity(&mtx);
 	//	D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
 	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
-	//	mtx *= mtxPos;
+	//	
 	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
 	//	pDevice->SetTexture(0, pTexture);
 	//	m_pMeshSphere->DrawSubset(0);
@@ -181,53 +216,133 @@ void CKFCollisionSystem::DrawCollider(void)
 #endif
 
 //--------------------------------------------------------------------------------
+//
 //  衝突処理
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  スフィアとスフィアの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere)
+void CKFCollisionSystem::checkWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere)
 {
 	for (auto itr = itrBegin; itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); ++itr)
 	{
 		//同じオブジェクトに付いているなら判定しない
 		if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
-		CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
-		CheckCollisionSphereWithSphere(sphere, *pSphere);
+		CSphereColliderComponent* pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		checkCollisionSphereWithSphere(sphere, *pSphere);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  スフィアとスフィアの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckWithStaticSphere(CSphereColliderComponent& sphere)
+void CKFCollisionSystem::checkWithDynamicOBB(CSphereColliderComponent& sphere)
+{
+	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	{
+		//同じオブジェクトに付いているなら判定しない
+		if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		checkCollisionSphereWithOBB(sphere, *pOBB);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  スフィアとスフィアの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithDynamicOBB(const list<CColliderComponent*>::iterator& itrBegin, COBBColliderComponent& obb)
+{
+	for (auto itr = itrBegin; itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	{
+		//同じオブジェクトに付いているなら判定しない
+		if ((*itr)->GetGameObject() == obb.GetGameObject()) { continue; }
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		checkCollisionBoxWithBox(*pOBB, obb);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  スフィアとスフィアの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithStaticSphere(CSphereColliderComponent& sphere)
 {
 	for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); ++itr)
 	{
-		CSphereColliderComponent* pSphere = (CSphereColliderComponent*)(*itr);
-		CheckCollisionSphereWithSphere(sphere, *pSphere);
+		CSphereColliderComponent* pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		checkCollisionSphereWithSphere(sphere, *pSphere);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  スフィアとOBBの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithStaticSphere(COBBColliderComponent& obb)
+{
+	for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); ++itr)
+	{
+		CSphereColliderComponent* pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		checkCollisionSphereWithOBB(*pSphere, obb);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  スフィアとOBBの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithStaticOBB(CSphereColliderComponent& sphere)
+{
+	for (auto itr = m_alistCollider[STATIC][COL_OBB].begin(); itr != m_alistCollider[STATIC][COL_OBB].end(); ++itr)
+	{
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		checkCollisionSphereWithOBB(sphere, *pOBB);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  OBBとOBBの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithStaticOBB(COBBColliderComponent& obb)
+{
+	for (auto itr = m_alistCollider[STATIC][COL_OBB].begin(); itr != m_alistCollider[STATIC][COL_OBB].end(); ++itr)
+	{
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		checkCollisionBoxWithBox(*pOBB, obb);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  スフィアとフィールドの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckWithField(CSphereColliderComponent& sphere)
+void CKFCollisionSystem::checkWithField(CSphereColliderComponent& sphere)
 {
 	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
 	{
-		CFieldColliderComponent* pField = (CFieldColliderComponent*)(*itr);
-		CheckCollisionSphereWithField(sphere, *pField);
+		CFieldColliderComponent* pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		checkCollisionSphereWithField(sphere, *pField);
 	}
 }
 
 //--------------------------------------------------------------------------------
+//  OBBとフィールドの当たり判定
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkWithField(COBBColliderComponent& obb)
+{
+	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
+	{
+		CFieldColliderComponent* pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		checkCollisionOBBWithField(obb, *pField);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//
 //  衝突判定関数
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  スフィアとスフィアの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
+void CKFCollisionSystem::checkCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
 {
 	CKFVec3 vSLPos = sphereL.GetWorldPos();
 	float fSLRadius = sphereL.GetRadius();
@@ -309,7 +424,7 @@ void CKFCollisionSystem::CheckCollisionSphereWithSphere(CSphereColliderComponent
 //--------------------------------------------------------------------------------
 //  スフィアとOBBの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckCollisionSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb)
+void CKFCollisionSystem::checkCollisionSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb)
 {
 	CKFVec3 vSPos = sphere.GetWorldPos();
 	float fSRadius = sphere.GetRadius();
@@ -331,17 +446,17 @@ void CKFCollisionSystem::CheckCollisionSphereWithOBB(CSphereColliderComponent& s
 	//OBBとスフィアの最近点の算出
 	fDis = vRealSPos.m_fX;
 	if (fDis > vBHalfSize.m_fX) { fDis = vBHalfSize.m_fX; }
-	if (fDis < -vBHalfSize.m_fX) { fDis = -vBHalfSize.m_fX; }
+	else if (fDis < -vBHalfSize.m_fX) { fDis = -vBHalfSize.m_fX; }
 	vClosestPos.m_fX = fDis;
 
 	fDis = vRealSPos.m_fY;
 	if (fDis > vBHalfSize.m_fY) { fDis = vBHalfSize.m_fY; }
-	if (fDis < -vBHalfSize.m_fY) { fDis = -vBHalfSize.m_fY; }
+	else if (fDis < -vBHalfSize.m_fY) { fDis = -vBHalfSize.m_fY; }
 	vClosestPos.m_fY = fDis;
 
 	fDis = vRealSPos.m_fZ;
 	if (fDis > vBHalfSize.m_fZ) { fDis = vBHalfSize.m_fZ; }
-	if (fDis < -vBHalfSize.m_fZ) { fDis = -vBHalfSize.m_fZ; }
+	else if (fDis < -vBHalfSize.m_fZ) { fDis = -vBHalfSize.m_fZ; }
 	vClosestPos.m_fZ = fDis;
 
 	//衝突検知
@@ -349,9 +464,9 @@ void CKFCollisionSystem::CheckCollisionSphereWithOBB(CSphereColliderComponent& s
 	if (fDisSqr >= fSRadius * fSRadius) { return; }
 
 	//衝突情報
-	CKFMath::MtxTranslation(mtxBox, vClosestPos);
+	vClosestPos = CKFMath::Vec3TransformCoord(vClosestPos, mtxBox);
 	CCollision collision;
-	collision.m_vCollisionNormal = vClosestPos - vSPos;
+	collision.m_vCollisionNormal = vSPos - vClosestPos;
 	CKFMath::VecNormalize(collision.m_vCollisionNormal);
 	collision.m_vCollisionPos = vClosestPos;
 	collision.m_fPenetration = fSRadius - sqrtf(fDisSqr);
@@ -396,12 +511,23 @@ void CKFCollisionSystem::CheckCollisionSphereWithOBB(CSphereColliderComponent& s
 }
 
 //--------------------------------------------------------------------------------
-//  field
+//  checkCollisionBoxWithBox
+//	BoxとBoxの当たり判定（いずれかが回転ある（AABBではない））
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::checkCollisionBoxWithBox(CBoxColliderComponent& boxL, CBoxColliderComponent& boxR)
+{
+
+}
+
+//--------------------------------------------------------------------------------
+//
+//  フィールド
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  スフィアとフィールドの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
+void CKFCollisionSystem::checkCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
 	CKFVec3 vSpherePos = sphere.GetWorldPos();
 	float fSphereRadius = sphere.GetRadius();
@@ -459,7 +585,7 @@ void CKFCollisionSystem::CheckCollisionSphereWithField(CSphereColliderComponent&
 	{
 		(*itr)->OnCollision(field, cInfo);
 	}
-
+	/*
 	//CGameObject* pSphereObj = sphere.GetGameObject();
 
 	////位置調節
@@ -480,12 +606,109 @@ void CKFCollisionSystem::CheckCollisionSphereWithField(CSphereColliderComponent&
 	//	vVelocity.m_fY = 0.0f;
 	//	p3DRB->SetVelocity(vVelocity);
 	//}
+	*/
 }
 
 //--------------------------------------------------------------------------------
 //  OBBとフィールドの当たり判定
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::CheckCollisionOBBWithField(COBBColliderComponent& obb, CFieldColliderComponent& field)
+void CKFCollisionSystem::checkCollisionOBBWithField(COBBColliderComponent& obb, CFieldColliderComponent& field)
 {
+	auto listOBBVtx = obb.GetWorldVertexes();
+	
+	//回転なしの場合一番深いの頂点を案出する
+	bool bFind = false;
+	CCollision collision;
+	for (auto itr = listOBBVtx.begin(); itr != listOBBVtx.end(); ++itr)
+	{
+		auto info = field.GetPointInfo((*itr));
+		if (info.bInTheField == false) { continue; }
 
+		float fDis = (*itr).m_fY - info.fHeight;
+		if (fDis >= 0.0f) { continue; }
+
+		if (!bFind)
+		{
+			bFind = true;
+
+			//衝突点の算出
+			collision.m_vCollisionPos = CKFVec3((*itr).m_fX, info.fHeight, (*itr).m_fZ);
+
+			//衝突深度の算出
+			collision.m_fPenetration = -fDis;
+
+			//衝突法線の算出
+			collision.m_vCollisionNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+
+			//リジッドボディの取得
+			C3DRigidbodyComponent* p3DRB = dynamic_cast<C3DRigidbodyComponent*>(obb.GetGameObject()->GetRigidbodyComponent());
+			p3DRB->SetOnGround(true);
+			collision.m_pRigidBodyOne = p3DRB;
+			collision.m_pRigidBodyTwo = nullptr;
+		}
+		else
+		{//深度を比べる
+			if (-fDis <= collision.m_fPenetration) { continue; }
+
+			//衝突点の算出
+			collision.m_vCollisionPos = CKFVec3((*itr).m_fX, info.fHeight, (*itr).m_fZ);
+
+			//衝突深度の算出
+			collision.m_fPenetration = -fDis;
+		}
+	}
+
+	if (!bFind) { return; }
+
+	//物理演算システムにレジストリ
+	GetManager()->GetPhysicsSystem()->RegistryCollision(collision);
+
+	//OnCollision
+	CCollisionInfo cInfo;
+	cInfo.m_pRigidBodyOne = collision.m_pRigidBodyOne;
+	cInfo.m_pRigidBodyTwo = collision.m_pRigidBodyTwo;
+	cInfo.m_listCollision.push_back(&collision);
+	auto list = obb.GetGameObject()->GetBehaviorComponent();
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		(*itr)->OnCollision(obb, cInfo);
+	}
+
+	list = field.GetGameObject()->GetBehaviorComponent();
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		(*itr)->OnCollision(field, cInfo);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  Box(AABBとOBB)のハーフサイズをとある軸に投影して長さを算出する
+//--------------------------------------------------------------------------------
+float CKFCollisionSystem::transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis)
+{
+	const CKFVec3& vHalfSize = box.GetHalfSize();
+	const CKFMtx44& mtxBox = box.GetMatrixWorld();
+	float fAnswer = vHalfSize.m_fX * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[0][0], mtxBox.m_af[0][1], mtxBox.m_af[0][2])))
+		+ vHalfSize.m_fY * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[1][0], mtxBox.m_af[1][1], mtxBox.m_af[1][2])))
+		+ vHalfSize.m_fZ * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[2][0], mtxBox.m_af[2][1], mtxBox.m_af[2][2])));
+	return fAnswer;
+}
+
+//--------------------------------------------------------------------------------
+//  checkOverlapOnAxis
+//	ボックス同士がとある軸に重ねてるかどうかをチェックする
+//--------------------------------------------------------------------------------
+bool CKFCollisionSystem::checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis)
+{
+	//軸上の長さを算出する
+	float fHalfDisL = transformBoxToAxis(boxL, vAxis);
+	float fHalfDisR = transformBoxToAxis(boxR, vAxis);
+
+	//軸上の中心間の距離を算出する
+	CKFVec3 vLtoR = boxL.GetWorldPos() - boxR.GetWorldPos();
+	float fDis = fabsf(CKFMath::Vec3Dot(vLtoR, vAxis));
+
+	//重ねてるかどうかをチェックする
+	bool bAns = fDis < (fHalfDisL + fHalfDisR);
+	return bAns;
 }

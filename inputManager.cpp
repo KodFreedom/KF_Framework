@@ -110,8 +110,8 @@ void CInputManager::UpdateInputInfo(void)
 	m_fMoveVertical = fabsf(fKAxisY) > fabsf(fJLAxisY) ? fKAxisY : fJLAxisY;
 
 	//Rot
-	float fMAxisX = 0.0f/*(float)m_pMouse->GetMouseAxisX() * 0.1f*/;
-	float fMAxisY = 0.0f/*(float)m_pMouse->GetMouseAxisY() * 0.1f*/;
+	float fMAxisX = -(float)m_pKeyboard->GetKeyPress(DIK_Q) + (float)m_pKeyboard->GetKeyPress(DIK_E);
+	float fMAxisY = -(float)m_pKeyboard->GetKeyPress(DIK_R) + (float)m_pKeyboard->GetKeyPress(DIK_T);
 	float fJRAxisX = (float)m_pJoystick->GetRStickAxisX() / CJoystickDX::sc_nStickAxisMax;
 	float fJRAxisY = (float)m_pJoystick->GetRStickAxisY() / CJoystickDX::sc_nStickAxisMax;
 	m_fRotHorizontal = fabsf(fMAxisX) > fabsf(fJRAxisX) ? fMAxisX : fJRAxisX;

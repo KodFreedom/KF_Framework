@@ -339,6 +339,9 @@
     <ClCompile Include="KF_PhysicsSystem.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
+    <ClCompile Include="OBBColliderComponent.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -558,6 +561,9 @@
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="OBBColliderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="boxColliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>

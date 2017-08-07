@@ -63,9 +63,9 @@ void CModeDemo::Init(void)
 
 	for (int nCnt = 0; nCnt < 1; nCnt++)
 	{
-		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 4.0f, -10.0f), CKFVec3(10.0f, 5.0f, 10.0f));
+		CKFVec3 vPos = CKFVec3(0.0f, 10.0f, 10.0f);//CKFMath::GetRandomVec3(CKFVec3(-10.0f, 10.0f, -10.0f), CKFVec3(10.0f, 12.0f, 10.0f));
 		CKFVec3 vRot = CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
-		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.2f));
+		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.0f));
 	}
 	
 	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));

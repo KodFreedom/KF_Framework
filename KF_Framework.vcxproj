@@ -196,6 +196,7 @@
     <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
+    <ClCompile Include="OBBColliderComponent.cpp" />
     <ClCompile Include="playerAttackStatus.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
     <ClCompile Include="playerJumpStatus.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="animatorComponent.h" />
     <ClInclude Include="behaviorComponent.h" />
     <ClInclude Include="bone.h" />
+    <ClInclude Include="boxColliderComponent.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="enemyAttackMode.h" />
     <ClInclude Include="enemyNormalMode.h" />

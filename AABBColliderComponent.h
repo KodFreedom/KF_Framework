@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "colliderComponent.h"
+#include "boxColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -17,26 +17,31 @@
 //--------------------------------------------------------------------------------
 //  AABBColliderポネントクラス
 //--------------------------------------------------------------------------------
-class CAABBColliderComponent : public CColliderComponent
+class CAABBColliderComponent : public CBoxColliderComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CAABBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
-		: CColliderComponent(pGameObj, CS::COL_AABB, mode)
-		, m_vHalfSize(vHalfSize) {}
-
+		: CBoxColliderComponent(pGameObj, CS::COL_AABB, mode, vHalfSize) {}
 	~CAABBColliderComponent() {}
 
-	bool	Init(void) override { return true; }
+	void	Update(void) override
+	{
+		CBoxColliderComponent::Update();
 
-	//Get関数
-	CKFVec3	GetHalfSize(void) { return m_vHalfSize; }
+		//回転を初期化する
+		m_mtxWorld.m_af[0][0] = 1.0f;
+		m_mtxWorld.m_af[0][1] = 0.0f;
+		m_mtxWorld.m_af[0][2] = 0.0f;
+		m_mtxWorld.m_af[1][0] = 0.0f;
+		m_mtxWorld.m_af[1][1] = 1.0f;
+		m_mtxWorld.m_af[1][2] = 0.0f;
+		m_mtxWorld.m_af[2][0] = 0.0f;
+		m_mtxWorld.m_af[2][1] = 0.0f;
+		m_mtxWorld.m_af[2][2] = 1.0f;
+	}
 
 private:
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	CKFVec3 m_vHalfSize;
 };

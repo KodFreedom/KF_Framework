@@ -14,6 +14,7 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class CColliderComponent;
+class CBoxColliderComponent;
 class CSphereColliderComponent;
 class COBBColliderComponent;
 class CFieldColliderComponent;
@@ -90,21 +91,28 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void	CheckWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere);
-	void	CheckWithStaticSphere(CSphereColliderComponent& sphere);
-	void	CheckWithField(CSphereColliderComponent& sphere);
+	void	checkWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere);
+	void	checkWithDynamicOBB(CSphereColliderComponent& sphere);
+	void	checkWithDynamicOBB(const list<CColliderComponent*>::iterator& itrBegin, COBBColliderComponent& obb);
+	void	checkWithStaticSphere(CSphereColliderComponent& sphere);
+	void	checkWithStaticSphere(COBBColliderComponent& obb);
+	void	checkWithStaticOBB(CSphereColliderComponent& sphere);
+	void	checkWithStaticOBB(COBBColliderComponent& obb);
+	void	checkWithField(CSphereColliderComponent& sphere);
+	void	checkWithField(COBBColliderComponent& obb);
 
 	//衝突判定関数
-	void	CheckCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR);
-	void	CheckCollisionSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb);
-	void	CheckCollisionOBBWithOBB(COBBColliderComponent& obbL, COBBColliderComponent& obbR);
+	void	checkCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR);
+	void	checkCollisionSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb);
+	void	checkCollisionBoxWithBox(CBoxColliderComponent& boxL, CBoxColliderComponent& boxR);
 
 	//Field
-	void	CheckCollisionOBBWithField(COBBColliderComponent& obb, CFieldColliderComponent& field);
-	void	CheckCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
+	void	checkCollisionOBBWithField(COBBColliderComponent& obb, CFieldColliderComponent& field);
+	void	checkCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
 
 	//計算用関数
-	float	transformBoxToAxis(const CKFVec3& vPos, const CKFVec3& vHalfSize, const CKFVec3& vAxis);
+	float	transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis);
+	bool	checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

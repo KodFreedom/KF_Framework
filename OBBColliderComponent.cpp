@@ -1,34 +1,27 @@
 //--------------------------------------------------------------------------------
 //	OBBColliderコンポネント
-//　OBBColliderComponent.h
+//　OBBColliderComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
-#pragma once
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "boxColliderComponent.h"
+#include "OBBColliderComponent.h"
 
+//--------------------------------------------------------------------------------
+//  クラス
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  OBBColliderポネントクラス
-//--------------------------------------------------------------------------------
-class COBBColliderComponent : public CBoxColliderComponent
+list<CKFVec3> COBBColliderComponent::GetWorldVertexes(void)
 {
-public:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	COBBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
-		: CBoxColliderComponent(pGameObj, CS::COL_OBB, mode, vHalfSize) {}
-	~COBBColliderComponent() {}
-
-	//Get関数
-	list<CKFVec3>	GetWorldVertexes(void);
-
-private:
-};
+	auto& listVtx = CBoxColliderComponent::GetLocalVertexes();
+	const auto& mtxWorld = GetMatrixWorld();
+	for (auto itr = listVtx.begin(); itr != listVtx.end(); ++itr)
+	{
+		*itr = CKFMath::Vec3TransformCoord(*itr, mtxWorld);
+	}
+	return listVtx;
+}

@@ -1016,6 +1016,12 @@ CKFVec3	CKFMath::TransformInverse(const CKFMtx44& mtx, const CKFVec3& vVec)
 	vAnswer.m_fZ = vWork.m_fX * mtx.m_af[2][0] +
 		vWork.m_fY * mtx.m_af[2][1] +
 		vWork.m_fZ * mtx.m_af[2][2];
+
+	//D3DXVECTOR3 vTest = vVec;
+	//D3DXMATRIX mtxTest = mtx;
+	//D3DXMatrixInverse(&mtxTest, nullptr, &mtxTest);
+	//D3DXVec3TransformCoord(&vTest, &vTest, &mtxTest);
+
 	return vAnswer;
 }
 

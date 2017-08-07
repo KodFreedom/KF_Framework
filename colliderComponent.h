@@ -35,7 +35,7 @@ public:
 	CColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode);
 	~CColliderComponent() {}
 
-	virtual bool		Init(void) override = 0;
+	virtual bool		Init(void) override { return true; }
 	virtual void		Uninit(void) override;
 	virtual void		Update(void);
 	
@@ -45,12 +45,12 @@ public:
 	void				SetOffset(const CKFVec3& vPos, const CKFVec3& vRot = CKFVec3(0.0f));
 
 	//Getä÷êî
-	const CKFVec3		GetLocalPos(void) const { return CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]); }
-	const CKFVec3		GetWorldPos(void) const { return CKFVec3(m_mtxWorld.m_af[3][0], m_mtxWorld.m_af[3][1], m_mtxWorld.m_af[3][2]); }
-	const CKFMtx44		GetMatrixWorld(void) const { return m_mtxWorld; }
+	CKFVec3				GetLocalPos(void) const { return CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]); }
+	CKFVec3				GetWorldPos(void) const { return CKFVec3(m_mtxWorld.m_af[3][0], m_mtxWorld.m_af[3][1], m_mtxWorld.m_af[3][2]); }
+	CKFMtx44			GetMatrixWorld(void) const { return m_mtxWorld; }
 	const CS::COL_TYPE	GetType(void) const { return m_type; }
-	const bool			IsTrigger(void) { return m_bTrigger; }
-	const string&		GetTag(void) { return m_strTag; }
+	const bool			IsTrigger(void) const { return m_bTrigger; }
+	const string&		GetTag(void) const { return m_strTag; }
 
 protected:
 	//--------------------------------------------------------------------------------
