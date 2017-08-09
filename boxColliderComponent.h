@@ -44,6 +44,7 @@ public:
 		for (int nCnt = 0; nCnt < 8; nCnt++) { listVtx.push_back(aVtx[nCnt]); }
 		return listVtx;
 	}
+	list<CKFVec3>	GetWorldVertexes(void);
 	CKFVec3			GetHalfSize(void) const { return m_vHalfSize; }
 
 private:

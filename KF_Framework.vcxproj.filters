@@ -339,7 +339,7 @@
     <ClCompile Include="KF_PhysicsSystem.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="OBBColliderComponent.cpp">
+    <ClCompile Include="boxColliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>

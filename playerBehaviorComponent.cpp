@@ -180,7 +180,7 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo)
+void CPlayerBehaviorComponent::OnCollision(CCollisionInfo& collisionInfo)
 {
 
 }

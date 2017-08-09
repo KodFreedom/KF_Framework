@@ -61,10 +61,10 @@ void CModeDemo::Init(void)
 	//ゲームオブジェクトの初期化
 	CGameObject3D::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 
-	for (int nCnt = 0; nCnt < 1; nCnt++)
+	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
-		CKFVec3 vPos = CKFVec3(0.0f, 10.0f, 10.0f);//CKFMath::GetRandomVec3(CKFVec3(-10.0f, 10.0f, -10.0f), CKFVec3(10.0f, 12.0f, 10.0f));
-		CKFVec3 vRot = CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
+		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 10.0f, -10.0f), CKFVec3(10.0f, 12.0f, 10.0f));
+		CKFVec3 vRot = CKFVec3(0.0f);//CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
 		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.0f));
 	}
 	
@@ -74,7 +74,7 @@ void CModeDemo::Init(void)
 
 	m_pCamera->SetTarget(pPlayer);
 
-	GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
+	//GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------

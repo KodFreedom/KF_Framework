@@ -27,8 +27,5 @@ public:
 		: CBoxColliderComponent(pGameObj, CS::COL_OBB, mode, vHalfSize) {}
 	~COBBColliderComponent() {}
 
-	//Getä÷êî
-	list<CKFVec3>	GetWorldVertexes(void);
-
 private:
 };

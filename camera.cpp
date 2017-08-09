@@ -160,7 +160,7 @@ void CCamera::Set(void)
 	//View行列
 	D3DXMATRIX mtxView;
 	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)m_vPosEye,& (D3DXVECTOR3)m_vPosAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
-	pDevice->SetTransform(D3DTS_VIEW,& mtxView);
+	pDevice->SetTransform(D3DTS_VIEW,&mtxView);
 
 	//プロジェクション行列
 	D3DXMATRIX mtxProjection;

@@ -93,7 +93,7 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo)
+void CEnemyBehaviorComponent::OnCollision(CCollisionInfo& collisionInfo)
 {
 
 }

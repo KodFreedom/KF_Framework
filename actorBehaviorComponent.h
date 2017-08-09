@@ -51,7 +51,7 @@ public:
 	virtual void	LateUpdate(void) override;
 
 	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override = 0;
-	virtual void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override = 0;
+	virtual void	OnCollision(CCollisionInfo& collisionInfo) override = 0;
 
 	//Setä÷êî
 	void	SetLevel(const int& nLevel) { m_nLevel = nLevel; }

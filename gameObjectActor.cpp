@@ -15,6 +15,7 @@
 #include "actorMeshComponent.h"
 #include "actorMeshDrawComponent.h"
 #include "sphereColliderComponent.h"
+#include "AABBColliderComponent.h"
 #include "playerUIObject.h"
 
 //--------------------------------------------------------------------------------
@@ -40,7 +41,9 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 	pObj->m_pRigidbody = pRb;
 	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, pRb);
 	pObj->m_listpBehavior.push_back(pPb);
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	CAABBColliderComponent* pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.6f);
+	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	pCollider->SetOffset(CKFVec3(0.0f, 0.6f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
 	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);

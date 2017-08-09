@@ -147,53 +147,10 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	vVelocity = vImpulsePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
 	collision.m_pRigidBodyOne->m_vVelocity += vVelocity;
 
-	if (collision.m_pRigidBodyOne->m_bRotLock != C3DRigidbodyComponent::AXIS::XYZ)
-	{//回転制限が全部制限されていないの場合
-		////線速度力積
-		//vForce = vVelocity * collision.m_pRigidBodyOne->m_fMass;
-
-		////中心点と衝突点のベクトル
-		//vPosToCollisionPos = collision.m_pRigidBodyOne->m_pGameObj->GetTransformComponent()->GetPosNext()
-		//	- collision.m_vCollisionPos;
-
-		////ベクトルが世界軸にとっての角度
-		//fWorldAngle = atan2f(vPosToCollisionPos.y, vPosToCollisionPos.x);
-
-		////回転作用力計算
-		//vWork = D3DXVECTOR3(vForce.x * cosf(-fWorldAngle) - vForce.y * sinf(-fWorldAngle),
-		//	vForce.x * sinf(-fWorldAngle) + vForce.y * cosf(-fWorldAngle), 0.0f);
-		//vRotationForce = D3DXVECTOR3(0.0f, vWork.y, 0.0f);
-		//vRotationForce = D3DXVECTOR3(vRotationForce.x * cosf(fWorldAngle) - vRotationForce.y * sinf(fWorldAngle),
-		//	vRotationForce.x * sinf(fWorldAngle) + vRotationForce.y * cosf(fWorldAngle), 0.0f);
-
-		//g_aPCollision[nNumCollision].apBody[0]->AddForce(vRotationForce, g_aPCollision[nNumCollision].vCollisionPos);
-	}
-
 	if (collision.m_pRigidBodyTwo)
 	{
 		vVelocity = vImpulsePerInverseMass * -1.0f * collision.m_pRigidBodyTwo->m_fInverseMass;
 		collision.m_pRigidBodyTwo->m_vVelocity += vVelocity;
-
-		//if (g_aPCollision[nNumCollision].bRotation)
-		//{
-		//	//線速度力積
-		//	vForce = g_aPCollision[nNumCollision].apBody[1]->GetMass() * vVelocity / DURATION * ROTATION_DAMPING;
-
-		//	//中心点と衝突点のベクトル
-		//	vPosToCollisionPos = g_aPCollision[nNumCollision].apBody[1]->GetPosCenter() - g_aPCollision[nNumCollision].vCollisionPos;
-
-		//	//ベクトルが世界軸にとっての角度
-		//	fWorldAngle = atan2f(vPosToCollisionPos.y, vPosToCollisionPos.x);
-
-		//	//回転作用力計算
-		//	vWork = D3DXVECTOR3(vForce.x * cosf(-fWorldAngle) - vForce.y * sinf(-fWorldAngle),
-		//		vForce.x * sinf(-fWorldAngle) + vForce.y * cosf(-fWorldAngle), 0.0f);
-		//	vRotationForce = D3DXVECTOR3(0.0f, vWork.y, 0.0f);
-		//	vRotationForce = D3DXVECTOR3(vRotationForce.x * cosf(fWorldAngle) - vRotationForce.y * sinf(fWorldAngle),
-		//		vRotationForce.x * sinf(fWorldAngle) + vRotationForce.y * cosf(fWorldAngle), 0.0f);
-
-		//	g_aPCollision[nNumCollision].apBody[1]->AddForce(vRotationForce, g_aPCollision[nNumCollision].vCollisionPos);
-		//}
 	}
 }
 

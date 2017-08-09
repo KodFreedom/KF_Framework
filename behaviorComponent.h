@@ -35,5 +35,5 @@ public:
 	virtual void LateUpdate(void) = 0;
 				 
 	virtual void OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) = 0;
-	virtual void OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) = 0;
+	virtual void OnCollision(CCollisionInfo& collisionInfo) = 0;
 };

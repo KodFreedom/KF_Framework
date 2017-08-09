@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------
-//	OBBColliderコンポネント
-//　OBBColliderComponent.cpp
+//	boxColliderコンポネント
+//　boxColliderComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "OBBColliderComponent.h"
+#include "boxColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -15,9 +15,9 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-list<CKFVec3> COBBColliderComponent::GetWorldVertexes(void)
+list<CKFVec3> CBoxColliderComponent::GetWorldVertexes(void)
 {
-	auto& listVtx = CBoxColliderComponent::GetLocalVertexes();
+	auto& listVtx = GetLocalVertexes();
 	const auto& mtxWorld = GetMatrixWorld();
 	for (auto itr = listVtx.begin(); itr != listVtx.end(); ++itr)
 	{

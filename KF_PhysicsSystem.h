@@ -15,6 +15,7 @@
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent;
+class CColliderComponent;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -49,8 +50,8 @@ class CCollisionInfo
 {
 public:
 	CCollisionInfo()
-		: m_pRigidBodyOne(nullptr)
-		, m_pRigidBodyTwo(nullptr) 
+		: m_pColliderThis(nullptr)
+		, m_pCollider(nullptr)
 	{
 		m_listCollision.clear();
 	}
@@ -59,8 +60,8 @@ public:
 		m_listCollision.clear();
 	}
 
-	C3DRigidbodyComponent*	m_pRigidBodyOne;
-	C3DRigidbodyComponent*	m_pRigidBodyTwo;
+	CColliderComponent*		m_pColliderThis;
+	CColliderComponent*		m_pCollider;
 	list<CCollision*>		m_listCollision;
 };
 

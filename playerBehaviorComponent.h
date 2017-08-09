@@ -51,7 +51,7 @@ public:
 	void	LateUpdate(void) override;
 			
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
-	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
+	void	OnCollision(CCollisionInfo& collisionInfo) override;
 
 	//ó‘Ô‚ÌØ‚è‘Ö‚¦
 	void	ChangeStatus(CStatus* const pStatus);

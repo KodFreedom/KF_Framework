@@ -44,7 +44,7 @@ public:
 	void	LateUpdate(void) override {}
 
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
-	void	OnCollision(CColliderComponent& colliderThis, CCollisionInfo& collisionInfo) override;
+	void	OnCollision(CCollisionInfo& collisionInfo) override;
 
 	void	ChangeMode(CAIMode* pAIMode);
 private:
