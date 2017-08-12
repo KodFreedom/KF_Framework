@@ -30,6 +30,7 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::CO
 {
 	CKFMath::MtxIdentity(m_mtxWorld);
 	CKFMath::MtxIdentity(m_mtxOffset);
+	GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::CO
 //--------------------------------------------------------------------------------
 void CColliderComponent::Uninit(void)
 {
+	GetManager()->GetCollisionSystem()->DeregisterCollider(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -45,8 +47,7 @@ void CColliderComponent::Uninit(void)
 void CColliderComponent::Update(void)
 {
 	m_mtxWorld = m_mtxOffset;
-	m_mtxWorld *= GetGameObject()->GetTransformComponent()->GetMatrixWorldNext();
-	GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
+	m_mtxWorld *= m_pGameObj->GetTransformComponent()->GetMatrixWorldNext();
 }
 
 //--------------------------------------------------------------------------------
@@ -58,4 +59,20 @@ void CColliderComponent::SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
 	m_mtxOffset.m_af[3][0] = vPos.m_fX;
 	m_mtxOffset.m_af[3][1] = vPos.m_fY;
 	m_mtxOffset.m_af[3][2] = vPos.m_fZ;
+}
+
+//--------------------------------------------------------------------------------
+//  OffsetÝ’è
+//--------------------------------------------------------------------------------
+void CColliderComponent::Sleep(void)
+{
+	GetManager()->GetCollisionSystem()->DeregisterCollider(m_mode, m_type, this);
+}
+
+//--------------------------------------------------------------------------------
+//  OffsetÝ’è
+//--------------------------------------------------------------------------------
+void CColliderComponent::Awake(void)
+{
+	GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
 }

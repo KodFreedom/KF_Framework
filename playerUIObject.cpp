@@ -89,7 +89,7 @@ void CPlayerUIObject::Update(void)
 
 	//To do
 	//HPゲージ更新
-	float fLifeRate = m_pPlayerBehavior->GetLifeNow() / m_pPlayerBehavior->GetLifeMax();
+	float fLifeRate = 1.0f;//m_pPlayerBehavior->GetLifeNow() / m_pPlayerBehavior->GetLifeMax();
 	CKFColor cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
 #ifdef USING_DIRECTX
 	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);

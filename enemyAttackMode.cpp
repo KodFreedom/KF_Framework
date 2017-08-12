@@ -26,72 +26,72 @@
 //--------------------------------------------------------------------------------
 void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 {
-	if (!enemy.m_pGameObj)
-	{//‘Šè‚ª‚¢‚È‚¢‚È‚ç•’Ê‚Èó‘Ô‚É–ß‚é
-		enemy.ChangeMode(new CEnemyNormalMode);
-		return;
-	}
+	//if (!enemy.m_pGameObj)
+	//{//‘Šè‚ª‚¢‚È‚¢‚È‚ç•’Ê‚Èó‘Ô‚É–ß‚é
+	//	enemy.ChangeMode(new CEnemyNormalMode);
+	//	return;
+	//}
 
-	CMeshComponent* pMesh = enemy.m_pGameObj->GetMeshComponent();
-	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
-	bool bCanControl = true;
-	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK)
-	{
-		if (pActor->GetMotionInfo().nKeyNow == 3 && !enemy.m_pAttackCollider)
-		{
-			enemy.m_pAttackCollider = new CSphereColliderComponent(enemy.m_pGameObj, CS::DYNAMIC, 0.9f);
-			enemy.m_pAttackCollider->SetOffset(CKFVec3(0.0f, 0.6f, 2.1f));
-			enemy.m_pAttackCollider->SetTag("weapon");
-			enemy.m_pAttackCollider->SetTrigger(true);
-		}
-		bCanControl = false;
-	}
-	if (!bCanControl) { return; }
-	if (enemy.m_pAttackCollider)
-	{
-		enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
-		enemy.m_pAttackCollider->Release();
-		enemy.m_pAttackCollider = nullptr;
-	}
+	//CMeshComponent* pMesh = enemy.m_pGameObj->GetMeshComponent();
+	//CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
+	//bool bCanControl = true;
+	//if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK)
+	//{
+	//	if (pActor->GetMotionInfo().nKeyNow == 3 && !enemy.m_pAttackCollider)
+	//	{
+	//		enemy.m_pAttackCollider = new CSphereColliderComponent(enemy.m_pGameObj, CS::DYNAMIC, 0.9f);
+	//		enemy.m_pAttackCollider->SetOffset(CKFVec3(0.0f, 0.6f, 2.1f));
+	//		enemy.m_pAttackCollider->SetTag("weapon");
+	//		enemy.m_pAttackCollider->SetTrigger(true);
+	//	}
+	//	bCanControl = false;
+	//}
+	//if (!bCanControl) { return; }
+	//if (enemy.m_pAttackCollider)
+	//{
+	//	enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
+	//	enemy.m_pAttackCollider->Release();
+	//	enemy.m_pAttackCollider = nullptr;
+	//}
 
-	CTransformComponent* pTransform = enemy.GetGameObject()->GetTransformComponent();
-	CKFVec3 vPosTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
-	CKFVec3 vPosThis = pTransform->GetPosNext();
-	CKFVec3 vForward = pTransform->GetForwardNext();
-	CKFVec3 vDiff = vPosTarget - vPosThis;
-	CKFVec3 vDir = vDiff;
-	CKFMath::VecNormalize(vDir);
+	//CTransformComponent* pTransform = enemy.GetGameObject()->GetTransformComponent();
+	//CKFVec3 vPosTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
+	//CKFVec3 vPosThis = pTransform->GetPosNext();
+	//CKFVec3 vForward = pTransform->GetForwardNext();
+	//CKFVec3 vDiff = vPosTarget - vPosThis;
+	//CKFVec3 vDir = vDiff;
+	//CKFMath::VecNormalize(vDir);
 
-	//“GŒŸ’m”ÍˆÍ‚ğæ“¾
-	float fDisMax = 0.0f;
-	auto listCollider = enemy.GetGameObject()->GetColliderComponent();
-	for (auto itr = listCollider.begin(); itr != listCollider.end(); ++itr)
-	{
-		if ((*itr)->GetTag() == "detector")
-		{
-			fDisMax = ((CSphereColliderComponent*)(*itr))->GetRadius();
-		}
-	}
+	////“GŒŸ’m”ÍˆÍ‚ğæ“¾
+	//float fDisMax = 0.0f;
+	//auto listCollider = enemy.GetGameObject()->GetColliderComponent();
+	//for (auto itr = listCollider.begin(); itr != listCollider.end(); ++itr)
+	//{
+	//	if ((*itr)->GetTag() == "detector")
+	//	{
+	//		fDisMax = ((CSphereColliderComponent*)(*itr))->GetRadius();
+	//	}
+	//}
 
-	float fDisSquare = CKFMath::VecMagnitudeSquare(vDiff);
-	if (fDisSquare > fDisMax * fDisMax)
-	{//‘Šè‚Æ‚Ì‹——£‚ª’·‚¯‚ê‚Î•’Ê‚Èó‘Ô‚É–ß‚é
-		enemy.ChangeMode(new CEnemyNormalMode);
-		return;
-	}
-	else if (fDisSquare <= 1.8f * 1.8f)
-	{//‹——£‚ª’Z‚¢‚È‚çUŒ‚
-		enemy.Attack(pActor);
-	}
-	else
-	{//‘Šè‚ÉŒü‚©‚Á‚ÄˆÚ“®‚·‚é
-	 //‘Šè‚ÉŒü‚­
-	 //‰ñ“]ŒvZ
-		CKFVec3 vUp = pTransform->GetUpNext();
-		vDir = (vUp * vDir) * vUp;
-		enemy.Turn(vDir);
+	//float fDisSquare = CKFMath::VecMagnitudeSquare(vDiff);
+	//if (fDisSquare > fDisMax * fDisMax)
+	//{//‘Šè‚Æ‚Ì‹——£‚ª’·‚¯‚ê‚Î•’Ê‚Èó‘Ô‚É–ß‚é
+	//	enemy.ChangeMode(new CEnemyNormalMode);
+	//	return;
+	//}
+	//else if (fDisSquare <= 1.8f * 1.8f)
+	//{//‹——£‚ª’Z‚¢‚È‚çUŒ‚
+	//	enemy.Attack(pActor);
+	//}
+	//else
+	//{//‘Šè‚ÉŒü‚©‚Á‚ÄˆÚ“®‚·‚é
+	// //‘Šè‚ÉŒü‚­
+	// //‰ñ“]ŒvZ
+	//	CKFVec3 vUp = pTransform->GetUpNext();
+	//	vDir = (vUp * vDir) * vUp;
+	//	enemy.Turn(vDir);
 
-		//ˆÚ“®
-		enemy.Move(pActor);
-	}
+	//	//ˆÚ“®
+	//	enemy.Move(pActor);
+	//}
 }

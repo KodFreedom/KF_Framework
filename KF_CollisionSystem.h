@@ -88,7 +88,9 @@ public:
 #endif
 
 	void	RegisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
-	
+	void	DeregisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
+	bool	RayCast(const CKFVec3& vPos, const CKFVec3& vDir, const float& fDis);
+
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
@@ -109,25 +111,6 @@ private:
 	void	checkWithStaticOBB(CBoxColliderComponent& box);
 	void	checkWithField(CSphereColliderComponent& sphere);
 	void	checkWithField(CBoxColliderComponent& box);
-
-	//衝突判定関数
-	void	checkCollisionSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR);
-	void	checkCollisionSphereWithAABB(CSphereColliderComponent& sphere, CAABBColliderComponent& aabb);
-	void	checkCollisionSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb);
-	void	checkCollisionAABBWithAABB(CAABBColliderComponent& aabbL, CAABBColliderComponent& aabbR);
-	void	checkCollisionBoxWithBox(CBoxColliderComponent& boxL, CBoxColliderComponent& boxR);
-	bool	checkCollisionPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb);
-	bool	checkCollisionPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box);
-	
-	//Field
-	void	checkCollisionBoxWithField(CBoxColliderComponent& box, CFieldColliderComponent& field);
-	void	checkCollisionSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
-	
-	//計算用関数
-	float	transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis);
-	bool	checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis);
-	bool	checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2& vMaxL, const CKFVec2& vMinR, const CKFVec2& vMaxR);
-	bool	checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

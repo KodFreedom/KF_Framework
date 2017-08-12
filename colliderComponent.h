@@ -52,6 +52,10 @@ public:
 	const bool			IsTrigger(void) const { return m_bTrigger; }
 	const string&		GetTag(void) const { return m_strTag; }
 
+	//‘¼
+	void				Sleep(void);
+	void				Awake(void);
+
 protected:
 	//--------------------------------------------------------------------------------
 	//  ’è”’è‹`
@@ -60,7 +64,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
-	CColliderComponent() : CComponent() , m_type(CS::COL_MAX) {}
+	CColliderComponent() : CComponent() , m_type(CS::COL_MAX), m_mode(CS::MODE_MAX) {}
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

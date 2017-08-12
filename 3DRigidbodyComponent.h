@@ -38,14 +38,12 @@ public:
 
 	//Get関数
 	CKFVec3	GetVelocity(void) const { return m_vVelocity; }
-	bool	IsOnGround(void) const { return m_bOnGround; }
 
 	//Set関数
 	void	SetDrag(const float& fDrag) { m_fDrag = fDrag; }
 	void	MovePos(const CKFVec3& vMovement) { m_vMovement += vMovement; }
 	void	SetMass(const float& fMass);
 	void	SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }
-	void	SetOnGround(const bool& bValue) { m_bOnGround = bValue; }
 	void	AddForce(const CKFVec3& vForce) { m_vForceAccum += vForce; }
 	//void	SetInertiaTensor(CColliderComponent* pCollider);
 
@@ -75,6 +73,7 @@ private:
 	//float		m_fAngularDrag;				//回転抵抗係数
 	float		m_fFriction;				//摩擦係数
 	float		m_fBounciness;				//跳ね返り係数
+	float		m_fGravityCoefficient;		//重力係数
 	CKFVec3		m_vGravity;					//重力
 	CKFVec3		m_vMovement;				//移動量
 	CKFVec3		m_vVelocity;				//速度
@@ -82,6 +81,5 @@ private:
 	CKFVec3		m_vForceAccum;				//合わせた作用力
 	//CKFVec3		m_vTorqueAccum;				//回転力
 	//CKFMtx44	m_mtxInertisTensor;			//慣性テンソルの行列
-	bool		m_bOnGround;				//着陸フラッグ
 	//BYTE		m_bRotLock;					//回転制限のフラグ
 };

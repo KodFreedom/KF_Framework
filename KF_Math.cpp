@@ -837,6 +837,17 @@ void CKFMath::VecNormalize(CKFVec3& vVec)
 }
 
 //--------------------------------------------------------------------------------
+//  Normalize(Vector3)
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::VecNormalize(const CKFVec3& vVec)
+{
+	auto fMagnitude = VecMagnitude(vVec);
+	if (fMagnitude == 0.0f) { return CKFVec3(0.0f); }
+	auto vAnswer = vVec;
+	vAnswer /= fMagnitude;
+	return vAnswer;
+}
+//--------------------------------------------------------------------------------
 //  èÊéZ(Dot)(Vector2)
 //--------------------------------------------------------------------------------
 float CKFMath::Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR)
@@ -907,6 +918,16 @@ CKFVec3 CKFMath::Vec3TransformNormal(const CKFVec3& vVec, const CKFMtx44 &mtxRot
 	vAnswer.m_fX = vVec4.m_fX;
 	vAnswer.m_fY = vVec4.m_fY;
 	vAnswer.m_fZ = vVec4.m_fZ;
+	return vAnswer;
+}
+
+//--------------------------------------------------------------------------------
+//  Vec3TransformNormal
+//	âÒì]çsóÒÇ…Ç∆Ç¡ÇƒVec3(ÉxÉNÉgÉã)ÇâÒì]Ç∑ÇÈ
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::Vec3Scale(const CKFVec3& vValue, const CKFVec3& vScale)
+{
+	auto vAnswer = CKFVec3(vValue.m_fX * vScale.m_fX, vValue.m_fY * vScale.m_fY, vValue.m_fZ * vScale.m_fZ);
 	return vAnswer;
 }
 
@@ -994,6 +1015,16 @@ CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo
 	vRot.m_fZ = RadianBetweenVec(CKFVec2(vVecFrom.m_fX, vVecFrom.m_fY), CKFVec2(vVecTo.m_fX, vVecTo.m_fY));
 
 	return vRot;
+}
+
+//--------------------------------------------------------------------------------
+//  EulerBetweenVec3
+//	Vector3ä‘ÇÃäpìxÇx,y,zâÒì]éÆÇ≈éZèo
+//--------------------------------------------------------------------------------
+CKFVec3	CKFMath::ProjectOnPlane(const CKFVec3& vVec, const CKFVec3& vUpPlane, const CKFVec3& vUpNow)
+{
+	auto vAnswer = vVec;
+	return vAnswer;
 }
 
 //--------------------------------------------------------------------------------

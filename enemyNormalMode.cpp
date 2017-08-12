@@ -29,12 +29,12 @@ void CEnemyNormalMode::Update(CEnemyBehaviorComponent& enemy)
 	bool bCanControl = true;
 	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) { bCanControl = false; }
 	if (!bCanControl) { return; }
-	if (enemy.m_pAttackCollider)
-	{
-		enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
-		enemy.m_pAttackCollider->Release();
-		enemy.m_pAttackCollider = nullptr;
-	}
+	//if (enemy.m_pAttackCollider)
+	//{
+	//	enemy.m_pGameObj->DeleteCollider(enemy.m_pAttackCollider);
+	//	enemy.m_pAttackCollider->Release();
+	//	enemy.m_pAttackCollider = nullptr;
+	//}
 
 	//ニュートラルモーション設定
 	pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);

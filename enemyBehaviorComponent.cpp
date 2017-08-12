@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "enemyBehaviorComponent.h"
+#include "actorBehaviorComponent.h"
 #include "manager.h"
 #include "mode.h"
 #include "gameObjectActor.h"
@@ -22,11 +23,11 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody)
-	: CActorBehaviorComponent(pGameObj, pRigidbody)
+CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor)
+	: CBehaviorComponent(pGameObj)
+	, m_actor(actor)
 	, m_pTarget(nullptr)
 	, m_pMode(nullptr)
-	, m_usCntWhosYourDaddy(0)
 {}
 
 //--------------------------------------------------------------------------------
@@ -35,11 +36,12 @@ CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, C3
 bool CEnemyBehaviorComponent::Init(void)
 {
 	m_pMode = new CEnemyNormalMode;
-	m_fMovementSpeed = 0.05f;
-	m_fJumpForce = 20.0f;
-	m_fTurnRate = 0.2f;
-	m_fLifeMax = 100.0f;
-	m_fLifeNow = 100.0f;
+	m_actor.SetLifeMax(100.0f);
+	m_actor.SetLifeNow(100.0f);
+	m_actor.SetJumpSpeed(6.0f);
+	m_actor.SetTurnSpeedMin(180.0f * DELTA_TIME);
+	m_actor.SetTurnSpeedMax(360.0f * DELTA_TIME);
+	m_actor.SetMoveSpeed(0.075f);
 	return true;
 }
 
@@ -61,7 +63,6 @@ void CEnemyBehaviorComponent::Uninit(void)
 void CEnemyBehaviorComponent::Update(void)
 {
 	m_pMode->Update(*this);
-	if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 }
 
 //--------------------------------------------------------------------------------
@@ -77,11 +78,10 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 			ChangeMode(new CEnemyAttackMode);
 		}
 
-		if (!m_usCntWhosYourDaddy && collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		if (collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
 		{
-			m_usCntWhosYourDaddy = 30;
-			m_fLifeNow -= 25.0f;
-			if (m_fLifeNow <= 0.0f)
+			m_actor.Hit(10.0f);
+			if (m_actor.GetLifeNow() <= 0.0f)
 			{
 				m_pGameObj->SetAlive(false);
 				GetManager()->GetMode()->EndMode();

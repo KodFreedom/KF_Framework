@@ -8,12 +8,13 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "playerBehaviorComponent.h"
+#include "actorBehaviorComponent.h"
 #include "manager.h"
+#include "inputManager.h"
 #include "mode.h"
+#include "camera.h"
 #include "gameObjectActor.h"
 #include "colliderComponent.h"
-#include "playerNormalStatus.h"
-#include "status.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -21,10 +22,9 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody)
-	: CActorBehaviorComponent(pGameObj, pRigidbody)
-	, m_pStatus(nullptr)
-	, m_usCntWhosYourDaddy(0)
+CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor)
+	: CBehaviorComponent(pGameObj)
+	, m_actor(actor)
 {}
 
 //--------------------------------------------------------------------------------
@@ -32,12 +32,12 @@ CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, 
 //--------------------------------------------------------------------------------
 bool CPlayerBehaviorComponent::Init(void)
 {
-	if (!m_pStatus) { m_pStatus = new CPlayerNormalStatus; }
-	m_fMovementSpeed = 0.075f;
-	m_fJumpForce = 20.0f;
-	m_fTurnRate = 0.2f;
-	m_fLifeMax = 100.0f;
-	m_fLifeNow = 100.0f;
+	m_actor.SetLifeMax(100.0f);
+	m_actor.SetLifeNow(100.0f);
+	m_actor.SetJumpSpeed(6.0f);
+	m_actor.SetTurnSpeedMin(KF_PI * DELTA_TIME);
+	m_actor.SetTurnSpeedMax(2.0f * KF_PI * DELTA_TIME);
+	m_actor.SetMoveSpeed(0.075f);
 	return true;
 }
 
@@ -46,13 +46,6 @@ bool CPlayerBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Uninit(void)
 {
-	CActorBehaviorComponent::Uninit();
-
-	if (m_pStatus)
-	{
-		delete m_pStatus;
-		m_pStatus = nullptr;
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -60,9 +53,15 @@ void CPlayerBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Update(void)
 {
-	CActorBehaviorComponent::Update();
-	m_pStatus->Update(*this);
-	if (m_usCntWhosYourDaddy > 0) { m_usCntWhosYourDaddy--; }
+	auto pInput = GetManager()->GetInputManager();
+	auto vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
+	auto pCamera = GetManager()->GetMode()->GetCamera();
+	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(CKFVec3(1.0f, 0.0f, 1.0f)));
+	auto vMove = pCamera->GetVecRight() * vAxis.m_fX + vCamForward * vAxis.m_fY;
+	auto bJump = pInput->GetKeyTrigger(CInputManager::K_JUMP);
+	auto bAttack = pInput->GetKeyTrigger(CInputManager::K_ATTACK);
+	m_actor.Act(vMove, bJump, bAttack);;
+
 	/*if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
@@ -153,8 +152,7 @@ void CPlayerBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::LateUpdate(void)
 {
-	CActorBehaviorComponent::LateUpdate();
-	m_pStatus->LateUpdate(*this);
+
 }
 
 //--------------------------------------------------------------------------------
@@ -164,15 +162,13 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 {
 	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_ENEMY)
 	{//武器チェック
-		if (!m_usCntWhosYourDaddy && collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		if (collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
 		{
-			m_fLifeNow -= 10.0f;
-			if (m_fLifeNow <= 0.0f)
+			m_actor.Hit(10.0f);
+			if (m_actor.GetLifeNow() <= 0.0f)
 			{
-				m_fLifeNow = 0.0f;
 				GetManager()->GetMode()->EndMode();
 			}
-			m_usCntWhosYourDaddy = 30;
 		}
 	}
 }
@@ -183,14 +179,4 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 void CPlayerBehaviorComponent::OnCollision(CCollisionInfo& collisionInfo)
 {
 
-}
-
-//--------------------------------------------------------------------------------
-//  状態更新
-//--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::ChangeStatus(CStatus* const pStatus)
-{
-	if (!pStatus) { return; }
-	if (m_pStatus) { delete m_pStatus; }
-	m_pStatus = pStatus;
 }

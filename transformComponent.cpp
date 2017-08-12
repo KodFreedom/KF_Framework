@@ -275,6 +275,19 @@ void CTransformComponent::RotByRoll(const float& fRadian)
 }
 
 //--------------------------------------------------------------------------------
+//  TransformDirectionToLocal
+//--------------------------------------------------------------------------------
+CKFVec3 CTransformComponent::TransformDirectionToLocal(const CKFVec3& vDirection)
+{
+	auto mtxInverse = CKFMath::MtxTranspose(m_mtxThis);
+	mtxInverse.m_af[3][0] = 0.0f;
+	mtxInverse.m_af[3][1] = 0.0f;
+	mtxInverse.m_af[3][2] = 0.0f;
+	auto vAnswer = CKFMath::Vec3TransformNormal(vDirection, mtxInverse);
+	return vAnswer;
+}
+
+//--------------------------------------------------------------------------------
 //
 //  private
 //

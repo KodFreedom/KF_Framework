@@ -103,7 +103,7 @@ void CInputManager::UpdateInputInfo(void)
 {
 	//Move
 	float fKAxisX = -(float)m_pKeyboard->GetKeyPress(DIK_A) + (float)m_pKeyboard->GetKeyPress(DIK_D);
-	float fKAxisY = -(float)m_pKeyboard->GetKeyPress(DIK_W) + (float)m_pKeyboard->GetKeyPress(DIK_S);
+	float fKAxisY = (float)m_pKeyboard->GetKeyPress(DIK_W) - (float)m_pKeyboard->GetKeyPress(DIK_S);
 	float fJLAxisX = (float)m_pJoystick->GetLStickAxisX() / CJoystickDX::sc_nStickAxisMax;
 	float fJLAxisY = (float)m_pJoystick->GetLStickAxisY() / CJoystickDX::sc_nStickAxisMax;
 	m_fMoveHorizontal = fabsf(fKAxisX) > fabsf(fJLAxisX) ? fKAxisX : fJLAxisX;

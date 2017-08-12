@@ -7,7 +7,9 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "KF_PhysicsSystem.h"
+#include "KF_CollisionUtility.h"
 #include "gameObject.h"
 #include "transformComponent.h"
 #include "3DRigidbodyComponent.h"
@@ -28,7 +30,15 @@ bool CKFPhysicsSystem::Init(void)
 //--------------------------------------------------------------------------------
 void CKFPhysicsSystem::Uninit(void)
 {
-
+	if (!m_listCollision.empty())
+	{
+		for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
+		{
+			auto pCollision = *itr;
+			delete pCollision;
+			itr = m_listCollision.erase(itr);
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -47,7 +57,8 @@ void CKFPhysicsSystem::Update(void)
 {
 	for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 	{
-		resolve(*itr);
+		resolve(**itr);
+		delete *itr;
 		itr = m_listCollision.erase(itr);
 	}
 }
@@ -55,9 +66,9 @@ void CKFPhysicsSystem::Update(void)
 //--------------------------------------------------------------------------------
 //  衝突情報のレジストリ
 //--------------------------------------------------------------------------------
-void CKFPhysicsSystem::RegistryCollision(CCollision& collision)
+void CKFPhysicsSystem::RegisterCollision(CCollision* pCollision)
 {
-	m_listCollision.push_back(collision);
+	m_listCollision.push_back(pCollision);
 }
 
 //--------------------------------------------------------------------------------

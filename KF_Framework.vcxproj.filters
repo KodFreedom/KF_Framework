@@ -136,24 +136,6 @@
     <Filter Include="ソース ファイル\Component\Behavior">
       <UniqueIdentifier>{d980ca8c-896c-4789-9255-ed456b26394a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Component\Behavior\Actor">
-      <UniqueIdentifier>{db9fe3ff-ead2-45c8-a8c0-9ce1e38bff52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Behavior\Actor\Status">
-      <UniqueIdentifier>{53dedc9a-9dc7-41e9-a574-bbf334886aea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Behavior\Actor\Status\Player">
-      <UniqueIdentifier>{a7bbc3cd-13a0-446f-ae9d-83393bf599a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor">
-      <UniqueIdentifier>{39d43d2f-91a7-421f-8aa6-93eb6058a2a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\Status">
-      <UniqueIdentifier>{f2e7361f-8eff-439a-a76d-030634afe26a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\Status\Player">
-      <UniqueIdentifier>{bfbaf041-83b6-48ca-8581-1d22cf8dee97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\AI">
       <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
     </Filter>
@@ -318,18 +300,6 @@
     <ClCompile Include="actorBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="playerNormalStatus.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="playerMoveStatus.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="playerJumpStatus.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="playerAttackStatus.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClCompile>
     <ClCompile Include="enemyNormalMode.cpp">
       <Filter>ソース ファイル\AI</Filter>
     </ClCompile>
@@ -341,6 +311,9 @@
     </ClCompile>
     <ClCompile Include="boxColliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="KF_CollisionUtility.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -518,30 +491,6 @@
     <ClInclude Include="KF_CollisionSystem.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="actorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="playerBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="status.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status</Filter>
-    </ClInclude>
-    <ClInclude Include="playerNormalStatus.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="playerAttackStatus.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="playerJumpStatus.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="playerMoveStatus.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor\Status\Player</Filter>
-    </ClInclude>
     <ClInclude Include="AIMode.h">
       <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
@@ -565,6 +514,18 @@
     </ClInclude>
     <ClInclude Include="boxColliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="actorBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="playerBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="KF_CollisionUtility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

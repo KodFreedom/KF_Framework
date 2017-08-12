@@ -16,11 +16,6 @@
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent;
 class CActorMeshComponent;
-//class CStatus;
-//class CPlayerNormalStatus;
-//class CPlayerMoveStatus;
-//class CPlayerJumpStatus;
-//class CPlayerAttackStatus;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -30,28 +25,23 @@ class CActorMeshComponent;
 //--------------------------------------------------------------------------------
 class CActorBehaviorComponent : public CBehaviorComponent
 {
-	//--------------------------------------------------------------------------------
-	//  フレンドクラス
-	//--------------------------------------------------------------------------------
-	//friend CPlayerNormalStatus;
-	//friend CPlayerMoveStatus;
-	//friend CPlayerJumpStatus;
-	//friend CPlayerAttackStatus;
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
+	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CActorMeshComponent* const pMesh);
 	~CActorBehaviorComponent();
 
-	virtual bool	Init(void) override = 0;
+	virtual bool	Init(void) override;
 	virtual void	Uninit(void) override;
 	virtual void	Update(void) override;
 	virtual void	LateUpdate(void) override;
 
-	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override = 0;
-	virtual void	OnCollision(CCollisionInfo& collisionInfo) override = 0;
+	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
+	virtual void	OnCollision(CCollisionInfo& collisionInfo) override {}
+
+	void	Act(CKFVec3& vMovement, bool& bJump, bool& bAttack);
+	void	Hit(const float& fDamage);
 
 	//Set関数
 	void	SetLevel(const int& nLevel) { m_nLevel = nLevel; }
@@ -59,10 +49,11 @@ public:
 	void	SetLifeNow(const float& fLifeNow) { m_fLifeNow = fLifeNow; }
 	void	SetAttack(const float& fAttack) { m_fAttack = fAttack; }
 	void	SetDefence(const float& fDefence) { m_fDefence = fDefence; }
-	void	SetMovementSpeed(const float& fMovementSpeed) { m_fMovementSpeed = fMovementSpeed; }
-	void	SetJumpForce(const float& fJumpForce) { m_fJumpForce = fJumpForce; }
-	void	SetTurnRate(const float& fTurnRate) { m_fTurnRate = fTurnRate; }
-
+	void	SetMoveSpeed(const float& fMoveSpeed) { m_fMoveSpeed = fMoveSpeed; }
+	void	SetJumpSpeed(const float& fJumpSpeed) { m_fJumpSpeed = fJumpSpeed; }
+	void	SetTurnSpeedMin(const float& fTurnSpeed) { m_fTurnSpeedMin = fTurnSpeed; }
+	void	SetTurnSpeedMax(const float& fTurnSpeed) { m_fTurnSpeedMax = fTurnSpeed; }
+	
 	//Get関数
 	float	GetLifeMax(void) const { return m_fLifeMax; }
 	float	GetLifeNow(void) const { return m_fLifeNow; }
@@ -71,31 +62,39 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void	Stay(CActorMeshComponent* pActor);
-	void	Move(void);				  
-	void	Move(CActorMeshComponent* pActor);
-	void	Jump(void);				  
-	void	Jump(CActorMeshComponent* pActor);
-	void	Attack(void);
-	void	Attack(CActorMeshComponent* pActor);
-	void	Turn(const CKFVec3& vForward);
-	void	Turn(const CKFVec3& vForward, CActorMeshComponent *pActor);
+	void	move(const CKFVec3& vMovement);
+	void	jump(const bool& bJump);
+	void	turn(const float& fTurnAngle, const float& fMoveRate);
+	void	updateAnimation(const float& fMovement, const bool& bAttack);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	C3DRigidbodyComponent*	m_pRigidbody;	//リジッドボディ
+	C3DRigidbodyComponent&	m_rigidbody;	//リジッドボディ
+	CActorMeshComponent*	m_pActor;
 
 	//一時採用
 	CColliderComponent*		m_pAttackCollider;
 
 	//パラメーター
-	int		m_nLevel;			//レベル
-	float	m_fLifeMax;			//最大生命値
-	float	m_fLifeNow;			//今の生命値
-	float	m_fAttack;			//攻撃力
-	float	m_fDefence;			//防御力
-	float	m_fMovementSpeed;	//移動速度
-	float	m_fJumpForce;		//跳ぶ力
-	float	m_fTurnRate;		//回る速度、pi(180度)回るに必要な時間(秒)
+	int		m_nLevel;				//レベル
+	float	m_fLifeMax;				//最大生命値
+	float	m_fLifeNow;				//今の生命値
+	float	m_fAttack;				//攻撃力
+	float	m_fDefence;				//防御力
+	float	m_fMoveSpeed;			//移動速度
+	float	m_fJumpSpeed;			//跳ぶ力
+	float	m_fTurnSpeedMin;		//回る速度
+	float	m_fTurnSpeedMax;
+	float	m_fGroundCheckDistance;
+	float	m_fAnimSpeed;
+	bool	m_bEnabled;
+	bool	m_bIsGrounded;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数宣言
+	//--------------------------------------------------------------------------------
+	CKFVec3 checkGroundStatus(void);
+	bool	checkCanAction(void);
 };

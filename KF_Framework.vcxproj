@@ -179,6 +179,7 @@
     <ClCompile Include="inputDX.cpp" />
     <ClCompile Include="inputManager.cpp" />
     <ClCompile Include="KF_CollisionSystem.cpp" />
+    <ClCompile Include="KF_CollisionUtility.cpp" />
     <ClCompile Include="KF_Math.cpp" />
     <ClCompile Include="KF_PhysicsSystem.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
@@ -197,11 +198,7 @@
     <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
-    <ClCompile Include="playerAttackStatus.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
-    <ClCompile Include="playerJumpStatus.cpp" />
-    <ClCompile Include="playerMoveStatus.cpp" />
-    <ClCompile Include="playerNormalStatus.cpp" />
     <ClCompile Include="playerUIObject.cpp" />
     <ClCompile Include="rendererDX.cpp" />
     <ClCompile Include="renderState.cpp" />
@@ -247,6 +244,7 @@
     <ClInclude Include="KF_CollisionSystem.h" />
     <ClInclude Include="KF_Math.h" />
     <ClInclude Include="KF_PhysicsSystem.h" />
+    <ClInclude Include="KF_CollisionUtility.h" />
     <ClInclude Include="KF_UtilityDX.h" />
     <ClInclude Include="lightManager.h" />
     <ClInclude Include="main.h" />
@@ -270,18 +268,13 @@
     <ClInclude Include="motionInfo.h" />
     <ClInclude Include="OBBColliderComponent.h" />
     <ClInclude Include="planeColliderComponent.h" />
-    <ClInclude Include="playerAttackStatus.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
-    <ClInclude Include="playerJumpStatus.h" />
-    <ClInclude Include="playerMoveStatus.h" />
-    <ClInclude Include="playerNormalStatus.h" />
     <ClInclude Include="playerUIObject.h" />
     <ClInclude Include="rendererDX.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbodyComponent.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereColliderComponent.h" />
-    <ClInclude Include="status.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="actionGameCamera.h" />
     <ClInclude Include="transformComponent.h" />

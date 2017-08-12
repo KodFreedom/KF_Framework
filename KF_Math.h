@@ -257,16 +257,19 @@ public:
 	static float			VecMagnitudeSquare(const CKFVec3& vValue);
 	static void				VecNormalize(CKFVec2& vVec);
 	static void				VecNormalize(CKFVec3& vVec);
+	static CKFVec3			VecNormalize(const CKFVec3& vVec);
 	static float			Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR);
 	static float			Vec3Dot(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static float			VecDistance(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static float			VecDistanceSquare(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static CKFVec3			Vec3TransformCoord(const CKFVec3& vVec, const CKFMtx44& mtxRot);
 	static CKFVec3			Vec3TransformNormal(const CKFVec3& vVec, const CKFMtx44& mtxRot);
+	static CKFVec3			Vec3Scale(const CKFVec3& vValue, const CKFVec3& vScale);
 	static float			Vec2Radian(const CKFVec2& vValue);
 	static float			RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR);
 	static float			RadianBetweenVec(const CKFVec3& vVecL, const CKFVec3& vVecR);
 	static CKFVec3			EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo);
+	static CKFVec3			ProjectOnPlane(const CKFVec3& vVec, const CKFVec3& vUpPlane, const CKFVec3& vUpNow = CKFVec3(0.0f, 1.0f, 0.0f));
 	static CKFVec3			TransformInverse(const CKFMtx44& mtx, const CKFVec3& vVec);
 
 	//MatrixåvéZ

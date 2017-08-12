@@ -9,13 +9,12 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "actorBehaviorComponent.h"
+#include "behaviorComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class C3DRigidbodyComponent;
-class CColliderComponent;
+class CActorBehaviorComponent;
 class CAIMode;
 class CEnemyNormalMode;
 class CEnemyAttackMode;
@@ -26,7 +25,7 @@ class CEnemyAttackMode;
 //--------------------------------------------------------------------------------
 //  プレイヤー行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CEnemyBehaviorComponent : public CActorBehaviorComponent
+class CEnemyBehaviorComponent : public CBehaviorComponent
 {
 	friend CEnemyNormalMode;
 	friend CEnemyAttackMode;
@@ -35,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CEnemyBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
+	CEnemyBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor);
 	~CEnemyBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -51,7 +50,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CGameObject*		m_pTarget;
-	CAIMode*			m_pMode;
-	unsigned int		m_usCntWhosYourDaddy;
+	CGameObject*				m_pTarget;
+	CAIMode*					m_pMode;
+	CActorBehaviorComponent&	m_actor;
 };

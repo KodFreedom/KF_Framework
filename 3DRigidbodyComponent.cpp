@@ -37,7 +37,7 @@ C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
 	, m_vMovement(CKFVec3(0.0f))
 	, m_vVelocity(CKFVec3(0.0f))
 	, m_vForceAccum(CKFVec3(0.0f))
-	, m_bOnGround(false)
+	//, m_bOnGround(false)
 	//, m_bRotLock(0)
 {
 }

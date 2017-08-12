@@ -75,6 +75,10 @@ public:
 	void			RotByForward(const CKFVec3& vForward);
 	void			RotByRight(const CKFVec3& vRight);
 
+	//ëºÇÃä÷êî
+	CKFVec3			TransformDirectionToWorld(const CKFVec3& vDirection);
+	CKFVec3			TransformDirectionToLocal(const CKFVec3& vDirection);
+
 private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`

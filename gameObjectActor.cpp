@@ -39,16 +39,18 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 	//コンポネント
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
-	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, pRb);
+	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
+	pMesh->SetModelName(modelName);
+	pObj->m_pMesh = pMesh;
+	CActorBehaviorComponent* pAb = new CActorBehaviorComponent(pObj, *pRb, pMesh);
+	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, *pAb);
+	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
 	CAABBColliderComponent* pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.6f);
 	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
 	pCollider->SetOffset(CKFVec3(0.0f, 0.6f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
-	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
-	pMesh->SetModelName(modelName);
-	pObj->m_pMesh = pMesh;
 	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
 	//パラメーター
@@ -80,8 +82,14 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelNam
 	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
 
+	//メッシュ
+	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
+	pMesh->SetModelName(modelName);
+	pObj->m_pMesh = pMesh;
+
 	//ビヘイビア
-	CEnemyBehaviorComponent* pEb = new CEnemyBehaviorComponent(pObj, pRb);
+	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pMesh);
+	CEnemyBehaviorComponent* pEb = new CEnemyBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pEb);
 
 	//コライダー
@@ -93,10 +101,7 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelNam
 	pObj->AddCollider(pCollider);
 	pObj->AddCollider(pDetector);
 
-	//メッシュ
-	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
-	pMesh->SetModelName(modelName);
-	pObj->m_pMesh = pMesh;
+	
 
 	//ドロー
 	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);

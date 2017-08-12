@@ -9,62 +9,15 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class C3DRigidbodyComponent;
-class CColliderComponent;
+class CCollision;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コリジョン
-//--------------------------------------------------------------------------------
-class CCollision
-{
-public:
-	CCollision()
-		: m_pRigidBodyOne(nullptr)
-		, m_pRigidBodyTwo(nullptr)
-		, m_vCollisionNormal(CKFVec3(0.0f))
-		, m_vCollisionPos(CKFVec3(0.0f))
-		, m_fPenetration(0.0f)
-	{}
-	~CCollision() {}
-
-	C3DRigidbodyComponent*	m_pRigidBodyOne;
-	C3DRigidbodyComponent*	m_pRigidBodyTwo;
-	CKFVec3					m_vCollisionNormal;
-	CKFVec3					m_vCollisionPos;
-	float					m_fPenetration;
-	CKFMtx44				m_mtxToWorld;
-};
-
-//--------------------------------------------------------------------------------
-//  コリジョン情報
-//--------------------------------------------------------------------------------
-class CCollisionInfo
-{
-public:
-	CCollisionInfo()
-		: m_pColliderThis(nullptr)
-		, m_pCollider(nullptr)
-	{
-		m_listCollision.clear();
-	}
-	~CCollisionInfo() 
-	{
-		m_listCollision.clear();
-	}
-
-	CColliderComponent*		m_pColliderThis;
-	CColliderComponent*		m_pCollider;
-	list<CCollision*>		m_listCollision;
-};
-
 //--------------------------------------------------------------------------------
 //  物理演算システム
 //--------------------------------------------------------------------------------
@@ -82,7 +35,7 @@ public:
 	void	Release(void);
 	void	Update(void);
 
-	void	RegistryCollision(CCollision& collision);
+	void	RegisterCollision(CCollision* pCollision);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -97,5 +50,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数宣言
 	//--------------------------------------------------------------------------------
-	list<CCollision> m_listCollision;
+	list<CCollision*> m_listCollision;
 };

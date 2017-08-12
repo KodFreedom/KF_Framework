@@ -9,18 +9,12 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "actorBehaviorComponent.h"
+#include "behaviorComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-//class C3DRigidbodyComponent;
-//class CActorMeshComponent;
-class CStatus;
-class CPlayerNormalStatus;
-class CPlayerMoveStatus;
-class CPlayerJumpStatus;
-class CPlayerAttackStatus;
+class CActorBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -28,21 +22,13 @@ class CPlayerAttackStatus;
 //--------------------------------------------------------------------------------
 //  プレイヤー行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CPlayerBehaviorComponent : public CActorBehaviorComponent
+class CPlayerBehaviorComponent : public CBehaviorComponent
 {
-	//--------------------------------------------------------------------------------
-	//  フレンドクラス
-	//--------------------------------------------------------------------------------
-	friend CPlayerNormalStatus;
-	friend CPlayerMoveStatus;
-	friend CPlayerJumpStatus;
-	friend CPlayerAttackStatus;
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPlayerBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent* const pRigidbody);
+	CPlayerBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor);
 	~CPlayerBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -53,14 +39,9 @@ public:
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
 	void	OnCollision(CCollisionInfo& collisionInfo) override;
 
-	//状態の切り替え
-	void	ChangeStatus(CStatus* const pStatus);
-
 private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CStatus*	m_pStatus;		//状態
-
-	unsigned int	m_usCntWhosYourDaddy;
+	CActorBehaviorComponent& m_actor;
 };
