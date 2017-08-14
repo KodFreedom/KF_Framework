@@ -56,6 +56,9 @@ public:
 
 	CKFVec2 operator+(const CKFVec2& vValue) const;
 	void operator+=(const CKFVec2& vValue);
+
+	CKFVec2 operator-(const CKFVec2& vValue) const;
+	void operator-=(const CKFVec2& vValue);
 	
 	CKFVec2 operator*(const float& fValue) const;
 	void operator*=(const float& fValue);
@@ -225,7 +228,14 @@ public:
 class CKFRay
 {
 public:
-	CKFRay() : m_vOrigin(CKFVec3(0.0f)), m_vDirection(CKFVec3(0.0f)) {}
+	CKFRay()
+		: m_vOrigin(CKFVec3(0.0f))
+		, m_vDirection(CKFVec3(0.0f))
+	{}
+	CKFRay(const CKFVec3& vOrigin, const CKFVec3& vDirection)
+		: m_vOrigin(vOrigin)
+		, m_vDirection(vDirection)
+	{}
 	~CKFRay() {}
 
 	CKFVec3 m_vOrigin;
@@ -238,13 +248,6 @@ public:
 class CKFMath
 {
 public:
-	//レイとスフィアの当たり情報
-	struct RTS_INFO
-	{
-		bool bIsContact;
-		float fTimingMin;
-	};
-
 	//Random
 	static void				InitRandom(void);
 	static int				GetRandomInt(const int& nMin, const int& nMax);
@@ -254,6 +257,7 @@ public:
 	//Vector計算
 	static float			VecMagnitude(const CKFVec2& vValue);
 	static float			VecMagnitude(const CKFVec3& vValue);
+	static float			VecMagnitudeSquare(const CKFVec2& vValue);
 	static float			VecMagnitudeSquare(const CKFVec3& vValue);
 	static void				VecNormalize(CKFVec2& vVec);
 	static void				VecNormalize(CKFVec3& vVec);
@@ -298,7 +302,6 @@ public:
 	static CKFRay			CalculatePickingRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11, const CKFMtx44& mtxViewInverse);
 	static CKFRay			ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11);
 	static void				TransformRay(CKFRay& ray, const CKFMtx44& mtxTrans);
-	static RTS_INFO			ContactRayToSphere(const CKFRay& ray, const CKFVec3& vSpherePos, const float& fRadius);
 
 	//Lerp関数
 	static CKFVec3			LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime);

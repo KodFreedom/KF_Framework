@@ -20,6 +20,8 @@ class CAABBColliderComponent;
 class COBBColliderComponent;
 class CFieldColliderComponent;
 class CCollision;
+class CRaycastHitInfo;
+class CGameObject;
 
 //--------------------------------------------------------------------------------
 //  íËêîíËã`
@@ -89,28 +91,44 @@ public:
 
 	void	RegisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
 	void	DeregisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
-	bool	RayCast(const CKFVec3& vPos, const CKFVec3& vDir, const float& fDis);
+	bool	RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis = nullptr);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
+	//Dynamic Sphere
 	void	checkWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere);
+	
+	//Dynamic AABB
 	void	checkWithDynamicAABB(CSphereColliderComponent& sphere);
 	void	checkWithDynamicAABB(const list<CColliderComponent*>::iterator& itrBegin, CAABBColliderComponent& aabb);
+	bool	checkWithDynamicAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis);
+
+	//Dynamic OBB
 	void	checkWithDynamicOBB(CSphereColliderComponent& sphere);
 	void	checkWithDynamicOBB(CAABBColliderComponent& aabb);
 	void	checkWithDynamicOBB(const list<CColliderComponent*>::iterator& itrBegin, COBBColliderComponent& obb);
+	bool	checkWithDynamicOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis);
+
+	//Static Sphere
 	void	checkWithStaticSphere(CSphereColliderComponent& sphere);
 	void	checkWithStaticSphere(CAABBColliderComponent& aabb);
 	void	checkWithStaticSphere(COBBColliderComponent& obb);
+	
+	//Static AABB
 	void	checkWithStaticAABB(CSphereColliderComponent& sphere);
 	void	checkWithStaticAABB(CAABBColliderComponent& aabb);
 	void	checkWithStaticAABB(COBBColliderComponent& obb);
+	
+	//Static OBB
 	void	checkWithStaticOBB(CSphereColliderComponent& sphere);
 	void	checkWithStaticOBB(CBoxColliderComponent& box);
+
+	//Field
 	void	checkWithField(CSphereColliderComponent& sphere);
 	void	checkWithField(CBoxColliderComponent& box);
+	bool	checkWithField(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

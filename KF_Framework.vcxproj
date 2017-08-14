@@ -264,10 +264,8 @@
     <ClInclude Include="2DMeshComponent.h" />
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
-    <ClInclude Include="motion.h" />
     <ClInclude Include="motionInfo.h" />
     <ClInclude Include="OBBColliderComponent.h" />
-    <ClInclude Include="planeColliderComponent.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerUIObject.h" />
     <ClInclude Include="rendererDX.h" />

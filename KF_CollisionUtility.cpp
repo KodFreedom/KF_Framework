@@ -788,6 +788,121 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 
 //--------------------------------------------------------------------------------
 //
+//  レイ
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：CheckRayWithField
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut)
+{
+	CCollision collision;
+	if (checkPointWithBox(collision, ray.m_vOrigin, box))
+	{
+		infoOut.m_vNormal = collision.m_vCollisionNormal;
+		infoOut.m_vPos = ray.m_vOrigin;
+		infoOut.m_pCollider = &box;
+		infoOut.m_fDistance = collision.m_fPenetration;
+		return true;
+	}
+	
+	auto vRayEnd = ray.m_vOrigin + ray.m_vDirection * fDistance;
+	if (checkPointWithBox(collision, vRayEnd, box))
+	{
+		infoOut.m_vNormal = collision.m_vCollisionNormal;
+		infoOut.m_vPos = vRayEnd;
+		infoOut.m_pCollider = &box;
+		infoOut.m_fDistance = collision.m_fPenetration;
+		return true;
+	}
+
+	return false;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CheckRayWithField
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
+{
+	CKFVec3 vOriginToSphere;
+	auto vSpherePos = sphere.GetWorldPos();
+	auto fRadius = sphere.GetRadius();
+	float fWorkA, fWorkB, fTimeA, fTimeB;
+	float fDiscriminant;
+
+	vOriginToSphere = ray.m_vOrigin - vSpherePos;
+	fWorkA = 2.0f * CKFMath::Vec3Dot(ray.m_vDirection, vOriginToSphere);
+	fWorkB = CKFMath::Vec3Dot(vOriginToSphere, vOriginToSphere) - fRadius * fRadius;
+
+	fDiscriminant = fWorkA * fWorkA - 4.0f * fWorkB;
+
+	if (fDiscriminant < 0.0f)
+	{
+		return false;
+	}
+
+	fDiscriminant = sqrtf(fDiscriminant);
+
+	fTimeA = (-fWorkA + fDiscriminant) / 2.0f;
+	fTimeB = (-fWorkA - fDiscriminant) / 2.0f;
+
+	if (fTimeA < 0.0f && fTimeB < 0.0f) { return false; }
+	
+	//最短時間を保存
+	fTimeA = fTimeA < 0.0f ? fTimeB : fTimeA;
+	fTimeB = fTimeB < 0.0f ? fTimeA : fTimeB;
+	auto fTimingMin = fTimeA <= fTimeB ? fTimeA : fTimeB;
+
+	if (fTimingMin > fDistance) { return false; }
+
+	infoOut.m_fDistance = fTimingMin;
+	infoOut.m_pCollider = &sphere;
+	infoOut.m_vPos = ray.m_vOrigin + ray.m_vDirection * fTimingMin;
+	infoOut.m_vNormal = infoOut.m_vPos - vSpherePos;
+	CKFMath::VecNormalize(infoOut.m_vNormal);
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CheckRayWithField
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut)
+{
+	//auto vRayMax = ray.m_vOrigin + ray.m_vDirection * fDistance;
+	//int nNumVtxX = 0;
+	//int nNumVtxZ = 0;
+	//vector<CKFVec3> vecVtx;
+	//if (!field.GetVtxByRange(ray.m_vOrigin, vRayMax, nNumVtxX, nNumVtxZ, vecVtx))
+	//{
+	//	return false;
+	//}
+
+	//一時採用
+	auto info = field.GetPointInfo(ray.m_vOrigin);
+	if (!info.bInTheField) { return false; }
+
+	auto fDis = ray.m_vOrigin.m_fY - info.fHeight;
+	if (fDis >= fDistance || fDis < 0.0f) { return false; }
+	infoOut.m_fDistance = fDis;
+	infoOut.m_vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+	infoOut.m_pCollider = &field;
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+//
 //  private
 //
 //--------------------------------------------------------------------------------
@@ -867,6 +982,93 @@ bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVe
 	return true;
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：checkLineWithLine
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vLB, const CKFVec2& vRA, const CKFVec2& vRB, CKFVec2& vOut)
+{
+	auto vLineL = vLB - vLA;
+	auto vLineR = vRB - vRA;
+
+	auto fSlopeL = (vLA.m_fX - vLB.m_fX) == 0.0f ? 0.0f
+		: (vLA.m_fY - vLB.m_fY) / (vLA.m_fX - vLB.m_fX);
+	auto fAddL = vLA.m_fY - fSlopeL * vLA.m_fX;
+	auto fSlopeR = (vRA.m_fX - vRB.m_fX) == 0.0f ? 0.0f
+		: (vRA.m_fY - vRB.m_fY) / (vRA.m_fX - vRB.m_fX);
+	auto fAddR = vRA.m_fY - fSlopeL * vRA.m_fX;
+	
+	//平行
+	if (fSlopeL == fSlopeR) { return false; }
+	
+	//交点の算出
+	vOut.m_fX = (fAddR - fAddL) / (fSlopeL - fSlopeR);
+	vOut.m_fY = fSlopeL * vOut.m_fX + fAddL;
+
+	//交点がラインの範囲内にあるかをチェック
+	//LineL
+	auto vDirL = vOut - vLA;
+	//方向チェック
+	if (CKFMath::Vec2Dot(vLineL, vDirL) < 0.0f) { return false; }
+
+	//長さチェック
+	if (CKFMath::VecMagnitudeSquare(vDirL) > CKFMath::VecMagnitudeSquare(vLineL)) { return false; }
+
+	//LineR
+	auto vDirR = vOut - vRA;
+	//方向チェック
+	if (CKFMath::Vec2Dot(vLineR, vDirR) < 0.0f) { return false; }
+
+	//長さチェック
+	if (CKFMath::VecMagnitudeSquare(vDirR) > CKFMath::VecMagnitudeSquare(vLineR)) { return false; }
+
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CheckRayWithField
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vLB, const CKFVec3& vRA, const CKFVec3& vRB, CKFVec3& vOut)
+{
+	auto vLineL = vLA - vLB;
+	auto vLineR = vRA - vRB;
+
+	if ((vLineL * vLineR) == CKFVec3(0.0f))
+	{//平行
+		return false;
+	}
+
+	//XY平面の交点の算出
+	CKFVec2 vOutXY;
+	if (!checkLineWithLine(CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), vOutXY))
+	{
+		return false;
+	}
+
+	CKFMath::VecNormalize(vLineL);
+	CKFMath::VecNormalize(vLineR);
+
+	//相応のZ値を算出する
+	auto fRateL = vLineL.m_fX != 0.0f ? (vOutXY.m_fX - vLA.m_fX) / vLineL.m_fX
+		: vLineL.m_fY != 0.0f ? (vOutXY.m_fY - vLA.m_fY) / vLineL.m_fY
+		: 0.0f;
+	auto fRateR = vLineR.m_fX != 0.0f ? (vOutXY.m_fX - vRA.m_fX) / vLineR.m_fX
+		: vLineR.m_fY != 0.0f ? (vOutXY.m_fY - vRA.m_fY) / vLineR.m_fY
+		: 0.0f;
+	auto fZL = vLA.m_fZ + fRateL * vLineL.m_fZ;
+	auto fZR = vRA.m_fZ + fRateR * vLineR.m_fZ;
+	if (fZL != fZR) { return false; }
+
+	vOut = CKFVec3(vOutXY.m_fX, vOutXY.m_fY, fZL);
+	return true;
+}
 
 //--------------------------------------------------------------------------------
 //  Box(AABBとOBB)のハーフサイズをとある軸に投影して長さを算出する

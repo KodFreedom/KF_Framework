@@ -33,12 +33,15 @@ public:
 	~CAnimatorComponent() {}
 
 	bool	Init(void) override;
-	void		Uninit(void) override;
-	void		Update(void);
+	void	Uninit(void) override;
+	void	Update(void);
 
 	//Setä÷êî
 	void ChangeMotion(CMotion* pMotion);
 	void ChangeMotionImmediately(CMotion* pMotion);
+
+	//Getä÷êî
+	vector<CGameObject*> GetNodes(void) { return m_vecNodes; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -55,6 +58,5 @@ private:
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	unordered_map<string, CMotionInfo> m_umMotionData;
-	vector<CGameObject*>	m_vecParts;
-	CMotion*					m_pMotionNow;
+	list<CGameObject*>	m_listNodes;
 };

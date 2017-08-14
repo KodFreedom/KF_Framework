@@ -142,6 +142,9 @@
     <Filter Include="ソース ファイル\AI">
       <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Motion">
+      <UniqueIdentifier>{7bc348cd-4315-4de3-b6ad-0e3e37cf9d16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -452,9 +455,6 @@
     <ClInclude Include="animatorComponent.h">
       <Filter>ヘッダー ファイル\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="motion.h">
-      <Filter>ヘッダー ファイル\Motion</Filter>
-    </ClInclude>
     <ClInclude Include="motionInfo.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
     </ClInclude>
@@ -502,9 +502,6 @@
     </ClInclude>
     <ClInclude Include="KF_PhysicsSystem.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="planeColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="AABBColliderComponent.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>

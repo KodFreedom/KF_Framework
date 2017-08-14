@@ -48,8 +48,8 @@ public:
 	void	Uninit(void) override;
 
 	//Getä÷êî
-	INFO		GetPointInfo(const CKFVec3& vPos);
-	list<INFO>	GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd);
+	INFO	GetPointInfo(const CKFVec3& vPos);
+	bool	GetVtxByRange(const CKFVec3& vBegin, const CKFVec3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<CKFVec3>& vecOut);
 
 private:
 	//--------------------------------------------------------------------------------

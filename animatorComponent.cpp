@@ -1,24 +1,19 @@
-////--------------------------------------------------------------------------------
-////
-////　animatorComponent.h
-////	Author : Xu Wenjie
-////	Date   : 2017-07-05
-////--------------------------------------------------------------------------------
-////--------------------------------------------------------------------------------
-////  インクルードファイル
-////--------------------------------------------------------------------------------
-//#include "animatorComponent.h"
-//#include "gameObjectManager.h"
-//#include "gameObject.h"
-//#include "transformComponent.h"
-//#include "modelMeshComponent.h"
-//#include "modelMeshDrawComponent.h"
-//#include "modelManager.h"
-//#include "manager.h"
+//--------------------------------------------------------------------------------
 //
-////--------------------------------------------------------------------------------
-////  クラス
-////--------------------------------------------------------------------------------
+//　animatorComponent.cpp
+//	Author : Xu Wenjie
+//	Date   : 2017-07-05
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  インクルードファイル
+//--------------------------------------------------------------------------------
+#include "animatorComponent.h"
+#include "gameObject.h"
+#include "transformComponent.h"
+
+//--------------------------------------------------------------------------------
+//  クラス
+//--------------------------------------------------------------------------------
 ////--------------------------------------------------------------------------------
 ////  コンストラクタ
 ////--------------------------------------------------------------------------------
@@ -55,65 +50,71 @@
 //
 //}
 //
-////--------------------------------------------------------------------------------
-////  コンストラクタ
-////--------------------------------------------------------------------------------
-//void CAnimatorComponent::Update(void)
-//{
-//	//パーツ更新
-//	int nFrame = 0;
-//	int nNumKey = 0;
-//	bool bLoop = false;
-//	int nNumParts = (int)m_vecParts.size();
-//	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
-//	{
-//		CKFVec3 vPartPos = m_vecParts[nCntPart]->GetTransformComponent()->GetPosNext();
-//		CKFVec3 vPartRot = m_vecParts[nCntPart]->GetTransformComponent()->GetRot();
-//		CKFVec3 vKeyPos = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].vPos;
-//		CKFVec3 vKeyRot = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].vRot;
-//		CKFVec3 vRotDifference = vKeyRot - vPartRot;
-//		CKFMath::NormalizeRotInPi(vRotDifference);
-//		CKFVec3 vMovement;
-//		CKFVec3 vRot;
-//
-//		nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].nFrame;
-//		nNumKey = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame.size();
-//		bLoop = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].bLoop;
-//
-//		if ((nFrame - m_motionInfo.nCntFrame) != 0)
-//		{
-//			vMovement = (vKeyPos - vPartPos) / (float)(nFrame - m_motionInfo.nCntFrame);
-//			vRot = vRotDifference / (float)(nFrame - m_motionInfo.nCntFrame);
-//		}
-//
-//		CKFMath::NormalizeRotInTwoPi(vRot);
-//		m_vecParts[nCntPart]->GetTransformComponent()->MovePosNext(vMovement);
-//		m_vecParts[nCntPart]->GetTransformComponent()->RotByEuler(vRot);
-//	}
-//
-//	//フレームカウント
-//	m_motionInfo.nCntFrame++;
-//
-//	//キーフレーム切り替え
-//	if (m_motionInfo.nCntFrame == nFrame)
-//	{
-//		m_status = MS_NORMAL;
-//		m_motionInfo.nCntFrame = 0;
-//		m_motionInfo.nKeyNow++;
-//
-//		//モーション切り替え
-//		if (m_motionInfo.nKeyNow == nNumKey)
-//		{
-//			m_motionInfo.nKeyNow = 0;
-//
-//			if (bLoop != true)
-//			{
-//				ChangeMotion(m_motionInfo.motionNext);
-//			}
-//		}
-//	}
-//}
-//
+//--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+void CAnimatorComponent::Update(void)
+{
+	for (auto pObj : m_listNodes)
+	{
+		auto pTrans = pObj->GetTransformComponent();
+		auto vPos = pTrans->GetPosNext();
+		auto qRot = pTrans->GetRotNext();
+	}
+	////パーツ更新
+	//int nFrame = 0;
+	//int nNumKey = 0;
+	//bool bLoop = false;
+	//int nNumParts = (int)m_vecParts.size();
+	//for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
+	//{
+	//	CKFVec3 vPartPos = m_vecParts[nCntPart]->GetTransformComponent()->GetPosNext();
+	//	CKFVec3 vPartRot = m_vecParts[nCntPart]->GetTransformComponent()->GetRot();
+	//	CKFVec3 vKeyPos = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].vPos;
+	//	CKFVec3 vKeyRot = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].vRot;
+	//	CKFVec3 vRotDifference = vKeyRot - vPartRot;
+	//	CKFMath::NormalizeRotInPi(vRotDifference);
+	//	CKFVec3 vMovement;
+	//	CKFVec3 vRot;
+
+	//	nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame[m_motionInfo.nKeyNow].nFrame;
+	//	nNumKey = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].vecKeyFrame.size();
+	//	bLoop = m_vecPartsMotionInfo[nCntPart][m_motionInfo.motionNow].bLoop;
+
+	//	if ((nFrame - m_motionInfo.nCntFrame) != 0)
+	//	{
+	//		vMovement = (vKeyPos - vPartPos) / (float)(nFrame - m_motionInfo.nCntFrame);
+	//		vRot = vRotDifference / (float)(nFrame - m_motionInfo.nCntFrame);
+	//	}
+
+	//	CKFMath::NormalizeRotInTwoPi(vRot);
+	//	m_vecParts[nCntPart]->GetTransformComponent()->MovePosNext(vMovement);
+	//	m_vecParts[nCntPart]->GetTransformComponent()->RotByEuler(vRot);
+	//}
+
+	////フレームカウント
+	//m_motionInfo.nCntFrame++;
+
+	////キーフレーム切り替え
+	//if (m_motionInfo.nCntFrame == nFrame)
+	//{
+	//	m_status = MS_NORMAL;
+	//	m_motionInfo.nCntFrame = 0;
+	//	m_motionInfo.nKeyNow++;
+
+	//	//モーション切り替え
+	//	if (m_motionInfo.nKeyNow == nNumKey)
+	//	{
+	//		m_motionInfo.nKeyNow = 0;
+
+	//		if (bLoop != true)
+	//		{
+	//			ChangeMotion(m_motionInfo.motionNext);
+	//		}
+	//	}
+	//}
+}
+
 ////--------------------------------------------------------------------------------
 ////  ファイルからデータを読み込む
 ////--------------------------------------------------------------------------------

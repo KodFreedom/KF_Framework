@@ -91,21 +91,45 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 //--------------------------------------------------------------------------------
 //  fieldの情報取得
 //--------------------------------------------------------------------------------
-list<CFieldColliderComponent::INFO> CFieldColliderComponent::GetRangeInfo(const CKFVec3& vBegin, const CKFVec3& vEnd)
+bool CFieldColliderComponent::GetVtxByRange(const CKFVec3& vBegin, const CKFVec3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<CKFVec3>& vecOut)
 {
-	list<INFO> listInfo;
+	CKFVec3 vMin = CKFVec3(min(vBegin.m_fX, vEnd.m_fX), min(vBegin.m_fY, vEnd.m_fY), min(vBegin.m_fZ, vEnd.m_fZ));
+	CKFVec3 vMax = CKFVec3(max(vBegin.m_fX, vEnd.m_fX), max(vBegin.m_fY, vEnd.m_fY), max(vBegin.m_fZ, vEnd.m_fZ));
 
-	//書き出す範囲を算出する
-	//CKFVec3 vStartPos = m_vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
-	//int nXLeftUpBegin = (int)(((vBegin.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	//int nZLeftUpBegin = -(int)(((vBegin.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
-	//int nXLeftUpEnd = (int)(((vEnd.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	//int nZLeftUpEnd = -(int)(((vEnd.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
-	
-	//範囲内フィールドがあるかどうかをチェック
+	//範囲を算出
+	CKFVec3 vPosCenter = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
+	CKFVec3 vStartPos = vPosCenter + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	int nXMin = (int)(((vMin.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZMin = -(int)(((vMin.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	int nXMax = 1 + (int)(((vMax.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZMax = 1 - (int)(((vMax.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	nXMin = nXMin < 0 ? 0 : nXMin;
+	nZMin = nZMin < 0 ? 0 : nZMin;
+	nXMax = nXMax > m_nNumBlockX + 1 ? m_nNumBlockX + 1 : nXMax;
+	nZMax = nZMax > m_nNumBlockZ + 1 ? m_nNumBlockZ + 1 : nZMax;
 
+	//フィールドの範囲外だったら処理終了
+	if (nXMin >= m_nNumBlockX + 1 || nZMin >= m_nNumBlockZ + 1
+		|| nXMax <= 0 || nZMax <= 0)
+	{
+		return false;
+	}
 
-	return listInfo;
+	//範囲内の頂点を保存する
+	nNumVtxXOut = nXMax - nXMin;
+	nNumVtxZOut = nZMax - nZMin;
+	vecOut.resize(nNumVtxXOut * nNumVtxZOut);
+	int nCnt = 0;
+	for (int nCntZ = nZMin; nCntZ <= nZMax; nCntZ++)
+	{
+		for (int nCntX = nXMin; nCntX <= nXMax; nCntX++)
+		{
+			vecOut[nCnt] = m_vectorVtx[nCntZ * (m_nNumBlockX + 1) + nCntX];
+			nCnt++;
+		}
+	}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------

@@ -7,6 +7,10 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "main.h"
+#include "manager.h"
+#include "KF_CollisionSystem.h"
+#include "KF_CollisionUtility.h"
 #include "actorBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "gameObject.h"
@@ -37,7 +41,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fJumpSpeed(0.0f)
 	, m_fTurnSpeedMin(0.0f)
 	, m_fTurnSpeedMax(0.0f)
-	, m_fGroundCheckDistance(0.0f)
+	, m_fGroundCheckDistance(0.2f)
 	, m_fAnimSpeed(1.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
@@ -128,9 +132,16 @@ void CActorBehaviorComponent::Act(CKFVec3& vMovement, bool& bJump, bool& bAttack
 	jump(bJump);
 
 	//Animation
-	updateAnimation(fMovement, bAttack);
+	updateAnimation(fMovement, bJump, bAttack);
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：Act
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Hit(const float& fDamage)
 {
 
@@ -162,11 +173,11 @@ void CActorBehaviorComponent::move(const CKFVec3& vMovement)
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::jump(const bool& bJump)
 {
-	if (!bJump) { return; }
+	if (!bJump || !m_bIsGrounded) { return; }
 	auto vVelocity = m_rigidbody.GetVelocity();
 	vVelocity.m_fY = m_fJumpSpeed;
-	m_bIsGrounded = false;
-	m_fGroundCheckDistance = 0.1f;
+	m_rigidbody.SetVelocity(vVelocity);
+	m_fGroundCheckDistance = 0.2f;
 }
 
 //--------------------------------------------------------------------------------
@@ -189,7 +200,7 @@ void CActorBehaviorComponent::turn(const float& fTurnAngle, const float& fMoveRa
 //			fMoveRate：移動率
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool& bAttack)
+void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool& bJump, const bool& bAttack)
 {
 	if (!m_pActor) { return; }
 
@@ -199,7 +210,7 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 		return;
 	}
 
-	if (!m_bIsGrounded)
+	if (m_bIsGrounded && bJump)
 	{
 		m_pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
 		return;
@@ -223,6 +234,15 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 //--------------------------------------------------------------------------------
 CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 {
+	CRaycastHitInfo rayHit;
+	auto vPos = m_pGameObj->GetTransformComponent()->GetPos();
+	auto pCollisionSystem = GetManager()->GetCollisionSystem();
+	if (pCollisionSystem->RayCast(vPos, CKFVec3(0.0f, -1.0f, 0.0f), m_fGroundCheckDistance, rayHit, m_pGameObj))
+	{
+		m_bIsGrounded = true;
+		return rayHit.m_vNormal;
+	}
+
 	m_bIsGrounded = false;
 	return CKFVec3(0.0f, 1.0f, 0.0f);
 }

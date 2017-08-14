@@ -65,7 +65,7 @@ protected:
 	void	move(const CKFVec3& vMovement);
 	void	jump(const bool& bJump);
 	void	turn(const float& fTurnAngle, const float& fMoveRate);
-	void	updateAnimation(const float& fMovement, const bool& bAttack);
+	void	updateAnimation(const float& fMovement, const bool& bJump, const bool& bAttack);
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

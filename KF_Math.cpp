@@ -84,6 +84,26 @@ void CKFVec2::operator+=(const CKFVec2 &vValue)
 }
 
 //--------------------------------------------------------------------------------
+//  operator-
+//--------------------------------------------------------------------------------
+CKFVec2 CKFVec2::operator-(const CKFVec2 &vValue) const
+{
+	CKFVec2 vAnswer;
+	vAnswer.m_fX = m_fX - vValue.m_fX;
+	vAnswer.m_fY = m_fY - vValue.m_fY;
+	return vAnswer;
+}
+
+//--------------------------------------------------------------------------------
+//  operator-=
+//--------------------------------------------------------------------------------
+void CKFVec2::operator-=(const CKFVec2 &vValue)
+{
+	m_fX -= vValue.m_fX;
+	m_fY -= vValue.m_fY;
+}
+
+//--------------------------------------------------------------------------------
 //  operator*(外積)
 //--------------------------------------------------------------------------------
 float CKFVec2::operator*(const CKFVec2& vValue) const
@@ -805,6 +825,15 @@ float CKFMath::VecMagnitude(const CKFVec3 &vValue)
 }
 
 //--------------------------------------------------------------------------------
+//  MagnitudeSquare(Vector2)
+//--------------------------------------------------------------------------------
+float CKFMath::VecMagnitudeSquare(const CKFVec2 &vValue)
+{
+	float fMagnitudeSquare = vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY;
+	return fMagnitudeSquare;
+}
+
+//--------------------------------------------------------------------------------
 //  MagnitudeSquare(Vector3)
 //--------------------------------------------------------------------------------
 float CKFMath::VecMagnitudeSquare(const CKFVec3 &vValue)
@@ -1373,51 +1402,6 @@ void CKFMath::TransformRay(CKFRay& ray, const CKFMtx44& mtxTrans)
 	ray.m_vOrigin = Vec3TransformCoord(ray.m_vOrigin, mtxTrans);
 	ray.m_vDirection = Vec3TransformNormal(ray.m_vDirection, mtxTrans);
 	VecNormalize(ray.m_vDirection);
-}
-
-//--------------------------------------------------------------------------------
-//  ContactRaytoSphere
-//	レイとスフィアの当たり判定
-//--------------------------------------------------------------------------------
-CKFMath::RTS_INFO CKFMath::ContactRayToSphere(const CKFRay& ray, const CKFVec3& vSpherePos, const float& fRadius)
-{
-	RTS_INFO info;
-	CKFVec3 vOriginToSphere;
-	float fWorkA, fWorkB, fTimeA, fTimeB;
-	float fDiscriminant;
-
-	info.bIsContact = false;
-	info.fTimingMin = 0.0f;
-
-	vOriginToSphere = ray.m_vOrigin - vSpherePos;
-	fWorkA = 2.0f * Vec3Dot(ray.m_vDirection, vOriginToSphere);
-	fWorkB = Vec3Dot(vOriginToSphere, vOriginToSphere) - fRadius * fRadius;
-
-	fDiscriminant = fWorkA * fWorkA - 4.0f * fWorkB;
-
-	if (fDiscriminant < 0.0f)
-	{
-		return info;
-	}
-
-	fDiscriminant = sqrtf(fDiscriminant);
-
-	fTimeA = (-fWorkA + fDiscriminant) / 2.0f;
-	fTimeB = (-fWorkA - fDiscriminant) / 2.0f;
-
-	if (fTimeA >= 0.0f || fTimeB >= 0.0f)
-	{
-		info.bIsContact = true;
-
-		//最短時間を保存
-		fTimeA = fTimeA < 0.0f ? fTimeB : fTimeA;
-		fTimeB = fTimeB < 0.0f ? fTimeA : fTimeB;
-		info.fTimingMin = fTimeA <= fTimeB ? fTimeA : fTimeB;
-
-		return info;
-	}
-
-	return info;
 }
 
 //--------------------------------------------------------------------------------

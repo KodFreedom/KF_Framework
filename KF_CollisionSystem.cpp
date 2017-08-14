@@ -31,6 +31,11 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CKFCollisionSystem::CKFCollisionSystem()
@@ -198,6 +203,52 @@ void CKFCollisionSystem::DeregisterCollider(const COL_MODE& mode, const COL_TYPE
 	}
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：RayCast
+//  関数説明：レイキャスト関数、レイと衝突したの最近点を算出する
+//	引数：	vOrigin：レイの始点
+//			vDirection：レイの向き
+//			fDistance：レイの長さ
+//			infoOut：衝突点の情報
+//			pObjThis：自分のゲームオブジェクト
+//	戻り値：衝突フラグ
+//--------------------------------------------------------------------------------
+bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+{
+	CKFRay ray = CKFRay(vOrigin, vDirection);
+	bool bFind = false;
+	CRaycastHitInfo info;
+
+	//AABB
+	if (checkWithDynamicAABB(ray, fDistance, info, pObjThis))
+	{
+		bFind = true;
+		infoOut = info;
+	}
+
+	//OBB
+	if (checkWithDynamicOBB(ray, fDistance, info, pObjThis))
+	{
+		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+		{
+			infoOut = info;
+		}
+		bFind = true;
+	}
+
+	//Field
+	if (checkWithField(ray, fDistance, info))
+	{
+		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+		{
+			infoOut = info;
+		}
+		bFind = true;
+	}
+
+	return bFind;
+}
+
 #ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  DrawCollider
@@ -238,6 +289,11 @@ void CKFCollisionSystem::DrawCollider(void)
 }
 #endif
 
+//--------------------------------------------------------------------------------
+//
+//  private
+//
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  衝突処理
@@ -285,6 +341,39 @@ void CKFCollisionSystem::checkWithDynamicAABB(const list<CColliderComponent*>::i
 	}
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：checkWithDynamicOBB
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CKFCollisionSystem::checkWithDynamicAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+{
+	bool bFind = false;
+	for (auto itr = m_alistCollider[DYNAMIC][COL_AABB].begin(); itr != m_alistCollider[DYNAMIC][COL_AABB].end(); ++itr)
+	{
+		//同じオブジェクトに付いているなら判定しない
+		if ((*itr)->GetGameObject() == pObjThis) { continue; }
+		CAABBColliderComponent* pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		CRaycastHitInfo info;
+		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pAABB, info))
+		{
+			if (!bFind)
+			{
+				bFind = true;
+				infoOut = info;
+			}
+			else if (info.m_fDistance < infoOut.m_fDistance)
+			{
+				infoOut = info;
+			}
+		}
+	}
+
+	return bFind;
+}
+
 
 //--------------------------------------------------------------------------------
 //  スフィアとOBBの当たり判定
@@ -326,6 +415,39 @@ void CKFCollisionSystem::checkWithDynamicOBB(const list<CColliderComponent*>::it
 		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
 		CCollisionDetector::CheckBoxWithBox(*pOBB, obb);
 	}
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：checkWithDynamicOBB
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+bool CKFCollisionSystem::checkWithDynamicOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+{
+	bool bFind = false;
+	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	{
+		CRaycastHitInfo info;
+		//同じオブジェクトに付いているなら判定しない
+		if ((*itr)->GetGameObject() == pObjThis) { continue; }
+		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pOBB, info))
+		{
+			if (!bFind)
+			{
+				bFind = true;
+				infoOut = info;
+			}
+			else if(info.m_fDistance < infoOut.m_fDistance)
+			{
+				infoOut = info;
+			}
+		}
+	}
+
+	return bFind;
 }
 
 //--------------------------------------------------------------------------------
@@ -448,4 +570,37 @@ void CKFCollisionSystem::checkWithField(CBoxColliderComponent& box)
 	}
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：RayCast
+//  関数説明：レイキャスト関数、レイと衝突したの最近点を算出する
+//	引数：	vOrigin：レイの始点
+//			vDirection：レイの向き
+//			fDistance：レイの長さ
+//			infoOut：衝突点の情報
+//			pObjThis：自分のゲームオブジェクト
+//	戻り値：衝突フラグ
+//--------------------------------------------------------------------------------
+bool CKFCollisionSystem::checkWithField(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
+{
+	bool bFind = false;
 
+	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
+	{
+		CFieldColliderComponent* pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		CRaycastHitInfo info;
+		if (CCollisionDetector::CheckRayWithField(ray, fDistance, *pField, info))
+		{
+			if (!bFind)
+			{
+				bFind = true;
+				infoOut = info;
+			}
+			else if(info.m_fDistance < infoOut.m_fDistance)
+			{
+				infoOut = info;
+			}
+		}
+	}
+
+	return bFind;
+}
