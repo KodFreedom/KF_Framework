@@ -31,22 +31,7 @@ void C3DMeshDrawComponent::Draw(void)
 	const CMesh* const pMeshInfo = GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
 
 	//マトリクス算出
-	CKFMtx44 mtxWorld;
-	CKFMtx44 mtxRot;
-	CKFMtx44 mtxPos;
-
-	//単位行列に初期化
-	CKFMath::MtxIdentity(mtxWorld);
-
-	//回転(Y->X->Z)
-	mtxRot = m_pGameObj->GetTransformComponent()->GetMatrixRot();
-	mtxWorld *= mtxRot;
-
-	//平行移動
-	CKFMath::MtxTranslation(mtxPos, m_pGameObj->GetTransformComponent()->GetPos());
-	mtxWorld *= mtxPos;
-
-	m_pGameObj->GetTransformComponent()->SetMatrix(mtxWorld);
+	auto mtxWorld = m_pGameObj->GetTransformComponent()->GetMatrix();
 
 #ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();

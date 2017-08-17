@@ -63,6 +63,7 @@ void CTextureManager::UseTexture(const string& strName)
 	{
 		string str = strPath + "が見つからない！！！";
 		MessageBox(NULL, str.c_str(), "エラー", MB_OK | MB_ICONWARNING);
+		texture.pTexture = nullptr;
 	}
 	m_umTexture.emplace(strName, texture);
 #endif

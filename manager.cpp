@@ -81,9 +81,9 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pMeshManager = new CMeshManager;
 
 	//モデルマネージャの生成
-	m_pModelManager = new CModelManager;
-	m_pModelManager->Init();
-	m_pModelManager->LoadAll();
+	//m_pModelManager = new CModelManager;
+	//m_pModelManager->Init();
+	//m_pModelManager->LoadAll();
 
 	//テクスチャマネージャの生成
 	m_pTextureManager = new CTextureManager;

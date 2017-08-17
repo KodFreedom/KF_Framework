@@ -129,6 +129,35 @@ CGameObject3D* CGameObject3D::CreateCube(const CKFVec3& vPos, const CKFVec3& vRo
 }
 
 //--------------------------------------------------------------------------------
+//  Cube生成処理
+//--------------------------------------------------------------------------------
+CGameObject3D* CGameObject3D::CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+{
+	CGameObject3D* pObj = new CGameObject3D;
+
+	//コンポネント
+	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	string strTexName;
+	pMesh->SetMeshName(strPath, strTexName);
+	pObj->m_pMesh = pMesh;
+	pObj->m_pDraw = new C3DMeshDrawComponent(pMesh, pObj);
+	pObj->m_pDraw->SetTexName(strTexName);
+	
+	//パラメーター
+	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
+
+	//初期化
+	pObj->Init();
+
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
 //  モデル生成処理
 //--------------------------------------------------------------------------------
 CGameObject3D* CGameObject3D::CreateModel(const CMOM::MODEL_NAME &modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)

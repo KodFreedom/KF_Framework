@@ -1289,7 +1289,7 @@ float CKFMath::QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR)
 //	MtxToQuaternion
 //	ïΩçsà⁄ìÆçsóÒÇÃçÏê¨
 //--------------------------------------------------------------------------------
-CKFQuaternion CKFMath::Vec3ToQuaternion(const CKFVec3& vVec)
+CKFQuaternion CKFMath::EulerToQuaternion(const CKFVec3& vVec)
 {
 	CKFQuaternion qValue;
 	D3DXQUATERNION qDx;

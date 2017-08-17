@@ -15,7 +15,7 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent;
-class CActorMeshComponent;
+class CAnimatorComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -29,7 +29,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CActorMeshComponent* const pMesh);
+	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator);
 	~CActorBehaviorComponent();
 
 	virtual bool	Init(void) override;
@@ -71,7 +71,7 @@ protected:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	C3DRigidbodyComponent&	m_rigidbody;	//リジッドボディ
-	CActorMeshComponent*	m_pActor;
+	CAnimatorComponent*		m_pAnimator;
 
 	//一時採用
 	CColliderComponent*		m_pAttackCollider;
@@ -96,5 +96,4 @@ private:
 	//  関数宣言
 	//--------------------------------------------------------------------------------
 	CKFVec3 checkGroundStatus(void);
-	bool	checkCanAction(void);
 };

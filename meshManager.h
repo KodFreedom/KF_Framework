@@ -30,6 +30,7 @@ public:
 	void	Release(void) { UnloadAll(); delete this; }
 	void	UnloadAll(void);
 	void	UseMesh(const string& strName);
+	void	UseMesh(const string& strName, string& texName);
 	void	DisuseMesh(const string& strName);
 
 	//GetŠÖ”
@@ -42,21 +43,23 @@ private:
 	struct MESH
 	{
 		unsigned short	usNumUsers;
-		list<CMesh*>	listpMesh;
+		//list<CMesh*>	listpMesh;
 		CMesh*			pMesh;
 	};
 
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”éŒ¾
 	//--------------------------------------------------------------------------------
-	CMesh*	CreateMesh(const string& strName);
-	void	CreateCube(CMesh* pMesh);
-	void	CreateSphere(CMesh* pMesh);
-	void	CreateSkyBox(CMesh* pMesh);
-	bool	CreateBuffer(CMesh* pMesh);
+	CMesh*	createMesh(const string& strName);
+	CMesh*	createMesh(const string& strName, string& texName);
+	void	createXFile(const string& strName, CMesh* pMesh, string& texName);
+	void	createCube(CMesh* pMesh);
+	void	createSphere(CMesh* pMesh);
+	void	createSkyBox(CMesh* pMesh);
+	bool	createBuffer(CMesh* pMesh);
 
 	//ˆêÌ—p
-	void	CreateField(CMesh* pMesh);
+	void	createField(CMesh* pMesh);
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

@@ -37,6 +37,7 @@ public:
 	
 	//SetŠÖ”
 	void			SetMeshName(const string& strMeshName);
+	void			SetMeshName(const string& strXFilePath, string& strTexName);
 
 	//GetŠÖ”
 	const string&	GetMeshName(void) const { return m_strMeshName; }

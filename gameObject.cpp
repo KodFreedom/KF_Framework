@@ -81,23 +81,23 @@ void CGameObject::SwapParam(void)
 #ifdef _DEBUG
 void CGameObject::DrawNormal(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-	D3DXMATRIX mtx, mtxPos;
-	D3DXMatrixIdentity(&mtx);
-	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+	//LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	//D3DXMATRIX mtx, mtxPos;
+	//D3DXMatrixIdentity(&mtx);
+	//pDevice->SetTransform(D3DTS_WORLD, &mtx);
 
-	VERTEX_3D vtx[2];
-	vtx[0].vPos = m_pTransform->GetPos();
-	vtx[0].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-	vtx[1].vPos = m_pTransform->GetPos() + m_pTransform->GetUp() * 2.0f;
-	vtx[1].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	//プリミティブ描画
-	pDevice->DrawPrimitiveUP(D3DPT_LINELIST,//プリミティブの種類
-		1,//プリミティブの数
-		&vtx[0],//頂点データの先頭アドレス
-		sizeof(VERTEX_3D)//一個分のサイズ
-	);
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	//VERTEX_3D vtx[2];
+	//vtx[0].vPos = m_pTransform->GetPos();
+	//vtx[0].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+	//vtx[1].vPos = m_pTransform->GetPos() + m_pTransform->GetUp() * 2.0f;
+	//vtx[1].ulColor = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+	//pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	////プリミティブ描画
+	//pDevice->DrawPrimitiveUP(D3DPT_LINELIST,//プリミティブの種類
+	//	1,//プリミティブの数
+	//	&vtx[0],//頂点データの先頭アドレス
+	//	sizeof(VERTEX_3D)//一個分のサイズ
+	//);
+	//pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 #endif

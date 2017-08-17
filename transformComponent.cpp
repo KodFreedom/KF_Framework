@@ -43,12 +43,15 @@ CTransformComponent::CTransformComponent(CGameObject* const pGameObj) : CCompone
 //--------------------------------------------------------------------------------
 void  CTransformComponent::UpdateMatrix(void)
 {
-	CalculateMtxThis();
+	//親がある場合計算しない
+	if (m_pParent) { return; }
+
+	calculateMtxThis();
 
 	//子供たちの行列も算出
-	for (auto itr = m_listChildren.begin(); itr != m_listChildren.end(); itr++)
+	for (auto pChild : m_listChildren)
 	{
-		(*itr)->UpdateMatrix(m_mtxThis);
+		pChild->UpdateMatrix(m_mtxThis);
 	}
 }
 
@@ -57,12 +60,12 @@ void  CTransformComponent::UpdateMatrix(void)
 //--------------------------------------------------------------------------------
 void  CTransformComponent::UpdateMatrix(const CKFMtx44& mtxParent)
 {
-	CalculateMtxThis(mtxParent);
+	calculateMtxThis(mtxParent);
 
 	//子供たちの行列も算出
-	for (auto itr = m_listChildren.begin(); itr != m_listChildren.end(); itr++)
+	for (auto pChild : m_listChildren)
 	{
-		(*itr)->UpdateMatrix(m_mtxThis);
+		pChild->UpdateMatrix(m_mtxThis);
 	}
 }
 
@@ -105,6 +108,7 @@ void CTransformComponent::RegisterParent(CTransformComponent* pParent, const CKF
 		m_pParent->DeregisterChild(this);
 	}
 	m_pParent = pParent;
+	m_pParent->RegisterChild(this);
 	m_vOffsetPos = vOffsetPos;
 	m_vOffsetRot = vOffsetRot;
 }
@@ -188,6 +192,27 @@ CKFMtx44 CTransformComponent::GetMatrixWorldNext(void)
 	}
 
 	return mtxWorld;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：changeMotion
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
+{
+	auto mtxRot = CKFMath::QuaternionToMtx(qRotNext);
+	m_vRightNext.m_fX = mtxRot.m_af[0][0];
+	m_vRightNext.m_fY = mtxRot.m_af[0][1];
+	m_vRightNext.m_fZ = mtxRot.m_af[0][2];
+	m_vUpNext.m_fX = mtxRot.m_af[1][0];
+	m_vUpNext.m_fY = mtxRot.m_af[1][1];
+	m_vUpNext.m_fZ = mtxRot.m_af[1][2];
+	m_vForwardNext.m_fX = mtxRot.m_af[2][0];
+	m_vForwardNext.m_fY = mtxRot.m_af[2][1];
+	m_vForwardNext.m_fZ = mtxRot.m_af[2][2];
 }
 
 //--------------------------------------------------------------------------------
@@ -295,7 +320,7 @@ CKFVec3 CTransformComponent::TransformDirectionToLocal(const CKFVec3& vDirection
 //--------------------------------------------------------------------------------
 //  マトリクス算出
 //--------------------------------------------------------------------------------
-void  CTransformComponent::CalculateMtxThis(void)
+void  CTransformComponent::calculateMtxThis(void)
 {
 	//単位行列に初期化
 	CKFMath::MtxIdentity(m_mtxThis);
@@ -312,10 +337,10 @@ void  CTransformComponent::CalculateMtxThis(void)
 //--------------------------------------------------------------------------------
 //  マトリクス算出(親子関係)
 //--------------------------------------------------------------------------------
-void  CTransformComponent::CalculateMtxThis(const CKFMtx44& mtxParent)
+void  CTransformComponent::calculateMtxThis(const CKFMtx44& mtxParent)
 {
 	//自分の行列算出
-	CalculateMtxThis();
+	calculateMtxThis();
 
 	//親に対する相対位置行列
 	//回転

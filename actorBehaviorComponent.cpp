@@ -15,7 +15,7 @@
 #include "3DRigidbodyComponent.h"
 #include "gameObject.h"
 #include "transformComponent.h"
-#include "actorMeshComponent.h"
+#include "animatorComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -28,10 +28,10 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CActorMeshComponent* const pMesh)
+CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator)
 	: CBehaviorComponent(pGameObj)
 	, m_rigidbody(rigidbody)
-	, m_pActor(pMesh)
+	, m_pAnimator(pAnimator)
 	, m_nLevel(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
@@ -95,12 +95,6 @@ void CActorBehaviorComponent::LateUpdate(void)
 void CActorBehaviorComponent::Act(CKFVec3& vMovement, bool& bJump, bool& bAttack)
 {
 	if (!m_bEnabled) { return; }
-	if (!checkCanAction())
-	{
-		vMovement = CKFVec3(0.0f);
-		bJump = false;
-		bAttack = false;
-	}
 
 	//方向の長さが1より大きいの場合ノーマライズする
 	auto fMovement = CKFMath::VecMagnitude(vMovement);
@@ -202,28 +196,12 @@ void CActorBehaviorComponent::turn(const float& fTurnAngle, const float& fMoveRa
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool& bJump, const bool& bAttack)
 {
-	if (!m_pActor) { return; }
+	if (!m_pAnimator) { return; }
 
-	if (bAttack && m_pActor->GetMotionNow() != CActorMeshComponent::MOTION_ATTACK)
-	{
-		m_pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
-		return;
-	}
-
-	if (m_bIsGrounded && bJump)
-	{
-		m_pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
-		return;
-	}
-
-	if (fMovement != 0.0f)
-	{
-		m_pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
-	}
-	else
-	{
-		m_pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
-	}
+	m_pAnimator->SetGrounded(m_bIsGrounded);
+	m_pAnimator->SetAttack(bAttack);
+	m_pAnimator->SetJump(bJump);
+	m_pAnimator->SetMove(fMovement);
 }
 
 //--------------------------------------------------------------------------------
@@ -245,20 +223,4 @@ CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 
 	m_bIsGrounded = false;
 	return CKFVec3(0.0f, 1.0f, 0.0f);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：checkCanAction
-//  関数説明：行動できるかどうかをチェックする関数
-//	引数：	なし
-//	戻り値：フラグ
-//--------------------------------------------------------------------------------
-bool CActorBehaviorComponent::checkCanAction(void)
-{
-	if (m_pActor && m_pActor->GetMotionNow() == CActorMeshComponent::MOTION_ATTACK)
-	{
-		return false;
-	}
-
-	return true;
 }

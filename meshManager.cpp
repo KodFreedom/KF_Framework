@@ -48,7 +48,27 @@ void CMeshManager::UseMesh(const string& strName)
 	//メッシュの作成
 	MESH mesh;
 	mesh.usNumUsers = 1;
-	mesh.pMesh = CreateMesh(strName);
+	mesh.pMesh = createMesh(strName);
+
+	//保存
+	m_umMesh.emplace(strName, mesh);
+}
+
+//--------------------------------------------------------------------------------
+//  メッシュの追加
+//--------------------------------------------------------------------------------
+void CMeshManager::UseMesh(const string& strName, string& texName)
+{
+	auto itr = m_umMesh.find(strName);
+	if (itr != m_umMesh.end())
+	{ //すでに存在してる
+		itr->second.usNumUsers++;
+	}
+
+	//メッシュの作成
+	MESH mesh;
+	mesh.usNumUsers = 1;
+	mesh.pMesh = createMesh(strName, texName);
 
 	//保存
 	m_umMesh.emplace(strName, mesh);
@@ -71,7 +91,22 @@ void CMeshManager::DisuseMesh(const string& strName)
 //--------------------------------------------------------------------------------
 //  メッシュの作成
 //--------------------------------------------------------------------------------
-CMesh* CMeshManager::CreateMesh(const string& strName)
+CMesh* CMeshManager::createMesh(const string& strName)
+{
+	CMesh* pMesh = new CMesh;
+
+	//デフォルトのメッシュを作成
+	if (strName == "cube") { createCube(pMesh); }
+	else if (strName == "sphere") { createSphere(pMesh); }
+	else if (strName == "skyBox") { createSkyBox(pMesh); }
+	else if (strName == "field") { createField(pMesh); }
+	return pMesh;
+}
+
+//--------------------------------------------------------------------------------
+//  メッシュの作成
+//--------------------------------------------------------------------------------
+CMesh* CMeshManager::createMesh(const string& strName, string& texName)
 {
 	CMesh* pMesh = new CMesh;
 
@@ -81,23 +116,76 @@ CMesh* CMeshManager::CreateMesh(const string& strName)
 
 	}
 
-	//デフォルトのメッシュを作成
-	else if (strName == "cube") { CreateCube(pMesh); }
-	else if (strName == "sphere") { CreateSphere(pMesh); }
-	else if (strName == "skyBox") { CreateSkyBox(pMesh); }
-	else if (strName == "field") { CreateField(pMesh); }
+	else if (strName.find(".x") != string::npos)
+	{//XFile
+		createXFile(strName, pMesh, texName);
+	}
+
 	return pMesh;
 }
 
 //--------------------------------------------------------------------------------
 //  Cubeの作成
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateCube(CMesh* pMesh)
+void CMeshManager::createXFile(const string& strName, CMesh* pMesh, string& texName)
+{
+	LPDIRECT3DDEVICE9	pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPD3DXMESH			pDxMesh;		//メッシュ情報インターフェイス
+	LPD3DXBUFFER		pBufferMaterial;//マテリアル情報　動的メモリ
+	DWORD				dwNumMaterial;	//モデルのマテリアル数
+
+	//ハードディスクからXファイルの読み込み
+	HRESULT hr = D3DXLoadMeshFromX(
+		strName.c_str(),	//ファイル名
+		D3DXMESH_MANAGED,
+		pDevice,
+		NULL,				//隣接情報
+		&pBufferMaterial,	//モデルのマテリアル情報
+		NULL,
+		&dwNumMaterial,		//モデルのマテリアル数
+		&pDxMesh);			//メッシュ情報
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "CModel : D3DXLoadMeshFromX ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		return;
+	}
+
+	//Mesh
+	pMesh->m_nNumIdx = pDxMesh->GetNumVertices();
+	pMesh->m_nNumPolygon = pDxMesh->GetNumFaces();
+	pMesh->m_nNumVtx = pDxMesh->GetNumVertices();
+	pDxMesh->GetIndexBuffer(&pMesh->m_pIdxBuffer);
+	pDxMesh->GetVertexBuffer(&pMesh->m_pVtxBuffer);
+
+	//texture
+	D3DXMATERIAL *pMat;//マテリアル情報を受け取れる用のポインタ
+
+	pMat = (D3DXMATERIAL*)pBufferMaterial->GetBufferPointer();
+	for (int nCnt = 0; nCnt < (int)dwNumMaterial; nCnt++)
+	{
+		if (pMat[nCnt].pTextureFilename != nullptr)
+		{
+			texName = pMat[nCnt].pTextureFilename;
+			break;
+		}
+	}
+
+	if (texName.empty())
+	{//テクスチャがないの場合普通なポリゴンにする
+		texName = "polygon.jpg";
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  Cubeの作成
+//--------------------------------------------------------------------------------
+void CMeshManager::createCube(CMesh* pMesh)
 {
 	pMesh->m_nNumVtx = 6 * 4;
 	pMesh->m_nNumIdx = 6 * 4 + 5 * 2;
 	pMesh->m_nNumPolygon = 6 * 2 + 5 * 4;
-	if (!CreateBuffer(pMesh)) { return; }
+	if (!createBuffer(pMesh)) { return; }
 
 #ifdef USING_DIRECTX
 	//仮想アドレスを取得するためのポインタ
@@ -232,7 +320,7 @@ void CMeshManager::CreateCube(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 //  Sphereの作成
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateSphere(CMesh* pMesh)
+void CMeshManager::createSphere(CMesh* pMesh)
 {
 
 }
@@ -240,12 +328,12 @@ void CMeshManager::CreateSphere(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 //  SkyBoxの作成
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateSkyBox(CMesh* pMesh)
+void CMeshManager::createSkyBox(CMesh* pMesh)
 {
 	pMesh->m_nNumVtx = 6 * 4;
 	pMesh->m_nNumIdx = 6 * 4 + 5 * 2;
 	pMesh->m_nNumPolygon = 6 * 2 + 5 * 4;
-	if (!CreateBuffer(pMesh)) { return; }
+	if (!createBuffer(pMesh)) { return; }
 
 #ifdef USING_DIRECTX
 	//仮想アドレスを取得するためのポインタ
@@ -368,7 +456,7 @@ void CMeshManager::CreateSkyBox(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 //  バッファの作成
 //--------------------------------------------------------------------------------
-bool CMeshManager::CreateBuffer(CMesh* pMesh)
+bool CMeshManager::createBuffer(CMesh* pMesh)
 {
 #ifdef USING_DIRECTX
 	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
@@ -411,14 +499,14 @@ bool CMeshManager::CreateBuffer(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 //  SkyBoxの作成
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateField(CMesh* pMesh)
+void CMeshManager::createField(CMesh* pMesh)
 {
 	int nNumBlockX = 100;
 	int nNumBlockZ = 100;
 	pMesh->m_nNumVtx = (nNumBlockX + 1) * (nNumBlockZ + 1);
 	pMesh->m_nNumIdx = ((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1;
 	pMesh->m_nNumPolygon = (nNumBlockX + 2) * 2 * nNumBlockZ - 4;
-	if (!CreateBuffer(pMesh)) { return; }
+	if (!createBuffer(pMesh)) { return; }
 
 #ifdef USING_DIRECTX
 

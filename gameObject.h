@@ -20,7 +20,6 @@
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
-class CTransformComponent;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
@@ -88,6 +87,7 @@ public:
 		m_pRigidbody->LateUpdate();
 		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->LateUpdate(); }
 		m_pMesh->Update();
+		m_pTransform->UpdateMatrix();
 	}
 
 	virtual void Draw(void)

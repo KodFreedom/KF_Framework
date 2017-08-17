@@ -239,6 +239,7 @@
     <ClInclude Include="gameObject3D.h" />
     <ClInclude Include="gameObjectActor.h" />
     <ClInclude Include="gameObjectManager.h" />
+    <ClInclude Include="motion.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="inputManager.h" />
     <ClInclude Include="KF_CollisionSystem.h" />

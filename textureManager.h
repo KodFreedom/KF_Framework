@@ -32,7 +32,11 @@ public:
 	void				DisuseTexture(const string& strName);
 
 #ifdef USING_DIRECTX
-	LPDIRECT3DTEXTURE9	GetTexture(const string& strName) { return m_umTexture.at(strName).pTexture; }
+	LPDIRECT3DTEXTURE9	GetTexture(const string& strName) 
+	{
+		if (strName.empty()) { return nullptr; }
+		return m_umTexture.at(strName).pTexture; 
+	}
 #endif
 
 private:

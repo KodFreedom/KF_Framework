@@ -55,6 +55,7 @@ public:
 	//Setä÷êî
 	void			SetPos(const CKFVec3& vPos) { m_vPos = vPos; }
 	void			SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
+	void			SetRotNext(const CKFQuaternion& qRotNext);
 	void			MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
 	void			SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
 	void			SetScaleNext(const CKFVec3& vScaleNext) { m_vScaleNext = vScaleNext; }
@@ -83,8 +84,8 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	void			CalculateMtxThis(void);
-	void			CalculateMtxThis(const CKFMtx44& mtxParent);
+	void			calculateMtxThis(void);
+	void			calculateMtxThis(const CKFMtx44& mtxParent);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

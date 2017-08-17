@@ -177,7 +177,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "E:\\HAL\\GitHub\\KF_Framework\\data\\TEXTURE\\face.jpg";
+    "face.jpg";
    }
   }
   Material {

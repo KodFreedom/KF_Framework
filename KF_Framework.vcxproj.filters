@@ -524,5 +524,8 @@
     <ClInclude Include="KF_CollisionUtility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

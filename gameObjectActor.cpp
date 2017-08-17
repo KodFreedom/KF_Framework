@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectActor.h"
+#include "animatorComponent.h"
 #include "actorBehaviorComponent.h"
 #include "playerBehaviorComponent.h"
 #include "enemyBehaviorComponent.h"
@@ -24,37 +25,44 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri, const OBJ_TYPE& type) : CGameObject3D(pri, type)
+CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri, const OBJ_TYPE& type)
+	: CGameObject(pri, type)
+	, m_pAnimator(nullptr)
 {
 
 }
 
 //--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+void CGameObjectActor::LateUpdate(void)
+{
+	CGameObject::LateUpdate();
+	m_pAnimator->Update();
+}
+
+//--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
 	CGameObjectActor* pObj = new CGameObjectActor(GOM::PRI_3D, OT_PLAYER);
 
 	//コンポネント
-	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
+	auto pRb = new C3DRigidbodyComponent(pObj);
 	pObj->m_pRigidbody = pRb;
-	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
-	pMesh->SetModelName(modelName);
-	pObj->m_pMesh = pMesh;
-	CActorBehaviorComponent* pAb = new CActorBehaviorComponent(pObj, *pRb, pMesh);
-	CPlayerBehaviorComponent* pPb = new CPlayerBehaviorComponent(pObj, *pAb);
+	pObj->m_pAnimator = new CAnimatorComponent(pObj, modelPath);
+	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);
+	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
-	CAABBColliderComponent* pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.6f);
-	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.6f);
 	pCollider->SetOffset(CKFVec3(0.0f, 0.6f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
-	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
 	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransformComponent();
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
 	pTrans->SetScale(vScale);
@@ -75,47 +83,47 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const CMOM::MODEL_NAME& modelNa
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreateEnemy(const CMOM::MODEL_NAME& modelName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	CGameObjectActor* pObj = new CGameObjectActor(GOM::PRI_3D, OT_ENEMY);
+	CGameObjectActor* pObj = nullptr;// = new CGameObjectActor(GOM::PRI_3D, OT_ENEMY);
 
-	//コンポネント
-	//リジッドボディ
-	C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
-	pObj->m_pRigidbody = pRb;
+	////コンポネント
+	////リジッドボディ
+	//C3DRigidbodyComponent* pRb = new C3DRigidbodyComponent(pObj);
+	//pObj->m_pRigidbody = pRb;
 
-	//メッシュ
-	CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
-	pMesh->SetModelName(modelName);
-	pObj->m_pMesh = pMesh;
+	////メッシュ
+	//CActorMeshComponent* pMesh = new CActorMeshComponent(pObj);
+	//pMesh->SetModelName(modelName);
+	//pObj->m_pMesh = pMesh;
 
-	//ビヘイビア
-	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pMesh);
-	CEnemyBehaviorComponent* pEb = new CEnemyBehaviorComponent(pObj, *pAb);
-	pObj->m_listpBehavior.push_back(pEb);
+	////ビヘイビア
+	//auto pAb = new CActorBehaviorComponent(pObj, *pRb, pMesh);
+	//CEnemyBehaviorComponent* pEb = new CEnemyBehaviorComponent(pObj, *pAb);
+	//pObj->m_listpBehavior.push_back(pEb);
 
-	//コライダー
-	CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
-	pCollider->SetTag("body");
-	CSphereColliderComponent* pDetector = new CSphereColliderComponent(pObj, CS::DYNAMIC, 6.0f);
-	pDetector->SetTrigger(true);
-	pDetector->SetTag("detector");
-	pObj->AddCollider(pCollider);
-	pObj->AddCollider(pDetector);
+	////コライダー
+	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	//pCollider->SetTag("body");
+	//CSphereColliderComponent* pDetector = new CSphereColliderComponent(pObj, CS::DYNAMIC, 6.0f);
+	//pDetector->SetTrigger(true);
+	//pDetector->SetTag("detector");
+	//pObj->AddCollider(pCollider);
+	//pObj->AddCollider(pDetector);
 
-	
+	//
 
-	//ドロー
-	pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
+	////ドロー
+	//pObj->m_pDraw = new CActorMeshDrawComponent(pMesh, pObj);
 
-	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
+	////パラメーター
+	//CTransformComponent* pTrans = pObj->GetTransformComponent();
+	//pTrans->SetPos(vPos);
+	//pTrans->SetPosNext(vPos);
+	//pTrans->SetScale(vScale);
+	//pTrans->SetScaleNext(vScale);
+	//pTrans->RotByEuler(vRot);
 
-	//初期化
-	pObj->Init();
+	////初期化
+	//pObj->Init();
 
 	return pObj;
 }
