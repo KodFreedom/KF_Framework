@@ -1463,42 +1463,52 @@ CKFColor CKFMath::LerpColor(const CKFColor& cFrom, const CKFColor& cTo, const fl
 //--------------------------------------------------------------------------------
 CKFQuaternion CKFMath::SlerpQuaternion(const CKFQuaternion& qFrom, const CKFQuaternion& qTo, const float& fTime)
 {
-	if (fTime <= 0.0f) { return qFrom; }
-	if (fTime >= 1.0f) { return qTo; }
+	//if (fTime <= 0.0f) { return qFrom; }
+	//if (fTime >= 1.0f) { return qTo; }
 
-	CKFQuaternion qFromCpy = qFrom;
-	CKFQuaternion qToCpy = qTo;
+	//CKFQuaternion qFromCpy = qFrom;
+	//CKFQuaternion qToCpy = qTo;
 
-	// Only unit quaternions are valid rotations.
-	// Normalize to avoid undefined behavior.
+	//// Only unit quaternions are valid rotations.
+	//// Normalize to avoid undefined behavior.
 
-	// Compute the cosine of the angle between the two vectors.
-	float fDot = QuaternionDot(qFromCpy, qToCpy);
+	//// Compute the cosine of the angle between the two vectors.
+	//float fDot = QuaternionDot(qFromCpy, qToCpy);
 
-	if (fabs(fDot) > 0.9995f)
-	{
-		// If the inputs are too close for comfort, linearly interpolate
-		// and normalize the result.
-		CKFQuaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
-		QuaternionNormalize(qResult);
-		return qResult;
-	}
+	//if (fabs(fDot) > 0.9995f)
+	//{
+	//	// If the inputs are too close for comfort, linearly interpolate
+	//	// and normalize the result.
+	//	CKFQuaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
+	//	QuaternionNormalize(qResult);
+	//	return qResult;
+	//}
 
-	// If the dot product is negative, the quaternions
-	// have opposite handed-ness and slerp won't take
-	// the shorter path. Fix by reversing one quaternion.
-	if (fDot < 0.0f) 
-	{
-		qToCpy *= -1.0f;
-		fDot = -fDot;
-	}
+	//// If the dot product is negative, the quaternions
+	//// have opposite handed-ness and slerp won't take
+	//// the shorter path. Fix by reversing one quaternion.
+	//if (fDot < 0.0f) 
+	//{
+	//	qToCpy *= -1.0f;
+	//	fDot = -fDot;
+	//}
 
-	ClampFloat(fDot, -1.0f, 1.0f);		// Robustness: Stay within domain of acos()
-	float fTheta = acosf(fDot) * fTime;	// theta = angle between v0 and result 
+	//ClampFloat(fDot, -1.0f, 1.0f);		// Robustness: Stay within domain of acos()
+	//float fTheta = acosf(fDot) * fTime;	// theta = angle between v0 and result 
 
-	CKFQuaternion qWork = qToCpy - qFromCpy * fDot;
-	QuaternionNormalize(qWork);			// { v0, v2 } is now an orthonormal basis
-	CKFQuaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
+	//CKFQuaternion qWork = qToCpy - qFromCpy * fDot;
+	//QuaternionNormalize(qWork);			// { v0, v2 } is now an orthonormal basis
+	//CKFQuaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
+	
+	D3DXQUATERNION qFromDX = qFrom;
+	D3DXQUATERNION qToDX = qTo;
+	D3DXQUATERNION qOut;
+	D3DXQuaternionSlerp(&qOut, &qFromDX, &qToDX, fTime);
+	CKFQuaternion qResult;
+	qResult.m_fX = qOut.x;
+	qResult.m_fY = qOut.y;
+	qResult.m_fZ = qOut.z;
+	qResult.m_fW = qOut.w;
 	return qResult;
 }
 

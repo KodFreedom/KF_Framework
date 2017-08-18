@@ -318,6 +318,9 @@
     <ClCompile Include="KF_CollisionUtility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
+    <ClCompile Include="KF_Utility.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -526,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="motion.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="KF_Utility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

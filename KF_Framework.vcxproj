@@ -182,6 +182,7 @@
     <ClCompile Include="KF_CollisionUtility.cpp" />
     <ClCompile Include="KF_Math.cpp" />
     <ClCompile Include="KF_PhysicsSystem.cpp" />
+    <ClCompile Include="KF_Utility.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="gameObject3D.h" />
     <ClInclude Include="gameObjectActor.h" />
     <ClInclude Include="gameObjectManager.h" />
+    <ClInclude Include="KF_Utility.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="inputManager.h" />

@@ -52,7 +52,7 @@ private:
 	//--------------------------------------------------------------------------------
 	CMesh*	createMesh(const string& strName);
 	CMesh*	createMesh(const string& strName, string& texName);
-	void	createXFile(const string& strName, CMesh* pMesh, string& texName);
+	CMesh*	createXFile(const string& strPath, string& texName);
 	void	createCube(CMesh* pMesh);
 	void	createSphere(CMesh* pMesh);
 	void	createSkyBox(CMesh* pMesh);

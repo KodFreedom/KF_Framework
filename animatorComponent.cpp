@@ -157,7 +157,14 @@ void CAnimatorComponent::SetJump(const bool& bJump)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::SetMove(const float& fMovement)
 {
-
+	if (fMovement == 0.0f)
+	{
+		changeMotion(MP_NEUTAL);
+	}
+	else
+	{
+		changeMotion(MP_RUN);
+	}
 }
 
 //--------------------------------------------------------------------------------

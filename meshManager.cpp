@@ -13,6 +13,7 @@
 #include "meshManager.h"
 #include "mesh.h"
 #include "camera.h"
+#include "KF_Utility.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -108,7 +109,7 @@ CMesh* CMeshManager::createMesh(const string& strName)
 //--------------------------------------------------------------------------------
 CMesh* CMeshManager::createMesh(const string& strName, string& texName)
 {
-	CMesh* pMesh = new CMesh;
+	CMesh* pMesh = nullptr;
 
 	//メッシュの名前の最後の五文字が.meshかどうかをチェック
 	if (strName.find(".mesh") != string::npos)
@@ -118,7 +119,7 @@ CMesh* CMeshManager::createMesh(const string& strName, string& texName)
 
 	else if (strName.find(".x") != string::npos)
 	{//XFile
-		createXFile(strName, pMesh, texName);
+		pMesh = createXFile(strName, texName);
 	}
 
 	return pMesh;
@@ -127,9 +128,216 @@ CMesh* CMeshManager::createMesh(const string& strName, string& texName)
 //--------------------------------------------------------------------------------
 //  Cubeの作成
 //--------------------------------------------------------------------------------
-void CMeshManager::createXFile(const string& strName, CMesh* pMesh, string& texName)
+CMesh* CMeshManager::createXFile(const string& strPath, string& texName)
 {
-	LPDIRECT3DDEVICE9	pDevice = GetManager()->GetRenderer()->GetDevice();
+	FILE* pFile;
+
+	//file open
+	fopen_s(&pFile, strPath.c_str(), "r");
+
+	if (!pFile) { return nullptr; }
+
+	auto pMesh = new CMesh;
+	vector<CKFVec3> vecVtx;
+	vector<CKFVec3> vecNormal;
+	vector<CKFVec2> vecUV;
+	vector<int>		vecIdx;
+	vector<int>		vecNormalIdx;
+
+	string strBuf;
+	while (CKFUtility::GetStrToken(pFile, "\n", strBuf) >= 0)
+	{
+		if (strBuf.compare("Mesh {") == 0)
+		{
+			//頂点数の読込
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			stringstream ss;
+			int nNumVtx;
+			ss << strBuf;
+			ss >> nNumVtx;
+
+			//頂点データの読込
+			vecVtx.resize(nNumVtx);
+			for (int nCnt = 0; nCnt < nNumVtx; ++nCnt)
+			{
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecVtx[nCnt].m_fX;
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecVtx[nCnt].m_fY;
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecVtx[nCnt].m_fZ;
+				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+			}
+
+			//ポリゴン数の読込
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			ss.clear();
+			ss << strBuf;
+			ss >> pMesh->m_nNumPolygon;
+
+			//インデックスの読込
+			pMesh->m_nNumVtx = 
+				pMesh->m_nNumIdx = pMesh->m_nNumPolygon * 3;
+			vecIdx.resize(pMesh->m_nNumIdx);
+			for (int nCnt = 0; nCnt < pMesh->m_nNumPolygon; ++nCnt)
+			{
+				//3;を飛ばす
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecIdx[nCnt * 3];
+				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecIdx[nCnt * 3 + 1];
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecIdx[nCnt * 3 + 2];
+				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+			}
+		}
+
+		if (strBuf.compare(" MeshMaterialList {") == 0)
+		{
+
+		}
+
+		if (strBuf.compare(" MeshNormals {") == 0)
+		{
+			//法線数の読込
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			stringstream ss;
+			int nNumNormal;
+			ss << strBuf;
+			ss >> nNumNormal;
+
+			//法線データの読込
+			vecNormal.resize(nNumNormal);
+			for (int nCnt = 0; nCnt < nNumNormal; ++nCnt)
+			{
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormal[nCnt].m_fX;
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormal[nCnt].m_fY;
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormal[nCnt].m_fZ;
+				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+			}
+
+			//法線インデックス数を読込(頂点数と同じのため)
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			ss.clear();
+			int nNumPolygonNormalIdx;
+			ss << strBuf;
+			ss >> nNumPolygonNormalIdx;
+			if (nNumPolygonNormalIdx != pMesh->m_nNumPolygon)
+			{//エラー
+				MessageBox(NULL,"CMeshManager:法線数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
+			}
+
+			//法線インデックスの読込
+			vecNormalIdx.resize(nNumPolygonNormalIdx * 3);
+			for (int nCnt = 0; nCnt < pMesh->m_nNumPolygon; ++nCnt)
+			{
+				//3;を飛ばす
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormalIdx[nCnt * 3];
+				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormalIdx[nCnt * 3 + 1];
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecNormalIdx[nCnt * 3 + 2];
+				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+			}
+		}
+
+		if (strBuf.compare(" MeshTextureCoords {") == 0)
+		{
+			//UV数の読込
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			stringstream ss;
+			int nNumUV;
+			ss << strBuf;
+			ss >> nNumUV;
+			if (nNumUV != vecVtx.size())
+			{//エラー
+				MessageBox(NULL, "CMeshManager:UV数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
+			}
+
+			//UVデータの読込
+			vecUV.resize(nNumUV);
+			for (int nCnt = 0; nCnt < nNumUV; ++nCnt)
+			{
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecUV[nCnt].m_fX;
+				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecUV[nCnt].m_fY;
+				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+			}
+		}
+	}
+
+	fclose(pFile);
+	
+#ifdef USING_DIRECTX
+	if (!createBuffer(pMesh)) { return nullptr; }
+
+	//仮想アドレスを取得するためのポインタ
+	VERTEX_3D *pVtx;
+
+	//頂点バッファをロックして、仮想アドレスを取得する
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
+	CKFColor cColor = CKFColor(1.0f);
+	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
+	{
+		pVtx[nCnt].vPos = vecVtx[vecIdx[nCnt]];
+		pVtx[nCnt].vNormal = vecNormal[vecNormalIdx[nCnt]];
+		pVtx[nCnt].vUV = vecUV[vecIdx[nCnt]];
+		pVtx[nCnt].ulColor = cColor;
+	}
+
+	//仮想アドレス解放
+	pMesh->m_pVtxBuffer->Unlock();
+
+	//インデックス
+	WORD *pIdx;
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
+	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; nCnt++)
+	{
+		pIdx[nCnt] = vecIdx[nCnt];
+	}
+
+	pMesh->m_pIdxBuffer->Unlock();
+#endif
+
+	return pMesh;
+	/*LPDIRECT3DDEVICE9	pDevice = GetManager()->GetRenderer()->GetDevice();
 	LPD3DXMESH			pDxMesh;		//メッシュ情報インターフェイス
 	LPD3DXBUFFER		pBufferMaterial;//マテリアル情報　動的メモリ
 	DWORD				dwNumMaterial;	//モデルのマテリアル数
@@ -174,7 +382,7 @@ void CMeshManager::createXFile(const string& strName, CMesh* pMesh, string& texN
 	if (texName.empty())
 	{//テクスチャがないの場合普通なポリゴンにする
 		texName = "polygon.jpg";
-	}
+	}*/
 }
 
 //--------------------------------------------------------------------------------
