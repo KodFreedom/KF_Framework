@@ -18,7 +18,7 @@
 ////--------------------------------------------------------------------------------
 //bool CActorMeshComponent::Init(void)
 //{
-//	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
+//	CModel* pModel = CMain::GetManager()->GetModelManager()->GetModel(m_modelName);
 //	if (pModel != NULL)
 //	{
 //		CModelActorX* pModelActor = (CModelActorX*)pModel;
@@ -44,7 +44,7 @@
 //void CActorMeshComponent::Update(void)
 //{
 //	//ƒ‚[ƒVƒ‡ƒ“î•ñŽæ“¾
-//	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
+//	CModel* pModel = CMain::GetManager()->GetModelManager()->GetModel(m_modelName);
 //	if (pModel == NULL) { return; }
 //	CModelActorX* pModelActor = (CModelActorX*)pModel;
 //	const vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();
@@ -116,7 +116,7 @@
 //	ChangeMotion(motion);
 //	m_status = MS_NORMAL;
 //
-//	CModel* pModel = GetManager()->GetModelManager()->GetModel(m_modelName);
+//	CModel* pModel = CMain::GetManager()->GetModelManager()->GetModel(m_modelName);
 //	if (pModel == NULL) { return; }
 //	CModelActorX* pModelActor = (CModelActorX*)pModel;
 //	const vector<CModelActorX::VEC_MOTION>& vectorMotion = pModelActor->GetPartsMotionInfo();

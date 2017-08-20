@@ -142,26 +142,26 @@ void CFieldColliderComponent::MakeVertex(void)
 	CKFVec3 vStartPos = vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	for (int nCntZ = 0; nCntZ < m_nNumBlockZ + 1; nCntZ++)
 	{
-		if (nCntZ <= (m_nNumBlockZ + 1) / 4)
-		{
-			fHeight += 0.25f;
-		}
-		else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
-		{
-			fHeight -= 0.25f;
-		}
-		else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
-		{
-			fHeight += 0.5f;
-		}
-		else
-		{
-			fHeight -= 0.5f;
-		}
+		//if (nCntZ <= (m_nNumBlockZ + 1) / 4)
+		//{
+		//	fHeight += 0.25f;
+		//}
+		//else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
+		//{
+		//	fHeight -= 0.25f;
+		//}
+		//else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
+		//{
+		//	fHeight += 0.5f;
+		//}
+		//else
+		//{
+		//	fHeight -= 0.5f;
+		//}
 		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
 		{
 			CKFVec3 vPos = vStartPos
-				+ CKFVec3(nCntX * m_vBlockSize.m_fX, fHeight, -nCntZ * m_vBlockSize.m_fY);
+				+ CKFVec3(nCntX * m_vBlockSize.m_fX, 0.0f, -nCntZ * m_vBlockSize.m_fY);
 			m_vectorVtx.push_back(vPos);
 		}
 	}

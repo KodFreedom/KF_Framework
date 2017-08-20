@@ -84,7 +84,7 @@
 //			if (m_actor.GetLifeNow() <= 0.0f)
 //			{
 //				m_pGameObj->SetAlive(false);
-//				GetManager()->GetMode()->EndMode();
+//				CMain::GetManager()->GetMode()->EndMode();
 //			}
 //		}
 //	}

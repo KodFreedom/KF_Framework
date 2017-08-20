@@ -16,6 +16,7 @@
 //--------------------------------------------------------------------------------
 class CMotion;
 class CMotionInfo;
+class CMotionKey;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -80,12 +81,13 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CMotionInfo*						m_apMotionData[MP_MAX];
-	list<CGameObject*>					m_listNodes;
-	MOTION_PATTERN						m_motionNow;
-	MOTION_PATTERN						m_motionNext;
-	MOTION_STATUS						m_status;
-	int									m_nKeyNow;	
-	int									m_nCntFrame;
-	int									m_nCntChangeFrame;
+	CMotionInfo*		m_apMotionData[MP_MAX];
+	CMotionKey*			m_pMotionKeyLast;
+	list<CGameObject*>	m_listNodes;
+	MOTION_PATTERN		m_motionNow;
+	MOTION_PATTERN		m_motionNext;
+	MOTION_STATUS		m_status;
+	int					m_nKeyNow;	
+	int					m_nCntFrame;
+	int					m_nCntChangeFrame;
 };

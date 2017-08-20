@@ -27,7 +27,7 @@
 void CLightOffRenderState::SetRenderState(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 #endif
 }
@@ -38,7 +38,7 @@ void CLightOffRenderState::SetRenderState(void)
 void CLightOffRenderState::ResetRenderState(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 #endif
 }

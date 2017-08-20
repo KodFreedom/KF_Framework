@@ -4,36 +4,40 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-19
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
 #include "inputManager.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  静的メンバ変数宣言
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  プロトタイプ宣言
-//--------------------------------------------------------------------------------
-LRESULT CALLBACK	WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void				CloseApp(HWND hWnd);
-
-//--------------------------------------------------------------------------------
-//  グローバル変数
-//--------------------------------------------------------------------------------
-CManager*	g_pManager = NULL;	//Game Manager
+CManager*	CMain::m_pManager = nullptr;
 
 #ifdef _DEBUG
-int			g_nCntFPS = 0;		//FPSカウンタ
+int			CMain::m_nCntFPS = 0;
 #endif
 
 //--------------------------------------------------------------------------------
-//  main関数
+//	メイン関数
 //--------------------------------------------------------------------------------
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
+{
+	return CMain::Main(hInstance, hPrevInstance, IpCmdLine, nCmdShow);
+}
+
+//--------------------------------------------------------------------------------
+//	クラス
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：WinMain
+//  関数説明：メイン関数
+//	引数：	hInstance
+//			hPrevInstance
+//			IpCmdLine
+//			nCmdShow
+//	戻り値：int
+//--------------------------------------------------------------------------------
+int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(IpCmdLine);
@@ -42,7 +46,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 
 	wcex.cbSize = sizeof(WNDCLASSEX);					//WNDCLASSEXのメモリサイズを指定
 	wcex.style = CS_CLASSDC;							//表示するウインドウのスタイルを設定
-	wcex.lpfnWndProc = WndProc;							//関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
+	wcex.lpfnWndProc = wndProc;							//関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
 	wcex.cbClsExtra = 0;								//通常は使用しないので０を指定
 	wcex.cbWndExtra = 0;								//通常は使用しないので０を指定
 	wcex.hInstance = hInstance;							//WinMainのパラメータのインスタンスハンドル
@@ -90,9 +94,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 		NULL);			//ウインドウ作成データ
 
 	//Manager生成
-	g_pManager = new CManager;
+	m_pManager = new CManager;
 
-	if (g_pManager->Init(hInstance, hWnd, true) == false)
+	if (!m_pManager->Init(hInstance, hWnd, true))
 	{
 		return -1;
 	};
@@ -143,18 +147,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 #ifdef _DEBUG
 				if ((dwCurrentTime - dwFPSLastTime) >= 500)//0.5秒ごとに実行
 				{
-					g_nCntFPS = (dwFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
+					m_nCntFPS = (dwFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
 					dwFPSLastTime = dwCurrentTime;
 					dwFrameCount = 0;
 				}
 #endif//_DEBUG
 
 				// 更新処理
-				g_pManager->Update();
-				g_pManager->LateUpdate();
+				m_pManager->Update();
+				m_pManager->LateUpdate();
 
 				// 描画処理
-				g_pManager->Draw();
+				m_pManager->Draw();
 
 				dwFrameCount++;
 			}
@@ -162,11 +166,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 	}
 
 	// 終了処理
-	if (g_pManager != NULL)
+	if (m_pManager)
 	{
-		g_pManager->Uninit();
-		delete g_pManager;
-		g_pManager = NULL;
+		m_pManager->Uninit();
+		delete m_pManager;
+		m_pManager = NULL;
 	}
 
 	//ウインドウクラスの登録お解除
@@ -181,30 +185,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 }
 
 //--------------------------------------------------------------------------------
-//  ウインドウプロシージャ関数
-//  (CALLBACK : Win32API関数を呼び出す時の規約)
-//  hWnd ; ウインドウのハンドル
-//  uMsg : メッセージの識別子
-//  wPara : メッセージの最初のパラメータ
-//  iParam : メッセージの二番目のパラメータ
+//	関数名：wndProc
+//  関数説明：ウインドウプロシージャ関数
+//	引数：	hWnd：ウインドウのハンドル
+//			uMsg：メッセージの識別子
+//			wParam：メッセージの最初のパラメータ
+//			lParam：メッセージの二番目のパラメータ
+//	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case WM_KEYDOWN:		//esp key
-		if (LOWORD(wParam) == VK_ESCAPE) { CloseApp(hWnd); }
+		if (LOWORD(wParam) == VK_ESCAPE) { closeApp(hWnd); }
 		break;
 	case WM_CLOSE:
-		CloseApp(hWnd);
+		closeApp(hWnd);
 		return 0;
 	case WM_DESTROY:		//保存するかチェックの仕組みを作れる
 		PostQuitMessage(0);	//WM_QUITというメッセージを呼ぶ
 		break;
 	case WM_ACTIVATEAPP:
-		if (g_pManager)
+		if (m_pManager)
 		{
 			BOOL bActive = (BOOL)GetActiveWindow();
-			CInputManager* pInput = g_pManager->GetInputManager();
+			auto pInput = m_pManager->GetInputManager();
 
 			if (bActive)
 			{
@@ -224,9 +229,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 //--------------------------------------------------------------------------------
-//  close確認関数
+//	関数名：closeApp
+//  関数説明：アプリを閉じる確認関数
+//	引数：	hWnd：ウインドウのハンドル
+//	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-void CloseApp(HWND hWnd)
+void CMain::closeApp(HWND hWnd)
 {
 	UINT nID = 0;//メッセージbox戻り値
 
@@ -239,21 +247,3 @@ void CloseApp(HWND hWnd)
 		DestroyWindow(hWnd);
 	}
 }
-
-//--------------------------------------------------------------------------------
-//  Game Manager取得
-//--------------------------------------------------------------------------------
-CManager *GetManager(void)
-{
-	return g_pManager;
-}
-
-//--------------------------------------------------------------------------------
-//  FPSカウンター取得
-//--------------------------------------------------------------------------------
-#ifdef _DEBUG
-int GetCountFPS(void)
-{
-	return g_nCntFPS;
-}
-#endif

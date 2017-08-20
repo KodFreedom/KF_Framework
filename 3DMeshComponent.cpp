@@ -23,7 +23,7 @@ void C3DMeshComponent::Uninit(void)
 {
 	if (!m_strMeshName.empty())
 	{
-		GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
+		CMain::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
 		m_strMeshName.clear();
 	}
 }
@@ -34,7 +34,7 @@ void C3DMeshComponent::Uninit(void)
 void C3DMeshComponent::SetMeshName(const string& strMeshName)
 {
 	m_strMeshName = strMeshName;
-	GetManager()->GetMeshManager()->UseMesh(m_strMeshName);
+	CMain::GetManager()->GetMeshManager()->UseMesh(m_strMeshName);
 }
 
 //--------------------------------------------------------------------------------
@@ -43,5 +43,5 @@ void C3DMeshComponent::SetMeshName(const string& strMeshName)
 void C3DMeshComponent::SetMeshName(const string& strXFilePath, string& strTexName)
 {
 	m_strMeshName = strXFilePath;
-	GetManager()->GetMeshManager()->UseMesh(m_strMeshName, strTexName);
+	CMain::GetManager()->GetMeshManager()->UseMesh(m_strMeshName, strTexName);
 }

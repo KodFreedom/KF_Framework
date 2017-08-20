@@ -174,7 +174,7 @@ void CRendererDX::Release(void)
 void CRendererDX::Update(void)
 {
 #ifdef _DEBUG
-	CKeyboardDX *pKeyboard = GetManager()->GetInputManager()->GetKeyboard();
+	CKeyboardDX *pKeyboard = CMain::GetManager()->GetInputManager()->GetKeyboard();
 	
 	if (pKeyboard->GetKeyPress(DIK_Q))
 	{
@@ -257,7 +257,7 @@ void CRendererDX::DrawFPS(void)
 {
 	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	char str[256];
-	int nCountFPS = GetCountFPS();
+	int nCountFPS = CMain::GetCountFPS();
 
 	wsprintf(str, "FPS:%d\n", nCountFPS);
 

@@ -33,6 +33,8 @@ public:
 	void	UseMesh(const string& strName, string& texName);
 	void	DisuseMesh(const string& strName);
 
+	void	UpdateField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx);
+
 	//Getä÷êî
 	CMesh*	GetMesh(const string& strName) { return m_umMesh.at(strName).pMesh; }
 

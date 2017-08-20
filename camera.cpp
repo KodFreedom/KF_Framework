@@ -80,8 +80,8 @@ void CCamera::Uninit(void)
 //--------------------------------------------------------------------------------
 void CCamera::Update(void)
 {
-//	CMouseDX *pMouse = GetManager()->GetMouse();
-//	CJoystickDX* pJoystick = GetManager()->GetJoystickDX();
+//	CMouseDX *pMouse = CMain::GetManager()->GetMouse();
+//	CJoystickDX* pJoystick = CMain::GetManager()->GetJoystickDX();
 //	CKFVec3 vRot = CKFVec3(0.0f);
 //	float fZoomSpeed = 0.0f;
 //
@@ -155,7 +155,7 @@ void CCamera::LateUpdate(void)
 void CCamera::Set(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//ViewçsóÒ
 	D3DXMATRIX mtxView;

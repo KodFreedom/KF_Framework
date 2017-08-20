@@ -138,6 +138,7 @@ CMesh* CMeshManager::createXFile(const string& strPath, string& texName)
 	if (!pFile) { return nullptr; }
 
 	auto pMesh = new CMesh;
+	pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
 	vector<CKFVec3> vecVtx;
 	vector<CKFVec3> vecNormal;
 	vector<CKFVec2> vecUV;
@@ -313,7 +314,7 @@ CMesh* CMeshManager::createXFile(const string& strPath, string& texName)
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	CKFColor cColor = CKFColor(1.0f);
-	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
+	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; ++nCnt)
 	{
 		pVtx[nCnt].vPos = vecVtx[vecIdx[nCnt]];
 		pVtx[nCnt].vNormal = vecNormal[vecNormalIdx[nCnt]];
@@ -328,16 +329,16 @@ CMesh* CMeshManager::createXFile(const string& strPath, string& texName)
 	WORD *pIdx;
 	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; nCnt++)
+	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; ++nCnt)
 	{
-		pIdx[nCnt] = vecIdx[nCnt];
+		pIdx[nCnt] = nCnt;
 	}
 
 	pMesh->m_pIdxBuffer->Unlock();
 #endif
 
 	return pMesh;
-	/*LPDIRECT3DDEVICE9	pDevice = GetManager()->GetRenderer()->GetDevice();
+	/*LPDIRECT3DDEVICE9	pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	LPD3DXMESH			pDxMesh;		//メッシュ情報インターフェイス
 	LPD3DXBUFFER		pBufferMaterial;//マテリアル情報　動的メモリ
 	DWORD				dwNumMaterial;	//モデルのマテリアル数
@@ -667,7 +668,7 @@ void CMeshManager::createSkyBox(CMesh* pMesh)
 bool CMeshManager::createBuffer(CMesh* pMesh)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ
@@ -723,31 +724,31 @@ void CMeshManager::createField(CMesh* pMesh)
 
 	//頂点バッファをロックして、仮想アドレスを取得する
 	float fHeight = 0.0f;
-	CKFVec2 vSize = CKFVec2(2.0f, 2.0f);
+	CKFVec2 vSize = CKFVec2(10.0f, 10.0f);
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	CKFVec3 vStartPos = CKFVec3(-nNumBlockX * 0.5f * vSize.m_fX, 0.0f, nNumBlockZ * 0.5f * vSize.m_fY);
 	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)
 	{
-		if (nCntZ <= (nNumBlockZ + 1) / 4)
-		{
-			fHeight += 0.25f;
-		}
-		else if (nCntZ <= (nNumBlockZ + 1) / 2)
-		{
-			fHeight -= 0.25f;
-		}
-		else if (nCntZ <= (nNumBlockZ + 1) * 3 / 4)
-		{
-			fHeight += 0.5f;
-		}
-		else
-		{
-			fHeight -= 0.5f;
-		}
+		//if (nCntZ <= (nNumBlockZ + 1) / 4)
+		//{
+		//	fHeight += 0.25f;
+		//}
+		//else if (nCntZ <= (nNumBlockZ + 1) / 2)
+		//{
+		//	fHeight -= 0.25f;
+		//}
+		//else if (nCntZ <= (nNumBlockZ + 1) * 3 / 4)
+		//{
+		//	fHeight += 0.5f;
+		//}
+		//else
+		//{
+		//	fHeight -= 0.5f;
+		//}
 		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
 		{
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos = vStartPos
-				+ CKFVec3(nCntX * vSize.m_fX, fHeight, -nCntZ * vSize.m_fY);
+				+ CKFVec3(nCntX * vSize.m_fX, 0.0f, -nCntZ * vSize.m_fY);
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f, nCntZ * 1.0f);
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
@@ -828,5 +829,81 @@ void CMeshManager::createField(CMesh* pMesh)
 	}
 
 	pMesh->m_pIdxBuffer->Unlock();
+#endif
+}
+
+void CMeshManager::UpdateField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx)
+{
+#ifdef USING_DIRECTX
+
+	//仮想アドレスを取得するためのポインタ
+	VERTEX_3D *pVtx;
+
+	//頂点バッファをロックして、仮想アドレスを取得する
+	auto pMesh = GetMesh("field");
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	auto cColor = CKFColor(1.0f);
+	for (int nCnt = 0; nCnt < (int)vecVtx.size(); ++nCnt)
+	{
+		pVtx[nCnt].vPos = vecVtx[nCnt];
+		pVtx[nCnt].ulColor = cColor;
+	}
+
+	//Choosen Color
+	int nNumBlockX = 100;
+	int nNumBlockZ = 100;
+	auto cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+	for (auto nIdx : listChoosenIdx)
+	{
+		pVtx[nIdx].ulColor = cRed;
+
+		//法線計算
+		int nCntZ = nIdx / (nNumBlockZ + 1);
+		int nCntX = nIdx - nCntZ * (nNumBlockZ + 1);
+		CKFVec3 vNormal;
+		CKFVec3 vPosThis = pVtx[nIdx].vPos;
+		CKFVec3 vPosLeft;
+		CKFVec3 vPosRight;
+		CKFVec3 vPosTop;
+		CKFVec3 vPosBottom;
+
+		if (nCntX == 0)
+		{
+			vPosLeft = vPosThis;
+			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
+		}
+		else if (nCntX < nNumBlockX)
+		{
+			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
+			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
+		}
+		else
+		{
+			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
+			vPosRight = vPosThis;
+		}
+
+		if (nCntZ == 0)
+		{
+			vPosTop = vPosThis;
+			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
+		}
+		else if (nCntZ < nNumBlockZ)
+		{
+			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
+			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
+		}
+		else
+		{
+			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
+			vPosBottom = vPosThis;
+		}
+		vNormal = (vPosRight - vPosLeft) * (vPosBottom - vPosTop);
+		CKFMath::VecNormalize(vNormal);
+		pVtx[nIdx].vNormal = vNormal;
+	}
+
+	//仮想アドレス解放
+	pMesh->m_pVtxBuffer->Unlock();
 #endif
 }

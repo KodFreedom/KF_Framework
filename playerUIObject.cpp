@@ -39,7 +39,7 @@ const CKFVec2	CPlayerUIObject::sc_vFaceUVSize = CKFVec2(0.25f, 1.0f);
 //--------------------------------------------------------------------------------
 bool CPlayerUIObject::Init(void)
 {
-	CTextureManager* pTexManager = GetManager()->GetTextureManager();
+	CTextureManager* pTexManager = CMain::GetManager()->GetTextureManager();
 	
 	//HPGauge
 	SPRITE sHP;

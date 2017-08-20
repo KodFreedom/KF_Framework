@@ -4,9 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-26
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
@@ -88,12 +85,41 @@ typedef struct//頂点情報構造体　上の頂点フォーマットと構造を合わせること
 }VERTEX_3D;//3D頂点情報構造体　頂点フォーマットと構造を合わせること
 
 //--------------------------------------------------------------------------------
-//  プロトタイプ宣言
+//  クラス宣言
 //--------------------------------------------------------------------------------
-CManager *GetManager(void);
+class CMain
+{
+public:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	static int				Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow);
+
+	//Get関数
+	static CManager*		GetManager(void) { return m_pManager; }
 
 #ifdef _DEBUG
-int GetCountFPS(void);
+	static int				GetCountFPS(void) { return m_nCntFPS; }
 #endif
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CMain() {}
+	~CMain() {}
+
+	static LRESULT CALLBACK	wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static void				closeApp(HWND hWnd);
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	static CManager*		m_pManager;
+
+#ifdef _DEBUG
+	static int				m_nCntFPS;		//FPSカウンタ
+#endif
+};
 
 #endif

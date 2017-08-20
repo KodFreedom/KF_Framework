@@ -214,7 +214,7 @@ CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 {
 	CRaycastHitInfo rayHit;
 	auto vPos = m_pGameObj->GetTransformComponent()->GetPos();
-	auto pCollisionSystem = GetManager()->GetCollisionSystem();
+	auto pCollisionSystem = CMain::GetManager()->GetCollisionSystem();
 	if (pCollisionSystem->RayCast(vPos, CKFVec3(0.0f, -1.0f, 0.0f), m_fGroundCheckDistance, rayHit, m_pGameObj))
 	{
 		m_bIsGrounded = true;

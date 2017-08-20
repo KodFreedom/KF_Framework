@@ -20,7 +20,7 @@
 #include "modeTitle.h"
 
 //gameobject
-#include "gameObject2D.h"
+//#include "gameObject2D.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -47,14 +47,14 @@ CModeResult::~CModeResult()
 void CModeResult::Init(void)
 {
 	//ライトの初期化
-	GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CCamera;
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), 0.0f, CKFVec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), "endingGood.jpg");
+//	CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), 0.0f, CKFVec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), "endingGood.jpg");
 }
 
 //--------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ void CModeResult::Uninit(void)
 	CMode::Uninit();
 
 	//ライトの破棄
-	GetManager()->GetLightManager()->ReleaseAll();
+	CMain::GetManager()->GetLightManager()->ReleaseAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -76,9 +76,9 @@ void CModeResult::Update(void)
 {
 	CMode::Update();
 
-	if (GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
 	{
-		GetManager()->GetFade()->FadeToMode(new CModeTitle);
+		CMain::GetManager()->GetFade()->FadeToMode(new CModeTitle);
 	}
 }
 

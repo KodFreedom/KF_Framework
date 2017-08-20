@@ -10,7 +10,7 @@
 #include "main.h"
 #include "animatorComponent.h"
 #include "gameObject.h"
-#include "gameObject3D.h"
+#include "gameObjectSpawner.h"
 #include "transformComponent.h"
 #include "motionInfo.h"
 
@@ -23,6 +23,7 @@
 //--------------------------------------------------------------------------------
 CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string& strPath)
 	: CComponent(pGameObj)
+	, m_pMotionKeyLast(nullptr)
 	, m_motionNow(MP_NEUTAL)
 	, m_motionNext(MP_NEUTAL)
 	, m_status(MS_CHANGE)
@@ -47,6 +48,8 @@ CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string
 bool CAnimatorComponent::Init(void)
 {
 	changeMotion(m_motionNow);
+	auto pMotionInfo = m_apMotionData[m_motionNow];
+	m_pMotionKeyLast = &pMotionInfo->m_vecMotionKey[m_nKeyNow];
 	return true;
 }
 
@@ -75,6 +78,7 @@ void CAnimatorComponent::Update(void)
 	auto pMotionInfo = m_apMotionData[m_motionNow];
 	auto& motionKey = pMotionInfo->m_vecMotionKey[m_nKeyNow];
 	auto nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * pMotionInfo->m_vecMotionKey[m_nKeyNow].m_nFrame;
+	auto itrNodeKeyLast = m_pMotionKeyLast->m_listNodesKey.begin();
 	auto itrNodeKey = motionKey.m_listNodesKey.begin();
 	float fRate = (float)m_nCntFrame / nFrame;
 
@@ -82,11 +86,12 @@ void CAnimatorComponent::Update(void)
 	for (auto pObj : m_listNodes)
 	{
 		auto pTrans = pObj->GetTransformComponent();
-		auto vPosNew = CKFMath::LerpVec3(pTrans->GetPosNext(), itrNodeKey->c_vPos, fRate);
-		auto qRotNew = CKFMath::SlerpQuaternion(pTrans->GetRotNext(), itrNodeKey->c_qRot, fRate);
+		auto vPosNew = CKFMath::LerpVec3(itrNodeKeyLast->c_vPos, itrNodeKey->c_vPos, fRate);
+		auto qRotNew = CKFMath::SlerpQuaternion(itrNodeKeyLast->c_qRot, itrNodeKey->c_qRot, fRate);
 		pTrans->SetPosNext(vPosNew);
 		pTrans->SetRotNext(qRotNew);
 		++itrNodeKey;
+		++itrNodeKeyLast;
 	}
 
 	//フレームカウント
@@ -95,6 +100,7 @@ void CAnimatorComponent::Update(void)
 	//キーフレーム切り替え
 	if (m_nCntFrame == nFrame)
 	{
+		m_pMotionKeyLast = &motionKey;
 		m_status = MS_NORMAL;
 		m_nCntFrame = 0;
 		m_nKeyNow++;
@@ -312,7 +318,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			strPath.push_back(strRead[nCnt]);
 		}
 
-		auto pNode = CGameObject3D::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+		auto pNode = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 		m_listNodes.push_back(pNode);
 		vecObj[nCntPart] = pNode;
 	}

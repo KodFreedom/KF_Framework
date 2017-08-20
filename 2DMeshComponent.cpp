@@ -24,7 +24,7 @@
 bool C2DMeshComponent::Init(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ

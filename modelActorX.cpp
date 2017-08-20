@@ -413,7 +413,7 @@ void CModelActorX::Uninit(void)
 void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	int nNumParts = (int)m_actorInfo.vectorPartsInfoDefault.size();
 	CKFMtx44* pMtxWorld = new CKFMtx44[nNumParts];
 
@@ -482,7 +482,7 @@ void CModelActorX::Draw(const CKFMtx44 &mtxWorldParents, vector<PARTS_INFO> &vec
 	//ƒp[ƒc”‚ð”äŠr‚·‚é
 	if (m_actorInfo.vectorPartsInfoDefault.size() != vectorParts.size()) { return; }
 
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	for (int nCntParts = 0; nCntParts < (int)vectorParts.size(); nCntParts++)
 	{

@@ -30,10 +30,10 @@ const float CFade::sc_fFadeRate = 1.0f / (120.0f * 0.5f);
 void CFade::Init(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
-	GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
+	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
 
 	//頂点バッファ
 	hr = pDevice->CreateVertexBuffer(
@@ -92,7 +92,7 @@ void CFade::Init(void)
 void CFade::Uninit(void)
 {
 #ifdef USING_DIRECTX
-	GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
+	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
 	SAFE_RELEASE(m_pVtxBuffer);
 #endif
 }
@@ -131,7 +131,7 @@ void CFade::Update(void)
 
 			//Check SE & BGM(fade out effect)
 			m_fade = FADE_IN;
-			GetManager()->SetMode(m_pModeNext);
+			CMain::GetManager()->SetMode(m_pModeNext);
 		}
 	}
 
@@ -144,7 +144,7 @@ void CFade::Update(void)
 void CFade::Draw(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_2D));
@@ -153,7 +153,7 @@ void CFade::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
+	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
 	pDevice->SetTexture(0, pTexture);
 
 	// ポリゴンの描画

@@ -53,9 +53,9 @@ void CPlayerBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Update(void)
 {
-	auto pInput = GetManager()->GetInputManager();
+	auto pInput = CMain::GetManager()->GetInputManager();
 	auto vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-	auto pCamera = GetManager()->GetMode()->GetCamera();
+	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(CKFVec3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.m_fX + vCamForward * vAxis.m_fY;
 	auto bJump = pInput->GetKeyTrigger(CInputManager::K_JUMP);
@@ -65,7 +65,7 @@ void CPlayerBehaviorComponent::Update(void)
 	/*if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
 	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
 	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
-	CInputManager* pInput = GetManager()->GetInputManager();
+	CInputManager* pInput = CMain::GetManager()->GetInputManager();
 	bool bCanControl = true;
 
 	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) 
@@ -101,7 +101,7 @@ void CPlayerBehaviorComponent::Update(void)
 		CKFVec3 vRight = pTrans->GetRightNext();
 
 		//ƒJƒƒ‰Œü‚«‚ðŽZo‚·‚é
-		CCamera* pCamera = GetManager()->GetMode()->GetCamera();
+		CCamera* pCamera = CMain::GetManager()->GetMode()->GetCamera();
 		CKFVec3 vForwardCamera = pCamera->GetVecLook();
 		CKFVec3 vForwardNext = (vUp * vForwardCamera) * vUp;
 
@@ -167,7 +167,7 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 			m_actor.Hit(10.0f);
 			if (m_actor.GetLifeNow() <= 0.0f)
 			{
-				GetManager()->GetMode()->EndMode();
+				CMain::GetManager()->GetMode()->EndMode();
 			}
 		}
 	}

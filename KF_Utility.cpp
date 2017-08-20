@@ -26,7 +26,7 @@ int CKFUtility::GetStrToken(FILE* pFp, const string& strToken, string& strBuf)
 	strBuf.clear();
 	while ((c = (char)fgetc(pFp)) != EOF)
 	{
-		for (int nCnt = 0; nCnt < strToken.length(); nCnt++)
+		for (int nCnt = 0; nCnt < (int)strToken.length(); nCnt++)
 		{
 			if (c == strToken.at(nCnt))
 			{

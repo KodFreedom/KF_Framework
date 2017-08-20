@@ -89,7 +89,7 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 	}
 
 	//物理演算システムにレジストリ
-	GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -197,7 +197,7 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	}
 
 	//物理演算システムにレジストリ
-	GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -305,7 +305,7 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	}
 
 	//物理演算システムにレジストリ
-	GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -425,7 +425,7 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 		//物理演算システムにレジストリ
 		CCollision* pCollision = new CCollision;
 		*pCollision = collisionDepthMaxL;
-		GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxL);
 	}
 
@@ -449,7 +449,7 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 		//物理演算システムにレジストリ
 		CCollision* pCollision = new CCollision;
 		*pCollision = collisionDepthMaxR;
-		GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxR);
 	}
 
@@ -575,7 +575,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		//物理演算システムにレジストリ
 		CCollision* pCollision = new CCollision;
 		*pCollision = collisionDepthMaxL;
-		GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxL);
 	}
 
@@ -599,7 +599,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		//物理演算システムにレジストリ
 		CCollision* pCollision = new CCollision;
 		*pCollision = collisionDepthMaxR;
-		GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxR);
 	}
 
@@ -669,7 +669,7 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	pCollision->m_pRigidBodyTwo = nullptr;
 
 	//物理演算システムにレジストリ
-	GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo cInfo;
@@ -764,7 +764,7 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 	if (!bFind) { return; }
 
 	//物理演算システムにレジストリ
-	GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo cInfo;

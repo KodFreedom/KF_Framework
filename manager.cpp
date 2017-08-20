@@ -21,6 +21,7 @@
 #include "rendererDX.h"
 #include "mode.h"
 #include "modeDemo.h"
+#include "modeEditor.h"
 #include "fade.h"
 #include "KF_CollisionSystem.h"
 #include "KF_PhysicsSystem.h"
@@ -119,7 +120,7 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pFade = CFade::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
-	SetMode(new CModeDemo);
+	SetMode(new CModeEditor);
 
 	return true;
 }

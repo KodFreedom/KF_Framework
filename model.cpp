@@ -25,7 +25,7 @@ bool CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 	//チェックポインタ
 	if (pXFile == NULL) { return false; }
 
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//ハードディスクからXファイルの読み込み
 	HRESULT hr = D3DXLoadMeshFromX(
@@ -77,7 +77,7 @@ bool CModel::LoadXFile(XFILE* pXFile, const LPCSTR &pXFilePath)
 //--------------------------------------------------------------------------------
 void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorldParents;
@@ -114,7 +114,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents)
 //--------------------------------------------------------------------------------
 void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorldParents;
@@ -125,7 +125,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(matType);
+	D3DMATERIAL9 mat = CMain::GetManager()->GetMaterialManager()->GetMaterial(matType);
 	pDevice->SetMaterial(&mat);
 
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
@@ -148,7 +148,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 //--------------------------------------------------------------------------------
 void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const string& strTexName)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorldParents;
@@ -163,7 +163,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 	pMat = (D3DXMATERIAL*)XFile.pBufferMaterial->GetBufferPointer();
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(strTexName);
+	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)
@@ -183,7 +183,7 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 //--------------------------------------------------------------------------------
 void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, const CMM::MATERIAL &matType, const string& strTexName)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorldParents;
@@ -194,11 +194,11 @@ void CModel::DrawXFile(const XFILE &XFile, const CKFMtx44 &mtxWorldParents, cons
 	pDevice->GetMaterial(&matDef);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = GetManager()->GetMaterialManager()->GetMaterial(matType);
+	D3DMATERIAL9 mat = CMain::GetManager()->GetMaterialManager()->GetMaterial(matType);
 	pDevice->SetMaterial(&mat);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(strTexName);
+	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	for (int nCnt = 0; nCnt < (int)XFile.dwNumMaterial; nCnt++)

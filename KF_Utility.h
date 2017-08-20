@@ -16,9 +16,9 @@
 class CKFUtility
 {
 public:
-	static int GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
-	static int GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
-
+	static int		GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
+	static int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
+	static string	GetStrTag(const string& strName);
 private:
 	CKFUtility() {}
 	~CKFUtility() {}

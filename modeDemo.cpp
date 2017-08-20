@@ -22,8 +22,7 @@
 #include "fade.h"
 
 //gameobject
-#include "gameObject2D.h"
-#include "gameObject3D.h"
+#include "gameObjectSpawner.h"
 #include "gameObjectActor.h"
 
 //--------------------------------------------------------------------------------
@@ -52,29 +51,29 @@ CModeDemo::~CModeDemo()
 void CModeDemo::Init(void)
 {	
 	//ライトの初期化
-	GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CActionGameCamera;
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CGameObject3D::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObjectSpawner::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 
 	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
 		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 10.0f, -10.0f), CKFVec3(10.0f, 12.0f, 10.0f));
 		CKFVec3 vRot = CKFVec3(0.0f);//CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
-		CGameObject3D::CreateCube(vPos, vRot, CKFVec3(1.0f));
+		CGameObjectSpawner::CreateCube(vPos, vRot, CKFVec3(1.0f));
 	}
 	
-	CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CGameObject* pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
 
 	m_pCamera->SetTarget(pPlayer);
 
-	//GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
+	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------
@@ -86,10 +85,10 @@ void CModeDemo::Uninit(void)
 	CMode::Uninit();
 
 	//ライトの破棄
-	GetManager()->GetLightManager()->ReleaseAll();
+	CMain::GetManager()->GetLightManager()->ReleaseAll();
 
 	//BGMの停止
-	GetManager()->GetSoundManager()->StopAll();
+	CMain::GetManager()->GetSoundManager()->StopAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -107,8 +106,8 @@ void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
 
-	if (m_bEndMode || GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (m_bEndMode || CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
 	{
-		GetManager()->GetFade()->FadeToMode(new CModeResult);
+		CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
 	}
 }

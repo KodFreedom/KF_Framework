@@ -213,12 +213,6 @@
     <ClCompile Include="3DMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh\3D</Filter>
     </ClCompile>
-    <ClCompile Include="gameObject2D.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObject3D.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="actorMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh\3D</Filter>
     </ClCompile>
@@ -321,6 +315,21 @@
     <ClCompile Include="KF_Utility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
+    <ClCompile Include="modeEditor.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="editorCamera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldEditorBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObjectSpawner.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="editorControllerBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -398,12 +407,6 @@
     <ClInclude Include="3DMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
     </ClInclude>
-    <ClInclude Include="gameObject3D.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObject2D.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="modelMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
     </ClInclude>
@@ -462,9 +465,6 @@
       <Filter>ヘッダー ファイル\Motion</Filter>
     </ClInclude>
     <ClInclude Include="modelActor.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="bone.h">
       <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
     <ClInclude Include="meshManager.h">
@@ -532,6 +532,18 @@
     </ClInclude>
     <ClInclude Include="KF_Utility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="modeEditor.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldEditorBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectSpawner.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="editorControllerBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -48,7 +48,7 @@
 //	CActorMeshComponent::ACTOR_MOTION_INFO& info = c_pMesh->GetMotionInfo();
 //
 //	//ƒ‚ƒfƒ‹‚ÌŽæ“¾
-//	CModel* pModel = GetManager()->GetModelManager()->GetModel(modelName);
+//	CModel* pModel = CMain::GetManager()->GetModelManager()->GetModel(modelName);
 //	if (pModel == NULL) { return; }
 //	CModelActorX* pModelActor = (CModelActorX*)pModel;
 //

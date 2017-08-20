@@ -13,8 +13,6 @@
 
 //gameObject head files
 #include "gameObject.h"
-#include "gameObject2D.h"
-#include "gameObject3D.h"
 #include "gameObjectActor.h"
 
 //--------------------------------------------------------------------------------

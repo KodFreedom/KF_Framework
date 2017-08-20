@@ -51,7 +51,7 @@ void CLight::Init(const int &nID, const CKFVec3 &vDir)
 //--------------------------------------------------------------------------------
 void CLight::Uninit(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	pDevice->LightEnable(m_nID, FALSE);
 }
@@ -72,7 +72,7 @@ void CLight::SetDirection(const CKFVec3 &vDir)
 //--------------------------------------------------------------------------------
 void CLight::SetLight(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	D3DLIGHT9 lightInfo;
 
 	//Light Init
@@ -112,7 +112,7 @@ CLightManager::~CLightManager()
 //--------------------------------------------------------------------------------
 void CLightManager::Init(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
@@ -121,7 +121,7 @@ void CLightManager::Init(void)
 //--------------------------------------------------------------------------------
 void CLightManager::Uninit(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	ReleaseAll();
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -132,7 +132,7 @@ void CLightManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void CLightManager::TurnAllLightOff(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
@@ -141,7 +141,7 @@ void CLightManager::TurnAllLightOff(void)
 //--------------------------------------------------------------------------------
 void CLightManager::TurnAllLightOn(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 

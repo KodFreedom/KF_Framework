@@ -82,7 +82,7 @@ void CActionGameCamera::Update(void)
 {
 	SwitchParam();
 
-	CInputManager *pInput = GetManager()->GetInputManager();
+	CInputManager *pInput = CMain::GetManager()->GetInputManager();
 	CKFVec3 vRot = CKFVec3(0.0f);
 	float fZoomSpeed = 0.0f;
 
@@ -132,7 +132,7 @@ void CActionGameCamera::Update(void)
 	m_fDistance += m_fZoomSpeed;
 	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;*/
 
-	//if (!GetManager()->GetColliderManager()->CheckActionCameraCollision(this))
+	//if (!CMain::GetManager()->GetColliderManager()->CheckActionCameraCollision(this))
 	//{
 	//	m_fDistance = CKFMath::LerpFloat(m_fDistance, sc_fDistanceDef, sc_fZoomLerpTime);
 	//}
@@ -250,7 +250,7 @@ void CActionGameCamera::CheckCollision(void)
 	//CColliderManager::HIT_INFO hitInfo;
 	//m_vPosEyeNext = m_vPosAtNext - m_vVecLookNext * m_fDistanceNext;
 
-	//if (GetManager()->GetColliderManager()->SphereCast(m_vPosEyeNext, sc_fCollisionRadius, hitInfo))
+	//if (CMain::GetManager()->GetColliderManager()->SphereCast(m_vPosEyeNext, sc_fCollisionRadius, hitInfo))
 	//{//è’ìÀÇµÇΩÇÁ
 	//	//êVÇµÇ¢ÉJÉÅÉâÇÃéZèo-
 	//	CKFVec3 vNewPosEye = hitInfo.vPos + hitInfo.vNormal * sc_fCollisionRadius;

@@ -26,7 +26,7 @@
 void C2DDrawComponent::Draw(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	// レンダーステート設定
 	m_pRenderState->SetRenderState();
@@ -42,7 +42,7 @@ void C2DDrawComponent::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	// ポリゴンの描画

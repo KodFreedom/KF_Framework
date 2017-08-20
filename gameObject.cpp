@@ -40,7 +40,7 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri, const OBJ_TYPE& type)
 	m_listpBehavior.clear();
 	m_listpCollider.clear();
 	m_pTransform = new CTransformComponent(this);
-	GetManager()->GetGameObjectManager()->SaveGameObj(m_pri, this);
+	CMain::GetManager()->GetGameObjectManager()->SaveGameObj(m_pri, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -48,7 +48,15 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri, const OBJ_TYPE& type)
 //--------------------------------------------------------------------------------
 void CGameObject::Release(void)
 {
-	GetManager()->GetGameObjectManager()->ReleaseGameObj(m_pri, this);
+	CMain::GetManager()->GetGameObjectManager()->ReleaseGameObj(m_pri, this);
+}
+
+//--------------------------------------------------------------------------------
+//  コライダーの追加
+//--------------------------------------------------------------------------------
+void CGameObject::AddBehavior(CBehaviorComponent* pBehavior)
+{
+	m_listpBehavior.push_back(pBehavior);
 }
 
 //--------------------------------------------------------------------------------
@@ -81,7 +89,7 @@ void CGameObject::SwapParam(void)
 #ifdef _DEBUG
 void CGameObject::DrawNormal(void)
 {
-	//LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	//LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	//D3DXMATRIX mtx, mtxPos;
 	//D3DXMatrixIdentity(&mtx);
 	//pDevice->SetTransform(D3DTS_WORLD, &mtx);

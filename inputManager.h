@@ -24,10 +24,18 @@ public:
 	//--------------------------------------------------------------------------------
 	enum KEY
 	{
-		K_JUMP = 0x01,
-		K_ATTACK = 0x02,
-		K_SUBMIT = 0x04,
-		K_CANCEL = 0x02,
+		K_JUMP	 = 0,
+		K_ATTACK = 1,
+		K_SUBMIT = 2,
+		K_CANCEL = 1,
+		K_EXTEND = 3,
+		K_SHRINK = 4,
+		K_RAISE	 = 5,
+		K_REDUCE = 6,
+		K_UP	 = 7,
+		K_DOWN	 = 8,
+		K_LEFT	 = 9,
+		K_RIGHT	 = 10,
 	};
 
 	//--------------------------------------------------------------------------------
@@ -43,6 +51,9 @@ public:
 	//
 	void			Acquire(void);
 	void			Unacquire(void);
+
+	//Set関数
+	void			SetEditorMode(const bool& bUse) { m_bEditorMode = bUse; }
 
 	//Get関数
 	CKeyboardDX*	GetKeyboard(void) { return m_pKeyboard; }
@@ -80,5 +91,5 @@ private:
 	LONG			m_lKeysPress;		//キーフラッグ情報
 	LONG			m_lKeysTrigger;		//キートリガーフラッグ情報
 	LONG			m_lKeysRelease;		//キーリリースフラッグ情報
-
+	bool			m_bEditorMode;
 };

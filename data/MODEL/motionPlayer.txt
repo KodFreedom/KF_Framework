@@ -14,16 +14,16 @@ NUM_MODEL = 10
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/player/00_body.x		# [0]体
-MODEL_FILENAME = data/MODEL/player/01_head.x		# [1]頭
-MODEL_FILENAME = data/MODEL/player/02_armR.x		# [2]右腕
-MODEL_FILENAME = data/MODEL/player/03_handR.x		# [3]右手
-MODEL_FILENAME = data/MODEL/player/04_armL.x		# [4]左腕
-MODEL_FILENAME = data/MODEL/player/05_handL.x		# [5]左手
-MODEL_FILENAME = data/MODEL/player/06_legR.x		# [6]右腿
-MODEL_FILENAME = data/MODEL/player/07_footR.x		# [7]右足
-MODEL_FILENAME = data/MODEL/player/08_legL.x		# [8]左腿
-MODEL_FILENAME = data/MODEL/player/09_footL.x		# [9]左足
+MODEL_FILENAME = data/MODEL/player/body.x		# [0]体
+MODEL_FILENAME = data/MODEL/player/head.x		# [1]頭
+MODEL_FILENAME = data/MODEL/player/armR.x		# [2]右腕
+MODEL_FILENAME = data/MODEL/player/handR.x		# [3]右手
+MODEL_FILENAME = data/MODEL/player/armL.x		# [4]左腕
+MODEL_FILENAME = data/MODEL/player/handL.x		# [5]左手
+MODEL_FILENAME = data/MODEL/player/legR.x		# [6]右腿
+MODEL_FILENAME = data/MODEL/player/footR.x		# [7]右足
+MODEL_FILENAME = data/MODEL/player/legL.x		# [8]左腿
+MODEL_FILENAME = data/MODEL/player/footL.x		# [9]左足
 
 #------------------------------------------------------------------------------
 # キャラクター情報

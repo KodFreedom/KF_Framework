@@ -7,12 +7,12 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "gameObject.h"
 #include "3DRigidbodyComponent.h"
 #include "colliderComponent.h"
 #include "sphereColliderComponent.h"
 #include "AABBColliderComponent.h"
 #include "OBBColliderComponent.h"
-#include "gameObject3D.h"
 
 //--------------------------------------------------------------------------------
 //  クラス

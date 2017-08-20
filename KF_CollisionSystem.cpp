@@ -61,8 +61,8 @@ CKFCollisionSystem::CKFCollisionSystem()
 void CKFCollisionSystem::Init(void)
 {
 #ifdef _DEBUG
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
-	GetManager()->GetTextureManager()->UseTexture("polygon.png");
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.png");
 	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
 	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
 #endif
@@ -86,7 +86,7 @@ void CKFCollisionSystem::Uninit(void)
 #ifdef _DEBUG
 	SAFE_RELEASE(m_pMeshSphere);
 	SAFE_RELEASE(m_pMeshCube);
-	GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
+	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
 #endif
 }
 
@@ -255,9 +255,9 @@ bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirecti
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::DrawCollider(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	//sphere
-	LPDIRECT3DTEXTURE9 pTexture = GetManager()->GetTextureManager()->GetTexture("polygon.png");
+	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.png");
 	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
 	{
 		D3DXVECTOR3 vPos = (*itr)->GetWorldPos();

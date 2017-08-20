@@ -1,30 +1,33 @@
 //--------------------------------------------------------------------------------
 //
-//　gameObject2D.h
+//　modeEditor.h
 //	Author : Xu Wenjie
-//	Date   : 2017-04-26
+//	Date   : 2017-08-19
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _GAMEOBJECT_2D_H_
-#define _GAMEOBJECT_2D_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "gameObject.h"
+#include "mode.h"
+
+//--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObject2D : public CGameObject
+class CModeEditor : public CMode
 {
 public:
-	CGameObject2D() : CGameObject(GOM::PRI_2D) {}
-	~CGameObject2D() {}
+	CModeEditor();
+	~CModeEditor();
 
-	static CGameObject2D* Create(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vSize, const string& strTexName);
+	void	Init(void) override;
+	void	Uninit(void) override;
+	void	Update(void) override;
+	void	LateUpdate(void) override;
+	void	EndMode(void) override {}
+private:
 };
-
-#endif

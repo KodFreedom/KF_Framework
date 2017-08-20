@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const CKFVec2& vPosCenter, const CKFVec2& vSize, const CKFVec2& vUVBegin, const CKFVec2& vUVSize, const float& fRot, const CKFColor& cColor)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ
@@ -90,7 +90,7 @@ bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const CKFVec2
 //--------------------------------------------------------------------------------
 bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const CKFVec2& vPosLeftTop, const CKFVec2& vSize, const CKFColor& cColor, const CKFVec2& vUVBegin, const CKFVec2& vUVSize)
 {
-	LPDIRECT3DDEVICE9 pDevice = GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ

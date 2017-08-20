@@ -32,13 +32,12 @@ CMode::CMode()
 void CMode::Uninit(void)
 {
 	//カメラの破棄
-	m_pCamera->Release();
-	m_pCamera = NULL;
+	SAFE_RELEASE(m_pCamera);
 
 	//オブジェクトの破棄
-	GetManager()->GetGameObjectManager()->ReleaseAll();
+	CMain::GetManager()->GetGameObjectManager()->ReleaseAll();
 
-	GetManager()->GetUISystem()->ReleaseAll();
+	CMain::GetManager()->GetUISystem()->ReleaseAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -50,7 +49,7 @@ void CMode::Update(void)
 	m_pCamera->Update();
 	
 	//オブジェクトの更新
-	GetManager()->GetGameObjectManager()->UpdateAll();
+	CMain::GetManager()->GetGameObjectManager()->UpdateAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -62,7 +61,7 @@ void CMode::LateUpdate(void)
 	m_pCamera->LateUpdate();
 
 	//オブジェクトの更新
-	GetManager()->GetGameObjectManager()->LateUpdateAll();
+	CMain::GetManager()->GetGameObjectManager()->LateUpdateAll();
 }
 
 //--------------------------------------------------------------------------------
@@ -74,5 +73,5 @@ void CMode::Draw(void)
 	m_pCamera->Set();
 
 	//オブジェクトの描画
-	GetManager()->GetGameObjectManager()->DrawAll();
+	CMain::GetManager()->GetGameObjectManager()->DrawAll();
 }

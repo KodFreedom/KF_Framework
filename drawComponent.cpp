@@ -27,7 +27,7 @@ void CDrawComponent::Uninit(void)
 {
 	if (!m_strTexName.empty())
 	{
-		GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
+		CMain::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
 		m_strTexName.clear();
 	}
 }
@@ -38,5 +38,5 @@ void CDrawComponent::Uninit(void)
 void CDrawComponent::SetTexName(const string& strTexName)
 {
 	m_strTexName = strTexName;
-	GetManager()->GetTextureManager()->UseTexture(m_strTexName);
+	CMain::GetManager()->GetTextureManager()->UseTexture(m_strTexName);
 }
