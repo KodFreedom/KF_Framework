@@ -53,7 +53,7 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 	int nXRightDown = nXLeftUp + 1;
 	int nZRightDown = nZLeftUp + 1;
 
-	CKFVec3 vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fY);
+	CKFVec3 vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fZ);
 	CKFVec3 vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
 	CKFVec3 vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
 

@@ -75,7 +75,10 @@ void CFieldEditorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CFieldEditorBehaviorComponent::Update(void)
 {
-	if (!m_bActive) { return; }
+	if (!m_bActive) 
+	{
+		return; 
+	}
 
 	auto pInput = CMain::GetManager()->GetInputManager();
 

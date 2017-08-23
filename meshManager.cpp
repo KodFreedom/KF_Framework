@@ -44,6 +44,7 @@ void CMeshManager::UseMesh(const string& strName)
 	if (itr != m_umMesh.end()) 
 	{ //すでに存在してる
 		itr->second.usNumUsers++;
+		return;
 	}
 
 	//メッシュの作成
@@ -58,21 +59,38 @@ void CMeshManager::UseMesh(const string& strName)
 //--------------------------------------------------------------------------------
 //  メッシュの追加
 //--------------------------------------------------------------------------------
-void CMeshManager::UseMesh(const string& strName, string& texName)
+void CMeshManager::UseMesh(const string& strFileName, string& texName)
 {
-	auto itr = m_umMesh.find(strName);
+	auto itr = m_umMesh.find(strFileName);
 	if (itr != m_umMesh.end())
 	{ //すでに存在してる
 		itr->second.usNumUsers++;
+		return;
 	}
 
-	//メッシュの作成
-	MESH mesh;
-	mesh.usNumUsers = 1;
-	mesh.pMesh = createMesh(strName, texName);
+	if (strFileName.find(".mesh") != string::npos)
+	{
+		//メッシュの作成
+		MESH mesh;
+		mesh.usNumUsers = 1;
+		mesh.pMesh = loadFromMesh(strFileName, texName);
 
-	//保存
-	m_umMesh.emplace(strName, mesh);
+		//保存
+		m_umMesh.emplace(strFileName, mesh);
+		return;
+	}
+
+	if (strFileName.find(".x") != string::npos)
+	{
+		//メッシュの作成
+		MESH mesh;
+		mesh.usNumUsers = 1;
+		mesh.pMesh = loadFromXFile(strFileName, texName);
+
+		//保存
+		m_umMesh.emplace(strFileName, mesh);
+		return;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -105,22 +123,74 @@ CMesh* CMeshManager::createMesh(const string& strName)
 }
 
 //--------------------------------------------------------------------------------
-//  メッシュの作成
+//	関数名：loadFromMesh
+//  関数説明：メッシュファイルからデータの読込
+//	引数：	strFileName：ファイルの名前 
+//			strTexName：テクスチャの名前（Out）
+//	戻り値：CMesh*
 //--------------------------------------------------------------------------------
-CMesh* CMeshManager::createMesh(const string& strName, string& texName)
+CMesh* CMeshManager::loadFromMesh(const string& strFileName, string& strTexName)
 {
-	CMesh* pMesh = nullptr;
+	std::string strName = "data/MESH/" + strFileName;
+	FILE *pFile;
 
-	//メッシュの名前の最後の五文字が.meshかどうかをチェック
-	if (strName.find(".mesh") != string::npos)
-	{//ファイルから読み込む
+	//file open
+	fopen_s(&pFile, strName.c_str(), "rb");
 
+	if (!pFile) { return nullptr; }
+	
+	auto pMesh = new CMesh;
+	pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
+
+	//NumVtx
+	fread(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+
+	//NumIdx
+	fread(&pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+
+	//NumPolygon
+	fread(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+
+	//load Vtx
+	VERTEX_3D* pVtx3D = new VERTEX_3D[pMesh->m_nNumVtx];
+	fread(pVtx3D, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
+	
+	//load Idx
+	int* pIdx3D = new int[pMesh->m_nNumIdx];
+	fread(pIdx3D, sizeof(int), pMesh->m_nNumIdx, pFile);
+
+#ifdef USING_DIRECTX
+	if (!createBuffer(pMesh)) { return nullptr; }
+
+	//頂点データ
+	VERTEX_3D* pVtx;
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
+	{
+		pVtx[nCnt] = pVtx3D[nCnt];
 	}
+	pMesh->m_pVtxBuffer->Unlock();
 
-	else if (strName.find(".x") != string::npos)
-	{//XFile
-		pMesh = createXFile(strName, texName);
+	//インデックス
+	WORD *pIdx;
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; ++nCnt)
+	{
+		pIdx[nCnt] = pIdx3D[nCnt];
 	}
+	pMesh->m_pIdxBuffer->Unlock();
+#endif
+
+	//Texture
+	int nSize;
+	fread(&nSize, sizeof(int), 1, pFile);
+	strTexName.resize(nSize);
+	fread(&strTexName[0], sizeof(char), nSize, pFile);
+
+	delete[] pVtx3D;
+	delete[] pIdx3D;
+
+	fclose(pFile);
 
 	return pMesh;
 }
@@ -128,7 +198,7 @@ CMesh* CMeshManager::createMesh(const string& strName, string& texName)
 //--------------------------------------------------------------------------------
 //  Cubeの作成
 //--------------------------------------------------------------------------------
-CMesh* CMeshManager::createXFile(const string& strPath, string& texName)
+CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 {
 	FILE* pFile;
 

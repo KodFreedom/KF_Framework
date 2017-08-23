@@ -15,6 +15,7 @@
 #include "gameObject.h"
 #include "editorControllerBehaviorComponent.h"
 #include "fieldEditorBehaviorComponent.h"
+#include "modelEditorBehaviorComponent.h"
 #include "transformComponent.h"
 
 //--------------------------------------------------------------------------------
@@ -27,6 +28,7 @@ CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(CGameObje
 	: CBehaviorComponent(pGameObj)
 	, m_mode(CM_FIELD)
 	, m_pFieldEditor(nullptr)
+	, m_pModelEditor(nullptr)
 {
 
 }
@@ -60,6 +62,7 @@ void CEditorControllerBehaviorComponent::Update(void)
 
 	//今アクティブのモードをオンにする
 	m_pFieldEditor->SetActive(m_mode == CM_FIELD);
+	m_pModelEditor->SetActive(m_mode == CM_MODEL);
 
 	//標的操作
 	auto pTrans = m_pGameObj->GetTransformComponent();
@@ -70,14 +73,18 @@ void CEditorControllerBehaviorComponent::Update(void)
 	auto vMove = pCamera->GetVecRight() * vAxis.m_fX + vCamForward * vAxis.m_fY;
 	vPos += vMove;
 	m_pFieldEditor->AdjustPosInField(vPos);
-	pTrans->SetPosNext(vPos);
 
-	//FieldEditorの操作中心の更新
+	//操作位置の更新
 	m_pFieldEditor->SetPos(vPos);
+	m_pModelEditor->SetPos(vPos);
 
 	//カメラの移動
 	auto vMovement = vPos - pTrans->GetPos();
 	pCamera->MoveCamera(vMovement);
+
+	//Pos設定
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
 }
 
 //--------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ public:
 	
 	//Setä÷êî
 	void			SetMeshName(const string& strMeshName);
-	void			SetMeshName(const string& strXFilePath, string& strTexName);
+	void			SetMeshName(const string& strFileName, string& strTexName);
 
 	//Getä÷êî
 	const string&	GetMeshName(void) const { return m_strMeshName; }

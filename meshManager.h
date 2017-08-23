@@ -30,7 +30,7 @@ public:
 	void	Release(void) { UnloadAll(); delete this; }
 	void	UnloadAll(void);
 	void	UseMesh(const string& strName);
-	void	UseMesh(const string& strName, string& texName);
+	void	UseMesh(const string& strFileName, string& texName);
 	void	DisuseMesh(const string& strName);
 
 	void	UpdateField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx);
@@ -53,8 +53,8 @@ private:
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
 	CMesh*	createMesh(const string& strName);
-	CMesh*	createMesh(const string& strName, string& texName);
-	CMesh*	createXFile(const string& strPath, string& texName);
+	CMesh*	loadFromMesh(const string& strFileName, string& strTexName);
+	CMesh*	loadFromXFile(const string& strPath, string& strTexName);
 	void	createCube(CMesh* pMesh);
 	void	createSphere(CMesh* pMesh);
 	void	createSkyBox(CMesh* pMesh);

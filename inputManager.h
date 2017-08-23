@@ -24,18 +24,30 @@ public:
 	//--------------------------------------------------------------------------------
 	enum KEY
 	{
-		K_JUMP	 = 0,
-		K_ATTACK = 1,
-		K_SUBMIT = 2,
-		K_CANCEL = 1,
-		K_EXTEND = 3,
-		K_SHRINK = 4,
-		K_RAISE	 = 5,
-		K_REDUCE = 6,
-		K_UP	 = 7,
-		K_DOWN	 = 8,
-		K_LEFT	 = 9,
-		K_RIGHT	 = 10,
+		K_SUBMIT	= 0,
+		K_CANCEL	= 1,
+		K_START		= 2,
+		K_ROTXM		= 3,
+		K_ROTXP		= 4,
+		K_ROTYM		= 5,
+		K_ROTYP		= 6,
+		K_ROTZM		= 7,
+		K_ROTZP		= 8,
+		K_UP		= 9,
+		K_DOWN		= 10,
+		K_LEFT		= 11,
+		K_RIGHT		= 12,
+		K_LRACKET	= 13,
+		K_RRACKET	= 14,
+		K_RESET		= 15,
+
+		//èdÇÀÇÈÉLÅ[
+		K_JUMP		= 0,
+		K_ATTACK	= 1,
+		K_EXTEND	= 3,
+		K_SHRINK	= 4,
+		K_RAISE		= 5,
+		K_REDUCE	= 6,
 	};
 
 	//--------------------------------------------------------------------------------

@@ -15,6 +15,7 @@
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
 class CFieldEditorBehaviorComponent;
+class CModelEditorBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -40,6 +41,7 @@ public:
 	void	OnCollision(CCollisionInfo& collisionInfo) override {}
 
 	void	SetFieldEditor(CGameObject* pFieldEditor);
+	void	SetModelEditor(CModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
 
 private:
 	enum CONTROL_MODE
@@ -51,4 +53,5 @@ private:
 
 	CONTROL_MODE					m_mode;
 	CFieldEditorBehaviorComponent*	m_pFieldEditor;
+	CModelEditorBehaviorComponent*	m_pModelEditor;
 };

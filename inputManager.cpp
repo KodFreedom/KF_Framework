@@ -134,40 +134,44 @@ void CInputManager::UpdateInputInfo(void)
 	m_fZoom = fabsf(fMAxisZ) > fabsf(fJAxisZ) ? fMAxisZ : fJAxisZ;
 
 	//Key
-	//Jump
-	bool bJumpPress = m_pKeyboard->GetKeyPress(DIK_SPACE) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_A);
-	bool bJumpTrigger = m_pKeyboard->GetKeyTrigger(DIK_SPACE) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_A);
-	bool bJumpRelease = m_pKeyboard->GetKeyRelease(DIK_SPACE) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_A);
-	
-	//Attack
-	bool bAttackPress = m_pKeyboard->GetKeyPress(DIK_J) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_B);
-	bool bAttackTrigger = m_pKeyboard->GetKeyTrigger(DIK_J) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_B);
-	bool bAttackRelease = m_pKeyboard->GetKeyRelease(DIK_J) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_B);
-	
 	//Submit
-	bool bSubmitPress = m_pKeyboard->GetKeyPress(DIK_RETURN) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_MENU);
-	bool bSubmitTrigger = m_pKeyboard->GetKeyTrigger(DIK_RETURN) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_MENU);
-	bool bSubmitRelease = m_pKeyboard->GetKeyRelease(DIK_RETURN) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_MENU);
+	bool bSubmitPress = m_pKeyboard->GetKeyPress(DIK_SPACE) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_A);
+	bool bSubmitTrigger = m_pKeyboard->GetKeyTrigger(DIK_SPACE) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_A);
+	bool bSubmitRelease = m_pKeyboard->GetKeyRelease(DIK_SPACE) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_A);
 
-	//Extend
-	bool bExtendPress = m_pKeyboard->GetKeyPress(DIK_F);
-	bool bExtendTrigger = m_pKeyboard->GetKeyTrigger(DIK_F);
-	bool bExtendRelease = m_pKeyboard->GetKeyRelease(DIK_F);
+	//Cancel
+	bool bCancelPress = m_pKeyboard->GetKeyPress(DIK_J) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_B);
+	bool bCancelTrigger = m_pKeyboard->GetKeyTrigger(DIK_J) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_B);
+	bool bCancelRelease = m_pKeyboard->GetKeyRelease(DIK_J) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_B);
 
-	//Shrink
-	bool bShrinkPress = m_pKeyboard->GetKeyPress(DIK_G);
-	bool bShrinkTrigger = m_pKeyboard->GetKeyTrigger(DIK_G);
-	bool bShrinkRelease = m_pKeyboard->GetKeyRelease(DIK_G);
+	//Start
+	bool bStartPress = m_pKeyboard->GetKeyPress(DIK_RETURN) | m_pJoystick->GetButtonPress(CJoystickDX::XBOX_BUTTON::B_MENU);
+	bool bStartTrigger = m_pKeyboard->GetKeyTrigger(DIK_RETURN) | m_pJoystick->GetButtonTrigger(CJoystickDX::XBOX_BUTTON::B_MENU);
+	bool bStartRelease = m_pKeyboard->GetKeyRelease(DIK_RETURN) | m_pJoystick->GetButtonRelease(CJoystickDX::XBOX_BUTTON::B_MENU);
 
-	//Raise
-	bool bRaisePress = m_pKeyboard->GetKeyPress(DIK_V);
-	bool bRaiseTrigger = m_pKeyboard->GetKeyTrigger(DIK_V);
-	bool bRaiseRelease = m_pKeyboard->GetKeyRelease(DIK_V);
+	//RotX
+	bool bRotXMinusPress = m_pKeyboard->GetKeyPress(DIK_T);
+	bool bRotXMinusTrigger = m_pKeyboard->GetKeyTrigger(DIK_T);
+	bool bRotXMinusRelease = m_pKeyboard->GetKeyRelease(DIK_T);
+	bool bRotXPlusPress = m_pKeyboard->GetKeyPress(DIK_Y);
+	bool bRotXPlusTrigger = m_pKeyboard->GetKeyTrigger(DIK_Y);
+	bool bRotXPlusRelease = m_pKeyboard->GetKeyRelease(DIK_Y);
 
-	//Reduce
-	bool bReducePress = m_pKeyboard->GetKeyPress(DIK_B);
-	bool bReduceTrigger = m_pKeyboard->GetKeyTrigger(DIK_B);
-	bool bReduceRelease = m_pKeyboard->GetKeyRelease(DIK_B);
+	//RotY
+	bool bRotYMinusPress = m_pKeyboard->GetKeyPress(DIK_G);
+	bool bRotYMinusTrigger = m_pKeyboard->GetKeyTrigger(DIK_G);
+	bool bRotYMinusRelease = m_pKeyboard->GetKeyRelease(DIK_G);
+	bool bRotYPlusPress = m_pKeyboard->GetKeyPress(DIK_H);
+	bool bRotYPlusTrigger = m_pKeyboard->GetKeyTrigger(DIK_H);
+	bool bRotYPlusRelease = m_pKeyboard->GetKeyRelease(DIK_H);
+
+	//RotZ
+	bool bRotZMinusPress = m_pKeyboard->GetKeyPress(DIK_B);
+	bool bRotZMinusTrigger = m_pKeyboard->GetKeyTrigger(DIK_B);
+	bool bRotZMinusRelease = m_pKeyboard->GetKeyRelease(DIK_B);
+	bool bRotZPlusPress = m_pKeyboard->GetKeyPress(DIK_N);
+	bool bRotZPlusTrigger = m_pKeyboard->GetKeyTrigger(DIK_N);
+	bool bRotZPlusRelease = m_pKeyboard->GetKeyRelease(DIK_N);
 
 	//Up
 	bool bUpPress = m_pKeyboard->GetKeyPress(DIK_UP);
@@ -189,41 +193,74 @@ void CInputManager::UpdateInputInfo(void)
 	bool bRightTrigger = m_pKeyboard->GetKeyTrigger(DIK_RIGHT);
 	bool bRightRelease = m_pKeyboard->GetKeyRelease(DIK_RIGHT);
 
-	m_lKeysPress = (LONG)bJumpPress
-		| (bAttackPress << 1)
-		| (bSubmitPress << 2)
-		| (bExtendPress << 3)
-		| (bShrinkPress << 4)
-		| (bRaisePress << 5)
-		| (bReducePress << 6)
-		| (bUpPress << 7)
-		| (bDownPress << 8)
-		| (bLeftPress << 9)
-		| (bRightPress << 10);
+	//LeftRacket
+	bool bLRacketPress = m_pKeyboard->GetKeyPress(DIK_LBRACKET);
+	bool bLRacketTrigger = m_pKeyboard->GetKeyTrigger(DIK_LBRACKET);
+	bool bLRacketRelease = m_pKeyboard->GetKeyRelease(DIK_LBRACKET);
 
-	m_lKeysTrigger = (LONG)bJumpTrigger
-		| (bAttackTrigger << 1)
-		| (bSubmitTrigger << 2)
-		| (bExtendTrigger << 3)
-		| (bShrinkTrigger << 4)
-		| (bRaiseTrigger << 5)
-		| (bReduceTrigger << 6)
-		| (bUpTrigger << 7)
-		| (bDownTrigger << 8)
-		| (bLeftTrigger << 9)
-		| (bRightTrigger << 10);
+	//RightRacket
+	bool bRRacketPress = m_pKeyboard->GetKeyPress(DIK_RBRACKET);
+	bool bRRacketTrigger = m_pKeyboard->GetKeyTrigger(DIK_RBRACKET);
+	bool bRRacketRelease = m_pKeyboard->GetKeyRelease(DIK_RBRACKET);
 
-	m_lKeysRelease = (LONG)bJumpRelease
-		| (bAttackRelease << 1)
-		| (bSubmitRelease << 2)
-		| (bExtendRelease << 3)
-		| (bShrinkRelease << 4)
-		| (bRaiseRelease << 5)
-		| (bReduceRelease << 6)
-		| (bUpRelease << 7)
-		| (bDownRelease << 8)
-		| (bLeftRelease << 9)
-		| (bRightRelease << 10);
+	//Reset
+	bool bResetPress = m_pKeyboard->GetKeyPress(DIK_R);
+	bool bResetTrigger = m_pKeyboard->GetKeyTrigger(DIK_R);
+	bool bResetRelease = m_pKeyboard->GetKeyRelease(DIK_R);
+
+	m_lKeysPress = 
+		(LONG)bSubmitPress << K_SUBMIT
+		| (bCancelPress << K_CANCEL)
+		| (bStartPress << K_START)
+		| (bRotXMinusPress << K_ROTXM)
+		| (bRotXPlusPress << K_ROTXP)
+		| (bRotYMinusPress << K_ROTYM)
+		| (bRotYPlusPress << K_ROTYP)
+		| (bRotZMinusPress << K_ROTZM)
+		| (bRotZPlusPress << K_ROTZP)
+		| (bUpPress << K_UP)
+		| (bDownPress << K_DOWN)
+		| (bLeftPress << K_LEFT)
+		| (bRightPress << K_RIGHT)
+		| (bLRacketPress << K_LRACKET)
+		| (bRRacketPress << K_RRACKET)
+		| (bResetPress << K_RESET);
+
+	m_lKeysTrigger = 
+		(LONG)bSubmitTrigger << K_SUBMIT
+		| (bCancelTrigger << K_CANCEL)
+		| (bStartTrigger << K_START)
+		| (bRotXMinusTrigger << K_ROTXM)
+		| (bRotXPlusTrigger << K_ROTXP)
+		| (bRotYMinusTrigger << K_ROTYM)
+		| (bRotYPlusTrigger << K_ROTYP)
+		| (bRotZMinusTrigger << K_ROTZM)
+		| (bRotZPlusTrigger << K_ROTZP)
+		| (bUpTrigger << K_UP)
+		| (bDownTrigger << K_DOWN)
+		| (bLeftTrigger << K_LEFT)
+		| (bRightTrigger << K_RIGHT)
+		| (bLRacketTrigger << K_LRACKET)
+		| (bRRacketTrigger << K_RRACKET)
+		| (bResetTrigger << K_RESET);
+
+	m_lKeysRelease = 
+		(LONG)bSubmitRelease << K_SUBMIT
+		| (bCancelRelease << K_CANCEL)
+		| (bStartRelease << K_START)
+		| (bRotXMinusRelease << K_ROTXM)
+		| (bRotXPlusRelease << K_ROTXP)
+		| (bRotYMinusRelease << K_ROTYM)
+		| (bRotYPlusRelease << K_ROTYP)
+		| (bRotZMinusRelease << K_ROTZM)
+		| (bRotZPlusRelease << K_ROTZP)
+		| (bUpRelease << K_UP)
+		| (bDownRelease << K_DOWN)
+		| (bLeftRelease << K_LEFT)
+		| (bRightRelease << K_RIGHT)
+		| (bLRacketRelease << K_LRACKET)
+		| (bRRacketRelease << K_RRACKET)
+		| (bResetRelease << K_RESET);
 	
 #ifdef _DEBUG
 	//char str[512];

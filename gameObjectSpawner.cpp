@@ -13,6 +13,7 @@
 #include "3DMeshComponent.h"
 #include "3DMeshDrawComponent.h"
 #include "fieldEditorBehaviorComponent.h"
+#include "modelEditorBehaviorComponent.h"
 #include "editorControllerBehaviorComponent.h"
 #include "sphereColliderComponent.h"
 #include "OBBColliderComponent.h"
@@ -136,7 +137,7 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 	pObj->SetDrawComponent(pDraw);
 
 	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransformComponent();
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
 	pTrans->SetScale(vScale);
@@ -145,6 +146,94 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 
 	//初期化
 	pObj->Init();
+
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CreateModel
+//  関数説明：モデルファイルからゲームオブジェクト作成
+//	引数：	strFilePath：ファイルの名前 
+//			vPos
+//			vRot
+//			vScale
+//	戻り値：CGameObject*
+//--------------------------------------------------------------------------------
+CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+{
+	if (strFilePath.find(".model") == string::npos) { return nullptr; }
+	
+	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
+
+	//Modelファイルの開く
+	std::string strName = "data/MODEL/" + strFilePath;
+	FILE *pFile;
+	fopen_s(&pFile, strName.c_str(), "rb");
+
+	//パーツ数の読込
+	int nNumMesh;
+	fread(&nNumMesh, sizeof(int), 1, pFile);
+
+	for (int nCnt = 0; nCnt < nNumMesh; ++nCnt)
+	{
+		//ファイル名
+		string strMeshName;
+		int nSize;
+		fread(&nSize, sizeof(int), 1, pFile);
+		strMeshName.resize(nSize);
+		fread(&strMeshName[0], sizeof(char), nSize, pFile);
+
+		//Offset
+		CKFVec3 vPos, vRot, vScale;
+		fread(&vPos, sizeof(CKFVec3), 1, pFile);
+		fread(&vRot, sizeof(CKFVec3), 1, pFile);
+		fread(&vScale, sizeof(CKFVec3), 1, pFile);
+
+		auto pObjChild = CreateMesh(strMeshName, CKFVec3(0.0f), CKFVec3(0.0f), vScale);
+		if (!pObjChild) { continue; }
+		pObjChild->GetTransformComponent()->RegisterParent(pTrans, vPos, vRot);
+	}
+
+	fclose(pFile);
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CreateMesh
+//  関数説明：モデルファイルからゲームオブジェクト作成
+//	引数：	strMeshName：ファイルの名前 
+//			vPos
+//			vRot
+//			vScale
+//	戻り値：CGameObject*
+//--------------------------------------------------------------------------------
+CGameObject* CGameObjectSpawner::CreateMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+{
+	if (strMeshName.find(".mesh") == string::npos) { return nullptr; }
+	auto pObj = new CGameObject(GOM::PRI_3D);
+
+	//コンポネント
+	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	string strTexName;
+	pMesh->SetMeshName(strMeshName, strTexName);
+	pObj->SetMeshComponent(pMesh);
+	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
+	pDraw->SetTexName(strTexName);
+	pObj->SetDrawComponent(pDraw);
+
+	//パラメーター
+	auto pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+	pTrans->SetScale(vScale);
+	pTrans->SetScaleNext(vScale);
+	pTrans->RotByEuler(vRot);
 
 	return pObj;
 }
@@ -164,9 +253,12 @@ CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEdito
 	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
 	pDraw->SetTexName(strTex);
 	pObj->SetDrawComponent(pDraw);
+	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
 	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
 	pBehavior->SetFieldEditor(pFieldEditor);
+	pBehavior->SetModelEditor(pMEBehavior);
 	pObj->AddBehavior(pBehavior);
+	pObj->AddBehavior(pMEBehavior);
 
 	//初期化
 	pObj->Init();

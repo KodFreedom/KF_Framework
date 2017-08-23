@@ -330,6 +330,9 @@
     <ClCompile Include="editorControllerBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="modelEditorBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -543,6 +546,9 @@
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="editorControllerBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="modelEditorBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>

@@ -197,6 +197,7 @@
     <ClCompile Include="modeEditor.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelActorX.cpp" />
+    <ClCompile Include="modelEditorBehaviorComponent.cpp" />
     <ClCompile Include="modelManager.cpp" />
     <ClCompile Include="modelX.cpp" />
     <ClCompile Include="2DMeshComponent.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="gameObjectSpawner.h" />
     <ClInclude Include="KF_Utility.h" />
     <ClInclude Include="modeEditor.h" />
+    <ClInclude Include="modelEditorBehaviorComponent.h" />
     <ClInclude Include="motion.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="inputManager.h" />

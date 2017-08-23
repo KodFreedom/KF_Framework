@@ -76,6 +76,7 @@ public:
 
 	virtual void Update(void)
 	{
+		if (!m_bActive) { return; }
 		SwapParam();
 		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->Update(); }
 		m_pRigidbody->Update();
@@ -84,6 +85,7 @@ public:
 
 	virtual void LateUpdate(void)
 	{
+		if (!m_bActive) { return; }
 		m_pRigidbody->LateUpdate();
 		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->LateUpdate(); }
 		m_pMesh->Update();
@@ -92,6 +94,7 @@ public:
 
 	virtual void Draw(void)
 	{
+		if (!m_bActive) { return; }
 		m_pDraw->Draw();
 
 #ifdef _DEBUG
@@ -113,8 +116,8 @@ public:
 	void						SetMeshComponent(CMeshComponent* pMesh) { m_pMesh = pMesh; }
 	void						SetDrawComponent(CDrawComponent* pDraw) { m_pDraw = pDraw; }
 	void						SetRigidbodyComponent(CRigidbodyComponent* pRb) { m_pRigidbody = pRb; }
-	void						SetActive(const bool& bActive) { m_bActive = bActive; }
-	void						SetAlive(const bool& bAlive) { m_bAlive = bAlive; }
+	void						SetActive(const bool& bActive);
+	void						SetAlive(const bool& bAlive);
 	void						AddBehavior(CBehaviorComponent* pBehavior);
 	void						AddCollider(CColliderComponent* pCollider);
 	void						DeleteCollider(CColliderComponent* pCollider);

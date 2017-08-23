@@ -83,11 +83,3 @@ void CEditorCamera::Update(void)
 	m_fDistance += fZoomSpeed;
 	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
 }
-
-//--------------------------------------------------------------------------------
-//  XVˆ—(•`‰æ’¼‘O)
-//--------------------------------------------------------------------------------
-void CEditorCamera::LateUpdate(void)
-{
-	CCamera::LateUpdate();
-}

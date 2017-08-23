@@ -40,8 +40,8 @@ void C3DMeshComponent::SetMeshName(const string& strMeshName)
 //--------------------------------------------------------------------------------
 //  XVˆ—
 //--------------------------------------------------------------------------------
-void C3DMeshComponent::SetMeshName(const string& strXFilePath, string& strTexName)
+void C3DMeshComponent::SetMeshName(const string& strFileName, string& strTexName)
 {
-	m_strMeshName = strXFilePath;
+	m_strMeshName = strFileName;
 	CMain::GetManager()->GetMeshManager()->UseMesh(m_strMeshName, strTexName);
 }

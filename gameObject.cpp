@@ -84,6 +84,32 @@ void CGameObject::SwapParam(void)
 }
 
 //--------------------------------------------------------------------------------
+//  SetActive
+//--------------------------------------------------------------------------------
+void CGameObject::SetActive(const bool& bActive)
+{
+	m_bActive = bActive;
+	auto& listChildren = m_pTransform->GetChildren();
+	for (auto pChild : listChildren)
+	{
+		pChild->GetGameObject()->SetActive(bActive);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//  SetAlive
+//--------------------------------------------------------------------------------
+void CGameObject::SetAlive(const bool& bAlive)
+{
+	m_bAlive = bAlive;
+	auto& listChildren = m_pTransform->GetChildren();
+	for (auto pChild : listChildren)
+	{
+		pChild->GetGameObject()->SetAlive(bAlive);
+	}
+}
+
+//--------------------------------------------------------------------------------
 //  ñ@ê¸ÇÃï`âÊ
 //--------------------------------------------------------------------------------
 #ifdef _DEBUG
