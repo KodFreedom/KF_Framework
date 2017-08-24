@@ -351,6 +351,79 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 		return;
 	}
 
+	//XYZ軸一番深度が浅いの軸を洗い出す
+	auto vPosL = aabbL.GetWorldPos();
+	auto vHalfSizeL = aabbL.GetHalfSize();
+	auto vPosR = aabbR.GetWorldPos();
+	auto vHalfSizeR = aabbR.GetHalfSize();
+	auto vMidLine = vPosL - vPosR;
+	auto vDisNoCol = vHalfSizeL + vHalfSizeR;
+	auto fPenetrationX = vDisNoCol.m_fX - fabsf(vMidLine.m_fX);
+	auto fPenetrationY = vDisNoCol.m_fY - fabsf(vMidLine.m_fY);
+	auto fPenetrationZ = vDisNoCol.m_fZ - fabsf(vMidLine.m_fZ);
+
+	fPenetrationX = fPenetrationX > 0.0f ? fPenetrationX : vDisNoCol.m_fX;
+	fPenetrationY = fPenetrationY > 0.0f ? fPenetrationY : vDisNoCol.m_fY;
+	fPenetrationZ = fPenetrationZ > 0.0f ? fPenetrationZ : vDisNoCol.m_fZ;
+	auto fPenetrationMin = min(fPenetrationX, min(fPenetrationY, fPenetrationZ));
+	
+	CCollision* pCollision = new CCollision;
+	pCollision->m_fPenetration = fPenetrationMin;
+	pCollision->m_vCollisionPos = vMidLine * 0.5f;
+	if (fPenetrationX == fPenetrationMin)
+	{
+		pCollision->m_vCollisionNormal = vMidLine.m_fX < 0.0f ? CKFVec3(-1.0f, 0.0f, 0.0f) : CKFVec3(1.0f, 0.0f, 0.0f);
+	}
+	else if (fPenetrationY == fPenetrationMin)
+	{
+		pCollision->m_vCollisionNormal = vMidLine.m_fY < 0.0f ? CKFVec3(0.0f, -1.0f, 0.0f) : CKFVec3(0.0f, 1.0f, 0.0f);
+	}
+	else
+	{
+		pCollision->m_vCollisionNormal = vMidLine.m_fZ < 0.0f ? CKFVec3(0.0f, 0.0f, -1.0f) : CKFVec3(0.0f, 0.0f, 1.0f);
+	}
+
+	//リジッドボディの取得
+	CRigidbodyComponent* pRBL = aabbL.GetGameObject()->GetRigidbodyComponent();
+	CRigidbodyComponent* pRBR = aabbR.GetGameObject()->GetRigidbodyComponent();
+
+	if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
+	{
+		pCollision->m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
+
+		if (pRBR->GetType() == CRigidbodyComponent::RB_3D)
+		{
+			pCollision->m_pRigidBodyTwo = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
+		}
+	}
+	else
+	{//一番が持ってないなら衝突法線を反転する
+		pCollision->m_vCollisionNormal *= -1.0f;
+		pCollision->m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
+	}
+
+	//物理演算システムにレジストリ
+	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	
+	//OnCollision
+	CCollisionInfo info;
+	info.m_listCollision.push_back(pCollision);
+	info.m_pColliderThis = &aabbL;
+	info.m_pCollider = &aabbR;
+	auto list = aabbL.GetGameObject()->GetBehaviorComponent();
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		(*itr)->OnCollision(info);
+	}
+
+	info.m_pColliderThis = &aabbR;
+	info.m_pCollider = &aabbL;
+	list = aabbR.GetGameObject()->GetBehaviorComponent();
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		(*itr)->OnCollision(info);
+	}
+	/*
 	//aabbLのすべての頂点とaabbRと判定し、めり込みが一番深いの頂点を洗い出す
 	bool bFindL = false;
 	CCollision collisionDepthMaxL;
@@ -469,7 +542,7 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	for (auto itr = list.begin(); itr != list.end(); ++itr)
 	{
 		(*itr)->OnCollision(info);
-	}
+	}*/
 }
 
 //--------------------------------------------------------------------------------

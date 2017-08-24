@@ -106,7 +106,7 @@ void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
 
-	if (m_bEndMode || CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (m_bEndMode || CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
 	{
 		CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
 	}
