@@ -120,10 +120,12 @@ private:
 	void	checkWithStaticAABB(CSphereColliderComponent& sphere);
 	void	checkWithStaticAABB(CAABBColliderComponent& aabb);
 	void	checkWithStaticAABB(COBBColliderComponent& obb);
-	
+	bool	checkWithStaticAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut);
+
 	//Static OBB
 	void	checkWithStaticOBB(CSphereColliderComponent& sphere);
 	void	checkWithStaticOBB(CBoxColliderComponent& box);
+	bool	checkWithStaticOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut);
 
 	//Field
 	void	checkWithField(CSphereColliderComponent& sphere);

@@ -145,6 +145,9 @@
     <Filter Include="ソース ファイル\Motion">
       <UniqueIdentifier>{7bc348cd-4315-4de3-b6ad-0e3e37cf9d16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
+      <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -332,6 +335,9 @@
     </ClCompile>
     <ClCompile Include="modelEditorBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="stageSpawner.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -539,17 +545,20 @@
     <ClInclude Include="modeEditor.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
-    <ClInclude Include="fieldEditorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="gameObjectSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="editorControllerBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldEditorBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
     <ClInclude Include="modelEditorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="stageSpawner.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

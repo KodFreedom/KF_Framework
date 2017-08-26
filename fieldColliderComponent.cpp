@@ -7,20 +7,17 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "fieldColliderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化処理
+//  
+//	Public
+//
 //--------------------------------------------------------------------------------
-bool CFieldColliderComponent::Init(void)
-{
-	MakeVertex();
-	return true;
-}
-
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
@@ -31,7 +28,10 @@ void CFieldColliderComponent::Uninit(void)
 }
 
 //--------------------------------------------------------------------------------
-//  fieldの情報取得
+//	関数名：GetPointInfo
+//  関数説明：ポイントのデータを取得する
+//	引数：	vPos：ポイント位置
+//	戻り値：INFO
 //--------------------------------------------------------------------------------
 CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec3& vPos)
 {
@@ -89,7 +89,14 @@ CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec
 }
 
 //--------------------------------------------------------------------------------
-//  fieldの情報取得
+//	関数名：GetVtxByRange
+//  関数説明：範囲内の頂点データを取得する
+//	引数：	vBegin：開始位置
+//			vEnd：終点位置
+//			nNumVtxXOut：X方向の頂点数(出力)
+//			nNumVtxZOut：Z方向の頂点数(出力)
+//			vecOut：範囲内の頂点データ(出力)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CFieldColliderComponent::GetVtxByRange(const CKFVec3& vBegin, const CKFVec3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<CKFVec3>& vecOut)
 {
@@ -133,36 +140,43 @@ bool CFieldColliderComponent::GetVtxByRange(const CKFVec3& vBegin, const CKFVec3
 }
 
 //--------------------------------------------------------------------------------
-//  頂点生成
+//  
+//	Private
+//
 //--------------------------------------------------------------------------------
-void CFieldColliderComponent::MakeVertex(void)
+//--------------------------------------------------------------------------------
+//	関数名：load
+//  関数説明：ファイルから頂点データを読み込む
+//	引数：	strFieldName：フィールド名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CFieldColliderComponent::load(const string& strFieldName)
 {
-	float fHeight = 0.0f;
-	CKFVec3 vPos = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
-	CKFVec3 vStartPos = vPos + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
-	for (int nCntZ = 0; nCntZ < m_nNumBlockZ + 1; nCntZ++)
+	//file open
+	string strName = "data/FIELD/" + strFieldName + ".field";
+	FILE *pFile;
+	fopen_s(&pFile, strName.c_str(), "rb");
+	if (!pFile) 
 	{
-		//if (nCntZ <= (m_nNumBlockZ + 1) / 4)
-		//{
-		//	fHeight += 0.25f;
-		//}
-		//else if (nCntZ <= (m_nNumBlockZ + 1) / 2)
-		//{
-		//	fHeight -= 0.25f;
-		//}
-		//else if (nCntZ <= (m_nNumBlockZ + 1) * 3 / 4)
-		//{
-		//	fHeight += 0.5f;
-		//}
-		//else
-		//{
-		//	fHeight -= 0.5f;
-		//}
-		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
-		{
-			CKFVec3 vPos = vStartPos
-				+ CKFVec3(nCntX * m_vBlockSize.m_fX, 0.0f, -nCntZ * m_vBlockSize.m_fY);
-			m_vectorVtx.push_back(vPos);
-		}
+		MessageBox(NULL, "CFieldColliderComponent : load ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
+		return;
 	}
+
+	//ブロック数の読込
+	fread(&m_nNumBlockX, sizeof(int), 1, pFile);
+	fread(&m_nNumBlockZ, sizeof(int), 1, pFile);
+
+	//ブロックSizeの読込
+	fread(&m_vBlockSize, sizeof(CKFVec2), 1, pFile);
+
+	//頂点データ数の読込
+	int nNumVtx;
+	fread(&nNumVtx, sizeof(int), 1, pFile);
+
+	//頂点データの読込
+	m_vectorVtx.resize(nNumVtx);
+	fread(&m_vectorVtx[0], sizeof(CKFVec3), nNumVtx, pFile);
+
+	fclose(pFile);
+	return;
 }

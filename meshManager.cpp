@@ -23,6 +23,11 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  中身を削除する
 //--------------------------------------------------------------------------------
 void CMeshManager::UnloadAll(void)
@@ -57,7 +62,11 @@ void CMeshManager::UseMesh(const string& strName)
 }
 
 //--------------------------------------------------------------------------------
-//  メッシュの追加
+//	関数名：UseMesh
+//  関数説明：メッシュの使用
+//	引数：	strFileName：メッシュファイルの名前
+//			strTexName：テクスチャの名前（Out）
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CMeshManager::UseMesh(const string& strFileName, string& texName)
 {
@@ -65,6 +74,7 @@ void CMeshManager::UseMesh(const string& strFileName, string& texName)
 	if (itr != m_umMesh.end())
 	{ //すでに存在してる
 		itr->second.usNumUsers++;
+		texName = itr->second.strTex;
 		return;
 	}
 
@@ -74,6 +84,7 @@ void CMeshManager::UseMesh(const string& strFileName, string& texName)
 		MESH mesh;
 		mesh.usNumUsers = 1;
 		mesh.pMesh = loadFromMesh(strFileName, texName);
+		mesh.strTex = texName;
 
 		//保存
 		m_umMesh.emplace(strFileName, mesh);
@@ -86,6 +97,7 @@ void CMeshManager::UseMesh(const string& strFileName, string& texName)
 		MESH mesh;
 		mesh.usNumUsers = 1;
 		mesh.pMesh = loadFromXFile(strFileName, texName);
+		mesh.strTex = texName;
 
 		//保存
 		m_umMesh.emplace(strFileName, mesh);
@@ -94,7 +106,10 @@ void CMeshManager::UseMesh(const string& strFileName, string& texName)
 }
 
 //--------------------------------------------------------------------------------
-//  メッシュの破棄
+//	関数名：DisuseMesh
+//  関数説明：メッシュの破棄
+//	引数：	strName：メッシュの名前
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CMeshManager::DisuseMesh(const string& strName)
 {
@@ -108,6 +123,228 @@ void CMeshManager::DisuseMesh(const string& strName)
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：CreateEditorField
+//  関数説明：エディタ用フィールドの作成
+//	引数：	nNumBlockX：X方向のブロック数
+//			nNumBlockZ：Z方向のブロック数
+//			vBlockSize：ブロックのサイズ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const CKFVec2& vBlockSize)
+{
+	auto itr = m_umMesh.find("field");
+	if (itr != m_umMesh.end())
+	{ //すでに存在してる
+		//itr->second.usNumUsers++;
+		return;
+	}
+
+	auto pMesh = new CMesh;
+	pMesh->m_nNumVtx = (nNumBlockX + 1) * (nNumBlockZ + 1);
+	pMesh->m_nNumIdx = ((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1;
+	pMesh->m_nNumPolygon = (nNumBlockX + 2) * 2 * nNumBlockZ - 4;
+	if (!createBuffer(pMesh)) { return; }
+
+#ifdef USING_DIRECTX
+	//仮想アドレスを取得するためのポインタ
+	VERTEX_3D *pVtx;
+
+	//頂点バッファをロックして、仮想アドレスを取得する
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	CKFVec3 vStartPos = CKFVec3(-nNumBlockX * 0.5f * vBlockSize.m_fX, 0.0f, nNumBlockZ * 0.5f * vBlockSize.m_fY);
+	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)
+	{
+		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
+		{
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos = vStartPos
+				+ CKFVec3(nCntX * vBlockSize.m_fX, 0.0f, -nCntZ * vBlockSize.m_fY);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f, nCntZ * 1.0f);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+		}
+	}
+
+	//仮想アドレス解放
+	pMesh->m_pVtxBuffer->Unlock();
+
+	//インデックス
+	WORD *pIdx;
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+
+	for (int nCntZ = 0; nCntZ < nNumBlockZ; nCntZ++)
+	{
+		for (int nCntX = 0; nCntX < (nNumBlockX + 1) * 2 + 2; nCntX++)
+		{
+			if (nCntX < (nNumBlockX + 1) * 2)
+			{
+				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = nCntX / 2 + (nCntX + 1) % 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
+			}
+			else if (nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX < (((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1))//縮退ポリゴン
+			{
+				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = (nCntX - 1) / 2 % (nNumBlockX + 1) + nCntX % 2 * 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
+			}
+		}
+	}
+
+	pMesh->m_pIdxBuffer->Unlock();
+#endif
+
+	//メッシュの作成
+	MESH mesh;
+	mesh.usNumUsers = 1;
+	mesh.pMesh = pMesh;
+
+	//保存
+	m_umMesh.emplace("field", mesh);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：UpdateEditorField
+//  関数説明：エディタ用フィールドデータの更新
+//	引数：	vecVtx：頂点データ
+//			listChoosenIdx：選択された頂点のインデックス
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CMeshManager::UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx)
+{
+#ifdef USING_DIRECTX
+
+	//仮想アドレスを取得するためのポインタ
+	VERTEX_3D *pVtx;
+
+	//頂点バッファをロックして、仮想アドレスを取得する
+	auto pMesh = GetMesh("field");
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	auto cColor = CKFColor(1.0f);
+	for (int nCnt = 0; nCnt < (int)vecVtx.size(); ++nCnt)
+	{
+		pVtx[nCnt].vPos = vecVtx[nCnt];
+		pVtx[nCnt].ulColor = cColor;
+	}
+
+	//Choosen Color
+	int nNumBlockX = 100;
+	int nNumBlockZ = 100;
+	auto cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+	for (auto nIdx : listChoosenIdx)
+	{
+		pVtx[nIdx].ulColor = cRed;
+
+		//法線計算
+		int nCntZ = nIdx / (nNumBlockZ + 1);
+		int nCntX = nIdx - nCntZ * (nNumBlockZ + 1);
+		CKFVec3 vNormal;
+		CKFVec3 vPosThis = pVtx[nIdx].vPos;
+		CKFVec3 vPosLeft;
+		CKFVec3 vPosRight;
+		CKFVec3 vPosTop;
+		CKFVec3 vPosBottom;
+
+		if (nCntX == 0)
+		{
+			vPosLeft = vPosThis;
+			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
+		}
+		else if (nCntX < nNumBlockX)
+		{
+			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
+			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
+		}
+		else
+		{
+			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
+			vPosRight = vPosThis;
+		}
+
+		if (nCntZ == 0)
+		{
+			vPosTop = vPosThis;
+			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
+		}
+		else if (nCntZ < nNumBlockZ)
+		{
+			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
+			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
+		}
+		else
+		{
+			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
+			vPosBottom = vPosThis;
+		}
+		vNormal = (vPosRight - vPosLeft) * (vPosBottom - vPosTop);
+		CKFMath::VecNormalize(vNormal);
+		pVtx[nIdx].vNormal = vNormal;
+	}
+
+	//仮想アドレス解放
+	pMesh->m_pVtxBuffer->Unlock();
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SaveEditorFieldAs
+//  関数説明：エディタ用フィールドデータの保存
+//	引数：	strFileName：ファイル名
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CMeshManager::SaveEditorFieldAs(const string& strFileName)
+{
+#ifdef USING_DIRECTX
+	auto pMesh = GetMesh("field");
+
+	//file open
+	string strName = "data/MESH/" + strFileName + ".mesh";
+	FILE *pFile;
+	fopen_s(&pFile, strName.c_str(), "wb");
+
+	//DrawType
+	int nDrawType = (int)DT_TRIANGLESTRIP;
+	fwrite(&nDrawType, sizeof(int), 1, pFile);
+
+	//NumVtx
+	fwrite(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+
+	//NumIdx
+	fwrite(&pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+
+	//NumPolygon
+	fwrite(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+
+	//Vtx&Idx
+	//頂点データ
+	VERTEX_3D* pVtx;
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	//色を白に戻す
+	unsigned long ulColor = CKFColor(1.0f);
+	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
+	{
+		pVtx[nCnt].ulColor = ulColor;
+	}
+
+	//保存
+	fwrite(pVtx, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
+	pMesh->m_pVtxBuffer->Unlock();
+	
+	//インデックス
+	WORD* pIdx;
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fwrite(pIdx, sizeof(WORD), pMesh->m_nNumIdx, pFile);
+	pMesh->m_pIdxBuffer->Unlock();
+	
+	//Texture
+	int nTexSize = 0;
+	fwrite(&nTexSize, sizeof(int), 1, pFile);
+
+	fclose(pFile);
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  メッシュの作成
 //--------------------------------------------------------------------------------
 CMesh* CMeshManager::createMesh(const string& strName)
@@ -118,7 +355,7 @@ CMesh* CMeshManager::createMesh(const string& strName)
 	if (strName == "cube") { createCube(pMesh); }
 	else if (strName == "sphere") { createSphere(pMesh); }
 	else if (strName == "skyBox") { createSkyBox(pMesh); }
-	else if (strName == "field") { createField(pMesh); }
+	else if (strName.find("Field") != string::npos) { loadField(strName, pMesh); }
 	return pMesh;
 }
 
@@ -131,7 +368,7 @@ CMesh* CMeshManager::createMesh(const string& strName)
 //--------------------------------------------------------------------------------
 CMesh* CMeshManager::loadFromMesh(const string& strFileName, string& strTexName)
 {
-	std::string strName = "data/MESH/" + strFileName;
+	string strName = "data/MESH/" + strFileName;
 	FILE *pFile;
 
 	//file open
@@ -140,7 +377,10 @@ CMesh* CMeshManager::loadFromMesh(const string& strFileName, string& strTexName)
 	if (!pFile) { return nullptr; }
 	
 	auto pMesh = new CMesh;
-	pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
+
+	//DrawType
+	fread(&pMesh->m_drawType, sizeof(int), 1, pFile);
+	//pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
 
 	//NumVtx
 	fread(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
@@ -151,33 +391,19 @@ CMesh* CMeshManager::loadFromMesh(const string& strFileName, string& strTexName)
 	//NumPolygon
 	fread(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
 
-	//load Vtx
-	VERTEX_3D* pVtx3D = new VERTEX_3D[pMesh->m_nNumVtx];
-	fread(pVtx3D, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
-	
-	//load Idx
-	int* pIdx3D = new int[pMesh->m_nNumIdx];
-	fread(pIdx3D, sizeof(int), pMesh->m_nNumIdx, pFile);
-
 #ifdef USING_DIRECTX
 	if (!createBuffer(pMesh)) { return nullptr; }
 
 	//頂点データ
 	VERTEX_3D* pVtx;
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
-	{
-		pVtx[nCnt] = pVtx3D[nCnt];
-	}
+	fread(pVtx, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
 	pMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
 	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; ++nCnt)
-	{
-		pIdx[nCnt] = pIdx3D[nCnt];
-	}
+	fread(pIdx, sizeof(WORD), pMesh->m_nNumIdx, pFile);
 	pMesh->m_pIdxBuffer->Unlock();
 #endif
 
@@ -187,16 +413,17 @@ CMesh* CMeshManager::loadFromMesh(const string& strFileName, string& strTexName)
 	strTexName.resize(nSize);
 	fread(&strTexName[0], sizeof(char), nSize, pFile);
 
-	delete[] pVtx3D;
-	delete[] pIdx3D;
-
 	fclose(pFile);
 
 	return pMesh;
 }
 
 //--------------------------------------------------------------------------------
-//  Cubeの作成
+//	関数名：loadFromXFile
+//  関数説明：Xファイルからデータの読込
+//	引数：	strPath：ファイルのパス
+//			strTexName：テクスチャの名前（Out）
+//	戻り値：CMesh*
 //--------------------------------------------------------------------------------
 CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 {
@@ -578,21 +805,77 @@ void CMeshManager::createCube(CMesh* pMesh)
 
 	pMesh->m_pIdxBuffer->Unlock();
 
-	//FILE *pFile;
+	//Modelファイルの保存
+	string strName = "data/MODEL/cube.model";
+	FILE *pFile;
 
-	////file open
-	//fopen_s(&pFile, "cube.mesh", "rb");
-	//VERTEX_3D aV[100];
-	//int aI[100];
-	////総数保存
-	//fread(&m_meshInfo.nNumVtx, sizeof(int), 1, pFile);
-	//fread(&m_meshInfo.nNumIdx, sizeof(int), 1, pFile);
-	//fread(&m_meshInfo.nNumPolygon, sizeof(int), 1, pFile);
-	//fread(aV, sizeof(VERTEX_3D), m_meshInfo.nNumVtx, pFile);
-	//fread(aI, sizeof(int), m_meshInfo.nNumIdx, pFile);
+	//file open
+	fopen_s(&pFile, strName.c_str(), "wb");
 
-	//fclose(pFile);
-	//int n = 1;
+	//パーツ数の保存
+	int nNumParentParts = 1;
+	fwrite(&nNumParentParts, sizeof(int), 1, pFile);
+
+	//ファイル名
+	string strMeshName = "cube.mesh";
+	int nSize = strMeshName.size();
+	fwrite(&nSize, sizeof(int), 1, pFile);
+	fwrite(&strMeshName[0], sizeof(char), nSize, pFile);
+
+	//Offset
+	auto vPos = CKFVec3(0.0f);
+	auto vRot = CKFVec3(0.0f);
+	auto vScale = CKFVec3(1.0f);
+	fwrite(&vPos, sizeof(CKFVec3), 1, pFile);
+	fwrite(&vRot, sizeof(CKFVec3), 1, pFile);
+	fwrite(&vScale, sizeof(CKFVec3), 1, pFile);
+
+	//Collider
+	int nNumCollider = 1;
+	fwrite(&nNumCollider, sizeof(int), 1, pFile);
+
+	int nType = 1;
+	fwrite(&nType, sizeof(int), 1, pFile);
+	fwrite(&vPos, sizeof(CKFVec3), 1, pFile);
+	fwrite(&vRot, sizeof(CKFVec3), 1, pFile);
+	fwrite(&vScale, sizeof(CKFVec3), 1, pFile);
+
+	fclose(pFile);
+
+	//Mesh
+	strName = "data/MESH/cube.mesh";
+
+	//file open
+	fopen_s(&pFile, strName.c_str(), "wb");
+
+	//DrawType
+	int nDrawType = (int)pMesh->m_drawType;
+	fwrite(&nDrawType, sizeof(int), 1, pFile);
+
+	//NumVtx
+	fwrite(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+
+	//NumIdx
+	fwrite(&pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+
+	//NumPolygon
+	fwrite(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+
+	//Vtx&Idx
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fwrite(pVtx, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
+	pMesh->m_pVtxBuffer->Unlock();
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fwrite(pIdx, sizeof(WORD), pMesh->m_nNumIdx, pFile);
+	pMesh->m_pIdxBuffer->Unlock();
+
+	//Texture
+	string strTexture = "nomal_cube.jpg";
+	nSize = strTexture.size();
+	fwrite(&nSize, sizeof(int), 1, pFile);
+	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
+
+	fclose(pFile);
 #endif
 }
 
@@ -601,7 +884,6 @@ void CMeshManager::createCube(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 void CMeshManager::createSphere(CMesh* pMesh)
 {
-
 }
 
 //--------------------------------------------------------------------------------
@@ -735,6 +1017,53 @@ void CMeshManager::createSkyBox(CMesh* pMesh)
 //--------------------------------------------------------------------------------
 //  バッファの作成
 //--------------------------------------------------------------------------------
+void CMeshManager::loadField(const string& strFileName, CMesh* pMesh)
+{
+#ifdef USING_DIRECTX
+	//file open
+	string strName = "data/MESH/" + strFileName + ".mesh";
+	FILE *pFile;
+	fopen_s(&pFile, strName.c_str(), "rb");
+	if (!pFile) 
+	{
+		MessageBox(NULL, "CMeshManager : loadField ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
+		return; 
+	}
+
+	//DrawType
+	fread(&pMesh->m_drawType, sizeof(int), 1, pFile);
+
+	//NumVtx
+	fread(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+
+	//NumIdx
+	fread(&pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+
+	//NumPolygon
+	fread(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+
+	if (!createBuffer(pMesh)) { return; }
+
+	//Vtx&Idx
+	//頂点データ
+	VERTEX_3D* pVtx;
+	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fread(pVtx, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
+	pMesh->m_pVtxBuffer->Unlock();
+
+	//インデックス
+	WORD* pIdx;
+	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fread(pIdx, sizeof(WORD), pMesh->m_nNumIdx, pFile);
+	pMesh->m_pIdxBuffer->Unlock();
+
+	fclose(pFile);
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//  バッファの作成
+//--------------------------------------------------------------------------------
 bool CMeshManager::createBuffer(CMesh* pMesh)
 {
 #ifdef USING_DIRECTX
@@ -771,209 +1100,5 @@ bool CMeshManager::createBuffer(CMesh* pMesh)
 		return false;
 	}
 #endif
-
 	return true;
-}
-
-//--------------------------------------------------------------------------------
-//  SkyBoxの作成
-//--------------------------------------------------------------------------------
-void CMeshManager::createField(CMesh* pMesh)
-{
-	int nNumBlockX = 100;
-	int nNumBlockZ = 100;
-	pMesh->m_nNumVtx = (nNumBlockX + 1) * (nNumBlockZ + 1);
-	pMesh->m_nNumIdx = ((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1;
-	pMesh->m_nNumPolygon = (nNumBlockX + 2) * 2 * nNumBlockZ - 4;
-	if (!createBuffer(pMesh)) { return; }
-
-#ifdef USING_DIRECTX
-
-	//仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
-
-	//頂点バッファをロックして、仮想アドレスを取得する
-	float fHeight = 0.0f;
-	CKFVec2 vSize = CKFVec2(10.0f, 10.0f);
-	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	CKFVec3 vStartPos = CKFVec3(-nNumBlockX * 0.5f * vSize.m_fX, 0.0f, nNumBlockZ * 0.5f * vSize.m_fY);
-	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)
-	{
-		//if (nCntZ <= (nNumBlockZ + 1) / 4)
-		//{
-		//	fHeight += 0.25f;
-		//}
-		//else if (nCntZ <= (nNumBlockZ + 1) / 2)
-		//{
-		//	fHeight -= 0.25f;
-		//}
-		//else if (nCntZ <= (nNumBlockZ + 1) * 3 / 4)
-		//{
-		//	fHeight += 0.5f;
-		//}
-		//else
-		//{
-		//	fHeight -= 0.5f;
-		//}
-		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
-		{
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos = vStartPos
-				+ CKFVec3(nCntX * vSize.m_fX, 0.0f, -nCntZ * vSize.m_fY);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f, nCntZ * 1.0f);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
-		}
-	}
-
-	//法線計算
-	for (int nCntZ = 0; nCntZ < nNumBlockX + 1; nCntZ++)
-	{
-		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
-		{
-			CKFVec3 vNormal;
-			CKFVec3 vPosThis = pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos;
-			CKFVec3 vPosLeft;
-			CKFVec3 vPosRight;
-			CKFVec3 vPosTop;
-			CKFVec3 vPosBottom;
-
-			if (nCntX == 0)
-			{
-				vPosLeft = vPosThis;
-				vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
-			}
-			else if (nCntX < nNumBlockX)
-			{
-				vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
-				vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
-			}
-			else
-			{
-				vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
-				vPosRight = vPosThis;
-			}
-
-			if (nCntZ == 0)
-			{
-				vPosTop = vPosThis;
-				vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
-			}
-			else if (nCntZ < nNumBlockZ)
-			{
-				vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
-				vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
-			}
-			else
-			{
-				vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
-				vPosBottom = vPosThis;
-			}
-
-			vNormal = (vPosRight - vPosLeft) * (vPosBottom - vPosTop);
-			CKFMath::VecNormalize(vNormal);
-
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = vNormal;
-		}
-	}
-
-	//仮想アドレス解放
-	pMesh->m_pVtxBuffer->Unlock();
-
-	//インデックス
-	WORD *pIdx;
-	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-
-	for (int nCntZ = 0; nCntZ < nNumBlockZ; nCntZ++)
-	{
-		for (int nCntX = 0; nCntX < (nNumBlockX + 1) * 2 + 2; nCntX++)
-		{
-			if (nCntX < (nNumBlockX + 1) * 2)
-			{
-				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = nCntX / 2 + (nCntX + 1) % 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
-			}
-			else if (nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX < (((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1))//縮退ポリゴン
-			{
-				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = (nCntX - 1) / 2 % (nNumBlockX + 1) + nCntX % 2 * 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
-			}
-		}
-	}
-
-	pMesh->m_pIdxBuffer->Unlock();
-#endif
-}
-
-void CMeshManager::UpdateField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx)
-{
-#ifdef USING_DIRECTX
-
-	//仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
-
-	//頂点バッファをロックして、仮想アドレスを取得する
-	auto pMesh = GetMesh("field");
-	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	auto cColor = CKFColor(1.0f);
-	for (int nCnt = 0; nCnt < (int)vecVtx.size(); ++nCnt)
-	{
-		pVtx[nCnt].vPos = vecVtx[nCnt];
-		pVtx[nCnt].ulColor = cColor;
-	}
-
-	//Choosen Color
-	int nNumBlockX = 100;
-	int nNumBlockZ = 100;
-	auto cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-	for (auto nIdx : listChoosenIdx)
-	{
-		pVtx[nIdx].ulColor = cRed;
-
-		//法線計算
-		int nCntZ = nIdx / (nNumBlockZ + 1);
-		int nCntX = nIdx - nCntZ * (nNumBlockZ + 1);
-		CKFVec3 vNormal;
-		CKFVec3 vPosThis = pVtx[nIdx].vPos;
-		CKFVec3 vPosLeft;
-		CKFVec3 vPosRight;
-		CKFVec3 vPosTop;
-		CKFVec3 vPosBottom;
-
-		if (nCntX == 0)
-		{
-			vPosLeft = vPosThis;
-			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
-		}
-		else if (nCntX < nNumBlockX)
-		{
-			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
-			vPosRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].vPos;
-		}
-		else
-		{
-			vPosLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].vPos;
-			vPosRight = vPosThis;
-		}
-
-		if (nCntZ == 0)
-		{
-			vPosTop = vPosThis;
-			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
-		}
-		else if (nCntZ < nNumBlockZ)
-		{
-			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
-			vPosBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].vPos;
-		}
-		else
-		{
-			vPosTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].vPos;
-			vPosBottom = vPosThis;
-		}
-		vNormal = (vPosRight - vPosLeft) * (vPosBottom - vPosTop);
-		CKFMath::VecNormalize(vNormal);
-		pVtx[nIdx].vNormal = vNormal;
-	}
-
-	//仮想アドレス解放
-	pMesh->m_pVtxBuffer->Unlock();
-#endif
 }

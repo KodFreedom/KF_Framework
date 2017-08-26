@@ -28,7 +28,12 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  スフィアとスフィアの当たり判定
+//	関数名：CheckSphereWithSphere
+//  関数説明：スフィアとスフィアの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	sphereL：スフィアコライダー
+//			sphereR：スフィアコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
 {
@@ -112,7 +117,12 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 }
 
 //--------------------------------------------------------------------------------
-//  スフィアとOBBの当たり判定
+//	関数名：CheckSphereWithAABB
+//  関数説明：スフィアとAABBの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	sphere：スフィアコライダー
+//			aabb：回転なしボックスコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, CAABBColliderComponent& aabb)
 {
@@ -220,7 +230,12 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 }
 
 //--------------------------------------------------------------------------------
-//  スフィアとOBBの当たり判定
+//	関数名：CheckSphereWithOBB
+//  関数説明：スフィアとOBBの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	sphere：スフィアコライダー
+//			obb：回転あるボックスコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb)
 {
@@ -328,7 +343,12 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 }
 
 //--------------------------------------------------------------------------------
-//  AABBとAABBの当たり判定
+//	関数名：CheckAABBWithAABB
+//  関数説明：AABBとAABBの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	aabbL：回転なしボックスコライダー
+//			aabbR：回転なしボックスコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBColliderComponent& aabbR)
 {
@@ -546,8 +566,12 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 }
 
 //--------------------------------------------------------------------------------
-//  checkCollisionBoxWithBox
-//	BoxとBoxの当たり判定（いずれかが回転ある（AABBではない））
+//	関数名：CheckBoxWithBox
+//  関数説明：boxとboxの当たり判定関数(いずれかが必ずOBB)
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	boxL：ボックスコライダー
+//			boxR：ボックスコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxColliderComponent& boxR)
 {
@@ -701,7 +725,12 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  スフィアとフィールドの当たり判定
+//	関数名：CheckSphereWithField
+//  関数説明：スフィアとフィールドの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	sphere：スフィアコライダー
+//			field：フィールドコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
@@ -787,7 +816,12 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 }
 
 //--------------------------------------------------------------------------------
-//  OBBとフィールドの当たり判定
+//	関数名：CheckBoxWithField
+//  関数説明：Boxとフィールドの当たり判定関数
+//			　当たったらコリジョン情報を物理演算マネージャに登録する
+//	引数：	box：ボックスコライダー
+//			field：フィールドコライダー
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldColliderComponent& field)
 {
@@ -865,11 +899,13 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：CheckRayWithField
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：CheckRayWithBox
+//  関数説明：レイとボックスの当たり判定
+//	引数：	ray：レイ
+//			fDistance：レイの長さ
+//			box：ボックスコライダー
+//			infoOut：レイの当たり判定情報(出力用)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut)
 {
@@ -897,11 +933,13 @@ bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistan
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：CheckRayWithField
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：CheckRayWithSphere
+//  関数説明：レイとスフィアの当たり判定
+//	引数：	ray：レイ
+//			fDistance：レイの長さ
+//			sphere：スフィアコライダー
+//			infoOut：レイの当たり判定情報(出力用)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
 {
@@ -946,10 +984,12 @@ bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDis
 
 //--------------------------------------------------------------------------------
 //	関数名：CheckRayWithField
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：レイとフィールドの当たり判定
+//	引数：	ray：レイ
+//			fDistance：レイの長さ
+//			field：フィールドコライダー
+//			infoOut：レイの当たり判定情報(出力用)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut)
 {
@@ -980,8 +1020,12 @@ bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDist
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  checkCollisionBoxWithBox
-//	BoxとBoxの当たり判定（いずれかが回転ある（AABBではない））
+//	関数名：checkPointWithAABB
+//  関数説明：点とAABBの当たり判定
+//	引数：	collisionOut：衝突情報(出力用)
+//			vPoint：点の位置
+//			aabb：AABBコライダー
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb)
 {
@@ -1018,8 +1062,12 @@ bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFV
 }
 
 //--------------------------------------------------------------------------------
-//  checkCollisionBoxWithBox
-//	BoxとBoxの当たり判定（いずれかが回転ある（AABBではない））
+//	関数名：checkPointWithBox
+//  関数説明：点とBoxの当たり判定
+//	引数：	collisionOut：衝突情報(出力用)
+//			vPoint：点の位置
+//			box：boxコライダー
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box)
 {
@@ -1057,10 +1105,13 @@ bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVe
 
 //--------------------------------------------------------------------------------
 //	関数名：checkLineWithLine
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：直線と直線の交差判定(二次元)
+//	引数：	vLA：LineLeftの始点
+//			vLB：LineLeftの終点
+//			vRA：LineRightの始点
+//			vRB：LineRightの終点
+//			vOut：交差点(出力用)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vLB, const CKFVec2& vRA, const CKFVec2& vRB, CKFVec2& vOut)
 {
@@ -1102,11 +1153,14 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vL
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：CheckRayWithField
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：checkLineWithLine
+//  関数説明：直線と直線の交差判定(三次元)
+//	引数：	vLA：LineLeftの始点
+//			vLB：LineLeftの終点
+//			vRA：LineRightの始点
+//			vRB：LineRightの終点
+//			vOut：交差点(出力用)
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vLB, const CKFVec3& vRA, const CKFVec3& vRB, CKFVec3& vOut)
 {
@@ -1144,7 +1198,11 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vL
 }
 
 //--------------------------------------------------------------------------------
-//  Box(AABBとOBB)のハーフサイズをとある軸に投影して長さを算出する
+//	関数名：transformBoxToAxis
+//  関数説明：boxを与えられた軸に投影して長さを算出する関数
+//	引数：	box：ボックスコライダー
+//			vAxis：軸情報
+//	戻り値：float
 //--------------------------------------------------------------------------------
 float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis)
 {
@@ -1157,8 +1215,12 @@ float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, c
 }
 
 //--------------------------------------------------------------------------------
-//  checkOverlapOnAxis
-//	ボックス同士がとある軸に重ねてるかどうかをチェックする
+//	関数名：checkOverlapOnAxis
+//  関数説明：ボックス同士が与えられた軸に重ねてるかどうかをチェックする
+//	引数：	boxL：ボックスコライダー
+//			boxR：ボックスコライダー
+//			vAxis：軸情報
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis)
 {
@@ -1176,8 +1238,13 @@ bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, c
 }
 
 //--------------------------------------------------------------------------------
-//  checkOverlapOnAxis
-//	ボックス同士がとある軸に重ねてるかどうかをチェックする(AABB)
+//	関数名：checkOverlapOnAxis
+//  関数説明：AABB同士が与えられた軸に重ねてるかどうかをチェックする(二次元)
+//	引数：	vMinL：AABB一番左上の点情報
+//			vMaxL：AABB一番右下の点情報
+//			vMinR：AABB一番左上の点情報
+//			vMaxR：AABB一番右下の点情報
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2& vMaxL, const CKFVec2& vMinR, const CKFVec2& vMaxR)
 {
@@ -1187,8 +1254,11 @@ bool CCollisionDetector::checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2&
 }
 
 //--------------------------------------------------------------------------------
-//  checkOverlapAABB
-//	ボックス同士がとXYZ軸に重ねてるかどうかをチェックする(AABB)
+//	関数名：checkOverlapOnAxis
+//  関数説明：AABB同士がXYZ軸に重ねてるかどうかをチェックする(三次元)
+//	引数：	aabbL：AABBコライダー
+//			aabbR：AABBコライダー
+//	戻り値：bool
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR)
 {

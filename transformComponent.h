@@ -56,6 +56,7 @@ public:
 	//Setä÷êî
 	void			SetPos(const CKFVec3& vPos) { m_vPos = vPos; }
 	void			SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
+	void			SetRot(const CKFQuaternion& qRot);
 	void			SetRotNext(const CKFQuaternion& qRotNext);
 	void			MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
 	void			SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
@@ -67,6 +68,11 @@ public:
 	void			SetRight(const CKFVec3& vRight) { m_vRight = vRight; }
 	void			SetRightNext(const CKFVec3& vRight) { m_vRightNext = vRight; }
 	void			SetMatrix(const CKFMtx44& mtx) { m_mtxThis = mtx; }
+	void			SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
+	{
+		m_vOffsetPos = vPos;
+		m_vOffsetRot = vRot;
+	}
 
 	//âÒì]ä÷êî
 	void			RotByEuler(const CKFVec3& vRot);

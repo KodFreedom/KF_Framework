@@ -33,18 +33,19 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CFieldColliderComponent(CGameObject* const pGameObj, const int& nNumBlockX, const int& nNumBlockZ, const CKFVec2& vBlockSize)
+	CFieldColliderComponent(CGameObject* const pGameObj, const string& strFieldName)
 		: CColliderComponent(pGameObj, CS::COL_FIELD, CS::STATIC)
-		, m_nNumBlockX(nNumBlockX)
-		, m_nNumBlockZ(nNumBlockZ)
-		, m_vBlockSize(vBlockSize)
+		, m_nNumBlockX(0)
+		, m_nNumBlockZ(0)
+		, m_vBlockSize(CKFVec2(0.0f))
 	{
 		m_vectorVtx.clear();
+		load(strFieldName);
 	}
 
 	~CFieldColliderComponent() {}
 
-	bool	Init(void) override;
+	bool	Init(void) override { return true; }
 	void	Uninit(void) override;
 
 	//Get関数
@@ -55,7 +56,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		MakeVertex(void);	//将来はエディタで作る
+	void	load(const string& strFieldName);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

@@ -8,6 +8,8 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+#include "manager.h"
+#include "meshManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
 #include "3DMeshComponent.h"
@@ -57,27 +59,20 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3
 //--------------------------------------------------------------------------------
 //  MeshField生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateField(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 {
 	auto pObj = new CGameObject(GOM::PRI_3D);
+	string strFieldName = strStageName + "Field";
 
 	//コンポネント
 	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
-	pMesh->SetMeshName("field");
+	pMesh->SetMeshName(strFieldName);
 	pObj->SetMeshComponent(pMesh);
 	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName("RockCliff.jpg");
+	pDraw->SetTexName("Grass0003_1_270.jpg");
 	pObj->SetDrawComponent(pDraw);
-	auto pCollider = new CFieldColliderComponent(pObj, 200, 200, CKFVec2(10.0f, 10.0f));
+	auto pCollider = new CFieldColliderComponent(pObj, strFieldName);
 	pObj->AddCollider(pCollider);
-
-	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
 
 	//初期化
 	pObj->Init();
@@ -93,7 +88,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
 	//コンポネント
-	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName("cube");
 	pObj->SetMeshComponent(pMesh);
 	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
@@ -107,7 +102,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 	pObj->SetRigidbodyComponent(pRb);
 
 	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransformComponent();
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
 	pTrans->SetScale(vScale);
@@ -128,7 +123,7 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
 	//コンポネント
-	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new C3DMeshComponent(pObj);
 	string strTexName;
 	pMesh->SetMeshName(strPath, strTexName);
 	pObj->SetMeshComponent(pMesh);
@@ -155,11 +150,11 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 //  関数説明：モデルファイルからゲームオブジェクト作成
 //	引数：	strFilePath：ファイルの名前 
 //			vPos
-//			vRot
+//			qRot
 //			vScale
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale)
 {
 	if (strFilePath.find(".model") == string::npos) { return nullptr; }
 	
@@ -169,38 +164,97 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	pTrans->SetPosNext(vPos);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
+	pTrans->SetRot(qRot);
+	pTrans->SetRotNext(qRot);
 
 	//Modelファイルの開く
-	std::string strName = "data/MODEL/" + strFilePath;
+	string strName = "data/MODEL/" + strFilePath;
 	FILE *pFile;
 	fopen_s(&pFile, strName.c_str(), "rb");
 
 	//パーツ数の読込
-	int nNumMesh;
-	fread(&nNumMesh, sizeof(int), 1, pFile);
+	int nNumParentMesh;
+	fread(&nNumParentMesh, sizeof(int), 1, pFile);
 
-	for (int nCnt = 0; nCnt < nNumMesh; ++nCnt)
+	for (int nCnt = 0; nCnt < nNumParentMesh; ++nCnt)
 	{
-		//ファイル名
-		string strMeshName;
-		int nSize;
-		fread(&nSize, sizeof(int), 1, pFile);
-		strMeshName.resize(nSize);
-		fread(&strMeshName[0], sizeof(char), nSize, pFile);
-
-		//Offset
-		CKFVec3 vPos, vRot, vScale;
-		fread(&vPos, sizeof(CKFVec3), 1, pFile);
-		fread(&vRot, sizeof(CKFVec3), 1, pFile);
-		fread(&vScale, sizeof(CKFVec3), 1, pFile);
-
-		auto pObjChild = CreateMesh(strMeshName, CKFVec3(0.0f), CKFVec3(0.0f), vScale);
-		if (!pObjChild) { continue; }
-		pObjChild->GetTransformComponent()->RegisterParent(pTrans, vPos, vRot);
+		auto pObjChild = createChildMesh(pTrans, pFile);
 	}
 
 	fclose(pFile);
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CreateModel
+//  関数説明：モデルファイルからゲームオブジェクト作成
+//	引数：	strFilePath：ファイルの名前 
+//			vPos
+//			vRot
+//			vScale
+//	戻り値：CGameObject*
+//--------------------------------------------------------------------------------
+CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, FILE* pFile)
+{
+	//ファイル名
+	string strMeshName;
+	int nSize = 0;
+	fread(&nSize, sizeof(int), 1, pFile);
+	strMeshName.resize(nSize);
+	fread(&strMeshName[0], sizeof(char), nSize, pFile);
+
+	//Offset
+	CKFVec3 vPos, vRot, vScale;
+	fread(&vPos, sizeof(CKFVec3), 1, pFile);
+	fread(&vRot, sizeof(CKFVec3), 1, pFile);
+	fread(&vScale, sizeof(CKFVec3), 1, pFile);
+
+	auto pObj = createMesh(strMeshName, CKFVec3(0.0f), CKFVec3(0.0f), vScale);
+	auto pTrans = pObj->GetTransformComponent();
+	pTrans->RegisterParent(pParent, vPos, vRot);;
+
+	//Collider
+	int nNumCollider = 0;
+	fread(&nNumCollider, sizeof(int), 1, pFile);
+	for (int nCnt = 0; nCnt < nNumCollider; ++nCnt)
+	{
+		int nColType = 0;
+		CKFVec3 vColPos, vColRot, vColScale;
+		fread(&nColType, sizeof(int), 1, pFile);
+		fread(&vColPos, sizeof(CKFVec3), 1, pFile);
+		fread(&vColRot, sizeof(CKFVec3), 1, pFile);
+		fread(&vColScale, sizeof(CKFVec3), 1, pFile);
+		vColRot *= KF_PI / 180.0f;
+
+		CColliderComponent* pCollider = nullptr;
+		switch ((CS::COL_TYPE)nColType)
+		{
+		case CS::COL_SPHERE:
+			pCollider = new CSphereColliderComponent(pObj, CS::STATIC, vColScale.m_fX);
+			break;
+		case CS::COL_AABB:
+			pCollider = new CAABBColliderComponent(pObj, CS::STATIC, vColScale * 0.5f);
+			break;
+		case CS::COL_OBB:
+			pCollider = new COBBColliderComponent(pObj, CS::STATIC, vColScale * 0.5f);
+			break;
+		default:
+			break;
+		}
+
+		if (!pCollider) { continue; }
+		pCollider->SetOffset(vColPos, vColRot);
+		pObj->AddCollider(pCollider);
+	}
+
+	//Child
+	int nNumChild = 0;
+	fread(&nNumChild, sizeof(int), 1, pFile);
+	for (int nCnt = 0; nCnt < nNumChild; ++nCnt)
+	{
+		auto pObjChild = createChildMesh(pTrans, pFile);
+	}
+
 	return pObj;
 }
 
@@ -213,13 +267,13 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 //			vScale
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::createMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
 	if (strMeshName.find(".mesh") == string::npos) { return nullptr; }
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
 	//コンポネント
-	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new C3DMeshComponent(pObj);
 	string strTexName;
 	pMesh->SetMeshName(strMeshName, strTexName);
 	pObj->SetMeshComponent(pMesh);
@@ -274,14 +328,14 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
 	//コンポネント
+	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
+	pObj->AddBehavior(pBehavior);
 	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName("field");
 	pObj->SetMeshComponent(pMesh);
 	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName("RockCliff.jpg");
+	pDraw->SetTexName("Grass0003_1_270.jpg");
 	pObj->SetDrawComponent(pDraw);
-	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
-	pObj->AddBehavior(pBehavior);
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();

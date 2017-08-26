@@ -44,6 +44,7 @@ public:
 		//èdÇÀÇÈÉLÅ[
 		K_JUMP		= 0,
 		K_ATTACK	= 1,
+		K_SAVE		= 2,
 		K_EXTEND	= 3,
 		K_SHRINK	= 4,
 		K_RAISE		= 5,

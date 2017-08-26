@@ -14,6 +14,7 @@
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
 class CGameObject;
+class CTransformComponent;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -22,11 +23,10 @@ class CGameObjectSpawner
 {
 public:
 	static CGameObject* CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
-	static CGameObject* CreateField(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject* CreateField(const string& strStageName);
 	static CGameObject* CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
 	static CGameObject* CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
-	static CGameObject* CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
-	static CGameObject* CreateMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject* CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale);
 
 	//Editor
 	static CGameObject* CreateEditorController(CGameObject* pFieldEditor);
@@ -35,4 +35,7 @@ public:
 private:
 	CGameObjectSpawner() {}
 	~CGameObjectSpawner() {}
+
+	static CGameObject* createChildMesh(CTransformComponent* pParent, FILE* pFile);
+	static CGameObject* createMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
 };

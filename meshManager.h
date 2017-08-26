@@ -33,7 +33,10 @@ public:
 	void	UseMesh(const string& strFileName, string& texName);
 	void	DisuseMesh(const string& strName);
 
-	void	UpdateField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx);
+	//Editor—p
+	void	CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const CKFVec2& vBlockSize);
+	void	UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx);
+	void	SaveEditorFieldAs(const string& strFileName);
 
 	//GetŠÖ”
 	CMesh*	GetMesh(const string& strName) { return m_umMesh.at(strName).pMesh; }
@@ -46,6 +49,7 @@ private:
 	{
 		unsigned short	usNumUsers;
 		//list<CMesh*>	listpMesh;
+		string			strTex;
 		CMesh*			pMesh;
 	};
 
@@ -58,10 +62,8 @@ private:
 	void	createCube(CMesh* pMesh);
 	void	createSphere(CMesh* pMesh);
 	void	createSkyBox(CMesh* pMesh);
+	void	loadField(const string& strFileName, CMesh* pMesh);
 	bool	createBuffer(CMesh* pMesh);
-
-	//ˆêÌ—p
-	void	createField(CMesh* pMesh);
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

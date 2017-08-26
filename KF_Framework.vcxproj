@@ -209,6 +209,7 @@
     <ClCompile Include="renderState.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="sphereColliderComponent.cpp" />
+    <ClCompile Include="stageSpawner.cpp" />
     <ClCompile Include="textureManager.cpp" />
     <ClCompile Include="transformComponent.cpp" />
     <ClCompile Include="UIObject.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="rigidbodyComponent.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereColliderComponent.h" />
+    <ClInclude Include="stageSpawner.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="actionGameCamera.h" />
     <ClInclude Include="transformComponent.h" />

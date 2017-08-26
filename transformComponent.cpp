@@ -188,10 +188,42 @@ CKFMtx44 CTransformComponent::GetMatrixWorldNext(void)
 	//親のマトリクス取得
 	if (m_pParent)
 	{
+		//親に対する相対位置行列
+		//回転
+		CKFMtx44 mtxRot;
+		CKFMath::MtxRotationYawPitchRoll(mtxRot, m_vOffsetRot);
+		mtxWorld *= mtxRot;
+
+		//平行移動
+		CKFMtx44 mtxPos;
+		CKFMath::MtxTranslation(mtxPos, m_vOffsetPos);
+		mtxWorld *= mtxPos;
+
 		mtxWorld *= m_pParent->GetMatrixWorldNext();
 	}
 
 	return mtxWorld;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：changeMotion
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CTransformComponent::SetRot(const CKFQuaternion& qRotNext)
+{
+	auto mtxRot = CKFMath::QuaternionToMtx(qRotNext);
+	m_vRight.m_fX = mtxRot.m_af[0][0];
+	m_vRight.m_fY = mtxRot.m_af[0][1];
+	m_vRight.m_fZ = mtxRot.m_af[0][2];
+	m_vUp.m_fX = mtxRot.m_af[1][0];
+	m_vUp.m_fY = mtxRot.m_af[1][1];
+	m_vUp.m_fZ = mtxRot.m_af[1][2];
+	m_vForward.m_fX = mtxRot.m_af[2][0];
+	m_vForward.m_fY = mtxRot.m_af[2][1];
+	m_vForward.m_fZ = mtxRot.m_af[2][2];
 }
 
 //--------------------------------------------------------------------------------

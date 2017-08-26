@@ -22,6 +22,7 @@
 #include "fade.h"
 
 //gameobject
+#include "stageSpawner.h"
 #include "gameObjectSpawner.h"
 #include "gameObjectActor.h"
 
@@ -58,16 +59,8 @@ void CModeDemo::Init(void)
 	m_pCamera->Init();
 
 	//ゲームオブジェクトの初期化
-	CGameObjectSpawner::CreateField(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-
-	for (int nCnt = 0; nCnt < 3; nCnt++)
-	{
-		CKFVec3 vPos = CKFMath::GetRandomVec3(CKFVec3(-10.0f, 10.0f, -10.0f), CKFVec3(10.0f, 12.0f, 10.0f));
-		CKFVec3 vRot = CKFVec3(0.0f);//CKFMath::GetRandomVec3(CKFVec3(-KF_PI, -KF_PI, -KF_PI), CKFVec3(KF_PI, KF_PI, KF_PI));
-		CGameObjectSpawner::CreateCube(vPos, vRot, CKFVec3(1.0f));
-	}
-	
 	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CStageSpawner::LoadStage("demo");
 	CGameObject* pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
 

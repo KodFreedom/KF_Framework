@@ -22,7 +22,7 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 	: CBehaviorComponent(pGameObj)
 	, m_nNumBlockX(100)
 	, m_nNumBlockZ(100)
-	, m_vBlockSize(CKFVec2(10.0f))
+	, m_vBlockSize(CKFVec2(5.0f))
 	, m_vPosMin(CKFVec3(0.0f))
 	, m_vPosMax(CKFVec3(0.0f))
 	, m_vEditorPos(CKFVec3(0.0f))
@@ -30,6 +30,9 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 	, m_bActive(true)
 {
 	m_vectorVtx.clear();
+
+	//Mesh生成
+	CMain::GetManager()->GetMeshManager()->CreateEditorField(m_nNumBlockX, m_nNumBlockZ, m_vBlockSize);
 }
 
 //--------------------------------------------------------------------------------
@@ -57,7 +60,7 @@ bool CFieldEditorBehaviorComponent::Init(void)
 	m_vPosMax = vHalfSize;
 	
 	auto info = getInfo();
-	CMain::GetManager()->GetMeshManager()->UpdateField(m_vectorVtx, info.listChoosenIdx);
+	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 
 	return true;
 }
@@ -98,7 +101,7 @@ void CFieldEditorBehaviorComponent::Update(void)
 		m_vectorVtx[nIdx].m_fY += fValue;
 	}
 
-	CMain::GetManager()->GetMeshManager()->UpdateField(m_vectorVtx, info.listChoosenIdx);
+	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 }
 
 //--------------------------------------------------------------------------------
@@ -112,6 +115,41 @@ void CFieldEditorBehaviorComponent::AdjustPosInField(CKFVec3& vPos)
 
 	//高さの調節
 	vPos.m_fY = getHeight(vPos);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SaveAs
+//  関数説明：フィールド情報を保存する関数
+//	引数：	strFileName：ファイル名
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
+{
+	//フィールドメッシュの保存
+	CMain::GetManager()->GetMeshManager()->SaveEditorFieldAs(strFileName);
+
+	//フィールドの保存
+	string strName = "data/FIELD/" + strFileName + ".field";
+	FILE *pFile;
+
+	//file open
+	fopen_s(&pFile, strName.c_str(), "wb");
+
+	//ブロック数の保存
+	fwrite(&m_nNumBlockX, sizeof(int), 1, pFile);
+	fwrite(&m_nNumBlockZ, sizeof(int), 1, pFile);
+
+	//ブロックSizeの保存
+	fwrite(&m_vBlockSize, sizeof(CKFVec2), 1, pFile);
+
+	//頂点データ数の保存
+	int nNumVtx = (int)m_vectorVtx.size();
+	fwrite(&nNumVtx, sizeof(int), 1, pFile);
+
+	//頂点データの保存
+	fwrite(&m_vectorVtx[0], sizeof(CKFVec3), nNumVtx, pFile);
+
+	fclose(pFile);
 }
 
 //--------------------------------------------------------------------------------

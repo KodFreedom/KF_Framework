@@ -39,6 +39,9 @@ public:
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }
 	void	SetPos(const CKFVec3& vPos);
 
+	//Save
+	void	SaveAs(const string& strFileName);
+
 private:
 	//--------------------------------------------------------------------------------
 	//  列挙型定義
@@ -48,19 +51,28 @@ private:
 		MT_BOX,
 		MT_TREE,
 		MT_PINE_TREE,
-		MT_ROCK_1,
-		MT_ROCK_2,
-		MT_ROCK_3,
-		MT_ROCK_4,
-		MT_BAKER_HOUSE,
+		//MT_ROCK_1,
+		//MT_ROCK_2,
+		//MT_ROCK_3,
+		//MT_ROCK_4,
+		//MT_BAKER_HOUSE,
+		MT_WINDMILL,
 		MT_MAX
+	};
+
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct INFO
+	{
+		CTransformComponent* pTransform;
 	};
 
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
 	static const float sc_fRotSpeed;
-
+	static const float sc_fMoveSpeed;
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
@@ -69,8 +81,8 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	vector<CGameObject*>	m_vecpObjDemo;
-	list<CGameObject*>		m_listObjCreated;
-	MODEL_TYPE				m_modelType;
-	bool					m_bActive;
+	CGameObject*	m_apObjDemo[MT_MAX];
+	list<INFO>		m_alistCreated[MT_MAX];
+	MODEL_TYPE		m_modelType;
+	bool			m_bActive;
 };

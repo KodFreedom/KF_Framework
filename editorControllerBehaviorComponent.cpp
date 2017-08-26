@@ -22,6 +22,11 @@
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//	Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(CGameObject* const pGameObj)
@@ -85,6 +90,12 @@ void CEditorControllerBehaviorComponent::Update(void)
 	//Pos設定
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
+
+	//Save
+	if (pInput->GetKeyTrigger(CInputManager::K_SAVE))
+	{
+		save();
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -96,4 +107,18 @@ void CEditorControllerBehaviorComponent::SetFieldEditor(CGameObject* pFieldEdito
 	if (listBehavior.empty()) { return; }
 	auto pBehavior = listBehavior.front();
 	m_pFieldEditor = static_cast<CFieldEditorBehaviorComponent*>(pBehavior);
+}
+
+//--------------------------------------------------------------------------------
+//
+//	Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+void CEditorControllerBehaviorComponent::save(void)
+{
+	m_pFieldEditor->SaveAs("demoField");
+	m_pModelEditor->SaveAs("demoStage");
 }

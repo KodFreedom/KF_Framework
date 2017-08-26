@@ -111,7 +111,8 @@ public:
 	CRigidbodyComponent*		GetRigidbodyComponent(void) const { return m_pRigidbody; }
 	list<CColliderComponent*>&	GetColliderComponent(void) { return m_listpCollider; }
 	OBJ_TYPE					GetObjType(void) const { return m_type; }
-	
+	bool						IsActive(void) const { return m_bActive; }
+
 	//Setä÷êî
 	void						SetMeshComponent(CMeshComponent* pMesh) { m_pMesh = pMesh; }
 	void						SetDrawComponent(CDrawComponent* pDraw) { m_pDraw = pDraw; }

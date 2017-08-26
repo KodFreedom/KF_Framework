@@ -162,6 +162,7 @@ class CKFQuaternion
 {
 public:
 	CKFQuaternion() : m_fX(0.0f), m_fY(0.0f), m_fZ(0.0f), m_fW(1.0f) {}
+	CKFQuaternion(const float& fValue) : m_fX(fValue), m_fY(fValue), m_fZ(fValue), m_fW(1.0f) {}
 	~CKFQuaternion() {}
 
 	float m_fX;

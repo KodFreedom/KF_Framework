@@ -41,7 +41,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fJumpSpeed(0.0f)
 	, m_fTurnSpeedMin(0.0f)
 	, m_fTurnSpeedMax(0.0f)
-	, m_fGroundCheckDistance(0.2f)
+	, m_fGroundCheckDistance(0.3f)
 	, m_fAnimSpeed(1.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
@@ -171,7 +171,7 @@ void CActorBehaviorComponent::jump(const bool& bJump)
 	auto vVelocity = m_rigidbody.GetVelocity();
 	vVelocity.m_fY = m_fJumpSpeed;
 	m_rigidbody.SetVelocity(vVelocity);
-	m_fGroundCheckDistance = 0.2f;
+	//m_fGroundCheckDistance = 0.3f;
 }
 
 //--------------------------------------------------------------------------------

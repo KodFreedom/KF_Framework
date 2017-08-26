@@ -42,6 +42,9 @@ public:
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }
 	void	SetPos(const CKFVec3& vPos) { m_vEditorPos = vPos; }
 
+	//Save
+	void	SaveAs(const string& strFileName);
+
 private:
 	//--------------------------------------------------------------------------------
 	//  ç\ë¢ëÃíËã`
