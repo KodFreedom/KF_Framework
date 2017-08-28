@@ -40,7 +40,7 @@ public:
 	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
 	virtual void	OnCollision(CCollisionInfo& collisionInfo) override {}
 
-	void	Act(CKFVec3& vMovement, bool& bJump, bool& bAttack);
+	void	Act(CKFVec3& vMovement, const bool& bJump, const bool& bAttack);
 	void	Hit(const float& fDamage);
 
 	//Set関数
@@ -78,6 +78,8 @@ protected:
 
 	//パラメーター
 	int		m_nLevel;				//レベル
+	int		m_nCntFalling;
+	int		m_nCntInvincible;		//無敵時間
 	float	m_fLifeMax;				//最大生命値
 	float	m_fLifeNow;				//今の生命値
 	float	m_fAttack;				//攻撃力

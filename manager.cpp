@@ -12,7 +12,6 @@
 #include "inputManager.h"
 #include "meshManager.h"
 #include "textureManager.h"
-#include "modelManager.h"
 #include "lightManager.h"
 #include "materialManager.h"
 #include "gameObjectManager.h"
@@ -43,7 +42,6 @@ CManager::CManager()
 	, m_pTextureManager(nullptr)
 	, m_pLightManager(nullptr)
 	, m_pMaterialManager(nullptr)
-	, m_pModelManager(nullptr)
 	, m_pGameObjectManager(nullptr)
 	, m_pSoundManager(nullptr)
 	, m_pUISystem(nullptr)
@@ -178,14 +176,6 @@ void CManager::Uninit(void)
 
 	//テクスチャマネージャの破棄
 	SAFE_RELEASE(m_pTextureManager);
-
-	//モデルマネージャの破棄
-	if (m_pModelManager)
-	{
-		m_pModelManager->UnloadAll();
-		delete m_pModelManager;
-		m_pModelManager = nullptr;
-	}
 
 	//メッシュマネージャの破棄
 	SAFE_RELEASE(m_pMeshManager);

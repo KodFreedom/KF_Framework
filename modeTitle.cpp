@@ -18,9 +18,7 @@
 #include "modeDemo.h"
 #include "camera.h"
 #include "fade.h"
-
-//gameobject
-//#include "gameObject2D.h"
+#include "BGUIObject.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -53,8 +51,8 @@ void CModeTitle::Init(void)
 	m_pCamera = new CCamera;
 	m_pCamera->Init();
 
-	//ゲームオブジェクトの初期化
-	//CGameObject2D::Create(CKFVec3(SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f, 0.0f), 0.0f, CKFVec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), "title.jpg");
+	//UIの初期化
+	CBGUIObject::Create("title.jpg");
 }
 
 //--------------------------------------------------------------------------------

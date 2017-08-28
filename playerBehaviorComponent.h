@@ -39,6 +39,9 @@ public:
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
 	void	OnCollision(CCollisionInfo& collisionInfo) override;
 
+	//Get
+	const CActorBehaviorComponent& GetActorBehavior(void) const { return m_actor; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

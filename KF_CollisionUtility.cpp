@@ -736,12 +736,12 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 {
 	CKFVec3 vSpherePos = sphere.GetWorldPos();
 	float fSphereRadius = sphere.GetRadius();
-	CFieldColliderComponent::INFO info = field.GetPointInfo(vSpherePos);
+	auto info = field.GetProjectionInfo(vSpherePos);
 
-	if (info.bInTheField == false) { return; }
+	if (info.bInFieldRange == false) { return; }
 
 	//スフィア中心とポリゴンの距離の算出
-	float fDis = vSpherePos.m_fY - fSphereRadius - info.fHeight;
+	float fDis = info.fPenetration - fSphereRadius;
 
 	if (fDis >= 0.0f) { return; }
 
@@ -757,13 +757,13 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	CCollision* pCollision = new CCollision;
 
 	//衝突点の算出
-	pCollision->m_vCollisionPos = CKFVec3(vSpherePos.m_fX, info.fHeight, vSpherePos.m_fZ);
+	pCollision->m_vCollisionPos = vSpherePos + info.vFaceNormal * fDis;
 
 	//衝突深度の算出
 	pCollision->m_fPenetration = -fDis;
 
 	//衝突法線の算出
-	pCollision->m_vCollisionNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+	pCollision->m_vCollisionNormal = info.vFaceNormal;
 
 	//リジッドボディの取得
 	C3DRigidbodyComponent* p3DRB = dynamic_cast<C3DRigidbodyComponent*>(sphere.GetGameObject()->GetRigidbodyComponent());
@@ -791,28 +791,6 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	{
 		(*itr)->OnCollision(cInfo);
 	}
-	/*
-	//CGameObject* pSphereObj = sphere.GetGameObject();
-
-	////位置調節
-	//CKFVec3 vMovement = CKFVec3(0.0f, info.fHeight + fSphereRadius - vSpherePos.m_fY, 0.0f);
-	//pSphereObj->GetTransformComponent()->MovePosNext(vMovement);
-
-	////回転調節
-	////CKFVec3 vUpNext = CKFMath::LerpNormal(pSphereObj->GetUpNext(), info.vFaceNormal, 0.2f);
-	////pSphereObj->RotByUp(vUpNext);
-
-	////速度調節
-	//CRigidbodyComponent* pRB = sphere.GetGameObject()->GetRigidbodyComponent();
-	//if (pRB->GetType() == CRigidbodyComponent::RB_3D)
-	//{
-	//	C3DRigidbodyComponent* p3DRB = (C3DRigidbodyComponent*)pRB;
-	//	p3DRB->SetOnGround(true);
-	//	CKFVec3 vVelocity = p3DRB->GetVelocity();
-	//	vVelocity.m_fY = 0.0f;
-	//	p3DRB->SetVelocity(vVelocity);
-	//}
-	*/
 }
 
 //--------------------------------------------------------------------------------
@@ -832,24 +810,27 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 	CCollision* pCollision = new CCollision;
 	for (auto itr = listOBBVtx.begin(); itr != listOBBVtx.end(); ++itr)
 	{
-		auto info = field.GetPointInfo((*itr));
-		if (info.bInTheField == false) { continue; }
-
-		float fDis = (*itr).m_fY - info.fHeight;
-		if (fDis >= 0.0f) { continue; }
+		auto info = field.GetProjectionInfo((*itr));
+		if (info.bInFieldRange == false) { continue; }
+		if (info.fPenetration <= 0.0f) { continue; }
 
 		if (!bFind)
 		{
 			bFind = true;
 
 			//衝突点の算出
-			pCollision->m_vCollisionPos = CKFVec3((*itr).m_fX, info.fHeight, (*itr).m_fZ);
+			pCollision->m_vCollisionPos = *itr;
 
 			//衝突深度の算出
-			pCollision->m_fPenetration = -fDis;
+			pCollision->m_fPenetration = info.fPenetration;
 
 			//衝突法線の算出
-			pCollision->m_vCollisionNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+			//地面法線の角度が45度以上なら地面法線を返す
+			//そうじゃないなら上方向を返す
+			//auto vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+			//auto fDot = CKFMath::Vec3Dot(vNormal, info.vFaceNormal);
+			//if (fDot < 0.7f) { vNormal = info.vFaceNormal; }
+			pCollision->m_vCollisionNormal = info.vFaceNormal;
 
 			//リジッドボディの取得
 			C3DRigidbodyComponent* p3DRB = dynamic_cast<C3DRigidbodyComponent*>(box.GetGameObject()->GetRigidbodyComponent());
@@ -858,13 +839,16 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 		}
 		else
 		{//深度を比べる
-			if (-fDis <= pCollision->m_fPenetration) { continue; }
+			if (info.fPenetration <= pCollision->m_fPenetration) { continue; }
 
 			//衝突点の算出
-			pCollision->m_vCollisionPos = CKFVec3((*itr).m_fX, info.fHeight, (*itr).m_fZ);
+			pCollision->m_vCollisionPos = *itr;
 
 			//衝突深度の算出
-			pCollision->m_fPenetration = -fDis;
+			pCollision->m_fPenetration = info.fPenetration;
+
+			//衝突法線の算出
+			pCollision->m_vCollisionNormal = info.vFaceNormal;
 		}
 	}
 
@@ -1003,13 +987,11 @@ bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDist
 	//}
 
 	//一時採用
-	auto info = field.GetPointInfo(ray.m_vOrigin);
-	if (!info.bInTheField) { return false; }
-
-	auto fDis = ray.m_vOrigin.m_fY - info.fHeight;
-	if (fDis >= fDistance || fDis < 0.0f) { return false; }
-	infoOut.m_fDistance = fDis;
-	infoOut.m_vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+	auto info = field.GetProjectionInfo(ray.m_vOrigin + ray.m_vDirection * fDistance);
+	if (!info.bInFieldRange) { return false; }
+	if (info.fPenetration < 0.0f) { return false; }
+	infoOut.m_fDistance = info.fPenetration;
+	infoOut.m_vNormal = info.vFaceNormal;
 	infoOut.m_pCollider = &field;
 	return true;
 }

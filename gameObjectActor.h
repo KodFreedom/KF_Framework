@@ -10,7 +10,6 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObject.h"
-#include "modelManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -37,7 +36,7 @@ public:
 
 	//生成関数
 	static CGameObjectActor* CreatePlayer(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObjectActor* CreateEnemy(const CMOM::MODEL_NAME &modelName, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	static CGameObjectActor* CreateEnemy(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
 private:
 	CAnimatorComponent* m_pAnimator;
 };

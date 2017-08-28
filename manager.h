@@ -19,7 +19,6 @@ class CMeshManager;
 class CTextureManager;
 class CLightManager;
 class CMaterialManager;
-class CModelManager;
 class CGameObjectManager;
 class CSoundManager;
 class CUISystem;
@@ -53,7 +52,6 @@ public:
 	CTextureManager*	GetTextureManager(void) { return m_pTextureManager; }
 	CLightManager*		GetLightManager(void) { return m_pLightManager; }
 	CMaterialManager*	GetMaterialManager(void) { return m_pMaterialManager; }
-	CModelManager*		GetModelManager(void) { return m_pModelManager; }
 	CGameObjectManager*	GetGameObjectManager(void) { return m_pGameObjectManager; }
 	CSoundManager*		GetSoundManager(void) { return m_pSoundManager; }
 	CUISystem*			GetUISystem(void) { return m_pUISystem; }
@@ -69,7 +67,6 @@ private:
 	CTextureManager*	m_pTextureManager;
 	CLightManager*		m_pLightManager;
 	CMaterialManager*	m_pMaterialManager;
-	CModelManager*		m_pModelManager;
 	CGameObjectManager*	m_pGameObjectManager;
 	CSoundManager*		m_pSoundManager;
 	CUISystem*			m_pUISystem;

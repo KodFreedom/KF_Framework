@@ -1,23 +1,31 @@
 //--------------------------------------------------------------------------------
-//	エネミーノーマルモード
-//　enemyNormalMode.h
+//
+//　BGUIObject.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-08-28
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "AIMode.h"
+#include "2DUIObject.h"
+
+//--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CEnemyNormalMode : public CAIMode
+class CBGUIObject : public C2DUIObject
 {
 public:
-	CEnemyNormalMode() : CAIMode(AM_NORMAL) {}
-	~CEnemyNormalMode() override {}
-	void Update(CEnemyBehaviorComponent& enemy) override;
+	CBGUIObject();
+	~CBGUIObject() {}
+
+	bool Init(const string& strTexName);
+
+	static CBGUIObject* Create(const string& strTexName);
+private:
 };

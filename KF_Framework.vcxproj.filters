@@ -43,12 +43,6 @@
     <Filter Include="ソース ファイル\Base\Manager">
       <UniqueIdentifier>{a72cad8e-b70a-4729-a70a-78d50f9dbc5f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Model">
-      <UniqueIdentifier>{ffcf0544-df98-4484-a345-19a99e9d071c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Model">
-      <UniqueIdentifier>{ad0e8577-7c31-4a40-9db8-3700936a726c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
     </Filter>
@@ -142,9 +136,6 @@
     <Filter Include="ソース ファイル\AI">
       <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Motion">
-      <UniqueIdentifier>{7bc348cd-4315-4de3-b6ad-0e3e37cf9d16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
     </Filter>
@@ -183,20 +174,8 @@
     <ClCompile Include="materialManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="modelManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="modelX.cpp">
-      <Filter>ソース ファイル\Model</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>ソース ファイル\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="modelActorX.cpp">
-      <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
     <ClCompile Include="2DMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh</Filter>
@@ -215,12 +194,6 @@
     </ClCompile>
     <ClCompile Include="3DMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="actorMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="actorMeshDrawComponent.cpp">
-      <Filter>ソース ファイル\Component\Draw</Filter>
     </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
@@ -339,6 +312,9 @@
     <ClCompile Include="stageSpawner.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="BGUIObject.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -374,20 +350,8 @@
     <ClInclude Include="materialManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="modelManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="modelX.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
-    </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="modelActorX.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
@@ -415,15 +379,6 @@
     </ClInclude>
     <ClInclude Include="3DMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="modelMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="actorMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="actorMeshDrawComponent.h">
-      <Filter>ヘッダー ファイル\Component\Draw</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
@@ -472,9 +427,6 @@
     </ClInclude>
     <ClInclude Include="motionInfo.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="modelActor.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
     <ClInclude Include="meshManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
@@ -536,9 +488,6 @@
     <ClInclude Include="KF_CollisionUtility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="motion.h">
-      <Filter>ヘッダー ファイル\Motion</Filter>
-    </ClInclude>
     <ClInclude Include="KF_Utility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
@@ -559,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="stageSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BGUIObject.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -34,6 +34,7 @@ CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(CGameObje
 	, m_mode(CM_FIELD)
 	, m_pFieldEditor(nullptr)
 	, m_pModelEditor(nullptr)
+	, m_bAutoHeight(true)
 {
 
 }
@@ -76,8 +77,16 @@ void CEditorControllerBehaviorComponent::Update(void)
 	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(CKFVec3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.m_fX + vCamForward * vAxis.m_fY;
+	auto fHeight = (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
 	vPos += vMove;
-	m_pFieldEditor->AdjustPosInField(vPos);
+	vPos.m_fY += fHeight;
+
+	if (pInput->GetKeyRelease(CInputManager::K_RESET))
+	{
+		m_bAutoHeight ^= 1;
+	}
+
+	m_pFieldEditor->AdjustPosInField(vPos, m_bAutoHeight);
 
 	//‘€ìˆÊ’u‚ÌXV
 	m_pFieldEditor->SetPos(vPos);

@@ -63,6 +63,7 @@ private:
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	CONTROL_MODE					m_mode;
+	bool							m_bAutoHeight;
 	CFieldEditorBehaviorComponent*	m_pFieldEditor;
 	CModelEditorBehaviorComponent*	m_pModelEditor;
 };

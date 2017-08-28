@@ -17,6 +17,7 @@
 class CMotion;
 class CMotionInfo;
 class CMotionKey;
+class CColliderComponent;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -44,6 +45,7 @@ public:
 	void	SetMove(const float& fMovement);
 
 	//Getä÷êî
+	bool	CanAct(void);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -62,7 +64,8 @@ private:
 	enum MOTION_STATUS
 	{
 		MS_NORMAL,
-		MS_CHANGE
+		MS_CHANGE,
+		MS_WAIT,
 	};
 
 	//--------------------------------------------------------------------------------
@@ -77,17 +80,20 @@ private:
 	void changeMotion(const MOTION_PATTERN& motion);
 	//void changeMotionImmediately(const MOTION_PATTERN& motion);
 	bool checkCanChange(const MOTION_PATTERN& motion);
+	void updateAttack(void);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CMotionInfo*		m_apMotionData[MP_MAX];
-	CMotionKey*			m_pMotionKeyLast;
-	list<CGameObject*>	m_listNodes;
-	MOTION_PATTERN		m_motionNow;
-	MOTION_PATTERN		m_motionNext;
-	MOTION_STATUS		m_status;
-	int					m_nKeyNow;	
-	int					m_nCntFrame;
-	int					m_nCntChangeFrame;
+	CMotionInfo*				m_apMotionData[MP_MAX];
+	CMotionKey*					m_pMotionKeyLast;
+	list<CColliderComponent*>	m_listAttackCollider;
+	list<CGameObject*>			m_listNodes;
+	MOTION_PATTERN				m_motionNow;
+	MOTION_PATTERN				m_motionNext;
+	MOTION_STATUS				m_status;
+	int							m_nKeyNow;	
+	int							m_nCntFrame;
+	int							m_nCntChangeFrame;
+	bool						m_bIsGrounded;
 };

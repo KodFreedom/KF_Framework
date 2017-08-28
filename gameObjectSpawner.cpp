@@ -146,6 +146,31 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 }
 
 //--------------------------------------------------------------------------------
+//  Cube生成処理
+//--------------------------------------------------------------------------------
+CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
+{
+	auto pObj = new CGameObject(GOM::PRI_3D, CGameObject::OT_GOAL);
+
+	//コライダー
+	auto pCollider = new CAABBColliderComponent(pObj, CS::STATIC, CKFVec3(8.5f, 6.0f, 9.25f));
+	pCollider->SetOffset(CKFVec3(0.55f, 5.55f, 0.0f));
+	pCollider->SetTrigger(true);
+	pCollider->SetTag("Goal");
+	pObj->AddCollider(pCollider);
+
+	//パラメーター
+	auto pTrans = pObj->GetTransformComponent();
+	pTrans->SetPos(vPos);
+	pTrans->SetPosNext(vPos);
+
+	//初期化
+	pObj->Init();
+
+	return pObj;
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：CreateModel
 //  関数説明：モデルファイルからゲームオブジェクト作成
 //	引数：	strFilePath：ファイルの名前 

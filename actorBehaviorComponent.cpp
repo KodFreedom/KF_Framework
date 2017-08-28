@@ -33,6 +33,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)
 	, m_nLevel(0)
+	, m_nCntFalling(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
 	, m_fAttack(0.0f)
@@ -41,7 +42,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fJumpSpeed(0.0f)
 	, m_fTurnSpeedMin(0.0f)
 	, m_fTurnSpeedMax(0.0f)
-	, m_fGroundCheckDistance(0.3f)
+	, m_fGroundCheckDistance(0.6f)
 	, m_fAnimSpeed(1.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
@@ -76,6 +77,7 @@ void CActorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Update(void)
 {
+	if (m_nCntInvincible > 0) { --m_nCntInvincible; }
 }
 
 //--------------------------------------------------------------------------------
@@ -92,9 +94,10 @@ void CActorBehaviorComponent::LateUpdate(void)
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CActorBehaviorComponent::Act(CKFVec3& vMovement, bool& bJump, bool& bAttack)
+void CActorBehaviorComponent::Act(CKFVec3& vMovement, const bool& bJump, const bool& bAttack)
 {
 	if (!m_bEnabled) { return; }
+	if (m_pAnimator && !m_pAnimator->CanAct()) { return; }
 
 	//方向の長さが1より大きいの場合ノーマライズする
 	auto fMovement = CKFMath::VecMagnitude(vMovement);
@@ -138,7 +141,10 @@ void CActorBehaviorComponent::Act(CKFVec3& vMovement, bool& bJump, bool& bAttack
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Hit(const float& fDamage)
 {
-
+	if (m_nCntInvincible > 0) { return; }
+	m_nCntInvincible = 60;
+	m_fLifeNow -= fDamage;
+	m_fLifeNow = m_fLifeNow < 0.0f ? 0.0f : m_fLifeNow;
 }
 
 //--------------------------------------------------------------------------------
@@ -218,9 +224,15 @@ CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 	if (pCollisionSystem->RayCast(vPos, CKFVec3(0.0f, -1.0f, 0.0f), m_fGroundCheckDistance, rayHit, m_pGameObj))
 	{
 		m_bIsGrounded = true;
+		if (m_nCntFalling > 60)
+		{
+			//m_fLifeNow -= (float)(m_nCntFalling - 60);
+		}
+		m_nCntFalling = 0;
 		return rayHit.m_vNormal;
 	}
 
 	m_bIsGrounded = false;
+	++m_nCntFalling;
 	return CKFVec3(0.0f, 1.0f, 0.0f);
 }

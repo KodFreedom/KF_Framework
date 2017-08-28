@@ -11,7 +11,6 @@
 #include "main.h"
 #include "manager.h"
 #include "textureManager.h"
-#include "modelManager.h"
 #include "lightManager.h"
 #include "inputManager.h"
 #include "soundManager.h"
@@ -61,9 +60,11 @@ void CModeDemo::Init(void)
 	//ゲームオブジェクトの初期化
 	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CStageSpawner::LoadStage("demo");
-	CGameObject* pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(0.0f, 10.0f, 0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//CGameObject* pEnemy = CGameObjectActor::CreateEnemy(CMOM::MODEL_PLAYER, CKFVec3(0.0f, 10.0f, 10.0f), CKFVec3(0.0f, KF_PI, 0.0f), CKFVec3(1.0f));
-
+	CGameObject* pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(-188.0f, 10.0f, 196.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	//CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-12.0, 45.0f, -46.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	//CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(117.0f, 80.0f, 1.6f), CKFVec3(0.0f), CKFVec3(1.0f));
+	CGameObjectSpawner::CreateGoal(CKFVec3(142.0f, 74.0f, 1.05f));
 	m_pCamera->SetTarget(pPlayer);
 
 	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);

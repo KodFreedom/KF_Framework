@@ -77,6 +77,7 @@ private:
 	CKFVec3		m_vGravity;					//重力
 	CKFVec3		m_vMovement;				//移動量
 	CKFVec3		m_vVelocity;				//速度
+	CKFVec3		m_vAcceleration;			//加速度
 	//CKFVec3		m_vAngularVelocity;			//回転速度
 	CKFVec3		m_vForceAccum;				//合わせた作用力
 	//CKFVec3		m_vTorqueAccum;				//回転力

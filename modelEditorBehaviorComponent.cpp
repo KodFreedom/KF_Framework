@@ -19,7 +19,6 @@
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
 const float CModelEditorBehaviorComponent::sc_fRotSpeed = 0.01f;
-const float CModelEditorBehaviorComponent::sc_fMoveSpeed = 0.01f;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -97,10 +96,6 @@ void CModelEditorBehaviorComponent::Update(void)
 
 	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
 
-	//モデル升降
-	float fHeight = sc_fMoveSpeed * (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
-	pTransNow->MovePosNext(CKFVec3(0.0f, fHeight, 0.0f));
-
 	//モデル回転
 	CKFVec3 vRot = CKFVec3(0.0f);
 	vRot.m_fX = sc_fRotSpeed * (float)(pInput->GetKeyPress(CInputManager::K_ROTXP) - pInput->GetKeyPress(CInputManager::K_ROTXM));
@@ -127,7 +122,7 @@ void CModelEditorBehaviorComponent::Update(void)
 void CModelEditorBehaviorComponent::SetPos(const CKFVec3& vPos)
 {
 	auto pTrans = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
-	pTrans->SetPosNext(CKFVec3(vPos.m_fX, pTrans->GetPosNext().m_fY, vPos.m_fZ));
+	pTrans->SetPosNext(vPos);
 }
 
 //--------------------------------------------------------------------------------

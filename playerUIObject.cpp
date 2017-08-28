@@ -12,6 +12,7 @@
 #include "textureManager.h"
 #include "playerUIObject.h"
 #include "playerBehaviorComponent.h"
+#include "actorBehaviorComponent.h"
 
 #ifdef USING_DIRECTX
 #include "KF_UtilityDX.h"
@@ -39,7 +40,7 @@ const CKFVec2	CPlayerUIObject::sc_vFaceUVSize = CKFVec2(0.25f, 1.0f);
 //--------------------------------------------------------------------------------
 bool CPlayerUIObject::Init(void)
 {
-	CTextureManager* pTexManager = CMain::GetManager()->GetTextureManager();
+	auto pTexManager = CMain::GetManager()->GetTextureManager();
 	
 	//HPGauge
 	SPRITE sHP;
@@ -86,10 +87,11 @@ bool CPlayerUIObject::Init(void)
 void CPlayerUIObject::Update(void)
 {
 	auto itr = m_listSprite.begin();
+	auto& actorBehavior = m_pPlayerBehavior->GetActorBehavior();
 
 	//To do
 	//HPゲージ更新
-	float fLifeRate = 1.0f;//m_pPlayerBehavior->GetLifeNow() / m_pPlayerBehavior->GetLifeMax();
+	float fLifeRate = actorBehavior.GetLifeNow() / actorBehavior.GetLifeMax();
 	CKFColor cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
 #ifdef USING_DIRECTX
 	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);

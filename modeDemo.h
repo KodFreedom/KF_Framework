@@ -29,7 +29,13 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 	void	EndMode(void) override { m_bEndMode = true; }
-
+	void	EndMode(const bool& bGameOver)
+	{
+		if (m_bEndMode) { return; }
+		m_bEndMode = true;
+		m_bGameOver = bGameOver;
+	}
 private:
 	bool	m_bEndMode;
+	bool	m_bGameOver;
 };

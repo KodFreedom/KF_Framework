@@ -101,7 +101,7 @@ void CKFCollisionSystem::Update(void)
 	//Sphere
 	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); ++itr)
 	{
-		CSphereColliderComponent* pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		auto pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
 
 		//Dynamic
 		checkWithDynamicSphere(itr, *pSphere);
@@ -109,18 +109,18 @@ void CKFCollisionSystem::Update(void)
 		checkWithDynamicOBB(*pSphere);
 
 		//Static
-		checkWithStaticSphere(*pSphere);
-		checkWithStaticAABB(*pSphere);
-		checkWithStaticOBB(*pSphere);
+		//checkWithStaticSphere(*pSphere);
+		//checkWithStaticAABB(*pSphere);
+		//checkWithStaticOBB(*pSphere);
 
 		//Field
-		checkWithField(*pSphere);
+		//checkWithField(*pSphere);
 	}
 
 	//aabb
 	for (auto itr = m_alistCollider[DYNAMIC][COL_AABB].begin(); itr != m_alistCollider[DYNAMIC][COL_AABB].end(); ++itr)
 	{
-		CAABBColliderComponent* pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
 
 		//Dynamic
 		checkWithDynamicAABB(itr, *pAABB);
@@ -138,7 +138,7 @@ void CKFCollisionSystem::Update(void)
 	//obb
 	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
 	{
-		COBBColliderComponent* pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
 
 		//Dynamic
 		checkWithDynamicOBB(itr, *pOBB);
@@ -275,40 +275,40 @@ bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirecti
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::DrawCollider(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	//sphere
-	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.png");
-	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
-	{
-		D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
-		float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
-		D3DXMATRIX mtx,mtxPos,mtxScale;
-		D3DXMatrixIdentity(&mtx);
-		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
-		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
-		mtx *= mtxPos;
-		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		pDevice->SetTexture(0, pTexture);
-		m_pMeshSphere->DrawSubset(0);
-	}
+	//LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	////sphere
+	//LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.png");
+	//for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+	//{
+	//	D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
+	//	float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
+	//	D3DXMATRIX mtx,mtxPos,mtxScale;
+	//	D3DXMatrixIdentity(&mtx);
+	//	D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+	//	mtx *= mtxScale;
+	//	D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
+	//	mtx *= mtxPos;
+	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+	//	pDevice->SetTexture(0, pTexture);
+	//	m_pMeshSphere->DrawSubset(0);
+	//}
 
-	//Cube
-	for (auto pCol : m_alistCollider[STATIC][COL_AABB])
-	{
-		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPos();
-		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
-		D3DXMATRIX mtx, mtxPos, mtxScale;
-		D3DXMatrixIdentity(&mtx);
-		D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
-		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
-		mtx *= mtxPos;
-		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		pDevice->SetTexture(0, pTexture);
-		m_pMeshCube->DrawSubset(0);
-	}
+	////Cube
+	//for (auto pCol : m_alistCollider[STATIC][COL_AABB])
+	//{
+	//	if (!pCol->GetGameObject()->IsActive()) { continue; }
+	//	auto vPos = pCol->GetWorldPos();
+	//	auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
+	//	D3DXMATRIX mtx, mtxPos, mtxScale;
+	//	D3DXMatrixIdentity(&mtx);
+	//	D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+	//	mtx *= mtxScale;
+	//	D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+	//	mtx *= mtxPos;
+	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
+	//	pDevice->SetTexture(0, pTexture);
+	//	m_pMeshCube->DrawSubset(0);
+	//}
 }
 #endif
 

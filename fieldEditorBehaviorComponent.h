@@ -36,7 +36,7 @@ public:
 	void	OnCollision(CCollisionInfo& collisionInfo) override {}
 
 	//Getä÷êî
-	void	AdjustPosInField(CKFVec3& vPos);
+	void	AdjustPosInField(CKFVec3& vPos, const bool& bAdjustHeight);
 
 	//Setä÷êî
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }

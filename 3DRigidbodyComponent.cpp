@@ -33,9 +33,10 @@ C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
 	//, m_fAngularDrag(0.95f)
 	, m_fFriction(1.0f)
 	, m_fBounciness(0.0f)
-	, m_vGravity(CKFVec3(0.0f, -0.75f, 0.0f))
+	, m_vGravity(CKFVec3(0.0f, -0.98f, 0.0f))
 	, m_vMovement(CKFVec3(0.0f))
 	, m_vVelocity(CKFVec3(0.0f))
+	, m_vAcceleration(CKFVec3(0.0f))
 	, m_vForceAccum(CKFVec3(0.0f))
 	//, m_bOnGround(false)
 	//, m_bRotLock(0)
@@ -57,6 +58,11 @@ void C3DRigidbodyComponent::SetMass(const float& fMass)
 //--------------------------------------------------------------------------------
 void C3DRigidbodyComponent::Update(void)
 {
+	auto pTrans = m_pGameObj->GetTransformComponent();
+
+	//加速度
+	m_vAcceleration = m_vMovement;
+
 	//重力
 	m_vForceAccum += m_vGravity * m_fMass * DELTA_TIME;
 
@@ -73,7 +79,6 @@ void C3DRigidbodyComponent::Update(void)
 	//m_vAngularVelocity   += vAngularAcceleration;
 
 	//位置更新
-	CTransformComponent* pTrans = m_pGameObj->GetTransformComponent();
 	pTrans->MovePosNext(m_vVelocity);
 	pTrans->MovePosNext(m_vMovement);
 
@@ -81,6 +86,7 @@ void C3DRigidbodyComponent::Update(void)
 	//pTrans->RotByEuler(m_vAngularVelocity);
 
 	//処理完了
+	
 	m_vForceAccum = CKFVec3(0.0f);
 	//m_vTorqueAccum = CKFVec3(0.0f);
 	m_vVelocity *= m_fDrag;
@@ -98,6 +104,7 @@ void C3DRigidbodyComponent::LateUpdate(void)
 
 	//処理完了
 	m_vMovement = CKFVec3(0.0f);
+	m_vAcceleration = CKFVec3(0.0f);
 }
 
 //--------------------------------------------------------------------------------

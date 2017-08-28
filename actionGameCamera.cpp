@@ -117,10 +117,10 @@ void CActionGameCamera::Update(void)
 	Pitch(m_vRotSpeed.m_fX);
 
 	//Target移動したらカメラの角度をデフォルトの角度にだんだん修正しに行く
-	if (m_pTarget && m_pTarget->GetTransformComponent()->GetPos() != m_pTarget->GetTransformComponent()->GetPosNext())
-	{
-		m_vVecLookNext = CKFMath::LerpNormal(m_vVecLookNext, m_vDefaultLook, sc_fReRotLerpTime);
-	}
+	//if (m_pTarget && m_pTarget->GetTransformComponent()->GetPos() != m_pTarget->GetTransformComponent()->GetPosNext())
+	//{
+	//	m_vVecLookNext = CKFMath::LerpNormal(m_vVecLookNext, m_vDefaultLook, sc_fReRotLerpTime);
+	//}
 
 	//世界との衝突判定
 	//CheckCollision();

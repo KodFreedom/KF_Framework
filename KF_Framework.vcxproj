@@ -158,9 +158,8 @@
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="actionGameCamera.cpp" />
     <ClCompile Include="actorBehaviorComponent.cpp" />
-    <ClCompile Include="actorMeshComponent.cpp" />
-    <ClCompile Include="actorMeshDrawComponent.cpp" />
     <ClCompile Include="animatorComponent.cpp" />
+    <ClCompile Include="BGUIObject.cpp" />
     <ClCompile Include="boxColliderComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
@@ -195,11 +194,7 @@
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="modeDemo.cpp" />
     <ClCompile Include="modeEditor.cpp" />
-    <ClCompile Include="model.cpp" />
-    <ClCompile Include="modelActorX.cpp" />
     <ClCompile Include="modelEditorBehaviorComponent.cpp" />
-    <ClCompile Include="modelManager.cpp" />
-    <ClCompile Include="modelX.cpp" />
     <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
@@ -223,11 +218,10 @@
     <ClInclude Include="3DRigidbodyComponent.h" />
     <ClInclude Include="AABBColliderComponent.h" />
     <ClInclude Include="actorBehaviorComponent.h" />
-    <ClInclude Include="actorMeshDrawComponent.h" />
-    <ClInclude Include="actorMeshComponent.h" />
     <ClInclude Include="AIMode.h" />
     <ClInclude Include="animatorComponent.h" />
     <ClInclude Include="behaviorComponent.h" />
+    <ClInclude Include="BGUIObject.h" />
     <ClInclude Include="boxColliderComponent.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="editorControllerBehaviorComponent.h" />
@@ -248,7 +242,6 @@
     <ClInclude Include="KF_Utility.h" />
     <ClInclude Include="modeEditor.h" />
     <ClInclude Include="modelEditorBehaviorComponent.h" />
-    <ClInclude Include="motion.h" />
     <ClInclude Include="inputDX.h" />
     <ClInclude Include="inputManager.h" />
     <ClInclude Include="KF_CollisionSystem.h" />
@@ -264,13 +257,7 @@
     <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
-    <ClInclude Include="model.h" />
-    <ClInclude Include="modelActor.h" />
-    <ClInclude Include="modelActorX.h" />
     <ClInclude Include="meshComponent.h" />
-    <ClInclude Include="modelManager.h" />
-    <ClInclude Include="modelMeshComponent.h" />
-    <ClInclude Include="modelX.h" />
     <ClInclude Include="2DMeshComponent.h" />
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />

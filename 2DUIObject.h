@@ -20,7 +20,7 @@ public:
 	C2DUIObject(const unsigned short& usOrder = 0);
 	~C2DUIObject() {}
 
-	virtual bool Init(void) override = 0;
+	virtual bool Init(void) override { return true; }
 	virtual void Uninit(void) override;
 	virtual void Draw(void) override;
 

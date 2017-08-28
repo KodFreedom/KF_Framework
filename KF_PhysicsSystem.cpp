@@ -202,12 +202,12 @@ void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 //--------------------------------------------------------------------------------
 float CKFPhysicsSystem::calculateSeparatingVelocity(CCollision& collision)
 {
-	CKFVec3 vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity;
+	CKFVec3 vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity + collision.m_pRigidBodyOne->m_vAcceleration;
 
 	//—±q‚Æ—±q‚ÌÕ“Ë
 	if (collision.m_pRigidBodyTwo)
 	{
-		vRelativeVelocity -= collision.m_pRigidBodyTwo->m_vVelocity;
+		vRelativeVelocity -= collision.m_pRigidBodyTwo->m_vVelocity + collision.m_pRigidBodyTwo->m_vAcceleration;
 	}
 
 	//“àÏŒvZ

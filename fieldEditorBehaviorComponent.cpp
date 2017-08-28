@@ -98,7 +98,7 @@ void CFieldEditorBehaviorComponent::Update(void)
 		- (float)pInput->GetKeyPress(CInputManager::K_REDUCE);
 	for (auto nIdx : info.listChoosenIdx)
 	{
-		m_vectorVtx[nIdx].m_fY += fValue;
+		m_vectorVtx[nIdx].m_fY += fValue * 0.5f;
 	}
 
 	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
@@ -107,14 +107,17 @@ void CFieldEditorBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
-void CFieldEditorBehaviorComponent::AdjustPosInField(CKFVec3& vPos)
+void CFieldEditorBehaviorComponent::AdjustPosInField(CKFVec3& vPos, const bool& bAdjustHeight)
 {
 	//îÕàÕì‡Ç…Ç∑ÇÈ
 	vPos.m_fX = vPos.m_fX < m_vPosMin.m_fX ? m_vPosMin.m_fX : vPos.m_fX > m_vPosMax.m_fX ? m_vPosMax.m_fX : vPos.m_fX;
 	vPos.m_fZ = vPos.m_fZ < m_vPosMin.m_fZ ? m_vPosMin.m_fZ : vPos.m_fZ > m_vPosMax.m_fZ ? m_vPosMax.m_fZ : vPos.m_fZ;
 
 	//çÇÇ≥ÇÃí≤êﬂ
-	vPos.m_fY = getHeight(vPos);
+	if (bAdjustHeight)
+	{
+		vPos.m_fY = getHeight(vPos);
+	}
 }
 
 //--------------------------------------------------------------------------------

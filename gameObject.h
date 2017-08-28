@@ -36,7 +36,8 @@ public:
 	{
 		OT_DEFAULT,
 		OT_ENEMY,
-		OT_PLAYER
+		OT_PLAYER,
+		OT_GOAL,
 	};
 
 	//--------------------------------------------------------------------------------
@@ -119,6 +120,7 @@ public:
 	void						SetRigidbodyComponent(CRigidbodyComponent* pRb) { m_pRigidbody = pRb; }
 	void						SetActive(const bool& bActive);
 	void						SetAlive(const bool& bAlive);
+	void						SetObjType(const OBJ_TYPE& type) { m_type = type; }
 	void						AddBehavior(CBehaviorComponent* pBehavior);
 	void						AddCollider(CColliderComponent* pCollider);
 	void						DeleteCollider(CColliderComponent* pCollider);

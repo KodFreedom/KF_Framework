@@ -30,6 +30,13 @@ public:
 		CKFVec3	vFaceNormal;
 	};
 
+	struct FINFO
+	{
+		bool	bInFieldRange;
+		float   fPenetration;
+		CKFVec3 vFaceNormal;
+	};
+
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
@@ -49,7 +56,8 @@ public:
 	void	Uninit(void) override;
 
 	//Getä÷êî
-	INFO	GetPointInfo(const CKFVec3& vPos);
+	//INFO	GetPointInfo(const CKFVec3& vPos);
+	FINFO	GetProjectionInfo(const CKFVec3& vPos);
 	bool	GetVtxByRange(const CKFVec3& vBegin, const CKFVec3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<CKFVec3>& vecOut);
 
 private:
@@ -57,7 +65,8 @@ private:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	void	load(const string& strFieldName);
-
+	bool	getPointInfo(const CKFVec3& vPos, CKFVec3& vPLeftUp, CKFVec3& vPRightDown, CKFVec3& vPSide, CKFVec3& vFaceNormal);
+	
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
