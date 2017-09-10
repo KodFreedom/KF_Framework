@@ -16,6 +16,11 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CInputManager::CInputManager()
@@ -57,36 +62,6 @@ bool CInputManager::Init(HINSTANCE hInst, HWND hWnd)
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CInputManager::Uninit(void)
-{
-	//キーボードの破棄
-	if (m_pKeyboard)
-	{
-		m_pKeyboard->Uninit();
-		delete m_pKeyboard;
-		m_pKeyboard = nullptr;
-	}
-
-	//マウスの破棄
-	if (m_pMouse)
-	{
-		m_pMouse->Uninit();
-		delete m_pMouse;
-		m_pMouse = nullptr;
-	}
-
-	//ジョイスティックの破棄
-	if (m_pJoystick)
-	{
-		m_pJoystick->Uninit();
-		delete m_pJoystick;
-		m_pJoystick = nullptr;
-	}
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void CInputManager::Update(void)
@@ -94,13 +69,62 @@ void CInputManager::Update(void)
 	m_pKeyboard->Update();
 	m_pMouse->Update();
 	m_pJoystick->Update();
-	UpdateInputInfo();
+	updateInputInfo();
 }
 
 //--------------------------------------------------------------------------------
+//  使用権取得
+//--------------------------------------------------------------------------------
+void CInputManager::Acquire(void)
+{
+	m_pKeyboard->Acquire();
+	m_pMouse->Acquire();
+	m_pJoystick->Acquire();
+}
+
+//--------------------------------------------------------------------------------
+//  使用権解放
+//--------------------------------------------------------------------------------
+void CInputManager::Unacquire(void)
+{
+	m_pKeyboard->Unacquire();
+	m_pMouse->Unacquire();
+	m_pJoystick->Unacquire();
+}
+
+//--------------------------------------------------------------------------------
+//  キーのプレス
+//--------------------------------------------------------------------------------
+bool CInputManager::GetKeyPress(const KEY& key)
+{
+	return m_lKeysPress & (1 << (int)key);
+}
+
+//--------------------------------------------------------------------------------
+//  キーのトリガー
+//--------------------------------------------------------------------------------
+bool CInputManager::GetKeyTrigger(const KEY& key)
+{
+	return m_lKeysTrigger & (1 << (int)key);
+}
+
+//--------------------------------------------------------------------------------
+//  キーのリリース
+//--------------------------------------------------------------------------------
+bool CInputManager::GetKeyRelease(const KEY& key)
+{
+	return m_lKeysRelease & (1 << (int)key);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  入力情報更新処理
 //--------------------------------------------------------------------------------
-void CInputManager::UpdateInputInfo(void)
+void CInputManager::updateInputInfo(void)
 {
 	//Move
 	float fKAxisX = -(float)m_pKeyboard->GetKeyPress(DIK_A) + (float)m_pKeyboard->GetKeyPress(DIK_D);
@@ -210,7 +234,7 @@ void CInputManager::UpdateInputInfo(void)
 	bool bResetTrigger = m_pKeyboard->GetKeyTrigger(DIK_R);
 	bool bResetRelease = m_pKeyboard->GetKeyRelease(DIK_R);
 
-	m_lKeysPress = 
+	m_lKeysPress =
 		(LONG)bSubmitPress << K_SUBMIT
 		| (bCancelPress << K_CANCEL)
 		| (bStartPress << K_START)
@@ -228,7 +252,7 @@ void CInputManager::UpdateInputInfo(void)
 		| (bRRacketPress << K_RRACKET)
 		| (bResetPress << K_RESET);
 
-	m_lKeysTrigger = 
+	m_lKeysTrigger =
 		(LONG)bSubmitTrigger << K_SUBMIT
 		| (bCancelTrigger << K_CANCEL)
 		| (bStartTrigger << K_START)
@@ -246,7 +270,7 @@ void CInputManager::UpdateInputInfo(void)
 		| (bRRacketTrigger << K_RRACKET)
 		| (bResetTrigger << K_RESET);
 
-	m_lKeysRelease = 
+	m_lKeysRelease =
 		(LONG)bSubmitRelease << K_SUBMIT
 		| (bCancelRelease << K_CANCEL)
 		| (bStartRelease << K_START)
@@ -263,7 +287,7 @@ void CInputManager::UpdateInputInfo(void)
 		| (bLRacketRelease << K_LRACKET)
 		| (bRRacketRelease << K_RRACKET)
 		| (bResetRelease << K_RESET);
-	
+
 #ifdef _DEBUG
 	//char str[512];
 	//sprintf(str, "MX : %f\tMY : %f\tMZ : %f\n", fMAxisX, fMAxisY, fMAxisZ);
@@ -274,45 +298,31 @@ void CInputManager::UpdateInputInfo(void)
 }
 
 //--------------------------------------------------------------------------------
-//  使用権取得
+//  終了処理
 //--------------------------------------------------------------------------------
-void CInputManager::Acquire(void)
+void CInputManager::uninit(void)
 {
-	m_pKeyboard->Acquire();
-	m_pMouse->Acquire();
-	m_pJoystick->Acquire();
-}
+	//キーボードの破棄
+	if (m_pKeyboard)
+	{
+		m_pKeyboard->Uninit();
+		delete m_pKeyboard;
+		m_pKeyboard = nullptr;
+	}
 
-//--------------------------------------------------------------------------------
-//  使用権解放
-//--------------------------------------------------------------------------------
-void CInputManager::Unacquire(void)
-{
-	m_pKeyboard->Unacquire();
-	m_pMouse->Unacquire();
-	m_pJoystick->Unacquire();
-}
+	//マウスの破棄
+	if (m_pMouse)
+	{
+		m_pMouse->Uninit();
+		delete m_pMouse;
+		m_pMouse = nullptr;
+	}
 
-//--------------------------------------------------------------------------------
-//  キーのプレス
-//--------------------------------------------------------------------------------
-bool CInputManager::GetKeyPress(const KEY& key)
-{
-	return m_lKeysPress & (1 << (int)key);
-}
-
-//--------------------------------------------------------------------------------
-//  キーのトリガー
-//--------------------------------------------------------------------------------
-bool CInputManager::GetKeyTrigger(const KEY& key)
-{
-	return m_lKeysTrigger & (1 << (int)key);
-}
-
-//--------------------------------------------------------------------------------
-//  キーのリリース
-//--------------------------------------------------------------------------------
-bool CInputManager::GetKeyRelease(const KEY& key)
-{
-	return m_lKeysRelease & (1 << (int)key);
+	//ジョイスティックの破棄
+	if (m_pJoystick)
+	{
+		m_pJoystick->Uninit();
+		delete m_pJoystick;
+		m_pJoystick = nullptr;
+	}
 }

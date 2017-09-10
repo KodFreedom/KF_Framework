@@ -40,7 +40,7 @@ public:
 	CLightManager();
 	~CLightManager();
 
-	void	Init(void);
+	bool	Init(void);
 	void	Uninit(void);
 
 	void	TurnAllLightOff(void);

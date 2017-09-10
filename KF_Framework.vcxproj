@@ -100,6 +100,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
     <ClCompile Include="component.cpp" />
+    <ClCompile Include="debugManager.cpp" />
     <ClCompile Include="drawComponent.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
     <ClCompile Include="editorCamera.cpp" />
@@ -224,6 +226,7 @@
     <ClInclude Include="BGUIObject.h" />
     <ClInclude Include="boxColliderComponent.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="debugManager.h" />
     <ClInclude Include="editorControllerBehaviorComponent.h" />
     <ClInclude Include="enemyAttackMode.h" />
     <ClInclude Include="enemyNormalMode.h" />

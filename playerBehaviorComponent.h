@@ -40,7 +40,7 @@ public:
 	void	OnCollision(CCollisionInfo& collisionInfo) override;
 
 	//Get
-	const CActorBehaviorComponent& GetActorBehavior(void) const { return m_actor; }
+	const auto& GetActorBehavior(void) const { return m_actor; }
 
 private:
 	//--------------------------------------------------------------------------------

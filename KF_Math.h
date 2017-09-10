@@ -163,6 +163,7 @@ class CKFQuaternion
 public:
 	CKFQuaternion() : m_fX(0.0f), m_fY(0.0f), m_fZ(0.0f), m_fW(1.0f) {}
 	CKFQuaternion(const float& fValue) : m_fX(fValue), m_fY(fValue), m_fZ(fValue), m_fW(1.0f) {}
+	CKFQuaternion(const float& fX, const float& fY, const float& fZ, const float& fW) : m_fX(fX), m_fY(fY), m_fZ(fZ), m_fW(fW) {}
 	~CKFQuaternion() {}
 
 	float m_fX;
@@ -183,8 +184,8 @@ public:
 	CKFQuaternion operator*(const float& fValue) const;
 	void operator*=(const float& fValue);
 	void operator/=(const float& fValue);
-	/*CKFQuaternion operator*(const CKFQuaternion& qValue) const;
-	void operator*=(const CKFQuaternion& qValue);*/
+	CKFQuaternion operator*(const CKFQuaternion& qValue) const;
+	void operator*=(const CKFQuaternion& qValue);
 };
 
 //--------------------------------------------------------------------------------
@@ -296,6 +297,7 @@ public:
 	static float			QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR);
 	static CKFVec3			QuaternionToEuler(const CKFQuaternion& quaternion);
 	static CKFMtx44			QuaternionToMtx(const CKFQuaternion& qValue);
+	static CKFQuaternion	QuaternionMultiplyXYZW(const CKFQuaternion& qL, const CKFQuaternion& qR);
 	static CKFQuaternion	EulerToQuaternion(const CKFVec3& vVec);
 	static CKFQuaternion	MtxToQuaternion(const CKFMtx44& mtxRot);
 	

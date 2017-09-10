@@ -74,7 +74,6 @@ private:
 	float		m_fFriction;				//–€CŒW”
 	float		m_fBounciness;				//’µ‚Ë•Ô‚èŒW”
 	float		m_fGravityCoefficient;		//d—ÍŒW”
-	CKFVec3		m_vGravity;					//d—Í
 	CKFVec3		m_vMovement;				//ˆÚ“®—Ê
 	CKFVec3		m_vVelocity;				//‘¬“x
 	CKFVec3		m_vAcceleration;			//‰Á‘¬“x

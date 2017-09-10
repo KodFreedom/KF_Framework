@@ -22,6 +22,10 @@
 #include "behaviorComponent.h"
 #include "transformComponent.h"
 
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif
+
 //--------------------------------------------------------------------------------
 //
 //  衝突判定関数
@@ -425,6 +429,10 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	//物理演算システムにレジストリ
 	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 	
+#ifdef _DEBUG
+	CMain::GetManager()->GetDebugManager()->DisplayScroll("Test!\n");
+#endif // _DEBUG
+
 	//OnCollision
 	CCollisionInfo info;
 	info.m_listCollision.push_back(pCollision);

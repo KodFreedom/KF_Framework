@@ -315,6 +315,9 @@
     <ClCompile Include="BGUIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
+    <ClCompile Include="debugManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -511,6 +514,9 @@
     </ClInclude>
     <ClInclude Include="BGUIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="debugManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

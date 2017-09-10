@@ -34,10 +34,10 @@ bool CPlayerBehaviorComponent::Init(void)
 {
 	m_actor.SetLifeMax(100.0f);
 	m_actor.SetLifeNow(100.0f);
-	m_actor.SetJumpSpeed(5.0f);
+	m_actor.SetJumpSpeed(20.0f);
 	m_actor.SetTurnSpeedMin(2.0f * KF_PI * DELTA_TIME);
 	m_actor.SetTurnSpeedMax(4.0f * KF_PI * DELTA_TIME);
-	m_actor.SetMoveSpeed(0.15f);
+	m_actor.SetMoveSpeed(8.0f);
 	return true;
 }
 

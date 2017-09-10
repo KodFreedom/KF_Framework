@@ -27,6 +27,9 @@ class CGameObject;
 class CGameObjectManager
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
 	enum PRIORITY
 	{
 		PRI_3D,
@@ -35,20 +38,41 @@ public:
 		PRI_MAX
 	};
 
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
 	CGameObjectManager();
 	~CGameObjectManager() {}
 
-	void	Init(void);
-	void	Uninit(void);
+	static auto Create(void)
+	{
+		auto pGOM = new CGameObjectManager;
+		pGOM->init();
+		return pGOM;
+	}
+	void		Release(void)
+	{
+		uninit();
+		delete this;
+	}
 
-	void	ReleaseAll(void);
-	void	UpdateAll(void);
-	void	LateUpdateAll(void);
-	void	DrawAll(void);
+	void		ReleaseAll(void);
+	void		UpdateAll(void);
+	void		LateUpdateAll(void);
+	void		DrawAll(void);
 
-	void	SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj);
-	void	ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj);
+	void		SaveGameObj(const PRIORITY& pri, CGameObject* pGameObj);
+	void		ReleaseGameObj(const PRIORITY& pri, CGameObject* pGameObj);
 
 private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	void		init(void);
+	void		uninit(void);
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
 	list<CGameObject*>	m_alistGameObj[PRI_MAX];
 };

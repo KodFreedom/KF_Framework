@@ -32,7 +32,6 @@ CKFVec2::operator D3DXVECTOR2() const
 	D3DXVECTOR2 vValue;
 	vValue.x = m_fX;
 	vValue.y = m_fY;
-
 	return vValue;
 }
 #endif
@@ -44,7 +43,6 @@ CKFVec2 &CKFVec2::operator=(const CKFVec2 &vValue)
 {
 	m_fX = vValue.m_fX;
 	m_fY = vValue.m_fY;
-
 	return *this;
 }
 
@@ -53,11 +51,7 @@ CKFVec2 &CKFVec2::operator=(const CKFVec2 &vValue)
 //--------------------------------------------------------------------------------
 bool CKFVec2::operator==(const CKFVec2 &vValue) const
 {
-	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY)
-	{
-		return true;
-	}
-
+	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY) { return true; }
 	return false;
 }
 
@@ -67,10 +61,8 @@ bool CKFVec2::operator==(const CKFVec2 &vValue) const
 CKFVec2 CKFVec2::operator+(const CKFVec2 &vValue) const
 {
 	CKFVec2 vAnswer;
-
 	vAnswer.m_fX = m_fX + vValue.m_fX;
 	vAnswer.m_fY = m_fY + vValue.m_fY;
-
 	return vAnswer;
 }
 
@@ -143,7 +135,6 @@ CKFVec3::operator CKFVec2() const
 	CKFVec2 vValue;
 	vValue.m_fX = m_fX;
 	vValue.m_fY = m_fY;
-
 	return vValue;
 }
 
@@ -158,7 +149,6 @@ CKFVec3::operator D3DXVECTOR3() const
 	vValue.x = m_fX;
 	vValue.y = m_fY;
 	vValue.z = m_fZ;
-
 	return vValue;
 }
 #endif
@@ -171,7 +161,6 @@ CKFVec3 &CKFVec3::operator=(const CKFVec3 &vValue)
 	m_fX = vValue.m_fX;
 	m_fY = vValue.m_fY;
 	m_fZ = vValue.m_fZ;
-
 	return *this;
 }
 
@@ -180,11 +169,7 @@ CKFVec3 &CKFVec3::operator=(const CKFVec3 &vValue)
 //--------------------------------------------------------------------------------
 bool CKFVec3::operator==(const CKFVec3 &vValue) const
 {
-	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY && m_fZ == vValue.m_fZ)
-	{
-		return true;
-	}
-
+	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY && m_fZ == vValue.m_fZ) { return true; }
 	return false;
 }
 
@@ -193,11 +178,7 @@ bool CKFVec3::operator==(const CKFVec3 &vValue) const
 //--------------------------------------------------------------------------------
 bool CKFVec3::operator!=(const CKFVec3 &vValue) const
 {
-	if (m_fX != vValue.m_fX || m_fY != vValue.m_fY || m_fZ != vValue.m_fZ)
-	{
-		return true;
-	}
-
+	if (m_fX != vValue.m_fX || m_fY != vValue.m_fY || m_fZ != vValue.m_fZ) { return true; }
 	return false;
 }
 
@@ -207,11 +188,9 @@ bool CKFVec3::operator!=(const CKFVec3 &vValue) const
 CKFVec3 CKFVec3::operator+(const CKFVec3 &vValue) const
 {
 	CKFVec3 vAnswer;
-
 	vAnswer.m_fX = m_fX + vValue.m_fX;
 	vAnswer.m_fY = m_fY + vValue.m_fY;
 	vAnswer.m_fZ = m_fZ + vValue.m_fZ;
-
 	return vAnswer;
 }
 
@@ -231,11 +210,9 @@ void CKFVec3::operator+=(const CKFVec3 &vValue)
 CKFVec3 CKFVec3::operator-(const CKFVec3 &vValue) const
 {
 	CKFVec3 vAnswer;
-
 	vAnswer.m_fX = m_fX - vValue.m_fX;
 	vAnswer.m_fY = m_fY - vValue.m_fY;
 	vAnswer.m_fZ = m_fZ - vValue.m_fZ;
-
 	return vAnswer;
 }
 
@@ -255,11 +232,9 @@ void CKFVec3::operator-=(const CKFVec3 &vValue)
 CKFVec3 CKFVec3::operator*(const float &fValue) const
 {
 	CKFVec3 vAnswer;
-
 	vAnswer.m_fX = m_fX * fValue;
 	vAnswer.m_fY = m_fY * fValue;
 	vAnswer.m_fZ = m_fZ * fValue;
-
 	return vAnswer;
 }
 
@@ -279,11 +254,9 @@ void CKFVec3::operator*=(const float &fValue)
 CKFVec3 CKFVec3::operator*(const CKFVec3 &vValue) const
 {
 	CKFVec3 vAnswer;
-
 	vAnswer.m_fX = m_fY * vValue.m_fZ - vValue.m_fY * m_fZ;
 	vAnswer.m_fY = m_fZ * vValue.m_fX - vValue.m_fZ * m_fX;
 	vAnswer.m_fZ = m_fX * vValue.m_fY - vValue.m_fX * m_fY;
-
 	return vAnswer;
 }
 
@@ -293,7 +266,6 @@ CKFVec3 CKFVec3::operator*(const CKFVec3 &vValue) const
 void CKFVec3::operator*=(const CKFVec3 &vValue)
 {
 	CKFVec3 vThis = *this;
-
 	m_fX = vThis.m_fY * vValue.m_fZ - vValue.m_fY * vThis.m_fZ;
 	m_fY = vThis.m_fZ * vValue.m_fX - vValue.m_fZ * vThis.m_fX;
 	m_fZ = vThis.m_fX * vValue.m_fY - vValue.m_fX * vThis.m_fY;
@@ -305,14 +277,12 @@ void CKFVec3::operator*=(const CKFVec3 &vValue)
 CKFVec3 CKFVec3::operator/(const float &fValue) const
 {
 	CKFVec3 vAnswer = CKFVec3(0.0f);
-
 	if (fValue != 0.0f)
 	{
 		vAnswer.m_fX = m_fX / fValue;
 		vAnswer.m_fY = m_fY / fValue;
 		vAnswer.m_fZ = m_fZ / fValue;
 	}
-
 	return vAnswer;
 }
 
@@ -322,14 +292,12 @@ CKFVec3 CKFVec3::operator/(const float &fValue) const
 void CKFVec3::operator/=(const float &fValue)
 {
 	CKFVec3 vAnswer = CKFVec3(0.0f);
-
 	if (fValue != 0.0f)
 	{
 		vAnswer.m_fX = m_fX / fValue;
 		vAnswer.m_fY = m_fY / fValue;
 		vAnswer.m_fZ = m_fZ / fValue;
 	}
-
 	*this = vAnswer;
 }
 
@@ -627,6 +595,31 @@ void CKFQuaternion::operator/=(const float& fValue)
 }
 
 //--------------------------------------------------------------------------------
+//  operator*
+//--------------------------------------------------------------------------------
+CKFQuaternion CKFQuaternion::operator*(const CKFQuaternion& qValue) const
+{
+	CKFQuaternion qAnswer;
+	qAnswer.m_fX = (qValue.m_fW * this->m_fX) + (qValue.m_fX * this->m_fW) + (qValue.m_fY * this->m_fZ) - (qValue.m_fZ * this->m_fY);
+	qAnswer.m_fY = (qValue.m_fW * this->m_fY) - (qValue.m_fX * this->m_fZ) + (qValue.m_fY * this->m_fW) + (qValue.m_fZ * this->m_fX);
+	qAnswer.m_fZ = (qValue.m_fW * this->m_fZ) + (qValue.m_fX * this->m_fY) - (qValue.m_fY * this->m_fX) + (qValue.m_fZ * this->m_fW);
+	qAnswer.m_fW = (qValue.m_fW * this->m_fW) - (qValue.m_fX * this->m_fX) - (qValue.m_fY * this->m_fY) - (qValue.m_fZ * this->m_fZ);
+	return qAnswer;
+}
+
+//--------------------------------------------------------------------------------
+//  operator*=
+//--------------------------------------------------------------------------------
+void CKFQuaternion::operator*=(const CKFQuaternion& qValue)
+{
+	auto qCopy = *this;
+	this->m_fX = (qValue.m_fW * qCopy.m_fX) + (qValue.m_fX * qCopy.m_fW) + (qValue.m_fY * qCopy.m_fZ) - (qValue.m_fZ * qCopy.m_fY);
+	this->m_fY = (qValue.m_fW * qCopy.m_fY) - (qValue.m_fX * qCopy.m_fZ) + (qValue.m_fY * qCopy.m_fW) + (qValue.m_fZ * qCopy.m_fX);
+	this->m_fZ = (qValue.m_fW * qCopy.m_fZ) + (qValue.m_fX * qCopy.m_fY) - (qValue.m_fY * qCopy.m_fX) + (qValue.m_fZ * qCopy.m_fW);
+	this->m_fW = (qValue.m_fW * qCopy.m_fW) - (qValue.m_fX * qCopy.m_fX) - (qValue.m_fY * qCopy.m_fY) - (qValue.m_fZ * qCopy.m_fZ);
+}
+
+//--------------------------------------------------------------------------------
 //  CKFColor
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -647,11 +640,7 @@ CKFColor &CKFColor::operator=(const CKFColor &cValue)
 //--------------------------------------------------------------------------------
 bool CKFColor::operator==(const CKFColor &cValue)
 {
-	if (m_fR == cValue.m_fR && m_fG == cValue.m_fG && m_fB == cValue.m_fB && m_fA == cValue.m_fA)
-	{
-		return true;
-	}
-
+	if (m_fR == cValue.m_fR && m_fG == cValue.m_fG && m_fB == cValue.m_fB && m_fA == cValue.m_fA) { return true; }
 	return false;
 }
 
@@ -860,9 +849,7 @@ void CKFMath::VecNormalize(CKFVec3& vVec)
 {
 	float fMagnitude = VecMagnitude(vVec);
 	if (fMagnitude == 0.0f) { return; }
-	vVec.m_fX /= fMagnitude;
-	vVec.m_fY /= fMagnitude;
-	vVec.m_fZ /= fMagnitude;
+	vVec /= fMagnitude;
 }
 
 //--------------------------------------------------------------------------------
@@ -870,12 +857,13 @@ void CKFMath::VecNormalize(CKFVec3& vVec)
 //--------------------------------------------------------------------------------
 CKFVec3 CKFMath::VecNormalize(const CKFVec3& vVec)
 {
-	auto fMagnitude = VecMagnitude(vVec);
+	float fMagnitude = VecMagnitude(vVec);
 	if (fMagnitude == 0.0f) { return CKFVec3(0.0f); }
 	auto vAnswer = vVec;
 	vAnswer /= fMagnitude;
 	return vAnswer;
 }
+
 //--------------------------------------------------------------------------------
 //  乗算(Dot)(Vector2)
 //--------------------------------------------------------------------------------
@@ -1286,6 +1274,19 @@ float CKFMath::QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR)
 }
 
 //--------------------------------------------------------------------------------
+//	QuaternionMultiplyXYZW
+//	平行移動行列の作成
+//--------------------------------------------------------------------------------
+CKFQuaternion CKFMath::QuaternionMultiplyXYZW(const CKFQuaternion& qL, const CKFQuaternion& qR)
+{
+	return CKFQuaternion(
+		qL.m_fX * qR.m_fX,
+		qL.m_fY * qR.m_fY,
+		qL.m_fZ * qR.m_fZ,
+		qL.m_fW * qR.m_fW);
+}
+
+//--------------------------------------------------------------------------------
 //	MtxToQuaternion
 //	平行移動行列の作成
 //--------------------------------------------------------------------------------
@@ -1308,13 +1309,53 @@ CKFQuaternion CKFMath::EulerToQuaternion(const CKFVec3& vVec)
 CKFQuaternion CKFMath::MtxToQuaternion(const CKFMtx44& mtxRot)
 {
 	CKFQuaternion qValue;
-	D3DXMATRIX mtx = mtxRot;
-	D3DXQUATERNION qDx;
-	D3DXQuaternionRotationMatrix(&qDx, &mtx);
-	qValue.m_fX = qDx.x;
-	qValue.m_fY = qDx.y;
-	qValue.m_fZ = qDx.z;
-	qValue.m_fW = qDx.w;
+	float fR22 = mtxRot.m_af[2][2];
+	if (fR22 <= 0.0f)  // x^2 + y^2 >= z^2 + w^2
+	{
+		float fDiff10 = mtxRot.m_af[1][1] - mtxRot.m_af[0][0];
+		float fOmr22 = 1.0f - fR22;
+		if (fDiff10 <= 0.0f)  // x^2 >= y^2
+		{
+			float f4XSqr = fOmr22 - fDiff10;
+			float fInv4X = 0.5f / sqrtf(f4XSqr);
+			qValue.m_fX = f4XSqr * fInv4X;
+			qValue.m_fY = (mtxRot.m_af[0][1] + mtxRot.m_af[1][0]) * fInv4X;
+			qValue.m_fZ = (mtxRot.m_af[0][2] + mtxRot.m_af[2][0]) * fInv4X;
+			qValue.m_fW = (mtxRot.m_af[1][2] - mtxRot.m_af[2][1]) * fInv4X;
+		}
+		else  // y^2 >= x^2
+		{
+			float f4YSqr = fOmr22 + fDiff10;
+			float fInv4Y = 0.5f / sqrtf(f4YSqr);
+			qValue.m_fX = (mtxRot.m_af[0][1] + mtxRot.m_af[1][0]) * fInv4Y;
+			qValue.m_fY = f4YSqr * fInv4Y;
+			qValue.m_fZ = (mtxRot.m_af[1][2] + mtxRot.m_af[2][1]) * fInv4Y;
+			qValue.m_fW = (mtxRot.m_af[2][0] - mtxRot.m_af[0][2]) * fInv4Y;
+		}
+	}
+	else  // z^2 + w^2 >= x^2 + y^2
+	{
+		float fSum10 = mtxRot.m_af[1][1] + mtxRot.m_af[0][0];
+		float fOpr22 = 1.0f + fR22;
+		if (fSum10 <= 0.0f)  // z^2 >= w^2
+		{
+			float f4ZSqr = fOpr22 - fSum10;
+			float fInv4Z = 0.5f / sqrtf(f4ZSqr);
+			qValue.m_fX = (mtxRot.m_af[0][2] + mtxRot.m_af[2][0]) * fInv4Z;
+			qValue.m_fY = (mtxRot.m_af[1][2] + mtxRot.m_af[2][1]) * fInv4Z;
+			qValue.m_fZ = f4ZSqr * fInv4Z;
+			qValue.m_fW = (mtxRot.m_af[0][1] - mtxRot.m_af[1][0]) * fInv4Z;
+		}
+		else  // w^2 >= z^2
+		{
+			float f4WSqr = fOpr22 + fSum10;
+			float fInv4W = 0.5f / sqrtf(f4WSqr);
+			qValue.m_fX = (mtxRot.m_af[1][2] - mtxRot.m_af[2][1]) * fInv4W;
+			qValue.m_fY = (mtxRot.m_af[2][0] - mtxRot.m_af[0][2]) * fInv4W;
+			qValue.m_fZ = (mtxRot.m_af[0][1] - mtxRot.m_af[1][0]) * fInv4W;
+			qValue.m_fW = f4WSqr * fInv4W;
+		}
+	}
 	return qValue;
 }
 
@@ -1325,27 +1366,42 @@ CKFQuaternion CKFMath::MtxToQuaternion(const CKFMtx44& mtxRot)
 CKFMtx44 CKFMath::QuaternionToMtx(const CKFQuaternion& qValue)
 {
 	CKFMtx44 mtx;
-	//mtx.m_af[0][0] = 1.0f - (2.0f * qValue.m_fY * qValue.m_fY + 2.0f * qValue.m_fX * qValue.m_fX);
-	//mtx.m_af[0][1] = 2.0f * qValue.m_fX * qValue.m_fY + 2.0f * qValue.m_fZ * qValue.m_fW;
-	//mtx.m_af[0][2] = 2.0f * qValue.m_fX * qValue.m_fZ - 2.0f * qValue.m_fY * qValue.m_fW;
-	//mtx.m_af[0][3] = 0.0f;
-	//mtx.m_af[1][0] = 2.0f * qValue.m_fX * qValue.m_fY - 2.0f * qValue.m_fZ * qValue.m_fW;
-	//mtx.m_af[1][1] = 1.0f - (2.0f * qValue.m_fX * qValue.m_fX + 2.0f * qValue.m_fZ * qValue.m_fZ);
-	//mtx.m_af[1][2] = 2.0f * qValue.m_fY * qValue.m_fZ + 2.0f * qValue.m_fX * qValue.m_fW;
-	//mtx.m_af[1][3] = 0.0f;
-	//mtx.m_af[2][0] = 2.0f * qValue.m_fX * qValue.m_fZ + 2.0f * qValue.m_fY * qValue.m_fW;
-	//mtx.m_af[2][1] = 2.0f * qValue.m_fY * qValue.m_fZ - 2.0f * qValue.m_fX * qValue.m_fW;
-	//mtx.m_af[2][2] = 1.0f - (2.0f * qValue.m_fX * qValue.m_fX + 2.0f * qValue.m_fY * qValue.m_fY);
-	//mtx.m_af[2][3] = 0.0f;
-	//mtx.m_af[3][0] = 0.0f;
-	//mtx.m_af[3][1] = 0.0f;
-	//mtx.m_af[3][2] = 0.0f;
-	//mtx.m_af[3][3] = 1.0f;
 
-	D3DXMATRIX mtxOut;
-	D3DXQUATERNION qQ = qValue;
-	D3DXMatrixRotationQuaternion(&mtxOut, &qQ);
-	mtx = CKFMath::ChangeDXMtxToMtx44(mtxOut);
+	static const auto qAnt1110 = CKFQuaternion(1.0f, 1.0f, 1.0f, 0.0f);
+	auto q0 = qValue + qValue;
+	auto q1 = QuaternionMultiplyXYZW(qValue, q0);
+	auto q3 = CKFQuaternion(q1.m_fY, q1.m_fX, q1.m_fX, qAnt1110.m_fW);
+	auto q4 = CKFQuaternion(q1.m_fZ, q1.m_fZ, q1.m_fY, qAnt1110.m_fW);
+	auto qR0 = qAnt1110 - q3;
+	qR0 -= q4;
+	q3 = CKFQuaternion(qValue.m_fX, qValue.m_fX, qValue.m_fY, qValue.m_fW);
+	q4 = CKFQuaternion(q0.m_fZ, q0.m_fY, q0.m_fZ, q0.m_fW);
+	q3 = QuaternionMultiplyXYZW(q3, q4);
+	q4 = CKFQuaternion(qValue.m_fW, qValue.m_fW, qValue.m_fW, qValue.m_fW);
+	auto q5 = CKFQuaternion(q0.m_fY, q0.m_fZ, q0.m_fX, q0.m_fW);
+	q4 = QuaternionMultiplyXYZW(q4, q5);
+	auto qR1 = q3 + q4;
+	auto qR2 = q3 - q4;
+	q3 = CKFQuaternion(qR1.m_fY, qR2.m_fX, qR2.m_fY, qR1.m_fZ);
+	q4 = CKFQuaternion(qR1.m_fX, qR2.m_fZ, qR1.m_fX, qR2.m_fZ);
+
+	mtx.m_af[0][0] = qR0.m_fX;
+	mtx.m_af[0][1] = q3.m_fX;
+	mtx.m_af[0][2] = q3.m_fY;
+	mtx.m_af[0][3] = qR0.m_fW;
+	mtx.m_af[1][0] = q3.m_fZ;
+	mtx.m_af[1][1] = qR0.m_fY;
+	mtx.m_af[1][2] = q3.m_fW;
+	mtx.m_af[1][3] = qR0.m_fW;
+	mtx.m_af[2][0] = q4.m_fX;
+	mtx.m_af[2][1] = q4.m_fY;
+	mtx.m_af[2][2] = qR0.m_fZ;
+	mtx.m_af[2][3] = qR0.m_fW;
+	mtx.m_af[3][0] = 0.0f;
+	mtx.m_af[3][1] = 0.0f;
+	mtx.m_af[3][2] = 0.0f;
+	mtx.m_af[3][3] = 1.0f;
+	
 	return mtx;
 }
 

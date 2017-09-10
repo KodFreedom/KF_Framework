@@ -1,13 +1,15 @@
 //--------------------------------------------------------------------------------
 //
-//　Model.cpp
+//　rendererDX.cpp
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
+//--------------------------------------------------------------------------------
+//  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+
+#ifdef USING_DIRECTX
 #include "rendererDX.h"
 
 #ifdef _DEBUG
@@ -19,28 +21,25 @@
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
-//---------------------------------------
+//--------------------------------------------------------------------------------
 CRendererDX::CRendererDX()
-	: m_pD3D(NULL)
-	, m_pD3DDevice(NULL)
-#ifdef _DEBUG
-	, m_pFont(NULL)
-#endif
+	: m_pD3D(nullptr)
+	, m_pD3DDevice(nullptr)
 {
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  デストラクタ
-//---------------------------------------
+//--------------------------------------------------------------------------------
 CRendererDX::~CRendererDX()
 {
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  初期化
-//---------------------------------------
+//--------------------------------------------------------------------------------
 bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 {
 	D3DPRESENT_PARAMETERS d3dpp;
@@ -140,25 +139,14 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);		// ２番目のアルファ引数(初期値はD3DTA_CURRENT)
 
-#ifdef _DEBUG
-	// デバッグ情報表示用フォントの生成
-	D3DXCreateFont(m_pD3DDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
-#endif
-
 	return true;
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  終了処理
-//---------------------------------------
+//--------------------------------------------------------------------------------
 void CRendererDX::Release(void)
 {
-#ifdef _DEBUG
-	// デバッグ情報表示用フォントの破棄
-	SAFE_RELEASE(m_pFont);
-#endif
-
 	// デバイスの破棄
 	SAFE_RELEASE(m_pD3DDevice);
 
@@ -168,15 +156,15 @@ void CRendererDX::Release(void)
 	delete this;
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  更新処理
-//---------------------------------------
+//--------------------------------------------------------------------------------
 void CRendererDX::Update(void)
 {
 #ifdef _DEBUG
 	CKeyboardDX *pKeyboard = CMain::GetManager()->GetInputManager()->GetKeyboard();
 	
-	if (pKeyboard->GetKeyPress(DIK_Q))
+	if (pKeyboard->GetKeyPress(DIK_F8))
 	{
 		SetRenderMode(RM_WIREFRAME);
 	}
@@ -188,32 +176,25 @@ void CRendererDX::Update(void)
 #endif
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  描画開始
-//---------------------------------------
+//--------------------------------------------------------------------------------
 bool CRendererDX::BeginDraw(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
 	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(128, 0, 128, 255), 1.0f, 0);
 
 	// Direct3Dによる描画の開始
-	HRESULT hr = m_pD3DDevice->BeginScene();
-
-	if (FAILED(hr)) { return false; }
+	if (FAILED(m_pD3DDevice->BeginScene())) { return false; }
 
 	return true;
 }
 
-//---------------------------------------
+//--------------------------------------------------------------------------------
 //  描画終了
-//---------------------------------------
+//--------------------------------------------------------------------------------
 void CRendererDX::EndDraw(void)
 {
-#ifdef _DEBUG
-	// FPS表示
-	DrawFPS();
-#endif
-
 	// Direct3Dによる描画の終了
 	m_pD3DDevice->EndScene();
 
@@ -221,17 +202,9 @@ void CRendererDX::EndDraw(void)
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 
-//---------------------------------------
-// Device取得
-//---------------------------------------
-LPDIRECT3DDEVICE9 CRendererDX::GetDevice(void)
-{
-	return m_pD3DDevice;
-}
-
-//---------------------------------------
+//--------------------------------------------------------------------------------
 // レンダーモード設定
-//---------------------------------------
+//--------------------------------------------------------------------------------
 void CRendererDX::SetRenderMode(const RENDER_MODE &rm)
 {
 	switch (rm)
@@ -249,20 +222,4 @@ void CRendererDX::SetRenderMode(const RENDER_MODE &rm)
 	}
 }
 
-#ifdef _DEBUG
-//---------------------------------------
-// FPS表示
-//---------------------------------------
-void CRendererDX::DrawFPS(void)
-{
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-	char str[256];
-	int nCountFPS = CMain::GetCountFPS();
-
-	wsprintf(str, "FPS:%d\n", nCountFPS);
-
-	// テキスト描画
-	m_pFont->DrawText(NULL, str, -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
-}
 #endif
-

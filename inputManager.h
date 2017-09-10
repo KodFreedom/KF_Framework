@@ -20,7 +20,7 @@ class CInputManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  定数定義
+	//  列挙型定義
 	//--------------------------------------------------------------------------------
 	enum KEY
 	{
@@ -58,10 +58,14 @@ public:
 	~CInputManager();
 
 	bool			Init(HINSTANCE hInst, HWND hWnd);
-	void			Uninit(void);
+	void			Release(void)
+	{
+		uninit();
+		delete this;
+	}
 	void			Update(void);
 
-	//
+	//使用権の確保、解放
 	void			Acquire(void);
 	void			Unacquire(void);
 
@@ -85,7 +89,8 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void			UpdateInputInfo(void);
+	void			updateInputInfo(void);
+	void			uninit(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

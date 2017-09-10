@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObject.h"
+#include "KF_PhysicsSystem.h"
 #include "3DRigidbodyComponent.h"
 #include "colliderComponent.h"
 #include "sphereColliderComponent.h"
@@ -29,16 +30,15 @@ C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
 	: CRigidbodyComponent(pGameObj, RB_3D)
 	, m_fMass(1.0f)
 	, m_fInverseMass(1.0f)
-	, m_fDrag(0.95f)
+	, m_fDrag(0.98f)
 	//, m_fAngularDrag(0.95f)
 	, m_fFriction(1.0f)
 	, m_fBounciness(0.0f)
-	, m_vGravity(CKFVec3(0.0f, -0.98f, 0.0f))
+	, m_fGravityCoefficient(3.0f)
 	, m_vMovement(CKFVec3(0.0f))
 	, m_vVelocity(CKFVec3(0.0f))
 	, m_vAcceleration(CKFVec3(0.0f))
 	, m_vForceAccum(CKFVec3(0.0f))
-	//, m_bOnGround(false)
 	//, m_bRotLock(0)
 {
 }
@@ -60,14 +60,11 @@ void C3DRigidbodyComponent::Update(void)
 {
 	auto pTrans = m_pGameObj->GetTransformComponent();
 
-	//加速度
-	m_vAcceleration = m_vMovement;
-
-	//重力
-	m_vForceAccum += m_vGravity * m_fMass * DELTA_TIME;
+	//重力加速度
+	m_vAcceleration += CKFPhysicsSystem::sc_vGravity * m_fGravityCoefficient;
 
 	//力から加速度を計算する
-	CKFVec3 vAcceleration = m_vForceAccum * m_fInverseMass;
+	m_vAcceleration += m_vForceAccum * m_fInverseMass;
 	
 	//回転力から回転加速度を計算する
 	//CKFMtx44 mtxIitWorld;
@@ -75,19 +72,19 @@ void C3DRigidbodyComponent::Update(void)
 	//CKFVec3 vAngularAcceleration = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
 
 	//速度
-	m_vVelocity += vAcceleration;
+	m_vVelocity += m_vAcceleration * DELTA_TIME;
 	//m_vAngularVelocity   += vAngularAcceleration;
 
 	//位置更新
-	pTrans->MovePosNext(m_vVelocity);
+	pTrans->MovePosNext(m_vVelocity * DELTA_TIME);
 	pTrans->MovePosNext(m_vMovement);
 
 	//回転更新
 	//pTrans->RotByEuler(m_vAngularVelocity);
 
 	//処理完了
-	
 	m_vForceAccum = CKFVec3(0.0f);
+	m_vAcceleration = CKFVec3(0.0f);
 	//m_vTorqueAccum = CKFVec3(0.0f);
 	m_vVelocity *= m_fDrag;
 	//m_vAngularVelocity *= m_fAngularDrag;
@@ -104,7 +101,6 @@ void C3DRigidbodyComponent::LateUpdate(void)
 
 	//処理完了
 	m_vMovement = CKFVec3(0.0f);
-	m_vAcceleration = CKFVec3(0.0f);
 }
 
 //--------------------------------------------------------------------------------

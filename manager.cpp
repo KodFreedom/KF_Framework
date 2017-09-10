@@ -19,11 +19,19 @@
 #include "UISystem.h"
 #include "rendererDX.h"
 #include "mode.h"
+#include "modeTitle.h"
 #include "modeDemo.h"
 #include "modeEditor.h"
 #include "fade.h"
+
+//物理演算処理
 #include "KF_CollisionSystem.h"
 #include "KF_PhysicsSystem.h"
+
+//Debug処理
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
@@ -49,6 +57,9 @@ CManager::CManager()
 	, m_pFade(nullptr)
 	, m_pCollisionSystem(nullptr)
 	, m_pPhysicsSystem(nullptr)
+#ifdef _DEBUG
+	, m_pDebugManager(nullptr)
+#endif
 {
 }
 
@@ -57,7 +68,10 @@ CManager::CManager()
 //--------------------------------------------------------------------------------
 bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 {
-	HRESULT hr;
+	HRESULT hr = E_FAIL;
+
+	//ランダム
+	CKFMath::InitRandom();
 
 	//レンダラーの生成
 	m_pRenderer = new CRendererDX;
@@ -69,27 +83,32 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return false;
 	}
 
-	//ランダム
-	CKFMath::InitRandom();
+#ifdef _DEBUG
+	//Debugマネージャの生成
+	m_pDebugManager = CDebugManager::Create();
+#endif
 
 	//入力の生成
 	m_pInputManager = new CInputManager;
-	m_pInputManager->Init(hInstance, hWnd);
+	if (!m_pInputManager->Init(hInstance, hWnd))
+	{
+		MessageBox(NULL, "m_pInputManager->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		return false;
+	}
 
 	//メッシュマネージャの生成
 	m_pMeshManager = new CMeshManager;
-
-	//モデルマネージャの生成
-	//m_pModelManager = new CModelManager;
-	//m_pModelManager->Init();
-	//m_pModelManager->LoadAll();
 
 	//テクスチャマネージャの生成
 	m_pTextureManager = new CTextureManager;
 
 	//ライトマネージャの生成
 	m_pLightManager = new CLightManager;
-	m_pLightManager->Init();
+	if (!m_pLightManager->Init())
+	{
+		MessageBox(NULL, "m_pLightManager->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		return false;
+	}
 
 	//マテリアルマネージャの生成
 	m_pMaterialManager = new CMaterialManager;
@@ -101,11 +120,14 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//物理演算システム
 	m_pPhysicsSystem = new CKFPhysicsSystem;
-	m_pPhysicsSystem->Init();
+	if (!m_pPhysicsSystem->Init())
+	{
+		MessageBox(NULL, "m_pPhysicsSystem->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		return false;
+	}
 
 	//ゲームオブジェクトマネージャの生成
-	m_pGameObjectManager = new CGameObjectManager;
-	m_pGameObjectManager->Init();
+	m_pGameObjectManager = CGameObjectManager::Create();
 
 	//UIシステムの生成
 	m_pUISystem = new CUISystem;
@@ -143,12 +165,7 @@ void CManager::Uninit(void)
 	}
 
 	//ゲームオブジェクトマネージャの破棄
-	if (m_pGameObjectManager)
-	{
-		m_pGameObjectManager->Uninit();
-		delete m_pGameObjectManager;
-		m_pGameObjectManager = nullptr;
-	}
+	SAFE_RELEASE(m_pGameObjectManager);
 
 	//UIシステムの破棄
 	SAFE_RELEASE(m_pUISystem);
@@ -181,12 +198,12 @@ void CManager::Uninit(void)
 	SAFE_RELEASE(m_pMeshManager);
 
 	//入力マネージャの破棄
-	if (m_pInputManager)
-	{
-		m_pInputManager->Uninit();
-		delete m_pInputManager;
-		m_pInputManager = nullptr;
-	}
+	SAFE_RELEASE(m_pInputManager);
+
+#ifdef _DEBUG
+	//Debugマネージャの破棄
+	SAFE_RELEASE(m_pDebugManager);
+#endif
 
 	//レンダラーの破棄
 	SAFE_RELEASE(m_pRenderer);
@@ -229,6 +246,11 @@ void CManager::LateUpdate(void)
 
 	//Fade更新
 	m_pFade->Update();
+
+#ifdef _DEBUG
+	//Debugマネージャの更新
+	m_pDebugManager->Update();
+#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -236,24 +258,26 @@ void CManager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CManager::Draw(void)
 {
-	if (m_pRenderer)
+	if (m_pRenderer->BeginDraw())
 	{
-		if (m_pRenderer->BeginDraw() == true)
-		{
-			//モード描画
-			m_pMode->Draw();
+		//モード描画
+		m_pMode->Draw();
 
 #ifdef _DEBUG
-			m_pCollisionSystem->DrawCollider();
+		m_pCollisionSystem->DrawCollider();
 #endif
-			//UI描画
-			m_pUISystem->DrawAll();
+		//UI描画
+		m_pUISystem->DrawAll();
 
-			//Fade描画
-			m_pFade->Draw();
+		//Fade描画
+		m_pFade->Draw();
 
-			m_pRenderer->EndDraw();
-		}
+#ifdef _DEBUG
+		//Debug表示
+		m_pDebugManager->Draw();
+#endif
+
+		m_pRenderer->EndDraw();
 	}
 }
 

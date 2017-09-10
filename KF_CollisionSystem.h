@@ -132,6 +132,11 @@ private:
 	void	checkWithField(CBoxColliderComponent& box);
 	bool	checkWithField(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut);
 
+#ifdef _DEBUG
+	string toString(const COL_MODE& mode);
+	string toString(const COL_TYPE& type);
+#endif
+
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------

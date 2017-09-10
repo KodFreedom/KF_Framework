@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-26
 //--------------------------------------------------------------------------------
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -21,10 +20,14 @@
 #include <algorithm>
 #include <sstream>
 using namespace std;
-//Include STL
 
+//OpenMP
+#include <omp.h>
+
+//数学処理
 #include "KF_Math.h"
 
+//DirectX系
 #ifdef USING_DIRECTX
 #include <d3dx9.h>
 #define DIRECTINPUT_VERSION (0x0800)
@@ -50,16 +53,16 @@ using namespace std;
 #define SAFE_RELEASE(p)		if(p){ p->Release(); p=nullptr; }	//safe release mode
 #define SCREEN_WIDTH		(1280)								//ウインドウ幅
 #define SCREEN_HEIGHT		(720)								//ウインドウ高さ
-#define FRAME_PER_SECOND	(60)
+#define FRAME_PER_SECOND	(60)								
 #define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)		//更新間隔
 #define DELTA_TIME			(TIMER_INTERVAL * 0.001f)			//更新間隔(秒単位)
 #define CLASS_NAME			"KF_Framework"						//クラスの名前
-#define WINDOW_NAME			"フレームワーク"
+#define WINDOW_NAME			"フレームワーク"					//ウインドウの名前
 
 #ifdef USING_DIRECTX
 #define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット
 #define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 )	//3D頂点フォーマット
-#endif											//ウインドウの名前
+#endif											
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -98,11 +101,6 @@ public:
 
 	//Get関数
 	static CManager*		GetManager(void) { return m_pManager; }
-
-#ifdef _DEBUG
-	static int				GetCountFPS(void) { return m_nCntFPS; }
-#endif
-
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
@@ -119,8 +117,6 @@ private:
 	static CManager*		m_pManager;
 
 #ifdef _DEBUG
-	static int				m_nCntFPS;		//FPSカウンタ
+	static unsigned int		m_unFPS;		//FPSカウンタ
 #endif
 };
-
-#endif

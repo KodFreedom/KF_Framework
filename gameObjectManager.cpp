@@ -8,7 +8,6 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "gameObjectManager.h"
 
 //gameObject head files
@@ -19,29 +18,16 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CGameObjectManager::CGameObjectManager()
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
-	{
-		m_alistGameObj[nCntPri].clear();
-	}
-}
-
-//--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-void CGameObjectManager::Init(void)
-{
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CGameObjectManager::Uninit(void)
-{
-	ReleaseAll();
+	for (auto& list : m_alistGameObj){ list.clear(); }
 }
 
 //--------------------------------------------------------------------------------
@@ -49,24 +35,14 @@ void CGameObjectManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::ReleaseAll(void)
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
+	for (auto& list : m_alistGameObj)
 	{
-		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end();)
+		for (auto itr = list.begin(); itr != list.end();)
 		{
 			(*itr)->Uninit();
 			delete (*itr);
-			itr = m_alistGameObj[nCntPri].erase(itr);
+			itr = list.erase(itr);
 		}
-		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
-		//{
-		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
-		//	{
-		//		m_alistGameObj[nCntPri][nCnt]->Uninit();
-		//		delete m_alistGameObj[nCntPri][nCnt];
-		//		m_alistGameObj[nCntPri][nCnt] = NULL;
-		//	}
-		//}
-		//m_alistGameObj[nCntPri].clear();
 	}
 }
 
@@ -75,19 +51,26 @@ void CGameObjectManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::UpdateAll(void)
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
+	for (auto& list : m_alistGameObj)
 	{
-		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
-		{
-			(*itr)->Update();
+		for (auto itr = list.begin(); itr != list.end();)
+		{//生きてないオブジェクトを削除
+			if (!(*itr)->m_bAlive)
+			{
+				(*itr)->Uninit();
+				delete (*itr);
+				itr = list.erase(itr);
+			}
+			else { ++itr; }
 		}
-		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
-		//{
-		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
-		//	{
-		//		m_alistGameObj[nCntPri][nCnt]->Update();
-		//	}
-		//}
+	}
+
+	for (auto& list : m_alistGameObj)
+	{
+		for (auto pObj : list)
+		{
+			pObj->Update();
+		}
 	}
 }
 
@@ -96,44 +79,12 @@ void CGameObjectManager::UpdateAll(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::LateUpdateAll(void)
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
+	for (auto& list : m_alistGameObj)
 	{
-		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
+		for (auto pObj : list)
 		{
-			(*itr)->LateUpdate();
+			pObj->LateUpdate();
 		}
-		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
-		//{
-		//	if (m_alistGameObj[nCntPri][nCnt] != NULL)
-		//	{
-		//		m_alistGameObj[nCntPri][nCnt]->LateUpdate();
-		//	}
-		//}
-	}
-
-
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
-	{
-		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end();)
-		{
-			if (!(*itr)->m_bAlive)
-			{//生きてないオブジェクトを削除
-				(*itr)->Uninit();
-				delete (*itr);
-				itr = m_alistGameObj[nCntPri].erase(itr);
-			}
-			else
-			{
-				++itr;
-			}
-		}
-		//for (int nCnt = 0; nCnt < (int)m_alistGameObj[nCntPri].size(); nCnt++)
-		//{
-		//	if (m_alistGameObj[nCntPri][nCnt] && !m_alistGameObj[nCntPri][nCnt]->m_bAlive)
-		//	{
-		//		ReleaseGameObj((PRIORITY)nCntPri, m_alistGameObj[nCntPri][nCnt]);
-		//	}
-		//}
 	}
 }
 
@@ -142,11 +93,11 @@ void CGameObjectManager::LateUpdateAll(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::DrawAll(void)
 {
-	for (int nCntPri = 0; nCntPri < PRI_MAX; nCntPri++)
+	for (auto& list : m_alistGameObj)
 	{
-		for (auto itr = m_alistGameObj[nCntPri].begin(); itr != m_alistGameObj[nCntPri].end(); ++itr)
+		for (auto pObj : list)
 		{
-			(*itr)->Draw();
+			pObj->Draw();
 		}
 	}
 }
@@ -156,16 +107,6 @@ void CGameObjectManager::DrawAll(void)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
-	////配列の間に空きがある場合
-	//for (int nCnt = 0; nCnt < (int)m_alistGameObj[pri].size(); nCnt++)
-	//{
-	//	if (m_alistGameObj[pri][nCnt] == NULL)
-	//	{
-	//		m_alistGameObj[pri][nCnt] = pGameObj;
-	//		return;
-	//	}
-	//}
-	////配列の間に空きがない場合
 	m_alistGameObj[pri].push_back(pGameObj);
 }
 
@@ -174,19 +115,29 @@ void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 //--------------------------------------------------------------------------------
 void CGameObjectManager::ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
+	if (!pGameObj) { return; }
 	PRIORITY priCopy = pri;
 	pGameObj->Uninit();
 	delete pGameObj;
 	m_alistGameObj[priCopy].remove(pGameObj);
+}
 
-	//for (int nCnt = 0; nCnt < (int)m_alistGameObj[priCopy].size(); nCnt++)
-	//{
-	//	if (m_alistGameObj[priCopy][nCnt] == pGameObj)
-	//	{
-	//		m_alistGameObj[priCopy][nCnt]->Uninit();
-	//		delete m_alistGameObj[priCopy][nCnt];
-	//		m_alistGameObj[priCopy][nCnt] = NULL;
-	//		return;
-	//	}
-	//}
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  初期化処理
+//--------------------------------------------------------------------------------
+void CGameObjectManager::init(void)
+{
+}
+
+//--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void CGameObjectManager::uninit(void)
+{
+	ReleaseAll();
 }

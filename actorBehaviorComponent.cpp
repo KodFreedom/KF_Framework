@@ -34,6 +34,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_pAnimator(pAnimator)
 	, m_nLevel(0)
 	, m_nCntFalling(0)
+	, m_nCntInvincible(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
 	, m_fAttack(0.0f)

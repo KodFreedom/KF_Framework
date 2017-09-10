@@ -8,13 +8,17 @@
 #include "manager.h"
 #include "inputManager.h"
 
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif
+
 //--------------------------------------------------------------------------------
 //  静的メンバ変数宣言
 //--------------------------------------------------------------------------------
 CManager*	CMain::m_pManager = nullptr;
 
 #ifdef _DEBUG
-int			CMain::m_nCntFPS = 0;
+unsigned int	CMain::m_unFPS = 0;
 #endif
 
 //--------------------------------------------------------------------------------
@@ -102,7 +106,9 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 	};
 
 	//FPS
-	DWORD dwFrameCount;
+#ifdef _DEBUG
+	unsigned int unFrameCount = 0;
+#endif
 	DWORD dwCurrentTime;//現時間
 	DWORD dwExecLastTime;//実行終了時時間
 	DWORD dwFPSLastTime;
@@ -112,7 +118,6 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 
 	//各カウンター初期化
 	dwCurrentTime = 0;
-	dwFrameCount = 0;
 	dwExecLastTime =
 		dwFPSLastTime = timeGetTime();//システム時刻をミリ秒単位で取得
 
@@ -139,7 +144,7 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 		else
 		{
 			dwCurrentTime = timeGetTime();
-
+			
 			if ((dwCurrentTime - dwExecLastTime) >= TIMER_INTERVAL)
 			{
 				dwExecLastTime = dwCurrentTime;//処理した時間
@@ -147,10 +152,14 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 #ifdef _DEBUG
 				if ((dwCurrentTime - dwFPSLastTime) >= 500)//0.5秒ごとに実行
 				{
-					m_nCntFPS = (dwFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
+					m_unFPS = (unFrameCount * 1000) / (dwCurrentTime - dwFPSLastTime);
 					dwFPSLastTime = dwCurrentTime;
-					dwFrameCount = 0;
+					unFrameCount = 0;
 				}
+
+				//Debug表示
+				m_pManager->GetDebugManager()->DisplayAlways("FPS : " + to_string(m_unFPS) + '\n');
+				unFrameCount++;
 #endif//_DEBUG
 
 				// 更新処理
@@ -159,8 +168,6 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 
 				// 描画処理
 				m_pManager->Draw();
-
-				dwFrameCount++;
 			}
 		}
 	}
@@ -170,7 +177,7 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 	{
 		m_pManager->Uninit();
 		delete m_pManager;
-		m_pManager = NULL;
+		m_pManager = nullptr;
 	}
 
 	//ウインドウクラスの登録お解除

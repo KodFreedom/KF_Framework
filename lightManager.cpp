@@ -110,10 +110,11 @@ CLightManager::~CLightManager()
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
 //--------------------------------------------------------------------------------
-void CLightManager::Init(void)
+bool CLightManager::Init(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	return true;
 }
 
 //--------------------------------------------------------------------------------

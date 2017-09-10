@@ -25,6 +25,7 @@
 #ifdef _DEBUG
 #include "rendererDX.h"
 #include "textureManager.h"
+#include "debugManager.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -44,11 +45,11 @@ CKFCollisionSystem::CKFCollisionSystem()
 	, m_pMeshCube(nullptr)
 #endif
 {
-	for (int nCntMode = 0; nCntMode < MODE_MAX; nCntMode++)
+	for (auto& aList : m_alistCollider)
 	{
-		for (int nCntType = 0; nCntType < COL_MAX; nCntType++)
+		for (auto& list : aList)
 		{
-			m_alistCollider[nCntMode][nCntType].clear();
+			list.clear();
 		}
 	}
 
@@ -61,7 +62,7 @@ CKFCollisionSystem::CKFCollisionSystem()
 void CKFCollisionSystem::Init(void)
 {
 #ifdef _DEBUG
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.png");
 	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
 	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
@@ -73,11 +74,11 @@ void CKFCollisionSystem::Init(void)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::Uninit(void)
 {
-	for (int nCntMode = 0; nCntMode < MODE_MAX; nCntMode++)
+	for (auto& aList : m_alistCollider)
 	{
-		for (int nCntType = 0; nCntType < COL_MAX; nCntType++)
+		for (auto& list : aList)
 		{
-			m_alistCollider[nCntMode][nCntType].clear();
+			list.clear();
 		}
 	}
 
@@ -103,18 +104,23 @@ void CKFCollisionSystem::Update(void)
 	{
 		auto pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
 
-		//Dynamic
-		checkWithDynamicSphere(itr, *pSphere);
-		checkWithDynamicAABB(*pSphere);
-		checkWithDynamicOBB(*pSphere);
-
-		//Static
-		//checkWithStaticSphere(*pSphere);
-		//checkWithStaticAABB(*pSphere);
-		//checkWithStaticOBB(*pSphere);
-
-		//Field
-		//checkWithField(*pSphere);
+#pragma omp parallel sections
+		{
+#pragma omp section 
+			checkWithDynamicSphere(itr, *pSphere); 
+#pragma omp section 
+			checkWithDynamicAABB(*pSphere); 
+#pragma omp section 
+			checkWithDynamicOBB(*pSphere);
+#pragma omp section 
+			checkWithStaticSphere(*pSphere);
+#pragma omp section 
+			checkWithStaticAABB(*pSphere);
+#pragma omp section
+			checkWithStaticOBB(*pSphere);
+#pragma omp section
+			checkWithField(*pSphere);
+		}
 	}
 
 	//aabb
@@ -122,17 +128,21 @@ void CKFCollisionSystem::Update(void)
 	{
 		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
 
-		//Dynamic
-		checkWithDynamicAABB(itr, *pAABB);
-		checkWithDynamicOBB(*pAABB);
-
-		//Static
-		checkWithStaticSphere(*pAABB);
-		checkWithStaticAABB(*pAABB);
-		checkWithStaticOBB(*pAABB);
-
-		//Field
-		checkWithField(*pAABB);
+#pragma omp parallel sections
+		{
+#pragma omp section 
+			checkWithDynamicAABB(itr, *pAABB);
+#pragma omp section 
+			checkWithDynamicOBB(*pAABB);
+#pragma omp section 
+			checkWithStaticSphere(*pAABB);
+#pragma omp section 
+			checkWithStaticAABB(*pAABB);
+#pragma omp section 
+			checkWithStaticOBB(*pAABB);
+#pragma omp section
+			checkWithField(*pAABB);
+		}
 	}
 
 	//obb
@@ -140,16 +150,19 @@ void CKFCollisionSystem::Update(void)
 	{
 		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
 
-		//Dynamic
-		checkWithDynamicOBB(itr, *pOBB);
-
-		//Static
-		checkWithStaticSphere(*pOBB);
-		checkWithStaticAABB(*pOBB);
-		checkWithStaticOBB(*pOBB);
-
-		//Field
-		checkWithField(*pOBB);
+#pragma omp parallel sections
+		{
+#pragma omp section 
+			checkWithDynamicOBB(itr, *pOBB);
+#pragma omp section 
+			checkWithStaticSphere(*pOBB);
+#pragma omp section 
+			checkWithStaticAABB(*pOBB);
+#pragma omp section 
+			checkWithStaticOBB(*pOBB);
+#pragma omp section 
+			checkWithField(*pOBB);
+		}
 	}
 }
 
@@ -158,6 +171,23 @@ void CKFCollisionSystem::Update(void)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::LateUpdate(void)
 {
+#ifdef _DEBUG
+	auto pDebug = CMain::GetManager()->GetDebugManager();
+	pDebug->DisplayAlways("Collider情報 : \n");
+	for (int nCntMode = 0; nCntMode < MODE_MAX; ++nCntMode)
+	{
+		pDebug->DisplayAlways(toString((COL_MODE)nCntMode) + " : ");
+		for (int nCntType = 0; nCntType < COL_MAX; ++nCntType)
+		{
+			int nNumCol = (int)m_alistCollider[nCntMode][nCntType].size();
+			pDebug->DisplayAlways(
+				toString((COL_TYPE)nCntType) +
+				"-" +
+				to_string(nNumCol) + "    ");
+		}
+		pDebug->DisplayAlways('\n');
+	}
+#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -218,52 +248,68 @@ bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirecti
 	CKFRay ray = CKFRay(vOrigin, vDirection);
 	bool bFind = false;
 	CRaycastHitInfo info;
-
-	//AABB
-	if (checkWithDynamicAABB(ray, fDistance, info, pObjThis))
+	
+#pragma omp parallel sections
 	{
-		bFind = true;
-		infoOut = info;
-	}
-
-	//OBB
-	if (checkWithDynamicOBB(ray, fDistance, info, pObjThis))
-	{
-		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+#pragma omp section
 		{
-			infoOut = info;
+			if (checkWithDynamicAABB(ray, fDistance, info, pObjThis))
+			{
+				if (bFind && info.m_fDistance < infoOut.m_fDistance)
+				{
+					infoOut = info;
+				}
+				bFind = true;
+			}
 		}
-		bFind = true;
-	}
 
-	//AABB
-	if (checkWithStaticAABB(ray, fDistance, info))
-	{
-		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+#pragma omp section
 		{
-			infoOut = info;
+			if (checkWithDynamicOBB(ray, fDistance, info, pObjThis))
+			{
+				if (bFind && info.m_fDistance < infoOut.m_fDistance)
+				{
+					infoOut = info;
+				}
+				bFind = true;
+			}
 		}
-		bFind = true;
-	}
 
-	//OBB
-	if (checkWithStaticOBB(ray, fDistance, info))
-	{
-		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+#pragma omp section
 		{
-			infoOut = info;
+			if (checkWithStaticAABB(ray, fDistance, info))
+			{
+				if (bFind && info.m_fDistance < infoOut.m_fDistance)
+				{
+					infoOut = info;
+				}
+				bFind = true;
+			}
 		}
-		bFind = true;
-	}
 
-	//Field
-	if (checkWithField(ray, fDistance, info))
-	{
-		if (bFind && info.m_fDistance < infoOut.m_fDistance)
+#pragma omp section
 		{
-			infoOut = info;
+			if (checkWithStaticOBB(ray, fDistance, info))
+			{
+				if (bFind && info.m_fDistance < infoOut.m_fDistance)
+				{
+					infoOut = info;
+				}
+				bFind = true;
+			}
 		}
-		bFind = true;
+
+#pragma omp section
+		{
+			if (checkWithField(ray, fDistance, info))
+			{
+				if (bFind && info.m_fDistance < infoOut.m_fDistance)
+				{
+					infoOut = info;
+				}
+				bFind = true;
+			}
+		}
 	}
 
 	return bFind;
@@ -341,11 +387,11 @@ void CKFCollisionSystem::checkWithDynamicSphere(const list<CColliderComponent*>:
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithDynamicAABB(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_alistCollider[DYNAMIC][COL_AABB].begin(); itr != m_alistCollider[DYNAMIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_AABB])
 	{
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == sphere.GetGameObject()) { continue; }
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithAABB(sphere, *pAABB);
 	}
 }
@@ -355,11 +401,11 @@ void CKFCollisionSystem::checkWithDynamicAABB(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithDynamicAABB(const list<CColliderComponent*>::iterator& itrBegin, CAABBColliderComponent& aabb)
 {
-	for (auto itr = itrBegin; itr != m_alistCollider[DYNAMIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_AABB])
 	{
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == aabb.GetGameObject()) { continue; }
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == aabb.GetGameObject()) { continue; }
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckAABBWithAABB(aabb, *pAABB);
 	}
 }
@@ -374,11 +420,11 @@ void CKFCollisionSystem::checkWithDynamicAABB(const list<CColliderComponent*>::i
 bool CKFCollisionSystem::checkWithDynamicAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
 {
 	bool bFind = false;
-	for (auto itr = m_alistCollider[DYNAMIC][COL_AABB].begin(); itr != m_alistCollider[DYNAMIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_AABB])
 	{
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == pObjThis) { continue; }
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == pObjThis) { continue; }
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CRaycastHitInfo info;
 		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pAABB, info))
 		{
@@ -403,11 +449,11 @@ bool CKFCollisionSystem::checkWithDynamicAABB(const CKFRay& ray, const float& fD
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithDynamicOBB(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_OBB])
 	{
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == sphere.GetGameObject()) { continue; }
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == sphere.GetGameObject()) { continue; }
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithOBB(sphere, *pOBB);
 	}
 }
@@ -417,11 +463,11 @@ void CKFCollisionSystem::checkWithDynamicOBB(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithDynamicOBB(CAABBColliderComponent& aabb)
 {
-	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_OBB])
 	{
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == aabb.GetGameObject()) { continue; }
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == aabb.GetGameObject()) { continue; }
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckBoxWithBox(aabb, *pOBB);
 	}
 }
@@ -450,12 +496,12 @@ void CKFCollisionSystem::checkWithDynamicOBB(const list<CColliderComponent*>::it
 bool CKFCollisionSystem::checkWithDynamicOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
 {
 	bool bFind = false;
-	for (auto itr = m_alistCollider[DYNAMIC][COL_OBB].begin(); itr != m_alistCollider[DYNAMIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[DYNAMIC][COL_OBB])
 	{
 		CRaycastHitInfo info;
 		//同じオブジェクトに付いているなら判定しない
-		if ((*itr)->GetGameObject() == pObjThis) { continue; }
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		if (pCollider->GetGameObject() == pObjThis) { continue; }
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pOBB, info))
 		{
 			if (!bFind)
@@ -463,7 +509,7 @@ bool CKFCollisionSystem::checkWithDynamicOBB(const CKFRay& ray, const float& fDi
 				bFind = true;
 				infoOut = info;
 			}
-			else if(info.m_fDistance < infoOut.m_fDistance)
+			else if (info.m_fDistance < infoOut.m_fDistance)
 			{
 				infoOut = info;
 			}
@@ -478,9 +524,9 @@ bool CKFCollisionSystem::checkWithDynamicOBB(const CKFRay& ray, const float& fDi
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticSphere(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_SPHERE])
 	{
-		auto pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		auto pSphere = dynamic_cast<CSphereColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithSphere(sphere, *pSphere);
 	}
 }
@@ -490,9 +536,9 @@ void CKFCollisionSystem::checkWithStaticSphere(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticSphere(CAABBColliderComponent& aabb)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_SPHERE])
 	{
-		auto pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		auto pSphere = dynamic_cast<CSphereColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithAABB(*pSphere, aabb);
 	}
 }
@@ -502,9 +548,9 @@ void CKFCollisionSystem::checkWithStaticSphere(CAABBColliderComponent& aabb)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticSphere(COBBColliderComponent& obb)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_SPHERE].begin(); itr != m_alistCollider[STATIC][COL_SPHERE].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_SPHERE])
 	{
-		auto pSphere = dynamic_cast<CSphereColliderComponent*>(*itr);
+		auto pSphere = dynamic_cast<CSphereColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithOBB(*pSphere, obb);
 	}
 }
@@ -514,9 +560,9 @@ void CKFCollisionSystem::checkWithStaticSphere(COBBColliderComponent& obb)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticAABB(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_AABB].begin(); itr != m_alistCollider[STATIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_AABB])
 	{
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithAABB(sphere, *pAABB);
 	}
 }
@@ -526,9 +572,9 @@ void CKFCollisionSystem::checkWithStaticAABB(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticAABB(CAABBColliderComponent& aabb)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_AABB].begin(); itr != m_alistCollider[STATIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_AABB])
 	{
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckAABBWithAABB(*pAABB, aabb);
 	}
 }
@@ -538,9 +584,9 @@ void CKFCollisionSystem::checkWithStaticAABB(CAABBColliderComponent& aabb)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticAABB(COBBColliderComponent& obb)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_AABB].begin(); itr != m_alistCollider[STATIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_AABB])
 	{
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckBoxWithBox(*pAABB, obb);
 	}
 }
@@ -551,9 +597,9 @@ void CKFCollisionSystem::checkWithStaticAABB(COBBColliderComponent& obb)
 bool CKFCollisionSystem::checkWithStaticAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
 {
 	bool bFind = false;
-	for (auto itr = m_alistCollider[STATIC][COL_AABB].begin(); itr != m_alistCollider[STATIC][COL_AABB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_AABB])
 	{
-		auto pAABB = dynamic_cast<CAABBColliderComponent*>(*itr);
+		auto pAABB = dynamic_cast<CAABBColliderComponent*>(pCollider);
 		CRaycastHitInfo info;
 		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pAABB, info))
 		{
@@ -577,9 +623,9 @@ bool CKFCollisionSystem::checkWithStaticAABB(const CKFRay& ray, const float& fDi
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticOBB(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_OBB].begin(); itr != m_alistCollider[STATIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_OBB])
 	{
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithOBB(sphere, *pOBB);
 	}
 }
@@ -589,9 +635,9 @@ void CKFCollisionSystem::checkWithStaticOBB(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithStaticOBB(CBoxColliderComponent& box)
 {
-	for (auto itr = m_alistCollider[STATIC][COL_OBB].begin(); itr != m_alistCollider[STATIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_OBB])
 	{
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		CCollisionDetector::CheckBoxWithBox(*pOBB, box);
 	}
 }
@@ -602,10 +648,10 @@ void CKFCollisionSystem::checkWithStaticOBB(CBoxColliderComponent& box)
 bool CKFCollisionSystem::checkWithStaticOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
 {
 	bool bFind = false;
-	for (auto itr = m_alistCollider[STATIC][COL_OBB].begin(); itr != m_alistCollider[STATIC][COL_OBB].end(); ++itr)
+	for (auto pCollider : m_alistCollider[STATIC][COL_OBB])
 	{
 		CRaycastHitInfo info;
-		auto pOBB = dynamic_cast<COBBColliderComponent*>(*itr);
+		auto pOBB = dynamic_cast<COBBColliderComponent*>(pCollider);
 		if (CCollisionDetector::CheckRayWithBox(ray, fDistance, *pOBB, info))
 		{
 			if (!bFind)
@@ -628,9 +674,9 @@ bool CKFCollisionSystem::checkWithStaticOBB(const CKFRay& ray, const float& fDis
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithField(CSphereColliderComponent& sphere)
 {
-	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
+	for (auto pCollider : m_listField)
 	{
-		auto pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		auto pField = dynamic_cast<CFieldColliderComponent*>(pCollider);
 		CCollisionDetector::CheckSphereWithField(sphere, *pField);
 	}
 }
@@ -640,9 +686,9 @@ void CKFCollisionSystem::checkWithField(CSphereColliderComponent& sphere)
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::checkWithField(CBoxColliderComponent& box)
 {
-	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
+	for (auto pCollider : m_listField)
 	{
-		auto pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		auto pField = dynamic_cast<CFieldColliderComponent*>(pCollider);
 		CCollisionDetector::CheckBoxWithField(box, *pField);
 	}
 }
@@ -661,9 +707,9 @@ bool CKFCollisionSystem::checkWithField(const CKFRay& ray, const float& fDistanc
 {
 	bool bFind = false;
 
-	for (auto itr = m_listField.begin(); itr != m_listField.end(); ++itr)
+	for (auto pCollider : m_listField)
 	{
-		auto pField = dynamic_cast<CFieldColliderComponent*>(*itr);
+		auto pField = dynamic_cast<CFieldColliderComponent*>(pCollider);
 		CRaycastHitInfo info;
 		if (CCollisionDetector::CheckRayWithField(ray, fDistance, *pField, info))
 		{
@@ -681,3 +727,49 @@ bool CKFCollisionSystem::checkWithField(const CKFRay& ray, const float& fDistanc
 
 	return bFind;
 }
+
+#ifdef _DEBUG
+//--------------------------------------------------------------------------------
+//	関数名：toString
+//  関数説明：モードのenumをstringに変換
+//	引数：	mode
+//	戻り値：string
+//--------------------------------------------------------------------------------
+string CKFCollisionSystem::toString(const COL_MODE& mode)
+{
+	switch (mode)
+	{
+	case STATIC:
+		return "Static";
+	case DYNAMIC:
+		return "Dynamic";
+	default:
+		return "Error";
+	}
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：toString
+//  関数説明：タイプのenumをstringに変換
+//	引数：	type
+//	戻り値：string
+//--------------------------------------------------------------------------------
+string CKFCollisionSystem::toString(const COL_TYPE& type)
+{
+	switch (type)
+	{
+	case COL_SPHERE:
+		return "Sphere";
+	case COL_AABB:
+		return "AABB";
+	case COL_OBB:
+		return "OBB";
+	case COL_PLANE:
+		return "Plane";
+	case COL_CYLINDER:
+		return "Cylinder";
+	default:
+		return "Error";
+	}
+}
+#endif
