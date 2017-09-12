@@ -61,8 +61,9 @@ public:
 	void		LateUpdateAll(void);
 	void		DrawAll(void);
 
-	void		SaveGameObj(const PRIORITY& pri, CGameObject* pGameObj);
-	void		ReleaseGameObj(const PRIORITY& pri, CGameObject* pGameObj);
+	void		RegisterGameObj(const PRIORITY& pri, CGameObject* pGameObj);
+	void		DeregisterGameObj(const PRIORITY& pri, CGameObject* pGameObj);
+
 
 private:
 	//--------------------------------------------------------------------------------

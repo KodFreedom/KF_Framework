@@ -39,6 +39,33 @@ int CKFUtility::GetStrToken(FILE* pFp, const string& strToken, string& strBuf)
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：GetStrToken
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+int CKFUtility::GetStrToken(string& str, const string& strToken, string& strBuf)
+{
+	strBuf.clear();
+	for (auto itr = str.begin(); itr != str.end();)
+	{
+		auto c = *itr;
+		itr = str.erase(itr);
+		for (int nCnt = 0; nCnt < (int)strToken.length(); nCnt++)
+		{
+			if (c == strToken.at(nCnt))
+			{
+				return strBuf.length();
+			}
+		}
+		strBuf += c;
+	}
+
+	return -1;
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：GetStrCount
 //  関数説明：アクション（移動、跳ぶ、攻撃）
 //	引数：	vDirection：移動方向
@@ -61,4 +88,50 @@ int CKFUtility::GetStrCount(FILE* pFp, const string& strToken, const string& str
 	fseek(pFp, 0, SEEK_SET);
 
 	return nCnt;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：GetStrCount
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+int CKFUtility::GetStrCount(string& str, const string& strToken, const string& strComp)
+{
+	int nCnt = 0;
+	string strBuf;
+	while (GetStrToken(str, strToken, strBuf) >= 0)
+	{
+		if (strBuf.compare(strComp) == 0)
+		{
+			nCnt++;
+		}
+	}
+	return nCnt;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：GetFileName
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+string CKFUtility::GetFileName(const string& strFilePath)
+{
+	auto strCpy = strFilePath;
+
+	//逆転
+	reverse(strCpy.begin(), strCpy.end());
+
+	//ファイル型の取得
+	string strType;
+	GetStrToken(strCpy, ".", strType);
+
+	//ファイル名の取得
+	string strName;
+	GetStrToken(strCpy, "\\/", strName);
+	reverse(strName.begin(), strName.end());
+	return strName;
 }

@@ -41,11 +41,11 @@
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
 {
-	CKFVec3 vSLPos = sphereL.GetWorldPos();
-	float fSLRadius = sphereL.GetRadius();
-	CKFVec3 vSRPos = sphereR.GetWorldPos();
-	float fSRRadius = sphereR.GetRadius();
-	CKFVec3 vMidLine = vSLPos - vSRPos;
+	const auto& vSLPos = sphereL.GetWorldPos();
+	const auto& fSLRadius = sphereL.GetRadius();
+	const auto& vSRPos = sphereR.GetWorldPos();
+	const auto& fSRRadius = sphereR.GetRadius();
+	auto& vMidLine = vSLPos - vSRPos;
 	float fDisMin = fSLRadius + fSRRadius;
 	float fDisSqr = CKFMath::VecMagnitudeSquare(vMidLine);
 
@@ -53,21 +53,15 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 
 	if (sphereL.IsTrigger() || sphereR.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto list = sphereL.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(sphereL, sphereR);
-		}
+		auto& listL = sphereL.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(sphereL, sphereR); }
 
-		list = sphereR.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(sphereR, sphereL);
-		}
+		auto& listR = sphereR.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(sphereR, sphereL); }
 		return;
 	}
 
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 
 	//衝突点の算出
 	pCollision->m_vCollisionPos = vSRPos + vMidLine * 0.5f;
@@ -80,8 +74,8 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 	pCollision->m_vCollisionNormal = vMidLine / fDis;
 
 	//リジッドボディの取得
-	CRigidbodyComponent* pRBL = sphereL.GetGameObject()->GetRigidbodyComponent();
-	CRigidbodyComponent* pRBR = sphereR.GetGameObject()->GetRigidbodyComponent();
+	auto pRBL = sphereL.GetGameObject()->GetRigidbodyComponent();
+	auto pRBR = sphereR.GetGameObject()->GetRigidbodyComponent();
 	if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
 	{
 		pCollision->m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
@@ -105,19 +99,13 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 	info.m_pColliderThis = &sphereL;
 	info.m_pCollider = &sphereR;
 	info.m_listCollision.push_back(pCollision);
-	auto list = sphereL.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listL = sphereL.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(info); }
 
 	info.m_pColliderThis = &sphereR;
 	info.m_pCollider = &sphereL;
-	list = sphereR.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listR = sphereR.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -130,11 +118,11 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, CAABBColliderComponent& aabb)
 {
-	const CKFVec3& vSPos = sphere.GetWorldPos();
-	const float& fSRadius = sphere.GetRadius();
-	const CKFVec3& vBHalfSize = aabb.GetHalfSize();
-	const CKFVec3& vBPos = aabb.GetWorldPos();
-	CKFVec3 vRealSPos = vSPos - vBPos;
+	const auto& vSPos = sphere.GetWorldPos();
+	const auto& fSRadius = sphere.GetRadius();
+	const auto& vBHalfSize = aabb.GetHalfSize();
+	const auto& vBPos = aabb.GetWorldPos();
+	auto& vRealSPos = vSPos - vBPos;
 
 	//分離軸チェック
 	if (fabsf(vRealSPos.m_fX) - fSRadius > vBHalfSize.m_fX
@@ -170,31 +158,25 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	//OnTrigger
 	if (sphere.IsTrigger() || aabb.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto list = sphere.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(sphere, aabb);
-		}
+		auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(sphere, aabb); }
 
-		list = aabb.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(aabb, sphere);
-		}
+		auto& listR = aabb.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(aabb, sphere); }
 		return;
 	}
 
 	//衝突情報
 	vClosestPos = vClosestPos + vBPos;
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 	pCollision->m_vCollisionNormal = vSPos - vClosestPos;
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
 	pCollision->m_fPenetration = fSRadius - sqrtf(fDisSqr);
 
 	//リジッドボディの取得
-	CRigidbodyComponent* pRBL = sphere.GetGameObject()->GetRigidbodyComponent();
-	CRigidbodyComponent* pRBR = aabb.GetGameObject()->GetRigidbodyComponent();
+	auto pRBL = sphere.GetGameObject()->GetRigidbodyComponent();
+	auto pRBR = aabb.GetGameObject()->GetRigidbodyComponent();
 	if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
 	{
 		pCollision->m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
@@ -218,19 +200,13 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	info.m_pColliderThis = &sphere;
 	info.m_pCollider = &aabb;
 	info.m_listCollision.push_back(pCollision);
-	auto list = sphere.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(info); }
 
 	info.m_pColliderThis = &aabb;
 	info.m_pCollider = &sphere;
-	list = aabb.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listR = aabb.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -243,11 +219,11 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb)
 {
-	const CKFVec3& vSPos = sphere.GetWorldPos();
-	const float& fSRadius = sphere.GetRadius();
-	const CKFVec3& vBHalfSize = obb.GetHalfSize();
-	const CKFMtx44& mtxBox = obb.GetMatrixWorld();
-	CKFVec3 vRealSPos = CKFMath::TransformInverse(mtxBox, vSPos);
+	const auto& vSPos = sphere.GetWorldPos();
+	const auto& fSRadius = sphere.GetRadius();
+	const auto& vBHalfSize = obb.GetHalfSize();
+	const auto& mtxBox = obb.GetMatrixWorld();
+	auto& vRealSPos = CKFMath::TransformInverse(mtxBox, vSPos);
 
 	//分離軸チェック
 	if (fabsf(vRealSPos.m_fX) - fSRadius > vBHalfSize.m_fX
@@ -283,23 +259,17 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	//OnTrigger
 	if (sphere.IsTrigger() || obb.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto list = sphere.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(sphere, obb);
-		}
+		auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(sphere, obb); }
 
-		list = obb.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(obb, sphere);
-		}
+		auto& listR = obb.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(obb, sphere); }
 		return;
 	}
 
 	//衝突情報
 	vClosestPos = CKFMath::Vec3TransformCoord(vClosestPos, mtxBox);
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 	pCollision->m_vCollisionNormal = vSPos - vClosestPos;
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
@@ -331,19 +301,13 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	info.m_pColliderThis = &sphere;
 	info.m_pCollider = &obb;
 	info.m_listCollision.push_back(pCollision);
-	auto list = sphere.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(info); }
 
 	info.m_pColliderThis = &obb;
 	info.m_pCollider = &sphere;
-	list = obb.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listR = obb.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -361,25 +325,19 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	//OnTrigger
 	if (aabbL.IsTrigger() || aabbR.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto list = aabbL.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(aabbL, aabbR);
-		}
+		auto& listL = aabbL.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(aabbL, aabbR); }
 
-		list = aabbR.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(aabbR, aabbL);
-		}
+		auto& listR = aabbR.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(aabbR, aabbL); }
 		return;
 	}
 
 	//XYZ軸一番深度が浅いの軸を洗い出す
-	auto vPosL = aabbL.GetWorldPos();
-	auto vHalfSizeL = aabbL.GetHalfSize();
-	auto vPosR = aabbR.GetWorldPos();
-	auto vHalfSizeR = aabbR.GetHalfSize();
+	const auto& vPosL = aabbL.GetWorldPos();
+	const auto& vHalfSizeL = aabbL.GetHalfSize();
+	const auto& vPosR = aabbR.GetWorldPos();
+	const auto& vHalfSizeR = aabbR.GetHalfSize();
 	auto vMidLine = vPosL - vPosR;
 	auto vDisNoCol = vHalfSizeL + vHalfSizeR;
 	auto fPenetrationX = vDisNoCol.m_fX - fabsf(vMidLine.m_fX);
@@ -391,7 +349,7 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	fPenetrationZ = fPenetrationZ > 0.0f ? fPenetrationZ : vDisNoCol.m_fZ;
 	auto fPenetrationMin = min(fPenetrationX, min(fPenetrationY, fPenetrationZ));
 	
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 	pCollision->m_fPenetration = fPenetrationMin;
 	pCollision->m_vCollisionPos = vMidLine * 0.5f;
 	if (fPenetrationX == fPenetrationMin)
@@ -408,8 +366,8 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	}
 
 	//リジッドボディの取得
-	CRigidbodyComponent* pRBL = aabbL.GetGameObject()->GetRigidbodyComponent();
-	CRigidbodyComponent* pRBR = aabbR.GetGameObject()->GetRigidbodyComponent();
+	auto pRBL = aabbL.GetGameObject()->GetRigidbodyComponent();
+	auto pRBR = aabbR.GetGameObject()->GetRigidbodyComponent();
 
 	if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
 	{
@@ -428,149 +386,19 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 
 	//物理演算システムにレジストリ
 	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
-	
-#ifdef _DEBUG
-	CMain::GetManager()->GetDebugManager()->DisplayScroll("Test!\n");
-#endif // _DEBUG
 
 	//OnCollision
 	CCollisionInfo info;
 	info.m_listCollision.push_back(pCollision);
 	info.m_pColliderThis = &aabbL;
 	info.m_pCollider = &aabbR;
-	auto list = aabbL.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listL = aabbL.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(info); }
 
 	info.m_pColliderThis = &aabbR;
 	info.m_pCollider = &aabbL;
-	list = aabbR.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
-	/*
-	//aabbLのすべての頂点とaabbRと判定し、めり込みが一番深いの頂点を洗い出す
-	bool bFindL = false;
-	CCollision collisionDepthMaxL;
-	auto& listVtxBoxL = aabbL.GetWorldVertexes();
-	for (auto itr = listVtxBoxL.begin(); itr != listVtxBoxL.end(); ++itr)
-	{
-		CCollision collision;
-		if (checkPointWithAABB(collision, *itr, aabbR))
-		{
-			if (!bFindL)
-			{
-				bFindL = true;
-				collisionDepthMaxL = collision;
-			}
-			else if (collision.m_fPenetration > collisionDepthMaxL.m_fPenetration)
-			{
-				collisionDepthMaxL = collision;
-			}
-		}
-	}
-
-	//aabbRのすべての頂点とaabbLと判定し、めり込みが一番深いの頂点を洗い出す
-	bool bFindR = false;
-	CCollision collisionDepthMaxR;
-
-	if (!bFindL)
-	{
-		auto& listVtxBoxR = aabbR.GetWorldVertexes();
-		for (auto itr = listVtxBoxR.begin(); itr != listVtxBoxR.end(); ++itr)
-		{
-			CCollision collision;
-			if (checkPointWithAABB(collision, *itr, aabbL))
-			{
-				if (!bFindR)
-				{
-					bFindR = true;
-					collisionDepthMaxR = collision;
-				}
-				else if (collision.m_fPenetration > collisionDepthMaxR.m_fPenetration)
-				{
-					collisionDepthMaxR = collision;
-				}
-			}
-		}
-	}
-
-	if (!bFindL && !bFindR) { return; } // 万が一のため
-
-	CCollisionInfo info;
-
-	//リジッドボディの取得
-	CRigidbodyComponent* pRBL = aabbL.GetGameObject()->GetRigidbodyComponent();
-	CRigidbodyComponent* pRBR = aabbR.GetGameObject()->GetRigidbodyComponent();
-
-	if (bFindL)
-	{
-		if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
-		{
-			collisionDepthMaxL.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
-
-			if (pRBR->GetType() == CRigidbodyComponent::RB_3D)
-			{
-				collisionDepthMaxL.m_pRigidBodyTwo = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
-			}
-		}
-		else
-		{//一番が持ってないなら衝突法線を反転する
-			collisionDepthMaxL.m_vCollisionNormal *= -1.0f;
-			collisionDepthMaxL.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
-		}
-
-		//物理演算システムにレジストリ
-		CCollision* pCollision = new CCollision;
-		*pCollision = collisionDepthMaxL;
-		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
-		info.m_listCollision.push_back(&collisionDepthMaxL);
-	}
-
-	if (bFindR)
-	{
-		if (pRBR->GetType() == CRigidbodyComponent::RB_3D)
-		{
-			collisionDepthMaxR.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBR);
-
-			if (pRBL->GetType() == CRigidbodyComponent::RB_3D)
-			{
-				collisionDepthMaxR.m_pRigidBodyTwo = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
-			}
-		}
-		else
-		{//一番が持ってないなら衝突法線を反転する
-			collisionDepthMaxR.m_vCollisionNormal *= -1.0f;
-			collisionDepthMaxR.m_pRigidBodyOne = dynamic_cast<C3DRigidbodyComponent*>(pRBL);
-		}
-
-		//物理演算システムにレジストリ
-		CCollision* pCollision = new CCollision;
-		*pCollision = collisionDepthMaxR;
-		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
-		info.m_listCollision.push_back(&collisionDepthMaxR);
-	}
-
-	//OnCollision
-	info.m_pColliderThis = &aabbL;
-	info.m_pCollider = &aabbR;
-	info.m_listCollision.push_back(&collisionDepthMaxL);
-	auto list = aabbL.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
-
-	info.m_pColliderThis = &aabbR;
-	info.m_pCollider = &aabbL;
-	list = aabbR.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}*/
+	auto& listR = aabbR.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -640,25 +468,19 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 	//OnTrigger
 	if (boxL.IsTrigger() || boxR.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto list = boxL.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(boxL, boxR);
-		}
+		auto& listL = boxL.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(boxL, boxR); }
 
-		list = boxR.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(boxR, boxL);
-		}
+		auto& listR = boxR.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(boxR, boxL); }
 		return;
 	}
 
 	CCollisionInfo info;
 
 	//リジッドボディの取得
-	CRigidbodyComponent* pRBL = boxL.GetGameObject()->GetRigidbodyComponent();
-	CRigidbodyComponent* pRBR = boxR.GetGameObject()->GetRigidbodyComponent();
+	auto pRBL = boxL.GetGameObject()->GetRigidbodyComponent();
+	auto pRBR = boxR.GetGameObject()->GetRigidbodyComponent();
 
 	if (bFindL)
 	{
@@ -678,7 +500,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		}
 
 		//物理演算システムにレジストリ
-		CCollision* pCollision = new CCollision;
+		auto pCollision = new CCollision;
 		*pCollision = collisionDepthMaxL;
 		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxL);
@@ -702,7 +524,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		}
 
 		//物理演算システムにレジストリ
-		CCollision* pCollision = new CCollision;
+		auto pCollision = new CCollision;
 		*pCollision = collisionDepthMaxR;
 		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxR);
@@ -712,19 +534,13 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 	info.m_pColliderThis = &boxL;
 	info.m_pCollider = &boxR;
 	info.m_listCollision.push_back(&collisionDepthMaxL);
-	auto list = boxL.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listL = boxL.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(info); }
 
 	info.m_pColliderThis = &boxR;
 	info.m_pCollider = &boxL;
-	list = boxR.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(info);
-	}
+	auto& listR = boxR.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -742,8 +558,8 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
-	CKFVec3 vSpherePos = sphere.GetWorldPos();
-	float fSphereRadius = sphere.GetRadius();
+	const auto& vSpherePos = sphere.GetWorldPos();
+	const auto& fSphereRadius = sphere.GetRadius();
 	auto info = field.GetProjectionInfo(vSpherePos);
 
 	if (info.bInFieldRange == false) { return; }
@@ -755,14 +571,14 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 
 	if (sphere.IsTrigger())
 	{
-		auto list = sphere.GetGameObject()->GetBehaviorComponent();
-		for (auto itr = list.begin(); itr != list.end(); ++itr)
-		{
-			(*itr)->OnTrigger(sphere, field);
-		}
+		auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(sphere, field); }
+
+		auto& listR = field.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(field, sphere); }
 		return;
 	}
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 
 	//衝突点の算出
 	pCollision->m_vCollisionPos = vSpherePos + info.vFaceNormal * fDis;
@@ -774,7 +590,7 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	pCollision->m_vCollisionNormal = info.vFaceNormal;
 
 	//リジッドボディの取得
-	C3DRigidbodyComponent* p3DRB = dynamic_cast<C3DRigidbodyComponent*>(sphere.GetGameObject()->GetRigidbodyComponent());
+	auto p3DRB = dynamic_cast<C3DRigidbodyComponent*>(sphere.GetGameObject()->GetRigidbodyComponent());
 	pCollision->m_pRigidBodyOne = p3DRB;
 	pCollision->m_pRigidBodyTwo = nullptr;
 
@@ -786,19 +602,13 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	cInfo.m_pColliderThis = &sphere;
 	cInfo.m_pCollider = &field;
 	cInfo.m_listCollision.push_back(pCollision);
-	auto list = sphere.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(cInfo);
-	}
+	auto& listL = sphere.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(cInfo); }
 
 	cInfo.m_pColliderThis = &field;
 	cInfo.m_pCollider = &sphere;
-	list = field.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(cInfo);
-	}
+	auto& listR = field.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(cInfo); }
 }
 
 //--------------------------------------------------------------------------------
@@ -811,15 +621,15 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldColliderComponent& field)
 {
-	auto listOBBVtx = box.GetWorldVertexes();
+	auto& listOBBVtx = box.GetWorldVertexes();
 
 	//回転なしの場合一番深いの頂点を案出する
 	bool bFind = false;
-	CCollision* pCollision = new CCollision;
+	auto pCollision = new CCollision;
 	for (auto itr = listOBBVtx.begin(); itr != listOBBVtx.end(); ++itr)
 	{
 		auto info = field.GetProjectionInfo((*itr));
-		if (info.bInFieldRange == false) { continue; }
+		if (!info.bInFieldRange) { continue; }
 		if (info.fPenetration <= 0.0f) { continue; }
 
 		if (!bFind)
@@ -833,15 +643,10 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 			pCollision->m_fPenetration = info.fPenetration;
 
 			//衝突法線の算出
-			//地面法線の角度が45度以上なら地面法線を返す
-			//そうじゃないなら上方向を返す
-			//auto vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
-			//auto fDot = CKFMath::Vec3Dot(vNormal, info.vFaceNormal);
-			//if (fDot < 0.7f) { vNormal = info.vFaceNormal; }
 			pCollision->m_vCollisionNormal = info.vFaceNormal;
 
 			//リジッドボディの取得
-			C3DRigidbodyComponent* p3DRB = dynamic_cast<C3DRigidbodyComponent*>(box.GetGameObject()->GetRigidbodyComponent());
+			auto p3DRB = dynamic_cast<C3DRigidbodyComponent*>(box.GetGameObject()->GetRigidbodyComponent());
 			pCollision->m_pRigidBodyOne = p3DRB;
 			pCollision->m_pRigidBodyTwo = nullptr;
 		}
@@ -862,6 +667,18 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 
 	if (!bFind) { return; }
 
+	if (box.IsTrigger())
+	{
+		auto& listL = box.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listL) { pBehavior->OnTrigger(box, field); }
+
+		auto& listR = field.GetGameObject()->GetBehaviorComponent();
+		for (auto& pBehavior : listR) { pBehavior->OnTrigger(field, box); }
+		
+		delete pCollision;
+		return;
+	}
+
 	//物理演算システムにレジストリ
 	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
@@ -870,19 +687,13 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 	cInfo.m_pColliderThis = &box;
 	cInfo.m_pCollider = &field;
 	cInfo.m_listCollision.push_back(pCollision);
-	auto list = box.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(cInfo);
-	}
+	auto& listL = box.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listL) { pBehavior->OnCollision(cInfo); }
 
 	cInfo.m_pColliderThis = &field;
 	cInfo.m_pCollider = &box;
-	list = field.GetGameObject()->GetBehaviorComponent();
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->OnCollision(cInfo);
-	}
+	auto& listR = field.GetGameObject()->GetBehaviorComponent();
+	for (auto& pBehavior : listR) { pBehavior->OnCollision(cInfo); }
 }
 
 //--------------------------------------------------------------------------------
@@ -911,7 +722,7 @@ bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistan
 		return true;
 	}
 	
-	auto vRayEnd = ray.m_vOrigin + ray.m_vDirection * fDistance;
+	auto& vRayEnd = ray.m_vOrigin + ray.m_vDirection * fDistance;
 	if (checkPointWithBox(collision, vRayEnd, box))
 	{
 		infoOut.m_vNormal = collision.m_vCollisionNormal;
@@ -936,8 +747,8 @@ bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistan
 bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
 {
 	CKFVec3 vOriginToSphere;
-	auto vSpherePos = sphere.GetWorldPos();
-	auto fRadius = sphere.GetRadius();
+	const auto& vSpherePos = sphere.GetWorldPos();
+	const auto& fRadius = sphere.GetRadius();
 	float fWorkA, fWorkB, fTimeA, fTimeB;
 	float fDiscriminant;
 
@@ -1019,22 +830,20 @@ bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDist
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb)
 {
-	const CKFVec3& vBPos = aabb.GetWorldPos();
-	const CKFVec3& vBHalfSize = aabb.GetHalfSize();
-	CKFVec3 vRealPoint = vPoint - vBPos;
+	const auto& vBPos = aabb.GetWorldPos();
+	const auto& vBHalfSize = aabb.GetHalfSize();
+	auto& vRealPoint = vPoint - vBPos;
 
 	float fDepthMin = vBHalfSize.m_fX - fabsf(vRealPoint.m_fX);
 	if (fDepthMin <= 0.0f) { return false; }
-	collisionOut.m_vCollisionNormal = CKFVec3(1.0f, 0.0f, 0.0f)
-		* (vRealPoint.m_fX < 0.0f ? -1.0f : 1.0f);
+	collisionOut.m_vCollisionNormal = vRealPoint.m_fX < 0.0f ? CKFMath::sc_vLeft : CKFMath::sc_vRight;
 
 	float fDepth = vBHalfSize.m_fY - fabsf(vRealPoint.m_fY);
 	if (fDepth <= 0.0f) { return false; }
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = CKFVec3(0.0f, 1.0f, 0.0f)
-			* (vRealPoint.m_fY < 0.0f ? -1.0f : 1.0f);
+		collisionOut.m_vCollisionNormal = vRealPoint.m_fY < 0.0f ? CKFMath::sc_vDown : CKFMath::sc_vUp;
 	}
 
 	fDepth = vBHalfSize.m_fZ - fabsf(vRealPoint.m_fZ);
@@ -1042,8 +851,7 @@ bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFV
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = CKFVec3(0.0f, 0.0f, 1.0f)
-			* (vRealPoint.m_fZ < 0.0f ? -1.0f : 1.0f);
+		collisionOut.m_vCollisionNormal = vRealPoint.m_fZ < 0.0f ? CKFMath::sc_vBack : CKFMath::sc_vForward;
 	}
 
 	collisionOut.m_fPenetration = fDepthMin;
@@ -1061,9 +869,9 @@ bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFV
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box)
 {
-	const CKFMtx44& mtxBox = box.GetMatrixWorld();
-	const CKFVec3& vBHalfSize = box.GetHalfSize();
-	CKFVec3 vRealPoint = CKFMath::TransformInverse(mtxBox, vPoint);
+	const auto& mtxBox = box.GetMatrixWorld();
+	const auto& vBHalfSize = box.GetHalfSize();
+	auto& vRealPoint = CKFMath::TransformInverse(mtxBox, vPoint);
 
 	float fDepthMin = vBHalfSize.m_fX - fabsf(vRealPoint.m_fX);
 	if (fDepthMin <= 0.0f) { return false; }
@@ -1105,8 +913,8 @@ bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVe
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vLB, const CKFVec2& vRA, const CKFVec2& vRB, CKFVec2& vOut)
 {
-	auto vLineL = vLB - vLA;
-	auto vLineR = vRB - vRA;
+	auto& vLineL = vLB - vLA;
+	auto& vLineR = vRB - vRA;
 
 	auto fSlopeL = (vLA.m_fX - vLB.m_fX) == 0.0f ? 0.0f
 		: (vLA.m_fY - vLB.m_fY) / (vLA.m_fX - vLB.m_fX);
@@ -1252,14 +1060,14 @@ bool CCollisionDetector::checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2&
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR)
 {
-	const CKFVec3& vPosL = aabbL.GetWorldPos();
-	const CKFVec3& vHalfSizeL = aabbL.GetHalfSize();
-	const CKFVec3& vPosR = aabbR.GetWorldPos();
-	const CKFVec3& vHalfSizeR = aabbR.GetHalfSize();
-	CKFVec3 vMinL = vPosL - vHalfSizeL;
-	CKFVec3 vMaxL = vPosL + vHalfSizeL;
-	CKFVec3 vMinR = vPosR - vHalfSizeR;
-	CKFVec3 vMaxR = vPosR + vHalfSizeR;
+	const auto& vPosL = aabbL.GetWorldPos();
+	const auto& vHalfSizeL = aabbL.GetHalfSize();
+	const auto& vPosR = aabbR.GetWorldPos();
+	const auto& vHalfSizeR = aabbR.GetHalfSize();
+	auto& vMinL = vPosL - vHalfSizeL;
+	auto& vMaxL = vPosL + vHalfSizeL;
+	auto& vMinR = vPosR - vHalfSizeR;
+	auto& vMaxR = vPosR + vHalfSizeR;
 
 	//AABB同士がxyz軸上に重ねてるかどうかをチェックする
 	bool bAnswer = checkOverlapOnAxis(CKFVec2(vMinL.m_fY, vMinL.m_fZ), CKFVec2(vMaxL.m_fY, vMaxL.m_fZ), CKFVec2(vMinR.m_fY, vMinR.m_fZ), CKFVec2(vMaxR.m_fY, vMaxR.m_fZ))	//X軸

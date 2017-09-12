@@ -10,6 +10,7 @@
 #include "drawComponent.h"
 #include "manager.h"
 #include "textureManager.h"
+#include "materialManager.h"
 
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”

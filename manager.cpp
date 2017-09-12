@@ -112,7 +112,6 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//マテリアルマネージャの生成
 	m_pMaterialManager = new CMaterialManager;
-	m_pMaterialManager->Init();
 
 	//コリジョンシステム
 	m_pCollisionSystem = new CKFCollisionSystem;

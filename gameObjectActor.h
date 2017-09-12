@@ -22,7 +22,7 @@ class CAnimatorComponent;
 class CGameObjectActor : public CGameObject
 {
 public:
-	CGameObjectActor(const GOM::PRIORITY &pri, const OBJ_TYPE& type);
+	CGameObjectActor(const GOM::PRIORITY &pri);
 	~CGameObjectActor() {}
 
 	bool Init(void) override;
@@ -30,7 +30,7 @@ public:
 	void LateUpdate(void) override;
 
 	//Getä÷êî
-	CAnimatorComponent* GetAnimatorComponent(void) { return m_pAnimator; }
+	auto GetAnimatorComponent(void) const { return m_pAnimator; }
 	
 	//Setä÷êî
 

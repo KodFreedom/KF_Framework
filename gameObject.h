@@ -32,32 +32,23 @@ class CGameObject
 	friend CGameObjectManager;
 
 public:
-	enum OBJ_TYPE
-	{
-		OT_DEFAULT,
-		OT_ENEMY,
-		OT_PLAYER,
-		OT_GOAL,
-	};
-
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(const GOM::PRIORITY& pri, const OBJ_TYPE& type = OT_DEFAULT);
+	CGameObject(const GOM::PRIORITY& pri);
 	~CGameObject() {}
 	
-	virtual bool Init(void) 
+	virtual bool	Init(void) 
 	{ 
 		m_pTransform->Init();
-		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->Init(); }
+		for (auto pBehavior : m_listpBehavior) { pBehavior->Init(); }
 		m_pRigidbody->Init();
-		for (auto itr = m_listpCollider.begin(); itr != m_listpCollider.end(); itr++) { (*itr)->Init(); }
+		for (auto pCollider : m_listpCollider) { pCollider->Init(); }
 		m_pMesh->Init();
 		m_pDraw->Init();
 		return true;
 	}
-
-	virtual void Uninit(void)
+	virtual void	Uninit(void)
 	{
 		m_pTransform->Release();
 		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end();)
@@ -74,26 +65,23 @@ public:
 		m_pMesh->Release();
 		m_pDraw->Release();
 	}
-
-	virtual void Update(void)
+	virtual void	Update(void)
 	{
 		if (!m_bActive) { return; }
-		SwapParam();
-		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->Update(); }
+		swapParam();
+		for (auto pBehavior : m_listpBehavior) { pBehavior->Update(); }
 		m_pRigidbody->Update();
-		for (auto itr = m_listpCollider.begin(); itr != m_listpCollider.end(); ++itr) { (*itr)->Update(); }
+		for (auto pCollider : m_listpCollider) { pCollider->Update(); }
 	}
-
-	virtual void LateUpdate(void)
+	virtual void	LateUpdate(void)
 	{
 		if (!m_bActive) { return; }
 		m_pRigidbody->LateUpdate();
-		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end(); ++itr) { (*itr)->LateUpdate(); }
+		for (auto pBehavior : m_listpBehavior) { pBehavior->LateUpdate(); }
 		m_pMesh->Update();
 		m_pTransform->UpdateMatrix();
 	}
-
-	virtual void Draw(void)
+	virtual void	Draw(void)
 	{
 		if (!m_bActive) { return; }
 		m_pDraw->Draw();
@@ -102,34 +90,42 @@ public:
 		DrawNormal();
 #endif
 	}
-
-	void						Release(void);
+	void			Release(void);
 
 	//Get関数
-	CTransformComponent*		GetTransformComponent(void) const { return m_pTransform; }
-	list<CBehaviorComponent*>&	GetBehaviorComponent(void) { return m_listpBehavior; }
-	CMeshComponent*				GetMeshComponent(void) const { return m_pMesh; }
-	CRigidbodyComponent*		GetRigidbodyComponent(void) const { return m_pRigidbody; }
-	list<CColliderComponent*>&	GetColliderComponent(void) { return m_listpCollider; }
-	OBJ_TYPE					GetObjType(void) const { return m_type; }
-	bool						IsActive(void) const { return m_bActive; }
+	auto		GetTransformComponent(void) const { return m_pTransform; }
+	auto&		GetBehaviorComponent(void) { return m_listpBehavior; }
+	auto		GetMeshComponent(void) const { return m_pMesh; }
+	auto		GetRigidbodyComponent(void) const { return m_pRigidbody; }
+	auto&		GetColliderComponent(void) const { return m_listpCollider; }
+	const auto&	GetName(void) const { return m_strName; }
+	const auto&	GetParentName(void) const
+	{
+		auto pParent = m_pTransform;
+		while (pParent->GetParent()) { pParent = pParent->GetParent(); }
+		return pParent->GetGameObject()->GetName();
+	}
+	const auto&	GetTag(void) const { return m_strTag; }
+	bool		IsActive(void) const { return m_bActive; }
 
 	//Set関数
-	void						SetMeshComponent(CMeshComponent* pMesh) { m_pMesh = pMesh; }
-	void						SetDrawComponent(CDrawComponent* pDraw) { m_pDraw = pDraw; }
-	void						SetRigidbodyComponent(CRigidbodyComponent* pRb) { m_pRigidbody = pRb; }
-	void						SetActive(const bool& bActive);
-	void						SetAlive(const bool& bAlive);
-	void						SetObjType(const OBJ_TYPE& type) { m_type = type; }
-	void						AddBehavior(CBehaviorComponent* pBehavior);
-	void						AddCollider(CColliderComponent* pCollider);
-	void						DeleteCollider(CColliderComponent* pCollider);
+	void		SetMeshComponent(CMeshComponent* pMesh) { m_pMesh = pMesh; }
+	void		SetDrawComponent(CDrawComponent* pDraw) { m_pDraw = pDraw; }
+	void		SetRigidbodyComponent(CRigidbodyComponent* pRb) { m_pRigidbody = pRb; }
+	void		SetActive(const bool& bActive);
+	void		SetAlive(const bool& bAlive);
+	void		SetName(const string& strName) { m_strName = strName; }
+	void		SetTag(const string& strTag) { m_strTag = strTag; }
+
+	void		AddBehavior(CBehaviorComponent* pBehavior);
+	void		AddCollider(CColliderComponent* pCollider);
+	void		DeleteCollider(CColliderComponent* pCollider);
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	virtual void				SwapParam(void);
+	virtual void				swapParam(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -151,7 +147,8 @@ private:
 	bool				m_bActive;		//活動フラグ
 	bool				m_bAlive;		//生きるフラグ
 	GOM::PRIORITY		m_pri;			//優先度
-	OBJ_TYPE			m_type;			//タイプ
+	string				m_strName;		//オブジェクトの名前
+	string				m_strTag;		//オブジェクトのタグ
 
 	//ヌルコンポネント
 	static CNullRigidbodyComponent	s_nullRigidbody;

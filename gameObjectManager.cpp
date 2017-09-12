@@ -105,7 +105,7 @@ void CGameObjectManager::DrawAll(void)
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトの確保
 //--------------------------------------------------------------------------------
-void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
+void CGameObjectManager::RegisterGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
 	m_alistGameObj[pri].push_back(pGameObj);
 }
@@ -113,7 +113,7 @@ void CGameObjectManager::SaveGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトの破棄
 //--------------------------------------------------------------------------------
-void CGameObjectManager::ReleaseGameObj(const PRIORITY &pri, CGameObject *pGameObj)
+void CGameObjectManager::DeregisterGameObj(const PRIORITY &pri, CGameObject *pGameObj)
 {
 	if (!pGameObj) { return; }
 	PRIORITY priCopy = pri;

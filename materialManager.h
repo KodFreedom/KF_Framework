@@ -4,11 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
-#ifndef _MATERIAL_MANAGER_H_
-#define _MATERIAL_MANAGER_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -25,6 +21,13 @@ class CKFMaterial
 {
 public:
 	CKFMaterial();
+	CKFMaterial(const CKFColor& cAmbient, const CKFColor& cDiffuse, const CKFColor& cSpecular, const CKFColor& cEmissive, const float& fPower)
+		: m_cAmbient(cAmbient)
+		, m_cDiffuse(cDiffuse)
+		, m_cSpecular(cSpecular)
+		, m_cEmissive(cEmissive)
+		, m_fPower(fPower)
+	{}
 	~CKFMaterial() {}
 
 	CKFColor	m_cAmbient;		// 環境光の反射率
@@ -33,8 +36,13 @@ public:
 	CKFColor	m_cEmissive;	// 自発光
 	float		m_fPower;		// ハイライトのシャープネス
 
-								//キャスト
+	//キャスト
+#ifdef USING_DIRECTX
 	operator D3DMATERIAL9 () const;
+#endif
+
+	//operator
+	bool operator==(const CKFMaterial& mat) const;
 };
 
 //--------------------------------------------------------------------------------
@@ -43,22 +51,31 @@ public:
 class CMaterialManager
 {
 public:
-	enum MATERIAL
+	//--------------------------------------------------------------------------------
+	//  列挙型定義
+	//--------------------------------------------------------------------------------
+	enum MAT_TYPE
 	{
-		MAT_NORMAL,
-		MAT_MAX
+		MT_NORMAL = 0,
 	};
 
-	CMaterialManager() {}
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CMaterialManager();
 	~CMaterialManager() {}
 
-	void Init(void);
+	void					Release(void) 
+	{
+		m_umMaterial.clear();
+		delete this; 
+	}
+	const unsigned short	SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
+	const CKFMaterial&		GetMaterial(const unsigned short& usID);
 
-	CKFMaterial GetMaterial(const MATERIAL &mat);
 private:
-	CKFMaterial InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
-
-	CKFMaterial m_aMaterial[MAT_MAX];
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	unordered_map<unsigned short, CKFMaterial> m_umMaterial;
 };
-
-#endif

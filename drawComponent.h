@@ -11,7 +11,6 @@
 //--------------------------------------------------------------------------------
 #include "component.h"
 #include "renderState.h"
-#include "materialManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -30,7 +29,7 @@ public:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CDrawComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-		,m_pRenderState(&s_nullRenderState), m_matType(CMM::MAT_NORMAL) 
+		,m_pRenderState(&s_nullRenderState), m_usMatID(0)
 	{
 		m_strTexName.clear();
 	}
@@ -53,7 +52,7 @@ public:
 		m_pRenderState = pRenderState; 
 	}
 	void			SetTexName(const string& strTexName);
-	void			SetMatType(const CMM::MATERIAL& matType) { m_matType = matType; }
+	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -71,7 +70,7 @@ protected:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	string			m_strTexName;	//テクスチャ
-	CMM::MATERIAL	m_matType;		//マテリアル
+	unsigned short	m_usMatID;		//マテリアル
 	CRenderState*	m_pRenderState;	//レンダーステート
 };
 

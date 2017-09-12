@@ -33,12 +33,9 @@ CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string
 	, m_nCntFrame(0)
 	, m_nCntChangeFrame(0)
 {
-	for (int nCnt = 0; nCnt < (int)MP_MAX; ++nCnt)
-	{
-		m_apMotionData[(MOTION_PATTERN)nCnt] = nullptr;
-	}
+	for (auto& pMotionDate : m_apMotionData) { pMotionDate = nullptr; }
 	m_listAttackCollider.clear();
-	m_listNodes.clear();
+	m_vecBorns.clear();
 
 	//ファイルからデータを読み込む
 	analyzeFile(strPath);
@@ -49,11 +46,8 @@ CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string
 //--------------------------------------------------------------------------------
 bool CAnimatorComponent::Init(void)
 {
-	auto objType = m_pGameObj->GetObjType();
-	for (auto pObj : m_listNodes)
-	{
-		pObj->SetObjType(objType);
-	}
+	auto& strTag = m_pGameObj->GetTag();
+	for (auto pObj : m_vecBorns) { pObj->SetTag(strTag); }
 	changeMotion(m_motionNow);
 	auto pMotionInfo = m_apMotionData[m_motionNow];
 	m_pMotionKeyLast = &pMotionInfo->m_vecMotionKey[m_nKeyNow];
@@ -67,14 +61,12 @@ void CAnimatorComponent::Uninit(void)
 {
 	for (auto pInfo : m_apMotionData)
 	{
-		if (pInfo)
-		{
-			delete pInfo;
-			pInfo = nullptr;
-		}
+		if (!pInfo) { continue; }
+		delete pInfo;
+		pInfo = nullptr;
 	}
 
-	m_listNodes.clear();
+	m_vecBorns.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -96,7 +88,7 @@ void CAnimatorComponent::Update(void)
 	float fRate = (float)m_nCntFrame / nFrame;
 
 	//Nodeごと位置回転更新
-	for (auto pObj : m_listNodes)
+	for (auto pObj : m_vecBorns)
 	{
 		auto pTrans = pObj->GetTransformComponent();
 		auto vPosNew = CKFMath::LerpVec3(itrNodeKeyLast->c_vPos, itrNodeKey->c_vPos, fRate);
@@ -190,14 +182,8 @@ void CAnimatorComponent::SetJump(const bool& bJump)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::SetMove(const float& fMovement)
 {
-	if (fMovement == 0.0f)
-	{
-		changeMotion(MP_NEUTAL);
-	}
-	else
-	{
-		changeMotion(MP_RUN);
-	}
+	if (fMovement == 0.0f) { changeMotion(MP_NEUTAL); }
+	else { changeMotion(MP_RUN); }
 }
 
 //--------------------------------------------------------------------------------
@@ -303,7 +289,7 @@ void CAnimatorComponent::updateAttack(void)
 	if (m_nKeyNow == 2 && m_listAttackCollider.empty())
 	{
 		//右手のオブジェクトにコライダーをつける
-		auto itr = m_listNodes.begin();
+		auto itr = m_vecBorns.begin();
 		advance(itr, 3);
 
 		for (int nCnt = 0; nCnt < 4; ++nCnt)
@@ -322,7 +308,7 @@ void CAnimatorComponent::updateAttack(void)
 		&& !m_listAttackCollider.empty())
 	{
 		//右手のオブジェクトからコライダーを外す
-		auto itr = m_listNodes.begin();
+		auto itr = m_vecBorns.begin();
 		advance(itr, 3);
 		for (auto itrCollider = m_listAttackCollider.begin(); itrCollider != m_listAttackCollider.end();)
 		{
@@ -374,11 +360,9 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		strNum[nCntNum] = strRead[nCnt];
 	}
 
+	//NumParts
 	int nNumParts = atoi(strNum);
-
-	//親設定用
-	vector<CGameObject*> vecObj;
-	vecObj.resize(nNumParts);
+	m_vecBorns.resize(nNumParts);
 
 	//XFileの読み込み
 	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
@@ -406,9 +390,8 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			strPath.push_back(strRead[nCnt]);
 		}
 
-		auto pNode = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-		m_listNodes.push_back(pNode);
-		vecObj[nCntPart] = pNode;
+		auto pBone = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+		m_vecBorns[nCntPart] = pBone;
 	}
 
 	//character情報の読み込み
@@ -456,8 +439,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	//m_fRadius = (float)atof(strRadius);
 
 	//parts infoの読み込み
-	auto itr = m_listNodes.begin();
-	for (int nCntPart = 0; nCntPart < nNumParts; ++nCntPart, ++itr)
+	for (int nCntPart = 0; nCntPart < nNumParts; ++nCntPart)
 	{
 		char strComp2[] = "\tPARTSSET";
 		bFind = false;
@@ -530,8 +512,8 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		
 		CGameObject* pParent = nullptr;
 		if (nParent < 0) { pParent = m_pGameObj; }
-		else { pParent = vecObj[nParent]; }
-		(*itr)->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
+		else { pParent = m_vecBorns[nParent]; }
+		m_vecBorns[nCntPart]->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
 	}
 
 	//motionの読み込み

@@ -28,13 +28,13 @@
 //--------------------------------------------------------------------------------
 void C3DMeshDrawComponent::Draw(void)
 {
-	const CMesh* const pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
+	const auto pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
 
 	//マトリクス算出
 	auto mtxWorld = m_pGameObj->GetTransformComponent()->GetMatrix();
 
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//RenderState設定
 	m_pRenderState->SetRenderState();
@@ -57,11 +57,11 @@ void C3DMeshDrawComponent::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+	auto pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = CMain::GetManager()->GetMaterialManager()->GetMaterial(m_matType);
+	D3DMATERIAL9 mat = CMain::GetManager()->GetMaterialManager()->GetMaterial(m_usMatID);
 	pDevice->SetMaterial(&mat);
 
 	//プリミティブ描画

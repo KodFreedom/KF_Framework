@@ -4,15 +4,16 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-//  Update : 
-//	
-//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "materialManager.h"
+
+//--------------------------------------------------------------------------------
+//  静的メンバ変数
+//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -24,15 +25,14 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CKFMaterial::CKFMaterial()
-	: m_cAmbient(CKFColor(0.0f))
-	, m_cDiffuse(CKFColor(0.0f))
-	, m_cEmissive(CKFColor(0.0f))
-	, m_cSpecular(CKFColor(0.0f))
-	, m_fPower(0.0f)
-{
+	: m_cAmbient(CKFMath::sc_cWhite)
+	, m_cDiffuse(CKFMath::sc_cWhite)
+	, m_cEmissive(CKFMath::sc_cWhite)
+	, m_cSpecular(CKFMath::sc_cWhite)
+	, m_fPower(1.0f)
+{}
 
-}
-
+#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
 //  キャスト(D3DMATERIAL9)
 //	DXの環境のため(マテリアル)オーバーロードする
@@ -40,49 +40,70 @@ CKFMaterial::CKFMaterial()
 CKFMaterial::operator D3DMATERIAL9() const
 {
 	D3DMATERIAL9 vAnswer;
-
 	vAnswer.Ambient = m_cAmbient;
 	vAnswer.Diffuse = m_cDiffuse;
 	vAnswer.Emissive = m_cEmissive;
 	vAnswer.Specular = m_cSpecular;
 	vAnswer.Power = m_fPower;
-
 	return vAnswer;
+}
+#endif
+
+//--------------------------------------------------------------------------------
+//	operator==
+//--------------------------------------------------------------------------------
+bool CKFMaterial::operator==(const CKFMaterial& mat) const
+{
+	if (this->m_cAmbient == mat.m_cAmbient
+		&& this->m_cDiffuse == mat.m_cDiffuse
+		&& this->m_cEmissive == mat.m_cEmissive
+		&& this->m_cSpecular == mat.m_cSpecular
+		&& this->m_fPower == mat.m_fPower)
+	{ return true; }
+	return false;
 }
 
 //--------------------------------------------------------------------------------
 //	CMaterialManager
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化処理
+//	コンストラクタ
 //--------------------------------------------------------------------------------
-void CMaterialManager::Init(void)
+CMaterialManager::CMaterialManager()
 {
-	m_aMaterial[MAT_NORMAL] = InitMaterial(CKFColor(1.0f)
-		, CKFColor(1.0f)
-		, CKFColor(0.0f, 0.0f, 0.0f, 1.0f)
-		, CKFColor(0.0f, 0.0f, 0.0f, 1.0f)
-		, 0.8f);
+	m_umMaterial.clear();
+
+	//Normal
+	SaveMaterial(CKFMath::sc_cWhite, CKFMath::sc_cWhite, CKFMath::sc_cBlack, CKFMath::sc_cBlack, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
-//  マテリアル取得
+//  SaveMaterial
 //--------------------------------------------------------------------------------
-CKFMaterial CMaterialManager::GetMaterial(const MATERIAL &mat)
+const unsigned short CMaterialManager::SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
 {
-	return m_aMaterial[mat];
+	auto& mat = CKFMaterial(cAmbient, cDiffuse, cSpecular, cEmissive, fPower);
+
+	//今までのマテリアルと比較する
+	for (auto& mMat : m_umMaterial)
+	{
+		if (mMat.second == mat)
+		{//すでにあるならIDを返す
+			return mMat.first;
+		}
+	}
+
+	//Mapに追加する
+	auto usID = (unsigned short)m_umMaterial.size();
+	m_umMaterial.emplace(usID, mat);
+
+	return usID;
 }
 
 //--------------------------------------------------------------------------------
-//  マテリアル設定
+//  GetMaterial
 //--------------------------------------------------------------------------------
-CKFMaterial CMaterialManager::InitMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
+const CKFMaterial& CMaterialManager::GetMaterial(const unsigned short& usID)
 {
-	CKFMaterial mat;
-	mat.m_cAmbient = cAmbient;		// 環境光の反射率
-	mat.m_cDiffuse = cDiffuse;		// 漫射光の反射率
-	mat.m_cSpecular = cSpecular;	// 鏡面光の反射率
-	mat.m_cEmissive = cEmissive;	// 自発光
-	mat.m_fPower = fPower;			// ハイライトのシャープネス
-	return mat;
+	return m_umMaterial.at(usID);
 }

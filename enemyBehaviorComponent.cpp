@@ -16,6 +16,10 @@
 #include "enemyNormalMode.h"
 #include "enemyAttackMode.h"
 
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif
+
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
@@ -37,10 +41,10 @@ bool CEnemyBehaviorComponent::Init(void)
 	m_pMode = new CEnemyNormalMode;
 	m_actor.SetLifeMax(100.0f);
 	m_actor.SetLifeNow(100.0f);
-	m_actor.SetJumpSpeed(0.5f);
+	m_actor.SetJumpSpeed(0.0f);
 	m_actor.SetTurnSpeedMin(2.0f * KF_PI * DELTA_TIME);
 	m_actor.SetTurnSpeedMax(4.0f * KF_PI * DELTA_TIME);
-	m_actor.SetMoveSpeed(0.075f);
+	m_actor.SetMoveSpeed(5.0f);
 	return true;
 }
 
@@ -49,11 +53,9 @@ bool CEnemyBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CEnemyBehaviorComponent::Uninit(void)
 {
-	if (m_pMode)
-	{
-		delete m_pMode;
-		m_pMode = nullptr;
-	}
+	if (!m_pMode) { return; }
+	delete m_pMode;
+	m_pMode = nullptr;
 }
 
 //--------------------------------------------------------------------------------
@@ -71,6 +73,9 @@ void CEnemyBehaviorComponent::LateUpdate(void)
 {
 	if (m_actor.GetLifeNow() <= 0.0f)
 	{
+#ifdef _DEBUG
+		CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is dead!\n");
+#endif
 		m_pGameObj->SetAlive(false);
 	}
 }
@@ -80,16 +85,23 @@ void CEnemyBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
 {
-	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_PLAYER)
+	if (collider.GetGameObject()->GetTag()._Equal("Player"))
 	{//プレイヤー
-		if (colliderThis.GetTag() == "detector" && !m_pTarget)
+		if (colliderThis.GetTag()._Equal("detector") && !m_pTarget)
 		{//敵検知範囲
+#ifdef _DEBUG
+			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " find " + collider.GetGameObject()->GetName() + "!\n");
+#endif
 			m_pTarget = collider.GetGameObject();
 			ChangeMode(new CEnemyAttackMode);
 		}
 
-		if (collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		if (collider.GetTag()._Equal("weapon") && colliderThis.GetTag()._Equal("body"))
 		{
+#ifdef _DEBUG
+			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted!\n");
+#endif
+
 			m_actor.Hit(25.0f);
 		}
 	}

@@ -23,8 +23,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri, const OBJ_TYPE& type)
-	: CGameObject(pri, type)
+CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri)
+	: CGameObject(pri)
 	, m_pAnimator(nullptr)
 {
 
@@ -63,7 +63,10 @@ void CGameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObjectActor(GOM::PRI_3D, OT_PLAYER);
+	auto pObj = new CGameObjectActor(GOM::PRI_3D);
+
+	//Tag
+	pObj->SetTag("Player");
 
 	//コンポネント
 	auto pRb = new C3DRigidbodyComponent(pObj);
@@ -90,7 +93,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 	pObj->Init();
 
 	//UI
-	CPlayerUIObject::Create(pPb);
+	//CPlayerUIObject::Create(pPb);
 
 	return pObj;
 }
@@ -100,7 +103,10 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObjectActor(GOM::PRI_3D, OT_ENEMY);
+	auto pObj = new CGameObjectActor(GOM::PRI_3D);
+
+	//Tag
+	pObj->SetTag("Enemy");
 
 	//コンポネント
 	auto pRb = new C3DRigidbodyComponent(pObj);

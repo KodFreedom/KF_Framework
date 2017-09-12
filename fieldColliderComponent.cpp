@@ -130,13 +130,12 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 
 	//地面法線の角度が60度以上なら地面法線を返す
 	//そうじゃないなら上方向を返す
-	auto vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
-	auto fDot = CKFMath::Vec3Dot(vNormal, info.vFaceNormal);
+	auto fDot = CKFMath::Vec3Dot(CKFMath::sc_vUp, info.vFaceNormal);
 	if (fDot > 0.5f) 
 	{
 		float fY = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * info.vFaceNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * info.vFaceNormal.m_fZ) / info.vFaceNormal.m_fY;
 		info.fPenetration = fY - vPos.m_fY;
-		info.vFaceNormal = vNormal;
+		info.vFaceNormal = CKFMath::sc_vUp;
 		return info;
 	}
 
@@ -144,8 +143,10 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 	auto vOffsetPos = (vPLeftUp + vPRightDown) * 0.5f;
 
 	//回転行列の算出
-	auto vRight = info.vFaceNormal * CKFVec3(0.0f, 0.0f, 1.0f);
+	auto vRight = vPRightDown - vPLeftUp;
+	CKFMath::VecNormalize(vRight);
 	auto vForward = vRight * info.vFaceNormal;
+	CKFMath::VecNormalize(vForward);
 	CKFMtx44 mtxThis;
 	mtxThis.m_af[0][0] = vRight.m_fX;
 	mtxThis.m_af[0][1] = vRight.m_fY;
@@ -161,9 +162,14 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 	mtxThis.m_af[3][2] = vOffsetPos.m_fZ;
 	auto vRealPos = CKFMath::TransformInverse(mtxThis, vPos);
 
+	if (vRealPos.m_fY < 0.0f)
+	{
+ 		int n = 0;
+	}
+
 	//登られないため法線を上方向と垂直方向にする
-	vRight = vNormal * info.vFaceNormal;
-	info.vFaceNormal = vRight * vNormal;
+	vRight = CKFMath::sc_vUp * info.vFaceNormal;
+	info.vFaceNormal = vRight * CKFMath::sc_vUp;
 	CKFMath::VecNormalize(info.vFaceNormal);
 	info.fPenetration = -vRealPos.m_fY;
 	return info;

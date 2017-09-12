@@ -19,13 +19,15 @@
 #include <string>
 #include <algorithm>
 #include <sstream>
+#include <assert.h>
 using namespace std;
 
 //OpenMP
 #include <omp.h>
 
-//”Šwˆ—
+//KFŠÖ”
 #include "KF_Math.h"
+#include "KF_Utility.h"
 
 //DirectXŒn
 #ifdef USING_DIRECTX

@@ -16,6 +16,10 @@
 #include "gameObjectActor.h"
 #include "colliderComponent.h"
 
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif
+
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
@@ -34,10 +38,10 @@ bool CPlayerBehaviorComponent::Init(void)
 {
 	m_actor.SetLifeMax(100.0f);
 	m_actor.SetLifeNow(100.0f);
-	m_actor.SetJumpSpeed(20.0f);
+	m_actor.SetJumpSpeed(100.0f);
 	m_actor.SetTurnSpeedMin(2.0f * KF_PI * DELTA_TIME);
 	m_actor.SetTurnSpeedMax(4.0f * KF_PI * DELTA_TIME);
-	m_actor.SetMoveSpeed(8.0f);
+	m_actor.SetMoveSpeed(50.0f);
 	return true;
 }
 
@@ -62,90 +66,6 @@ void CPlayerBehaviorComponent::Update(void)
 	auto bJump = pInput->GetKeyTrigger(CInputManager::K_JUMP);
 	auto bAttack = pInput->GetKeyTrigger(CInputManager::K_ATTACK);
 	m_actor.Act(vMove, bJump, bAttack);;
-
-	/*if (m_usCntWhosYourDaddy) { m_usCntWhosYourDaddy--; }
-	CMeshComponent* pMesh = m_pGameObj->GetMeshComponent();
-	CActorMeshComponent *pActor = (CActorMeshComponent*)pMesh;
-	CInputManager* pInput = CMain::GetManager()->GetInputManager();
-	bool bCanControl = true;
-
-	if (pActor->GetMotionNow() == CActorMeshComponent::MOTION::MOTION_ATTACK) 
-	{
-		if (pActor->GetMotionInfo().nKeyNow == 3 && !m_pAttackCollider)
-		{
-			m_pAttackCollider = new CSphereColliderComponent(m_pGameObj, CM::DYNAMIC, CKFVec3(0.0f, 0.6f, 2.1f), 0.9f);
-			m_pAttackCollider->SetTag("weapon");
-			m_pAttackCollider->SetTrigger(true);
-		}
-		bCanControl = false; 
-	}
-
-	if (!bCanControl) { return; }
-
-	if (m_pAttackCollider)
-	{
-		m_pGameObj->DeleteCollider(m_pAttackCollider);
-		m_pAttackCollider->Release();
-		m_pAttackCollider = nullptr;
-	}
-
-	//移動
-	CKFVec2 vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-	if (fabsf(vAxis.m_fX) > 0.1f || fabsf(vAxis.m_fY) > 0.1f)
-	{
-		float fRot = CKFMath::Vec2Radian(vAxis) + KF_PI * 0.5f;
-		CTransformComponent* pTrans = m_pGameObj->GetTransformComponent();
-
-		//回転計算
-		CKFVec3 vUp = pTrans->GetUpNext();
-		CKFVec3 vForward = pTrans->GetForwardNext();
-		CKFVec3 vRight = pTrans->GetRightNext();
-
-		//カメラ向きを算出する
-		CCamera* pCamera = CMain::GetManager()->GetMode()->GetCamera();
-		CKFVec3 vForwardCamera = pCamera->GetVecLook();
-		CKFVec3 vForwardNext = (vUp * vForwardCamera) * vUp;
-
-		if (fRot != 0.0f)
-		{//操作より行く方向を回転する
-			CKFMtx44 mtxYaw;
-			CKFMath::MtxRotAxis(mtxYaw, vUp, fRot);
-			CKFMath::Vec3TransformNormal(vForwardNext, mtxYaw);
-		}
-
-		CKFMath::VecNormalize(vForwardNext);
-		vForwardNext = CKFMath::LerpNormal(vForward, vForwardNext, 0.2f);
-		pTrans->RotByForward(vForwardNext);
-
-		//移動設定
-		c_pRigidbody->MovePos(vForwardNext * c_fSpeed);
-
-		//移動モーション設定
-		pActor->SetMotion(CActorMeshComponent::MOTION_MOVE);
-	}
-	else
-	{
-		//ニュートラルモーション設定
-		pActor->SetMotion(CActorMeshComponent::MOTION_NEUTAL);
-	}
-
-	//ジャンプ
-	if (pInput->GetKeyTrigger(CInputManager::KEY::K_JUMP) && c_pRigidbody->IsOnGround())
-	{
-		//上方向にジャンプ
-		c_pRigidbody->AddForce(CKFVec3(0.0f, 1.0f, 0.0f) * c_fJumpForce * DELTA_TIME);
-		c_pRigidbody->SetOnGround(false);
-
-		//ジャンプモーション設定
-		pActor->SetMotion(CActorMeshComponent::MOTION_JUMP);
-	}
-
-	//攻撃
-	if (pInput->GetKeyTrigger(CInputManager::KEY::K_ATTACK))
-	{
-		//ジャンプモーション設定
-		pActor->SetMotion(CActorMeshComponent::MOTION_ATTACK);
-	}*/
 }
 
 //--------------------------------------------------------------------------------
@@ -166,17 +86,20 @@ void CPlayerBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
 {
-	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_ENEMY)
+	if (collider.GetGameObject()->GetTag()._Equal("Enemy"))
 	{//武器チェック
-		if (collider.GetTag() == "weapon" && colliderThis.GetTag() == "body")
+		if (collider.GetTag()._Equal("weapon") && colliderThis.GetTag()._Equal("body"))
 		{
+#ifdef _DEBUG
+			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted by" + collider.GetGameObject()->GetParentName() + "!");
+#endif
 			m_actor.Hit(5.0f);
 		}
 	}
 
-	if (collider.GetGameObject()->GetObjType() == CGameObject::OT_GOAL)
+	if (collider.GetGameObject()->GetTag()._Equal("Goal"))
 	{
-		if (colliderThis.GetTag() == "body")
+		if (colliderThis.GetTag()._Equal("body"))
 		{
 			auto pMode = CMain::GetManager()->GetMode();
 			auto pModeDemo = dynamic_cast<CModeDemo*>(pMode);

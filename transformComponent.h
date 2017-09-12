@@ -23,76 +23,77 @@ public:
 	CTransformComponent(CGameObject* const pGameObj);
 	~CTransformComponent() {}
 	
-	bool			Init(void) override { return true; }
-	void			Uninit(void) override {}
-	void			UpdateMatrix(void);	
-	void			UpdateMatrix(const CKFMtx44& mtxParent);
-	void			SwapParam(void);
+	bool					Init(void) override { return true; }
+	void					Uninit(void) override {}
+	void					UpdateMatrix(void);	
+	void					UpdateMatrix(const CKFMtx44& mtxParent);
+	void					SwapParam(void);
 	
 	//êeéqä÷åW
-	void			RegisterChild(CTransformComponent* pChild);
-	void			DeregisterChild(CTransformComponent* pChild);
-	void			RegisterParent(CTransformComponent* pParent, const CKFVec3& vOffsetPos = CKFVec3(0.0f), const CKFVec3& vOffsetRot = CKFVec3(0.0f));
+	void					RegisterChild(CTransformComponent* pChild);
+	void					DeregisterChild(CTransformComponent* pChild);
+	void					RegisterParent(CTransformComponent* pParent, const CKFVec3& vOffsetPos = CKFVec3(0.0f), const CKFVec3& vOffsetRot = CKFVec3(0.0f));
 
 	//Getä÷êî
-	CKFVec3			GetPos(void) const { return m_vPos; }
-	CKFVec3			GetPosNext(void) const { return m_vPosNext; }
-	CKFQuaternion	GetRot(void);
-	CKFQuaternion	GetRotNext(void);
-	CKFVec3			GetScale(void) const { return m_vScale; }
-	CKFVec3			GetScaleNext(void) const { return m_vScaleNext; }
-	CKFVec3			GetForward(void) const { return m_vForward; }
-	CKFVec3			GetForwardNext(void) const { return m_vForwardNext; }
-	CKFVec3			GetUp(void) const { return m_vUp; }
-	CKFVec3			GetUpNext(void) const { return m_vUpNext; }
-	CKFVec3			GetRight(void) const { return m_vRight; }
-	CKFVec3			GetRightNext(void) const { return m_vRightNext; }
-	CKFMtx44		GetMatrixRot(void);
-	CKFMtx44		GetMatrixRotNext(void);
-	CKFMtx44		GetMatrix(void) const { return m_mtxThis; }
-	CKFMtx44		GetMatrixWorldNext(void);
-	auto&			GetChildren(void) { return m_listChildren; }
+	const auto&				GetPos(void) const { return m_vPos; }
+	const auto&				GetPosNext(void) const { return m_vPosNext; }
+	const CKFQuaternion		GetRot(void) const;
+	const CKFQuaternion		GetRotNext(void) const;
+	const auto&				GetScale(void) const { return m_vScale; }
+	const auto&				GetScaleNext(void) const { return m_vScaleNext; }
+	const auto&				GetForward(void) const { return m_vForward; }
+	const auto&				GetForwardNext(void) const { return m_vForwardNext; }
+	const auto&				GetUp(void) const { return m_vUp; }
+	const auto&				GetUpNext(void) const { return m_vUpNext; }
+	const auto&				GetRight(void) const { return m_vRight; }
+	const auto&				GetRightNext(void) const { return m_vRightNext; }
+	const CKFMtx44			GetMatrixRot(void) const;
+	const CKFMtx44			GetMatrixRotNext(void) const;
+	const CKFMtx44&			GetMatrix(void) const { return m_mtxThis; }
+	const CKFMtx44			GetMatrixWorldNext(void) const;
+	const auto				GetParent(void) const { return m_pParent; }
+	auto&					GetChildren(void) { return m_listChildren; }
 
 	//Setä÷êî
-	void			SetPos(const CKFVec3& vPos) { m_vPos = vPos; }
-	void			SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
-	void			SetRot(const CKFQuaternion& qRot);
-	void			SetRotNext(const CKFQuaternion& qRotNext);
-	void			MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
-	void			SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
-	void			SetScaleNext(const CKFVec3& vScaleNext) { m_vScaleNext = vScaleNext; }
-	void			SetForward(const CKFVec3& vForward) { m_vForward = vForward; }
-	void			SetForwardNext(const CKFVec3& vForward) { m_vForwardNext = vForward; }
-	void			SetUp(const CKFVec3& vUp) { m_vUp = vUp; }
-	void			SetUpNext(const CKFVec3& vUp) { m_vUpNext = vUp; }
-	void			SetRight(const CKFVec3& vRight) { m_vRight = vRight; }
-	void			SetRightNext(const CKFVec3& vRight) { m_vRightNext = vRight; }
-	void			SetMatrix(const CKFMtx44& mtx) { m_mtxThis = mtx; }
-	void			SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
+	void					SetPos(const CKFVec3& vPos) { m_vPos = vPos; }
+	void					SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
+	void					SetRot(const CKFQuaternion& qRot);
+	void					SetRotNext(const CKFQuaternion& qRotNext);
+	void					MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
+	void					SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
+	void					SetScaleNext(const CKFVec3& vScaleNext) { m_vScaleNext = vScaleNext; }
+	void					SetForward(const CKFVec3& vForward) { m_vForward = vForward; }
+	void					SetForwardNext(const CKFVec3& vForward) { m_vForwardNext = vForward; }
+	void					SetUp(const CKFVec3& vUp) { m_vUp = vUp; }
+	void					SetUpNext(const CKFVec3& vUp) { m_vUpNext = vUp; }
+	void					SetRight(const CKFVec3& vRight) { m_vRight = vRight; }
+	void					SetRightNext(const CKFVec3& vRight) { m_vRightNext = vRight; }
+	void					SetMatrix(const CKFMtx44& mtx) { m_mtxThis = mtx; }
+	void					SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
 	{
 		m_vOffsetPos = vPos;
 		m_vOffsetRot = vRot;
 	}
 
 	//âÒì]ä÷êî
-	void			RotByEuler(const CKFVec3& vRot);
-	void			RotByPitch(const float& fRadian);
-	void			RotByYaw(const float& fRadian);
-	void			RotByRoll(const float& fRadian);
-	void			RotByUp(const CKFVec3& vUp);
-	void			RotByForward(const CKFVec3& vForward);
-	void			RotByRight(const CKFVec3& vRight);
+	void					RotByEuler(const CKFVec3& vRot);
+	void					RotByPitch(const float& fRadian);
+	void					RotByYaw(const float& fRadian);
+	void					RotByRoll(const float& fRadian);
+	void					RotByUp(const CKFVec3& vUp);
+	void					RotByForward(const CKFVec3& vForward);
+	void					RotByRight(const CKFVec3& vRight);
 
 	//ëºÇÃä÷êî
-	CKFVec3			TransformDirectionToWorld(const CKFVec3& vDirection);
-	CKFVec3			TransformDirectionToLocal(const CKFVec3& vDirection);
+	CKFVec3					TransformDirectionToWorld(const CKFVec3& vDirection);
+	CKFVec3					TransformDirectionToLocal(const CKFVec3& vDirection);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	void			calculateMtxThis(void);
-	void			calculateMtxThis(const CKFMtx44& mtxParent);
+	void		calculateMtxThis(void);
+	void		calculateMtxThis(const CKFMtx44& mtxParent);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

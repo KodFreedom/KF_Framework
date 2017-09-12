@@ -250,6 +250,21 @@ public:
 class CKFMath
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  íËêîíËã`
+	//--------------------------------------------------------------------------------
+	static const CKFVec3	sc_vZero;
+	static const CKFVec3	sc_vUp;
+	static const CKFVec3	sc_vDown;
+	static const CKFVec3	sc_vLeft;
+	static const CKFVec3	sc_vRight;
+	static const CKFVec3	sc_vForward;
+	static const CKFVec3	sc_vBack;
+	static const CKFColor	sc_cWhite;
+	static const CKFColor	sc_cBlack;
+	//--------------------------------------------------------------------------------
+	//  ä÷êîíËã`
+	//--------------------------------------------------------------------------------
 	//Random
 	static void				InitRandom(void);
 	static int				GetRandomInt(const int& nMin, const int& nMax);

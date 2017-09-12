@@ -518,5 +518,8 @@
     <ClInclude Include="debugManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="WindmillBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

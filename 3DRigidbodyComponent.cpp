@@ -30,15 +30,15 @@ C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
 	: CRigidbodyComponent(pGameObj, RB_3D)
 	, m_fMass(1.0f)
 	, m_fInverseMass(1.0f)
-	, m_fDrag(0.98f)
+	, m_fDrag(1.0f)
 	//, m_fAngularDrag(0.95f)
 	, m_fFriction(1.0f)
 	, m_fBounciness(0.0f)
-	, m_fGravityCoefficient(3.0f)
-	, m_vMovement(CKFVec3(0.0f))
-	, m_vVelocity(CKFVec3(0.0f))
-	, m_vAcceleration(CKFVec3(0.0f))
-	, m_vForceAccum(CKFVec3(0.0f))
+	, m_fGravityCoefficient(5.0f)
+	, m_vMovement(CKFMath::sc_vZero)
+	, m_vVelocity(CKFMath::sc_vZero)
+	, m_vAcceleration(CKFMath::sc_vZero)
+	, m_vForceAccum(CKFMath::sc_vZero)
 	//, m_bRotLock(0)
 {
 }
@@ -72,6 +72,7 @@ void C3DRigidbodyComponent::Update(void)
 	//CKFVec3 vAngularAcceleration = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
 
 	//‘¬“x
+	float fD = DELTA_TIME;
 	m_vVelocity += m_vAcceleration * DELTA_TIME;
 	//m_vAngularVelocity   += vAngularAcceleration;
 
@@ -83,12 +84,12 @@ void C3DRigidbodyComponent::Update(void)
 	//pTrans->RotByEuler(m_vAngularVelocity);
 
 	//ˆ—Š®—¹
-	m_vForceAccum = CKFVec3(0.0f);
-	m_vAcceleration = CKFVec3(0.0f);
+	m_vForceAccum = CKFMath::sc_vZero;
+	m_vAcceleration = CKFMath::sc_vZero;
 	//m_vTorqueAccum = CKFVec3(0.0f);
 	m_vVelocity *= m_fDrag;
 	//m_vAngularVelocity *= m_fAngularDrag;
-	m_vMovement = CKFVec3(0.0f);
+	m_vMovement = CKFMath::sc_vZero;
 }
 
 //--------------------------------------------------------------------------------
@@ -100,7 +101,7 @@ void C3DRigidbodyComponent::LateUpdate(void)
 	m_pGameObj->GetTransformComponent()->MovePosNext(m_vMovement);
 
 	//ˆ—Š®—¹
-	m_vMovement = CKFVec3(0.0f);
+	m_vMovement = CKFMath::sc_vZero;
 }
 
 //--------------------------------------------------------------------------------

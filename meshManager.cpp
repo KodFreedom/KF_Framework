@@ -352,9 +352,9 @@ CMesh* CMeshManager::createMesh(const string& strName)
 	CMesh* pMesh = new CMesh;
 
 	//デフォルトのメッシュを作成
-	if (strName == "cube") { createCube(pMesh); }
-	else if (strName == "sphere") { createSphere(pMesh); }
-	else if (strName == "skyBox") { createSkyBox(pMesh); }
+	if (strName._Equal("cube")) { createCube(pMesh); }
+	else if (strName._Equal("sphere")) { createSphere(pMesh); }
+	else if (strName._Equal("skyBox")) { createSkyBox(pMesh); }
 	else if (strName.find("Field") != string::npos) { loadField(strName, pMesh); }
 	return pMesh;
 }
@@ -436,11 +436,13 @@ CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 
 	auto pMesh = new CMesh;
 	pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
-	vector<CKFVec3> vecVtx;
-	vector<CKFVec3> vecNormal;
-	vector<CKFVec2> vecUV;
-	vector<int>		vecIdx;
-	vector<int>		vecNormalIdx;
+	vector<CKFVec3>		vecVtx;
+	vector<CKFVec3>		vecNormal;
+	vector<CKFVec2>		vecUV;
+	vector<CKFColor>	vecColor;
+	vector<int>			vecIdx;
+	vector<int>			vecNormalIdx;
+	vector<int>			vecColorIdx;
 
 	string strBuf;
 	while (CKFUtility::GetStrToken(pFile, "\n", strBuf) >= 0)
@@ -505,8 +507,72 @@ CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 
 		if (strBuf.compare(" MeshMaterialList {") == 0)
 		{
+			//Material数
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			stringstream ss;
+			int nNumColor;
+			ss << strBuf;
+			ss >> nNumColor;
+			vecColor.resize(nNumColor);
 
+			//インデックス数
+			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			ss.clear();
+			int nNumPolygon;
+			ss << strBuf;
+			ss >> nNumPolygon;
+			vecColorIdx.resize(nNumPolygon * 3);
+
+			//インデックスの読み込み
+			for (int nCnt = 0; nCnt < nNumPolygon; ++nCnt)
+			{
+				CKFUtility::GetStrToken(pFile, ",;", strBuf);
+				ss.clear();
+				ss << strBuf;
+				ss >> vecColorIdx[nCnt * 3];
+				vecColorIdx[nCnt * 3 + 1] = 
+					vecColorIdx[nCnt * 3 + 2] =
+					vecColorIdx[nCnt * 3];
+			}
+
+			//マテリアルの読み込み
+			for (int nCnt = 0; nCnt < nNumColor; ++nCnt)
+			{
+				while (CKFUtility::GetStrToken(pFile, "\n", strBuf) >= 0)
+				{
+					if (strBuf.compare("  Material {") == 0)
+					{
+						//R
+						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						ss.clear();
+						ss << strBuf;
+						ss >> vecColor[nCnt].m_fR;
+
+						//G
+						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						ss.clear();
+						ss << strBuf;
+						ss >> vecColor[nCnt].m_fG;
+
+						//B
+						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						ss.clear();
+						ss << strBuf;
+						ss >> vecColor[nCnt].m_fB;
+
+						//A
+						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						ss.clear();
+						ss << strBuf;
+						ss >> vecColor[nCnt].m_fA;
+
+						break;
+					}
+				}
+			}
 		}
+
+		
 
 		if (strBuf.compare(" MeshNormals {") == 0)
 		{
@@ -610,13 +676,12 @@ CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 	//頂点バッファをロックして、仮想アドレスを取得する
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	CKFColor cColor = CKFColor(1.0f);
 	for (int nCnt = 0; nCnt < pMesh->m_nNumIdx; ++nCnt)
 	{
 		pVtx[nCnt].vPos = vecVtx[vecIdx[nCnt]];
 		pVtx[nCnt].vNormal = vecNormal[vecNormalIdx[nCnt]];
 		pVtx[nCnt].vUV = vecUV[vecIdx[nCnt]];
-		pVtx[nCnt].ulColor = cColor;
+		pVtx[nCnt].ulColor = vecColor[vecColorIdx[nCnt]];
 	}
 
 	//仮想アドレス解放
@@ -635,52 +700,6 @@ CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 #endif
 
 	return pMesh;
-	/*LPDIRECT3DDEVICE9	pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	LPD3DXMESH			pDxMesh;		//メッシュ情報インターフェイス
-	LPD3DXBUFFER		pBufferMaterial;//マテリアル情報　動的メモリ
-	DWORD				dwNumMaterial;	//モデルのマテリアル数
-
-	//ハードディスクからXファイルの読み込み
-	HRESULT hr = D3DXLoadMeshFromX(
-		strName.c_str(),	//ファイル名
-		D3DXMESH_MANAGED,
-		pDevice,
-		NULL,				//隣接情報
-		&pBufferMaterial,	//モデルのマテリアル情報
-		NULL,
-		&dwNumMaterial,		//モデルのマテリアル数
-		&pDxMesh);			//メッシュ情報
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "CModel : D3DXLoadMeshFromX ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return;
-	}
-
-	//Mesh
-	pMesh->m_nNumIdx = pDxMesh->GetNumVertices();
-	pMesh->m_nNumPolygon = pDxMesh->GetNumFaces();
-	pMesh->m_nNumVtx = pDxMesh->GetNumVertices();
-	pDxMesh->GetIndexBuffer(&pMesh->m_pIdxBuffer);
-	pDxMesh->GetVertexBuffer(&pMesh->m_pVtxBuffer);
-
-	//texture
-	D3DXMATERIAL *pMat;//マテリアル情報を受け取れる用のポインタ
-
-	pMat = (D3DXMATERIAL*)pBufferMaterial->GetBufferPointer();
-	for (int nCnt = 0; nCnt < (int)dwNumMaterial; nCnt++)
-	{
-		if (pMat[nCnt].pTextureFilename != nullptr)
-		{
-			texName = pMat[nCnt].pTextureFilename;
-			break;
-		}
-	}
-
-	if (texName.empty())
-	{//テクスチャがないの場合普通なポリゴンにする
-		texName = "polygon.jpg";
-	}*/
 }
 
 //--------------------------------------------------------------------------------

@@ -88,7 +88,7 @@ private:
 	CMotionInfo*				m_apMotionData[MP_MAX];
 	CMotionKey*					m_pMotionKeyLast;
 	list<CColliderComponent*>	m_listAttackCollider;
-	list<CGameObject*>			m_listNodes;
+	vector<CGameObject*>		m_vecBorns;
 	MOTION_PATTERN				m_motionNow;
 	MOTION_PATTERN				m_motionNext;
 	MOTION_STATUS				m_status;

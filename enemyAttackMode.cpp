@@ -42,7 +42,7 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	auto listCollider = enemy.GetGameObject()->GetColliderComponent();
 	for (auto itr = listCollider.begin(); itr != listCollider.end(); ++itr)
 	{
-		if ((*itr)->GetTag() == "detector")
+		if ((*itr)->GetTag()._Equal("detector"))
 		{
 			auto pSphereCollider = dynamic_cast<CSphereColliderComponent*>(*itr);
 			fDisMax = pSphereCollider->GetRadius();

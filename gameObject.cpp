@@ -26,21 +26,27 @@ CNullDrawComponent		CGameObject::s_nullDraw;
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOM::PRIORITY &pri, const OBJ_TYPE& type)
+CGameObject::CGameObject(const GOM::PRIORITY &pri)
 	: m_pri(pri)
-	, m_type(type)
 	, m_bActive(true)
 	, m_bAlive(true)
 	, m_pRigidbody(&s_nullRigidbody)
 	, m_pMesh(&s_nullMesh)
 	, m_pDraw(&s_nullDraw)
 {
+	m_strName.clear();
+	m_strTag.clear();
 	m_listpBehavior.clear();
 	m_listpCollider.clear();
 	m_pTransform = new CTransformComponent(this);
-	CMain::GetManager()->GetGameObjectManager()->SaveGameObj(m_pri, this);
+	CMain::GetManager()->GetGameObjectManager()->RegisterGameObj(m_pri, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -48,7 +54,7 @@ CGameObject::CGameObject(const GOM::PRIORITY &pri, const OBJ_TYPE& type)
 //--------------------------------------------------------------------------------
 void CGameObject::Release(void)
 {
-	CMain::GetManager()->GetGameObjectManager()->ReleaseGameObj(m_pri, this);
+	CMain::GetManager()->GetGameObjectManager()->DeregisterGameObj(m_pri, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -76,14 +82,6 @@ void CGameObject::DeleteCollider(CColliderComponent* pCollider)
 }
 
 //--------------------------------------------------------------------------------
-//  パラメーター交換処理
-//--------------------------------------------------------------------------------
-void CGameObject::SwapParam(void)
-{
-	m_pTransform->SwapParam();
-}
-
-//--------------------------------------------------------------------------------
 //  SetActive
 //--------------------------------------------------------------------------------
 void CGameObject::SetActive(const bool& bActive)
@@ -107,6 +105,19 @@ void CGameObject::SetAlive(const bool& bAlive)
 	{
 		pChild->GetGameObject()->SetAlive(bAlive);
 	}
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Protected
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  パラメーター交換処理
+//--------------------------------------------------------------------------------
+void CGameObject::swapParam(void)
+{
+	m_pTransform->SwapParam();
 }
 
 //--------------------------------------------------------------------------------

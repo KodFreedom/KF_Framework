@@ -22,16 +22,16 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CTransformComponent::CTransformComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-	, m_vPos(CKFVec3(0.0f))
-	, m_vPosNext(CKFVec3(0.0f))
-	, m_vScale(CKFVec3(0.0f))
-	, m_vScaleNext(CKFVec3(0.0f))
-	, m_vForward(CKFVec3(0.0f, 0.0f, 1.0f))
-	, m_vUp(CKFVec3(0.0f, 1.0f, 0.0f))
-	, m_vRight(CKFVec3(1.0f, 0.0f, 0.0f))
-	, m_vForwardNext(CKFVec3(0.0f, 0.0f, 1.0f))
-	, m_vUpNext(CKFVec3(0.0f, 1.0f, 0.0f))
-	, m_vRightNext(CKFVec3(1.0f, 0.0f, 0.0f))
+	, m_vPos(CKFMath::sc_vZero)
+	, m_vPosNext(CKFMath::sc_vZero)
+	, m_vScale(CKFMath::sc_vZero)
+	, m_vScaleNext(CKFMath::sc_vZero)
+	, m_vForward(CKFMath::sc_vForward)
+	, m_vUp(CKFMath::sc_vUp)
+	, m_vRight(CKFMath::sc_vRight)
+	, m_vForwardNext(CKFMath::sc_vForward)
+	, m_vUpNext(CKFMath::sc_vUp)
+	, m_vRightNext(CKFMath::sc_vRight)
 	, m_pParent(nullptr)
 {
 	m_listChildren.clear();
@@ -39,7 +39,10 @@ CTransformComponent::CTransformComponent(CGameObject* const pGameObj) : CCompone
 }
 
 //--------------------------------------------------------------------------------
-//  マトリクス算出(親がないの場合呼び出される)
+//	関数名：UpdateMatrix
+//  関数説明：マトリクス算出(親がないの場合呼び出される)
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void  CTransformComponent::UpdateMatrix(void)
 {
@@ -56,7 +59,10 @@ void  CTransformComponent::UpdateMatrix(void)
 }
 
 //--------------------------------------------------------------------------------
-//  マトリクス算出(親があるの場合呼び出される)
+//	関数名：UpdateMatrix
+//  関数説明：マトリクス算出(親があるの場合呼び出される)
+//	引数：	mtxParent
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void  CTransformComponent::UpdateMatrix(const CKFMtx44& mtxParent)
 {
@@ -70,12 +76,14 @@ void  CTransformComponent::UpdateMatrix(const CKFMtx44& mtxParent)
 }
 
 //--------------------------------------------------------------------------------
-//  パラメーター交換処理
+//	関数名：UpdateMatrix
+//  関数説明：パラメーター交換処理
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::SwapParam(void)
 {
 	m_vPos = m_vPosNext;
-	//m_vRot = m_vRotNext;
 	m_vScale = m_vScaleNext;
 	m_vForward = m_vForwardNext;
 	m_vRight = m_vRightNext;
@@ -83,7 +91,10 @@ void CTransformComponent::SwapParam(void)
 }
 
 //--------------------------------------------------------------------------------
-//  Childリストに追加
+//	関数名：RegisterChild
+//  関数説明：Childリストに追加
+//	引数：	pChild
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RegisterChild(CTransformComponent* pChild)
 {
@@ -91,7 +102,10 @@ void CTransformComponent::RegisterChild(CTransformComponent* pChild)
 }
 
 //--------------------------------------------------------------------------------
-//  Childリストから削除
+//	関数名：RegisterChild
+//  関数説明：Childリストから削除
+//	引数：	pChild
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::DeregisterChild(CTransformComponent* pChild)
 {
@@ -99,7 +113,12 @@ void CTransformComponent::DeregisterChild(CTransformComponent* pChild)
 }
 
 //--------------------------------------------------------------------------------
-//  パラメーター交換処理
+//	関数名：RegisterParent
+//  関数説明：親の追加
+//	引数：	pParent
+//			vOffsetPos
+//			vOffsetRot
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RegisterParent(CTransformComponent* pParent, const CKFVec3& vOffsetPos, const CKFVec3& vOffsetRot)
 {
@@ -114,29 +133,34 @@ void CTransformComponent::RegisterParent(CTransformComponent* pParent, const CKF
 }
 
 //--------------------------------------------------------------------------------
-//  パラメーター交換処理
+//	関数名：GetRot
+//  関数説明：今のフレームの回転の取得
+//	引数：	なし
+//	戻り値：CKFQuaternion
 //--------------------------------------------------------------------------------
-CKFQuaternion CTransformComponent::GetRot(void)
+const CKFQuaternion CTransformComponent::GetRot(void) const
 {
-	CKFMtx44 mtxRot = GetMatrixRot();
-	CKFQuaternion qRot = CKFMath::MtxToQuaternion(mtxRot);
-	return qRot;
+	return CKFMath::MtxToQuaternion(GetMatrixRot());
 }
 
 //--------------------------------------------------------------------------------
-//  パラメーター交換処理
+//	関数名：GetRotNext
+//  関数説明：次のフレームの回転の取得
+//	引数：	なし
+//	戻り値：CKFQuaternion
 //--------------------------------------------------------------------------------
-CKFQuaternion CTransformComponent::GetRotNext(void)
+const CKFQuaternion CTransformComponent::GetRotNext(void) const
 {
-	CKFMtx44 mtxRot = GetMatrixRotNext();
-	CKFQuaternion qRot = CKFMath::MtxToQuaternion(mtxRot);
-	return qRot;
+	return CKFMath::MtxToQuaternion(GetMatrixRotNext());
 }
 
 //--------------------------------------------------------------------------------
-//	回転行列の取得
+//	関数名：GetMatrixRot
+//  関数説明：今のフレームの回転行列の取得
+//	引数：	なし
+//	戻り値：CKFMtx44
 //--------------------------------------------------------------------------------
-CKFMtx44 CTransformComponent::GetMatrixRot(void)
+const CKFMtx44 CTransformComponent::GetMatrixRot(void) const
 {
 	CKFMtx44 mtxRot;
 	mtxRot.m_af[0][0] = m_vRight.m_fX;
@@ -152,9 +176,12 @@ CKFMtx44 CTransformComponent::GetMatrixRot(void)
 }
 
 //--------------------------------------------------------------------------------
-//	回転行列の取得
+//	関数名：GetMatrixRotNext
+//  関数説明：次のフレームの回転行列の取得
+//	引数：	なし
+//	戻り値：CKFMtx44
 //--------------------------------------------------------------------------------
-CKFMtx44 CTransformComponent::GetMatrixRotNext(void)
+const CKFMtx44 CTransformComponent::GetMatrixRotNext(void) const
 {
 	CKFMtx44 mtxRot;
 	mtxRot.m_af[0][0] = m_vRightNext.m_fX;
@@ -170,15 +197,15 @@ CKFMtx44 CTransformComponent::GetMatrixRotNext(void)
 }
 
 //--------------------------------------------------------------------------------
-//	行列の取得
+//	関数名：GetMatrixWorldNext
+//  関数説明：次のフレームの世界行列の取得
+//	引数：	なし
+//	戻り値：CKFMtx44
 //--------------------------------------------------------------------------------
-CKFMtx44 CTransformComponent::GetMatrixWorldNext(void)
+const CKFMtx44 CTransformComponent::GetMatrixWorldNext(void) const
 {
-	//マトリクス算出
-	CKFMtx44 mtxWorld;
-
 	//回転
-	mtxWorld = GetMatrixRotNext();
+	auto mtxWorld = GetMatrixRotNext();
 
 	//平行移動
 	mtxWorld.m_af[3][0] = m_vPosNext.m_fX;
@@ -206,15 +233,14 @@ CKFMtx44 CTransformComponent::GetMatrixWorldNext(void)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：changeMotion
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
+//	関数名：SetRot
+//  関数説明：今の回転の設定
+//	引数：	qRot：回転情報
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::SetRot(const CKFQuaternion& qRotNext)
+void CTransformComponent::SetRot(const CKFQuaternion& qRot)
 {
-	auto mtxRot = CKFMath::QuaternionToMtx(qRotNext);
+	auto mtxRot = CKFMath::QuaternionToMtx(qRot);
 	m_vRight.m_fX = mtxRot.m_af[0][0];
 	m_vRight.m_fY = mtxRot.m_af[0][1];
 	m_vRight.m_fZ = mtxRot.m_af[0][2];
@@ -227,10 +253,9 @@ void CTransformComponent::SetRot(const CKFQuaternion& qRotNext)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：changeMotion
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
+//	関数名：SetRotNext
+//  関数説明：次の回転の設定
+//	引数：	qRotNext：回転情報
 //	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
@@ -248,7 +273,10 @@ void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
 }
 
 //--------------------------------------------------------------------------------
-//  上方向により回転
+//	関数名：RotByUp
+//  関数説明：上方向により回転
+//	引数：	vUp：上方向
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByUp(const CKFVec3& vUp)
 {
@@ -261,7 +289,10 @@ void CTransformComponent::RotByUp(const CKFVec3& vUp)
 }
 
 //--------------------------------------------------------------------------------
-//  前方向により回転
+//	関数名：RotByForward
+//  関数説明：前方向により回転
+//	引数：	vForward：前方向
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByForward(const CKFVec3& vForward)
 {
@@ -274,7 +305,10 @@ void CTransformComponent::RotByForward(const CKFVec3& vForward)
 }
 
 //--------------------------------------------------------------------------------
-//  右方向により回転
+//	関数名：RotByRight
+//  関数説明：右方向により回転
+//	引数：	vRight：右方向
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByRight(const CKFVec3& vRight)
 {
@@ -287,7 +321,10 @@ void CTransformComponent::RotByRight(const CKFVec3& vRight)
 }
 
 //--------------------------------------------------------------------------------
-//  ZXY回転
+//	関数名：RotByEuler
+//  関数説明：オーラー角より回転
+//	引数：	vRot：オーラー角
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByEuler(const CKFVec3& vRot)
 {
@@ -299,7 +336,10 @@ void CTransformComponent::RotByEuler(const CKFVec3& vRot)
 }
 
 //--------------------------------------------------------------------------------
-//  X軸(vVecRight)回転
+//	関数名：RotByPitch
+//  関数説明：自分のX軸(vVecRight)より回転
+//	引数：	fRadian：ラジアン角
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByPitch(const float& fRadian)
 {
@@ -310,7 +350,10 @@ void CTransformComponent::RotByPitch(const float& fRadian)
 }
 
 //--------------------------------------------------------------------------------
-//  Y軸(vVecUp)回転
+//	関数名：RotByYaw
+//  関数説明：自分のY軸(vVecUp)より回転
+//	引数：	fRadian：ラジアン角
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByYaw(const float& fRadian)
 {
@@ -321,7 +364,10 @@ void CTransformComponent::RotByYaw(const float& fRadian)
 }
 
 //--------------------------------------------------------------------------------
-//  Z軸(vLook)回転
+//	関数名：RotByRoll
+//  関数説明：自分のZ軸(vLook)より回転
+//	引数：	fRadian：ラジアン角
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByRoll(const float& fRadian)
 {
@@ -332,7 +378,10 @@ void CTransformComponent::RotByRoll(const float& fRadian)
 }
 
 //--------------------------------------------------------------------------------
-//  TransformDirectionToLocal
+//	関数名：TransformDirectionToLocal
+//  関数説明：世界軸の方向ベクトルを自分の軸に変換する
+//	引数：	vDirection：方向ベクトル
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 CKFVec3 CTransformComponent::TransformDirectionToLocal(const CKFVec3& vDirection)
 {
@@ -350,7 +399,10 @@ CKFVec3 CTransformComponent::TransformDirectionToLocal(const CKFVec3& vDirection
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  マトリクス算出
+//	関数名：calculateMtxThis
+//  関数説明：行列の算出(親なし)
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void  CTransformComponent::calculateMtxThis(void)
 {
@@ -367,7 +419,10 @@ void  CTransformComponent::calculateMtxThis(void)
 }
 
 //--------------------------------------------------------------------------------
-//  マトリクス算出(親子関係)
+//	関数名：calculateMtxThis
+//  関数説明：行列の算出(親あり)
+//	引数：	mtxParent
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void  CTransformComponent::calculateMtxThis(const CKFMtx44& mtxParent)
 {

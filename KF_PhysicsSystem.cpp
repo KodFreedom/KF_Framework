@@ -36,11 +36,11 @@ bool CKFPhysicsSystem::Init(void)
 void CKFPhysicsSystem::Uninit(void)
 {
 	if (!m_listCollision.empty())
-	{
+	{//万が一のため
+		assert(!"コリジョンがまだ残ってる！");
 		for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 		{
-			auto pCollision = *itr;
-			delete pCollision;
+			delete *itr;
 			itr = m_listCollision.erase(itr);
 		}
 	}
@@ -90,32 +90,15 @@ void CKFPhysicsSystem::resolve(CCollision& collision)
 //--------------------------------------------------------------------------------
 void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 {
-	//変数宣言
-	//CKFVec3	vAccCausedVelocity;				//衝突方向の作用力(加速度)
-	CKFVec3	vImpulsePerInverseMass;			//単位逆質量の衝突力
-	CKFVec3	vVelocity;						//変化した速度
-	CKFVec3	vForce;							//速度あたりの作用力
-	CKFVec3	vPosToCollisionPos;				//中心点と衝突点のベクトル
-	CKFVec3	vWork;							//計算用ベクトル
-	CKFVec3	vRotationForce;					//回転作用力
-	float	fSeparatingVelocity;			//分離速度
-	float	fNewSeparatingVelocity;			//新しい分離速度
-	//float	fAccCausedSeparatingVelocity;	//衝突法線上の加速度
-	float	fDeltaVelocity;					//速度の変化量
-	float	fTotalInverseMass;				//質量の総和
-	float	fImpulse;						//衝突力
-	//float	fWorldAngle;					//全体的にとっての角度
-	float	fBounciness;					//跳ね返り係数
-
 	//分離速度計算
-	fSeparatingVelocity = calculateSeparatingVelocity(collision);
+	float fSeparatingVelocity = calculateSeparatingVelocity(collision);
 
 	//分離速度チェック
 	//衝突法線の逆方向になれば計算しない
 	if (fSeparatingVelocity > 0.0f) { return; }
 
 	//跳ね返り係数の算出
-	fBounciness = collision.m_pRigidBodyOne->m_fBounciness;
+	float fBounciness = collision.m_pRigidBodyOne->m_fBounciness;
 	if (collision.m_pRigidBodyTwo)
 	{
 		fBounciness += collision.m_pRigidBodyTwo->m_fBounciness;
@@ -123,28 +106,28 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	}
 
 	//跳ね返り速度の算出
-	fNewSeparatingVelocity = -fSeparatingVelocity * fBounciness;
+	float fNewSeparatingVelocity = -fSeparatingVelocity * fBounciness;
 
 	//衝突方向に作用力を計算する
-	//vAccCausedVelocity = collision.m_pRigidBodyOne->m_vAcceleration;
-	//if (collision.m_pRigidBodyTwo)
-	//{
-	//	vAccCausedVelocity -= collision.m_pRigidBodyTwo->m_vAcceleration;
-	//}
-	//fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.m_vCollisionNormal);
+	auto vAccCausedVelocity = collision.m_pRigidBodyOne->m_vAcceleration;
+	if (collision.m_pRigidBodyTwo)
+	{
+		vAccCausedVelocity -= collision.m_pRigidBodyTwo->m_vAcceleration;
+	}
+	float fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.m_vCollisionNormal);
 
-	////衝突法線の逆方向になれば
-	//if (fAccCausedSeparatingVelocity < 0.0f)
-	//{
-	//	fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
-	//	if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
-	//}
+	//衝突法線の逆方向になれば
+	if (fAccCausedSeparatingVelocity < 0.0f)
+	{
+		fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
+		if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
+	}
 
 	//速度差分計算
-	fDeltaVelocity = fNewSeparatingVelocity - fSeparatingVelocity;
+	float fDeltaVelocity = fNewSeparatingVelocity - fSeparatingVelocity;
 
-	//質量取得
-	fTotalInverseMass = collision.m_pRigidBodyOne->m_fInverseMass;
+	//逆質量取得
+	float fTotalInverseMass = collision.m_pRigidBodyOne->m_fInverseMass;
 	if (collision.m_pRigidBodyTwo)
 	{
 		fTotalInverseMass += collision.m_pRigidBodyTwo->m_fInverseMass;
@@ -154,13 +137,13 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	if (fTotalInverseMass <= 0.0f) { return; }
 
 	//衝突力計算
-	fImpulse = fDeltaVelocity / fTotalInverseMass;
+	float fImpulse = fDeltaVelocity / fTotalInverseMass;
 
 	//単位逆質量の衝突力
-	vImpulsePerInverseMass = collision.m_vCollisionNormal * fImpulse;
+	auto vImpulsePerInverseMass = collision.m_vCollisionNormal * fImpulse;
 
 	//速度計算
-	vVelocity = vImpulsePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
+	auto vVelocity = vImpulsePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
 	collision.m_pRigidBodyOne->m_vVelocity += vVelocity;
 
 	if (collision.m_pRigidBodyTwo)
@@ -189,10 +172,10 @@ void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 	if (fTotalInverseMass <= 0) { return; }
 
 	//質量単位戻り量計算
-	CKFVec3 vMovePerInverseMass = collision.m_vCollisionNormal * collision.m_fPenetration / fTotalInverseMass;
+	auto vMovePerInverseMass = collision.m_vCollisionNormal * collision.m_fPenetration / fTotalInverseMass;
 
 	//各粒子戻り位置計算
-	CTransformComponent* pTrans = collision.m_pRigidBodyOne->m_pGameObj->GetTransformComponent();
+	auto pTrans = collision.m_pRigidBodyOne->m_pGameObj->GetTransformComponent();
 	collision.m_pRigidBodyOne->m_vMovement += vMovePerInverseMass * collision.m_pRigidBodyOne->m_fInverseMass;
 
 	if (collision.m_pRigidBodyTwo)
@@ -207,17 +190,9 @@ void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 //--------------------------------------------------------------------------------
 float CKFPhysicsSystem::calculateSeparatingVelocity(CCollision& collision)
 {
-	CKFVec3 vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity + collision.m_pRigidBodyOne->m_vAcceleration;
-
-	//粒子と粒子の衝突
-	if (collision.m_pRigidBodyTwo)
-	{
-		vRelativeVelocity -= collision.m_pRigidBodyTwo->m_vVelocity + collision.m_pRigidBodyTwo->m_vAcceleration;
-	}
-
-	//内積計算
-	float fDot = CKFMath::Vec3Dot(vRelativeVelocity, collision.m_vCollisionNormal);
-	return fDot;
+	auto vRelativeVelocity = collision.m_pRigidBodyOne->m_vVelocity;
+	if (collision.m_pRigidBodyTwo) { vRelativeVelocity -= collision.m_pRigidBodyTwo->m_vVelocity; }
+	return CKFMath::Vec3Dot(vRelativeVelocity, collision.m_vCollisionNormal);
 }
 
 //--------------------------------------------------------------------------------

@@ -122,9 +122,14 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 {
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
+	//Name
+	auto& strName = CKFUtility::GetFileName(strPath);
+	pObj->SetName(strName);
+
 	//コンポネント
 	auto pMesh = new C3DMeshComponent(pObj);
 	string strTexName;
+
 	pMesh->SetMeshName(strPath, strTexName);
 	pObj->SetMeshComponent(pMesh);
 	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
@@ -150,7 +155,10 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D, CGameObject::OT_GOAL);
+	auto pObj = new CGameObject(GOM::PRI_3D);
+
+	//Tag
+	pObj->SetTag("Goal");
 
 	//コライダー
 	auto pCollider = new CAABBColliderComponent(pObj, CS::STATIC, CKFVec3(8.5f, 6.0f, 9.25f));
@@ -296,6 +304,10 @@ CGameObject* CGameObjectSpawner::createMesh(const string& strMeshName, const CKF
 {
 	if (strMeshName.find(".mesh") == string::npos) { return nullptr; }
 	auto pObj = new CGameObject(GOM::PRI_3D);
+
+	//Name
+	auto& strName = CKFUtility::GetFileName(strMeshName);
+	pObj->SetName(strName);
 
 	//コンポネント
 	auto pMesh = new C3DMeshComponent(pObj);
