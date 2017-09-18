@@ -21,6 +21,8 @@ public:
 	static int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
 	static int		GetStrCount(string& str, const string& strToken, const string& strComp);
 	static string	GetFileName(const string& strFilePath);
+	static void		AnalyzeFilePath(const string& strTexPath, string& strName, string& strType);
+
 private:
 	CKFUtility() {}
 	~CKFUtility() {}

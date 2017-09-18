@@ -572,8 +572,6 @@ CMesh* CMeshManager::loadFromXFile(const string& strPath, string& strTexName)
 			}
 		}
 
-		
-
 		if (strBuf.compare(" MeshNormals {") == 0)
 		{
 			//–@ü”‚Ì“Ç

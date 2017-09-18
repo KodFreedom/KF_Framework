@@ -201,9 +201,6 @@
     <ClCompile Include="drawComponent.cpp">
       <Filter>ソース ファイル\Component\Draw</Filter>
     </ClCompile>
-    <ClCompile Include="component.cpp">
-      <Filter>ソース ファイル\Component</Filter>
-    </ClCompile>
     <ClCompile Include="colliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>

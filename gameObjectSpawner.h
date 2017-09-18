@@ -37,6 +37,6 @@ private:
 	CGameObjectSpawner() {}
 	~CGameObjectSpawner() {}
 
-	static CGameObject* createChildMesh(CTransformComponent* pParent, FILE* pFile);
-	static CGameObject* createMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject* createChildNode(CTransformComponent* pParent, FILE* pFile);
+	static CGameObject* createChildMesh(CTransformComponent* pParent, const string& strMeshName);
 };

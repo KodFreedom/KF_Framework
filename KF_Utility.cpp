@@ -135,3 +135,28 @@ string CKFUtility::GetFileName(const string& strFilePath)
 	reverse(strName.begin(), strName.end());
 	return strName;
 }
+
+//--------------------------------------------------------------------------------
+//	関数名：GetStrCount
+//  関数説明：アクション（移動、跳ぶ、攻撃）
+//	引数：	vDirection：移動方向
+//			bJump：跳ぶフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CKFUtility::AnalyzeFilePath(const string& strTexPath, string& strName, string& strType)
+{
+	auto strCpy = strTexPath;
+
+	//逆転
+	reverse(strCpy.begin(), strCpy.end());
+
+	//ファイル型の取得
+	if (GetStrToken(strCpy, ".", strType) > 0)
+	{
+		reverse(strType.begin(), strType.end());
+	}
+
+	//ファイル名の取得
+	GetStrToken(strCpy, "\\/", strName);
+	reverse(strName.begin(), strName.end());
+}

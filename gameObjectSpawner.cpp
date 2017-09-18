@@ -189,9 +189,16 @@ CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale)
 {
-	if (strFilePath.find(".model") == string::npos) { return nullptr; }
+	string strName, strType;
+	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
+	if (!strType._Equal("model")) { return nullptr; }
 	
 	auto pObj = new CGameObject(GOM::PRI_3D);
+
+	//Name
+	pObj->SetName(strName);
+
+	//Trans
 	auto pTrans = pObj->GetTransformComponent();
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
@@ -205,59 +212,56 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	FILE *pFile;
 	fopen_s(&pFile, strName.c_str(), "rb");
 
-	//パーツ数の読込
-	int nNumParentMesh;
-	fread(&nNumParentMesh, sizeof(int), 1, pFile);
-
-	for (int nCnt = 0; nCnt < nNumParentMesh; ++nCnt)
-	{
-		auto pObjChild = createChildMesh(pTrans, pFile);
-	}
+	//Child
+	auto pChild = createChildNode(pTrans, pFile);
 
 	fclose(pFile);
 	return pObj;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：CreateModel
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：createChildNode
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	strFilePath：ファイルの名前 
-//			vPos
-//			vRot
-//			vScale
+//	引数：	pParent：ファイルの名前 
+//			pFile
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, FILE* pFile)
+CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, FILE* pFile)
 {
-	//ファイル名
-	string strMeshName;
-	int nSize = 0;
-	fread(&nSize, sizeof(int), 1, pFile);
-	strMeshName.resize(nSize);
-	fread(&strMeshName[0], sizeof(char), nSize, pFile);
+	auto pObj = new CGameObject(GOM::PRI_3D);
+
+	//Node名
+	int nNodeNameSize;
+	fread_s(&nNodeNameSize, sizeof(int), sizeof(int), 1, pFile);
+	string strNodeName;
+	strNodeName.reserve(nNodeNameSize);
+	fread_s(&strNodeName[0], nNodeNameSize, sizeof(char), nNodeNameSize, pFile);
+	pObj->SetName(strNodeName);
 
 	//Offset
 	CKFVec3 vPos, vRot, vScale;
-	fread(&vPos, sizeof(CKFVec3), 1, pFile);
-	fread(&vRot, sizeof(CKFVec3), 1, pFile);
-	fread(&vScale, sizeof(CKFVec3), 1, pFile);
-
-	auto pObj = createMesh(strMeshName, CKFVec3(0.0f), CKFVec3(0.0f), vScale);
+	fread_s(&vPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+	fread_s(&vRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+	fread_s(&vScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->RegisterParent(pParent, vPos, vRot);;
+	pTrans->RegisterParent(pParent, vPos, vRot);
 
 	//Collider
 	int nNumCollider = 0;
-	fread(&nNumCollider, sizeof(int), 1, pFile);
+	fread_s(&nNumCollider, sizeof(int), sizeof(int), 1, pFile);
 	for (int nCnt = 0; nCnt < nNumCollider; ++nCnt)
 	{
 		int nColType = 0;
 		CKFVec3 vColPos, vColRot, vColScale;
-		fread(&nColType, sizeof(int), 1, pFile);
-		fread(&vColPos, sizeof(CKFVec3), 1, pFile);
-		fread(&vColRot, sizeof(CKFVec3), 1, pFile);
-		fread(&vColScale, sizeof(CKFVec3), 1, pFile);
-		vColRot *= KF_PI / 180.0f;
+		fread_s(&nColType, sizeof(int), sizeof(int), 1, pFile);
+		fread_s(&vColPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+		fread_s(&vColRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+		fread_s(&vColScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
 
 		CColliderComponent* pCollider = nullptr;
 		switch ((CS::COL_TYPE)nColType)
@@ -280,29 +284,62 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, F
 		pObj->AddCollider(pCollider);
 	}
 
-	//Child
-	int nNumChild = 0;
-	fread(&nNumChild, sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumChild; ++nCnt)
+	//Texture
+	int nNumTexture = 0;
+	fread_s(&nNumTexture, sizeof(int), sizeof(int), 1, pFile);
+	for (int nCnt = 0; nCnt < nNumTexture; ++nCnt)
 	{
-		auto pObjChild = createChildMesh(pTrans, pFile);
+		int nNameSize = 0;
+		fread_s(&nNameSize, sizeof(int), sizeof(int), 1, pFile);
+		string strTexName;
+		strTexName.reserve(nNameSize);
+		fread_s(&strTexName[0], nNameSize, sizeof(char), nNameSize, pFile);
+		//Mesh側で読み込むのでここは放っておく
 	}
 
-	return pObj;
+	//Mesh
+	int nNumMesh = 0;
+	fread_s(&nNumMesh, sizeof(int), sizeof(int), 1, pFile);
+	for (int nCnt = 0; nCnt < nNumMesh; ++nCnt)
+	{
+		//Mesh Name
+		int nMeshNameSize = 0;
+		fread_s(&nMeshNameSize, sizeof(int), sizeof(int), 1, pFile);
+		string strMeshName;
+		strMeshName.reserve(nMeshNameSize);
+		fread_s(&strMeshName[0], nMeshNameSize, sizeof(char), nMeshNameSize, pFile);
+
+		//Check Type
+		string strName, strType;
+		CKFUtility::AnalyzeFilePath(strMeshName, strName, strType);
+		if (strType._Equal("mesh"))
+		{//骨なし
+			auto pChildMesh = createChildMesh(pTrans, strMeshName);
+		}
+		else if (strType._Equal("oneSkinMesh"))
+		{//ワンスキーンメッシュ
+			MessageBox(NULL, "oneSkinMesh未対応", "CGameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+		}
+	}
+
+	//Child
+	int nNumChild = 0;
+	fread_s(&nNumChild, sizeof(int), sizeof(int), 1, pFile);
+	for (int nCnt = 0; nCnt < nNumChild; ++nCnt)
+	{
+		auto pChild = createChildNode(pTrans, pFile);
+	}
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：CreateMesh
+//	関数名：createChildMesh
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	strMeshName：ファイルの名前 
-//			vPos
-//			vRot
-//			vScale
+//	引数：	pParent：ファイルの名前 
+//			strMeshName
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::createMesh(const string& strMeshName, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, const string& strMeshName)
 {
-	if (strMeshName.find(".mesh") == string::npos) { return nullptr; }
 	auto pObj = new CGameObject(GOM::PRI_3D);
 
 	//Name
@@ -320,12 +357,7 @@ CGameObject* CGameObjectSpawner::createMesh(const string& strMeshName, const CKF
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
-
+	pTrans->RegisterParent(pParent);
 	return pObj;
 }
 

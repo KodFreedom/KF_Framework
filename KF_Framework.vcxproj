@@ -164,7 +164,6 @@
     <ClCompile Include="boxColliderComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
-    <ClCompile Include="component.cpp" />
     <ClCompile Include="debugManager.cpp" />
     <ClCompile Include="drawComponent.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
