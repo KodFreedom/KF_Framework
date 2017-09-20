@@ -15,6 +15,7 @@
 #include "motionInfo.h"
 #include "KF_CollisionSystem.h"
 #include "sphereColliderComponent.h"
+#include "motionStatus.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -25,16 +26,12 @@
 //--------------------------------------------------------------------------------
 CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string& strPath)
 	: CComponent(pGameObj)
-	, m_pMotionKeyLast(nullptr)
 	, m_motionNow(MP_NEUTAL)
 	, m_motionNext(MP_NEUTAL)
-	, m_status(MS_CHANGE)
-	, m_nKeyNow(0)
-	, m_nCntFrame(0)
-	, m_nCntChangeFrame(0)
+	, m_pMotionStatus(nullptr)
+	, m_bIsGrounded(false)
 {
 	for (auto& pMotionDate : m_apMotionData) { pMotionDate = nullptr; }
-	m_listAttackCollider.clear();
 	m_vecBorns.clear();
 
 	//ファイルからデータを読み込む
@@ -48,9 +45,7 @@ bool CAnimatorComponent::Init(void)
 {
 	auto& strTag = m_pGameObj->GetTag();
 	for (auto pObj : m_vecBorns) { pObj->SetTag(strTag); }
-	changeMotion(m_motionNow);
-	auto pMotionInfo = m_apMotionData[m_motionNow];
-	m_pMotionKeyLast = &pMotionInfo->m_vecMotionKey[m_nKeyNow];
+	m_pMotionStatus = new CNormalMotionStatus;
 	return true;
 }
 
@@ -67,6 +62,12 @@ void CAnimatorComponent::Uninit(void)
 	}
 
 	m_vecBorns.clear();
+
+	if (m_pMotionStatus)
+	{
+		delete m_pMotionStatus;
+		m_pMotionStatus = nullptr;
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -74,60 +75,13 @@ void CAnimatorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::Update(void)
 {
-	if (m_status == MS_WAIT) 
-	{
-		changeMotion(m_motionNext);
-		return; 
-	}
-
-	auto pMotionInfo = m_apMotionData[m_motionNow];
-	auto& motionKey = pMotionInfo->m_vecMotionKey[m_nKeyNow];
-	auto nFrame = (int)m_status * sc_nChangeFrame + (1 - (int)m_status) * pMotionInfo->m_vecMotionKey[m_nKeyNow].m_nFrame;
-	auto itrNodeKeyLast = m_pMotionKeyLast->m_listNodesKey.begin();
-	auto itrNodeKey = motionKey.m_listNodesKey.begin();
-	float fRate = (float)m_nCntFrame / nFrame;
-
-	//Nodeごと位置回転更新
-	for (auto pObj : m_vecBorns)
-	{
-		auto pTrans = pObj->GetTransformComponent();
-		auto vPosNew = CKFMath::LerpVec3(itrNodeKeyLast->c_vPos, itrNodeKey->c_vPos, fRate);
-		auto qRotNew = CKFMath::SlerpQuaternion(itrNodeKeyLast->c_qRot, itrNodeKey->c_qRot, fRate);
-		pTrans->SetPosNext(vPosNew);
-		pTrans->SetRotNext(qRotNew);
-		++itrNodeKey;
-		++itrNodeKeyLast;
-	}
-
-	//フレームカウント
-	m_nCntFrame++;
-
-	//キーフレーム切り替え
-	if (m_nCntFrame == nFrame)
-	{
-		m_pMotionKeyLast = &motionKey;
-		m_status = MS_NORMAL;
-		m_nCntFrame = 0;
-		m_nKeyNow++;
-
-		//モーション切り替え
-		if (m_nKeyNow == pMotionInfo->m_vecMotionKey.size())
-		{
-			m_nKeyNow = 0;
-
-			if (!pMotionInfo->m_bLoop)
-			{
-				m_status = MS_WAIT;
-				changeMotion(m_motionNext);
-			}
-		}
-	}
+	m_pMotionStatus->Update(*this);
 
 	//Attack用
-	if (m_motionNow == MP_ATTACK)
-	{
-		updateAttack();
-	}
+	//if (m_motionNow == MP_ATTACK)
+	//{
+	//	updateAttack();
+	//}
 }
 
 //--------------------------------------------------------------------------------
@@ -140,7 +94,7 @@ void CAnimatorComponent::Update(void)
 void CAnimatorComponent::SetAttack(const bool& bAttack)
 {
 	if (!bAttack) { return; }
-	changeMotion(MP_ATTACK);
+	m_pMotionStatus->ChangeMotion(MP_ATTACK);
 }
 
 //--------------------------------------------------------------------------------
@@ -155,7 +109,7 @@ void CAnimatorComponent::SetGrounded(const bool& bGrounded)
 	if (m_bIsGrounded == bGrounded) { return; }
 	if (!m_bIsGrounded && bGrounded)
 	{
-		changeMotion(MP_LAND);
+		m_pMotionStatus->ChangeMotion(MP_LAND);
 	}
 	m_bIsGrounded = bGrounded;
 }
@@ -170,7 +124,7 @@ void CAnimatorComponent::SetGrounded(const bool& bGrounded)
 void CAnimatorComponent::SetJump(const bool& bJump)
 {
 	if (!bJump || !m_bIsGrounded) { return; }
-	changeMotion(MP_JUMP);
+	m_pMotionStatus->ChangeMotion(MP_JUMP);
 }
 
 //--------------------------------------------------------------------------------
@@ -182,8 +136,8 @@ void CAnimatorComponent::SetJump(const bool& bJump)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::SetMove(const float& fMovement)
 {
-	if (fMovement == 0.0f) { changeMotion(MP_NEUTAL); }
-	else { changeMotion(MP_RUN); }
+	if (fMovement == 0.0f) { m_pMotionStatus->ChangeMotion(MP_NEUTAL); }
+	else { m_pMotionStatus->ChangeMotion(MP_RUN); }
 }
 
 //--------------------------------------------------------------------------------
@@ -211,113 +165,59 @@ bool CAnimatorComponent::CanAct(void)
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void  CAnimatorComponent::changeMotion(const MOTION_PATTERN& motion)
-{
-	if (!checkCanChange(motion)) { return; }
-
-	m_status = MS_CHANGE;
-	m_motionNow = motion;
-	m_nCntFrame = 0;
-	m_nKeyNow = 0;
-
-	//Motion Next
-	switch (motion)
-	{
-	case MP_JUMP:
-		m_motionNext = MP_LAND;
-		break;
-	default:
-		m_motionNext = MP_NEUTAL;
-		break;
-	}
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：changeMotion
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-//void  CAnimatorComponent::changeMotionImmediately(const MOTION_PATTERN& motion)
+//bool  CAnimatorComponent::checkCanChange(const MOTION_PATTERN& motion)
 //{
+//	if (m_motionNow == motion) { return false; }
 //
+//	switch (m_motionNow)
+//	{
+//	case MP_NEUTAL:
+//		return true;
+//	case MP_RUN:
+//		return true;
+//	case MP_JUMP:
+//		if (motion == MP_LAND && m_bIsGrounded) { return true; }
+//		return false;
+//	case MP_LAND:
+//		if (m_status != MS_WAIT && motion == MP_NEUTAL) { return false; }
+//		return true;
+//	case MP_ATTACK:
+//		if (m_status == MS_WAIT) { return true; }
+//		return false;
+//	default:
+//		break;
+//	}
+//
+//	return true;
 //}
 
 //--------------------------------------------------------------------------------
-//	関数名：changeMotion
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
+//	関数名：changeMotionStatus
+//  関数説明：モーションステータスの切り替え
+//	引数：	pMotionStatus：新しいモーションステータス
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-bool  CAnimatorComponent::checkCanChange(const MOTION_PATTERN& motion)
+void CAnimatorComponent::changeMotionStatus(CMotionStatus* pMotionStatus)
 {
-	if (m_motionNow == motion) { return false; }
-
-	switch (m_motionNow)
-	{
-	case MP_NEUTAL:
-		return true;
-	case MP_RUN:
-		return true;
-	case MP_JUMP:
-		if (motion == MP_LAND && m_bIsGrounded) { return true; }
-		return false;
-	case MP_LAND:
-		if (m_status != MS_WAIT && motion == MP_NEUTAL) { return false; }
-		return true;
-	case MP_ATTACK:
-		if (m_status == MS_WAIT) { return true; }
-		return false;
-	default:
-		break;
-	}
-
-	return true;
+	if (m_pMotionStatus) { delete m_pMotionStatus; }
+	m_pMotionStatus = pMotionStatus;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：updateAttack
+//	関数名：getMotionNext
 //  関数説明：アクション（移動、跳ぶ、攻撃）
 //	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CAnimatorComponent::updateAttack(void)
+MOTION_PATTERN CAnimatorComponent::getMotionNext(const MOTION_PATTERN& motion)
 {
-	if (m_nKeyNow == 2 && m_listAttackCollider.empty())
+	switch (motion)
 	{
-		//右手のオブジェクトにコライダーをつける
-		auto itr = m_vecBorns.begin();
-		advance(itr, 3);
-
-		for (int nCnt = 0; nCnt < 4; ++nCnt)
-		{
-			auto pCollider = new CSphereColliderComponent(*itr, CS::DYNAMIC, 0.2f);
-			pCollider->SetOffset(CKFVec3(0.0f, 0.4f * nCnt + 0.4f, 0.0f));
-			pCollider->SetTag("weapon");
-			pCollider->SetTrigger(true);
-			m_listAttackCollider.push_back(pCollider);
-			(*itr)->AddCollider(pCollider);
-		}
+	case MP_JUMP:
+		return MP_LAND;
 	}
 
-	if (m_nKeyNow == m_apMotionData[MP_ATTACK]->m_vecMotionKey.size() - 1
-		&& m_nCntFrame == m_apMotionData[MP_ATTACK]->m_vecMotionKey[m_nKeyNow].m_nFrame - 1
-		&& !m_listAttackCollider.empty())
-	{
-		//右手のオブジェクトからコライダーを外す
-		auto itr = m_vecBorns.begin();
-		advance(itr, 3);
-		for (auto itrCollider = m_listAttackCollider.begin(); itrCollider != m_listAttackCollider.end();)
-		{
-			(*itr)->DeleteCollider(*itrCollider);
-			(*itrCollider)->Release();
-			itrCollider = m_listAttackCollider.erase(itrCollider);
-		}
-		
-	}
+	return MP_NEUTAL;
 }
 
 //--------------------------------------------------------------------------------
@@ -389,8 +289,18 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		{
 			strPath.push_back(strRead[nCnt]);
 		}
-
-		auto pBone = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+		string strFileName, strFileType;
+		CKFUtility::AnalyzeFilePath(strPath, strFileName, strFileType);
+		CGameObject* pBone = nullptr;
+		if (strFileType._Equal("x"))
+		{
+			pBone = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+		}
+		else if (strFileType._Equal("model"))
+		{
+			pBone = CGameObjectSpawner::CreateModel(strPath, CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
+		}
+		
 		m_vecBorns[nCntPart] = pBone;
 	}
 

@@ -208,7 +208,7 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	pTrans->SetRotNext(qRot);
 
 	//Modelファイルの開く
-	string strName = "data/MODEL/" + strFilePath;
+	strName = "data/MODEL/" + strFilePath;
 	FILE *pFile;
 	fopen_s(&pFile, strName.c_str(), "rb");
 
@@ -239,7 +239,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	int nNodeNameSize;
 	fread_s(&nNodeNameSize, sizeof(int), sizeof(int), 1, pFile);
 	string strNodeName;
-	strNodeName.reserve(nNodeNameSize);
+	strNodeName.resize(nNodeNameSize);
 	fread_s(&strNodeName[0], nNodeNameSize, sizeof(char), nNodeNameSize, pFile);
 	pObj->SetName(strNodeName);
 
@@ -292,7 +292,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 		int nNameSize = 0;
 		fread_s(&nNameSize, sizeof(int), sizeof(int), 1, pFile);
 		string strTexName;
-		strTexName.reserve(nNameSize);
+		strTexName.resize(nNameSize);
 		fread_s(&strTexName[0], nNameSize, sizeof(char), nNameSize, pFile);
 		//Mesh側で読み込むのでここは放っておく
 	}
@@ -306,7 +306,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 		int nMeshNameSize = 0;
 		fread_s(&nMeshNameSize, sizeof(int), sizeof(int), 1, pFile);
 		string strMeshName;
-		strMeshName.reserve(nMeshNameSize);
+		strMeshName.resize(nMeshNameSize);
 		fread_s(&strMeshName[0], nMeshNameSize, sizeof(char), nMeshNameSize, pFile);
 
 		//Check Type
@@ -329,6 +329,8 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	{
 		auto pChild = createChildNode(pTrans, pFile);
 	}
+
+	return pObj;
 }
 
 //--------------------------------------------------------------------------------

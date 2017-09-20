@@ -823,29 +823,22 @@ void CMeshManager::createCube(CMesh* pMesh)
 	pMesh->m_pIdxBuffer->Unlock();
 
 	//Modelファイルの保存
-	string strName = "data/MODEL/cube.model";
+	string strFileName = "data/MODEL/cube.model";
 	FILE *pFile;
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "wb");
+	fopen_s(&pFile, strFileName.c_str(), "wb");
 
-	//パーツ数の保存
-	int nNumParentParts = 1;
-	fwrite(&nNumParentParts, sizeof(int), 1, pFile);
-
-	//ファイル名
-	string strMeshName = "cube.mesh";
-	int nSize = strMeshName.size();
+	//Node名
+	string strNodeName = "cube";
+	int nSize = (int)strNodeName.size();
 	fwrite(&nSize, sizeof(int), 1, pFile);
-	fwrite(&strMeshName[0], sizeof(char), nSize, pFile);
+	fwrite(&strNodeName[0], sizeof(char), nSize, pFile);
 
 	//Offset
-	auto vPos = CKFVec3(0.0f);
-	auto vRot = CKFVec3(0.0f);
-	auto vScale = CKFVec3(1.0f);
-	fwrite(&vPos, sizeof(CKFVec3), 1, pFile);
-	fwrite(&vRot, sizeof(CKFVec3), 1, pFile);
-	fwrite(&vScale, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vOne, sizeof(CKFVec3), 1, pFile);
 
 	//Collider
 	int nNumCollider = 1;
@@ -853,17 +846,33 @@ void CMeshManager::createCube(CMesh* pMesh)
 
 	int nType = 1;
 	fwrite(&nType, sizeof(int), 1, pFile);
-	fwrite(&vPos, sizeof(CKFVec3), 1, pFile);
-	fwrite(&vRot, sizeof(CKFVec3), 1, pFile);
-	fwrite(&vScale, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vOne, sizeof(CKFVec3), 1, pFile);
+
+	//Texture
+	int nNumTexture = 1;
+	fwrite(&nNumTexture, sizeof(int), 1, pFile);
+	string strTexture = "nomal_cube.jpg";
+	nSize = strTexture.size();
+	fwrite(&nSize, sizeof(int), 1, pFile);
+	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
+
+	//Mesh
+	int nNumMesh = 1;
+	fwrite(&nNumMesh, sizeof(int), 1, pFile);
+	string strMeshName = strNodeName + ".mesh";
+	nSize = (int)strMeshName.size();
+	fwrite(&nSize, sizeof(int), 1, pFile);
+	fwrite(&strMeshName[0], sizeof(char), nSize, pFile);
 
 	fclose(pFile);
 
 	//Mesh
-	strName = "data/MESH/cube.mesh";
+	strFileName = "data/MESH/cube.mesh";
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "wb");
+	fopen_s(&pFile, strFileName.c_str(), "wb");
 
 	//DrawType
 	int nDrawType = (int)pMesh->m_drawType;
@@ -887,12 +896,13 @@ void CMeshManager::createCube(CMesh* pMesh)
 	pMesh->m_pIdxBuffer->Unlock();
 
 	//Texture
-	string strTexture = "nomal_cube.jpg";
+	strTexture = "nomal_cube.jpg";
 	nSize = strTexture.size();
 	fwrite(&nSize, sizeof(int), 1, pFile);
 	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
 
 	fclose(pFile);
+	
 #endif
 }
 

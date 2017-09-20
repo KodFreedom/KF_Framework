@@ -60,10 +60,11 @@ void CModeDemo::Init(void)
 	//ゲームオブジェクトの初期化
 	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CStageSpawner::LoadStage("demo");
+	//CGameObjectSpawner::CreateCube(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(-188.0f, 10.0f, 196.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	pPlayer->SetName("Player");
-	auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	pEnemy->SetName("Enemy00");
+	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	//pEnemy->SetName("Enemy00");
 	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-12.0, 45.0f, -46.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy01");
 	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(117.0f, 80.0f, 1.6f), CKFVec3(0.0f), CKFVec3(1.0f));

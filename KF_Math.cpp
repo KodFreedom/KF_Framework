@@ -15,6 +15,7 @@
 //  ê√ìIÉÅÉìÉoïœêî
 //--------------------------------------------------------------------------------
 const CKFVec3	CKFMath::sc_vZero = CKFVec3(0.0f);
+const CKFVec3	CKFMath::sc_vOne = CKFVec3(1.0f);
 const CKFVec3	CKFMath::sc_vUp = CKFVec3(0.0f, 1.0f, 0.0f);
 const CKFVec3	CKFMath::sc_vDown = CKFVec3(0.0f, -1.0f, 0.0f);
 const CKFVec3	CKFMath::sc_vLeft = CKFVec3(-1.0f, 0.0f, 0.0f);
@@ -23,6 +24,9 @@ const CKFVec3	CKFMath::sc_vForward = CKFVec3(0.0f, 0.0f, 1.0f);
 const CKFVec3	CKFMath::sc_vBack = CKFVec3(0.0f, 0.0f, -1.0f);
 const CKFColor	CKFMath::sc_cWhite = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
 const CKFColor	CKFMath::sc_cBlack = CKFColor(0.0f, 0.0f, 0.0f, 1.0f);
+const CKFColor	CKFMath::sc_cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+const CKFColor	CKFMath::sc_cBlue = CKFColor(0.0f, 0.0f, 1.0f, 1.0f);
+const CKFColor	CKFMath::sc_cGreen = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 //--------------------------------------------------------------------------------
 //  CKFVec2

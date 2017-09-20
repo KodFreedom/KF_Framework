@@ -139,6 +139,9 @@
     <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Motion">
+      <UniqueIdentifier>{cb274add-2675-4099-97a6-dc2c9e1bb78c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -314,6 +317,9 @@
     </ClCompile>
     <ClCompile Include="debugManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="motionStatus.cpp">
+      <Filter>ソース ファイル\Motion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="WindmillBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="motionStatus.h">
+      <Filter>ヘッダー ファイル\Motion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

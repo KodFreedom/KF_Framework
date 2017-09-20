@@ -199,6 +199,7 @@
     <ClCompile Include="2DMeshComponent.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
+    <ClCompile Include="motionStatus.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
     <ClCompile Include="playerUIObject.cpp" />
     <ClCompile Include="rendererDX.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motionInfo.h" />
+    <ClInclude Include="motionStatus.h" />
     <ClInclude Include="OBBColliderComponent.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerUIObject.h" />
