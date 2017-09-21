@@ -33,7 +33,7 @@ public:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	CColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode);
-	~CColliderComponent() {}
+	~CColliderComponent();
 
 	virtual bool		Init(void) override { return true; }
 	virtual void		Uninit(void) override;

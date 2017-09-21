@@ -4,8 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-#ifndef _RENDERSTATE_H_
-#define _RENDERSTATE_H_
+#pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -23,33 +22,69 @@ public:
 	CRenderState() {}
 	~CRenderState() {}
 
-	virtual void	SetRenderState(void) = 0;
-	virtual void	ResetRenderState(void) = 0;
+#ifdef USING_DIRECTX
+	virtual void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) = 0;
+	virtual void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) = 0;
+#endif // USING_DIRECTX
 };
 
 //--------------------------------------------------------------------------------
-//  LightOffクラス
+//  LIGHTON_CULLFACEON_MUL
 //--------------------------------------------------------------------------------
-class CLightOffRenderState : public CRenderState
+class CLightOnCullFaceOnMulRenderState : public CRenderState
 {
 public:
-	CLightOffRenderState() : CRenderState() {}
-	~CLightOffRenderState() {}
+	CLightOnCullFaceOnMulRenderState() {}
+	~CLightOnCullFaceOnMulRenderState() {}
 
-	void	SetRenderState(void) override;
-	void	ResetRenderState(void) override;
+#ifdef USING_DIRECTX
+	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+#endif // USING_DIRECTX
 };
 
 //--------------------------------------------------------------------------------
-//  ヌルクラス
+//  RS_LIGHTON_CULLFACEOFF_MUL
 //--------------------------------------------------------------------------------
-class CNullRenderState : public CRenderState
+class CLightOnCullFaceOffMulRenderState : public CRenderState
 {
 public:
-	CNullRenderState() : CRenderState() {}
-	~CNullRenderState() {}
+	CLightOnCullFaceOffMulRenderState() {}
+	~CLightOnCullFaceOffMulRenderState() {}
 
-	void	SetRenderState(void) override {}
-	void	ResetRenderState(void) override {}
+#ifdef USING_DIRECTX
+	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+#endif // USING_DIRECTX
 };
-#endif
+
+//--------------------------------------------------------------------------------
+//  RS_LIGHTOFF_CULLFACEON_MUL
+//--------------------------------------------------------------------------------
+class CLightOffCullFaceOnMulRenderState : public CRenderState
+{
+public:
+	CLightOffCullFaceOnMulRenderState() {}
+	~CLightOffCullFaceOnMulRenderState() {}
+
+#ifdef USING_DIRECTX
+	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+#endif // USING_DIRECTX
+};
+
+//--------------------------------------------------------------------------------
+//  RS_LIGHTOFF_CULLFACEOFF_MUL
+//--------------------------------------------------------------------------------
+class CLightOffCullFaceOffMulRenderState : public CRenderState
+{
+public:
+	CLightOffCullFaceOffMulRenderState() {}
+	~CLightOffCullFaceOffMulRenderState() {}
+
+#ifdef USING_DIRECTX
+	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
+#endif // USING_DIRECTX
+};
+

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	2D描画コンポネント
-//　2DDrawComponent.h
+//　2DRenderComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "renderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -22,14 +22,14 @@ class C2DMeshComponent;
 //--------------------------------------------------------------------------------
 //  描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class C2DDrawComponent : public CDrawComponent
+class C2DRenderComponent : public CRenderComponent
 {
 public:
-	C2DDrawComponent(C2DMeshComponent* const pMesh, CGameObject* const pGameObj)
-		: CDrawComponent(pGameObj), c_pMesh(pMesh) {}
-	~C2DDrawComponent() {}
+	C2DRenderComponent(C2DMeshComponent* const pMesh, CGameObject* const pGameObj)
+		: CRenderComponent(pGameObj), c_pMesh(pMesh) {}
+	~C2DRenderComponent() {}
 
-	void	Draw(void) override;
+	void	Render(void) override;
 
 private:
 	C2DMeshComponent* const c_pMesh;

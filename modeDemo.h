@@ -21,11 +21,13 @@
 class CModeDemo : public CMode
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”éŒ¾
+	//--------------------------------------------------------------------------------
 	CModeDemo();
 	~CModeDemo();
 
 	void	Init(void) override;
-	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 	void	EndMode(void) override { m_bEndMode = true; }
@@ -35,7 +37,16 @@ public:
 		m_bEndMode = true;
 		m_bGameOver = bGameOver;
 	}
+
 private:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”éŒ¾
+	//--------------------------------------------------------------------------------
+	void	uninit(void) override;
+
+	//--------------------------------------------------------------------------------
+	//  •Ï”éŒ¾
+	//--------------------------------------------------------------------------------
 	bool	m_bEndMode;
 	bool	m_bGameOver;
 };

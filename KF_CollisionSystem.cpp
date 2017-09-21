@@ -57,41 +57,6 @@ CKFCollisionSystem::CKFCollisionSystem()
 }
 
 //--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-void CKFCollisionSystem::Init(void)
-{
-#ifdef _DEBUG
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.png");
-	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
-	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
-#endif
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CKFCollisionSystem::Uninit(void)
-{
-	for (auto& aList : m_alistCollider)
-	{
-		for (auto& list : aList)
-		{
-			list.clear();
-		}
-	}
-
-	m_listField.clear();
-
-#ifdef _DEBUG
-	SAFE_RELEASE(m_pMeshSphere);
-	SAFE_RELEASE(m_pMeshCube);
-	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
-#endif
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::Update(void)
@@ -193,7 +158,7 @@ void CKFCollisionSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::RegisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider)
+void CKFCollisionSystem::Register(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider)
 {
 	if (type < CS::COL_MAX)
 	{
@@ -213,7 +178,7 @@ void CKFCollisionSystem::RegisterCollider(const COL_MODE& mode, const COL_TYPE& 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CKFCollisionSystem::DeregisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider)
+void CKFCollisionSystem::Deregister(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider)
 {
 	if (type < CS::COL_MAX)
 	{
@@ -363,6 +328,42 @@ void CKFCollisionSystem::DrawCollider(void)
 //  private
 //
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  初期化処理
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::init(void)
+{
+#ifdef _DEBUG
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.png");
+	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
+	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void CKFCollisionSystem::uninit(void)
+{
+	for (auto& aList : m_alistCollider)
+	{
+		for (auto& list : aList)
+		{
+			if (!list.empty()) { assert(!"コライダーがまだ残ってる！"); }
+			list.clear();
+		}
+	}
+
+	m_listField.clear();
+
+#ifdef _DEBUG
+	SAFE_RELEASE(m_pMeshSphere);
+	SAFE_RELEASE(m_pMeshCube);
+	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
+#endif
+}
+
 //--------------------------------------------------------------------------------
 //
 //  衝突処理

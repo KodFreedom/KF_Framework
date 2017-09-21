@@ -1,64 +1,86 @@
 //--------------------------------------------------------------------------------
-//
-//　rendererDX.h
+//	描画コンポネント
+//　renderComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2016-05-31
+//	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
 #pragma once
 
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "component.h"
+#include "renderManager.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  プロトタイプ宣言
+//  前方宣言
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CRendererDX
+//--------------------------------------------------------------------------------
+//  描画コンポネントクラス
+//--------------------------------------------------------------------------------
+class CRenderComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRendererDX();
-	~CRendererDX();
-
-	bool	Init(HWND hWnd,BOOL bWindow);
-	void	Release(void);
-	void	Update(void);
-	bool	BeginRender(void);
-	void	EndRender(void);
-
-	//Get関数
-	auto	GetDevice(void) { return m_pD3DDevice; }
-
-private:
-	//--------------------------------------------------------------------------------
-	//  列挙型定義
-	//--------------------------------------------------------------------------------
-	enum RENDER_MODE
+	CRenderComponent(CGameObject* const pGameObj)
+		: CComponent(pGameObj)
+		, m_usMatID(0)
+		, m_renderPriority(RP_3D)
+		, m_renderState(RS_LIGHTON_CULLFACEON_MUL)
 	{
-		RM_NORMAL,		//背面カリング、塗りつぶし
-		RM_WIREFRAME	//ワイヤーフレーム（デバッグ用）
-	};
+		m_strTexName.clear();
+	}
 
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	void				SetRenderMode(const RENDER_MODE& rm);
+	~CRenderComponent() {}
+
+	virtual bool	Init(void) override { return true; }
+	virtual void	Uninit(void) override;
+	virtual void	Update(void);
+	virtual void	Render(void) = 0;
+
+	//Set関数
+	void			SetTexName(const string& strTexName);
+	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
+	void			SetRenderPriority(const RENDER_PRIORITY& rp) { m_renderPriority = rp; }
+	void			SetRenderState(const RENDER_STATE& rs) { m_renderState = rs; }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	LPDIRECT3D9			m_pD3D;			// Direct3Dオブジェクト
-	LPDIRECT3DDEVICE9	m_pD3DDevice;	// Deviceオブジェクト(描画に必要)
+
+protected:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CRenderComponent() : CComponent() {}
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	string			m_strTexName;		//テクスチャ
+	unsigned short	m_usMatID;			//マテリアル
+	RENDER_PRIORITY	m_renderPriority;
+	RENDER_STATE	m_renderState;
 };
-#endif
+
+//--------------------------------------------------------------------------------
+//  ヌル描画コンポネントクラス
+//--------------------------------------------------------------------------------
+class CNullRenderComponent : public CRenderComponent
+{
+public:
+	CNullRenderComponent() : CRenderComponent() {}
+	~CNullRenderComponent() {}
+
+	bool	Init(void) override { return true; }
+	void	Uninit(void) override {}
+	void	Release(void) override {}
+	void	Update(void) override {}
+	void	Render(void) override {}
+};

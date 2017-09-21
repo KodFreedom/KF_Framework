@@ -1,90 +1,90 @@
 //--------------------------------------------------------------------------------
-//	描画コンポネント
-//　drawComponent.h
+//	描画用マネージャ
+//　renderManager.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-18	
+//	Date   : 2017-09-20
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "component.h"
-#include "renderState.h"
+#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CRenderComponent;
+class CRenderState;
+
+//--------------------------------------------------------------------------------
+//  列挙型定義
+//--------------------------------------------------------------------------------
+enum RENDER_PRIORITY
+{//レンダー優先度
+	RP_3D = 0,
+	RP_3DALPHA_ZTEST,
+	RP_3DALPHA_ZSORT,
+	RP_MAX
+};
+
+enum RENDER_STATE
+{//レンダーステート
+	RS_LIGHTOFF_CULLFACEON_MUL = 0,	//ライトオフ、両面描画、乗算合成
+	RS_LIGHTOFF_CULLFACEOFF_MUL,	//ライトオフ、両面描画、乗算合成
+	RS_LIGHTON_CULLFACEON_MUL,		//ライトオン、片面描画、乗算合成
+	RS_LIGHTON_CULLFACEOFF_MUL,		//ライトオン、片面描画、乗算合成
+	RS_MAX
+};
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  描画コンポネントクラス
-//--------------------------------------------------------------------------------
-class CDrawComponent : public CComponent
+class CRenderManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CDrawComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-		,m_pRenderState(&s_nullRenderState), m_usMatID(0)
+	CRenderManager();
+	~CRenderManager() {}
+
+	static auto Create(void)
 	{
-		m_strTexName.clear();
+		auto pRenderManager = new CRenderManager();
+		pRenderManager->init();
+		return pRenderManager;
+	}
+	void		Update(void);
+	void		Render(void);
+	void		Release(void)
+	{
+		uninit();
+		delete this;
+	}
+	void		Register(CRenderComponent* pRender, const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
+	{
+		m_apRenderComponents[rp][rs].push_back(pRender);
 	}
 
-	~CDrawComponent() {}
-
-	virtual bool	Init(void) override { return true; }
-	virtual void	Uninit(void) override;
-	virtual void	Draw(void) = 0;
-
-	//Set関数
-	void			SetRenderState(CRenderState* const pRenderState) 
-	{
-		if (!pRenderState)
-		{
-			m_pRenderState = &s_nullRenderState;
-			return;
-		}
-
-		m_pRenderState = pRenderState; 
-	}
-	void			SetTexName(const string& strTexName);
-	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
-
+private:
 	//--------------------------------------------------------------------------------
-	//  変数定義
+	//  構造体定義
 	//--------------------------------------------------------------------------------
-	static CLightOffRenderState	s_lightOffRenderState;
-	static CNullRenderState		s_nullRenderState;
+	typedef list<CRenderComponent*> ListDraw;
 
-protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CDrawComponent() : CComponent() {}
+	void		init(void);
+	void		uninit(void);
+	void		clear(void);
+	void		setRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
+	void		resetRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string			m_strTexName;	//テクスチャ
-	unsigned short	m_usMatID;		//マテリアル
-	CRenderState*	m_pRenderState;	//レンダーステート
-};
-
-//--------------------------------------------------------------------------------
-//  ヌル描画コンポネントクラス
-//--------------------------------------------------------------------------------
-class CNullDrawComponent : public CDrawComponent
-{
-public:
-	CNullDrawComponent() : CDrawComponent() {}
-	~CNullDrawComponent() {}
-
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override {}
-	void	Release(void) override {}
-	void	Draw(void) override {}
+	ListDraw		m_apRenderComponents[RP_MAX][RS_MAX];
+	CRenderState*	m_apRenderState[RS_MAX];
 };

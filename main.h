@@ -12,7 +12,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
-//Include STL
+//STL
 #include <list>
 #include <vector>
 #include <unordered_map>
@@ -52,7 +52,6 @@ using namespace std;
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define SAFE_RELEASE(p)		if(p){ p->Release(); p=nullptr; }	//safe release mode
 #define SCREEN_WIDTH		(1280)								//ウインドウ幅
 #define SCREEN_HEIGHT		(720)								//ウインドウ高さ
 #define FRAME_PER_SECOND	(60)								

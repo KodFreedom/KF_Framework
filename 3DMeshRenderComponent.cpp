@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------
 //	3Dメッシュ描画コンポネント
-//　3DMeshDrawComponent.cpp
+//　3DMeshRenderComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "3DMeshDrawComponent.h"
+#include "3DMeshRenderComponent.h"
 #include "3DMeshComponent.h"
 #include "gameObject.h"
 #include "manager.h"
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void C3DMeshDrawComponent::Draw(void)
+void C3DMeshRenderComponent::Render(void)
 {
 	const auto pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
 
@@ -35,10 +35,7 @@ void C3DMeshDrawComponent::Draw(void)
 
 #ifdef USING_DIRECTX
 	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-
-	//RenderState設定
-	m_pRenderState->SetRenderState();
-
+	
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorld;
 	pDevice->SetTransform(D3DTS_WORLD, &mtx);
@@ -72,8 +69,5 @@ void C3DMeshDrawComponent::Draw(void)
 		pMeshInfo->m_nNumVtx,
 		0,
 		pMeshInfo->m_nNumPolygon);
-
-	//RenderState戻す
-	m_pRenderState->ResetRenderState();
 #endif
 }

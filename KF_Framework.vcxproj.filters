@@ -46,9 +46,6 @@
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Draw">
-      <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Physics">
       <UniqueIdentifier>{4dfeab76-87b5-4f7f-9bdb-4dcd6105f1c8}</UniqueIdentifier>
     </Filter>
@@ -63,9 +60,6 @@
     </Filter>
     <Filter Include="ソース ファイル\Component\Mesh">
       <UniqueIdentifier>{bda8fd06-b5f6-4d17-9e81-62ead9c4f049}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Draw">
-      <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base\Renderer">
       <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
@@ -142,6 +136,12 @@
     <Filter Include="ソース ファイル\Motion">
       <UniqueIdentifier>{cb274add-2675-4099-97a6-dc2c9e1bb78c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Render">
+      <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Render">
+      <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -183,12 +183,6 @@
     <ClCompile Include="2DMeshComponent.cpp">
       <Filter>ソース ファイル\Component\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="2DDrawComponent.cpp">
-      <Filter>ソース ファイル\Component\Draw</Filter>
-    </ClCompile>
-    <ClCompile Include="3DMeshDrawComponent.cpp">
-      <Filter>ソース ファイル\Component\Draw</Filter>
-    </ClCompile>
     <ClCompile Include="rendererDX.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
     </ClCompile>
@@ -200,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="drawComponent.cpp">
-      <Filter>ソース ファイル\Component\Draw</Filter>
     </ClCompile>
     <ClCompile Include="colliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
@@ -321,6 +312,18 @@
     <ClCompile Include="motionStatus.cpp">
       <Filter>ソース ファイル\Motion</Filter>
     </ClCompile>
+    <ClCompile Include="renderManager.cpp">
+      <Filter>ソース ファイル\Base\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="3DMeshRenderComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="2DRenderComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -362,9 +365,6 @@
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="drawComponent.h">
-      <Filter>ヘッダー ファイル\Component\Draw</Filter>
-    </ClInclude>
     <ClInclude Include="rendererDX.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
     </ClInclude>
@@ -373,12 +373,6 @@
     </ClInclude>
     <ClInclude Include="2DMeshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="2DDrawComponent.h">
-      <Filter>ヘッダー ファイル\Component\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="3DMeshDrawComponent.h">
-      <Filter>ヘッダー ファイル\Component\Draw</Filter>
     </ClInclude>
     <ClInclude Include="renderState.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
@@ -526,6 +520,18 @@
     </ClInclude>
     <ClInclude Include="motionStatus.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="renderManager.h">
+      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="3DMeshRenderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="2DRenderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

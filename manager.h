@@ -14,6 +14,7 @@
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
 class CRendererDX;
+class CRenderManager;
 class CInputManager;
 class CMeshManager;
 class CTextureManager;
@@ -37,6 +38,9 @@ class CDebugManager;
 class CManager
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”’è‹`
+	//--------------------------------------------------------------------------------
 	CManager();
 	~CManager() {}
 
@@ -51,6 +55,7 @@ public:
 
 	//GetŠÖ”
 	auto GetRenderer(void) { return m_pRenderer; }
+	auto GetRenderManager(void) { return m_pRenderManager; }
 	auto GetInputManager(void) { return m_pInputManager; }
 	auto GetMeshManager(void) { return m_pMeshManager; }
 	auto GetTextureManager(void) { return m_pTextureManager; }
@@ -73,6 +78,7 @@ private:
 	//  •Ï”’è‹`
 	//--------------------------------------------------------------------------------
 	CRendererDX*		m_pRenderer;
+	CRenderManager*		m_pRenderManager;
 	CInputManager*		m_pInputManager;
 	CMeshManager*		m_pMeshManager;
 	CTextureManager*	m_pTextureManager;

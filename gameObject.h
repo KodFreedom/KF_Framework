@@ -12,7 +12,7 @@
 #include "gameObjectManager.h"
 #include "transformComponent.h"
 #include "behaviorComponent.h"
-#include "drawComponent.h"
+#include "renderComponent.h"
 #include "rigidbodyComponent.h"
 #include "meshComponent.h"
 #include "colliderComponent.h"
@@ -29,41 +29,24 @@
 //--------------------------------------------------------------------------------
 class CGameObject
 {
-	friend CGameObjectManager;
+	friend class CGameObjectManager;
 
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(const GOM::PRIORITY& pri);
+	CGameObject(const GOMLAYER& layer = L_DEFAULT);
 	~CGameObject() {}
 	
 	virtual bool	Init(void) 
 	{ 
-		m_pTransform->Init();
-		for (auto pBehavior : m_listpBehavior) { pBehavior->Init(); }
-		m_pRigidbody->Init();
-		for (auto pCollider : m_listpCollider) { pCollider->Init(); }
-		m_pMesh->Init();
-		m_pDraw->Init();
+		if (!m_pTransform->Init()) { assert("init transform error!!"); return false; }
+		for (auto pBehavior : m_listpBehavior) { if (!pBehavior->Init()) { assert("init behavior error!!"); return false; } }
+		if (!m_pRigidbody->Init()) { assert("init rigidbody error!!");  return false; }
+		for (auto pCollider : m_listpCollider) { if (!pCollider->Init()) { assert("init collider error!!");  return false; } }
+		if (!m_pMesh->Init()) { assert("init mesh error!!");  return false; }
+		if (!m_pRender->Init()) { assert("init render error!!");  return false; }
 		return true;
-	}
-	virtual void	Uninit(void)
-	{
-		m_pTransform->Release();
-		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end();)
-		{
-			(*itr)->Release();
-			itr = m_listpBehavior.erase(itr);
-		}
-		m_pRigidbody->Release();
-		for (auto itr = m_listpCollider.begin(); itr != m_listpCollider.end();) 
-		{ 
-			(*itr)->Release(); 
-			itr = m_listpCollider.erase(itr);
-		}
-		m_pMesh->Release();
-		m_pDraw->Release();
 	}
 	virtual void	Update(void)
 	{
@@ -80,17 +63,13 @@ public:
 		for (auto pBehavior : m_listpBehavior) { pBehavior->LateUpdate(); }
 		m_pMesh->Update();
 		m_pTransform->UpdateMatrix();
+		m_pRender->Update();
 	}
-	virtual void	Draw(void)
+	void			Release(void)
 	{
-		if (!m_bActive) { return; }
-		m_pDraw->Draw();
-
-#ifdef _DEBUG
-		DrawNormal();
-#endif
+		uninit();
+		delete this;
 	}
-	void			Release(void);
 
 	//Get関数
 	auto		GetTransformComponent(void) const { return m_pTransform; }
@@ -109,49 +88,103 @@ public:
 	bool		IsActive(void) const { return m_bActive; }
 
 	//Set関数
-	void		SetMeshComponent(CMeshComponent* pMesh) { m_pMesh = pMesh; }
-	void		SetDrawComponent(CDrawComponent* pDraw) { m_pDraw = pDraw; }
-	void		SetRigidbodyComponent(CRigidbodyComponent* pRb) { m_pRigidbody = pRb; }
+	void		SetMeshComponent(CMeshComponent* pMesh) 
+	{
+		//Release
+		if (m_pMesh != &s_nullMesh) { SAFE_RELEASE(m_pMesh); }
+
+		//Set
+		if (!pMesh) { m_pMesh = &s_nullMesh; }
+		else { m_pMesh = pMesh; }
+	}
+	void		SetRenderComponent(CRenderComponent* pRender) 
+	{
+		//Release
+		if (m_pRender != &s_nullRender) { SAFE_RELEASE(m_pRender); }
+
+		//Set
+		if (!pRender) { m_pRender = &s_nullRender; }
+		else { m_pRender = pRender; }
+	}
+	void		SetRigidbodyComponent(CRigidbodyComponent* pRb) 
+	{
+		//Release
+		if (m_pRigidbody != &s_nullRigidbody) { SAFE_RELEASE(m_pRigidbody); }
+
+		//Set
+		if (!pRb) { m_pRender = &s_nullRender; }
+		else { m_pRigidbody = pRb; }
+	}
 	void		SetActive(const bool& bActive);
 	void		SetAlive(const bool& bAlive);
 	void		SetName(const string& strName) { m_strName = strName; }
 	void		SetTag(const string& strTag) { m_strTag = strTag; }
 
-	void		AddBehavior(CBehaviorComponent* pBehavior);
-	void		AddCollider(CColliderComponent* pCollider);
-	void		DeleteCollider(CColliderComponent* pCollider);
+	void		AddBehavior(CBehaviorComponent* pBehavior)
+	{
+		m_listpBehavior.push_back(pBehavior);
+	}
+	void		AddCollider(CColliderComponent* pCollider)
+	{
+		m_listpCollider.push_back(pCollider);
+	}
+	void		DeleteCollider(CColliderComponent* pCollider)
+	{
+		m_listpCollider.remove(pCollider);
+	}
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	virtual void				swapParam(void);
+	virtual void				uninit(void)
+	{
+		m_pTransform->Release();
+		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end();)
+		{
+			(*itr)->Release();
+			itr = m_listpBehavior.erase(itr);
+		}
+		m_pRigidbody->Release();
+		for (auto itr = m_listpCollider.begin(); itr != m_listpCollider.end();)
+		{
+			(*itr)->Release();
+			itr = m_listpCollider.erase(itr);
+		}
+		m_pMesh->Release();
+		m_pRender->Release();
+	}
 
 	//--------------------------------------------------------------------------------
-	//  変数定義
+	//  コンポネント
 	//--------------------------------------------------------------------------------
-	//コンポネント
 	CTransformComponent*		m_pTransform;	//位置関係パーツ
 	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
 	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
 	list<CColliderComponent*>	m_listpCollider;//コリジョンパーツ
 	CMeshComponent*				m_pMesh;		//メッシュパーツ
-	CDrawComponent*				m_pDraw;		//描画処理パーツ
+	CRenderComponent*			m_pRender;		//描画処理パーツ
 
 private:
-#ifdef _DEBUG
-	void		DrawNormal(void);
-#endif
-
-	//パラメーター(管理用)
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	CGameObject(CGameObject&) {}
+	
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
 	bool				m_bActive;		//活動フラグ
 	bool				m_bAlive;		//生きるフラグ
-	GOM::PRIORITY		m_pri;			//優先度
 	string				m_strName;		//オブジェクトの名前
 	string				m_strTag;		//オブジェクトのタグ
+	GOMLAYER			m_layer;		//レイヤ
 
-	//ヌルコンポネント
+	//--------------------------------------------------------------------------------
+	//  ヌルコンポネント定義
+	//--------------------------------------------------------------------------------
 	static CNullRigidbodyComponent	s_nullRigidbody;
 	static CNullMeshComponent		s_nullMesh;
-	static CNullDrawComponent		s_nullDraw;
+	static CNullRenderComponent		s_nullRender;
 };

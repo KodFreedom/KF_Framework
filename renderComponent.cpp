@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------
 //	描画コンポネント
-//　drawComponent.cpp
+//　renderComponent.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "renderComponent.h"
 #include "manager.h"
 #include "textureManager.h"
 #include "materialManager.h"
@@ -15,8 +15,6 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-CLightOffRenderState	CDrawComponent::s_lightOffRenderState;
-CNullRenderState		CDrawComponent::s_nullRenderState;
 
 //--------------------------------------------------------------------------------
 //	クラス
@@ -24,7 +22,7 @@ CNullRenderState		CDrawComponent::s_nullRenderState;
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CDrawComponent::Uninit(void)
+void CRenderComponent::Uninit(void)
 {
 	if (!m_strTexName.empty())
 	{
@@ -34,10 +32,24 @@ void CDrawComponent::Uninit(void)
 }
 
 //--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void CRenderComponent::Update(void)
+{
+	CMain::GetManager()->GetRenderManager()->Register(this, m_renderPriority, m_renderState);
+}
+
+//--------------------------------------------------------------------------------
 //  テクスチャ設定
 //--------------------------------------------------------------------------------
-void CDrawComponent::SetTexName(const string& strTexName)
+void CRenderComponent::SetTexName(const string& strTexName)
 {
+	if (!m_strTexName.empty())
+	{
+		CMain::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
+		m_strTexName.clear();
+	}
+
 	m_strTexName = strTexName;
 	CMain::GetManager()->GetTextureManager()->UseTexture(m_strTexName);
 }

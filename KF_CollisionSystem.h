@@ -75,28 +75,35 @@ public:
 	CKFCollisionSystem();
 	~CKFCollisionSystem() {}
 
-	void	Init(void);
-	void	Uninit(void);
-	void	Update(void);
-	void	LateUpdate(void);
-	void	Release(void)
+	static auto Create(void)
 	{
-		Uninit();
+		auto pCS = new CKFCollisionSystem;
+		pCS->init();
+		return pCS;
+	}
+	void		Update(void);
+	void		LateUpdate(void);
+	void		Release(void)
+	{
+		uninit();
 		delete this;
 	}
 
 #ifdef _DEBUG
-	void	DrawCollider(void);
+	void		DrawCollider(void);
 #endif
 
-	void	RegisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
-	void	DeregisterCollider(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
-	bool	RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis = nullptr);
+	void		Register(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
+	void		Deregister(const COL_MODE& mode, const COL_TYPE& type, CColliderComponent* pCollider);
+	bool		RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis = nullptr);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
+	void	init(void);
+	void	uninit(void);
+	
 	//Dynamic Sphere
 	void	checkWithDynamicSphere(const list<CColliderComponent*>::iterator& itrBegin, CSphereColliderComponent& sphere);
 	

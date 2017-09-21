@@ -9,36 +9,88 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "renderState.h"
-#include "manager.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
-#endif
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  LightOffクラス
+//  LIGHTON_CULLFACEON_MUL
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  レンダーステート設定
 //--------------------------------------------------------------------------------
-void CLightOffRenderState::SetRenderState(void)
+void CLightOnCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
 {
-#ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-#endif
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 //--------------------------------------------------------------------------------
 //  レンダーステートリセット
 //--------------------------------------------------------------------------------
-void CLightOffRenderState::ResetRenderState(void)
+void CLightOnCullFaceOnMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{}
+
+//--------------------------------------------------------------------------------
+//  RS_LIGHTON_CULLFACEOFF_MUL
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  レンダーステート設定
+//--------------------------------------------------------------------------------
+void CLightOnCullFaceOffMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
 {
-#ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-#endif
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 }
+
+//--------------------------------------------------------------------------------
+//  レンダーステートリセット
+//--------------------------------------------------------------------------------
+void CLightOnCullFaceOffMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+//--------------------------------------------------------------------------------
+//  RS_LIGHTOFF_CULLFACEON_MUL
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  レンダーステート設定
+//--------------------------------------------------------------------------------
+void CLightOffCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+//--------------------------------------------------------------------------------
+//  レンダーステートリセット
+//--------------------------------------------------------------------------------
+void CLightOffCullFaceOnMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//--------------------------------------------------------------------------------
+//  RS_LIGHTOFF_CULLFACEOFF_MUL
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  レンダーステート設定
+//--------------------------------------------------------------------------------
+void CLightOffCullFaceOffMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+}
+
+//--------------------------------------------------------------------------------
+//  レンダーステートリセット
+//--------------------------------------------------------------------------------
+void CLightOffCullFaceOffMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+{
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+#endif

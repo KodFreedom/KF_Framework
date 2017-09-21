@@ -22,11 +22,13 @@ class CAnimatorComponent;
 class CGameObjectActor : public CGameObject
 {
 public:
-	CGameObjectActor(const GOM::PRIORITY &pri);
+	//--------------------------------------------------------------------------------
+	//  ä÷êîêÈåæ
+	//--------------------------------------------------------------------------------
+	CGameObjectActor(const GOMLAYER& layer = L_DEFAULT);
 	~CGameObjectActor() {}
 
 	bool Init(void) override;
-	void Uninit(void) override;
 	void LateUpdate(void) override;
 
 	//Getä÷êî
@@ -37,6 +39,15 @@ public:
 	//ê∂ê¨ä÷êî
 	static CGameObjectActor* CreatePlayer(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
 	static CGameObjectActor* CreateEnemy(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+
 private:
+	//--------------------------------------------------------------------------------
+	//  ä÷êîêÈåæ
+	//--------------------------------------------------------------------------------
+	void uninit(void) override;
+
+	//--------------------------------------------------------------------------------
+	//  ïœêîêÈåæ
+	//--------------------------------------------------------------------------------
 	CAnimatorComponent* m_pAnimator;
 };

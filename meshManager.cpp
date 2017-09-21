@@ -14,6 +14,7 @@
 #include "mesh.h"
 #include "camera.h"
 #include "KF_Utility.h"
+#include "renderManager.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -900,6 +901,14 @@ void CMeshManager::createCube(CMesh* pMesh)
 	nSize = strTexture.size();
 	fwrite(&nSize, sizeof(int), 1, pFile);
 	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
+
+	//RenderPriority
+	auto rp = RP_3D;
+	fwrite(&rp, sizeof(rp), 1, pFile);
+
+	//RenderState
+	auto rs = RS_LIGHTON_CULLFACEON_MUL;
+	fwrite(&rs, sizeof(rs), 1, pFile);
 
 	fclose(pFile);
 	

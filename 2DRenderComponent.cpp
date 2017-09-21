@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------
 //	2D描画コンポネント
-//　2DDrawComponent.h
+//　2DRenderComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "2DDrawComponent.h"
+#include "2DRenderComponent.h"
 #include "2DMeshComponent.h"
 #include "gameObject.h"
 #include "manager.h"
@@ -23,13 +23,10 @@
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void C2DDrawComponent::Draw(void)
+void C2DRenderComponent::Render(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-
-	// レンダーステート設定
-	m_pRenderState->SetRenderState();
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
@@ -49,8 +46,5 @@ void C2DDrawComponent::Draw(void)
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
 		0,							//オフセット
 		c_pMesh->GetNumPolygon());	//ポリゴン数
-
-	// レンダーステートリセット
-	m_pRenderState->ResetRenderState();
 #endif
 }

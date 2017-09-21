@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	3Dメッシュ描画コンポネント
-//　3DMeshDrawComponent.h
+//　3DMeshRenderComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21	
 //--------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "drawComponent.h"
+#include "renderComponent.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -22,14 +22,14 @@ class C3DMeshComponent;
 //--------------------------------------------------------------------------------
 //  3D描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class C3DMeshDrawComponent : public CDrawComponent
+class C3DMeshRenderComponent : public CRenderComponent
 {
 public:
-	C3DMeshDrawComponent(C3DMeshComponent* const pMesh, CGameObject* const pGameObj)
-		: CDrawComponent(pGameObj), c_pMesh(pMesh) {}
-	~C3DMeshDrawComponent() {}
+	C3DMeshRenderComponent(C3DMeshComponent* const pMesh, CGameObject* const pGameObj)
+		: CRenderComponent(pGameObj), c_pMesh(pMesh) {}
+	~C3DMeshRenderComponent() {}
 
-	void	Draw(void) override;
+	void	Render(void) override;
 
 private:
 	C3DMeshComponent* const c_pMesh;

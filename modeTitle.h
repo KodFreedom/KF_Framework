@@ -21,12 +21,20 @@
 class CModeTitle : public CMode
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”éŒ¾
+	//--------------------------------------------------------------------------------
 	CModeTitle();
 	~CModeTitle();
 
 	void	Init(void) override;
-	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 	void	EndMode(void) override {}
+
+private:
+	//--------------------------------------------------------------------------------
+	//  ŠÖ”éŒ¾
+	//--------------------------------------------------------------------------------
+	void	uninit(void) override;
 };

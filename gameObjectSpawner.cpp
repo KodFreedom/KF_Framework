@@ -10,10 +10,11 @@
 #include "main.h"
 #include "manager.h"
 #include "meshManager.h"
+#include "renderManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
 #include "3DMeshComponent.h"
-#include "3DMeshDrawComponent.h"
+#include "3DMeshRenderComponent.h"
 #include "fieldEditorBehaviorComponent.h"
 #include "modelEditorBehaviorComponent.h"
 #include "editorControllerBehaviorComponent.h"
@@ -31,19 +32,19 @@
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//コンポネント
-	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName("skyBox");
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetRenderState(&CDrawComponent::s_lightOffRenderState);
-	pDraw->SetTexName("skybox000.jpg");
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetRenderState(RS_LIGHTOFF_CULLFACEON_MUL);
+	pRender->SetTexName("skybox000.jpg");
+	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
-	CTransformComponent* pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransformComponent();
 	pTrans->SetPos(vPos);
 	pTrans->SetPosNext(vPos);
 	pTrans->SetScale(vScale);
@@ -61,16 +62,16 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 	string strFieldName = strStageName + "Field";
 
 	//コンポネント
-	C3DMeshComponent* pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName(strFieldName);
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName("Grass0003_1_270.jpg");
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName("Grass0003_1_270.jpg");
+	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CFieldColliderComponent(pObj, strFieldName);
 	pObj->AddCollider(pCollider);
 
@@ -85,15 +86,15 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//コンポネント
 	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName("cube");
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName("nomal_cube.jpg");
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName("nomal_cube.jpg");
+	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
 	//COBBColliderComponent* pCollider = new COBBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
 	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, vScale.m_fX * 0.5f);
@@ -120,7 +121,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//Name
 	auto& strName = CKFUtility::GetFileName(strPath);
@@ -132,9 +133,9 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 
 	pMesh->SetMeshName(strPath, strTexName);
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName(strTexName);
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName(strTexName);
+	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
@@ -146,7 +147,6 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -155,7 +155,7 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//Tag
 	pObj->SetTag("Goal");
@@ -193,7 +193,7 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
 	if (!strType._Equal("model")) { return nullptr; }
 	
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//Name
 	pObj->SetName(strName);
@@ -233,7 +233,7 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, FILE* pFile)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//Node名
 	int nNodeNameSize;
@@ -342,7 +342,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, const string& strMeshName)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//Name
 	auto& strName = CKFUtility::GetFileName(strMeshName);
@@ -353,9 +353,14 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 	string strTexName;
 	pMesh->SetMeshName(strMeshName, strTexName);
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName(strTexName);
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName(strTexName);
+	if (strTexName._Equal("Pine_tree.png"))
+	{//Test
+		pRender->SetRenderPriority(RP_3DALPHA_ZTEST);
+		pRender->SetRenderState(RS_LIGHTON_CULLFACEOFF_MUL);
+	}
+	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
@@ -368,16 +373,16 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEditor)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//コンポネント
 	auto pMesh = new C3DMeshComponent(pObj);
 	string strTex;
 	pMesh->SetMeshName("data/MODEL/target.x", strTex);
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName(strTex);
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName(strTex);
+	pObj->SetRenderComponent(pRender);
 	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
 	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
 	pBehavior->SetFieldEditor(pFieldEditor);
@@ -396,7 +401,7 @@ CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEdito
 //--------------------------------------------------------------------------------
 CGameObject* CGameObjectSpawner::CreateEditorField(void)
 {
-	auto pObj = new CGameObject(GOM::PRI_3D);
+	auto pObj = new CGameObject;
 
 	//コンポネント
 	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
@@ -404,9 +409,9 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	auto pMesh = new C3DMeshComponent(pObj);
 	pMesh->SetMeshName("field");
 	pObj->SetMeshComponent(pMesh);
-	auto pDraw = new C3DMeshDrawComponent(pMesh, pObj);
-	pDraw->SetTexName("Grass0003_1_270.jpg");
-	pObj->SetDrawComponent(pDraw);
+	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	pRender->SetTexName("Grass0003_1_270.jpg");
+	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();

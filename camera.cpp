@@ -155,7 +155,7 @@ void CCamera::LateUpdate(void)
 void CCamera::Set(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 
 	//View行列
 	D3DXMATRIX mtxView;
@@ -167,7 +167,7 @@ void CCamera::Set(void)
 	D3DXMatrixPerspectiveFovLH(&mtxProjection,
 		m_fFovY * KF_PI / 180.0f,//視野角度(半分)
 		(float)SCREEN_WIDTH / SCREEN_HEIGHT,//アスペクト比
-		0.01f,//near 0.0fより大きい値
+		0.1f,//near 0.0fより大きい値
 		m_fFar);//far nearより大きい値
 	pDevice->SetTransform(D3DTS_PROJECTION,& mtxProjection);
 

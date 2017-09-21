@@ -30,15 +30,20 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::CO
 {
 	CKFMath::MtxIdentity(m_mtxWorld);
 	CKFMath::MtxIdentity(m_mtxOffset);
-	CMain::GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
+	CMain::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
 }
+
+//--------------------------------------------------------------------------------
+//  デストラクタ
+//--------------------------------------------------------------------------------
+CColliderComponent::~CColliderComponent() {}
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
 void CColliderComponent::Uninit(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->DeregisterCollider(m_mode, m_type, this);
+	CMain::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -66,7 +71,7 @@ void CColliderComponent::SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
 //--------------------------------------------------------------------------------
 void CColliderComponent::Sleep(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->DeregisterCollider(m_mode, m_type, this);
+	CMain::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -74,5 +79,5 @@ void CColliderComponent::Sleep(void)
 //--------------------------------------------------------------------------------
 void CColliderComponent::Awake(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->RegisterCollider(m_mode, m_type, this);
+	CMain::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
 }

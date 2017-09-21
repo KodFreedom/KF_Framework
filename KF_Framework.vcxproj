@@ -152,9 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2DDrawComponent.cpp" />
+    <ClCompile Include="2DRenderComponent.cpp" />
     <ClCompile Include="2DUIObject.cpp" />
-    <ClCompile Include="3DMeshDrawComponent.cpp" />
+    <ClCompile Include="3DMeshRenderComponent.cpp" />
     <ClCompile Include="3DMeshComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="actionGameCamera.cpp" />
@@ -165,7 +165,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
     <ClCompile Include="debugManager.cpp" />
-    <ClCompile Include="drawComponent.cpp" />
+    <ClCompile Include="renderComponent.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
     <ClCompile Include="editorCamera.cpp" />
     <ClCompile Include="enemyAttackMode.cpp" />
@@ -203,6 +203,7 @@
     <ClCompile Include="playerBehaviorComponent.cpp" />
     <ClCompile Include="playerUIObject.cpp" />
     <ClCompile Include="rendererDX.cpp" />
+    <ClCompile Include="renderManager.cpp" />
     <ClCompile Include="renderState.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="sphereColliderComponent.cpp" />
@@ -213,9 +214,9 @@
     <ClCompile Include="UISystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2DDrawComponent.h" />
+    <ClInclude Include="2DRenderComponent.h" />
     <ClInclude Include="2DUIObject.h" />
-    <ClInclude Include="3DMeshDrawComponent.h" />
+    <ClInclude Include="3DMeshRenderComponent.h" />
     <ClInclude Include="3DMeshComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
     <ClInclude Include="AABBColliderComponent.h" />
@@ -232,7 +233,7 @@
     <ClInclude Include="enemyNormalMode.h" />
     <ClInclude Include="colliderComponent.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="drawComponent.h" />
+    <ClInclude Include="renderComponent.h" />
     <ClInclude Include="editorCamera.h" />
     <ClInclude Include="enemyBehaviorComponent.h" />
     <ClInclude Include="fade.h" />
@@ -270,6 +271,7 @@
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerUIObject.h" />
     <ClInclude Include="rendererDX.h" />
+    <ClInclude Include="renderManager.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbodyComponent.h" />
     <ClInclude Include="soundManager.h" />

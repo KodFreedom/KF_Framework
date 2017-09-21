@@ -21,10 +21,15 @@
 //  クラス
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOM::PRIORITY& pri)
-	: CGameObject(pri)
+CGameObjectActor::CGameObjectActor(const GOMLAYER& layer)
+	: CGameObject(layer)
 	, m_pAnimator(nullptr)
 {
 
@@ -43,15 +48,6 @@ bool CGameObjectActor::Init(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CGameObjectActor::Uninit(void)
-{
-	CGameObject::Uninit();
-	m_pAnimator->Release();
-}
-
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
 void CGameObjectActor::LateUpdate(void)
 {
 	CGameObject::LateUpdate();
@@ -63,7 +59,7 @@ void CGameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObjectActor(GOM::PRI_3D);
+	auto pObj = new CGameObjectActor;
 
 	//Tag
 	pObj->SetTag("Player");
@@ -103,7 +99,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 //--------------------------------------------------------------------------------
 CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
 {
-	auto pObj = new CGameObjectActor(GOM::PRI_3D);
+	auto pObj = new CGameObjectActor;
 
 	//Tag
 	pObj->SetTag("Enemy");
@@ -141,4 +137,18 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const C
 	pObj->Init();
 
 	return pObj;
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void CGameObjectActor::uninit(void)
+{
+	CGameObject::uninit();
+	SAFE_RELEASE(m_pAnimator);
 }

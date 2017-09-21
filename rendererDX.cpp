@@ -114,31 +114,7 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	//	//
 	//}
 
-	// レンダーステートの設定
 	SetRenderMode(RM_NORMAL);
-	m_pD3DDevice->SetRenderState(D3DRS_ZENABLE, TRUE);						// Zバッファを使用
-	m_pD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	m_pD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);		// αソースカラーの指定
-	m_pD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	// αデスティネーションカラーの指定
-	
-	//抗劇歯
-	//m_pD3DDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);			// アンチエイジング
-
-	// サンプラーステートの設定
-	m_pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャＵ値の繰り返し設定
-	m_pD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);	// テクスチャＶ値の繰り返し設定
-	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);	// テクスチャ拡大時の補間設定
-	m_pD3DDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);	// テクスチャ縮小時の補間設定
-
-	// テクスチャステージステートの設定
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);		// 最初のアルファ引数(初期値はD3DTA_TEXTURE、テクスチャがない場合はD3DTA_DIFFUSE)
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
-	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);		// ２番目のアルファ引数(初期値はD3DTA_CURRENT)
-
 	return true;
 }
 
@@ -179,7 +155,7 @@ void CRendererDX::Update(void)
 //--------------------------------------------------------------------------------
 //  描画開始
 //--------------------------------------------------------------------------------
-bool CRendererDX::BeginDraw(void)
+bool CRendererDX::BeginRender(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
 	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(128, 0, 128, 255), 1.0f, 0);
@@ -193,7 +169,7 @@ bool CRendererDX::BeginDraw(void)
 //--------------------------------------------------------------------------------
 //  描画終了
 //--------------------------------------------------------------------------------
-void CRendererDX::EndDraw(void)
+void CRendererDX::EndRender(void)
 {
 	// Direct3Dによる描画の終了
 	m_pD3DDevice->EndScene();
@@ -210,11 +186,9 @@ void CRendererDX::SetRenderMode(const RENDER_MODE &rm)
 	switch (rm)
 	{
 	case RM_NORMAL:
-		m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);		//背面を左回りでカリングする
 		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	//塗りつぶし
 		break;
 	case RM_WIREFRAME:
-		m_pD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);		//背面のカリングはしない
 		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);//ワイヤーフレーム
 		break;
 	default:

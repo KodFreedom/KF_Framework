@@ -94,7 +94,7 @@ void CAnimatorComponent::Update(void)
 void CAnimatorComponent::SetAttack(const bool& bAttack)
 {
 	if (!bAttack) { return; }
-	m_pMotionStatus->ChangeMotion(MP_ATTACK);
+	m_pMotionStatus->ChangeMotion(*this, MP_ATTACK);
 }
 
 //--------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ void CAnimatorComponent::SetGrounded(const bool& bGrounded)
 	if (m_bIsGrounded == bGrounded) { return; }
 	if (!m_bIsGrounded && bGrounded)
 	{
-		m_pMotionStatus->ChangeMotion(MP_LAND);
+		m_pMotionStatus->ChangeMotion(*this, MP_LAND);
 	}
 	m_bIsGrounded = bGrounded;
 }
@@ -124,7 +124,7 @@ void CAnimatorComponent::SetGrounded(const bool& bGrounded)
 void CAnimatorComponent::SetJump(const bool& bJump)
 {
 	if (!bJump || !m_bIsGrounded) { return; }
-	m_pMotionStatus->ChangeMotion(MP_JUMP);
+	m_pMotionStatus->ChangeMotion(*this, MP_JUMP);
 }
 
 //--------------------------------------------------------------------------------
@@ -136,8 +136,8 @@ void CAnimatorComponent::SetJump(const bool& bJump)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::SetMove(const float& fMovement)
 {
-	if (fMovement == 0.0f) { m_pMotionStatus->ChangeMotion(MP_NEUTAL); }
-	else { m_pMotionStatus->ChangeMotion(MP_RUN); }
+	if (fMovement == 0.0f) { m_pMotionStatus->ChangeMotion(*this, MP_NEUTAL); }
+	else { m_pMotionStatus->ChangeMotion(*this, MP_RUN); }
 }
 
 //--------------------------------------------------------------------------------

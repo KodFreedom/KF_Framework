@@ -9,10 +9,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectManager.h"
-
-//gameObject head files
 #include "gameObject.h"
-#include "gameObjectActor.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -27,7 +24,7 @@
 //--------------------------------------------------------------------------------
 CGameObjectManager::CGameObjectManager()
 {
-	for (auto& list : m_alistGameObj){ list.clear(); }
+	for (auto& list : m_aListGameObject){ list.clear(); }
 }
 
 //--------------------------------------------------------------------------------
@@ -35,12 +32,11 @@ CGameObjectManager::CGameObjectManager()
 //--------------------------------------------------------------------------------
 void CGameObjectManager::ReleaseAll(void)
 {
-	for (auto& list : m_alistGameObj)
+	for (auto& list : m_aListGameObject)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
 		{
-			(*itr)->Uninit();
-			delete (*itr);
+			(*itr)->Release();
 			itr = list.erase(itr);
 		}
 	}
@@ -49,23 +45,22 @@ void CGameObjectManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::UpdateAll(void)
+void CGameObjectManager::Update(void)
 {
-	for (auto& list : m_alistGameObj)
+	for (auto& list : m_aListGameObject)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
 		{//生きてないオブジェクトを削除
 			if (!(*itr)->m_bAlive)
 			{
-				(*itr)->Uninit();
-				delete (*itr);
+				(*itr)->Release();
 				itr = list.erase(itr);
 			}
 			else { ++itr; }
 		}
 	}
 
-	for (auto& list : m_alistGameObj)
+	for (auto& list : m_aListGameObject)
 	{
 		for (auto pObj : list)
 		{
@@ -77,9 +72,9 @@ void CGameObjectManager::UpdateAll(void)
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void CGameObjectManager::LateUpdateAll(void)
+void CGameObjectManager::LateUpdate(void)
 {
-	for (auto& list : m_alistGameObj)
+	for (auto& list : m_aListGameObject)
 	{
 		for (auto pObj : list)
 		{
@@ -89,37 +84,11 @@ void CGameObjectManager::LateUpdateAll(void)
 }
 
 //--------------------------------------------------------------------------------
-//  描画処理
-//--------------------------------------------------------------------------------
-void CGameObjectManager::DrawAll(void)
-{
-	for (auto& list : m_alistGameObj)
-	{
-		for (auto pObj : list)
-		{
-			pObj->Draw();
-		}
-	}
-}
-
-//--------------------------------------------------------------------------------
 //  ゲームオブジェクトの確保
 //--------------------------------------------------------------------------------
-void CGameObjectManager::RegisterGameObj(const PRIORITY &pri, CGameObject *pGameObj)
+void CGameObjectManager::Register(CGameObject* pGameObj, const GOMLAYER& layer)
 {
-	m_alistGameObj[pri].push_back(pGameObj);
-}
-
-//--------------------------------------------------------------------------------
-//  ゲームオブジェクトの破棄
-//--------------------------------------------------------------------------------
-void CGameObjectManager::DeregisterGameObj(const PRIORITY &pri, CGameObject *pGameObj)
-{
-	if (!pGameObj) { return; }
-	PRIORITY priCopy = pri;
-	pGameObj->Uninit();
-	delete pGameObj;
-	m_alistGameObj[priCopy].remove(pGameObj);
+	m_aListGameObject[layer].push_back(pGameObj);
 }
 
 //--------------------------------------------------------------------------------
@@ -127,13 +96,6 @@ void CGameObjectManager::DeregisterGameObj(const PRIORITY &pri, CGameObject *pGa
 //  Private
 //
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-void CGameObjectManager::init(void)
-{
-}
-
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------

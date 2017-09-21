@@ -18,9 +18,6 @@ class CCollision;
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  物理演算システム
-//--------------------------------------------------------------------------------
 class CKFPhysicsSystem
 {
 public:
@@ -35,22 +32,30 @@ public:
 	CKFPhysicsSystem() { m_listCollision.clear(); }
 	~CKFPhysicsSystem() {}
 
-	bool	Init(void);
-	void	Uninit(void);
-	void	Release(void);
-	void	Update(void);
-
-	void	RegisterCollision(CCollision* pCollision);
+	static auto	Create(void)
+	{
+		auto pPs = new CKFPhysicsSystem;
+		return pPs;
+	}
+	void		Release(void)
+	{
+		uninit();
+		delete this;
+	}
+	void		Update(void);
+	void		Clear(void);
+	void		RegisterCollision(CCollision* pCollision);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void	resolve(CCollision& collision);
-	void	resolveVelocity(CCollision& collision);
-	void	resolveInterpenetration(CCollision& collision);
-	float	calculateSeparatingVelocity(CCollision& collision);
-	void	calculateCollisionBasis(CCollision& collision);
+	void		uninit(void);
+	void		resolve(CCollision& collision);
+	void		resolveVelocity(CCollision& collision);
+	void		resolveInterpenetration(CCollision& collision);
+	float		calculateSeparatingVelocity(CCollision& collision);
+	void		calculateCollisionBasis(CCollision& collision);
 
 	//--------------------------------------------------------------------------------
 	//  変数宣言

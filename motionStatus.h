@@ -45,7 +45,7 @@ public:
 	~CMotionStatus() {};
 
 	virtual void	Update(CAnimatorComponent& animator) = 0;
-	virtual void	ChangeMotion(const MOTION_PATTERN& motion) = 0;
+	virtual void	ChangeMotion(CAnimatorComponent& animator, const MOTION_PATTERN& motion) = 0;
 
 	int				GetKeyNow(void) const { return m_nKeyNow; }
 	int				GetFrameNow(void) const { return m_nFrameNow; }
@@ -54,7 +54,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-
+	virtual bool	checkCanChange(CAnimatorComponent& animator, const MOTION_PATTERN& motion) = 0;
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -77,7 +77,13 @@ public:
 	~CNormalMotionStatus() {}
 
 	void Update(CAnimatorComponent& animator) override;
-	void ChangeMotion(const MOTION_PATTERN& motion) override;
+	void ChangeMotion(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	bool checkCanChange(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
 };
 
 //--------------------------------------------------------------------------------
@@ -93,8 +99,14 @@ public:
 		: CMotionStatus(nKeyNow, nFrameNow) {}
 	~CAwaitMotionStatus() {}
 
-	void Update(CAnimatorComponent& animator) override {}
-	void ChangeMotion(const MOTION_PATTERN& motion) override;
+	void Update(CAnimatorComponent& animator) override;
+	void ChangeMotion(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	bool checkCanChange(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
 };
 
 //--------------------------------------------------------------------------------
@@ -107,22 +119,30 @@ public:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CBlendMotionStatus(const int nKeyNow = 0, const int nFrameNow = 0)
-		: CMotionStatus(nKeyNow, nFrameNow) {}
+		: CMotionStatus(nKeyNow, nFrameNow)
+		, m_nBlendKeyNow(0)
+		, m_nBlendFrameNow(0)
+		, m_nBlendFrameCnt(0) {}
 	~CBlendMotionStatus() {}
 
 	void Update(CAnimatorComponent& animator) override;
-	void ChangeMotion(const MOTION_PATTERN& motion) override;
+	void ChangeMotion(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
 
 private:
 	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	bool checkCanChange(CAnimatorComponent& animator, const MOTION_PATTERN& motion) override;
+
+	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const int	sc_nBlendFrame = 5;
+	static const int	sc_nBlendFrame = 10;
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------
 	int	m_nBlendKeyNow;
 	int	m_nBlendFrameNow;
-	int m_nBlendFrame;
+	int m_nBlendFrameCnt;
 };

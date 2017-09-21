@@ -17,6 +17,15 @@
 #define GOM CGameObjectManager	//GameObjectManagerの略称
 
 //--------------------------------------------------------------------------------
+//  列挙型定義
+//--------------------------------------------------------------------------------
+enum GOMLAYER
+{
+	L_DEFAULT = 0,
+	L_MAX
+};
+
+//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class CGameObject;
@@ -28,17 +37,6 @@ class CGameObjectManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  列挙型定義
-	//--------------------------------------------------------------------------------
-	enum PRIORITY
-	{
-		PRI_3D,
-		PRI_3D_ALPHA,
-		PRI_2D,
-		PRI_MAX
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CGameObjectManager();
@@ -47,7 +45,6 @@ public:
 	static auto Create(void)
 	{
 		auto pGOM = new CGameObjectManager;
-		pGOM->init();
 		return pGOM;
 	}
 	void		Release(void)
@@ -57,23 +54,19 @@ public:
 	}
 
 	void		ReleaseAll(void);
-	void		UpdateAll(void);
-	void		LateUpdateAll(void);
-	void		DrawAll(void);
+	void		Update(void);
+	void		LateUpdate(void);
 
-	void		RegisterGameObj(const PRIORITY& pri, CGameObject* pGameObj);
-	void		DeregisterGameObj(const PRIORITY& pri, CGameObject* pGameObj);
-
+	void		Register(CGameObject* pGameObj, const GOMLAYER& layer = L_DEFAULT);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		init(void);
 	void		uninit(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<CGameObject*>	m_alistGameObj[PRI_MAX];
+	list<CGameObject*>	m_aListGameObject[L_MAX];
 };
