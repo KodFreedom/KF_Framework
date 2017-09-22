@@ -193,7 +193,12 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
 	if (!strType._Equal("model")) { return nullptr; }
 	
-	auto pObj = new CGameObject;
+	//Modelファイルの開く
+	string strPath = "data/MODEL/" + strFilePath;
+	FILE *pFile;
+	fopen_s(&pFile, strPath.c_str(), "rb");
+
+	auto pObj = createChildNode(nullptr, pFile);
 
 	//Name
 	pObj->SetName(strName);
@@ -206,14 +211,6 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	pTrans->SetScaleNext(vScale);
 	pTrans->SetRot(qRot);
 	pTrans->SetRotNext(qRot);
-
-	//Modelファイルの開く
-	strName = "data/MODEL/" + strFilePath;
-	FILE *pFile;
-	fopen_s(&pFile, strName.c_str(), "rb");
-
-	//Child
-	auto pChild = createChildNode(pTrans, pFile);
 
 	fclose(pFile);
 	return pObj;
@@ -249,7 +246,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	fread_s(&vRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
 	fread_s(&vScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->RegisterParent(pParent, vPos, vRot);
+	if (pParent) { pTrans->RegisterParent(pParent, vPos, vRot); }
 
 	//Collider
 	int nNumCollider = 0;
@@ -357,7 +354,7 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 	pRender->SetTexName(strTexName);
 	if (strTexName._Equal("Pine_tree.png"))
 	{//Test
-		pRender->SetRenderPriority(RP_3DALPHA_ZTEST);
+		pRender->SetRenderPriority(RP_3D_ALPHATEST);
 		pRender->SetRenderState(RS_LIGHTON_CULLFACEOFF_MUL);
 	}
 	pObj->SetRenderComponent(pRender);

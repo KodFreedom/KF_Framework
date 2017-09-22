@@ -23,8 +23,8 @@ class CRenderState;
 enum RENDER_PRIORITY
 {//ƒŒƒ“ƒ_[—Dæ“x
 	RP_3D = 0,
-	RP_3DALPHA_ZTEST,
-	RP_3DALPHA_ZSORT,
+	RP_3D_ALPHATEST,
+	RP_3D_ZSORT,
 	RP_MAX
 };
 
