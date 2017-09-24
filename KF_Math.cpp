@@ -14,19 +14,20 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const CKFVec3	CKFMath::sc_vZero = CKFVec3(0.0f);
-const CKFVec3	CKFMath::sc_vOne = CKFVec3(1.0f);
-const CKFVec3	CKFMath::sc_vUp = CKFVec3(0.0f, 1.0f, 0.0f);
-const CKFVec3	CKFMath::sc_vDown = CKFVec3(0.0f, -1.0f, 0.0f);
-const CKFVec3	CKFMath::sc_vLeft = CKFVec3(-1.0f, 0.0f, 0.0f);
-const CKFVec3	CKFMath::sc_vRight = CKFVec3(1.0f, 0.0f, 0.0f);
-const CKFVec3	CKFMath::sc_vForward = CKFVec3(0.0f, 0.0f, 1.0f);
-const CKFVec3	CKFMath::sc_vBack = CKFVec3(0.0f, 0.0f, -1.0f);
-const CKFColor	CKFMath::sc_cWhite = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
-const CKFColor	CKFMath::sc_cBlack = CKFColor(0.0f, 0.0f, 0.0f, 1.0f);
-const CKFColor	CKFMath::sc_cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-const CKFColor	CKFMath::sc_cBlue = CKFColor(0.0f, 0.0f, 1.0f, 1.0f);
-const CKFColor	CKFMath::sc_cGreen = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
+const CKFVec3		CKFMath::sc_vZero = CKFVec3(0.0f);
+const CKFVec3		CKFMath::sc_vOne = CKFVec3(1.0f);
+const CKFVec3		CKFMath::sc_vUp = CKFVec3(0.0f, 1.0f, 0.0f);
+const CKFVec3		CKFMath::sc_vDown = CKFVec3(0.0f, -1.0f, 0.0f);
+const CKFVec3		CKFMath::sc_vLeft = CKFVec3(-1.0f, 0.0f, 0.0f);
+const CKFVec3		CKFMath::sc_vRight = CKFVec3(1.0f, 0.0f, 0.0f);
+const CKFVec3		CKFMath::sc_vForward = CKFVec3(0.0f, 0.0f, 1.0f);
+const CKFVec3		CKFMath::sc_vBack = CKFVec3(0.0f, 0.0f, -1.0f);
+const CKFColor		CKFMath::sc_cWhite = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
+const CKFColor		CKFMath::sc_cBlack = CKFColor(0.0f, 0.0f, 0.0f, 1.0f);
+const CKFColor		CKFMath::sc_cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+const CKFColor		CKFMath::sc_cBlue = CKFColor(0.0f, 0.0f, 1.0f, 1.0f);
+const CKFColor		CKFMath::sc_cGreen = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
+const CKFQuaternion	CKFMath::sc_qRotZero = CKFQuaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
 //--------------------------------------------------------------------------------
 //  CKFVec2
@@ -1224,6 +1225,15 @@ CKFMtx44 CKFMath::MtxTranspose(const CKFMtx44& mtx)
 }
 
 //--------------------------------------------------------------------------------
+//	MtxTranspose
+//	行列のトランスポース
+//--------------------------------------------------------------------------------
+CKFVec3 CKFMath::MtxToEular(const CKFMtx44& mtx)
+{
+	return QuaternionToEuler(MtxToQuaternion(mtx));
+}
+
+//--------------------------------------------------------------------------------
 //  Quaternion
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -1420,6 +1430,8 @@ CKFMtx44 CKFMath::QuaternionToMtx(const CKFQuaternion& qValue)
 //--------------------------------------------------------------------------------
 CKFVec3	CKFMath::QuaternionToEuler(const CKFQuaternion& quaternion)
 {
+	D3DXQUATERNION q = quaternion;
+	
 	CKFVec3 vRot;
 	float fX = quaternion.m_fX;
 	float fY = quaternion.m_fY;

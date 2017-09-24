@@ -33,32 +33,25 @@ public:
 
 	bool	Init(HWND hWnd,BOOL bWindow);
 	void	Release(void);
-	void	Update(void);
 	bool	BeginRender(void);
 	void	EndRender(void);
 
 	//Get関数
 	auto	GetDevice(void) { return m_pD3DDevice; }
+	auto	GetBGColor(void) const { return m_cBGColor; }
+	auto	GetWireFrameFlag(void) const { return m_bWireFrame; }
+
+	//Set関数
+	void	SetBGColor(const CKFColor& cColor) { m_cBGColor = cColor; }
+	void	SetWireFrameFlag(const bool& bFlag);
 
 private:
-	//--------------------------------------------------------------------------------
-	//  列挙型定義
-	//--------------------------------------------------------------------------------
-	enum RENDER_MODE
-	{
-		RM_NORMAL,		//背面カリング、塗りつぶし
-		RM_WIREFRAME	//ワイヤーフレーム（デバッグ用）
-	};
-
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	void				SetRenderMode(const RENDER_MODE& rm);
-
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	LPDIRECT3D9			m_pD3D;			// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9	m_pD3DDevice;	// Deviceオブジェクト(描画に必要)
+	CKFColor			m_cBGColor;		// 背景色
+	bool				m_bWireFrame;	// ワイヤフレーム
 };
 #endif

@@ -27,6 +27,7 @@
 CRendererDX::CRendererDX()
 	: m_pD3D(nullptr)
 	, m_pD3DDevice(nullptr)
+	, m_bWireFrame(false)
 {
 }
 
@@ -114,7 +115,7 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	//	//
 	//}
 
-	SetRenderMode(RM_NORMAL);
+	SetWireFrameFlag(false);
 	return true;
 }
 
@@ -130,26 +131,6 @@ void CRendererDX::Release(void)
 	SAFE_RELEASE(m_pD3D);
 
 	delete this;
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void CRendererDX::Update(void)
-{
-#ifdef _DEBUG
-	CKeyboardDX *pKeyboard = CMain::GetManager()->GetInputManager()->GetKeyboard();
-	
-	if (pKeyboard->GetKeyPress(DIK_F8))
-	{
-		SetRenderMode(RM_WIREFRAME);
-	}
-	else
-	{
-		SetRenderMode(RM_NORMAL);
-	}
-
-#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -181,19 +162,19 @@ void CRendererDX::EndRender(void)
 //--------------------------------------------------------------------------------
 // レンダーモード設定
 //--------------------------------------------------------------------------------
-void CRendererDX::SetRenderMode(const RENDER_MODE &rm)
+void CRendererDX::SetWireFrameFlag(const bool& bFlag)
 {
-	switch (rm)
+	m_bWireFrame = bFlag;
+
+	if (m_bWireFrame)
 	{
-	case RM_NORMAL:
-		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	//塗りつぶし
-		break;
-	case RM_WIREFRAME:
 		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);//ワイヤーフレーム
-		break;
-	default:
-		break;
 	}
+	else
+	{
+		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	//塗りつぶし
+	}
+
 }
 
 #endif

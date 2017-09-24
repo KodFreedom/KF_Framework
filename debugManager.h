@@ -19,13 +19,14 @@ public:
 	CDebugManager();
 	~CDebugManager() {}
 
-	static auto Create(void)
+	static auto Create(HWND hWnd)
 	{
 		auto pDM = new CDebugManager;
-		pDM->init();
+		pDM->init(hWnd);
 		return pDM;
 	}
 	void		Update(void);
+	void		LateUpdate(void);
 	void		Draw(void);
 	void		Release(void)
 	{
@@ -46,8 +47,9 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void			init(void);
+	void			init(HWND hWnd);
 	void			uninit(void);
+	void			showMainWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -55,9 +57,5 @@ private:
 	string			m_strDebugInfo;
 	list<string>	m_listStrDebugScroll;
 	unsigned short	m_usCntScroll;
-
-#ifdef USING_DIRECTX
-	LPD3DXFONT		m_pFont;		// フォントへのポインタ
-#endif//USING_DIRECTX
 };
 #endif//_DEBUG

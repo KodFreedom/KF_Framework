@@ -86,7 +86,7 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 #ifdef _DEBUG
 	//Debugマネージャの生成
-	m_pDebugManager = CDebugManager::Create();
+	m_pDebugManager = CDebugManager::Create(hWnd);
 #endif
 
 	//レンダーマネージャの生成
@@ -137,7 +137,7 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pFade = CFade::Create();
 
 	//初期モード設定
-	SetMode(new CModeDemo);
+	SetMode(new CModeEditor);
 
 	return true;
 }
@@ -210,11 +210,13 @@ void CManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void CManager::Update(void)
 {
+#ifdef _DEBUG
+	//Debugマネージャの更新
+	m_pDebugManager->Update();
+#endif
+
 	//入力更新
 	m_pInputManager->Update();
-
-	//レンダラー更新
-	m_pRenderer->Update();
 
 	//モード更新
 	m_pMode->Update();
@@ -254,7 +256,7 @@ void CManager::LateUpdate(void)
 
 #ifdef _DEBUG
 	//Debugマネージャの更新
-	m_pDebugManager->Update();
+	m_pDebugManager->LateUpdate();
 #endif
 }
 
@@ -294,12 +296,8 @@ void CManager::Draw(void)
 //--------------------------------------------------------------------------------
 void CManager::SetMode(CMode* pMode)
 {
+	if (!pMode) { return; }
 	SAFE_RELEASE(m_pMode);
-
 	m_pMode = pMode;
-
-	if (m_pMode)
-	{
-		m_pMode->Init();
-	}
+	m_pMode->Init();
 }

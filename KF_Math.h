@@ -253,19 +253,20 @@ public:
 	//--------------------------------------------------------------------------------
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
-	static const CKFVec3	sc_vZero;
-	static const CKFVec3	sc_vOne;
-	static const CKFVec3	sc_vUp;
-	static const CKFVec3	sc_vDown;
-	static const CKFVec3	sc_vLeft;
-	static const CKFVec3	sc_vRight;
-	static const CKFVec3	sc_vForward;
-	static const CKFVec3	sc_vBack;
-	static const CKFColor	sc_cWhite;
-	static const CKFColor	sc_cBlack;
-	static const CKFColor	sc_cRed;
-	static const CKFColor	sc_cBlue;
-	static const CKFColor	sc_cGreen;
+	static const CKFVec3		sc_vZero;
+	static const CKFVec3		sc_vOne;
+	static const CKFVec3		sc_vUp;
+	static const CKFVec3		sc_vDown;
+	static const CKFVec3		sc_vLeft;
+	static const CKFVec3		sc_vRight;
+	static const CKFVec3		sc_vForward;
+	static const CKFVec3		sc_vBack;
+	static const CKFColor		sc_cWhite;
+	static const CKFColor		sc_cBlack;
+	static const CKFColor		sc_cRed;
+	static const CKFColor		sc_cBlue;
+	static const CKFColor		sc_cGreen;
+	static const CKFQuaternion	sc_qRotZero;
 
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
@@ -304,7 +305,8 @@ public:
 	static void				MtxRotationYawPitchRoll(CKFMtx44& mtxRot, const CKFVec3& vRot);
 	static void				MtxTranslation(CKFMtx44& mtxTrans, const CKFVec3& vPos);
 	static CKFMtx44			MtxTranspose(const CKFMtx44& mtx);
-	
+	static CKFVec3			MtxToEular(const CKFMtx44& mtx);
+
 #ifdef USING_DIRECTX
 	static CKFMtx44			ChangeDXMtxToMtx44(const D3DXMATRIX& mtx);
 #endif

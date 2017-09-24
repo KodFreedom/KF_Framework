@@ -165,6 +165,10 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
     <ClCompile Include="debugManager.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="renderComponent.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
     <ClCompile Include="editorCamera.cpp" />
@@ -233,6 +237,13 @@
     <ClInclude Include="enemyNormalMode.h" />
     <ClInclude Include="colliderComponent.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\stb_rect_pack.h" />
+    <ClInclude Include="ImGui\stb_textedit.h" />
+    <ClInclude Include="ImGui\stb_truetype.h" />
     <ClInclude Include="renderComponent.h" />
     <ClInclude Include="editorCamera.h" />
     <ClInclude Include="enemyBehaviorComponent.h" />

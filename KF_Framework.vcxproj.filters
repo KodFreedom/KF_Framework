@@ -142,6 +142,15 @@
     <Filter Include="ソース ファイル\Component\Render">
       <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\ImGui">
+      <UniqueIdentifier>{93f7d4c3-a8e7-476c-848e-4cd79575de54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ImGui">
+      <UniqueIdentifier>{88e67559-49a6-4540-b010-3b1b95d8b6a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Editor">
+      <UniqueIdentifier>{06ee83df-d177-4aae-bcba-0f0d5327dbc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -288,17 +297,8 @@
     <ClCompile Include="editorCamera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="fieldEditorBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectSpawner.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="editorControllerBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="modelEditorBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="stageSpawner.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
@@ -323,6 +323,27 @@
     </ClCompile>
     <ClCompile Include="2DRenderComponent.cpp">
       <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
+      <Filter>ソース ファイル\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="editorControllerBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldEditorBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="modelEditorBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -532,6 +553,27 @@
     </ClInclude>
     <ClInclude Include="2DRenderComponent.h">
       <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx9.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\stb_rect_pack.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\stb_textedit.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\stb_truetype.h">
+      <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

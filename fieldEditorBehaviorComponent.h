@@ -37,6 +37,7 @@ public:
 
 	//Getä÷êî
 	void	AdjustPosInField(CKFVec3& vPos, const bool& bAdjustHeight);
+	bool	GetActive(void) const { return m_bActive; }
 
 	//Setä÷êî
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }

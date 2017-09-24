@@ -39,6 +39,7 @@ public:
 	const auto&				GetPosNext(void) const { return m_vPosNext; }
 	const CKFQuaternion		GetRot(void) const;
 	const CKFQuaternion		GetRotNext(void) const;
+	const CKFVec3			GetEulerRot(void) const;
 	const auto&				GetScale(void) const { return m_vScale; }
 	const auto&				GetScaleNext(void) const { return m_vScaleNext; }
 	const auto&				GetForward(void) const { return m_vForward; }
@@ -59,6 +60,7 @@ public:
 	void					SetPosNext(const CKFVec3& vPosNext) { m_vPosNext = vPosNext; }
 	void					SetRot(const CKFQuaternion& qRot);
 	void					SetRotNext(const CKFQuaternion& qRotNext);
+	void					SetRotNext(const CKFVec3& vRot);
 	void					MovePosNext(const CKFVec3& vMovement) { m_vPosNext += vMovement; }
 	void					SetScale(const CKFVec3& vScale) { m_vScale = vScale; }
 	void					SetScaleNext(const CKFVec3& vScaleNext) { m_vScaleNext = vScaleNext; }

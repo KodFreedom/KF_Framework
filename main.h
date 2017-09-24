@@ -116,8 +116,4 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	static CManager*		m_pManager;
-
-#ifdef _DEBUG
-	static unsigned int		m_unFPS;		//FPSカウンタ
-#endif
 };

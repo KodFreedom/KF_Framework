@@ -4,6 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-06-20
 //--------------------------------------------------------------------------------
+#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -11,6 +12,7 @@
 #include "manager.h"
 #include "inputManager.h"
 #include "editorCamera.h"
+#include "inputDX.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -51,7 +53,9 @@ void CEditorCamera::Init(void)
 void CEditorCamera::Update(void)
 {
 	auto pInput = CMain::GetManager()->GetInputManager();
-	CKFVec3 vRot = CKFVec3(0.0f);
+	if (!pInput->GetMouse()->GetMousePress(CMouseDX::MOUSE_RIGHT)) { return; }
+	
+	CKFVec3 vRot;
 	float fZoomSpeed = 0.0f;
 	float fAxisX = pInput->GetMoveHorizontal();
 	float fAxisY = pInput->GetMoveVertical();
@@ -83,3 +87,4 @@ void CEditorCamera::Update(void)
 	m_fDistance += fZoomSpeed;
 	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
 }
+#endif // _DEBUG

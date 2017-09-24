@@ -4,6 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-08-23
 //--------------------------------------------------------------------------------
+#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -14,14 +15,19 @@
 #include "gameObjectSpawner.h"
 #include "transformComponent.h"
 #include "modelEditorBehaviorComponent.h"
+#include "ImGui\imgui.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const float CModelEditorBehaviorComponent::sc_fRotSpeed = 0.01f;
 
 //--------------------------------------------------------------------------------
 //  クラス
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//
+//  Public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
@@ -30,16 +36,13 @@ CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(CGameObject* const 
 	: CBehaviorComponent(pGameObj)
 	, m_modelType(MT_BOX)
 	, m_bActive(false)
+	, m_bShowCreatedList(false)
+	, m_fMoveSpeed(1.0f)
+	, m_fRotSpeed(0.01f)
 {
-	for (auto& pObj : m_apObjDemo)
-	{
-		pObj = nullptr;
-	}
-
-	for (auto& list : m_alistCreated)
-	{
-		list.clear();
-	}
+	for (auto& str : m_aStrName) { str.clear(); }
+	for (auto& pObj : m_apObjDemo) { pObj = nullptr; }
+	for (auto& list : m_alistCreated) { list.clear(); }
 }
 
 //--------------------------------------------------------------------------------
@@ -47,16 +50,24 @@ CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(CGameObject* const 
 //--------------------------------------------------------------------------------
 bool CModelEditorBehaviorComponent::Init(void)
 {
+	m_aStrName[MT_BOX] = "cube";
+	m_aStrName[MT_TREE] = "tree_1";
+	m_aStrName[MT_PINE_TREE] = "Pine_tree";
+	m_aStrName[MT_WINDMILL] = "Medieval_Windmill";
+	m_aStrName[MT_ROCK_1] = "rock_1";
+	m_aStrName[MT_ROCK_2] = "rock_2";
+	m_aStrName[MT_ROCK_3] = "rock_3";
+	m_aStrName[MT_BAKER_HOUSE] = "Baker_house";
+	m_aStrName[MT_BARREL] = "Barrel";
+	m_aStrName[MT_BRIDGE] = "Bridge";
+	m_aStrName[MT_FENCE] = "Fence";
+
 	//Demo Objectの作成
-	m_apObjDemo[MT_BOX] = CGameObjectSpawner::CreateModel("cube.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-	m_apObjDemo[MT_TREE] = CGameObjectSpawner::CreateModel("tree_1.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-	m_apObjDemo[MT_PINE_TREE] = CGameObjectSpawner::CreateModel("Pine_tree.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-	//m_vecpObjDemo[MT_ROCK_1] = CGameObjectSpawner::CreateModel("rock_1.model", CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//m_vecpObjDemo[MT_ROCK_2] = CGameObjectSpawner::CreateModel("rock_2.model", CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//m_vecpObjDemo[MT_ROCK_3] = CGameObjectSpawner::CreateModel("rock_3.model", CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//m_vecpObjDemo[MT_ROCK_4] = CGameObjectSpawner::CreateModel("rock_4.model", CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//m_vecpObjDemo[MT_BAKER_HOUSE] = CGameObjectSpawner::CreateModel("Baker_house.model", CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	m_apObjDemo[MT_WINDMILL] = CGameObjectSpawner::CreateModel("Medieval_Windmill.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
+	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	{
+		m_apObjDemo[nCnt] = CGameObjectSpawner::CreateModel(m_aStrName[nCnt] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
+		m_apObjDemo[nCnt]->SetActive(false);
+	}
 	return true;
 }
 
@@ -65,7 +76,8 @@ bool CModelEditorBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::Uninit(void)
 {
-
+	for (auto& str : m_aStrName) { str.clear(); }
+	for (auto& list : m_alistCreated) { list.clear(); }
 }
 
 //--------------------------------------------------------------------------------
@@ -75,44 +87,22 @@ void CModelEditorBehaviorComponent::Update(void)
 {
 	if (!m_bActive)
 	{
-		for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
-		{
-			m_apObjDemo[nCnt]->SetActive(false);
-		}
+		for (auto pObj : m_apObjDemo) { pObj->SetActive(false); }
 		return;
 	}
 
-	auto pInput = CMain::GetManager()->GetInputManager();
+	showMainWindow();
+	showCreatedList();
+}
 
-	//モデルの切り替え
-	m_modelType = (MODEL_TYPE)((int)m_modelType + (int)pInput->GetKeyTrigger(CInputManager::K_RRACKET) - (int)pInput->GetKeyTrigger(CInputManager::K_LRACKET));
-	m_modelType = (MODEL_TYPE)((int)m_modelType < 0 ? (int)MT_MAX - 1 : m_modelType >= MT_MAX ? 0 : m_modelType);
-
-	//モデルアクティブの設定
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+//--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void CModelEditorBehaviorComponent::LateUpdate(void)
+{
+	if (!m_bActive)
 	{
-		m_apObjDemo[nCnt]->SetActive(m_modelType == (MODEL_TYPE)nCnt);
-	}
-
-	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
-
-	//モデル回転
-	CKFVec3 vRot = CKFVec3(0.0f);
-	vRot.m_fX = sc_fRotSpeed * (float)(pInput->GetKeyPress(CInputManager::K_ROTXP) - pInput->GetKeyPress(CInputManager::K_ROTXM));
-	vRot.m_fY = sc_fRotSpeed * (float)(pInput->GetKeyPress(CInputManager::K_ROTYP) - pInput->GetKeyPress(CInputManager::K_ROTYM));
-	vRot.m_fZ = sc_fRotSpeed * (float)(pInput->GetKeyPress(CInputManager::K_ROTZP) - pInput->GetKeyPress(CInputManager::K_ROTZM));
-	pTransNow->RotByEuler(vRot);
-	if (pInput->GetKeyTrigger(CInputManager::K_RESET))
-	{//回転を0に戻す
-		pTransNow->SetForwardNext(CKFVec3(0.0f, 0.0f, 1.0f));
-		pTransNow->SetUpNext(CKFVec3(0.0f, 1.0f, 0.0f));
-		pTransNow->SetRightNext(CKFVec3(1.0f, 0.0f, 0.0f));
-	}
-
-	//モデルの作成
-	if (pInput->GetKeyTrigger(CInputManager::K_SUBMIT))
-	{
-		create();
+		return;
 	}
 }
 
@@ -130,12 +120,6 @@ void CModelEditorBehaviorComponent::SetPos(const CKFVec3& vPos)
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 {
-	string aStrMeshName[MT_MAX];
-	aStrMeshName[MT_BOX] = "cube";
-	aStrMeshName[MT_TREE] = "tree_1";
-	aStrMeshName[MT_PINE_TREE] = "Pine_tree";
-	aStrMeshName[MT_WINDMILL] = "Medieval_Windmill";
-
 	//フィールドの保存
 	string strName = "data/STAGE/" + strFileName + ".stage";
 	FILE *pFile;
@@ -150,9 +134,9 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
 	{
 		//ファイル名保存
-		int nSize = aStrMeshName[nCnt].size();
+		int nSize = (int)m_aStrName[nCnt].size();
 		fwrite(&nSize, sizeof(int), 1, pFile);
-		fwrite(&aStrMeshName[nCnt][0], sizeof(char), nSize, pFile);
+		fwrite(&m_aStrName[nCnt][0], sizeof(char), nSize, pFile);
 
 		//モデル数の保存
 		int nNum = m_alistCreated[nCnt].size();
@@ -172,39 +156,147 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 }
 
 //--------------------------------------------------------------------------------
-//  SetPos
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  create
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::create(void)
 {
-	CTransformComponent* pTrans = nullptr;
-	CGameObject* pObj = nullptr;
-
-	switch (m_modelType)
-	{
-	case MT_BOX:
-		pObj = CGameObjectSpawner::CreateModel("cube.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-		break;
-	case MT_TREE:
-		pObj = CGameObjectSpawner::CreateModel("tree_1.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-		break;
-	case MT_PINE_TREE:
-		pObj = CGameObjectSpawner::CreateModel("Pine_tree.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-		break;
-	case MT_WINDMILL:
-		pObj = CGameObjectSpawner::CreateModel("Medieval_Windmill.model", CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
-		break;
-	default:
-		break;
-	}
-
-	if (!pObj) { return; }
-	pTrans = pObj->GetTransformComponent();
-	auto pTransNow = m_apObjDemo[m_modelType]->GetTransformComponent();
+	auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[(int)m_modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
+	auto pTrans = pObj->GetTransformComponent();
+	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
 	auto& vPos = pTransNow->GetPos();
 	auto& qRot = pTransNow->GetRot();
 	pTrans->SetPosNext(vPos);
 	pTrans->SetRotNext(qRot);
 	INFO info;
 	info.pTransform = pTrans;
-	m_alistCreated[m_modelType].push_back(info);
+	m_alistCreated[(int)m_modelType].push_back(info);
 }
+
+//--------------------------------------------------------------------------------
+//  showMainWindow
+//--------------------------------------------------------------------------------
+void CModelEditorBehaviorComponent::showMainWindow(void)
+{
+	// Begin
+	if (!ImGui::Begin("Model Editor Window"))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Model Type
+	showTypeListBox();
+
+	// Model Trans
+	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
+
+	//モデル回転
+	auto vRot = pTransNow->GetEulerRot();
+	if(ImGui::SliderFloat3("Rot", &vRot.m_fX, 0.0f, KF_PI * 2.0f)){ pTransNow->SetRotNext(vRot); }
+
+	//モデルの作成
+	if (ImGui::Button("Create")) { create(); }
+
+	//モデルリスト
+	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	{
+		ImGui::Text("%s : %d", m_aStrName[nCnt].c_str(), (int)m_alistCreated[nCnt].size());
+	}
+	if (ImGui::Button("Show Created List")) { m_bShowCreatedList ^= 1; }
+
+	// End
+	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  showTypeListBox
+//--------------------------------------------------------------------------------
+void CModelEditorBehaviorComponent::showTypeListBox(void)
+{
+	//new
+	char **arr = new char*[MT_MAX];
+	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	{
+		auto& strName = m_aStrName[nCnt];
+		int nNumChar = (int)strName.size();
+		arr[nCnt] = new char[nNumChar];
+		for (int nCntChar = 0; nCntChar < nNumChar; ++nCntChar)
+		{
+			arr[nCnt][nCntChar] = strName[nCntChar];
+		}
+	}
+
+	//Type
+	if (ImGui::ListBox("Model Type\n", (int*)&m_modelType, arr, MT_MAX, MT_MAX))
+	{
+		//モデルアクティブの設定
+		for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+		{
+			m_apObjDemo[nCnt]->SetActive(m_modelType == (MODEL_TYPE)nCnt);
+		}
+	}
+
+	//delete
+	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	{
+		delete[] arr[nCnt];
+		arr[nCnt] = nullptr;
+	}
+	delete[] arr;
+	arr = nullptr;
+}
+
+//--------------------------------------------------------------------------------
+//  showCreatedList
+//--------------------------------------------------------------------------------
+void CModelEditorBehaviorComponent::showCreatedList(void)
+{
+	if (!m_bShowCreatedList) { return; }
+
+	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	{
+		if (ImGui::TreeNode(m_aStrName[nCnt].c_str()))
+		{
+			int nCntObj = 0;
+			for (auto itr = m_alistCreated[nCnt].begin(); itr != m_alistCreated[nCnt].end();)
+			{
+				bool bDelete = false;
+				char aBuf[128];
+				wsprintf(aBuf, "%s_%d", m_aStrName[nCnt].c_str(), nCntObj);
+				if (ImGui::TreeNode(aBuf))
+				{
+					auto vPos = itr->pTransform->GetPos();
+					auto vRot = itr->pTransform->GetEulerRot();
+					auto vScale = itr->pTransform->GetScale();
+
+					//Offset
+					if (ImGui::InputFloat3("Trans", &vPos.m_fX)) { itr->pTransform->SetPosNext(vPos); }
+					if (ImGui::SliderFloat3("Rot", &vRot.m_fX, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(vRot); }
+					if (ImGui::InputFloat3("Scale", &vScale.m_fX)) { itr->pTransform->SetScaleNext(vScale); }
+
+					//Delete
+					bDelete = ImGui::Button("Delete");
+					ImGui::TreePop();
+				}
+
+				if (bDelete)
+				{
+					itr = m_alistCreated[nCnt].erase(itr);
+				}
+				else
+				{
+					++itr;
+					++nCntObj;
+				}
+			}
+			ImGui::TreePop();
+		}
+	}
+}
+
+#endif // _DEBUG

@@ -11,10 +11,12 @@
 #include "main.h"
 #include "manager.h"
 #include "debugManager.h"
+#include "ImGui\imgui.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
-#endif //USING_DIRECTX
+#include "ImGui\imgui_impl_dx9.h"
+#endif // USING_DIRECTX
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -29,9 +31,6 @@
 //--------------------------------------------------------------------------------
 CDebugManager::CDebugManager()
 	: m_usCntScroll(0)
-#ifdef USING_DIRECTX
-	, m_pFont(nullptr)
-#endif //USING_DIRECTX
 {
 	m_strDebugInfo.clear();
 	m_listStrDebugScroll.clear();
@@ -42,6 +41,18 @@ CDebugManager::CDebugManager()
 //--------------------------------------------------------------------------------
 void CDebugManager::Update(void)
 {
+#ifdef USING_DIRECTX
+	ImGui_ImplDX9_NewFrame();
+#endif // USING_DIRECTX
+}
+
+//--------------------------------------------------------------------------------
+//  更新処理
+//--------------------------------------------------------------------------------
+void CDebugManager::LateUpdate(void)
+{
+	showMainWindow();
+
 	if (!m_listStrDebugScroll.empty())
 	{
 		++m_usCntScroll;
@@ -50,7 +61,7 @@ void CDebugManager::Update(void)
 			m_usCntScroll = 0;
 			m_listStrDebugScroll.erase(m_listStrDebugScroll.begin());
 		}
-		
+
 		for (auto& str : m_listStrDebugScroll)
 		{//Debug表示に追加する
 			m_strDebugInfo += str;
@@ -63,12 +74,8 @@ void CDebugManager::Update(void)
 //--------------------------------------------------------------------------------
 void CDebugManager::Draw(void)
 {
-#ifdef USING_DIRECTX
-	RECT rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-
-	// テキスト描画
-	m_pFont->DrawText(NULL, m_strDebugInfo.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_ARGB(0xff, 0xff, 0xff, 0xff));
-#endif
+	//描画
+	ImGui::Render();
 
 	//前フレームの文字列を削除
 	m_strDebugInfo.clear();
@@ -116,15 +123,11 @@ void CDebugManager::DisplayScroll(const string& strInfo)
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-void CDebugManager::init(void)
+void CDebugManager::init(HWND hWnd)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-
-	// デバッグ情報表示用フォントの生成
-	D3DXCreateFont(pDevice, 18, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
-		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);
-#endif //USING_DIRECTX
+	ImGui_ImplDX9_Init(hWnd, CMain::GetManager()->GetRenderer()->GetDevice());
+#endif // USING_DIRECTX
 }
 
 //--------------------------------------------------------------------------------
@@ -133,11 +136,42 @@ void CDebugManager::init(void)
 void CDebugManager::uninit(void)
 {
 #ifdef USING_DIRECTX
-	// デバッグ情報表示用フォントの破棄
-	SAFE_RELEASE(m_pFont);
-#endif //USING_DIRECTX
+	ImGui_ImplDX9_Shutdown();
+#endif // USING_DIRECTX
 
 	m_strDebugInfo.clear();
 }
 
+//--------------------------------------------------------------------------------
+//  showMainWindow
+//--------------------------------------------------------------------------------
+void CDebugManager::showMainWindow(void)
+{
+	auto pRenderer = CMain::GetManager()->GetRenderer();
+	auto cBGColor = pRenderer->GetBGColor();
+	auto bWireFrame = pRenderer->GetWireFrameFlag();
+
+	// Begin
+	if (!ImGui::Begin("Main Debug Window"))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// FPS
+	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	// BG Color
+	ImGui::ColorEdit3("BG Color", (float*)&cBGColor);
+	pRenderer->SetBGColor(cBGColor);
+
+	// WireFrame
+	if (ImGui::Checkbox("WireFrame", &bWireFrame)){ pRenderer->SetWireFrameFlag(bWireFrame); }
+	
+	// Camera Window
+	//if (ImGui::Button("Camera")) m_bCameraWindow ^= 1;
+
+	// End
+	ImGui::End();
+}
 #endif//_DEBUG

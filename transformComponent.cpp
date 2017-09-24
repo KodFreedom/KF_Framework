@@ -155,6 +155,17 @@ const CKFQuaternion CTransformComponent::GetRotNext(void) const
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：GetEulerRot
+//  関数説明：今のフレームの回転の取得
+//	引数：	なし
+//	戻り値：CKFVec3
+//--------------------------------------------------------------------------------
+const CKFVec3 CTransformComponent::GetEulerRot(void) const
+{
+	return CKFMath::MtxToEular(GetMatrixRot());
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：GetMatrixRot
 //  関数説明：今のフレームの回転行列の取得
 //	引数：	なし
@@ -270,6 +281,18 @@ void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
 	m_vForwardNext.m_fX = mtxRot.m_af[2][0];
 	m_vForwardNext.m_fY = mtxRot.m_af[2][1];
 	m_vForwardNext.m_fZ = mtxRot.m_af[2][2];
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SetRotNext
+//  関数説明：次の回転の設定
+//	引数：	vRot：回転情報
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CTransformComponent::SetRotNext(const CKFVec3& vRot)
+{
+	auto qRot = CKFMath::EulerToQuaternion(vRot);
+	SetRotNext(qRot);
 }
 
 //--------------------------------------------------------------------------------
