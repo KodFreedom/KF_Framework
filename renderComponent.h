@@ -39,7 +39,7 @@ public:
 
 	~CRenderComponent() {}
 
-	virtual bool	Init(void) override { return true; }
+	virtual bool	Init(void) override;
 	virtual void	Uninit(void) override;
 	virtual void	Update(void);
 	virtual void	Render(void) = 0;

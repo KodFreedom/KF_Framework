@@ -9,6 +9,9 @@
 //--------------------------------------------------------------------------------
 #include "renderComponent.h"
 #include "manager.h"
+#include "gameObject.h"
+#include "meshComponent.h"
+#include "meshManager.h"
 #include "textureManager.h"
 #include "materialManager.h"
 
@@ -19,6 +22,21 @@
 //--------------------------------------------------------------------------------
 //	ƒNƒ‰ƒX
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  ‰Šú‰»
+//--------------------------------------------------------------------------------
+bool CRenderComponent::Init(void)
+{
+	auto pMesh = m_pGameObj->GetMeshComponent();
+	auto pMeshManager = CMain::GetManager()->GetMeshManager();
+	auto renderInfo = pMeshManager->GetRenderInfo(pMesh->GetMeshName());
+	
+	if (!renderInfo.strTex.empty()) { SetTexName(renderInfo.strTex); }
+	m_renderPriority = renderInfo.renderPriority;
+	m_renderState = renderInfo.renderState;
+	return true;
+}
+
 //--------------------------------------------------------------------------------
 //  I—¹ˆ—
 //--------------------------------------------------------------------------------

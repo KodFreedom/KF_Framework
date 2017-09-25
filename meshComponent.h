@@ -28,18 +28,32 @@ public:
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CMeshComponent(CGameObject* const pGameObj)
-		: CComponent(pGameObj) {}
+		: CComponent(pGameObj) 
+	{
+		m_strMeshName.clear();
+	}
 	~CMeshComponent() {}
 
-	virtual bool	Init(void) override = 0;
-	virtual void	Uninit(void) override = 0;
-	virtual void	Update(void) = 0;
+	virtual bool	Init(void) override { return true; }
+	virtual void	Uninit(void) override;
+	virtual void	Update(void) {}
+
+	//Set関数
+	void			SetMeshName(const string& strMeshName);
+
+	//Get関数
+	const string&	GetMeshName(void) const { return m_strMeshName; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	CMeshComponent() : CComponent() {}
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	string	m_strMeshName;	//メッシュの名前
 };
 
 //--------------------------------------------------------------------------------

@@ -70,7 +70,9 @@ private:
 	//--------------------------------------------------------------------------------
 	struct INFO
 	{
-		CTransformComponent* pTransform;
+		INFO() : pTransform(nullptr), vRot(CKFMath::sc_vZero) {}
+		CTransformComponent*	pTransform;
+		CKFVec3					vRot;
 	};
 
 	//--------------------------------------------------------------------------------
@@ -89,7 +91,7 @@ private:
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	string			m_aStrName[MT_MAX];
-	CGameObject*	m_apObjDemo[MT_MAX];
+	INFO			m_aObjInfoDemo[MT_MAX];
 	list<INFO>		m_alistCreated[MT_MAX];
 	MODEL_TYPE		m_modelType;
 	bool			m_bActive;

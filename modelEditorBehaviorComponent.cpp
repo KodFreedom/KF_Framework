@@ -41,7 +41,6 @@ CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(CGameObject* const 
 	, m_fRotSpeed(0.01f)
 {
 	for (auto& str : m_aStrName) { str.clear(); }
-	for (auto& pObj : m_apObjDemo) { pObj = nullptr; }
 	for (auto& list : m_alistCreated) { list.clear(); }
 }
 
@@ -65,8 +64,9 @@ bool CModelEditorBehaviorComponent::Init(void)
 	//Demo Objectの作成
 	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
 	{
-		m_apObjDemo[nCnt] = CGameObjectSpawner::CreateModel(m_aStrName[nCnt] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
-		m_apObjDemo[nCnt]->SetActive(false);
+		auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[nCnt] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
+		pObj->SetActive(false);
+		m_aObjInfoDemo[nCnt].pTransform = pObj->GetTransformComponent();
 	}
 	return true;
 }
@@ -87,7 +87,7 @@ void CModelEditorBehaviorComponent::Update(void)
 {
 	if (!m_bActive)
 	{
-		for (auto pObj : m_apObjDemo) { pObj->SetActive(false); }
+		for (auto info : m_aObjInfoDemo) { info.pTransform->GetGameObject()->SetActive(false); }
 		return;
 	}
 
@@ -111,8 +111,7 @@ void CModelEditorBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::SetPos(const CKFVec3& vPos)
 {
-	auto pTrans = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
-	pTrans->SetPosNext(vPos);
+	m_aObjInfoDemo[(int)m_modelType].pTransform->SetPosNext(vPos);
 }
 
 //--------------------------------------------------------------------------------
@@ -167,13 +166,14 @@ void CModelEditorBehaviorComponent::create(void)
 {
 	auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[(int)m_modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
 	auto pTrans = pObj->GetTransformComponent();
-	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
-	auto& vPos = pTransNow->GetPos();
-	auto& qRot = pTransNow->GetRot();
+	auto infoNow = m_aObjInfoDemo[(int)m_modelType];
+	auto& vPos = infoNow.pTransform->GetPos();
+	auto& qRot = infoNow.pTransform->GetRot();
 	pTrans->SetPosNext(vPos);
 	pTrans->SetRotNext(qRot);
 	INFO info;
 	info.pTransform = pTrans;
+	info.vRot = infoNow.vRot;
 	m_alistCreated[(int)m_modelType].push_back(info);
 }
 
@@ -193,11 +193,13 @@ void CModelEditorBehaviorComponent::showMainWindow(void)
 	showTypeListBox();
 
 	// Model Trans
-	auto pTransNow = m_apObjDemo[(int)m_modelType]->GetTransformComponent();
+	auto& infoNow = m_aObjInfoDemo[(int)m_modelType];
 
 	//モデル回転
-	auto vRot = pTransNow->GetEulerRot();
-	if(ImGui::SliderFloat3("Rot", &vRot.m_fX, 0.0f, KF_PI * 2.0f)){ pTransNow->SetRotNext(vRot); }
+	if(ImGui::SliderFloat3("Rot", &infoNow.vRot.m_fX, 0.0f, KF_PI * 2.0f))
+	{ 
+		infoNow.pTransform->SetRotNext(infoNow.vRot);
+	}
 
 	//モデルの作成
 	if (ImGui::Button("Create")) { create(); }
@@ -224,20 +226,21 @@ void CModelEditorBehaviorComponent::showTypeListBox(void)
 	{
 		auto& strName = m_aStrName[nCnt];
 		int nNumChar = (int)strName.size();
-		arr[nCnt] = new char[nNumChar];
+		arr[nCnt] = new char[nNumChar + 1];
 		for (int nCntChar = 0; nCntChar < nNumChar; ++nCntChar)
 		{
 			arr[nCnt][nCntChar] = strName[nCntChar];
 		}
+		arr[nCnt][nNumChar] = '\0';
 	}
 
 	//Type
-	if (ImGui::ListBox("Model Type\n", (int*)&m_modelType, arr, MT_MAX, MT_MAX))
+	if (ImGui::ListBox("Model Type\n", (int*)&m_modelType, arr, MT_MAX))
 	{
 		//モデルアクティブの設定
 		for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
 		{
-			m_apObjDemo[nCnt]->SetActive(m_modelType == (MODEL_TYPE)nCnt);
+			m_aObjInfoDemo[nCnt].pTransform->GetGameObject()->SetActive(m_modelType == (MODEL_TYPE)nCnt);
 		}
 	}
 
@@ -271,12 +274,11 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 				if (ImGui::TreeNode(aBuf))
 				{
 					auto vPos = itr->pTransform->GetPos();
-					auto vRot = itr->pTransform->GetEulerRot();
 					auto vScale = itr->pTransform->GetScale();
 
 					//Offset
 					if (ImGui::InputFloat3("Trans", &vPos.m_fX)) { itr->pTransform->SetPosNext(vPos); }
-					if (ImGui::SliderFloat3("Rot", &vRot.m_fX, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(vRot); }
+					if (ImGui::InputFloat3("Rot", &itr->vRot.m_fX, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(itr->vRot); }
 					if (ImGui::InputFloat3("Scale", &vScale.m_fX)) { itr->pTransform->SetScaleNext(vScale); }
 
 					//Delete

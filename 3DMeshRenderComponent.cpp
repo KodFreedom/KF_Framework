@@ -8,7 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "3DMeshRenderComponent.h"
-#include "3DMeshComponent.h"
+#include "meshComponent.h"
 #include "gameObject.h"
 #include "manager.h"
 #include "meshManager.h"
@@ -28,7 +28,8 @@
 //--------------------------------------------------------------------------------
 void C3DMeshRenderComponent::Render(void)
 {
-	const auto pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(c_pMesh->GetMeshName());
+	auto pMesh = m_pGameObj->GetMeshComponent();
+	const auto pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(pMesh->GetMeshName());
 
 	//マトリクス算出
 	auto mtxWorld = m_pGameObj->GetTransformComponent()->GetMatrix();

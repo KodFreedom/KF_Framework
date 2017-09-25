@@ -5,7 +5,7 @@
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 #pragma once
-
+#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public:
 	bool	GetActive(void) const { return m_bActive; }
 
 	//Set関数
-	void	SetActive(const bool& bActive) { m_bActive = bActive; }
+	void	SetActive(const bool& bActive);
 	void	SetPos(const CKFVec3& vPos) { m_vEditorPos = vPos; }
 
 	//Save
@@ -60,6 +60,7 @@ private:
 	//--------------------------------------------------------------------------------
 	float			getHeight(const CKFVec3& vPos);
 	EINFO			getInfo(void);
+	void			showMainWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -74,3 +75,4 @@ private:
 	float			m_fEditorRadius;
 	bool			m_bActive;
 };
+#endif // _DEBUG

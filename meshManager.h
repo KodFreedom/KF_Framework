@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "renderManager.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -22,6 +23,16 @@ class CMeshManager
 {
 public:
 	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct RENDER_INFO
+	{
+		string			strTex;
+		RENDER_PRIORITY renderPriority;
+		RENDER_STATE	renderState;
+	};
+
+	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
 	CMeshManager() { m_umMesh.clear(); }
@@ -30,8 +41,8 @@ public:
 	void	Release(void) { UnloadAll(); delete this; }
 	void	UnloadAll(void);
 	void	UseMesh(const string& strName);
-	void	UseMesh(const string& strFileName, string& texName);
 	void	DisuseMesh(const string& strName);
+	auto	GetRenderInfo(const string& strName) const { return m_umMesh.at(strName).renderInfo; }
 
 	//Editor用
 	void	CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const CKFVec2& vBlockSize);
@@ -47,22 +58,27 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MESH
 	{
+		MESH()
+			: usNumUsers(1)
+			, pMesh(nullptr)
+		{
+			renderInfo.strTex.clear();
+			renderInfo.renderPriority = RP_3D;
+			renderInfo.renderState = RS_LIGHTON_CULLFACEON_MUL;
+		}
 		unsigned short	usNumUsers;
-		//list<CMesh*>	listpMesh;
-		string			strTex;
 		CMesh*			pMesh;
+		RENDER_INFO		renderInfo;
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CMesh*	createMesh(const string& strName);
-	CMesh*	loadFromMesh(const string& strFileName, string& strTexName);
-	CMesh*	loadFromXFile(const string& strPath, string& strTexName);
-	void	createCube(CMesh* pMesh);
-	void	createSphere(CMesh* pMesh);
-	void	createSkyBox(CMesh* pMesh);
-	void	loadField(const string& strFileName, CMesh* pMesh);
+	MESH	loadFromMesh(const string& strFileName);
+	MESH	loadFromXFile(const string& strPath);
+	MESH	createCube(void);
+	MESH	createSphere(void);
+	MESH	createSkyBox(void);
 	bool	createBuffer(CMesh* pMesh);
 
 	//--------------------------------------------------------------------------------

@@ -1312,12 +1312,14 @@ CKFQuaternion CKFMath::QuaternionMultiplyXYZW(const CKFQuaternion& qL, const CKF
 CKFQuaternion CKFMath::EulerToQuaternion(const CKFVec3& vVec)
 {
 	CKFQuaternion qValue;
+#ifdef USING_DIRECTX
 	D3DXQUATERNION qDx;
 	D3DXQuaternionRotationYawPitchRoll(&qDx, vVec.m_fY, vVec.m_fX, vVec.m_fZ);
 	qValue.m_fX = qDx.x;
 	qValue.m_fY = qDx.y;
 	qValue.m_fZ = qDx.z;
 	qValue.m_fW = qDx.w;
+#endif // USING_DIRECTX
 	return qValue;
 }
 
@@ -1430,9 +1432,13 @@ CKFMtx44 CKFMath::QuaternionToMtx(const CKFQuaternion& qValue)
 //--------------------------------------------------------------------------------
 CKFVec3	CKFMath::QuaternionToEuler(const CKFQuaternion& quaternion)
 {
-	D3DXQUATERNION q = quaternion;
-	
 	CKFVec3 vRot;
+#ifdef USING_DIRECTX
+	D3DXQUATERNION q = quaternion;
+	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(1.0f, 0.0f, 0.0f), &vRot.m_fX);
+	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &vRot.m_fY);
+	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(0.0f, 0.0f, 1.0f), &vRot.m_fZ);
+#else
 	float fX = quaternion.m_fX;
 	float fY = quaternion.m_fY;
 	float fZ = quaternion.m_fZ;
@@ -1440,6 +1446,7 @@ CKFVec3	CKFMath::QuaternionToEuler(const CKFQuaternion& quaternion)
 	vRot.m_fX = atan2f(2.0f * (fW * fZ + fX * fY), 1.0f - 2.0f * (fZ * fZ + fX * fX));
 	vRot.m_fY = asinf(2.0f * (fW * fX - fY * fZ));
 	vRot.m_fZ = atan2f(2.0f * (fW * fY + fZ * fX), 1.0f - 2.0f * (fX * fX + fY * fY));
+#endif // USING_DIRECTX
 	return vRot;
 }
 

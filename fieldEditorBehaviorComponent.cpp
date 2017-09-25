@@ -4,6 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
+#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -14,6 +15,7 @@
 #include "mode.h"
 #include "camera.h"
 #include "fieldEditorBehaviorComponent.h"
+#include "ImGui\imgui.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -78,10 +80,8 @@ void CFieldEditorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CFieldEditorBehaviorComponent::Update(void)
 {
-	if (!m_bActive) 
-	{
-		return; 
-	}
+	if (!m_bActive) { return; }
+	showMainWindow();
 
 	auto pInput = CMain::GetManager()->GetInputManager();
 
@@ -117,6 +117,22 @@ void CFieldEditorBehaviorComponent::AdjustPosInField(CKFVec3& vPos, const bool& 
 	if (bAdjustHeight)
 	{
 		vPos.m_fY = getHeight(vPos);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SetActive
+//  関数説明：フィールド情報を保存する関数
+//	引数：	strFileName：ファイル名
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CFieldEditorBehaviorComponent::SetActive(const bool& bActive)
+{
+	m_bActive = bActive;
+	if (!m_bActive)
+	{//Field Reset
+		EINFO info;
+		CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 	}
 }
 
@@ -245,3 +261,27 @@ CFieldEditorBehaviorComponent::EINFO CFieldEditorBehaviorComponent::getInfo(void
 	}
 	return info;
 }
+
+//--------------------------------------------------------------------------------
+//  クラス宣言
+//--------------------------------------------------------------------------------
+void CFieldEditorBehaviorComponent::showMainWindow(void)
+{
+	// Begin
+	if (!ImGui::Begin("Field Editor Window"))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Controll
+	ImGui::Text("Extend / Shrink : T / Y");
+	ImGui::Text("Raise / Reduce : G / H");
+
+	// Radius
+	ImGui::Text("Radius : %f", m_fEditorRadius);
+
+	// End
+	ImGui::End();
+}
+#endif // _DEBUG

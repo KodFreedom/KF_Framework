@@ -13,7 +13,7 @@
 #include "renderManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
-#include "3DMeshComponent.h"
+#include "MeshComponent.h"
 #include "3DMeshRenderComponent.h"
 #include "fieldEditorBehaviorComponent.h"
 #include "modelEditorBehaviorComponent.h"
@@ -35,10 +35,10 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new CMeshComponent(pObj);
 	pMesh->SetMeshName("skyBox");
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetRenderState(RS_LIGHTOFF_CULLFACEON_MUL);
 	pRender->SetTexName("skybox000.jpg");
 	pObj->SetRenderComponent(pRender);
@@ -53,7 +53,6 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -66,10 +65,10 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 	string strFieldName = strStageName + "Field";
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
-	pMesh->SetMeshName(strFieldName);
+	auto pMesh = new CMeshComponent(pObj);
+	pMesh->SetMeshName(strFieldName + ".mesh");
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("Grass0003_1_270.jpg");
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CFieldColliderComponent(pObj, strFieldName);
@@ -77,7 +76,6 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -89,10 +87,10 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new CMeshComponent(pObj);
 	pMesh->SetMeshName("cube");
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("nomal_cube.jpg");
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
@@ -112,7 +110,6 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -128,13 +125,10 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 	pObj->SetName(strName);
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
-	string strTexName;
-
-	pMesh->SetMeshName(strPath, strTexName);
+	auto pMesh = new CMeshComponent(pObj);
+	pMesh->SetMeshName(strPath);
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
-	pRender->SetTexName(strTexName);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
@@ -174,7 +168,6 @@ CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -213,6 +206,9 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 	pTrans->SetRotNext(qRot);
 
 	fclose(pFile);
+
+	//初期化
+	pObj->Init();
 	return pObj;
 }
 
@@ -327,6 +323,8 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 		auto pChild = createChildNode(pTrans, pFile);
 	}
 
+	//初期化
+	pObj->Init();
 	return pObj;
 }
 
@@ -346,22 +344,18 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 	pObj->SetName(strName);
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
-	string strTexName;
-	pMesh->SetMeshName(strMeshName, strTexName);
+	auto pMesh = new CMeshComponent(pObj);
+	pMesh->SetMeshName(strMeshName);
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
-	pRender->SetTexName(strTexName);
-	if (strTexName._Equal("Pine_tree.png"))
-	{//Test
-		pRender->SetRenderPriority(RP_3D_ALPHATEST);
-		pRender->SetRenderState(RS_LIGHTON_CULLFACEOFF_MUL);
-	}
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
 	pTrans->RegisterParent(pParent);
+
+	//初期化
+	pObj->Init();
 	return pObj;
 }
 
@@ -373,12 +367,10 @@ CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEdito
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new C3DMeshComponent(pObj);
-	string strTex;
-	pMesh->SetMeshName("data/MODEL/target.x", strTex);
+	auto pMesh = new CMeshComponent(pObj);
+	pMesh->SetMeshName("data/MODEL/target.x");
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
-	pRender->SetTexName(strTex);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
 	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
@@ -389,7 +381,6 @@ CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEdito
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }
 
@@ -403,10 +394,10 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	//コンポネント
 	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
 	pObj->AddBehavior(pBehavior);
-	auto pMesh = new C3DMeshComponent(pObj);
+	auto pMesh = new CMeshComponent(pObj);
 	pMesh->SetMeshName("field");
 	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pMesh, pObj);
+	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("Grass0003_1_270.jpg");
 	pObj->SetRenderComponent(pRender);
 
@@ -420,6 +411,5 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 
 	//初期化
 	pObj->Init();
-
 	return pObj;
 }

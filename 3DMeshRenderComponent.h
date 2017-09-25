@@ -25,12 +25,9 @@ class C3DMeshComponent;
 class C3DMeshRenderComponent : public CRenderComponent
 {
 public:
-	C3DMeshRenderComponent(C3DMeshComponent* const pMesh, CGameObject* const pGameObj)
-		: CRenderComponent(pGameObj), c_pMesh(pMesh) {}
+	C3DMeshRenderComponent(CGameObject* const pGameObj)
+		: CRenderComponent(pGameObj){}
 	~C3DMeshRenderComponent() {}
 
 	void	Render(void) override;
-
-private:
-	C3DMeshComponent* const c_pMesh;
 };

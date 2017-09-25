@@ -144,6 +144,8 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 
 	//ImGui
 	ImGui::Text("Move : W A S D");
+	ImGui::Text("CameraRot : RightClick + MouseMove");
+	ImGui::Text("CameraZoom : RightClick + MouseWheel");
 	ImGui::InputFloat3("Pos", &vPos.m_fX);
 
 	//‘€ìˆÊ’u‚ÌXV
