@@ -73,6 +73,8 @@ private:
 	CKFVec3			m_vPosMax;
 	CKFVec3			m_vEditorPos;
 	float			m_fEditorRadius;
+	float			m_fRaiseSpeed;
+	float			m_fExtendSpeed;
 	bool			m_bActive;
 };
 #endif // _DEBUG

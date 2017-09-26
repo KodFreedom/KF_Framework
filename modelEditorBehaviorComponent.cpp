@@ -37,8 +37,6 @@ CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(CGameObject* const 
 	, m_modelType(MT_BOX)
 	, m_bActive(false)
 	, m_bShowCreatedList(false)
-	, m_fMoveSpeed(1.0f)
-	, m_fRotSpeed(0.01f)
 {
 	for (auto& str : m_aStrName) { str.clear(); }
 	for (auto& list : m_alistCreated) { list.clear(); }
@@ -288,6 +286,7 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 
 				if (bDelete)
 				{
+					itr->pTransform->GetGameObject()->SetAlive(false);
 					itr = m_alistCreated[nCnt].erase(itr);
 				}
 				else

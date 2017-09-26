@@ -78,7 +78,6 @@ protected:
 
 	//パラメーター
 	int		m_nLevel;				//レベル
-	int		m_nCntFalling;
 	int		m_nCntInvincible;		//無敵時間
 	float	m_fLifeMax;				//最大生命値
 	float	m_fLifeNow;				//今の生命値
@@ -90,6 +89,7 @@ protected:
 	float	m_fTurnSpeedMax;
 	float	m_fGroundCheckDistance;
 	float	m_fAnimSpeed;
+	float	m_fMaxPosY;				//ジャンプのとき最高の位置
 	bool	m_bEnabled;
 	bool	m_bIsGrounded;
 

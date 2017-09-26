@@ -54,5 +54,6 @@ private:
 	bool							m_bAutoHeight;
 	CFieldEditorBehaviorComponent*	m_pFieldEditor;
 	CModelEditorBehaviorComponent*	m_pModelEditor;
+	float							m_fMoveSpeed;
 };
 #endif // _DEBUG

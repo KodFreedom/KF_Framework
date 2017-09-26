@@ -66,7 +66,7 @@ void CModeDemo::Init(void)
 	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CStageSpawner::LoadStage("demo");
 	//CGameObjectSpawner::CreateCube(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(-188.0f, 10.0f, 196.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(187.0f, 10.0f, -197.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	pPlayer->SetName("Player");
 	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy00");
@@ -74,7 +74,7 @@ void CModeDemo::Init(void)
 	//pEnemy->SetName("Enemy01");
 	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(117.0f, 80.0f, 1.6f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy02");
-	CGameObjectSpawner::CreateGoal(CKFVec3(142.0f, 74.0f, 1.05f));
+	//CGameObjectSpawner::CreateGoal(CKFVec3(142.0f, 74.0f, 1.05f));
 	m_pCamera->SetTarget(pPlayer);
 
 	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);

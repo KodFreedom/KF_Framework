@@ -33,7 +33,6 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)
 	, m_nLevel(0)
-	, m_nCntFalling(0)
 	, m_nCntInvincible(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
@@ -43,8 +42,9 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fJumpSpeed(0.0f)
 	, m_fTurnSpeedMin(0.0f)
 	, m_fTurnSpeedMax(0.0f)
-	, m_fGroundCheckDistance(0.6f)
+	, m_fGroundCheckDistance(0.1f)
 	, m_fAnimSpeed(1.0f)
+	, m_fMaxPosY(0.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
 	, m_pAttackCollider(nullptr)
@@ -79,6 +79,7 @@ void CActorBehaviorComponent::Uninit(void)
 void CActorBehaviorComponent::Update(void)
 {
 	if (m_nCntInvincible > 0) { --m_nCntInvincible; }
+	
 }
 
 //--------------------------------------------------------------------------------
@@ -224,16 +225,17 @@ CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 	auto pCollisionSystem = CMain::GetManager()->GetCollisionSystem();
 	if (pCollisionSystem->RayCast(vPos, CKFMath::sc_vDown, m_fGroundCheckDistance, rayHit, m_pGameObj))
 	{
-		m_bIsGrounded = true;
-		if (m_nCntFalling > 60)
+		//To do : Jump Damage
+		if (!m_bIsGrounded)
 		{
-			//m_fLifeNow -= (float)(m_nCntFalling - 60);
+			float fFallDis = m_fMaxPosY - vPos.m_fY;
 		}
-		m_nCntFalling = 0;
+		
+		m_bIsGrounded = true;
 		return rayHit.m_vNormal;
 	}
 
+	m_fMaxPosY = m_fMaxPosY < vPos.m_fY ? vPos.m_fY : m_fMaxPosY;
 	m_bIsGrounded = false;
-	++m_nCntFalling;
 	return CKFMath::sc_vUp;
 }

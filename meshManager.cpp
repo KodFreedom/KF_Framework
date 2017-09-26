@@ -119,7 +119,7 @@ void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ,
 		{
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos = vStartPos
 				+ CKFVec3(nCntX * vBlockSize.m_fX, 0.0f, -nCntZ * vBlockSize.m_fY);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f, nCntZ * 1.0f);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f / (float)nNumBlockX, nCntZ * 1.0f / (float)nNumBlockX);
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
 		}

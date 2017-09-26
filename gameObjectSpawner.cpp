@@ -398,7 +398,7 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	pMesh->SetMeshName("field");
 	pObj->SetMeshComponent(pMesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetTexName("Grass0003_1_270.jpg");
+	pRender->SetTexName("editorField.jpg");
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター

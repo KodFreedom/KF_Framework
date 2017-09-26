@@ -72,7 +72,7 @@ void CKFPhysicsSystem::uninit(void)
 {
 	if (!m_listCollision.empty())
 	{//万が一のため
-		assert(!"コリジョンがまだ残ってる！");
+		//assert(!"コリジョンがまだ残ってる！");
 		for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 		{
 			delete *itr;

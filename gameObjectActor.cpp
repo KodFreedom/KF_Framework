@@ -72,8 +72,9 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
-	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, CKFVec3(0.3f * vScale.m_fX, 0.6f * vScale.m_fY, 0.3f * vScale.m_fZ));
-	pCollider->SetOffset(CKFVec3(0.0f, 0.6f, 0.0f));
+	//auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, CKFVec3(0.3f * vScale.m_fX, 0.6f * vScale.m_fY, 0.3f * vScale.m_fZ));
+	auto pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	pCollider->SetOffset(CKFVec3(0.0f, 0.55f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
 

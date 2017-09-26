@@ -24,11 +24,13 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 	: CBehaviorComponent(pGameObj)
 	, m_nNumBlockX(100)
 	, m_nNumBlockZ(100)
-	, m_vBlockSize(CKFVec2(5.0f))
+	, m_vBlockSize(CKFVec2(3.0f))
 	, m_vPosMin(CKFVec3(0.0f))
 	, m_vPosMax(CKFVec3(0.0f))
 	, m_vEditorPos(CKFVec3(0.0f))
 	, m_fEditorRadius(0.0f)
+	, m_fRaiseSpeed(1.0f)
+	, m_fExtendSpeed(1.0f)
 	, m_bActive(true)
 {
 	m_vectorVtx.clear();
@@ -42,7 +44,7 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 //--------------------------------------------------------------------------------
 bool CFieldEditorBehaviorComponent::Init(void)
 {
-	CKFVec3 vStartPos = CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	auto& vStartPos = CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	m_vectorVtx.resize((m_nNumBlockX + 1) * (m_nNumBlockZ + 1));
 	int nCntVtx = 0;
 
@@ -50,14 +52,14 @@ bool CFieldEditorBehaviorComponent::Init(void)
 	{
 		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
 		{
-			CKFVec3 vPos = vStartPos
+			auto& vPos = vStartPos
 				+ CKFVec3(nCntX * m_vBlockSize.m_fX, 0.0f, -nCntZ * m_vBlockSize.m_fY);
 			m_vectorVtx[nCntVtx] = vPos;
 			++nCntVtx;
 		}
 	}
 
-	auto vHalfSize = CKFVec3(m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	auto& vHalfSize = CKFVec3(m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	m_vPosMin = vHalfSize * -1.0f;
 	m_vPosMax = vHalfSize;
 	
@@ -88,7 +90,7 @@ void CFieldEditorBehaviorComponent::Update(void)
 	//Šgk
 	auto fValue = (float)pInput->GetKeyPress(CInputManager::K_EXTEND)
 		- (float)pInput->GetKeyPress(CInputManager::K_SHRINK);
-	m_fEditorRadius += fValue;
+	m_fEditorRadius += fValue * m_fExtendSpeed;
 	m_fEditorRadius = m_fEditorRadius < 0.0f ? 0.0f : m_fEditorRadius;
 	
 	auto info = getInfo();
@@ -98,7 +100,7 @@ void CFieldEditorBehaviorComponent::Update(void)
 		- (float)pInput->GetKeyPress(CInputManager::K_REDUCE);
 	for (auto nIdx : info.listChoosenIdx)
 	{
-		m_vectorVtx[nIdx].m_fY += fValue * 0.5f;
+		m_vectorVtx[nIdx].m_fY += fValue * m_fRaiseSpeed;
 	}
 
 	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
@@ -176,7 +178,7 @@ void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 float CFieldEditorBehaviorComponent::getHeight(const CKFVec3& vPos)
 {
-	CKFVec3 vStartPos = CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
+	auto& vStartPos = CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
 	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
 	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 
@@ -189,14 +191,14 @@ float CFieldEditorBehaviorComponent::getHeight(const CKFVec3& vPos)
 	int nXRightDown = nXLeftUp + 1;
 	int nZRightDown = nZLeftUp + 1;
 
-	CKFVec3 vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fZ);
-	CKFVec3 vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
-	CKFVec3 vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
+	auto& vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fZ);
+	auto& vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
+	auto& vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
 
 	//Check Side
-	CKFVec3 vMid = vPRightDown - vPLeftUp;
-	CKFVec3 vTL = vPosTarget - vPLeftUp;
-	CKFVec3 vCross = vTL * vMid;
+	auto& vMid = vPRightDown - vPLeftUp;
+	auto& vTL = vPosTarget - vPLeftUp;
+	auto& vCross = vTL * vMid;
 	int nXSide, nZSide;
 	int nSign = 0;
 	if (vCross.m_fY >= 0.0f)
@@ -211,10 +213,10 @@ float CFieldEditorBehaviorComponent::getHeight(const CKFVec3& vPos)
 		nZSide = nZLeftUp + 1;
 		nSign = 1;
 	}
-	CKFVec3 vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
-	CKFVec3 vLS = vPLeftUp - vPSide;
-	CKFVec3 vRS = vPRightDown - vPSide;
-	CKFVec3 vNormal = (vLS * vRS) * (float)nSign;
+	auto& vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
+	auto& vLS = vPLeftUp - vPSide;
+	auto& vRS = vPRightDown - vPSide;
+	auto& vNormal = (vLS * vRS) * (float)nSign;
 	CKFMath::VecNormalize(vNormal);
 
 	auto fHeight = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
@@ -280,6 +282,12 @@ void CFieldEditorBehaviorComponent::showMainWindow(void)
 
 	// Radius
 	ImGui::Text("Radius : %f", m_fEditorRadius);
+
+	// Raise Speed
+	ImGui::InputFloat("Raise Speed", &m_fRaiseSpeed);
+
+	// Extend Speed
+	ImGui::InputFloat("Extend Speed", &m_fExtendSpeed);
 
 	// End
 	ImGui::End();

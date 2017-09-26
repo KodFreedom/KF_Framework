@@ -64,12 +64,6 @@
     <Filter Include="ソース ファイル\Base\Renderer">
       <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Mesh\3D">
-      <UniqueIdentifier>{15d63201-9ae4-46d7-8ea7-c34e3b10c14e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Mesh\3D">
-      <UniqueIdentifier>{810aeb35-7774-4f4a-96a7-490e7b3cfd65}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Physics">
       <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
     </Filter>
@@ -189,17 +183,11 @@
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="2DMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="rendererDX.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderState.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="3DMeshComponent.cpp">
-      <Filter>ソース ファイル\Component\Mesh\3D</Filter>
     </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
@@ -208,9 +196,6 @@
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="fieldColliderComponent.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="sphereColliderComponent.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="3DRigidbodyComponent.cpp">
@@ -345,6 +330,9 @@
     <ClCompile Include="modelEditorBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="windmillBehaviorComponent.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -392,14 +380,8 @@
     <ClInclude Include="meshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="2DMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="renderState.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="3DMeshComponent.h">
-      <Filter>ヘッダー ファイル\Component\Mesh\3D</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
@@ -536,9 +518,6 @@
     <ClInclude Include="debugManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="WindmillBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="motionStatus.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
     </ClInclude>
@@ -574,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="windmillBehaviorComponent.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

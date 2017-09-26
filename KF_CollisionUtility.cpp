@@ -170,6 +170,13 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	vClosestPos = vClosestPos + vBPos;
 	auto pCollision = new CCollision;
 	pCollision->m_vCollisionNormal = vSPos - vClosestPos;
+	if (CKFMath::VecMagnitudeSquare(pCollision->m_vCollisionNormal) == 0.0f)
+	{//中心がobbの中にある
+		auto pTrans = sphere.GetGameObject()->GetTransformComponent();
+		auto vPos = pTrans->GetPos();
+		auto vPosNext = pTrans->GetPosNext();
+		pCollision->m_vCollisionNormal = vPos - vPosNext;
+	}
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
 	pCollision->m_fPenetration = fSRadius - sqrtf(fDisSqr);
@@ -271,6 +278,13 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	vClosestPos = CKFMath::Vec3TransformCoord(vClosestPos, mtxBox);
 	auto pCollision = new CCollision;
 	pCollision->m_vCollisionNormal = vSPos - vClosestPos;
+	if (CKFMath::VecMagnitudeSquare(pCollision->m_vCollisionNormal) == 0.0f)
+	{//中心がobbの中にある
+		auto pTrans = sphere.GetGameObject()->GetTransformComponent();
+		auto vPos = pTrans->GetPos();
+		auto vPosNext = pTrans->GetPosNext();
+		pCollision->m_vCollisionNormal = vPos - vPosNext;
+	}
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
 	pCollision->m_fPenetration = fSRadius - sqrtf(fDisSqr);
@@ -565,9 +579,9 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	if (info.bInFieldRange == false) { return; }
 
 	//スフィア中心とポリゴンの距離の算出
-	float fDis = info.fPenetration - fSphereRadius;
+	float fPenetration = info.fPenetration + fSphereRadius;
 
-	if (fDis >= 0.0f) { return; }
+	if (fPenetration <= 0.0f) { return; }
 
 	if (sphere.IsTrigger())
 	{
@@ -581,10 +595,10 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	auto pCollision = new CCollision;
 
 	//衝突点の算出
-	pCollision->m_vCollisionPos = vSpherePos + info.vFaceNormal * fDis;
+	pCollision->m_vCollisionPos = vSpherePos + info.vFaceNormal * fPenetration;
 
 	//衝突深度の算出
-	pCollision->m_fPenetration = -fDis;
+	pCollision->m_fPenetration = fPenetration;
 
 	//衝突法線の算出
 	pCollision->m_vCollisionNormal = info.vFaceNormal;

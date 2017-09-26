@@ -96,7 +96,5 @@ private:
 	MODEL_TYPE		m_modelType;
 	bool			m_bActive;
 	bool			m_bShowCreatedList;
-	float			m_fMoveSpeed;
-	float			m_fRotSpeed;
 };
 #endif // _DEBUG

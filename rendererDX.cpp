@@ -28,6 +28,7 @@ CRendererDX::CRendererDX()
 	: m_pD3D(nullptr)
 	, m_pD3DDevice(nullptr)
 	, m_bWireFrame(false)
+	, m_cBGColor(CKFMath::sc_cBlue)
 {
 }
 
@@ -139,7 +140,7 @@ void CRendererDX::Release(void)
 bool CRendererDX::BeginRender(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
-	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), D3DCOLOR_RGBA(128, 0, 128, 255), 1.0f, 0);
+	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), m_cBGColor, 1.0f, 0);
 
 	// Direct3Dによる描画の開始
 	if (FAILED(m_pD3DDevice->BeginScene())) { return false; }

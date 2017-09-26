@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	風車ビヘイビアコンポネント
-//　WindmillBehaviorComponent.h
+//　windmillBehaviorComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
@@ -24,14 +24,30 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CWindmillBehaviorComponent(CGameObject* const pGameObj) : CBehaviorComponent(pGameObj) {}
+	CWindmillBehaviorComponent(CGameObject* const pGameObj)
+		: CBehaviorComponent(pGameObj)
+		, m_fRotSpeed(0.01f)
+		, m_pFan(nullptr)
+	{}
 	~CWindmillBehaviorComponent() {}
 
 	bool	Init(void) override;
-	void	Uninit(void) override;
+	void	Uninit(void) override {}
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
 	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
 	void	OnCollision(CCollisionInfo& collisionInfo) override {}
+
+private:
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	CGameObject*	findFan(CGameObject* pParent);
+
+	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	float			m_fRotSpeed;
+	CGameObject*	m_pFan;
 };

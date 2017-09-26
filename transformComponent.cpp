@@ -396,7 +396,7 @@ void CTransformComponent::RotByRoll(const float& fRadian)
 {
 	CKFMtx44 mtxRoll;
 	CKFMath::MtxRotAxis(mtxRoll, m_vForwardNext, fRadian);
-	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRoll);
+	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxRoll);
 	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxRoll);
 }
 
