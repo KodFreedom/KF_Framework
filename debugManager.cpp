@@ -12,6 +12,9 @@
 #include "manager.h"
 #include "debugManager.h"
 #include "ImGui\imgui.h"
+#include "KF_CollisionSystem.h"
+#include "mode.h"
+#include "camera.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -31,6 +34,8 @@
 //--------------------------------------------------------------------------------
 CDebugManager::CDebugManager()
 	: m_usCntScroll(0)
+	, m_bCollisionSystemWindow(false)
+	, m_bCameraWindow(false)
 {
 	m_strDebugInfo.clear();
 	m_listStrDebugScroll.clear();
@@ -52,6 +57,8 @@ void CDebugManager::Update(void)
 void CDebugManager::LateUpdate(void)
 {
 	showMainWindow();
+	showCollisionSystemWindow();
+	showCameraWindow();
 
 	if (!m_listStrDebugScroll.empty())
 	{
@@ -168,10 +175,72 @@ void CDebugManager::showMainWindow(void)
 	// WireFrame
 	if (ImGui::Checkbox("WireFrame", &bWireFrame)){ pRenderer->SetWireFrameFlag(bWireFrame); }
 	
+	// Collision System
+	if (ImGui::Button("Collision System")) { m_bCollisionSystemWindow ^= 1; }
+
 	// Camera Window
-	//if (ImGui::Button("Camera")) m_bCameraWindow ^= 1;
+	if (ImGui::Button("Camera")) { m_bCameraWindow ^= 1; }
 
 	// End
 	ImGui::End();
 }
+
+//--------------------------------------------------------------------------------
+//  showCollisionSystemWindow
+//--------------------------------------------------------------------------------
+void CDebugManager::showCollisionSystemWindow(void)
+{
+	if (!m_bCollisionSystemWindow) { return; }
+	auto pCS = CMain::GetManager()->GetCollisionSystem();
+	
+	// Begin
+	if (!ImGui::Begin("Collision System Debug Window", &m_bCollisionSystemWindow))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Draw Collider
+	ImGui::Checkbox("Show Collider", &pCS->m_bDrawCollider);
+
+	// Num Collider
+	if (ImGui::CollapsingHeader("Static"))
+	{
+		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_SPHERE].size());
+		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_AABB].size());
+		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_OBB].size());
+	}
+	if (ImGui::CollapsingHeader("Dynamic"))
+	{
+		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_SPHERE].size());
+		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_AABB].size());
+		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_OBB].size());
+	}
+
+	// End
+	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  showCameraWindow
+//--------------------------------------------------------------------------------
+void CDebugManager::showCameraWindow(void)
+{
+	if (!m_bCameraWindow) { return; }
+	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
+
+	// Begin
+	if (!ImGui::Begin("Camera Window", &m_bCameraWindow))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Fov
+	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
+
+	// End
+	ImGui::End();
+}
+
 #endif//_DEBUG

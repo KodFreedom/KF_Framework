@@ -47,7 +47,6 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_fMaxPosY(0.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
-	, m_pAttackCollider(nullptr)
 {
 }
 
@@ -230,7 +229,7 @@ CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
 		{
 			float fFallDis = m_fMaxPosY - vPos.m_fY;
 		}
-		
+		m_fMaxPosY = vPos.m_fY;
 		m_bIsGrounded = true;
 		return rayHit.m_vNormal;
 	}

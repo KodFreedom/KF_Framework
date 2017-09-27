@@ -66,7 +66,7 @@ void CModeDemo::Init(void)
 	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	CStageSpawner::LoadStage("demo");
 	//CGameObjectSpawner::CreateCube(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(187.0f, 10.0f, -197.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(119.7f, 10.0f, -121.2f), CKFVec3(0.0f), CKFVec3(1.0f));
 	pPlayer->SetName("Player");
 	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy00");

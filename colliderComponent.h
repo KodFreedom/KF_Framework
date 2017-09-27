@@ -48,6 +48,7 @@ public:
 	CKFVec3				GetLocalPos(void) const { return CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]); }
 	CKFVec3				GetWorldPos(void) const { return CKFVec3(m_mtxWorld.m_af[3][0], m_mtxWorld.m_af[3][1], m_mtxWorld.m_af[3][2]); }
 	CKFMtx44			GetMatrixWorld(void) const { return m_mtxWorld; }
+	CKFMtx44			GetMatrixOffset(void) const { return m_mtxOffset; }
 	const CS::COL_TYPE	GetType(void) const { return m_type; }
 	const bool			IsTrigger(void) const { return m_bTrigger; }
 	const string&		GetTag(void) const { return m_strTag; }

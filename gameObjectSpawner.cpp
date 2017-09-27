@@ -69,7 +69,7 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 	pMesh->SetMeshName(strFieldName + ".mesh");
 	pObj->SetMeshComponent(pMesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetTexName("Grass0003_1_270.jpg");
+	pRender->SetTexName("demoField.jpg");
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CFieldColliderComponent(pObj, strFieldName);
 	pObj->AddCollider(pCollider);

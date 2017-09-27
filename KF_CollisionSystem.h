@@ -36,6 +36,10 @@ class CGameObject;
 //--------------------------------------------------------------------------------
 class CKFCollisionSystem
 {
+#ifdef _DEBUG
+	friend class CDebugManager;
+#endif // _DEBUG
+
 public:
 	//--------------------------------------------------------------------------------
 	//  —ñ‹“Œ^’è‹`
@@ -151,7 +155,8 @@ private:
 	list<CColliderComponent*> m_listField;
 
 #ifdef _DEBUG
-	LPD3DXMESH m_pMeshSphere;
-	LPD3DXMESH m_pMeshCube;
+	LPD3DXMESH	m_pMeshSphere;
+	LPD3DXMESH	m_pMeshCube;
+	bool		m_bDrawCollider;
 #endif
 };

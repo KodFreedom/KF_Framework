@@ -169,7 +169,7 @@ void CCamera::Set(void)
 		(float)SCREEN_WIDTH / SCREEN_HEIGHT,//アスペクト比
 		0.1f,//near 0.0fより大きい値
 		m_fFar);//far nearより大きい値
-	pDevice->SetTransform(D3DTS_PROJECTION,& mtxProjection);
+	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
 
 	//逆view
 	UpdateViewInverse(mtxView);

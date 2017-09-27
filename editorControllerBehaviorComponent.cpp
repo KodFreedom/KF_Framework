@@ -138,7 +138,7 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	auto vMove = pCamera->GetVecRight() * vAxis.m_fX * m_fMoveSpeed + vCamForward * vAxis.m_fY * m_fMoveSpeed;
 	auto fHeight = (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
 	vPos += vMove;
-	vPos.m_fY += fHeight;
+	vPos.m_fY += fHeight * m_fMoveSpeed;;
 
 	//Adjust Pos
 	m_pFieldEditor->AdjustPosInField(vPos, m_bAutoHeight);
@@ -148,7 +148,7 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	ImGui::Text("Raise / Reduce : <- / ->");
 	ImGui::Text("CameraRot : RightClick + MouseMove");
 	ImGui::Text("CameraZoom : RightClick + MouseWheel");
-	ImGui::InputFloat("Move Speed", &m_fMoveSpeed);
+	ImGui::InputFloat("Move / Raise Speed", &m_fMoveSpeed);
 	ImGui::InputFloat3("Pos", &vPos.m_fX);
 
 	//ëÄçÏà íuÇÃçXêV

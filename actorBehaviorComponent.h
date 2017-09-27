@@ -73,9 +73,6 @@ protected:
 	C3DRigidbodyComponent&	m_rigidbody;	//リジッドボディ
 	CAnimatorComponent*		m_pAnimator;
 
-	//一時採用
-	CColliderComponent*		m_pAttackCollider;
-
 	//パラメーター
 	int		m_nLevel;				//レベル
 	int		m_nCntInvincible;		//無敵時間

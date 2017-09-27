@@ -137,7 +137,7 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pFade = CFade::Create();
 
 	//‰Šúƒ‚[ƒhÝ’è
-	SetMode(new CModeEditor);
+	SetMode(new CModeDemo);
 
 	return true;
 }
@@ -274,8 +274,10 @@ void CManager::Draw(void)
 		m_pRenderManager->Render();
 
 #ifdef _DEBUG
+		//Debug•\Ž¦
 		m_pCollisionSystem->DrawCollider();
 #endif
+
 		//UI•`‰æ
 		m_pUISystem->DrawAll();
 

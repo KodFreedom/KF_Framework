@@ -50,6 +50,8 @@ private:
 	void			init(HWND hWnd);
 	void			uninit(void);
 	void			showMainWindow(void);
+	void			showCollisionSystemWindow(void);
+	void			showCameraWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
@@ -57,5 +59,7 @@ private:
 	string			m_strDebugInfo;
 	list<string>	m_listStrDebugScroll;
 	unsigned short	m_usCntScroll;
+	bool			m_bCollisionSystemWindow;
+	bool			m_bCameraWindow;
 };
 #endif//_DEBUG

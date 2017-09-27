@@ -58,6 +58,13 @@ bool CModelEditorBehaviorComponent::Init(void)
 	m_aStrName[MT_BARREL] = "Barrel";
 	m_aStrName[MT_BRIDGE] = "Bridge";
 	m_aStrName[MT_FENCE] = "Fence";
+	m_aStrName[MT_FANCY_TAVERN] = "Fancy_Tavern";
+	m_aStrName[MT_MED_HOUSE] = "Medieval house";
+	m_aStrName[MT_MED_HOUSE_1] = "Medieval_house_1";
+	m_aStrName[MT_MED_HOUSE_FANTASY] = "Medieva_fantasy_house";
+	m_aStrName[MT_HOUSE] = "House";
+	m_aStrName[MT_WELL] = "cartoon_well";
+	m_aStrName[MT_MED_BRIDGE] = "Medieval Bridge";
 
 	//Demo Object�̍쐬
 	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)

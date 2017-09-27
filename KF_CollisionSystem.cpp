@@ -43,6 +43,7 @@ CKFCollisionSystem::CKFCollisionSystem()
 #ifdef _DEBUG
 	: m_pMeshSphere(nullptr)
 	, m_pMeshCube(nullptr)
+	, m_bDrawCollider(false)
 #endif
 {
 	for (auto& aList : m_alistCollider)
@@ -289,13 +290,19 @@ bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirecti
 //--------------------------------------------------------------------------------
 void CKFCollisionSystem::DrawCollider(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	//sphere
+	if (!m_bDrawCollider) { return; }
+
+	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
 	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.png");
-	for (auto itr = m_alistCollider[DYNAMIC][COL_SPHERE].begin(); itr != m_alistCollider[DYNAMIC][COL_SPHERE].end(); itr++)
+	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pDevice->SetTexture(0, pTexture);
+
+	//sphere
+	for (auto pCol : m_alistCollider[DYNAMIC][COL_SPHERE])
 	{
-		D3DXVECTOR3 vPos = (*itr)->GetWorldPos();
-		float fRadius = ((CSphereColliderComponent*)(*itr))->GetRadius();
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		D3DXVECTOR3 vPos = pCol->GetWorldPos();
+		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
 		D3DXMATRIX mtx,mtxPos,mtxScale;
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
@@ -303,26 +310,86 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		pDevice->SetTexture(0, pTexture);
 		m_pMeshSphere->DrawSubset(0);
 	}
 
-	////Cube
-	//for (auto pCol : m_alistCollider[STATIC][COL_AABB])
-	//{
-	//	if (!pCol->GetGameObject()->IsActive()) { continue; }
-	//	auto vPos = pCol->GetWorldPos();
-	//	auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
-	//	D3DXMATRIX mtx, mtxPos, mtxScale;
-	//	D3DXMatrixIdentity(&mtx);
-	//	D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
-	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
-	//	mtx *= mtxPos;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	pDevice->SetTexture(0, pTexture);
-	//	m_pMeshCube->DrawSubset(0);
-	//}
+	for (auto pCol : m_alistCollider[STATIC][COL_SPHERE])
+	{
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		auto vPos = pCol->GetWorldPos();
+		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
+		D3DXMATRIX mtx, mtxPos, mtxScale;
+		D3DXMatrixIdentity(&mtx);
+		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+		mtx *= mtxScale;
+		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		mtx *= mtxPos;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		m_pMeshSphere->DrawSubset(0);
+	}
+
+	//AABB
+	for (auto pCol : m_alistCollider[DYNAMIC][COL_AABB])
+	{
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		auto vPos = pCol->GetWorldPos();
+		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
+		D3DXMATRIX mtx, mtxPos, mtxScale;
+		D3DXMatrixIdentity(&mtx);
+		D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		mtx *= mtxScale;
+		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		mtx *= mtxPos;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		m_pMeshCube->DrawSubset(0);
+	}
+
+	for (auto pCol : m_alistCollider[STATIC][COL_AABB])
+	{
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		auto vPos = pCol->GetWorldPos();
+		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
+		D3DXMATRIX mtx, mtxPos, mtxScale;
+		D3DXMatrixIdentity(&mtx);
+		D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		mtx *= mtxScale;
+		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		mtx *= mtxPos;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		m_pMeshCube->DrawSubset(0);
+	}
+
+	//OBB
+	for (auto pCol : m_alistCollider[DYNAMIC][COL_OBB])
+	{
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		auto& vHalfSize = ((COBBColliderComponent*)pCol)->GetHalfSize();
+		D3DXMATRIX mtx;
+		D3DXMatrixScaling(&mtx, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMATRIX mtxOff = pCol->GetMatrixOffset();
+		mtx *= mtxOff;
+		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
+		mtx *= mtxObj;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		m_pMeshCube->DrawSubset(0);
+	}
+
+	for (auto pCol : m_alistCollider[STATIC][COL_OBB])
+	{
+		if (!pCol->GetGameObject()->IsActive()) { continue; }
+		auto& vHalfSize = ((COBBColliderComponent*)pCol)->GetHalfSize();
+		D3DXMATRIX mtx;
+		D3DXMatrixScaling(&mtx, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMATRIX mtxOff = pCol->GetMatrixOffset();
+		mtx *= mtxOff;
+		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
+		mtx *= mtxObj;
+		pDevice->SetTransform(D3DTS_WORLD, &mtx);
+		m_pMeshCube->DrawSubset(0);
+	}
+
+
+	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 #endif
 

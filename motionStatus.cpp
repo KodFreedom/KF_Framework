@@ -225,6 +225,9 @@ void CBlendMotionStatus::Update(CAnimatorComponent& animator)
 void CBlendMotionStatus::ChangeMotion(CAnimatorComponent& animator, const MOTION_PATTERN& motion)
 {
 	if (!checkCanChange(animator, motion)) { return; }
+	animator.m_motionNow = animator.m_motionNext;
+	animator.m_motionNext = motion;
+	animator.changeMotionStatus(new CBlendMotionStatus(m_nBlendKeyNow, m_nBlendFrameNow));
 }
 
 //--------------------------------------------------------------------------------
@@ -232,5 +235,14 @@ void CBlendMotionStatus::ChangeMotion(CAnimatorComponent& animator, const MOTION
 //--------------------------------------------------------------------------------
 bool CBlendMotionStatus::checkCanChange(CAnimatorComponent& animator, const MOTION_PATTERN& motion)
 {
+	if (animator.m_motionNow == motion) { return false; }
+
+	switch (animator.m_motionNow)
+	{
+	case MP_LAND:
+		if (motion == MP_JUMP && animator.m_bIsGrounded) { return true; }
+		return false;
+	}
+
 	return false;
 }
