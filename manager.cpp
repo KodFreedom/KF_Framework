@@ -22,15 +22,14 @@
 #include "mode.h"
 #include "modeTitle.h"
 #include "modeDemo.h"
-#include "modeEditor.h"
 #include "fade.h"
 
 //•¨—‰‰Zˆ—
 #include "KF_CollisionSystem.h"
 #include "KF_PhysicsSystem.h"
 
-//Debugˆ—
 #ifdef _DEBUG
+#include "modeEditor.h"
 #include "debugManager.h"
 #endif
 

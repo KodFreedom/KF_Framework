@@ -4,6 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-08-19
 //--------------------------------------------------------------------------------
+#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -59,7 +60,7 @@ void CModeEditor::Init(void)
 	//ゲームオブジェクトの初期化
 	auto pEditorField = CGameObjectSpawner::CreateEditorField();
 	CGameObjectSpawner::CreateEditorController(pEditorField);
-	
+
 	//CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 }
 
@@ -97,3 +98,5 @@ void CModeEditor::uninit(void)
 
 	CMain::GetManager()->GetInputManager()->SetEditorMode(false);
 }
+#endif // _DEBUG
+

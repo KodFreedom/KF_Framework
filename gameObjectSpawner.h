@@ -29,9 +29,10 @@ public:
 	static CGameObject* CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale);
 	static CGameObject* CreateGoal(const CKFVec3& vPos);
 
-	//Editor
+#ifdef _DEBUG
 	static CGameObject* CreateEditorController(CGameObject* pFieldEditor);
 	static CGameObject* CreateEditorField(void);
+#endif // _DEBUG	
 
 private:
 	CGameObjectSpawner() {}

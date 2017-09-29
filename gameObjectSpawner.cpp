@@ -15,14 +15,17 @@
 #include "gameObject.h"
 #include "MeshComponent.h"
 #include "3DMeshRenderComponent.h"
-#include "fieldEditorBehaviorComponent.h"
-#include "modelEditorBehaviorComponent.h"
-#include "editorControllerBehaviorComponent.h"
 #include "sphereColliderComponent.h"
 #include "OBBColliderComponent.h"
 #include "AABBColliderComponent.h"
 #include "fieldColliderComponent.h"
 #include "3DRigidbodyComponent.h"
+
+#ifdef _DEBUG
+#include "fieldEditorBehaviorComponent.h"
+#include "modelEditorBehaviorComponent.h"
+#include "editorControllerBehaviorComponent.h"
+#endif // _DEBUG
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -155,8 +158,8 @@ CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 	pObj->SetTag("Goal");
 
 	//コライダー
-	auto pCollider = new CAABBColliderComponent(pObj, CS::STATIC, CKFVec3(8.5f, 6.0f, 9.25f));
-	pCollider->SetOffset(CKFVec3(0.55f, 5.55f, 0.0f));
+	auto pCollider = new CSphereColliderComponent(pObj, CS::STATIC, 2.0f);
+	//pCollider->SetOffset(CKFVec3(0.0f));
 	pCollider->SetTrigger(true);
 	pCollider->SetTag("Goal");
 	pObj->AddCollider(pCollider);
@@ -362,6 +365,7 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
+#ifdef _DEBUG
 CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEditor)
 {
 	auto pObj = new CGameObject;
@@ -413,3 +417,4 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	pObj->Init();
 	return pObj;
 }
+#endif // _DEBUG

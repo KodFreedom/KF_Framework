@@ -14,6 +14,7 @@
 #include "gameObjectManager.h"
 #include "KF_PhysicsSystem.h"
 #include "UISystem.h"
+#include "renderManager.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -71,7 +72,9 @@ void CMode::uninit(void)
 	//ƒJƒƒ‰‚Ì”jŠü
 	SAFE_RELEASE(m_pCamera);
 
-	CMain::GetManager()->GetPhysicsSystem()->Clear();
-	CMain::GetManager()->GetGameObjectManager()->ReleaseAll();
-	CMain::GetManager()->GetUISystem()->ReleaseAll();
+	auto pManager = CMain::GetManager();
+	pManager->GetPhysicsSystem()->Clear();
+	pManager->GetGameObjectManager()->ReleaseAll();
+	pManager->GetUISystem()->ReleaseAll();
+	pManager->GetRenderManager()->Clear();
 }

@@ -8,6 +8,11 @@
 
 #ifdef _DEBUG
 //--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
+class CGameObjectActor;
+
+//--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
 class CDebugManager
@@ -38,6 +43,8 @@ public:
 	void		DisplayAlways(const char& cInfo);
 	void		DisplayScroll(const string& strInfo);
 
+	void		SetPlayer(CGameObjectActor* pPlayer) { m_pPlayer = pPlayer; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
@@ -52,14 +59,19 @@ private:
 	void			showMainWindow(void);
 	void			showCollisionSystemWindow(void);
 	void			showCameraWindow(void);
+	void			showPlayerWindow(void);
+	void			showTextureManagerWindow(void);
+	void			showMeshManagerWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string			m_strDebugInfo;
-	list<string>	m_listStrDebugScroll;
-	unsigned short	m_usCntScroll;
-	bool			m_bCollisionSystemWindow;
-	bool			m_bCameraWindow;
+	string				m_strDebugInfo;
+	list<string>		m_listStrDebugScroll;
+	unsigned short		m_usCntScroll;
+	bool				m_bCollisionSystemWindow;
+	bool				m_bCameraWindow;
+	bool				m_bPlayerWindow;
+	CGameObjectActor*	m_pPlayer;
 };
 #endif//_DEBUG

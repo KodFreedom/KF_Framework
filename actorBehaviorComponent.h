@@ -25,6 +25,10 @@ class CAnimatorComponent;
 //--------------------------------------------------------------------------------
 class CActorBehaviorComponent : public CBehaviorComponent
 {
+#ifdef _DEBUG
+	friend class CDebugManager;
+#endif // _DEBUG
+
 public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`

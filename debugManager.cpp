@@ -13,8 +13,13 @@
 #include "debugManager.h"
 #include "ImGui\imgui.h"
 #include "KF_CollisionSystem.h"
+#include "textureManager.h"
+#include "meshManager.h"
 #include "mode.h"
 #include "camera.h"
+#include "gameObjectActor.h"
+#include "transformComponent.h"
+#include "actorBehaviorComponent.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -36,6 +41,8 @@ CDebugManager::CDebugManager()
 	: m_usCntScroll(0)
 	, m_bCollisionSystemWindow(false)
 	, m_bCameraWindow(false)
+	, m_bPlayerWindow(false)
+	, m_pPlayer(nullptr)
 {
 	m_strDebugInfo.clear();
 	m_listStrDebugScroll.clear();
@@ -59,6 +66,7 @@ void CDebugManager::LateUpdate(void)
 	showMainWindow();
 	showCollisionSystemWindow();
 	showCameraWindow();
+	showPlayerWindow();
 
 	if (!m_listStrDebugScroll.empty())
 	{
@@ -167,7 +175,7 @@ void CDebugManager::showMainWindow(void)
 
 	// FPS
 	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
+	
 	// BG Color
 	ImGui::ColorEdit3("BG Color", (float*)&cBGColor);
 	pRenderer->SetBGColor(cBGColor);
@@ -180,6 +188,9 @@ void CDebugManager::showMainWindow(void)
 
 	// Camera Window
 	if (ImGui::Button("Camera")) { m_bCameraWindow ^= 1; }
+
+	// Player Window
+	if (ImGui::Button("Player")) { m_bPlayerWindow ^= 1; }
 
 	// End
 	ImGui::End();
@@ -238,6 +249,49 @@ void CDebugManager::showCameraWindow(void)
 
 	// Fov
 	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
+
+	// PosEye
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosEye.m_fX, pCamera->m_vPosEye.m_fY, pCamera->m_vPosEye.m_fZ);
+
+	// PosAt
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosAt.m_fX, pCamera->m_vPosAt.m_fY, pCamera->m_vPosAt.m_fZ);
+
+	// Forward
+	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.m_fX, pCamera->m_vVecLook.m_fY, pCamera->m_vVecLook.m_fZ);
+
+	// Up
+	ImGui::Text("Up : %f %f %f", pCamera->m_vVecUp.m_fX, pCamera->m_vVecUp.m_fY, pCamera->m_vVecUp.m_fZ);
+
+	// Right
+	ImGui::Text("Right : %f %f %f", pCamera->m_vVecRight.m_fX, pCamera->m_vVecRight.m_fY, pCamera->m_vVecRight.m_fZ);
+
+	// End
+	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  showPlayerWindow
+//--------------------------------------------------------------------------------
+void CDebugManager::showPlayerWindow(void)
+{
+	if (!m_bPlayerWindow || !m_pPlayer) { return; }
+
+	// Begin
+	if (!ImGui::Begin("Player Window", &m_bCameraWindow))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Trans
+	auto pTrans = m_pPlayer->GetTransformComponent();
+	ImGui::InputFloat3("Trans", &pTrans->m_vPosNext.m_fX);
+
+	// Actor Behavior
+	auto pActor = static_cast<CActorBehaviorComponent*>(m_pPlayer->GetBehaviorComponent().front());
+	ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
+	ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
+	ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
 
 	// End
 	ImGui::End();

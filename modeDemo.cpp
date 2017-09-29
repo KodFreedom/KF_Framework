@@ -25,6 +25,10 @@
 #include "gameObjectSpawner.h"
 #include "gameObjectActor.h"
 
+#ifdef _DEBUG
+#include "debugManager.h"
+#endif // _DEBUG
+
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
 //--------------------------------------------------------------------------------
@@ -68,13 +72,17 @@ void CModeDemo::Init(void)
 	//CGameObjectSpawner::CreateCube(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(119.7f, 10.0f, -121.2f), CKFVec3(0.0f), CKFVec3(1.0f));
 	pPlayer->SetName("Player");
+
+#ifdef _DEBUG
+	CMain::GetManager()->GetDebugManager()->SetPlayer(pPlayer);
+#endif // _DEBUG
 	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy00");
 	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-12.0, 45.0f, -46.0f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy01");
 	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(117.0f, 80.0f, 1.6f), CKFVec3(0.0f), CKFVec3(1.0f));
 	//pEnemy->SetName("Enemy02");
-	//CGameObjectSpawner::CreateGoal(CKFVec3(142.0f, 74.0f, 1.05f));
+	CGameObjectSpawner::CreateGoal(CKFVec3(112.0f, 16.0f, 51.0f));
 	m_pCamera->SetTarget(pPlayer);
 
 	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
@@ -95,10 +103,10 @@ void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
 
-	//if (m_bEndMode || CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
-	//{
-	//	CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
-	//}
+	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
+	{
+		CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
+	}
 }
 
 //--------------------------------------------------------------------------------

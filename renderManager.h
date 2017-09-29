@@ -62,6 +62,7 @@ public:
 		uninit();
 		delete this;
 	}
+	void		Clear(void);
 	void		Register(CRenderComponent* pRender, const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
 	{
 		m_apRenderComponents[rp][rs].push_back(pRender);
@@ -78,7 +79,6 @@ private:
 	//--------------------------------------------------------------------------------
 	void		init(void);
 	void		uninit(void);
-	void		clear(void);
 	void		setRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
 	void		resetRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
 

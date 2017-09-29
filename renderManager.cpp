@@ -31,7 +31,7 @@
 CRenderManager::CRenderManager()
 {
 	for (auto& pRS : m_apRenderState) { pRS = nullptr; }
-	clear();
+	Clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -66,7 +66,21 @@ void CRenderManager::Render(void)
 	}
 
 	//Clear
-	clear();
+	Clear();
+}
+
+//--------------------------------------------------------------------------------
+//  配列クリア処理
+//--------------------------------------------------------------------------------
+void CRenderManager::Clear(void)
+{
+	for (auto& aListRender : m_apRenderComponents)
+	{
+		for (auto& listRender : aListRender)
+		{
+			listRender.clear();
+		}
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -114,21 +128,7 @@ void CRenderManager::init(void)
 void CRenderManager::uninit(void)
 {
 	for (auto& pRS : m_apRenderState) { SAFE_DELETE(pRS); }
-	clear();
-}
-
-//--------------------------------------------------------------------------------
-//  配列クリア処理
-//--------------------------------------------------------------------------------
-void CRenderManager::clear(void)
-{
-	for (auto& aListRender : m_apRenderComponents)
-	{
-		for (auto& listRender : aListRender)
-		{
-			listRender.clear();
-		}
-	}
+	Clear();
 }
 
 //--------------------------------------------------------------------------------
