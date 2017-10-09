@@ -333,6 +333,9 @@
     <ClCompile Include="windmillBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="fog.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -556,6 +559,9 @@
     </ClInclude>
     <ClInclude Include="windmillBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="fog.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

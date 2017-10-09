@@ -71,8 +71,7 @@ void CKFPhysicsSystem::RegisterCollision(CCollision* pCollision)
 void CKFPhysicsSystem::uninit(void)
 {
 	if (!m_listCollision.empty())
-	{//万が一のため
-		//assert(!"コリジョンがまだ残ってる！");
+	{
 		for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
 		{
 			delete *itr;
@@ -164,7 +163,7 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 {
 	//衝突しない
-	if (collision.m_fPenetration <= 0) { return; }
+	if (collision.m_fPenetration <= 0.0f) { return; }
 
 	//逆質量計算
 	float fTotalInverseMass = collision.m_pRigidBodyOne->m_fInverseMass;
@@ -174,7 +173,7 @@ void CKFPhysicsSystem::resolveInterpenetration(CCollision& collision)
 	}
 
 	//質量が無限大の場合計算しない
-	if (fTotalInverseMass <= 0) { return; }
+	if (fTotalInverseMass <= 0.0f) { return; }
 
 	//質量単位戻り量計算
 	auto vMovePerInverseMass = collision.m_vCollisionNormal * collision.m_fPenetration / fTotalInverseMass;

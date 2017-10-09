@@ -28,7 +28,7 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::CO
 	, m_mode(mode)
 	, m_bTrigger(false)
 {
-	CKFMath::MtxIdentity(m_mtxWorld);
+	CKFMath::MtxIdentity(m_mtxWorldNext);
 	CKFMath::MtxIdentity(m_mtxOffset);
 	CMain::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
 }
@@ -51,8 +51,8 @@ void CColliderComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CColliderComponent::Update(void)
 {
-	m_mtxWorld = m_mtxOffset;
-	m_mtxWorld *= m_pGameObj->GetTransformComponent()->GetMatrixWorldNext();
+	m_mtxWorldNext = m_mtxOffset;
+	m_mtxWorldNext *= m_pGameObj->GetTransformComponent()->GetMatrixWorldNext();
 }
 
 //--------------------------------------------------------------------------------

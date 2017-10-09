@@ -27,6 +27,7 @@ class CMode;
 class CFade;
 class CKFCollisionSystem;
 class CKFPhysicsSystem;
+class CFog;
 
 #ifdef _DEBUG
 class CDebugManager;
@@ -68,6 +69,7 @@ public:
 	auto GetFade(void) { return m_pFade; }
 	auto GetCollisionSystem(void) { return m_pCollisionSystem; }
 	auto GetPhysicsSystem(void) { return m_pPhysicsSystem; }
+	auto GetFog(void) { return m_pFog; }
 
 #ifdef _DEBUG
 	auto GetDebugManager(void) { return m_pDebugManager; }
@@ -91,6 +93,7 @@ private:
 	CFade*				m_pFade;
 	CKFCollisionSystem*	m_pCollisionSystem;
 	CKFPhysicsSystem*	m_pPhysicsSystem;
+	CFog*				m_pFog;
 
 #ifdef _DEBUG
 	CDebugManager*		m_pDebugManager;

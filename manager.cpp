@@ -23,6 +23,7 @@
 #include "modeTitle.h"
 #include "modeDemo.h"
 #include "fade.h"
+#include "fog.h"
 
 //物理演算処理
 #include "KF_CollisionSystem.h"
@@ -58,6 +59,7 @@ CManager::CManager()
 	, m_pFade(nullptr)
 	, m_pCollisionSystem(nullptr)
 	, m_pPhysicsSystem(nullptr)
+	, m_pFog(nullptr)
 #ifdef _DEBUG
 	, m_pDebugManager(nullptr)
 #endif
@@ -90,6 +92,9 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	//レンダーマネージャの生成
 	m_pRenderManager = CRenderManager::Create();
+
+	//フォグの生成
+	m_pFog = CFog::Create();
 
 	//入力の生成
 	m_pInputManager = new CInputManager;
@@ -196,6 +201,9 @@ void CManager::Uninit(void)
 	//Debugマネージャの破棄
 	SAFE_RELEASE(m_pDebugManager);
 #endif
+
+	//フォグの破棄
+	SAFE_RELEASE(m_pFog);
 
 	//レンダーマネージャ
 	SAFE_RELEASE(m_pRenderManager);

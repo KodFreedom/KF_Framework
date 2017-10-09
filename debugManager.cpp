@@ -20,6 +20,7 @@
 #include "gameObjectActor.h"
 #include "transformComponent.h"
 #include "actorBehaviorComponent.h"
+#include "fog.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -42,6 +43,7 @@ CDebugManager::CDebugManager()
 	, m_bCollisionSystemWindow(false)
 	, m_bCameraWindow(false)
 	, m_bPlayerWindow(false)
+	, m_bFogWindow(false)
 	, m_pPlayer(nullptr)
 {
 	m_strDebugInfo.clear();
@@ -67,6 +69,7 @@ void CDebugManager::LateUpdate(void)
 	showCollisionSystemWindow();
 	showCameraWindow();
 	showPlayerWindow();
+	showFogWindow();
 
 	if (!m_listStrDebugScroll.empty())
 	{
@@ -177,8 +180,11 @@ void CDebugManager::showMainWindow(void)
 	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	
 	// BG Color
-	ImGui::ColorEdit3("BG Color", (float*)&cBGColor);
-	pRenderer->SetBGColor(cBGColor);
+	if (ImGui::ColorEdit3("BG Color", (float*)&cBGColor))
+	{
+		pRenderer->SetBGColor(cBGColor);
+	}
+	
 
 	// WireFrame
 	if (ImGui::Checkbox("WireFrame", &bWireFrame)){ pRenderer->SetWireFrameFlag(bWireFrame); }
@@ -191,6 +197,9 @@ void CDebugManager::showMainWindow(void)
 
 	// Player Window
 	if (ImGui::Button("Player")) { m_bPlayerWindow ^= 1; }
+
+	// Fog Window
+	if (ImGui::Button("Fog")) { m_bFogWindow ^= 1; }
 
 	// End
 	ImGui::End();
@@ -292,6 +301,67 @@ void CDebugManager::showPlayerWindow(void)
 	ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
 	ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
 	ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
+
+	// End
+	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  showFogWindow
+//--------------------------------------------------------------------------------
+void CDebugManager::showFogWindow(void)
+{
+	if (!m_bFogWindow) { return; }
+	auto pFog = CMain::GetManager()->GetFog();
+
+	// Begin
+	if (!ImGui::Begin("Fog Window", &m_bFogWindow))
+	{
+		ImGui::End();
+		return;
+	}
+
+	// Enable
+	auto bEnable = pFog->GetEnable();
+	if (ImGui::Checkbox("Enable", &bEnable))
+	{
+		pFog->SetEnable(bEnable);
+	}
+
+	// Enable RangeFog
+	auto bRangeFog = pFog->GetEnableRangeFog();
+	if (ImGui::Checkbox("RangeFog", &bRangeFog))
+	{
+		pFog->SetEnableRangeFog(bRangeFog);
+	}
+
+	// Start
+	auto fStart = pFog->GetStart();
+	if (ImGui::InputFloat("Start", &fStart))
+	{
+		pFog->SetStart(fStart);
+	}
+
+	// End
+	auto fEnd = pFog->GetEnd();
+	if (ImGui::InputFloat("End", &fEnd))
+	{
+		pFog->SetEnd(fEnd);
+	}
+
+	// Density
+	auto fDensity = pFog->GetDensity();
+	if (ImGui::InputFloat("Density", &fDensity))
+	{
+		pFog->SetDensity(fDensity);
+	}
+
+	// Color
+	auto cColor = pFog->GetColor();
+	if (ImGui::ColorEdit4("Color", (float*)&cColor))
+	{
+		pFog->SetColor(cColor);
+	}
 
 	// End
 	ImGui::End();

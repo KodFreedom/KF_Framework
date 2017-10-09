@@ -164,6 +164,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
     <ClCompile Include="debugManager.cpp" />
+    <ClCompile Include="fog.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="enemyNormalMode.h" />
     <ClInclude Include="colliderComponent.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="fog.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx9.h" />

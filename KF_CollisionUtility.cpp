@@ -41,9 +41,9 @@
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL, CSphereColliderComponent& sphereR)
 {
-	const auto& vSLPos = sphereL.GetWorldPos();
+	const auto& vSLPos = sphereL.GetWorldPosNext();
 	const auto& fSLRadius = sphereL.GetRadius();
-	const auto& vSRPos = sphereR.GetWorldPos();
+	const auto& vSRPos = sphereR.GetWorldPosNext();
 	const auto& fSRRadius = sphereR.GetRadius();
 	auto& vMidLine = vSLPos - vSRPos;
 	float fDisMin = fSLRadius + fSRRadius;
@@ -118,10 +118,10 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, CAABBColliderComponent& aabb)
 {
-	const auto& vSPos = sphere.GetWorldPos();
+	const auto& vSPos = sphere.GetWorldPosNext();
 	const auto& fSRadius = sphere.GetRadius();
 	const auto& vBHalfSize = aabb.GetHalfSize();
-	const auto& vBPos = aabb.GetWorldPos();
+	const auto& vBPos = aabb.GetWorldPosNext();
 	auto& vRealSPos = vSPos - vBPos;
 
 	//分離軸チェック
@@ -226,10 +226,10 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, COBBColliderComponent& obb)
 {
-	const auto& vSPos = sphere.GetWorldPos();
+	const auto& vSPos = sphere.GetWorldPosNext();
 	const auto& fSRadius = sphere.GetRadius();
 	const auto& vBHalfSize = obb.GetHalfSize();
-	const auto& mtxBox = obb.GetMatrixWorld();
+	const auto& mtxBox = obb.GetMatrixWorldNext();
 	auto& vRealSPos = CKFMath::TransformInverse(mtxBox, vSPos);
 
 	//分離軸チェック
@@ -348,9 +348,9 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	}
 
 	//XYZ軸一番深度が浅いの軸を洗い出す
-	const auto& vPosL = aabbL.GetWorldPos();
+	const auto& vPosL = aabbL.GetWorldPosNext();
 	const auto& vHalfSizeL = aabbL.GetHalfSize();
-	const auto& vPosR = aabbR.GetWorldPos();
+	const auto& vPosR = aabbR.GetWorldPosNext();
 	const auto& vHalfSizeR = aabbR.GetHalfSize();
 	auto vMidLine = vPosL - vPosR;
 	auto vDisNoCol = vHalfSizeL + vHalfSizeR;
@@ -572,7 +572,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 //--------------------------------------------------------------------------------
 void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field)
 {
-	const auto& vSpherePos = sphere.GetWorldPos();
+	const auto& vSpherePos = sphere.GetWorldPosNext();
 	const auto& fSphereRadius = sphere.GetRadius();
 	auto info = field.GetProjectionInfo(vSpherePos);
 
@@ -761,7 +761,7 @@ bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistan
 bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
 {
 	CKFVec3 vOriginToSphere;
-	const auto& vSpherePos = sphere.GetWorldPos();
+	const auto& vSpherePos = sphere.GetWorldPosNext();
 	const auto& fRadius = sphere.GetRadius();
 	float fWorkA, fWorkB, fTimeA, fTimeB;
 	float fDiscriminant;
@@ -844,7 +844,7 @@ bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDist
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb)
 {
-	const auto& vBPos = aabb.GetWorldPos();
+	const auto& vBPos = aabb.GetWorldPosNext();
 	const auto& vBHalfSize = aabb.GetHalfSize();
 	auto& vRealPoint = vPoint - vBPos;
 
@@ -883,7 +883,7 @@ bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFV
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box)
 {
-	const auto& mtxBox = box.GetMatrixWorld();
+	const auto& mtxBox = box.GetMatrixWorldNext();
 	const auto& vBHalfSize = box.GetHalfSize();
 	auto& vRealPoint = CKFMath::TransformInverse(mtxBox, vPoint);
 
@@ -1019,7 +1019,7 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vL
 float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis)
 {
 	const CKFVec3& vHalfSize = box.GetHalfSize();
-	const CKFMtx44& mtxBox = box.GetMatrixWorld();
+	const CKFMtx44& mtxBox = box.GetMatrixWorldNext();
 	float fAnswer = vHalfSize.m_fX * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[0][0], mtxBox.m_af[0][1], mtxBox.m_af[0][2])))
 		+ vHalfSize.m_fY * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[1][0], mtxBox.m_af[1][1], mtxBox.m_af[1][2])))
 		+ vHalfSize.m_fZ * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[2][0], mtxBox.m_af[2][1], mtxBox.m_af[2][2])));
@@ -1041,7 +1041,7 @@ bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, c
 	float fHalfDisR = transformBoxToAxis(boxR, vAxis);
 
 	//軸上の中心間の距離を算出する
-	CKFVec3 vLtoR = boxL.GetWorldPos() - boxR.GetWorldPos();
+	CKFVec3 vLtoR = boxL.GetWorldPosNext() - boxR.GetWorldPosNext();
 	float fDis = fabsf(CKFMath::Vec3Dot(vLtoR, vAxis));
 
 	//重ねてるかどうかをチェックする
@@ -1074,9 +1074,9 @@ bool CCollisionDetector::checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2&
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR)
 {
-	const auto& vPosL = aabbL.GetWorldPos();
+	const auto& vPosL = aabbL.GetWorldPosNext();
 	const auto& vHalfSizeL = aabbL.GetHalfSize();
-	const auto& vPosR = aabbR.GetWorldPos();
+	const auto& vPosR = aabbR.GetWorldPosNext();
 	const auto& vHalfSizeR = aabbR.GetHalfSize();
 	auto& vMinL = vPosL - vHalfSizeL;
 	auto& vMaxL = vPosL + vHalfSizeL;

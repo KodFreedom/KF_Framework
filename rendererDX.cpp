@@ -116,6 +116,7 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	//	//
 	//}
 
+
 	SetWireFrameFlag(false);
 	return true;
 }

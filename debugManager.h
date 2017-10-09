@@ -60,6 +60,7 @@ private:
 	void			showCollisionSystemWindow(void);
 	void			showCameraWindow(void);
 	void			showPlayerWindow(void);
+	void			showFogWindow(void);
 	void			showTextureManagerWindow(void);
 	void			showMeshManagerWindow(void);
 
@@ -72,6 +73,7 @@ private:
 	bool				m_bCollisionSystemWindow;
 	bool				m_bCameraWindow;
 	bool				m_bPlayerWindow;
+	bool				m_bFogWindow;
 	CGameObjectActor*	m_pPlayer;
 };
 #endif//_DEBUG

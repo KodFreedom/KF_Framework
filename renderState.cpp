@@ -9,6 +9,8 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "renderState.h"
+#include "manager.h"
+#include "fog.h"
 
 #ifdef USING_DIRECTX
 #include "rendererDX.h"
@@ -62,6 +64,7 @@ void CLightOffCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice
 {
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
 }
 
 //--------------------------------------------------------------------------------
@@ -70,6 +73,7 @@ void CLightOffCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice
 void CLightOffCullFaceOnMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
 {
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	pDevice->SetRenderState(D3DRS_FOGENABLE, CMain::GetManager()->GetFog()->GetEnable());
 }
 
 //--------------------------------------------------------------------------------
