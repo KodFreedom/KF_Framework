@@ -301,7 +301,7 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[DYNAMIC][COL_SPHERE])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		D3DXVECTOR3 vPos = pCol->GetWorldPos();
+		D3DXVECTOR3 vPos = pCol->GetWorldPosNext();
 		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
 		D3DXMATRIX mtx,mtxPos,mtxScale;
 		D3DXMatrixIdentity(&mtx);
@@ -316,7 +316,7 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[STATIC][COL_SPHERE])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPos();
+		auto vPos = pCol->GetWorldPosNext();
 		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
@@ -332,7 +332,7 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[DYNAMIC][COL_AABB])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPos();
+		auto vPos = pCol->GetWorldPosNext();
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
@@ -347,7 +347,7 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[STATIC][COL_AABB])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPos();
+		auto vPos = pCol->GetWorldPosNext();
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);

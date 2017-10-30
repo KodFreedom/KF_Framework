@@ -32,15 +32,15 @@ public:
 		CBoxColliderComponent::Update();
 
 		//âÒì]Çèâä˙âªÇ∑ÇÈ
-		m_mtxWorld.m_af[0][0] = 1.0f;
-		m_mtxWorld.m_af[0][1] = 0.0f;
-		m_mtxWorld.m_af[0][2] = 0.0f;
-		m_mtxWorld.m_af[1][0] = 0.0f;
-		m_mtxWorld.m_af[1][1] = 1.0f;
-		m_mtxWorld.m_af[1][2] = 0.0f;
-		m_mtxWorld.m_af[2][0] = 0.0f;
-		m_mtxWorld.m_af[2][1] = 0.0f;
-		m_mtxWorld.m_af[2][2] = 1.0f;
+		m_mtxWorldNext.m_af[0][0] = 1.0f;
+		m_mtxWorldNext.m_af[0][1] = 0.0f;
+		m_mtxWorldNext.m_af[0][2] = 0.0f;
+		m_mtxWorldNext.m_af[1][0] = 0.0f;
+		m_mtxWorldNext.m_af[1][1] = 1.0f;
+		m_mtxWorldNext.m_af[1][2] = 0.0f;
+		m_mtxWorldNext.m_af[2][0] = 0.0f;
+		m_mtxWorldNext.m_af[2][1] = 0.0f;
+		m_mtxWorldNext.m_af[2][2] = 1.0f;
 	}
 
 private:

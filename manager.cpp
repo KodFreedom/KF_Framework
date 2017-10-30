@@ -141,7 +141,7 @@ bool CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	m_pFade = CFade::Create();
 
 	//‰Šúƒ‚[ƒhİ’è
-	SetMode(new CModeDemo);
+	SetMode(new CModeEditor);
 
 	return true;
 }

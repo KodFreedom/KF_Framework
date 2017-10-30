@@ -18,7 +18,7 @@
 list<CKFVec3> CBoxColliderComponent::GetWorldVertexes(void)
 {
 	auto& listVtx = GetLocalVertexes();
-	const auto& mtxWorld = GetMatrixWorld();
+	const auto& mtxWorld = GetMatrixWorldNext();
 	for (auto itr = listVtx.begin(); itr != listVtx.end(); ++itr)
 	{
 		*itr = CKFMath::Vec3TransformCoord(*itr, mtxWorld);
