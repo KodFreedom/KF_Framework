@@ -58,12 +58,12 @@ void CColliderComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  Offsetê›íË
 //--------------------------------------------------------------------------------
-void CColliderComponent::SetOffset(const CKFVec3& vPos, const CKFVec3& vRot)
+void CColliderComponent::SetOffset(const Vector3& vPos, const Vector3& vRot)
 {
 	CKFMath::MtxRotationYawPitchRoll(m_mtxOffset, vRot);
-	m_mtxOffset.m_af[3][0] = vPos.m_fX;
-	m_mtxOffset.m_af[3][1] = vPos.m_fY;
-	m_mtxOffset.m_af[3][2] = vPos.m_fZ;
+	m_mtxOffset.Elements[3][0] = vPos.Y;
+	m_mtxOffset.Elements[3][1] = vPos.Y;
+	m_mtxOffset.Elements[3][2] = vPos.Z;
 }
 
 //--------------------------------------------------------------------------------

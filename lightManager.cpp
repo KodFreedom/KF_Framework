@@ -26,9 +26,9 @@
 //--------------------------------------------------------------------------------
 CLight::CLight()
 	: m_nID(0)
-	, m_cDiffuse(CKFColor(1.0f))
-	, m_cAmbient(CKFColor(0.2f, 0.2f, 0.2f, 1.0f))
-	, m_vDirection(CKFVec3(0.0f, -1.0f, 0.0f))
+	, m_cDiffuse(Color(1.0f))
+	, m_cAmbient(Color(0.2f, 0.2f, 0.2f, 1.0f))
+	, Direction(Vector3(0.0f, -1.0f, 0.0f))
 {
 
 }
@@ -36,12 +36,12 @@ CLight::CLight()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CLight::Init(const int &nID, const CKFVec3 &vDir)
+void CLight::Init(const int &nID, const Vector3 &vDir)
 {
 	m_nID = nID;
 
-	m_vDirection = vDir;
-	CKFMath::VecNormalize(m_vDirection);
+	Direction = vDir;
+	CKFMath::VecNormalize(Direction);
 
 	SetLight();
 }
@@ -59,10 +59,10 @@ void CLight::Uninit(void)
 //--------------------------------------------------------------------------------
 //  方向設定
 //--------------------------------------------------------------------------------
-void CLight::SetDirection(const CKFVec3 &vDir)
+void CLight::SetDirection(const Vector3 &vDir)
 {
-	m_vDirection = vDir;
-	CKFMath::VecNormalize(m_vDirection);
+	Direction = vDir;
+	CKFMath::VecNormalize(Direction);
 
 	SetLight();
 }
@@ -80,7 +80,7 @@ void CLight::SetLight(void)
 	lightInfo.Type = D3DLIGHT_DIRECTIONAL;//平行光源
 	lightInfo.Diffuse = m_cDiffuse;
 	lightInfo.Ambient = m_cAmbient;
-	lightInfo.Direction = m_vDirection;
+	lightInfo.Direction = Direction;
 
 	//デバイスにライト設定
 	pDevice->SetLight(m_nID, &lightInfo);
@@ -167,7 +167,7 @@ void CLightManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 //  ライト作成
 //--------------------------------------------------------------------------------
-int CLightManager::CreateDirectionalLight(const CKFVec3 &vDir)
+int CLightManager::CreateDirectionalLight(const Vector3 &vDir)
 {
 	int nID = m_listLight.size();
 
@@ -181,7 +181,7 @@ int CLightManager::CreateDirectionalLight(const CKFVec3 &vDir)
 //--------------------------------------------------------------------------------
 //  ライト方向設定
 //--------------------------------------------------------------------------------
-void CLightManager::SetLightDirection(const int &nLightID, const CKFVec3 &vDir)
+void CLightManager::SetLightDirection(const int &nLightID, const Vector3 &vDir)
 {
 	list<CLight*>::iterator itr = m_listLight.begin();
 	advance(itr, nLightID);

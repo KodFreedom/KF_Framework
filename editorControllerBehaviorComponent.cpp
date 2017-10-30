@@ -132,13 +132,13 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	auto pInput = CMain::GetManager()->GetInputManager();
 	auto pTrans = m_pGameObj->GetTransformComponent();
 	auto vPos = pTrans->GetPos();
-	auto vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
+	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
 	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
-	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(CKFVec3(1.0f, 0.0f, 1.0f)));
-	auto vMove = pCamera->GetVecRight() * vAxis.m_fX * m_fMoveSpeed + vCamForward * vAxis.m_fY * m_fMoveSpeed;
+	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
+	auto vMove = pCamera->GetVecRight() * vAxis.X * m_fMoveSpeed + vCamForward * vAxis.Y * m_fMoveSpeed;
 	auto fHeight = (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
 	vPos += vMove;
-	vPos.m_fY += fHeight * m_fMoveSpeed;;
+	vPos.Y += fHeight * m_fMoveSpeed;;
 
 	//Adjust Pos
 	m_pFieldEditor->AdjustPosInField(vPos, m_bAutoHeight);
@@ -149,7 +149,7 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	ImGui::Text("CameraRot : RightClick + MouseMove");
 	ImGui::Text("CameraZoom : RightClick + MouseWheel");
 	ImGui::InputFloat("Move / Raise Speed", &m_fMoveSpeed);
-	ImGui::InputFloat3("Pos", &vPos.m_fX);
+	ImGui::InputFloat3("Pos", &vPos.X);
 
 	//‘€ìˆÊ’u‚ÌXV
 	m_pFieldEditor->SetPos(vPos);

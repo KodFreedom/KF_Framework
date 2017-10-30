@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”
 //--------------------------------------------------------------------------------
-const CKFVec3 CKFPhysicsSystem::sc_vGravity = CKFVec3(0.0f, -9.8f, 0.0f);
+const Vector3 CKFPhysicsSystem::sc_vGravity = Vector3(0.0f, -9.8f, 0.0f);
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -102,10 +102,10 @@ void CKFPhysicsSystem::resolveVelocity(CCollision& collision)
 	if (fSeparatingVelocity > 0.0f) { return; }
 
 	//’µ‚Ë•Ô‚èŒW”‚ÌŽZo
-	float fBounciness = collision.m_pRigidBodyOne->m_fBounciness;
+	float fBounciness = collision.m_pRigidBodyOne->Bounciness;
 	if (collision.m_pRigidBodyTwo)
 	{
-		fBounciness += collision.m_pRigidBodyTwo->m_fBounciness;
+		fBounciness += collision.m_pRigidBodyTwo->Bounciness;
 		fBounciness *= 0.5f;
 	}
 
@@ -204,45 +204,45 @@ float CKFPhysicsSystem::calculateSeparatingVelocity(CCollision& collision)
 //--------------------------------------------------------------------------------
 void CKFPhysicsSystem::calculateCollisionBasis(CCollision& collision)
 {
-	CKFVec3 vAxisY, vAxisZ;
+	Vector3 vAxisY, vAxisZ;
 
 	//Õ“Ë–@ü‚ª¢ŠEXŽ²‚Æ¢ŠEYŽ²‚Ç‚Á‚¿‚Æ‚ÌŠp“x‚ª‹ß‚¢
-	if (fabsf(collision.m_vCollisionNormal.m_fX) > fabsf(collision.m_vCollisionNormal.m_fY))
+	if (fabsf(collision.m_vCollisionNormal.X) > fabsf(collision.m_vCollisionNormal.Y))
 	{//Y
-		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.m_fX * collision.m_vCollisionNormal.m_fX
-			+ collision.m_vCollisionNormal.m_fZ * collision.m_vCollisionNormal.m_fZ);
+		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.X * collision.m_vCollisionNormal.X
+			+ collision.m_vCollisionNormal.Z * collision.m_vCollisionNormal.Z);
 
-		vAxisZ.m_fX = collision.m_vCollisionNormal.m_fZ * fScale;
-		vAxisZ.m_fY = 0.0f;
-		vAxisZ.m_fZ = collision.m_vCollisionNormal.m_fX * fScale;
+		vAxisZ.X = collision.m_vCollisionNormal.Z * fScale;
+		vAxisZ.Y = 0.0f;
+		vAxisZ.Z = collision.m_vCollisionNormal.X * fScale;
 
-		vAxisY.m_fX = collision.m_vCollisionNormal.m_fY * vAxisZ.m_fX;
-		vAxisY.m_fY = collision.m_vCollisionNormal.m_fZ * vAxisZ.m_fX
-			- collision.m_vCollisionNormal.m_fX * vAxisZ.m_fZ;
-		vAxisY.m_fZ = -collision.m_vCollisionNormal.m_fY * vAxisZ.m_fX;
+		vAxisY.X = collision.m_vCollisionNormal.Y * vAxisZ.X;
+		vAxisY.Y = collision.m_vCollisionNormal.Z * vAxisZ.X
+			- collision.m_vCollisionNormal.X * vAxisZ.Z;
+		vAxisY.Z = -collision.m_vCollisionNormal.Y * vAxisZ.X;
 	}
 	else
 	{//X
-		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.m_fY * collision.m_vCollisionNormal.m_fY
-			+ collision.m_vCollisionNormal.m_fZ * collision.m_vCollisionNormal.m_fZ);
+		float fScale = 1.0f / sqrtf(collision.m_vCollisionNormal.Y * collision.m_vCollisionNormal.Y
+			+ collision.m_vCollisionNormal.Z * collision.m_vCollisionNormal.Z);
 
-		vAxisZ.m_fX = 0.0f;
-		vAxisZ.m_fY = -collision.m_vCollisionNormal.m_fZ * fScale;
-		vAxisZ.m_fZ = collision.m_vCollisionNormal.m_fY * fScale;
+		vAxisZ.X = 0.0f;
+		vAxisZ.Y = -collision.m_vCollisionNormal.Z * fScale;
+		vAxisZ.Z = collision.m_vCollisionNormal.Y * fScale;
 
-		vAxisY.m_fX = collision.m_vCollisionNormal.m_fY * vAxisZ.m_fZ
-			- collision.m_vCollisionNormal.m_fZ * vAxisZ.m_fY;
-		vAxisY.m_fY = -collision.m_vCollisionNormal.m_fX * vAxisZ.m_fZ;
-		vAxisY.m_fZ = collision.m_vCollisionNormal.m_fX * vAxisZ.m_fY;
+		vAxisY.X = collision.m_vCollisionNormal.Y * vAxisZ.Z
+			- collision.m_vCollisionNormal.Z * vAxisZ.Y;
+		vAxisY.Y = -collision.m_vCollisionNormal.X * vAxisZ.Z;
+		vAxisY.Z = collision.m_vCollisionNormal.X * vAxisZ.Y;
 	}
 
-	collision.m_mtxToWorld.m_af[0][0] = collision.m_vCollisionNormal.m_fX;
-	collision.m_mtxToWorld.m_af[0][1] = collision.m_vCollisionNormal.m_fY;
-	collision.m_mtxToWorld.m_af[0][2] = collision.m_vCollisionNormal.m_fZ;
-	collision.m_mtxToWorld.m_af[1][0] = vAxisY.m_fX;
-	collision.m_mtxToWorld.m_af[1][1] = vAxisY.m_fY;
-	collision.m_mtxToWorld.m_af[1][2] = vAxisY.m_fZ;
-	collision.m_mtxToWorld.m_af[2][0] = vAxisZ.m_fX;
-	collision.m_mtxToWorld.m_af[2][1] = vAxisZ.m_fY;
-	collision.m_mtxToWorld.m_af[2][2] = vAxisZ.m_fZ;
+	collision.m_mtxToWorld.Elements[0][0] = collision.m_vCollisionNormal.X;
+	collision.m_mtxToWorld.Elements[0][1] = collision.m_vCollisionNormal.Y;
+	collision.m_mtxToWorld.Elements[0][2] = collision.m_vCollisionNormal.Z;
+	collision.m_mtxToWorld.Elements[1][0] = vAxisY.X;
+	collision.m_mtxToWorld.Elements[1][1] = vAxisY.Y;
+	collision.m_mtxToWorld.Elements[1][2] = vAxisY.Z;
+	collision.m_mtxToWorld.Elements[2][0] = vAxisZ.X;
+	collision.m_mtxToWorld.Elements[2][1] = vAxisZ.Y;
+	collision.m_mtxToWorld.Elements[2][2] = vAxisZ.Z;
 }

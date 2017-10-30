@@ -23,7 +23,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	COBBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
+	COBBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const Vector3& vHalfSize)
 		: CBoxColliderComponent(pGameObj, CS::COL_OBB, mode, vHalfSize) {}
 	~COBBColliderComponent() {}
 

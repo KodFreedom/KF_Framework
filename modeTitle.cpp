@@ -50,7 +50,7 @@ CModeTitle::~CModeTitle()
 void CModeTitle::Init(void)
 {
 	//ƒ‰ƒCƒg‚Ì‰Šú‰»
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	m_pCamera = new CCamera;

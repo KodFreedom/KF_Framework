@@ -75,18 +75,18 @@ class CManager;
 //--------------------------------------------------------------------------------
 typedef struct
 {
-	CKFVec3			vPos;	//xyz
+	Vector3			vPos;	//xyz
 	float			fRhw;	//rhw
 	unsigned long	ulColor;//色
-	CKFVec2			vUV;	//テクスチャ
+	Vector2			vUV;	//テクスチャ
 }VERTEX_2D;//2D頂点情報構造体　頂点フォーマットと構造を合わせること
 
 typedef struct//頂点情報構造体　上の頂点フォーマットと構造を合わせること
 {
-	CKFVec3			vPos;	//xyz
-	CKFVec3			vNormal;//法線
+	Vector3			vPos;	//xyz
+	Vector3			vNormal;//法線
 	unsigned long	ulColor;//色
-	CKFVec2			vUV;	//uv
+	Vector2			vUV;	//uv
 }VERTEX_3D;//3D頂点情報構造体　頂点フォーマットと構造を合わせること
 
 //--------------------------------------------------------------------------------

@@ -26,9 +26,9 @@ public:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	CFade()
-		: m_fade(FADE_IN)
+		: Ade(FADE_IN)
 		, m_pModeNext(NULL)
-		, m_cColor(CKFColor(0.0f, 0.0f, 0.0f, 1.0f))
+		, m_cColor(Color(0.0f, 0.0f, 0.0f, 1.0f))
 		, m_nCnt(0)
 #ifdef USING_DIRECTX
 		, m_pVtxBuffer(NULL)
@@ -70,13 +70,13 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	void SetColorFade(const CKFColor &cColor);
+	void SetColorFade(const Color &cColor);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CKFColor					m_cColor;
-	FADE						m_fade;
+	Color					m_cColor;
+	FADE						Ade;
 	CMode*						m_pModeNext;
 	int							m_nCnt;
 

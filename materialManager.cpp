@@ -80,7 +80,7 @@ CMaterialManager::CMaterialManager()
 //--------------------------------------------------------------------------------
 //  SaveMaterial
 //--------------------------------------------------------------------------------
-const unsigned short CMaterialManager::SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
+const unsigned short CMaterialManager::SaveMaterial(const Color &cAmbient, const Color &cDiffuse, const Color &cSpecular, const Color &cEmissive, const float &fPower)
 {
 	auto& mat = CKFMaterial(cAmbient, cDiffuse, cSpecular, cEmissive, fPower);
 

@@ -29,9 +29,9 @@ CInputManager::CInputManager()
 	, m_pJoystick(nullptr)
 	, m_fMoveHorizontal(0.0f)
 	, m_fMoveVertical(0.0f)
-	, m_fRotHorizontal(0.0f)
-	, m_fRotVertical(0.0f)
-	, m_fZoom(0.0f)
+	, RotHorizontal(0.0f)
+	, RotVertical(0.0f)
+	, Zoom(0.0f)
 	, m_lKeysPress(0)
 	, m_lKeysTrigger(0)
 	, m_lKeysRelease(0)
@@ -151,13 +151,13 @@ void CInputManager::updateInputInfo(void)
 	}
 	float fJRAxisX = (float)m_pJoystick->GetRStickAxisX() / CJoystickDX::sc_nStickAxisMax;
 	float fJRAxisY = (float)m_pJoystick->GetRStickAxisY() / CJoystickDX::sc_nStickAxisMax;
-	m_fRotHorizontal = fabsf(fMAxisX) > fabsf(fJRAxisX) ? fMAxisX : fJRAxisX;
-	m_fRotVertical = fabsf(fMAxisY) > fabsf(fJRAxisY) ? fMAxisY : fJRAxisY;
+	RotHorizontal = fabsf(fMAxisX) > fabsf(fJRAxisX) ? fMAxisX : fJRAxisX;
+	RotVertical = fabsf(fMAxisY) > fabsf(fJRAxisY) ? fMAxisY : fJRAxisY;
 
 	//Zoom
 	float fMAxisZ = -(float)m_pMouse->GetMouseAxisZ() / MOUSE_AXIS_MAX;
 	float fJAxisZ = (float)m_pJoystick->GetLTandRT() / CJoystickDX::sc_nStickAxisMax;
-	m_fZoom = fabsf(fMAxisZ) > fabsf(fJAxisZ) ? fMAxisZ : fJAxisZ;
+	Zoom = fabsf(fMAxisZ) > fabsf(fJAxisZ) ? fMAxisZ : fJAxisZ;
 
 	//Key
 	//Submit

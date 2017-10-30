@@ -20,12 +20,12 @@
 class CNodeKey
 {
 public:
-	CNodeKey(const CKFVec3& vPos, const CKFQuaternion& qRot)
+	CNodeKey(const Vector3& vPos, const Quaternion& qRot)
 		: c_vPos(vPos), c_qRot(qRot) {}
 	~CNodeKey() {}
 
-	const CKFVec3		c_vPos;
-	const CKFQuaternion c_qRot;
+	const Vector3		c_vPos;
+	const Quaternion c_qRot;
 };
 
 //--------------------------------------------------------------------------------

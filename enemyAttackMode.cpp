@@ -74,7 +74,7 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	{//‘ŠŽè‚ÉŒü‚©‚Á‚ÄˆÚ“®‚·‚é
 	 //‘ŠŽè‚ÉŒü‚­
 	 //‰ñ“]ŒvŽZ
-		CKFVec3 vUp = pTransform->GetUpNext();
+		Vector3 vUp = pTransform->GetUpNext();
 		vDir = (vUp * vDir) * vUp;
 	}
 

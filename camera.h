@@ -54,17 +54,17 @@ public:
 	void Set(void);
 
 	//Get関数
-	CKFVec3		GetVecLook(void);
-	CKFVec3		GetVecUp(void);
-	CKFVec3		GetVecRight(void);
-	CKFVec3		GetPosAt(void);
-	CKFVec3		GetPosEye(void);
+	Vector3		GetVecLook(void);
+	Vector3		GetVecUp(void);
+	Vector3		GetVecRight(void);
+	Vector3		GetPosAt(void);
+	Vector3		GetPosEye(void);
 	D3DXMATRIX	GetMtxViewInverse(void);
 
 	//Set関数
-	void MoveCamera(const CKFVec3& vMovement);
-	void LookAtHere(const CKFVec3& vPos);
-	void SetCamera(const CKFVec3& vPosAt, const CKFVec3& vPosEye, const CKFVec3& vUp, const CKFVec3& vRight);
+	void MoveCamera(const Vector3& vMovement);
+	void LookAtHere(const Vector3& vPos);
+	void SetCamera(const Vector3& vPosAt, const Vector3& vPosEye, const Vector3& vUp, const Vector3& vRight);
 	virtual void SetTarget(CGameObject* pTarget) {}
 
 protected:
@@ -80,12 +80,12 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CKFVec3			m_vMovement;
-	CKFVec3			m_vPosAt;			//注視点の位置
-	CKFVec3			m_vPosEye;			//カメラの位置
-	CKFVec3			m_vVecLook;			//カメラの前方向情報
-	CKFVec3			m_vVecUp;			//カメラの上方向情報
-	CKFVec3			m_vVecRight;		//カメラの右方向情報
+	Vector3			m_vMovement;
+	Vector3			m_vPosAt;			//注視点の位置
+	Vector3			m_vPosEye;			//カメラの位置
+	Vector3			m_vVecLook;			//カメラの前方向情報
+	Vector3			m_vVecUp;			//カメラの上方向情報
+	Vector3			m_vVecRight;		//カメラの右方向情報
 	D3DXMATRIX		m_mtxViewInverse;	//Viewの逆行列
 	float			m_fDistance;		//AtとEyeの距離
 	float			m_fFovY;			//画角

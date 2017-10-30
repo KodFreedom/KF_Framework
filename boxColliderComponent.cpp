@@ -15,7 +15,7 @@
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
 //--------------------------------------------------------------------------------
-list<CKFVec3> CBoxColliderComponent::GetWorldVertexes(void)
+list<Vector3> CBoxColliderComponent::GetWorldVertexes(void)
 {
 	auto& listVtx = GetLocalVertexes();
 	const auto& mtxWorld = GetMatrixWorldNext();

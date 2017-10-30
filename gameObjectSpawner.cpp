@@ -33,7 +33,7 @@
 //--------------------------------------------------------------------------------
 //  SkyBox生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateSkyBox(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -85,7 +85,7 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateCube(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -98,7 +98,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
 	//COBBColliderComponent* pCollider = new COBBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
-	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, vScale.m_fX * 0.5f);
+	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, vScale.X * 0.5f);
 	pObj->AddCollider(pCollider);
 	auto pRb = new C3DRigidbodyComponent(pObj);
 	pObj->SetRigidbodyComponent(pRb);
@@ -119,7 +119,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& 
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -150,7 +150,7 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVe
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
+CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& vPos)
 {
 	auto pObj = new CGameObject;
 
@@ -159,7 +159,7 @@ CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 
 	//コライダー
 	auto pCollider = new CSphereColliderComponent(pObj, CS::STATIC, 2.0f);
-	//pCollider->SetOffset(CKFVec3(0.0f));
+	//pCollider->SetOffset(Vector3(0.0f));
 	pCollider->SetTrigger(true);
 	pCollider->SetTag("Goal");
 	pObj->AddCollider(pCollider);
@@ -183,7 +183,7 @@ CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
 //			vScale
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale)
+CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const Vector3& vPos, const Quaternion& qRot, const Vector3& vScale)
 {
 	string strName, strType;
 	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
@@ -240,10 +240,10 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	pObj->SetName(strNodeName);
 
 	//Offset
-	CKFVec3 vPos, vRot, vScale;
-	fread_s(&vPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-	fread_s(&vRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-	fread_s(&vScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+	Vector3 vPos, vRot, vScale;
+	fread_s(&vPos, sizeof(Vector3), sizeof(Vector3), 1, pFile);
+	fread_s(&vRot, sizeof(Vector3), sizeof(Vector3), 1, pFile);
+	fread_s(&vScale, sizeof(Vector3), sizeof(Vector3), 1, pFile);
 	auto pTrans = pObj->GetTransformComponent();
 	if (pParent) { pTrans->RegisterParent(pParent, vPos, vRot); }
 
@@ -253,17 +253,17 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	for (int nCnt = 0; nCnt < nNumCollider; ++nCnt)
 	{
 		int nColType = 0;
-		CKFVec3 vColPos, vColRot, vColScale;
+		Vector3 vColPos, vColRot, vColScale;
 		fread_s(&nColType, sizeof(int), sizeof(int), 1, pFile);
-		fread_s(&vColPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-		fread_s(&vColRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-		fread_s(&vColScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+		fread_s(&vColPos, sizeof(Vector3), sizeof(Vector3), 1, pFile);
+		fread_s(&vColRot, sizeof(Vector3), sizeof(Vector3), 1, pFile);
+		fread_s(&vColScale, sizeof(Vector3), sizeof(Vector3), 1, pFile);
 
 		CColliderComponent* pCollider = nullptr;
 		switch ((CS::COL_TYPE)nColType)
 		{
 		case CS::COL_SPHERE:
-			pCollider = new CSphereColliderComponent(pObj, CS::STATIC, vColScale.m_fX);
+			pCollider = new CSphereColliderComponent(pObj, CS::STATIC, vColScale.X);
 			break;
 		case CS::COL_AABB:
 			pCollider = new CAABBColliderComponent(pObj, CS::STATIC, vColScale * 0.5f);
@@ -407,11 +407,11 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(CKFVec3(0.0f));
-	pTrans->SetPosNext(CKFVec3(0.0f));
-	pTrans->SetScale(CKFVec3(1.0f));
-	pTrans->SetScaleNext(CKFVec3(1.0f));
-	pTrans->RotByEuler(CKFVec3(0.0f));
+	pTrans->SetPos(Vector3(0.0f));
+	pTrans->SetPosNext(Vector3(0.0f));
+	pTrans->SetScale(Vector3(1.0f));
+	pTrans->SetScaleNext(Vector3(1.0f));
+	pTrans->RotByEuler(Vector3(0.0f));
 
 	//初期化
 	pObj->Init();

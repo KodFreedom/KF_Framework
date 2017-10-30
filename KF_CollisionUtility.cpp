@@ -125,31 +125,31 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	auto& vRealSPos = vSPos - vBPos;
 
 	//分離軸チェック
-	if (fabsf(vRealSPos.m_fX) - fSRadius > vBHalfSize.m_fX
-		|| fabsf(vRealSPos.m_fY) - fSRadius > vBHalfSize.m_fY
-		|| fabsf(vRealSPos.m_fZ) - fSRadius > vBHalfSize.m_fZ)
+	if (fabsf(vRealSPos.X) - fSRadius > vBHalfSize.X
+		|| fabsf(vRealSPos.Y) - fSRadius > vBHalfSize.Y
+		|| fabsf(vRealSPos.Z) - fSRadius > vBHalfSize.Z)
 	{
 		return;
 	}
 
-	CKFVec3 vClosestPos;
+	Vector3 vClosestPos;
 	float fDis;
 
 	//AABBとスフィアの最近点の算出
-	fDis = vRealSPos.m_fX;
-	if (fDis > vBHalfSize.m_fX) { fDis = vBHalfSize.m_fX; }
-	else if (fDis < -vBHalfSize.m_fX) { fDis = -vBHalfSize.m_fX; }
-	vClosestPos.m_fX = fDis;
+	fDis = vRealSPos.X;
+	if (fDis > vBHalfSize.X) { fDis = vBHalfSize.X; }
+	else if (fDis < -vBHalfSize.X) { fDis = -vBHalfSize.X; }
+	vClosestPos.X = fDis;
 
-	fDis = vRealSPos.m_fY;
-	if (fDis > vBHalfSize.m_fY) { fDis = vBHalfSize.m_fY; }
-	else if (fDis < -vBHalfSize.m_fY) { fDis = -vBHalfSize.m_fY; }
-	vClosestPos.m_fY = fDis;
+	fDis = vRealSPos.Y;
+	if (fDis > vBHalfSize.Y) { fDis = vBHalfSize.Y; }
+	else if (fDis < -vBHalfSize.Y) { fDis = -vBHalfSize.Y; }
+	vClosestPos.Y = fDis;
 
-	fDis = vRealSPos.m_fZ;
-	if (fDis > vBHalfSize.m_fZ) { fDis = vBHalfSize.m_fZ; }
-	else if (fDis < -vBHalfSize.m_fZ) { fDis = -vBHalfSize.m_fZ; }
-	vClosestPos.m_fZ = fDis;
+	fDis = vRealSPos.Z;
+	if (fDis > vBHalfSize.Z) { fDis = vBHalfSize.Z; }
+	else if (fDis < -vBHalfSize.Z) { fDis = -vBHalfSize.Z; }
+	vClosestPos.Z = fDis;
 
 	//衝突検知
 	float fDisSqr = CKFMath::VecMagnitudeSquare(vClosestPos - vRealSPos);
@@ -233,31 +233,31 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	auto& vRealSPos = CKFMath::TransformInverse(mtxBox, vSPos);
 
 	//分離軸チェック
-	if (fabsf(vRealSPos.m_fX) - fSRadius > vBHalfSize.m_fX
-		|| fabsf(vRealSPos.m_fY) - fSRadius > vBHalfSize.m_fY
-		|| fabsf(vRealSPos.m_fZ) - fSRadius > vBHalfSize.m_fZ)
+	if (fabsf(vRealSPos.X) - fSRadius > vBHalfSize.X
+		|| fabsf(vRealSPos.Y) - fSRadius > vBHalfSize.Y
+		|| fabsf(vRealSPos.Z) - fSRadius > vBHalfSize.Z)
 	{
 		return;
 	}
 
-	CKFVec3 vClosestPos;
+	Vector3 vClosestPos;
 	float fDis;
 
 	//OBBとスフィアの最近点の算出
-	fDis = vRealSPos.m_fX;
-	if (fDis > vBHalfSize.m_fX) { fDis = vBHalfSize.m_fX; }
-	else if (fDis < -vBHalfSize.m_fX) { fDis = -vBHalfSize.m_fX; }
-	vClosestPos.m_fX = fDis;
+	fDis = vRealSPos.X;
+	if (fDis > vBHalfSize.X) { fDis = vBHalfSize.X; }
+	else if (fDis < -vBHalfSize.X) { fDis = -vBHalfSize.X; }
+	vClosestPos.X = fDis;
 
-	fDis = vRealSPos.m_fY;
-	if (fDis > vBHalfSize.m_fY) { fDis = vBHalfSize.m_fY; }
-	else if (fDis < -vBHalfSize.m_fY) { fDis = -vBHalfSize.m_fY; }
-	vClosestPos.m_fY = fDis;
+	fDis = vRealSPos.Y;
+	if (fDis > vBHalfSize.Y) { fDis = vBHalfSize.Y; }
+	else if (fDis < -vBHalfSize.Y) { fDis = -vBHalfSize.Y; }
+	vClosestPos.Y = fDis;
 
-	fDis = vRealSPos.m_fZ;
-	if (fDis > vBHalfSize.m_fZ) { fDis = vBHalfSize.m_fZ; }
-	else if (fDis < -vBHalfSize.m_fZ) { fDis = -vBHalfSize.m_fZ; }
-	vClosestPos.m_fZ = fDis;
+	fDis = vRealSPos.Z;
+	if (fDis > vBHalfSize.Z) { fDis = vBHalfSize.Z; }
+	else if (fDis < -vBHalfSize.Z) { fDis = -vBHalfSize.Z; }
+	vClosestPos.Z = fDis;
 
 	//衝突検知
 	float fDisSqr = CKFMath::VecMagnitudeSquare(vClosestPos - vRealSPos);
@@ -354,13 +354,13 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	const auto& vHalfSizeR = aabbR.GetHalfSize();
 	auto vMidLine = vPosL - vPosR;
 	auto vDisNoCol = vHalfSizeL + vHalfSizeR;
-	auto fPenetrationX = vDisNoCol.m_fX - fabsf(vMidLine.m_fX);
-	auto fPenetrationY = vDisNoCol.m_fY - fabsf(vMidLine.m_fY);
-	auto fPenetrationZ = vDisNoCol.m_fZ - fabsf(vMidLine.m_fZ);
+	auto fPenetrationX = vDisNoCol.X - fabsf(vMidLine.X);
+	auto fPenetrationY = vDisNoCol.Y - fabsf(vMidLine.Y);
+	auto fPenetrationZ = vDisNoCol.Z - fabsf(vMidLine.Z);
 
-	fPenetrationX = fPenetrationX > 0.0f ? fPenetrationX : vDisNoCol.m_fX;
-	fPenetrationY = fPenetrationY > 0.0f ? fPenetrationY : vDisNoCol.m_fY;
-	fPenetrationZ = fPenetrationZ > 0.0f ? fPenetrationZ : vDisNoCol.m_fZ;
+	fPenetrationX = fPenetrationX > 0.0f ? fPenetrationX : vDisNoCol.X;
+	fPenetrationY = fPenetrationY > 0.0f ? fPenetrationY : vDisNoCol.Y;
+	fPenetrationZ = fPenetrationZ > 0.0f ? fPenetrationZ : vDisNoCol.Z;
 	auto fPenetrationMin = min(fPenetrationX, min(fPenetrationY, fPenetrationZ));
 	
 	auto pCollision = new CCollision;
@@ -368,15 +368,15 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	pCollision->m_vCollisionPos = vMidLine * 0.5f;
 	if (fPenetrationX == fPenetrationMin)
 	{
-		pCollision->m_vCollisionNormal = vMidLine.m_fX < 0.0f ? CKFVec3(-1.0f, 0.0f, 0.0f) : CKFVec3(1.0f, 0.0f, 0.0f);
+		pCollision->m_vCollisionNormal = vMidLine.X < 0.0f ? Vector3(-1.0f, 0.0f, 0.0f) : Vector3(1.0f, 0.0f, 0.0f);
 	}
 	else if (fPenetrationY == fPenetrationMin)
 	{
-		pCollision->m_vCollisionNormal = vMidLine.m_fY < 0.0f ? CKFVec3(0.0f, -1.0f, 0.0f) : CKFVec3(0.0f, 1.0f, 0.0f);
+		pCollision->m_vCollisionNormal = vMidLine.Y < 0.0f ? Vector3(0.0f, -1.0f, 0.0f) : Vector3(0.0f, 1.0f, 0.0f);
 	}
 	else
 	{
-		pCollision->m_vCollisionNormal = vMidLine.m_fZ < 0.0f ? CKFVec3(0.0f, 0.0f, -1.0f) : CKFVec3(0.0f, 0.0f, 1.0f);
+		pCollision->m_vCollisionNormal = vMidLine.Z < 0.0f ? Vector3(0.0f, 0.0f, -1.0f) : Vector3(0.0f, 0.0f, 1.0f);
 	}
 
 	//リジッドボディの取得
@@ -426,9 +426,9 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxColliderComponent& boxR)
 {
 	//ボックスがxyz軸上に重ねてるかどうかをチェックする
-	if (!checkOverlapOnAxis(boxL, boxR, CKFVec3(1.0f, 0.0f, 0.0f))
-		&& !checkOverlapOnAxis(boxL, boxR, CKFVec3(0.0f, 1.0f, 0.0f))
-		&& !checkOverlapOnAxis(boxL, boxR, CKFVec3(0.0f, 0.0f, 1.0f)))
+	if (!checkOverlapOnAxis(boxL, boxR, Vector3(1.0f, 0.0f, 0.0f))
+		&& !checkOverlapOnAxis(boxL, boxR, Vector3(0.0f, 1.0f, 0.0f))
+		&& !checkOverlapOnAxis(boxL, boxR, Vector3(0.0f, 0.0f, 1.0f)))
 	{
 		return;
 	}
@@ -724,19 +724,19 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 //			infoOut：レイの当たり判定情報(出力用)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut)
+bool CCollisionDetector::CheckRayWithBox(const Ray& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut)
 {
 	CCollision collision;
-	if (checkPointWithBox(collision, ray.m_vOrigin, box))
+	if (checkPointWithBox(collision, ray.Origin, box))
 	{
 		infoOut.m_vNormal = collision.m_vCollisionNormal;
-		infoOut.m_vPos = ray.m_vOrigin;
+		infoOut.m_vPos = ray.Origin;
 		infoOut.m_pCollider = &box;
 		infoOut.m_fDistance = collision.m_fPenetration;
 		return true;
 	}
 	
-	auto& vRayEnd = ray.m_vOrigin + ray.m_vDirection * fDistance;
+	auto& vRayEnd = ray.Origin + ray.Direction * fDistance;
 	if (checkPointWithBox(collision, vRayEnd, box))
 	{
 		infoOut.m_vNormal = collision.m_vCollisionNormal;
@@ -758,16 +758,16 @@ bool CCollisionDetector::CheckRayWithBox(const CKFRay& ray, const float& fDistan
 //			infoOut：レイの当たり判定情報(出力用)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
+bool CCollisionDetector::CheckRayWithSphere(const Ray& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut)
 {
-	CKFVec3 vOriginToSphere;
+	Vector3 vOriginToSphere;
 	const auto& vSpherePos = sphere.GetWorldPosNext();
 	const auto& fRadius = sphere.GetRadius();
 	float fWorkA, fWorkB, fTimeA, fTimeB;
 	float fDiscriminant;
 
-	vOriginToSphere = ray.m_vOrigin - vSpherePos;
-	fWorkA = 2.0f * CKFMath::Vec3Dot(ray.m_vDirection, vOriginToSphere);
+	vOriginToSphere = ray.Origin - vSpherePos;
+	fWorkA = 2.0f * CKFMath::Vec3Dot(ray.Direction, vOriginToSphere);
 	fWorkB = CKFMath::Vec3Dot(vOriginToSphere, vOriginToSphere) - fRadius * fRadius;
 
 	fDiscriminant = fWorkA * fWorkA - 4.0f * fWorkB;
@@ -793,7 +793,7 @@ bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDis
 
 	infoOut.m_fDistance = fTimingMin;
 	infoOut.m_pCollider = &sphere;
-	infoOut.m_vPos = ray.m_vOrigin + ray.m_vDirection * fTimingMin;
+	infoOut.m_vPos = ray.Origin + ray.Direction * fTimingMin;
 	infoOut.m_vNormal = infoOut.m_vPos - vSpherePos;
 	CKFMath::VecNormalize(infoOut.m_vNormal);
 	return true;
@@ -808,19 +808,19 @@ bool CCollisionDetector::CheckRayWithSphere(const CKFRay& ray, const float& fDis
 //			infoOut：レイの当たり判定情報(出力用)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut)
+bool CCollisionDetector::CheckRayWithField(const Ray& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut)
 {
-	//auto vRayMax = ray.m_vOrigin + ray.m_vDirection * fDistance;
+	//auto vRayMax = ray.Origin + ray.Direction * fDistance;
 	//int nNumVtxX = 0;
 	//int nNumVtxZ = 0;
-	//vector<CKFVec3> vecVtx;
-	//if (!field.GetVtxByRange(ray.m_vOrigin, vRayMax, nNumVtxX, nNumVtxZ, vecVtx))
+	//vector<Vector3> vecVtx;
+	//if (!field.GetVtxByRange(ray.Origin, vRayMax, nNumVtxX, nNumVtxZ, vecVtx))
 	//{
 	//	return false;
 	//}
 
 	//一時採用
-	auto info = field.GetProjectionInfo(ray.m_vOrigin + ray.m_vDirection * fDistance);
+	auto info = field.GetProjectionInfo(ray.Origin + ray.Direction * fDistance);
 	if (!info.bInFieldRange) { return false; }
 	if (info.fPenetration < 0.0f) { return false; }
 	infoOut.m_fDistance = info.fPenetration;
@@ -842,30 +842,30 @@ bool CCollisionDetector::CheckRayWithField(const CKFRay& ray, const float& fDist
 //			aabb：AABBコライダー
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb)
+bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const Vector3 vPoint, const CAABBColliderComponent& aabb)
 {
 	const auto& vBPos = aabb.GetWorldPosNext();
 	const auto& vBHalfSize = aabb.GetHalfSize();
 	auto& vRealPoint = vPoint - vBPos;
 
-	float fDepthMin = vBHalfSize.m_fX - fabsf(vRealPoint.m_fX);
+	float fDepthMin = vBHalfSize.X - fabsf(vRealPoint.X);
 	if (fDepthMin <= 0.0f) { return false; }
-	collisionOut.m_vCollisionNormal = vRealPoint.m_fX < 0.0f ? CKFMath::sc_vLeft : CKFMath::sc_vRight;
+	collisionOut.m_vCollisionNormal = vRealPoint.X < 0.0f ? CKFMath::sc_vLeft : CKFMath::sc_vRight;
 
-	float fDepth = vBHalfSize.m_fY - fabsf(vRealPoint.m_fY);
+	float fDepth = vBHalfSize.Y - fabsf(vRealPoint.Y);
 	if (fDepth <= 0.0f) { return false; }
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = vRealPoint.m_fY < 0.0f ? CKFMath::sc_vDown : CKFMath::sc_vUp;
+		collisionOut.m_vCollisionNormal = vRealPoint.Y < 0.0f ? CKFMath::sc_vDown : CKFMath::sc_vUp;
 	}
 
-	fDepth = vBHalfSize.m_fZ - fabsf(vRealPoint.m_fZ);
+	fDepth = vBHalfSize.Z - fabsf(vRealPoint.Z);
 	if (fDepth <= 0.0f) { return false; }
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = vRealPoint.m_fZ < 0.0f ? CKFMath::sc_vBack : CKFMath::sc_vForward;
+		collisionOut.m_vCollisionNormal = vRealPoint.Z < 0.0f ? CKFMath::sc_vBack : CKFMath::sc_vForward;
 	}
 
 	collisionOut.m_fPenetration = fDepthMin;
@@ -881,33 +881,33 @@ bool CCollisionDetector::checkPointWithAABB(CCollision& collisionOut, const CKFV
 //			box：boxコライダー
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box)
+bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const Vector3 vPoint, const CBoxColliderComponent& box)
 {
 	const auto& mtxBox = box.GetMatrixWorldNext();
 	const auto& vBHalfSize = box.GetHalfSize();
 	auto& vRealPoint = CKFMath::TransformInverse(mtxBox, vPoint);
 
-	float fDepthMin = vBHalfSize.m_fX - fabsf(vRealPoint.m_fX);
+	float fDepthMin = vBHalfSize.X - fabsf(vRealPoint.X);
 	if (fDepthMin <= 0.0f) { return false; }
-	collisionOut.m_vCollisionNormal = CKFVec3(mtxBox.m_af[0][0], mtxBox.m_af[0][1], mtxBox.m_af[0][2])
-		* (vRealPoint.m_fX < 0.0f ? -1.0f : 1.0f);
+	collisionOut.m_vCollisionNormal = Vector3(mtxBox.Elements[0][0], mtxBox.Elements[0][1], mtxBox.Elements[0][2])
+		* (vRealPoint.X < 0.0f ? -1.0f : 1.0f);
 
-	float fDepth = vBHalfSize.m_fY - fabsf(vRealPoint.m_fY);
+	float fDepth = vBHalfSize.Y - fabsf(vRealPoint.Y);
 	if (fDepth <= 0.0f) { return false; }
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = CKFVec3(mtxBox.m_af[1][0], mtxBox.m_af[1][1], mtxBox.m_af[1][2])
-			* (vRealPoint.m_fY < 0.0f ? -1.0f : 1.0f);
+		collisionOut.m_vCollisionNormal = Vector3(mtxBox.Elements[1][0], mtxBox.Elements[1][1], mtxBox.Elements[1][2])
+			* (vRealPoint.Y < 0.0f ? -1.0f : 1.0f);
 	}
 
-	fDepth = vBHalfSize.m_fZ - fabsf(vRealPoint.m_fZ);
+	fDepth = vBHalfSize.Z - fabsf(vRealPoint.Z);
 	if (fDepth <= 0.0f) { return false; }
 	else if (fDepth < fDepthMin)
 	{
 		fDepthMin = fDepth;
-		collisionOut.m_vCollisionNormal = CKFVec3(mtxBox.m_af[2][0], mtxBox.m_af[2][1], mtxBox.m_af[2][2])
-			* (vRealPoint.m_fZ < 0.0f ? -1.0f : 1.0f);
+		collisionOut.m_vCollisionNormal = Vector3(mtxBox.Elements[2][0], mtxBox.Elements[2][1], mtxBox.Elements[2][2])
+			* (vRealPoint.Z < 0.0f ? -1.0f : 1.0f);
 	}
 
 	collisionOut.m_fPenetration = fDepthMin;
@@ -925,24 +925,24 @@ bool CCollisionDetector::checkPointWithBox(CCollision& collisionOut, const CKFVe
 //			vOut：交差点(出力用)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vLB, const CKFVec2& vRA, const CKFVec2& vRB, CKFVec2& vOut)
+bool CCollisionDetector::checkLineWithLine(const Vector2& vLA, const Vector2& vLB, const Vector2& vRA, const Vector2& vRB, Vector2& vOut)
 {
 	auto& vLineL = vLB - vLA;
 	auto& vLineR = vRB - vRA;
 
-	auto fSlopeL = (vLA.m_fX - vLB.m_fX) == 0.0f ? 0.0f
-		: (vLA.m_fY - vLB.m_fY) / (vLA.m_fX - vLB.m_fX);
-	auto fAddL = vLA.m_fY - fSlopeL * vLA.m_fX;
-	auto fSlopeR = (vRA.m_fX - vRB.m_fX) == 0.0f ? 0.0f
-		: (vRA.m_fY - vRB.m_fY) / (vRA.m_fX - vRB.m_fX);
-	auto fAddR = vRA.m_fY - fSlopeL * vRA.m_fX;
+	auto fSlopeL = (vLA.X - vLB.X) == 0.0f ? 0.0f
+		: (vLA.Y - vLB.Y) / (vLA.X - vLB.X);
+	auto fAddL = vLA.Y - fSlopeL * vLA.X;
+	auto fSlopeR = (vRA.X - vRB.X) == 0.0f ? 0.0f
+		: (vRA.Y - vRB.Y) / (vRA.X - vRB.X);
+	auto fAddR = vRA.Y - fSlopeL * vRA.X;
 	
 	//平行
 	if (fSlopeL == fSlopeR) { return false; }
 	
 	//交点の算出
-	vOut.m_fX = (fAddR - fAddL) / (fSlopeL - fSlopeR);
-	vOut.m_fY = fSlopeL * vOut.m_fX + fAddL;
+	vOut.X = (fAddR - fAddL) / (fSlopeL - fSlopeR);
+	vOut.Y = fSlopeL * vOut.X + fAddL;
 
 	//交点がラインの範囲内にあるかをチェック
 	//LineL
@@ -974,19 +974,19 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vL
 //			vOut：交差点(出力用)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vLB, const CKFVec3& vRA, const CKFVec3& vRB, CKFVec3& vOut)
+bool CCollisionDetector::checkLineWithLine(const Vector3& vLA, const Vector3& vLB, const Vector3& vRA, const Vector3& vRB, Vector3& vOut)
 {
 	auto vLineL = vLA - vLB;
 	auto vLineR = vRA - vRB;
 
-	if ((vLineL * vLineR) == CKFVec3(0.0f))
+	if ((vLineL * vLineR) == Vector3(0.0f))
 	{//平行
 		return false;
 	}
 
 	//XY平面の交点の算出
-	CKFVec2 vOutXY;
-	if (!checkLineWithLine(CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), CKFVec2(vLA.m_fX, vLA.m_fY), vOutXY))
+	Vector2 vOutXY;
+	if (!checkLineWithLine(Vector2(vLA.X, vLA.Y), Vector2(vLA.X, vLA.Y), Vector2(vLA.X, vLA.Y), Vector2(vLA.X, vLA.Y), vOutXY))
 	{
 		return false;
 	}
@@ -995,17 +995,17 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vL
 	CKFMath::VecNormalize(vLineR);
 
 	//相応のZ値を算出する
-	auto fRateL = vLineL.m_fX != 0.0f ? (vOutXY.m_fX - vLA.m_fX) / vLineL.m_fX
-		: vLineL.m_fY != 0.0f ? (vOutXY.m_fY - vLA.m_fY) / vLineL.m_fY
+	auto fRateL = vLineL.X != 0.0f ? (vOutXY.X - vLA.X) / vLineL.X
+		: vLineL.Y != 0.0f ? (vOutXY.Y - vLA.Y) / vLineL.Y
 		: 0.0f;
-	auto fRateR = vLineR.m_fX != 0.0f ? (vOutXY.m_fX - vRA.m_fX) / vLineR.m_fX
-		: vLineR.m_fY != 0.0f ? (vOutXY.m_fY - vRA.m_fY) / vLineR.m_fY
+	auto fRateR = vLineR.X != 0.0f ? (vOutXY.X - vRA.X) / vLineR.X
+		: vLineR.Y != 0.0f ? (vOutXY.Y - vRA.Y) / vLineR.Y
 		: 0.0f;
-	auto fZL = vLA.m_fZ + fRateL * vLineL.m_fZ;
-	auto fZR = vRA.m_fZ + fRateR * vLineR.m_fZ;
+	auto fZL = vLA.Z + fRateL * vLineL.Z;
+	auto fZR = vRA.Z + fRateR * vLineR.Z;
 	if (fZL != fZR) { return false; }
 
-	vOut = CKFVec3(vOutXY.m_fX, vOutXY.m_fY, fZL);
+	vOut = Vector3(vOutXY.X, vOutXY.Y, fZL);
 	return true;
 }
 
@@ -1016,13 +1016,13 @@ bool CCollisionDetector::checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vL
 //			vAxis：軸情報
 //	戻り値：float
 //--------------------------------------------------------------------------------
-float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis)
+float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, const Vector3& vAxis)
 {
-	const CKFVec3& vHalfSize = box.GetHalfSize();
-	const CKFMtx44& mtxBox = box.GetMatrixWorldNext();
-	float fAnswer = vHalfSize.m_fX * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[0][0], mtxBox.m_af[0][1], mtxBox.m_af[0][2])))
-		+ vHalfSize.m_fY * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[1][0], mtxBox.m_af[1][1], mtxBox.m_af[1][2])))
-		+ vHalfSize.m_fZ * fabsf(CKFMath::Vec3Dot(vAxis, CKFVec3(mtxBox.m_af[2][0], mtxBox.m_af[2][1], mtxBox.m_af[2][2])));
+	const Vector3& vHalfSize = box.GetHalfSize();
+	const Matrix44& mtxBox = box.GetMatrixWorldNext();
+	float fAnswer = vHalfSize.X * fabsf(CKFMath::Vec3Dot(vAxis, Vector3(mtxBox.Elements[0][0], mtxBox.Elements[0][1], mtxBox.Elements[0][2])))
+		+ vHalfSize.Y * fabsf(CKFMath::Vec3Dot(vAxis, Vector3(mtxBox.Elements[1][0], mtxBox.Elements[1][1], mtxBox.Elements[1][2])))
+		+ vHalfSize.Z * fabsf(CKFMath::Vec3Dot(vAxis, Vector3(mtxBox.Elements[2][0], mtxBox.Elements[2][1], mtxBox.Elements[2][2])));
 	return fAnswer;
 }
 
@@ -1034,14 +1034,14 @@ float CCollisionDetector::transformBoxToAxis(const CBoxColliderComponent& box, c
 //			vAxis：軸情報
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis)
+bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const Vector3& vAxis)
 {
 	//軸上の長さを算出する
 	float fHalfDisL = transformBoxToAxis(boxL, vAxis);
 	float fHalfDisR = transformBoxToAxis(boxR, vAxis);
 
 	//軸上の中心間の距離を算出する
-	CKFVec3 vLtoR = boxL.GetWorldPosNext() - boxR.GetWorldPosNext();
+	Vector3 vLtoR = boxL.GetWorldPosNext() - boxR.GetWorldPosNext();
 	float fDis = fabsf(CKFMath::Vec3Dot(vLtoR, vAxis));
 
 	//重ねてるかどうかをチェックする
@@ -1058,10 +1058,10 @@ bool CCollisionDetector::checkOverlapOnAxis(const CBoxColliderComponent& boxL, c
 //			vMaxR：AABB一番右下の点情報
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CCollisionDetector::checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2& vMaxL, const CKFVec2& vMinR, const CKFVec2& vMaxR)
+bool CCollisionDetector::checkOverlapOnAxis(const Vector2& vMinL, const Vector2& vMaxL, const Vector2& vMinR, const Vector2& vMaxR)
 {
-	bool bAnswer = vMinL.m_fX < vMaxR.m_fX && vMinR.m_fX < vMaxL.m_fX
-		&& vMinL.m_fY < vMaxR.m_fY && vMinR.m_fY < vMaxL.m_fY;
+	bool bAnswer = vMinL.X < vMaxR.X && vMinR.X < vMaxL.X
+		&& vMinL.Y < vMaxR.Y && vMinR.Y < vMaxL.Y;
 	return bAnswer;
 }
 
@@ -1084,9 +1084,9 @@ bool CCollisionDetector::checkOverlapAABB(const CAABBColliderComponent& aabbL, c
 	auto& vMaxR = vPosR + vHalfSizeR;
 
 	//AABB同士がxyz軸上に重ねてるかどうかをチェックする
-	bool bAnswer = checkOverlapOnAxis(CKFVec2(vMinL.m_fY, vMinL.m_fZ), CKFVec2(vMaxL.m_fY, vMaxL.m_fZ), CKFVec2(vMinR.m_fY, vMinR.m_fZ), CKFVec2(vMaxR.m_fY, vMaxR.m_fZ))	//X軸
-		&& checkOverlapOnAxis(CKFVec2(vMinL.m_fZ, vMinL.m_fX), CKFVec2(vMaxL.m_fZ, vMaxL.m_fX), CKFVec2(vMinR.m_fZ, vMinR.m_fX), CKFVec2(vMaxR.m_fZ, vMaxR.m_fX))			//Y軸
-		&& checkOverlapOnAxis(CKFVec2(vMinL.m_fX, vMinL.m_fY), CKFVec2(vMaxL.m_fX, vMaxL.m_fY), CKFVec2(vMinR.m_fX, vMinR.m_fY), CKFVec2(vMaxR.m_fX, vMaxR.m_fY));			//Z軸
+	bool bAnswer = checkOverlapOnAxis(Vector2(vMinL.Y, vMinL.Z), Vector2(vMaxL.Y, vMaxL.Z), Vector2(vMinR.Y, vMinR.Z), Vector2(vMaxR.Y, vMaxR.Z))	//X軸
+		&& checkOverlapOnAxis(Vector2(vMinL.Z, vMinL.X), Vector2(vMaxL.Z, vMaxL.X), Vector2(vMinR.Z, vMinR.X), Vector2(vMaxR.Z, vMaxR.X))			//Y軸
+		&& checkOverlapOnAxis(Vector2(vMinL.X, vMinL.Y), Vector2(vMaxL.X, vMaxL.Y), Vector2(vMinR.X, vMinR.Y), Vector2(vMaxR.X, vMaxR.Y));			//Z軸
 
 	return bAnswer;
 }

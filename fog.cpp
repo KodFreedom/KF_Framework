@@ -99,7 +99,7 @@ void CFog::SetDensity(const float& fDensity)
 //--------------------------------------------------------------------------------
 //  フォグ色設定
 //--------------------------------------------------------------------------------
-void CFog::SetColor(const CKFColor& cColor)
+void CFog::SetColor(const Color& cColor)
 {
 	m_cColor = cColor;
 #ifdef USING_DIRECTX
@@ -130,7 +130,8 @@ void CFog::init(void)
 
 	// フォグ範囲設定
 	pDevice->SetRenderState(D3DRS_FOGSTART, *((LPDWORD)(&m_fStart)));
-	pDevice->SetRenderState(D3DRS_FOGEND, *((LPDWORD)(&m_fEnd)));
+	pDevice->SetRenderState(D3DRS_FOGEND, *((LPDWORD)(&m_fEnd)));
+
 	// ピクセルフォグ(指数の２ )を使用
 	pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP2);
 

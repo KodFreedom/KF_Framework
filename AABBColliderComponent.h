@@ -23,7 +23,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CAABBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
+	CAABBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const Vector3& vHalfSize)
 		: CBoxColliderComponent(pGameObj, CS::COL_AABB, mode, vHalfSize) {}
 	~CAABBColliderComponent() {}
 
@@ -32,15 +32,15 @@ public:
 		CBoxColliderComponent::Update();
 
 		//âÒì]Çèâä˙âªÇ∑ÇÈ
-		m_mtxWorldNext.m_af[0][0] = 1.0f;
-		m_mtxWorldNext.m_af[0][1] = 0.0f;
-		m_mtxWorldNext.m_af[0][2] = 0.0f;
-		m_mtxWorldNext.m_af[1][0] = 0.0f;
-		m_mtxWorldNext.m_af[1][1] = 1.0f;
-		m_mtxWorldNext.m_af[1][2] = 0.0f;
-		m_mtxWorldNext.m_af[2][0] = 0.0f;
-		m_mtxWorldNext.m_af[2][1] = 0.0f;
-		m_mtxWorldNext.m_af[2][2] = 1.0f;
+		m_mtxWorldNext.Elements[0][0] = 1.0f;
+		m_mtxWorldNext.Elements[0][1] = 0.0f;
+		m_mtxWorldNext.Elements[0][2] = 0.0f;
+		m_mtxWorldNext.Elements[1][0] = 0.0f;
+		m_mtxWorldNext.Elements[1][1] = 1.0f;
+		m_mtxWorldNext.Elements[1][2] = 0.0f;
+		m_mtxWorldNext.Elements[2][0] = 0.0f;
+		m_mtxWorldNext.Elements[2][1] = 0.0f;
+		m_mtxWorldNext.Elements[2][2] = 1.0f;
 	}
 
 private:

@@ -37,14 +37,14 @@ public:
 	void	LateUpdate(void) override;
 
 	//GetŠÖ”
-	CKFVec3	GetVelocity(void) const { return m_vVelocity; }
+	Vector3	GetVelocity(void) const { return m_vVelocity; }
 
 	//SetŠÖ”
 	void	SetDrag(const float& fDrag) { m_fDrag = fDrag; }
-	void	MovePos(const CKFVec3& vMovement) { m_vMovement += vMovement; }
+	void	MovePos(const Vector3& vMovement) { m_vMovement += vMovement; }
 	void	SetMass(const float& fMass);
-	void	SetVelocity(const CKFVec3& vVelocity) { m_vVelocity = vVelocity; }
-	void	AddForce(const CKFVec3& vForce) { m_vForceAccum += vForce; }
+	void	SetVelocity(const Vector3& vVelocity) { m_vVelocity = vVelocity; }
+	void	AddForce(const Vector3& vForce) { m_vForceAccum += vForce; }
 	//void	SetInertiaTensor(CColliderComponent* pCollider);
 
 private:
@@ -62,7 +62,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
-	//void		calculateInertiaTensorWorld(CKFMtx44& mtxIitWorld);
+	//void		calculateInertiaTensorWorld(Matrix44& mtxIitWorld);
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`
@@ -70,16 +70,16 @@ private:
 	float		m_fMass;					//¿—Ê
 	float		m_fInverseMass;				//¿—Ê‚Ì‹t”
 	float		m_fDrag;					//’ïRŒW”(‹ó‹C’ïR)
-	//float		m_fAngularDrag;				//‰ñ“]’ïRŒW”
+	//float		AngularDrag;				//‰ñ“]’ïRŒW”
 	float		m_fFriction;				//–€CŒW”
-	float		m_fBounciness;				//’µ‚Ë•Ô‚èŒW”
-	float		m_fGravityCoefficient;		//d—ÍŒW”
-	CKFVec3		m_vMovement;				//ˆÚ“®—Ê
-	CKFVec3		m_vVelocity;				//‘¬“x
-	CKFVec3		m_vAcceleration;			//‰Á‘¬“x
-	//CKFVec3		m_vAngularVelocity;			//‰ñ“]‘¬“x
-	CKFVec3		m_vForceAccum;				//‡‚í‚¹‚½ì—p—Í
-	//CKFVec3		m_vTorqueAccum;				//‰ñ“]—Í
-	//CKFMtx44	m_mtxInertisTensor;			//Šµ«ƒeƒ“ƒ\ƒ‹‚Ìs—ñ
+	float		Bounciness;				//’µ‚Ë•Ô‚èŒW”
+	float		GravityCoefficient;		//d—ÍŒW”
+	Vector3		m_vMovement;				//ˆÚ“®—Ê
+	Vector3		m_vVelocity;				//‘¬“x
+	Vector3		m_vAcceleration;			//‰Á‘¬“x
+	//Vector3		m_vAngularVelocity;			//‰ñ“]‘¬“x
+	Vector3		m_vForceAccum;				//‡‚í‚¹‚½ì—p—Í
+	//Vector3		m_vTorqueAccum;				//‰ñ“]—Í
+	//Matrix44	m_mtxInertisTensor;			//Šµ«ƒeƒ“ƒ\ƒ‹‚Ìs—ñ
 	//BYTE		m_bRotLock;					//‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO
 };

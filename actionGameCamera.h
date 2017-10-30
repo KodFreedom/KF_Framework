@@ -69,15 +69,15 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CKFVec3			m_vPosAtNext;		//注視点の位置
-	CKFVec3			m_vPosEyeNext;		//カメラの位置
-	CKFVec3			m_vVecLookNext;		//カメラの前方向情報
-	CKFVec3			m_vVecUpNext;		//カメラの上方向情報
-	CKFVec3			m_vVecRightNext;	//カメラの右方向情報
+	Vector3			m_vPosAtNext;		//注視点の位置
+	Vector3			m_vPosEyeNext;		//カメラの位置
+	Vector3			m_vVecLookNext;		//カメラの前方向情報
+	Vector3			m_vVecUpNext;		//カメラの上方向情報
+	Vector3			m_vVecRightNext;	//カメラの右方向情報
 	float			m_fDistanceNext;	//AtとEyeの距離
 
 	CGameObject*	m_pTarget;			//カメラが見てるターゲット
-	CKFVec3			m_vDefaultLook;		//デフォルト前方向
-	CKFVec3			m_vRotSpeed;		//X軸回転速度
-	float			m_fZoomSpeed;		//ズーム速度	
+	Vector3			m_vDefaultLook;		//デフォルト前方向
+	Vector3			m_vRotSpeed;		//X軸回転速度
+	float			ZoomSpeed;		//ズーム速度	
 };

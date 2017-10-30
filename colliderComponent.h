@@ -42,13 +42,13 @@ public:
 	//Set関数
 	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
 	void				SetTag(const string& strTag) { m_strTag = strTag; }
-	void				SetOffset(const CKFVec3& vPos, const CKFVec3& vRot = CKFVec3(0.0f));
+	void				SetOffset(const Vector3& vPos, const Vector3& vRot = Vector3(0.0f));
 
 	//Get関数
-	CKFVec3				GetLocalPos(void) const { return CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]); }
-	CKFVec3				GetWorldPosNext(void) const { return CKFVec3(m_mtxWorldNext.m_af[3][0], m_mtxWorldNext.m_af[3][1], m_mtxWorldNext.m_af[3][2]); }
-	CKFMtx44			GetMatrixWorldNext(void) const { return m_mtxWorldNext; }
-	CKFMtx44			GetMatrixOffset(void) const { return m_mtxOffset; }
+	Vector3				GetLocalPos(void) const { return Vector3(m_mtxOffset.Elements[3][0], m_mtxOffset.Elements[3][1], m_mtxOffset.Elements[3][2]); }
+	Vector3				GetWorldPosNext(void) const { return Vector3(m_mtxWorldNext.Elements[3][0], m_mtxWorldNext.Elements[3][1], m_mtxWorldNext.Elements[3][2]); }
+	Matrix44			GetMatrixWorldNext(void) const { return m_mtxWorldNext; }
+	Matrix44			GetMatrixOffset(void) const { return m_mtxOffset; }
 	const CS::COL_TYPE	GetType(void) const { return m_type; }
 	const bool			IsTrigger(void) const { return m_bTrigger; }
 	const string&		GetTag(void) const { return m_strTag; }
@@ -73,7 +73,7 @@ protected:
 	CS::COL_TYPE	m_type;			//colliderのタイプ
 	CS::COL_MODE	m_mode;			//Static/Dynamic mode
 	bool			m_bTrigger;		//Trigger Flag
-	CKFMtx44		m_mtxOffset;	//相対行列
-	CKFMtx44		m_mtxWorldNext;	//ワールド行列(処理速度向上のため)
+	Matrix44		m_mtxOffset;	//相対行列
+	Matrix44		m_mtxWorldNext;	//ワールド行列(処理速度向上のため)
 	string			m_strTag;		//識別用タグ
 };

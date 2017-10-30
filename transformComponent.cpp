@@ -64,7 +64,7 @@ void  CTransformComponent::UpdateMatrix(void)
 //	引数：	mtxParent
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void  CTransformComponent::UpdateMatrix(const CKFMtx44& mtxParent)
+void  CTransformComponent::UpdateMatrix(const Matrix44& mtxParent)
 {
 	calculateMtxThis(mtxParent);
 
@@ -120,7 +120,7 @@ void CTransformComponent::DeregisterChild(CTransformComponent* pChild)
 //			vOffsetRot
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::RegisterParent(CTransformComponent* pParent, const CKFVec3& vOffsetPos, const CKFVec3& vOffsetRot)
+void CTransformComponent::RegisterParent(CTransformComponent* pParent, const Vector3& vOffsetPos, const Vector3& vOffsetRot)
 {
 	if (m_pParent)
 	{//親があるの場合前の親から削除
@@ -136,9 +136,9 @@ void CTransformComponent::RegisterParent(CTransformComponent* pParent, const CKF
 //	関数名：GetRot
 //  関数説明：今のフレームの回転の取得
 //	引数：	なし
-//	戻り値：CKFQuaternion
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-const CKFQuaternion CTransformComponent::GetRot(void) const
+const Quaternion CTransformComponent::GetRot(void) const
 {
 	return CKFMath::MtxToQuaternion(GetMatrixRot());
 }
@@ -147,9 +147,9 @@ const CKFQuaternion CTransformComponent::GetRot(void) const
 //	関数名：GetRotNext
 //  関数説明：次のフレームの回転の取得
 //	引数：	なし
-//	戻り値：CKFQuaternion
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-const CKFQuaternion CTransformComponent::GetRotNext(void) const
+const Quaternion CTransformComponent::GetRotNext(void) const
 {
 	return CKFMath::MtxToQuaternion(GetMatrixRotNext());
 }
@@ -158,9 +158,9 @@ const CKFQuaternion CTransformComponent::GetRotNext(void) const
 //	関数名：GetEulerRot
 //  関数説明：今のフレームの回転の取得
 //	引数：	なし
-//	戻り値：CKFVec3
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-const CKFVec3 CTransformComponent::GetEulerRot(void) const
+const Vector3 CTransformComponent::GetEulerRot(void) const
 {
 	return CKFMath::MtxToEular(GetMatrixRot());
 }
@@ -169,20 +169,20 @@ const CKFVec3 CTransformComponent::GetEulerRot(void) const
 //	関数名：GetMatrixRot
 //  関数説明：今のフレームの回転行列の取得
 //	引数：	なし
-//	戻り値：CKFMtx44
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-const CKFMtx44 CTransformComponent::GetMatrixRot(void) const
+const Matrix44 CTransformComponent::GetMatrixRot(void) const
 {
-	CKFMtx44 mtxRot;
-	mtxRot.m_af[0][0] = m_vRight.m_fX;
-	mtxRot.m_af[0][1] = m_vRight.m_fY;
-	mtxRot.m_af[0][2] = m_vRight.m_fZ;
-	mtxRot.m_af[1][0] = m_vUp.m_fX;
-	mtxRot.m_af[1][1] = m_vUp.m_fY;
-	mtxRot.m_af[1][2] = m_vUp.m_fZ;
-	mtxRot.m_af[2][0] = m_vForward.m_fX;
-	mtxRot.m_af[2][1] = m_vForward.m_fY;
-	mtxRot.m_af[2][2] = m_vForward.m_fZ;
+	Matrix44 mtxRot;
+	mtxRot.Elements[0][0] = m_vRight.X;
+	mtxRot.Elements[0][1] = m_vRight.Y;
+	mtxRot.Elements[0][2] = m_vRight.Z;
+	mtxRot.Elements[1][0] = m_vUp.X;
+	mtxRot.Elements[1][1] = m_vUp.Y;
+	mtxRot.Elements[1][2] = m_vUp.Z;
+	mtxRot.Elements[2][0] = m_vForward.X;
+	mtxRot.Elements[2][1] = m_vForward.Y;
+	mtxRot.Elements[2][2] = m_vForward.Z;
 	return mtxRot;
 }
 
@@ -190,20 +190,20 @@ const CKFMtx44 CTransformComponent::GetMatrixRot(void) const
 //	関数名：GetMatrixRotNext
 //  関数説明：次のフレームの回転行列の取得
 //	引数：	なし
-//	戻り値：CKFMtx44
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-const CKFMtx44 CTransformComponent::GetMatrixRotNext(void) const
+const Matrix44 CTransformComponent::GetMatrixRotNext(void) const
 {
-	CKFMtx44 mtxRot;
-	mtxRot.m_af[0][0] = m_vRightNext.m_fX;
-	mtxRot.m_af[0][1] = m_vRightNext.m_fY;
-	mtxRot.m_af[0][2] = m_vRightNext.m_fZ;
-	mtxRot.m_af[1][0] = m_vUpNext.m_fX;
-	mtxRot.m_af[1][1] = m_vUpNext.m_fY;
-	mtxRot.m_af[1][2] = m_vUpNext.m_fZ;
-	mtxRot.m_af[2][0] = m_vForwardNext.m_fX;
-	mtxRot.m_af[2][1] = m_vForwardNext.m_fY;
-	mtxRot.m_af[2][2] = m_vForwardNext.m_fZ;
+	Matrix44 mtxRot;
+	mtxRot.Elements[0][0] = m_vRightNext.X;
+	mtxRot.Elements[0][1] = m_vRightNext.Y;
+	mtxRot.Elements[0][2] = m_vRightNext.Z;
+	mtxRot.Elements[1][0] = m_vUpNext.X;
+	mtxRot.Elements[1][1] = m_vUpNext.Y;
+	mtxRot.Elements[1][2] = m_vUpNext.Z;
+	mtxRot.Elements[2][0] = m_vForwardNext.X;
+	mtxRot.Elements[2][1] = m_vForwardNext.Y;
+	mtxRot.Elements[2][2] = m_vForwardNext.Z;
 	return mtxRot;
 }
 
@@ -211,29 +211,29 @@ const CKFMtx44 CTransformComponent::GetMatrixRotNext(void) const
 //	関数名：GetMatrixWorldNext
 //  関数説明：次のフレームの世界行列の取得
 //	引数：	なし
-//	戻り値：CKFMtx44
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-const CKFMtx44 CTransformComponent::GetMatrixWorldNext(void) const
+const Matrix44 CTransformComponent::GetMatrixWorldNext(void) const
 {
 	//回転
 	auto mtxWorld = GetMatrixRotNext();
 
 	//平行移動
-	mtxWorld.m_af[3][0] = m_vPosNext.m_fX;
-	mtxWorld.m_af[3][1] = m_vPosNext.m_fY;
-	mtxWorld.m_af[3][2] = m_vPosNext.m_fZ;
+	mtxWorld.Elements[3][0] = m_vPosNext.X;
+	mtxWorld.Elements[3][1] = m_vPosNext.Y;
+	mtxWorld.Elements[3][2] = m_vPosNext.Z;
 
 	//親のマトリクス取得
 	if (m_pParent)
 	{
 		//親に対する相対位置行列
 		//回転
-		CKFMtx44 mtxRot;
+		Matrix44 mtxRot;
 		CKFMath::MtxRotationYawPitchRoll(mtxRot, m_vOffsetRot);
 		mtxWorld *= mtxRot;
 
 		//平行移動
-		CKFMtx44 mtxPos;
+		Matrix44 mtxPos;
 		CKFMath::MtxTranslation(mtxPos, m_vOffsetPos);
 		mtxWorld *= mtxPos;
 
@@ -249,18 +249,18 @@ const CKFMtx44 CTransformComponent::GetMatrixWorldNext(void) const
 //	引数：	qRot：回転情報
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::SetRot(const CKFQuaternion& qRot)
+void CTransformComponent::SetRot(const Quaternion& qRot)
 {
 	auto mtxRot = CKFMath::QuaternionToMtx(qRot);
-	m_vRight.m_fX = mtxRot.m_af[0][0];
-	m_vRight.m_fY = mtxRot.m_af[0][1];
-	m_vRight.m_fZ = mtxRot.m_af[0][2];
-	m_vUp.m_fX = mtxRot.m_af[1][0];
-	m_vUp.m_fY = mtxRot.m_af[1][1];
-	m_vUp.m_fZ = mtxRot.m_af[1][2];
-	m_vForward.m_fX = mtxRot.m_af[2][0];
-	m_vForward.m_fY = mtxRot.m_af[2][1];
-	m_vForward.m_fZ = mtxRot.m_af[2][2];
+	m_vRight.X = mtxRot.Elements[0][0];
+	m_vRight.Y = mtxRot.Elements[0][1];
+	m_vRight.Z = mtxRot.Elements[0][2];
+	m_vUp.X = mtxRot.Elements[1][0];
+	m_vUp.Y = mtxRot.Elements[1][1];
+	m_vUp.Z = mtxRot.Elements[1][2];
+	m_vForward.X = mtxRot.Elements[2][0];
+	m_vForward.Y = mtxRot.Elements[2][1];
+	m_vForward.Z = mtxRot.Elements[2][2];
 }
 
 //--------------------------------------------------------------------------------
@@ -269,18 +269,18 @@ void CTransformComponent::SetRot(const CKFQuaternion& qRot)
 //	引数：	qRotNext：回転情報
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
+void CTransformComponent::SetRotNext(const Quaternion& qRotNext)
 {
 	auto mtxRot = CKFMath::QuaternionToMtx(qRotNext);
-	m_vRightNext.m_fX = mtxRot.m_af[0][0];
-	m_vRightNext.m_fY = mtxRot.m_af[0][1];
-	m_vRightNext.m_fZ = mtxRot.m_af[0][2];
-	m_vUpNext.m_fX = mtxRot.m_af[1][0];
-	m_vUpNext.m_fY = mtxRot.m_af[1][1];
-	m_vUpNext.m_fZ = mtxRot.m_af[1][2];
-	m_vForwardNext.m_fX = mtxRot.m_af[2][0];
-	m_vForwardNext.m_fY = mtxRot.m_af[2][1];
-	m_vForwardNext.m_fZ = mtxRot.m_af[2][2];
+	m_vRightNext.X = mtxRot.Elements[0][0];
+	m_vRightNext.Y = mtxRot.Elements[0][1];
+	m_vRightNext.Z = mtxRot.Elements[0][2];
+	m_vUpNext.X = mtxRot.Elements[1][0];
+	m_vUpNext.Y = mtxRot.Elements[1][1];
+	m_vUpNext.Z = mtxRot.Elements[1][2];
+	m_vForwardNext.X = mtxRot.Elements[2][0];
+	m_vForwardNext.Y = mtxRot.Elements[2][1];
+	m_vForwardNext.Z = mtxRot.Elements[2][2];
 }
 
 //--------------------------------------------------------------------------------
@@ -289,7 +289,7 @@ void CTransformComponent::SetRotNext(const CKFQuaternion& qRotNext)
 //	引数：	vRot：回転情報
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::SetRotNext(const CKFVec3& vRot)
+void CTransformComponent::SetRotNext(const Vector3& vRot)
 {
 	auto qRot = CKFMath::EulerToQuaternion(vRot);
 	SetRotNext(qRot);
@@ -301,7 +301,7 @@ void CTransformComponent::SetRotNext(const CKFVec3& vRot)
 //	引数：	vUp：上方向
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::RotByUp(const CKFVec3& vUp)
+void CTransformComponent::RotByUp(const Vector3& vUp)
 {
 	m_vUpNext = vUp;
 	m_vRightNext = m_vUpNext * m_vForwardNext;
@@ -317,7 +317,7 @@ void CTransformComponent::RotByUp(const CKFVec3& vUp)
 //	引数：	vForward：前方向
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::RotByForward(const CKFVec3& vForward)
+void CTransformComponent::RotByForward(const Vector3& vForward)
 {
 	m_vForwardNext = vForward;
 	m_vUpNext = m_vForwardNext * m_vRightNext;
@@ -333,7 +333,7 @@ void CTransformComponent::RotByForward(const CKFVec3& vForward)
 //	引数：	vRight：右方向
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::RotByRight(const CKFVec3& vRight)
+void CTransformComponent::RotByRight(const Vector3& vRight)
 {
 	m_vRightNext = vRight;
 	m_vForwardNext = m_vRightNext * m_vUpNext;
@@ -349,9 +349,9 @@ void CTransformComponent::RotByRight(const CKFVec3& vRight)
 //	引数：	vRot：オーラー角
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CTransformComponent::RotByEuler(const CKFVec3& vRot)
+void CTransformComponent::RotByEuler(const Vector3& vRot)
 {
-	CKFMtx44 mtxRot;
+	Matrix44 mtxRot;
 	CKFMath::MtxRotationYawPitchRoll(mtxRot, vRot);
 	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxRot);
 	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxRot);
@@ -366,7 +366,7 @@ void CTransformComponent::RotByEuler(const CKFVec3& vRot)
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByPitch(const float& fRadian)
 {
-	CKFMtx44 mtxPitch;
+	Matrix44 mtxPitch;
 	CKFMath::MtxRotAxis(mtxPitch, m_vRightNext, fRadian);
 	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxPitch);
 	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxPitch);
@@ -380,7 +380,7 @@ void CTransformComponent::RotByPitch(const float& fRadian)
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByYaw(const float& fRadian)
 {
-	CKFMtx44 mtxYaw;
+	Matrix44 mtxYaw;
 	CKFMath::MtxRotAxis(mtxYaw, m_vUpNext, fRadian);
 	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxYaw);
 	m_vForwardNext = CKFMath::Vec3TransformNormal(m_vForwardNext, mtxYaw);
@@ -394,7 +394,7 @@ void CTransformComponent::RotByYaw(const float& fRadian)
 //--------------------------------------------------------------------------------
 void CTransformComponent::RotByRoll(const float& fRadian)
 {
-	CKFMtx44 mtxRoll;
+	Matrix44 mtxRoll;
 	CKFMath::MtxRotAxis(mtxRoll, m_vForwardNext, fRadian);
 	m_vUpNext = CKFMath::Vec3TransformNormal(m_vUpNext, mtxRoll);
 	m_vRightNext = CKFMath::Vec3TransformNormal(m_vRightNext, mtxRoll);
@@ -406,12 +406,12 @@ void CTransformComponent::RotByRoll(const float& fRadian)
 //	引数：	vDirection：方向ベクトル
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-CKFVec3 CTransformComponent::TransformDirectionToLocal(const CKFVec3& vDirection)
+Vector3 CTransformComponent::TransformDirectionToLocal(const Vector3& vDirection)
 {
 	auto mtxInverse = CKFMath::MtxTranspose(m_mtxThis);
-	mtxInverse.m_af[3][0] = 0.0f;
-	mtxInverse.m_af[3][1] = 0.0f;
-	mtxInverse.m_af[3][2] = 0.0f;
+	mtxInverse.Elements[3][0] = 0.0f;
+	mtxInverse.Elements[3][1] = 0.0f;
+	mtxInverse.Elements[3][2] = 0.0f;
 	auto vAnswer = CKFMath::Vec3TransformNormal(vDirection, mtxInverse);
 	return vAnswer;
 }
@@ -436,7 +436,7 @@ void  CTransformComponent::calculateMtxThis(void)
 	m_mtxThis *= GetMatrixRot();
 
 	//平行移動
-	CKFMtx44 mtxPos;
+	Matrix44 mtxPos;
 	CKFMath::MtxTranslation(mtxPos, m_vPos);
 	m_mtxThis *= mtxPos;
 }
@@ -447,19 +447,19 @@ void  CTransformComponent::calculateMtxThis(void)
 //	引数：	mtxParent
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void  CTransformComponent::calculateMtxThis(const CKFMtx44& mtxParent)
+void  CTransformComponent::calculateMtxThis(const Matrix44& mtxParent)
 {
 	//自分の行列算出
 	calculateMtxThis();
 
 	//親に対する相対位置行列
 	//回転
-	CKFMtx44 mtxRot;
+	Matrix44 mtxRot;
 	CKFMath::MtxRotationYawPitchRoll(mtxRot, m_vOffsetRot);
 	m_mtxThis *= mtxRot;
 
 	//平行移動
-	CKFMtx44 mtxPos;
+	Matrix44 mtxPos;
 	CKFMath::MtxTranslation(mtxPos, m_vOffsetPos);
 	m_mtxThis *= mtxPos;
 

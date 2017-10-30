@@ -36,14 +36,14 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_nCntInvincible(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
-	, m_fAttack(0.0f)
+	, Attack(0.0f)
 	, m_fDefence(0.0f)
 	, m_fMoveSpeed(0.0f)
 	, m_fJumpSpeed(0.0f)
 	, m_fTurnSpeedMin(0.0f)
 	, m_fTurnSpeedMax(0.0f)
-	, m_fGroundCheckDistance(0.1f)
-	, m_fAnimSpeed(1.0f)
+	, GroundCheckDistance(0.1f)
+	, AnimSpeed(1.0f)
 	, m_fMaxPosY(0.0f)
 	, m_bEnabled(true)
 	, m_bIsGrounded(false)
@@ -95,7 +95,7 @@ void CActorBehaviorComponent::LateUpdate(void)
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CActorBehaviorComponent::Act(CKFVec3& vMovement, const bool& bJump, const bool& bAttack)
+void CActorBehaviorComponent::Act(Vector3& vMovement, const bool& bJump, const bool& bAttack)
 {
 	if (!m_bEnabled) { return; }
 	if (m_pAnimator && !m_pAnimator->CanAct()) { return; }
@@ -118,7 +118,7 @@ void CActorBehaviorComponent::Act(CKFVec3& vMovement, const bool& bJump, const b
 	vMovement = CKFMath::ProjectOnPlane(vMovement, vGroundNormal);
 
 	//回転角度の算出
-	auto fTurnAngle = atan2f(vTurnDir.m_fX, vTurnDir.m_fZ);
+	auto fTurnAngle = atan2f(vTurnDir.X, vTurnDir.Z);
 
 	//回転
 	turn(fTurnAngle, fMovement);
@@ -159,10 +159,10 @@ void CActorBehaviorComponent::Hit(const float& fDamage)
 //	引数：	vMovement：移動方向と移動量
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CActorBehaviorComponent::move(const CKFVec3& vMovement)
+void CActorBehaviorComponent::move(const Vector3& vMovement)
 {
 	auto vVelocity = vMovement * m_fMoveSpeed;
-	vVelocity.m_fY = m_rigidbody.GetVelocity().m_fY;
+	vVelocity.Y = m_rigidbody.GetVelocity().Y;
 	m_rigidbody.SetVelocity(vVelocity);
 }
 
@@ -176,9 +176,9 @@ void CActorBehaviorComponent::jump(const bool& bJump)
 {
 	if (!bJump || !m_bIsGrounded) { return; }
 	auto vVelocity = m_rigidbody.GetVelocity();
-	vVelocity.m_fY = m_fJumpSpeed;
+	vVelocity.Y = m_fJumpSpeed;
 	m_rigidbody.SetVelocity(vVelocity);
-	//m_fGroundCheckDistance = 0.3f;
+	//GroundCheckDistance = 0.3f;
 }
 
 //--------------------------------------------------------------------------------
@@ -217,24 +217,24 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 //	引数：	なし
 //	戻り値：地面の表面法線
 //--------------------------------------------------------------------------------
-CKFVec3 CActorBehaviorComponent::checkGroundStatus(void)
+Vector3 CActorBehaviorComponent::checkGroundStatus(void)
 {
 	CRaycastHitInfo rayHit;
 	auto vPos = m_pGameObj->GetTransformComponent()->GetPos();
 	auto pCollisionSystem = CMain::GetManager()->GetCollisionSystem();
-	if (pCollisionSystem->RayCast(vPos, CKFMath::sc_vDown, m_fGroundCheckDistance, rayHit, m_pGameObj))
+	if (pCollisionSystem->RayCast(vPos, CKFMath::sc_vDown, GroundCheckDistance, rayHit, m_pGameObj))
 	{
 		//To do : Jump Damage
 		if (!m_bIsGrounded)
 		{
-			float fFallDis = m_fMaxPosY - vPos.m_fY;
+			float fFallDis = m_fMaxPosY - vPos.Y;
 		}
-		m_fMaxPosY = vPos.m_fY;
+		m_fMaxPosY = vPos.Y;
 		m_bIsGrounded = true;
 		return rayHit.m_vNormal;
 	}
 
-	m_fMaxPosY = m_fMaxPosY < vPos.m_fY ? vPos.m_fY : m_fMaxPosY;
+	m_fMaxPosY = m_fMaxPosY < vPos.Y ? vPos.Y : m_fMaxPosY;
 	m_bIsGrounded = false;
 	return CKFMath::sc_vUp;
 }

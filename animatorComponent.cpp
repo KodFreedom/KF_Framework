@@ -294,11 +294,11 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		CGameObject* pBone = nullptr;
 		if (strFileType._Equal("x"))
 		{
-			pBone = CGameObjectSpawner::CreateXModel(strPath, CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+			pBone = CGameObjectSpawner::CreateXModel(strPath, Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 		}
 		else if (strFileType._Equal("model"))
 		{
-			pBone = CGameObjectSpawner::CreateModel(strPath, CKFVec3(0.0f), CKFQuaternion(0.0f), CKFVec3(1.0f));
+			pBone = CGameObjectSpawner::CreateModel(strPath, Vector3(0.0f), Quaternion(0.0f), Vector3(1.0f));
 		}
 		
 		m_vecBorns[nCntPart] = pBone;
@@ -346,7 +346,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	{
 		strRadius[nCntRadius] = strRead[nCnt];
 	}
-	//m_fRadius = (float)atof(strRadius);
+	//Radius = (float)atof(strRadius);
 
 	//parts infoÇÃì«Ç›çûÇ›
 	for (int nCntPart = 0; nCntPart < nNumParts; ++nCntPart)
@@ -398,7 +398,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			nCntPos++;
 		}
 
-		auto vOffsetPos = CKFVec3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
+		auto vOffsetPos = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 		//Rot
 		fgets(strRead, sizeof(strRead), pFile);
@@ -418,7 +418,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			nCntRot++;
 		}
 
-		auto vOffsetRot = CKFVec3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
+		auto vOffsetRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
 		
 		CGameObject* pParent = nullptr;
 		if (nParent < 0) { pParent = m_pGameObj; }
@@ -540,7 +540,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 					nCntPos++;
 				}
 
-				auto vPos = CKFVec3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
+				auto vPos = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 				//Rot
 				fgets(strRead, sizeof(strRead), pFile);
@@ -560,7 +560,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 					nCntRot++;
 				}
 
-				auto vRot = CKFVec3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
+				auto vRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
 				auto qRot = CKFMath::EulerToQuaternion(vRot);
 				auto nodeKey = CNodeKey(vPos, qRot);
 				motionKey.m_listNodesKey.push_back(nodeKey);

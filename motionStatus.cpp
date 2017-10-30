@@ -163,8 +163,8 @@ void CBlendMotionStatus::Update(CAnimatorComponent& animator)
 
 	for (auto pObj : animator.m_vecBorns)
 	{//Nodeごと位置回転更新
-		CKFVec3 vPosNew;
-		CKFQuaternion qRotNew;
+		Vector3 vPosNew;
+		Quaternion qRotNew;
 
 		if (!pMotion->m_bLoop)
 		{//ループしないなら最後の1フレームのままにする

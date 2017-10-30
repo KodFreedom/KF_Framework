@@ -22,12 +22,12 @@ class CTransformComponent;
 class CGameObjectSpawner
 {
 public:
-	static CGameObject* CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
+	static CGameObject* CreateSkyBox(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale);
 	static CGameObject* CreateField(const string& strStageName);
-	static CGameObject* CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
-	static CGameObject* CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale);
-	static CGameObject* CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale);
-	static CGameObject* CreateGoal(const CKFVec3& vPos);
+	static CGameObject* CreateCube(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale);
+	static CGameObject* CreateXModel(const string& strPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale);
+	static CGameObject* CreateModel(const string& strFilePath, const Vector3& vPos, const Quaternion& qRot, const Vector3& vScale);
+	static CGameObject* CreateGoal(const Vector3& vPos);
 
 #ifdef _DEBUG
 	static CGameObject* CreateEditorController(CGameObject* pFieldEditor);

@@ -44,7 +44,7 @@ CEditorCamera::CEditorCamera() : CCamera()
 void CEditorCamera::Init(void)
 {
 	CCamera::Init();
-	SetCamera(CKFVec3(0.0f), CKFVec3(0.0f, 20.0f, -20.0f), CKFVec3(0.0f, 1.0f, 0.0f), CKFVec3(1.0f, 0.0f, 0.0f));
+	SetCamera(Vector3(0.0f), Vector3(0.0f, 20.0f, -20.0f), Vector3(0.0f, 1.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f));
 }
 
 //--------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ void CEditorCamera::Update(void)
 	auto pInput = CMain::GetManager()->GetInputManager();
 	if (!pInput->GetMouse()->GetMousePress(CMouseDX::MOUSE_RIGHT)) { return; }
 	
-	CKFVec3 vRot;
+	Vector3 vRot;
 	float fZoomSpeed = 0.0f;
 	float fAxisX = pInput->GetMoveHorizontal();
 	float fAxisY = pInput->GetMoveVertical();
@@ -66,11 +66,11 @@ void CEditorCamera::Update(void)
 	//íçñ⁄ì_âÒì]
 	if (fabsf(fRAxisX) > sc_fStartRotMin)
 	{//Yé≤âÒì]
-		vRot.m_fY = sc_fRotSpeed * fRAxisX;
+		vRot.Y = sc_fRotSpeed * fRAxisX;
 	}
 	if (fabsf(fRAxisY) > sc_fStartRotMin)
 	{//Xé≤âÒì]
-		vRot.m_fX = sc_fRotSpeed * fRAxisY;
+		vRot.Y = sc_fRotSpeed * fRAxisY;
 	}
 
 	//ägëÂèkè¨
@@ -80,8 +80,8 @@ void CEditorCamera::Update(void)
 	}
 
 	//âÒì]
-	Yaw(vRot.m_fY);
-	Pitch(vRot.m_fX);
+	Yaw(vRot.Y);
+	Pitch(vRot.Y);
 
 	//ÉYÅ[ÉÄ
 	m_fDistance += fZoomSpeed;

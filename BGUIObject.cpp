@@ -40,7 +40,7 @@ bool CBGUIObject::Init(const string& strTexName)
 	sprite.usNumPolygon = 2;
 
 #ifdef USING_DIRECTX
-	CKFVec2 vScreenSize = CKFVec2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+	Vector2 vScreenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
 	CKFUtilityDX::MakeVertex(sprite.pVtxBuffer, vScreenSize * 0.5f, vScreenSize);
 #endif
 	m_listSprite.push_back(sprite);

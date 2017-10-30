@@ -44,14 +44,14 @@ public:
 	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
 	virtual void	OnCollision(CCollisionInfo& collisionInfo) override {}
 
-	void	Act(CKFVec3& vMovement, const bool& bJump, const bool& bAttack);
+	void	Act(Vector3& vMovement, const bool& bJump, const bool& bAttack);
 	void	Hit(const float& fDamage);
 
 	//Set関数
 	void	SetLevel(const int& nLevel) { m_nLevel = nLevel; }
 	void	SetLifeMax(const float& fLifeMax) { m_fLifeMax = fLifeMax; }
 	void	SetLifeNow(const float& fLifeNow) { m_fLifeNow = fLifeNow; }
-	void	SetAttack(const float& fAttack) { m_fAttack = fAttack; }
+	void	SetAttack(const float& fAttack) { Attack = fAttack; }
 	void	SetDefence(const float& fDefence) { m_fDefence = fDefence; }
 	void	SetMoveSpeed(const float& fMoveSpeed) { m_fMoveSpeed = fMoveSpeed; }
 	void	SetJumpSpeed(const float& fJumpSpeed) { m_fJumpSpeed = fJumpSpeed; }
@@ -66,7 +66,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void	move(const CKFVec3& vMovement);
+	void	move(const Vector3& vMovement);
 	void	jump(const bool& bJump);
 	void	turn(const float& fTurnAngle, const float& fMoveRate);
 	void	updateAnimation(const float& fMovement, const bool& bJump, const bool& bAttack);
@@ -82,14 +82,14 @@ protected:
 	int		m_nCntInvincible;		//無敵時間
 	float	m_fLifeMax;				//最大生命値
 	float	m_fLifeNow;				//今の生命値
-	float	m_fAttack;				//攻撃力
+	float	Attack;				//攻撃力
 	float	m_fDefence;				//防御力
 	float	m_fMoveSpeed;			//移動速度
 	float	m_fJumpSpeed;			//跳ぶ力
 	float	m_fTurnSpeedMin;		//回る速度
 	float	m_fTurnSpeedMax;
-	float	m_fGroundCheckDistance;
-	float	m_fAnimSpeed;
+	float	GroundCheckDistance;
+	float	AnimSpeed;
 	float	m_fMaxPosY;				//ジャンプのとき最高の位置
 	bool	m_bEnabled;
 	bool	m_bIsGrounded;
@@ -98,5 +98,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CKFVec3 checkGroundStatus(void);
+	Vector3 checkGroundStatus(void);
 };

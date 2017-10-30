@@ -91,7 +91,7 @@ void CMeshManager::DisuseMesh(const string& strName)
 //			vBlockSize：ブロックのサイズ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const CKFVec2& vBlockSize)
+void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const Vector2& vBlockSize)
 {
 	auto itr = m_umMesh.find("field");
 	if (itr != m_umMesh.end())
@@ -112,16 +112,16 @@ void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ,
 
 	//頂点バッファをロックして、仮想アドレスを取得する
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	CKFVec3 vStartPos = CKFVec3(-nNumBlockX * 0.5f * vBlockSize.m_fX, 0.0f, nNumBlockZ * 0.5f * vBlockSize.m_fY);
+	Vector3 vStartPos = Vector3(-nNumBlockX * 0.5f * vBlockSize.X, 0.0f, nNumBlockZ * 0.5f * vBlockSize.Y);
 	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)
 	{
 		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
 		{
 			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vPos = vStartPos
-				+ CKFVec3(nCntX * vBlockSize.m_fX, 0.0f, -nCntZ * vBlockSize.m_fY);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = CKFVec2(nCntX * 1.0f / (float)nNumBlockX, nCntZ * 1.0f / (float)nNumBlockX);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+				+ Vector3(nCntX * vBlockSize.X, 0.0f, -nCntZ * vBlockSize.Y);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vUV = Vector2(nCntX * 1.0f / (float)nNumBlockX, nCntZ * 1.0f / (float)nNumBlockX);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].ulColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].vNormal = Vector3(0.0f, 1.0f, 0.0f);
 		}
 	}
 
@@ -165,7 +165,7 @@ void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ,
 //			listChoosenIdx：選択された頂点のインデックス
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx)
+void CMeshManager::UpdateEditorField(const vector<Vector3>& vecVtx, const list<int>& listChoosenIdx)
 {
 #ifdef USING_DIRECTX
 
@@ -175,7 +175,7 @@ void CMeshManager::UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<i
 	//頂点バッファをロックして、仮想アドレスを取得する
 	auto pMesh = GetMesh("field");
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	auto cColor = CKFColor(1.0f);
+	auto cColor = Color(1.0f);
 	for (int nCnt = 0; nCnt < (int)vecVtx.size(); ++nCnt)
 	{
 		pVtx[nCnt].vPos = vecVtx[nCnt];
@@ -185,7 +185,7 @@ void CMeshManager::UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<i
 	//Choosen Color
 	int nNumBlockX = 100;
 	int nNumBlockZ = 100;
-	auto cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
+	auto cRed = Color(1.0f, 0.0f, 0.0f, 1.0f);
 	for (auto nIdx : listChoosenIdx)
 	{
 		pVtx[nIdx].ulColor = cRed;
@@ -193,12 +193,12 @@ void CMeshManager::UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<i
 		//法線計算
 		int nCntZ = nIdx / (nNumBlockZ + 1);
 		int nCntX = nIdx - nCntZ * (nNumBlockZ + 1);
-		CKFVec3 vNormal;
-		CKFVec3 vPosThis = pVtx[nIdx].vPos;
-		CKFVec3 vPosLeft;
-		CKFVec3 vPosRight;
-		CKFVec3 vPosTop;
-		CKFVec3 vPosBottom;
+		Vector3 vNormal;
+		Vector3 vPosThis = pVtx[nIdx].vPos;
+		Vector3 vPosLeft;
+		Vector3 vPosRight;
+		Vector3 vPosTop;
+		Vector3 vPosBottom;
 
 		if (nCntX == 0)
 		{
@@ -275,7 +275,7 @@ void CMeshManager::SaveEditorFieldAs(const string& strFileName)
 	VERTEX_3D* pVtx;
 	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	//色を白に戻す
-	unsigned long ulColor = CKFColor(1.0f);
+	unsigned long ulColor = Color(1.0f);
 	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
 	{
 		pVtx[nCnt].ulColor = ulColor;
@@ -406,10 +406,10 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 
 	mesh.pMesh = new CMesh;
 	mesh.pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
-	vector<CKFVec3>		vecVtx;
-	vector<CKFVec3>		vecNormal;
-	vector<CKFVec2>		vecUV;
-	vector<CKFColor>	vecColor;
+	vector<Vector3>		vecVtx;
+	vector<Vector3>		vecNormal;
+	vector<Vector2>		vecUV;
+	vector<Color>	vecColor;
 	vector<int>			vecIdx;
 	vector<int>			vecNormalIdx;
 	vector<int>			vecColorIdx;
@@ -433,15 +433,15 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecVtx[nCnt].m_fX;
+				ss >> vecVtx[nCnt].X;
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecVtx[nCnt].m_fY;
+				ss >> vecVtx[nCnt].Y;
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecVtx[nCnt].m_fZ;
+				ss >> vecVtx[nCnt].Z;
 				CKFUtility::GetStrToken(pFile, "\n", strBuf);
 			}
 
@@ -516,25 +516,25 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 						CKFUtility::GetStrToken(pFile, ";", strBuf);
 						ss.clear();
 						ss << strBuf;
-						ss >> vecColor[nCnt].m_fR;
+						ss >> vecColor[nCnt].R;
 
 						//G
 						CKFUtility::GetStrToken(pFile, ";", strBuf);
 						ss.clear();
 						ss << strBuf;
-						ss >> vecColor[nCnt].m_fG;
+						ss >> vecColor[nCnt].G;
 
 						//B
 						CKFUtility::GetStrToken(pFile, ";", strBuf);
 						ss.clear();
 						ss << strBuf;
-						ss >> vecColor[nCnt].m_fB;
+						ss >> vecColor[nCnt].B;
 
 						//A
 						CKFUtility::GetStrToken(pFile, ";", strBuf);
 						ss.clear();
 						ss << strBuf;
-						ss >> vecColor[nCnt].m_fA;
+						ss >> vecColor[nCnt].A;
 
 						break;
 					}
@@ -558,15 +558,15 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecNormal[nCnt].m_fX;
+				ss >> vecNormal[nCnt].X;
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecNormal[nCnt].m_fY;
+				ss >> vecNormal[nCnt].Y;
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecNormal[nCnt].m_fZ;
+				ss >> vecNormal[nCnt].Z;
 				CKFUtility::GetStrToken(pFile, "\n", strBuf);
 			}
 
@@ -623,11 +623,11 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecUV[nCnt].m_fX;
+				ss >> vecUV[nCnt].X;
 				CKFUtility::GetStrToken(pFile, ";", strBuf);
 				ss.clear();
 				ss << strBuf;
-				ss >> vecUV[nCnt].m_fY;
+				ss >> vecUV[nCnt].Y;
 				CKFUtility::GetStrToken(pFile, "\n", strBuf);
 			}
 		}
@@ -697,20 +697,20 @@ CMeshManager::MESH CMeshManager::createCube(void)
 
 	//頂点バッファをロックして、仮想アドレスを取得する
 	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	CKFVec3 vHalfSize = CKFVec3(1.0f) * 0.5f;
-	CKFColor cColor = CKFColor(1.0f);
+	Vector3 vHalfSize = Vector3(1.0f) * 0.5f;
+	Color cColor = Color(1.0f);
 	int nCntVtx = 0;
 
 	//正面
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			-vHalfSize.m_fX + (nCnt % 2) * vHalfSize.m_fX * 2.0f,
-			vHalfSize.m_fY - (nCnt / 2) * vHalfSize.m_fY * 2.0f,
-			-vHalfSize.m_fZ);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
+			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
+			-vHalfSize.Z);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 0.0f, -1.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 0.0f, -1.0f);
 
 		nCntVtx++;
 	}
@@ -718,13 +718,13 @@ CMeshManager::MESH CMeshManager::createCube(void)
 	//上
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			-vHalfSize.m_fX + (nCnt % 2) * vHalfSize.m_fX * 2.0f,
-			vHalfSize.m_fY,
-			vHalfSize.m_fZ - (nCnt / 2) * vHalfSize.m_fZ * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
+			vHalfSize.Y,
+			vHalfSize.Z - (nCnt / 2) * vHalfSize.Z * 2.0f);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 1.0f, 0.0f);
 
 		nCntVtx++;
 	}
@@ -732,13 +732,13 @@ CMeshManager::MESH CMeshManager::createCube(void)
 	//左
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			-vHalfSize.m_fX,
-			vHalfSize.m_fY - (nCnt / 2) * vHalfSize.m_fY * 2.0f,
-			vHalfSize.m_fZ - (nCnt % 2) * vHalfSize.m_fZ * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			-vHalfSize.X,
+			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
+			vHalfSize.Z - (nCnt % 2) * vHalfSize.Z * 2.0f);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(-1.0f, 0.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(-1.0f, 0.0f, 0.0f);
 
 		nCntVtx++;
 	}
@@ -746,39 +746,39 @@ CMeshManager::MESH CMeshManager::createCube(void)
 	//下
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			-vHalfSize.m_fX + (nCnt % 2) * vHalfSize.m_fX * 2.0f,
-			-vHalfSize.m_fY,
-			-vHalfSize.m_fZ + (nCnt / 2) * vHalfSize.m_fZ * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
+			-vHalfSize.Y,
+			-vHalfSize.Z + (nCnt / 2) * vHalfSize.Z * 2.0f);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, -1.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, -1.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//右
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			vHalfSize.m_fX,
-			vHalfSize.m_fY - (nCnt / 2) * vHalfSize.m_fY * 2.0f,
-			-vHalfSize.m_fZ + (nCnt % 2) * vHalfSize.m_fZ * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			vHalfSize.X,
+			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
+			-vHalfSize.Z + (nCnt % 2) * vHalfSize.Z * 2.0f);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(1.0f, 0.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(1.0f, 0.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//後ろ
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
-			vHalfSize.m_fX - (nCnt % 2) * vHalfSize.m_fX * 2.0f,
-			vHalfSize.m_fY - (nCnt / 2) * vHalfSize.m_fY * 2.0f,
-			vHalfSize.m_fZ);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
+		pVtx[nCntVtx].vPos = Vector3(
+			vHalfSize.X - (nCnt % 2) * vHalfSize.X * 2.0f,
+			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
+			vHalfSize.Z);
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 0.0f, 1.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 0.0f, 1.0f);
 		nCntVtx++;
 	}
 
@@ -817,9 +817,9 @@ CMeshManager::MESH CMeshManager::createCube(void)
 	fwrite(&strNodeName[0], sizeof(char), nSize, pFile);
 
 	//Offset
-	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
-	fwrite(&CKFMath::sc_vOne, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
+	fwrite(&CKFMath::sc_vOne, sizeof(Vector3), 1, pFile);
 
 	//Collider
 	int nNumCollider = 1;
@@ -827,9 +827,9 @@ CMeshManager::MESH CMeshManager::createCube(void)
 
 	int nType = 1;
 	fwrite(&nType, sizeof(int), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(CKFVec3), 1, pFile);
-	fwrite(&CKFMath::sc_vOne, sizeof(CKFVec3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
+	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
+	fwrite(&CKFMath::sc_vOne, sizeof(Vector3), 1, pFile);
 
 	//Texture
 	int nNumTexture = 1;
@@ -937,84 +937,84 @@ CMeshManager::MESH CMeshManager::createSkyBox(void)
 	//正面
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			fLength - (nCnt % 2) * fLength * 2.0f,
 			fLength - (nCnt / 2) * fLength * 2.0f,
 			-fLength);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 0.0f, 1.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 0.0f, 1.0f);
 		nCntVtx++;
 	}
 
 	//上
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			fLength - (nCnt % 2) * fLength * 2.0f,
 			fLength,
 			fLength - (nCnt / 2) * fLength * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, -1.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, -1.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//左
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			-fLength,
 			fLength - (nCnt / 2) * fLength * 2.0f,
 			-fLength + (nCnt % 2) * fLength * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + 0.5f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + 0.5f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(1.0f, 0.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(1.0f, 0.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//下
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			fLength - (nCnt % 2) * fLength * 2.0f,
 			-fLength,
 			-fLength + (nCnt / 2) * fLength * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + 2.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 1.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 1.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//右
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			fLength,
 			fLength - (nCnt / 2) * fLength * 2.0f,
 			fLength - (nCnt % 2) * fLength * 2.0f);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(-1.0f, 0.0f, 0.0f);
+		pVtx[nCntVtx].vNormal = Vector3(-1.0f, 0.0f, 0.0f);
 		nCntVtx++;
 	}
 
 	//後ろ
 	for (int nCnt = 0; nCnt < 4; nCnt++)
 	{
-		pVtx[nCntVtx].vPos = CKFVec3(
+		pVtx[nCntVtx].vPos = Vector3(
 			-fLength + (nCnt % 2) * fLength * 2.0f,
 			fLength - (nCnt / 2) * fLength * 2.0f,
 			fLength);
-		pVtx[nCntVtx].vUV = CKFVec2((nCnt % 2) * 0.25f + 0.75f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
+		pVtx[nCntVtx].vUV = Vector2((nCnt % 2) * 0.25f + 0.75f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
 			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
 		pVtx[nCntVtx].ulColor = cColor;
-		pVtx[nCntVtx].vNormal = CKFVec3(0.0f, 0.0f, -1.0f);
+		pVtx[nCntVtx].vNormal = Vector3(0.0f, 0.0f, -1.0f);
 		nCntVtx++;
 	}
 

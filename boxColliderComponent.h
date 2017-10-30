@@ -23,33 +23,33 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CBoxColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode, const CKFVec3& vHalfSize)
+	CBoxColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode, const Vector3& vHalfSize)
 		: CColliderComponent(pGameObj, type, mode)
 		, m_vHalfSize(vHalfSize) {}
 	~CBoxColliderComponent() {}
 
 	//Getä÷êî
-	list<CKFVec3>	GetLocalVertexes(void) const
+	list<Vector3>	GetLocalVertexes(void) const
 	{
-		CKFVec3 aVtx[8];
-		aVtx[0] = CKFVec3(-m_vHalfSize.m_fX, -m_vHalfSize.m_fY, m_vHalfSize.m_fZ);
-		aVtx[1] = CKFVec3(m_vHalfSize.m_fX, -m_vHalfSize.m_fY, m_vHalfSize.m_fZ);
-		aVtx[2] = CKFVec3(-m_vHalfSize.m_fX, -m_vHalfSize.m_fY, -m_vHalfSize.m_fZ);
-		aVtx[3] = CKFVec3(m_vHalfSize.m_fX, -m_vHalfSize.m_fY, -m_vHalfSize.m_fZ);
-		aVtx[4] = CKFVec3(-m_vHalfSize.m_fX, m_vHalfSize.m_fY, m_vHalfSize.m_fZ);
-		aVtx[5] = CKFVec3(m_vHalfSize.m_fX, m_vHalfSize.m_fY, m_vHalfSize.m_fZ);
-		aVtx[6] = CKFVec3(-m_vHalfSize.m_fX, m_vHalfSize.m_fY, -m_vHalfSize.m_fZ);
-		aVtx[7] = CKFVec3(m_vHalfSize.m_fX, m_vHalfSize.m_fY, -m_vHalfSize.m_fZ);
-		list<CKFVec3> listVtx;
+		Vector3 aVtx[8];
+		aVtx[0] = Vector3(-m_vHalfSize.X, -m_vHalfSize.Y, m_vHalfSize.Z);
+		aVtx[1] = Vector3(m_vHalfSize.X, -m_vHalfSize.Y, m_vHalfSize.Z);
+		aVtx[2] = Vector3(-m_vHalfSize.X, -m_vHalfSize.Y, -m_vHalfSize.Z);
+		aVtx[3] = Vector3(m_vHalfSize.X, -m_vHalfSize.Y, -m_vHalfSize.Z);
+		aVtx[4] = Vector3(-m_vHalfSize.X, m_vHalfSize.Y, m_vHalfSize.Z);
+		aVtx[5] = Vector3(m_vHalfSize.X, m_vHalfSize.Y, m_vHalfSize.Z);
+		aVtx[6] = Vector3(-m_vHalfSize.X, m_vHalfSize.Y, -m_vHalfSize.Z);
+		aVtx[7] = Vector3(m_vHalfSize.X, m_vHalfSize.Y, -m_vHalfSize.Z);
+		list<Vector3> listVtx;
 		for (int nCnt = 0; nCnt < 8; nCnt++) { listVtx.push_back(aVtx[nCnt]); }
 		return listVtx;
 	}
-	list<CKFVec3>	GetWorldVertexes(void);
-	CKFVec3			GetHalfSize(void) const { return m_vHalfSize; }
+	list<Vector3>	GetWorldVertexes(void);
+	Vector3			GetHalfSize(void) const { return m_vHalfSize; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
-	CKFVec3 m_vHalfSize;
+	Vector3 m_vHalfSize;
 };

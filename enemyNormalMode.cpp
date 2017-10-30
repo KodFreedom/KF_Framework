@@ -20,5 +20,5 @@
 //--------------------------------------------------------------------------------
 void CEnemyNormalMode::Update(CEnemyBehaviorComponent& enemy)
 {
-	enemy.m_actor.Act(CKFVec3(0.0f), false, false);
+	enemy.m_actor.Act(Vector3(0.0f), false, false);
 }

@@ -35,7 +35,7 @@ bool CWindmillBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CWindmillBehaviorComponent::Update(void)
 {
-	m_pFan->GetTransformComponent()->RotByRoll(m_fRotSpeed);
+	m_pFan->GetTransformComponent()->RotByRoll(RotSpeed);
 }
 
 //--------------------------------------------------------------------------------

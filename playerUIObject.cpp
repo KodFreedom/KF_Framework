@@ -22,15 +22,15 @@
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
 const float		CPlayerUIObject::sc_fScreenRate = (float)SCREEN_WIDTH / 1920.0f;
-const CKFVec2	CPlayerUIObject::sc_vLifeGaugeSize = CKFVec2(540.0f, 33.0f) * sc_fScreenRate;
-const CKFVec2	CPlayerUIObject::sc_vLifeGaugePosLeftTop = CKFVec2(287.0f, 960.0f) * sc_fScreenRate;
-const CKFColor	CPlayerUIObject::sc_cLifeGaugeColorMax = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
-const CKFColor	CPlayerUIObject::sc_cLifeGaugeColorMin = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-const CKFVec2	CPlayerUIObject::sc_vCoverSize = CKFVec2(804.0f, 179.0f) * sc_fScreenRate;
-const CKFVec2	CPlayerUIObject::sc_vCoverPosCenter = CKFVec2(35.0f, 883.0f) * sc_fScreenRate + sc_vCoverSize * 0.5f;
-const CKFVec2	CPlayerUIObject::sc_vFaceSize = CKFVec2(153.0f, 169.0f) * sc_fScreenRate;
-const CKFVec2	CPlayerUIObject::sc_vFacePosCenter = CKFVec2(63.0f, 840.0f) * sc_fScreenRate + sc_vFaceSize * 0.5f;
-const CKFVec2	CPlayerUIObject::sc_vFaceUVSize = CKFVec2(0.25f, 1.0f);
+const Vector2	CPlayerUIObject::sc_vLifeGaugeSize = Vector2(540.0f, 33.0f) * sc_fScreenRate;
+const Vector2	CPlayerUIObject::sc_vLifeGaugePosLeftTop = Vector2(287.0f, 960.0f) * sc_fScreenRate;
+const Color	CPlayerUIObject::sc_cLifeGaugeColorMax = Color(0.0f, 1.0f, 0.0f, 1.0f);
+const Color	CPlayerUIObject::sc_cLifeGaugeColorMin = Color(1.0f, 0.0f, 0.0f, 1.0f);
+const Vector2	CPlayerUIObject::sc_vCoverSize = Vector2(804.0f, 179.0f) * sc_fScreenRate;
+const Vector2	CPlayerUIObject::sc_vCoverPosCenter = Vector2(35.0f, 883.0f) * sc_fScreenRate + sc_vCoverSize * 0.5f;
+const Vector2	CPlayerUIObject::sc_vFaceSize = Vector2(153.0f, 169.0f) * sc_fScreenRate;
+const Vector2	CPlayerUIObject::sc_vFacePosCenter = Vector2(63.0f, 840.0f) * sc_fScreenRate + sc_vFaceSize * 0.5f;
+const Vector2	CPlayerUIObject::sc_vFaceUVSize = Vector2(0.25f, 1.0f);
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -92,7 +92,7 @@ void CPlayerUIObject::Update(void)
 	//To do
 	//HPゲージ更新
 	float fLifeRate = actorBehavior.GetLifeNow() / actorBehavior.GetLifeMax();
-	CKFColor cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
+	Color cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
 #ifdef USING_DIRECTX
 	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);
 #endif
@@ -114,7 +114,7 @@ void CPlayerUIObject::Update(void)
 	float fFaceU = 0.25f * (int)((0.75f - fLifeRate) * 4.0f);
 	fFaceU = fFaceU < 0.0f ? 0.0f : fFaceU;
 #ifdef USING_DIRECTX
-	CKFUtilityDX::UpdateUV(itr->pVtxBuffer, CKFVec2(fFaceU, 0.0f), sc_vFaceUVSize);
+	CKFUtilityDX::UpdateUV(itr->pVtxBuffer, Vector2(fFaceU, 0.0f), sc_vFaceUVSize);
 #endif
 }
 

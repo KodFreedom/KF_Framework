@@ -58,10 +58,10 @@ void CFade::Init(void)
 
 	//頂点位置設定
 	//頂点座標の設定（2D座標、右回り）
-	pVtx[0].vPos = CKFVec3(0.0f, 0.0f, 0.0f);
-	pVtx[1].vPos = CKFVec3(SCREEN_WIDTH, 0.0f, 0.0f);
-	pVtx[2].vPos = CKFVec3(0.0f, SCREEN_HEIGHT, 0.0f);
-	pVtx[3].vPos = CKFVec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+	pVtx[0].vPos = Vector3(0.0f, 0.0f, 0.0f);
+	pVtx[1].vPos = Vector3(SCREEN_WIDTH, 0.0f, 0.0f);
+	pVtx[2].vPos = Vector3(0.0f, SCREEN_HEIGHT, 0.0f);
+	pVtx[3].vPos = Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 
 	//頂点カラー設定
 	pVtx[0].ulColor = m_cColor;
@@ -70,10 +70,10 @@ void CFade::Init(void)
 	pVtx[3].ulColor = m_cColor;
 
 	//頂点UV設定
-	pVtx[0].vUV = CKFVec2(0.0f, 0.0f);
-	pVtx[1].vUV = CKFVec2(1.0f, 0.0f);
-	pVtx[2].vUV = CKFVec2(0.0f, 1.0f);
-	pVtx[3].vUV = CKFVec2(1.0f, 1.0f);
+	pVtx[0].vUV = Vector2(0.0f, 0.0f);
+	pVtx[1].vUV = Vector2(1.0f, 0.0f);
+	pVtx[2].vUV = Vector2(0.0f, 1.0f);
+	pVtx[3].vUV = Vector2(1.0f, 1.0f);
 
 	//rhwの設定(必ず1.0f)
 	pVtx[0].fRhw = 1.0f;
@@ -102,7 +102,7 @@ void CFade::Uninit(void)
 //--------------------------------------------------------------------------------
 void CFade::Update(void)
 {
-	if (m_fade == FADE_NONE) { return; }
+	if (Ade == FADE_NONE) { return; }
 
 	//fade時間カウント
 	if (m_nCnt != 0)
@@ -111,26 +111,26 @@ void CFade::Update(void)
 		return;
 	}
 
-	if (m_fade == FADE_IN)
+	if (Ade == FADE_IN)
 	{
-		m_cColor.m_fA -= sc_fFadeRate;//alphaを減算して後ろの画面を浮き上がらせる
+		m_cColor.A -= sc_fFadeRate;//alphaを減算して後ろの画面を浮き上がらせる
 
-		if (m_cColor.m_fA <= 0.0f)
+		if (m_cColor.A <= 0.0f)
 		{
-			m_cColor.m_fA = 0.0f;
-			m_fade = FADE_NONE;
+			m_cColor.A = 0.0f;
+			Ade = FADE_NONE;
 		}
 	}
-	else if (m_fade == FADE_OUT)
+	else if (Ade == FADE_OUT)
 	{
-		m_cColor.m_fA += sc_fFadeRate;
+		m_cColor.A += sc_fFadeRate;
 
-		if (m_cColor.m_fA >= 1.0f)
+		if (m_cColor.A >= 1.0f)
 		{
-			m_cColor.m_fA = 1.0f;
+			m_cColor.A = 1.0f;
 
 			//Check SE & BGM(fade out effect)
-			m_fade = FADE_IN;
+			Ade = FADE_IN;
 			CMain::GetManager()->SetMode(m_pModeNext);
 		}
 	}
@@ -166,13 +166,13 @@ void CFade::Draw(void)
 //--------------------------------------------------------------------------------
 void CFade::FadeToMode(CMode* pModeNext)
 {
-	if (m_fade == FADE_OUT) 
+	if (Ade == FADE_OUT) 
 	{
 		delete pModeNext;
 		return;
 	}
 
-	m_fade = FADE_OUT;
+	Ade = FADE_OUT;
 	m_pModeNext = pModeNext;
 	m_nCnt = 10;
 }
@@ -180,7 +180,7 @@ void CFade::FadeToMode(CMode* pModeNext)
 //--------------------------------------------------------------------------------
 //  SetColorFade
 //--------------------------------------------------------------------------------
-void CFade::SetColorFade(const CKFColor &cColor)
+void CFade::SetColorFade(const Color &cColor)
 {
 #ifdef USING_DIRECTX
 	//仮想アドレスを取得するためのポインタ

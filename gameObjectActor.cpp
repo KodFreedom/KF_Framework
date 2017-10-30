@@ -57,7 +57,7 @@ void CGameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObjectActor;
 
@@ -72,9 +72,9 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
-	//auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, CKFVec3(0.3f * vScale.m_fX, 0.6f * vScale.m_fY, 0.3f * vScale.m_fZ));
+	//auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
 	auto pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
-	pCollider->SetOffset(CKFVec3(0.0f, 0.55f, 0.0f));
+	pCollider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
 
@@ -98,7 +98,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObjectActor;
 
@@ -117,8 +117,8 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const C
 	pObj->m_listpBehavior.push_back(pEb);
 	
 	//コライダー
-	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, CKFVec3(0.3f * vScale.m_fX, 0.6f * vScale.m_fY, 0.3f * vScale.m_fZ));
-	pCollider->SetOffset(CKFVec3(0.0f, 0.6f, 0.0f));
+	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
+	pCollider->SetOffset(Vector3(0.0f, 0.6f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
 	auto pDetector = new CSphereColliderComponent(pObj, CS::DYNAMIC, 6.0f);

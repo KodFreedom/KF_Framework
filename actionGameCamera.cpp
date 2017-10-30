@@ -42,15 +42,15 @@ const float CActionGameCamera::sc_fPosAtHeight = 1.0f;
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CActionGameCamera::CActionGameCamera() : CCamera()
-	, m_vRotSpeed(CKFVec3(0.0f))
-	, m_fZoomSpeed(0.0f)
-	, m_vPosAtNext(CKFVec3(0.0f))
-	, m_vPosEyeNext(CKFVec3(0.0f))
-	, m_vVecLookNext(CKFVec3(0.0f))
-	, m_vVecUpNext(CKFVec3(0.0f))
-	, m_vVecRightNext(CKFVec3(0.0f))
+	, m_vRotSpeed(Vector3(0.0f))
+	, ZoomSpeed(0.0f)
+	, m_vPosAtNext(Vector3(0.0f))
+	, m_vPosEyeNext(Vector3(0.0f))
+	, m_vVecLookNext(Vector3(0.0f))
+	, m_vVecUpNext(Vector3(0.0f))
+	, m_vVecRightNext(Vector3(0.0f))
 	, m_fDistanceNext(0.0f)
-	, m_vDefaultLook(CKFVec3(0.0f))
+	, m_vDefaultLook(Vector3(0.0f))
 	, m_pTarget(nullptr)
 {
 }
@@ -71,7 +71,7 @@ void CActionGameCamera::Init(void)
 	m_fDistanceNext = m_fDistance;
 
 	//デフォルト角度設定
-	m_vDefaultLook = CKFVec3(0.0f, -tanf(sc_fRotXDefault), 1.0f);
+	m_vDefaultLook = Vector3(0.0f, -tanf(sc_fRotXDefault), 1.0f);
 	CKFMath::VecNormalize(m_vDefaultLook);
 }
 
@@ -83,7 +83,7 @@ void CActionGameCamera::Update(void)
 	SwitchParam();
 
 	CInputManager *pInput = CMain::GetManager()->GetInputManager();
-	CKFVec3 vRot = CKFVec3(0.0f);
+	Vector3 vRot = Vector3(0.0f);
 	float fZoomSpeed = 0.0f;
 
 	float fRAxisX = pInput->GetRotHorizontal();
@@ -93,11 +93,11 @@ void CActionGameCamera::Update(void)
 	//注目点回転
 	if (fabsf(fRAxisX) > sc_fStartRotMin)
 	{//Y軸回転
-		vRot.m_fY = sc_fRotSpeed * fRAxisX;
+		vRot.Y = sc_fRotSpeed * fRAxisX;
 	}
 	if (fabsf(fRAxisY) > sc_fStartRotMin)
 	{//X軸回転
-		vRot.m_fX = sc_fRotSpeed * fRAxisY;
+		vRot.Y = sc_fRotSpeed * fRAxisY;
 	}
 
 	//拡大縮小
@@ -113,8 +113,8 @@ void CActionGameCamera::Update(void)
 	LimitRot();
 
 	//回転
-	Yaw(m_vRotSpeed.m_fY);
-	Pitch(m_vRotSpeed.m_fX);
+	Yaw(m_vRotSpeed.Y);
+	Pitch(m_vRotSpeed.Y);
 
 	//Target移動したらカメラの角度をデフォルトの角度にだんだん修正しに行く
 	//if (m_pTarget && m_pTarget->GetTransformComponent()->GetPos() != m_pTarget->GetTransformComponent()->GetPosNext())
@@ -128,8 +128,8 @@ void CActionGameCamera::Update(void)
 
 
 	//ズーム
-	/*m_fZoomSpeed = CKFMath::LerpFloat(m_fZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
-	m_fDistance += m_fZoomSpeed;
+	/*ZoomSpeed = CKFMath::LerpFloat(ZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
+	m_fDistance += ZoomSpeed;
 	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;*/
 
 	//if (!CMain::GetManager()->GetColliderManager()->CheckActionCameraCollision(this))
@@ -148,7 +148,7 @@ void CActionGameCamera::LateUpdate(void)
 	//カメラ移動
 	if (m_pTarget)
 	{
-		m_vPosAtNext = CKFMath::LerpVec3(m_vPosAtNext, m_pTarget->GetTransformComponent()->GetPos() + CKFVec3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
+		m_vPosAtNext = CKFMath::LerpVec3(m_vPosAtNext, m_pTarget->GetTransformComponent()->GetPos() + Vector3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
 	}
 
 	//カメラノーマライズ
@@ -161,8 +161,8 @@ void CActionGameCamera::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::Yaw(const float& fAngle)
 {
-	CKFMtx44 mtxYaw;
-	CKFVec3 vAxisY = CKFVec3(0.0f, 1.0f, 0.0f);
+	Matrix44 mtxYaw;
+	Vector3 vAxisY = Vector3(0.0f, 1.0f, 0.0f);
 	CKFMath::MtxRotAxis(mtxYaw, vAxisY, fAngle);
 	m_vVecRightNext = CKFMath::Vec3TransformNormal(m_vVecRightNext, mtxYaw);
 	m_vVecLookNext = CKFMath::Vec3TransformNormal(m_vVecLookNext, mtxYaw);
@@ -174,7 +174,7 @@ void CActionGameCamera::Yaw(const float& fAngle)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::Pitch(const float& fAngle)
 {
-	CKFMtx44 mtxPitch;
+	Matrix44 mtxPitch;
 	CKFMath::MtxRotAxis(mtxPitch, m_vVecRightNext, fAngle);
 	m_vVecUpNext = CKFMath::Vec3TransformNormal(m_vVecUpNext, mtxPitch);
 	m_vVecLookNext = CKFMath::Vec3TransformNormal(m_vVecLookNext, mtxPitch);
@@ -208,8 +208,8 @@ void CActionGameCamera::ReCalcDefault(void)
 //--------------------------------------------------------------------------------
 float CActionGameCamera::CalcRotX(void)
 {
-	CKFVec2 vX = CKFVec2(m_vVecLook.m_fX, m_vVecLook.m_fZ);
-	float fRot = atan2f(-m_vVecLook.m_fY, CKFMath::VecMagnitude(vX));
+	Vector2 vX = Vector2(m_vVecLook.Y, m_vVecLook.Z);
+	float fRot = atan2f(-m_vVecLook.Y, CKFMath::VecMagnitude(vX));
 	return fRot;
 }
 
@@ -220,13 +220,13 @@ void CActionGameCamera::LimitRot(void)
 {
 	//X軸回転制限
 	float fRotXNow = CalcRotX();
-	if (m_vRotSpeed.m_fX + fRotXNow >= sc_fRotXMax)
+	if (m_vRotSpeed.Y + fRotXNow >= sc_fRotXMax)
 	{
-		m_vRotSpeed.m_fX = sc_fRotXMax - fRotXNow;
+		m_vRotSpeed.Y = sc_fRotXMax - fRotXNow;
 	}
-	else if (m_vRotSpeed.m_fX + fRotXNow <= -sc_fRotXMax)
+	else if (m_vRotSpeed.Y + fRotXNow <= -sc_fRotXMax)
 	{
-		m_vRotSpeed.m_fX = -sc_fRotXMax - fRotXNow;
+		m_vRotSpeed.Y = -sc_fRotXMax - fRotXNow;
 	}
 }
 
@@ -253,7 +253,7 @@ void CActionGameCamera::CheckCollision(void)
 	//if (CMain::GetManager()->GetColliderManager()->SphereCast(m_vPosEyeNext, sc_fCollisionRadius, hitInfo))
 	//{//衝突したら
 	//	//新しいカメラの算出-
-	//	CKFVec3 vNewPosEye = hitInfo.vPos + hitInfo.vNormal * sc_fCollisionRadius;
+	//	Vector3 vNewPosEye = hitInfo.vPos + hitInfo.vNormal * sc_fCollisionRadius;
 	//	
 	//	//新しい前方向の算出
 	//	m_vVecLookNext = m_vPosAtNext - vNewPosEye;
@@ -261,9 +261,9 @@ void CActionGameCamera::CheckCollision(void)
 	//	//新しい距離の算出
 	//	m_fDistanceNext = CKFMath::VecMagnitude(m_vVecLookNext);
 
-	//	//if (m_vVecLookNext.m_fY != 0.0f)
+	//	//if (m_vVecLookNext.Y != 0.0f)
 	//	//{
-	//	//	fNewDis = fabsf((vNewPos.m_fY - m_vPosAtNext.m_fY) / m_vVecLookNext.m_fY);
+	//	//	fNewDis = fabsf((vNewPos.Y - m_vPosAtNext.Y) / m_vVecLookNext.Y);
 	//	//}
 	//	//m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, fNewDis, sc_fZoomLerpTime);
 	//}

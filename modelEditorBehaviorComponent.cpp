@@ -114,7 +114,7 @@ void CModelEditorBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  SetPos
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::SetPos(const CKFVec3& vPos)
+void CModelEditorBehaviorComponent::SetPos(const Vector3& vPos)
 {
 	m_aObjInfoDemo[(int)m_modelType].pTransform->SetPosNext(vPos);
 }
@@ -150,9 +150,9 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 		for (auto& info : m_alistCreated[nCnt])
 		{
 			auto vPos = info.pTransform->GetPos();
-			fwrite(&vPos, sizeof(CKFVec3), 1, pFile);
+			fwrite(&vPos, sizeof(Vector3), 1, pFile);
 			auto qRot = info.pTransform->GetRot();
-			fwrite(&qRot, sizeof(CKFQuaternion), 1, pFile);
+			fwrite(&qRot, sizeof(Quaternion), 1, pFile);
 		}
 	}
 
@@ -201,7 +201,7 @@ void CModelEditorBehaviorComponent::showMainWindow(void)
 	auto& infoNow = m_aObjInfoDemo[(int)m_modelType];
 
 	//ƒ‚ƒfƒ‹‰ñ“]
-	if(ImGui::SliderFloat3("Rot", &infoNow.vRot.m_fX, 0.0f, KF_PI * 2.0f))
+	if(ImGui::SliderFloat3("Rot", &infoNow.vRot.X, 0.0f, KF_PI * 2.0f))
 	{ 
 		infoNow.pTransform->SetRotNext(infoNow.vRot);
 	}
@@ -282,9 +282,9 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 					auto vScale = itr->pTransform->GetScale();
 
 					//Offset
-					if (ImGui::InputFloat3("Trans", &vPos.m_fX)) { itr->pTransform->SetPosNext(vPos); }
-					if (ImGui::InputFloat3("Rot", &itr->vRot.m_fX, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(itr->vRot); }
-					if (ImGui::InputFloat3("Scale", &vScale.m_fX)) { itr->pTransform->SetScaleNext(vScale); }
+					if (ImGui::InputFloat3("Trans", &vPos.X)) { itr->pTransform->SetPosNext(vPos); }
+					if (ImGui::InputFloat3("Rot", &itr->vRot.X, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(itr->vRot); }
+					if (ImGui::InputFloat3("Scale", &vScale.X)) { itr->pTransform->SetScaleNext(vScale); }
 
 					//Delete
 					bDelete = ImGui::Button("Delete");

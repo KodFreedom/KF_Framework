@@ -78,9 +78,9 @@ public:
 	CJoystickDX*	GetJoystickDX(void) { return m_pJoystick; }
 	float			GetMoveHorizontal(void) { return m_fMoveHorizontal; }
 	float			GetMoveVertical(void) { return m_fMoveVertical; }
-	float			GetRotHorizontal(void) { return m_fRotHorizontal; }
-	float			GetRotVertical(void) { return m_fRotVertical; }
-	float			GetZoom(void) { return m_fZoom; }
+	float			GetRotHorizontal(void) { return RotHorizontal; }
+	float			GetRotVertical(void) { return RotVertical; }
+	float			GetZoom(void) { return Zoom; }
 	bool			GetKeyPress(const KEY& key);
 	bool			GetKeyTrigger(const KEY& key);
 	bool			GetKeyRelease(const KEY& key);
@@ -103,9 +103,9 @@ private:
 	//入力情報
 	float			m_fMoveHorizontal;	//移動用横情報
 	float			m_fMoveVertical;	//移動用縦情報
-	float			m_fRotHorizontal;	//回転用横情報
-	float			m_fRotVertical;		//回転用縦情報
-	float			m_fZoom;			//ズーム用情報
+	float			RotHorizontal;	//回転用横情報
+	float			RotVertical;		//回転用縦情報
+	float			Zoom;			//ズーム用情報
 	LONG			m_lKeysPress;		//キーフラッグ情報
 	LONG			m_lKeysTrigger;		//キートリガーフラッグ情報
 	LONG			m_lKeysRelease;		//キーリリースフラッグ情報

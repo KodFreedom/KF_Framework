@@ -42,7 +42,7 @@ public:
 	auto	GetWireFrameFlag(void) const { return m_bWireFrame; }
 
 	//Set関数
-	void	SetBGColor(const CKFColor& cColor) { m_cBGColor = cColor; }
+	void	SetBGColor(const Color& cColor) { m_cBGColor = cColor; }
 	void	SetWireFrameFlag(const bool& bFlag);
 
 private:
@@ -51,7 +51,7 @@ private:
 	//--------------------------------------------------------------------------------
 	LPDIRECT3D9			m_pD3D;			// Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9	m_pD3DDevice;	// Deviceオブジェクト(描画に必要)
-	CKFColor			m_cBGColor;		// 背景色
+	Color			m_cBGColor;		// 背景色
 	bool				m_bWireFrame;	// ワイヤフレーム
 };
 #endif

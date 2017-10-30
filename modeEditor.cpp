@@ -49,7 +49,7 @@ CModeEditor::~CModeEditor()
 void CModeEditor::Init(void)
 {
 	//ÉâÉCÉgÇÃèâä˙âª
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
 
 	//ÉJÉÅÉâÇÃèâä˙âª
 	m_pCamera = new CEditorCamera;
@@ -61,7 +61,7 @@ void CModeEditor::Init(void)
 	auto pEditorField = CGameObjectSpawner::CreateEditorField();
 	CGameObjectSpawner::CreateEditorController(pEditorField);
 
-	//CGameObject3D::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
+	//CGameObject3D::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 }
 
 //--------------------------------------------------------------------------------

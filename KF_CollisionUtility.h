@@ -33,18 +33,18 @@ public:
 	CCollision()
 		: m_pRigidBodyOne(nullptr)
 		, m_pRigidBodyTwo(nullptr)
-		, m_vCollisionNormal(CKFVec3(0.0f))
-		, m_vCollisionPos(CKFVec3(0.0f))
+		, m_vCollisionNormal(Vector3(0.0f))
+		, m_vCollisionPos(Vector3(0.0f))
 		, m_fPenetration(0.0f)
 	{}
 	~CCollision() {}
 
 	C3DRigidbodyComponent*	m_pRigidBodyOne;
 	C3DRigidbodyComponent*	m_pRigidBodyTwo;
-	CKFVec3					m_vCollisionNormal;
-	CKFVec3					m_vCollisionPos;
+	Vector3					m_vCollisionNormal;
+	Vector3					m_vCollisionPos;
 	float					m_fPenetration;
-	CKFMtx44				m_mtxToWorld;
+	Matrix44				m_mtxToWorld;
 };
 
 //--------------------------------------------------------------------------------
@@ -78,15 +78,15 @@ public:
 	CRaycastHitInfo()
 		: m_pCollider(nullptr)
 		, m_fDistance(0.0f)
-		, m_vNormal(CKFVec3(0.0f))
-		, m_vPos(CKFVec3(0.0f))
+		, m_vNormal(Vector3(0.0f))
+		, m_vPos(Vector3(0.0f))
 	{}
 	~CRaycastHitInfo() {}
 
 	CColliderComponent*		m_pCollider;	//衝突相手のコライダー
 	float					m_fDistance;	//レイの始点と衝突点との距離
-	CKFVec3					m_vNormal;		//衝突点の面法線
-	CKFVec3					m_vPos;			//衝突点の位置
+	Vector3					m_vNormal;		//衝突点の面法線
+	Vector3					m_vPos;			//衝突点の位置
 };
 
 //--------------------------------------------------------------------------------
@@ -107,23 +107,23 @@ public:
 	static void		CheckSphereWithField(CSphereColliderComponent& sphere, CFieldColliderComponent& field);
 	
 	//Ray
-	static bool		CheckRayWithBox(const CKFRay& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut);
-	static bool		CheckRayWithSphere(const CKFRay& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut);
-	static bool		CheckRayWithField(const CKFRay& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut);
+	static bool		CheckRayWithBox(const Ray& ray, const float& fDistance, CBoxColliderComponent& box, CRaycastHitInfo& infoOut);
+	static bool		CheckRayWithSphere(const Ray& ray, const float& fDistance, CSphereColliderComponent& sphere, CRaycastHitInfo& infoOut);
+	static bool		CheckRayWithField(const Ray& ray, const float& fDistance, CFieldColliderComponent& field, CRaycastHitInfo& infoOut);
 
 private:
 	CCollisionDetector() {}
 	~CCollisionDetector() {}
 
 	//計算用関数
-	static bool		checkPointWithAABB(CCollision& collisionOut, const CKFVec3 vPoint, const CAABBColliderComponent& aabb);
-	static bool		checkPointWithBox(CCollision& collisionOut, const CKFVec3 vPoint, const CBoxColliderComponent& box);
-	static bool		checkLineWithLine(const CKFVec2& vLA, const CKFVec2& vLB, const CKFVec2& vRA, const CKFVec2& vRB, CKFVec2& vOut);
-	static bool		checkLineWithLine(const CKFVec3& vLA, const CKFVec3& vLB, const CKFVec3& vRA, const CKFVec3& vRB, CKFVec3& vOut);
+	static bool		checkPointWithAABB(CCollision& collisionOut, const Vector3 vPoint, const CAABBColliderComponent& aabb);
+	static bool		checkPointWithBox(CCollision& collisionOut, const Vector3 vPoint, const CBoxColliderComponent& box);
+	static bool		checkLineWithLine(const Vector2& vLA, const Vector2& vLB, const Vector2& vRA, const Vector2& vRB, Vector2& vOut);
+	static bool		checkLineWithLine(const Vector3& vLA, const Vector3& vLB, const Vector3& vRA, const Vector3& vRB, Vector3& vOut);
 
-	static float	transformBoxToAxis(const CBoxColliderComponent& box, const CKFVec3& vAxis);
-	static bool		checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const CKFVec3& vAxis);
-	static bool		checkOverlapOnAxis(const CKFVec2& vMinL, const CKFVec2& vMaxL, const CKFVec2& vMinR, const CKFVec2& vMaxR);
+	static float	transformBoxToAxis(const CBoxColliderComponent& box, const Vector3& vAxis);
+	static bool		checkOverlapOnAxis(const CBoxColliderComponent& boxL, const CBoxColliderComponent& boxR, const Vector3& vAxis);
+	static bool		checkOverlapOnAxis(const Vector2& vMinL, const Vector2& vMaxL, const Vector2& vMinR, const Vector2& vMaxR);
 	static bool		checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR);
 
 };

@@ -58,10 +58,10 @@ void CPlayerBehaviorComponent::Uninit(void)
 void CPlayerBehaviorComponent::Update(void)
 {
 	auto pInput = CMain::GetManager()->GetInputManager();
-	auto vAxis = CKFVec2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
+	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
 	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
-	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(CKFVec3(1.0f, 0.0f, 1.0f)));
-	auto vMove = pCamera->GetVecRight() * vAxis.m_fX + vCamForward * vAxis.m_fY;
+	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
+	auto vMove = pCamera->GetVecRight() * vAxis.X + vCamForward * vAxis.Y;
 	CKFMath::VecNormalize(vMove);
 	auto bJump = pInput->GetKeyTrigger(CInputManager::K_JUMP);
 	auto bAttack = pInput->GetKeyTrigger(CInputManager::K_ATTACK);

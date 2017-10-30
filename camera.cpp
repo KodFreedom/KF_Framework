@@ -19,7 +19,7 @@
 //#define CAMERA_MOVE_SPEED (1.0f)
 //#define RETURN_SPEED (0.95f)
 //#define FLOAT_MIN (0.001f)
-//#define WORLD_ROT_DEFAULT (CKFVec3(0.0f, 0.0f, 0.0f))
+//#define WORLD_ROT_DEFAULT (Vector3(0.0f, 0.0f, 0.0f))
 //#define CAMERA_FOV_DEFAULT (75.0f * D3DX_PI / 180.0f)
 //#define CAMERA_FOV_MIN (0.1f)
 //#define CAMERA_FOV_MAX (D3DX_PI - 0.1f)
@@ -38,12 +38,12 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CCamera::CCamera()
-	: m_vMovement(CKFVec3(0.0f))
-	, m_vPosAt(CKFVec3(0.0f))
-	, m_vPosEye(CKFVec3(0.0f, 5.0f, -5.0f))
-	, m_vVecLook(CKFVec3(0.0f))
-	, m_vVecUp(CKFVec3(0.0f, 1.0f, 0.0f))
-	, m_vVecRight(CKFVec3(1.0f, 0.0f, 0.0f))
+	: m_vMovement(Vector3(0.0f))
+	, m_vPosAt(Vector3(0.0f))
+	, m_vPosEye(Vector3(0.0f, 5.0f, -5.0f))
+	, m_vVecLook(Vector3(0.0f))
+	, m_vVecUp(Vector3(0.0f, 1.0f, 0.0f))
+	, m_vVecRight(Vector3(1.0f, 0.0f, 0.0f))
 	, m_fDistance(0.0f)
 	, m_fFovY((float)DEFAULT_FOV)
 	, m_fFar((float)DEFAULT_FAR)
@@ -82,17 +82,17 @@ void CCamera::Update(void)
 {
 //	CMouseDX *pMouse = CMain::GetManager()->GetMouse();
 //	CJoystickDX* pJoystick = CMain::GetManager()->GetJoystickDX();
-//	CKFVec3 vRot = CKFVec3(0.0f);
+//	Vector3 vRot = Vector3(0.0f);
 //	float fZoomSpeed = 0.0f;
 //
 //	//注目点回転
 //	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisX() != 0)
 //	{
-//		vRot.m_fY = KF_PI * ((float)pMouse->GetMouseAxisX() / SCREEN_WIDTH);
+//		vRot.Y = KF_PI * ((float)pMouse->GetMouseAxisX() / SCREEN_WIDTH);
 //	}
 //	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisY() != 0)
 //	{
-//		vRot.m_fX = KF_PI * ((float)pMouse->GetMouseAxisY() / SCREEN_HEIGHT);
+//		vRot.X = KF_PI * ((float)pMouse->GetMouseAxisY() / SCREEN_HEIGHT);
 //	}
 //
 //	//拡大縮小
@@ -115,11 +115,11 @@ void CCamera::Update(void)
 //		//注目点回転
 //		if (fabsf(fRAxisX) > sc_fStartRotMin)
 //		{//Y軸回転
-//			vRot.m_fY = sc_fRotSpeed * fRAxisX;
+//			vRot.Y = sc_fRotSpeed * fRAxisX;
 //		}
 //		if (fabsf(fRAxisY) > sc_fStartRotMin)
 //		{//X軸回転
-//			vRot.m_fX = sc_fRotSpeed * fRAxisY;
+//			vRot.X = sc_fRotSpeed * fRAxisY;
 //		}
 //
 //		//拡大縮小
@@ -131,12 +131,12 @@ void CCamera::Update(void)
 //
 //	//注目点回転
 //	m_vRotSpeed = CKFMath::LerpVec3(m_vRotSpeed, vRot, sc_fRotLerpTime);
-//	Yaw(m_vRotSpeed.m_fY);
-//	Pitch(m_vRotSpeed.m_fX);
+//	Yaw(m_vRotSpeed.Y);
+//	Pitch(m_vRotSpeed.X);
 //
 //	//ズーム
-//	m_fZoomSpeed = CKFMath::LerpFloat(m_fZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
-//	m_fDistance += m_fZoomSpeed;
+//	ZoomSpeed = CKFMath::LerpFloat(ZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
+//	m_fDistance += ZoomSpeed;
 //	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
 }
 
@@ -200,7 +200,7 @@ D3DXMATRIX CCamera::GetMtxViewInverse(void)
 //--------------------------------------------------------------------------------
 //  移動処理
 //--------------------------------------------------------------------------------
-void CCamera::MoveCamera(const CKFVec3& vMovement)
+void CCamera::MoveCamera(const Vector3& vMovement)
 {
 	m_vPosEye += vMovement;
 	m_vPosAt += vMovement;
@@ -209,7 +209,7 @@ void CCamera::MoveCamera(const CKFVec3& vMovement)
 //--------------------------------------------------------------------------------
 //  移動処理
 //--------------------------------------------------------------------------------
-void CCamera::LookAtHere(const CKFVec3& vPos)
+void CCamera::LookAtHere(const Vector3& vPos)
 {
 	m_vMovement = vPos - m_vPosAt;
 }
@@ -217,7 +217,7 @@ void CCamera::LookAtHere(const CKFVec3& vPos)
 //--------------------------------------------------------------------------------
 //  前向き取得
 //--------------------------------------------------------------------------------
-CKFVec3 CCamera::GetVecLook(void)
+Vector3 CCamera::GetVecLook(void)
 {
 	return m_vVecLook;
 }
@@ -225,7 +225,7 @@ CKFVec3 CCamera::GetVecLook(void)
 //--------------------------------------------------------------------------------
 //  前向き取得
 //--------------------------------------------------------------------------------
-CKFVec3 CCamera::GetVecUp(void)
+Vector3 CCamera::GetVecUp(void)
 {
 	return m_vVecUp;
 }
@@ -233,7 +233,7 @@ CKFVec3 CCamera::GetVecUp(void)
 //--------------------------------------------------------------------------------
 //  前向き取得
 //--------------------------------------------------------------------------------
-CKFVec3 CCamera::GetVecRight(void)
+Vector3 CCamera::GetVecRight(void)
 {
 	return m_vVecRight;
 }
@@ -241,7 +241,7 @@ CKFVec3 CCamera::GetVecRight(void)
 //--------------------------------------------------------------------------------
 //  前向き取得
 //--------------------------------------------------------------------------------
-CKFVec3 CCamera::GetPosAt(void)
+Vector3 CCamera::GetPosAt(void)
 {
 	return m_vPosAt;
 }
@@ -249,7 +249,7 @@ CKFVec3 CCamera::GetPosAt(void)
 //--------------------------------------------------------------------------------
 //  前向き取得
 //--------------------------------------------------------------------------------
-CKFVec3 CCamera::GetPosEye(void)
+Vector3 CCamera::GetPosEye(void)
 {
 	return m_vPosEye;
 }
@@ -257,7 +257,7 @@ CKFVec3 CCamera::GetPosEye(void)
 //--------------------------------------------------------------------------------
 //  カメラ設定
 //--------------------------------------------------------------------------------
-void CCamera::SetCamera(const CKFVec3& vPosAt, const CKFVec3& vPosEye, const CKFVec3& vUp, const CKFVec3& vRight)
+void CCamera::SetCamera(const Vector3& vPosAt, const Vector3& vPosEye, const Vector3& vUp, const Vector3& vRight)
 {
 	m_vPosAt = vPosAt;
 	m_vPosEye = vPosEye;
@@ -290,7 +290,7 @@ void CCamera::NormalizeCamera(void)
 //--------------------------------------------------------------------------------
 void CCamera::Pitch(const float& fAngle)
 {
-	CKFMtx44 mtxPitch;
+	Matrix44 mtxPitch;
 	CKFMath::MtxRotAxis(mtxPitch, m_vVecRight, fAngle);
 	m_vVecUp = CKFMath::Vec3TransformNormal(m_vVecUp, mtxPitch);
 	m_vVecLook = CKFMath::Vec3TransformNormal(m_vVecLook, mtxPitch);
@@ -301,8 +301,8 @@ void CCamera::Pitch(const float& fAngle)
 //--------------------------------------------------------------------------------
 void CCamera::Yaw(const float& fAngle)
 {
-	CKFMtx44 mtxYaw;
-	CKFVec3 vAxisY = CKFVec3(0.0f, 1.0f, 0.0f);
+	Matrix44 mtxYaw;
+	Vector3 vAxisY = Vector3(0.0f, 1.0f, 0.0f);
 	CKFMath::MtxRotAxis(mtxYaw, vAxisY, fAngle);
 	m_vVecRight = CKFMath::Vec3TransformNormal(m_vVecRight, mtxYaw);
 	m_vVecLook = CKFMath::Vec3TransformNormal(m_vVecLook, mtxYaw);
@@ -313,7 +313,7 @@ void CCamera::Yaw(const float& fAngle)
 //--------------------------------------------------------------------------------
 void CCamera::Roll(const float& fAngle)
 {
-	CKFMtx44 mtxRoll;
+	Matrix44 mtxRoll;
 	CKFMath::MtxRotAxis(mtxRoll, m_vVecLook, fAngle);
 	m_vVecUp = CKFMath::Vec3TransformNormal(m_vVecUp, mtxRoll);
 	m_vVecRight = CKFMath::Vec3TransformNormal(m_vVecRight, mtxRoll);

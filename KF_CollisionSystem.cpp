@@ -212,9 +212,9 @@ void CKFCollisionSystem::Deregister(const COL_MODE& mode, const COL_TYPE& type, 
 //			pObjThis：自分のゲームオブジェクト
 //	戻り値：衝突フラグ
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::RayCast(const CKFVec3& vOrigin, const CKFVec3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+bool CKFCollisionSystem::RayCast(const Vector3& vOrigin, const Vector3& vDirection, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
 {
-	CKFRay ray = CKFRay(vOrigin, vDirection);
+	Ray ray = Ray(vOrigin, vDirection);
 	bool bFind = false;
 	CRaycastHitInfo info;
 	
@@ -322,7 +322,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshSphere->DrawSubset(0);
@@ -336,9 +336,9 @@ void CKFCollisionSystem::DrawCollider(void)
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
-		D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshCube->DrawSubset(0);
@@ -351,9 +351,9 @@ void CKFCollisionSystem::DrawCollider(void)
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
-		D3DXMatrixScaling(&mtxScale, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.m_fX, vPos.m_fY, vPos.m_fZ);
+		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshCube->DrawSubset(0);
@@ -365,7 +365,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
 		auto& vHalfSize = ((COBBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx;
-		D3DXMatrixScaling(&mtx, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		D3DXMATRIX mtxOff = pCol->GetMatrixOffset();
 		mtx *= mtxOff;
 		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
@@ -379,7 +379,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
 		auto& vHalfSize = ((COBBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx;
-		D3DXMatrixScaling(&mtx, vHalfSize.m_fX * 2.0f, vHalfSize.m_fY * 2.0f, vHalfSize.m_fZ * 2.0f);
+		D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		D3DXMATRIX mtxOff = pCol->GetMatrixOffset();
 		mtx *= mtxOff;
 		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
@@ -491,7 +491,7 @@ void CKFCollisionSystem::checkWithDynamicAABB(const list<CColliderComponent*>::i
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::checkWithDynamicAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+bool CKFCollisionSystem::checkWithDynamicAABB(const Ray& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
 {
 	bool bFind = false;
 	for (auto pCollider : m_alistCollider[DYNAMIC][COL_AABB])
@@ -571,7 +571,7 @@ void CKFCollisionSystem::checkWithDynamicOBB(const list<CColliderComponent*>::it
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::checkWithDynamicOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
+bool CKFCollisionSystem::checkWithDynamicOBB(const Ray& ray, const float& fDistance, CRaycastHitInfo& infoOut, const CGameObject* const pObjThis)
 {
 	bool bFind = false;
 	for (auto pCollider : m_alistCollider[DYNAMIC][COL_OBB])
@@ -679,7 +679,7 @@ void CKFCollisionSystem::checkWithStaticAABB(COBBColliderComponent& obb)
 //--------------------------------------------------------------------------------
 //  OBBとAABBの当たり判定
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::checkWithStaticAABB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
+bool CKFCollisionSystem::checkWithStaticAABB(const Ray& ray, const float& fDistance, CRaycastHitInfo& infoOut)
 {
 	bool bFind = false;
 	for (auto pCollider : m_alistCollider[STATIC][COL_AABB])
@@ -733,7 +733,7 @@ void CKFCollisionSystem::checkWithStaticOBB(CBoxColliderComponent& box)
 //--------------------------------------------------------------------------------
 //  boxとOBBの当たり判定
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::checkWithStaticOBB(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
+bool CKFCollisionSystem::checkWithStaticOBB(const Ray& ray, const float& fDistance, CRaycastHitInfo& infoOut)
 {
 	bool bFind = false;
 	for (auto pCollider : m_alistCollider[STATIC][COL_OBB])
@@ -794,7 +794,7 @@ void CKFCollisionSystem::checkWithField(CBoxColliderComponent& box)
 //			pObjThis：自分のゲームオブジェクト
 //	戻り値：衝突フラグ
 //--------------------------------------------------------------------------------
-bool CKFCollisionSystem::checkWithField(const CKFRay& ray, const float& fDistance, CRaycastHitInfo& infoOut)
+bool CKFCollisionSystem::checkWithField(const Ray& ray, const float& fDistance, CRaycastHitInfo& infoOut)
 {
 	bool bFind = false;
 

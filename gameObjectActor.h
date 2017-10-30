@@ -37,8 +37,8 @@ public:
 	//Setä÷êî
 
 	//ê∂ê¨ä÷êî
-	static CGameObjectActor* CreatePlayer(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObjectActor* CreateEnemy(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	static CGameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &vPos, const Vector3 &vRot, const Vector3 &vScale);
+	static CGameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &vPos, const Vector3 &vRot, const Vector3 &vScale);
 
 private:
 	//--------------------------------------------------------------------------------

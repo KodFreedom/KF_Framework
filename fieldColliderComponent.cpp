@@ -33,16 +33,16 @@ void CFieldColliderComponent::Uninit(void)
 //	引数：	vPos：ポイント位置
 //	戻り値：INFO
 //--------------------------------------------------------------------------------
-//CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const CKFVec3& vPos)
+//CFieldColliderComponent::INFO CFieldColliderComponent::GetPointInfo(const Vector3& vPos)
 //{
 //	INFO info;
 //	info.bInTheField = false;
 //	info.fHeight = 0.0f;
-//	info.vFaceNormal = CKFVec3(0.0f);
-//	CKFVec3 vPosCenter = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
-//	CKFVec3 vStartPos = vPosCenter + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
-//	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-//	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+//	info.vFaceNormal = Vector3(0.0f);
+//	Vector3 vPosCenter = Vector3(m_mtxOffset.Elements[3][0], m_mtxOffset.Elements[3][1], m_mtxOffset.Elements[3][2]);
+//	Vector3 vStartPos = vPosCenter + Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
+//	int nXLeftUp = (int)(((vPos.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+//	int nZLeftUp = -(int)(((vPos.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 //
 //	//フィールドの範囲外だったら処理終了
 //	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
@@ -53,17 +53,17 @@ void CFieldColliderComponent::Uninit(void)
 //	int nXRightDown = nXLeftUp + 1;
 //	int nZRightDown = nZLeftUp + 1;
 //
-//	CKFVec3 vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fZ);
-//	CKFVec3 vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
-//	CKFVec3 vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
+//	Vector3 vPosTarget = Vector3(vPos.X, 0.0f, vPos.Z);
+//	Vector3 vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
+//	Vector3 vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
 //
 //	//Check Side
-//	CKFVec3 vMid = vPRightDown - vPLeftUp;
-//	CKFVec3 vTL = vPosTarget - vPLeftUp;
-//	CKFVec3 vCross = vTL * vMid;
+//	Vector3 vMid = vPRightDown - vPLeftUp;
+//	Vector3 vTL = vPosTarget - vPLeftUp;
+//	Vector3 vCross = vTL * vMid;
 //	int nXSide, nZSide;
 //	int nSign = 0;
-//	if (vCross.m_fY >= 0.0f)
+//	if (vCross.Y >= 0.0f)
 //	{//LeftSide
 //		nXSide = nXLeftUp + 1;
 //		nZSide = nZLeftUp;
@@ -75,37 +75,37 @@ void CFieldColliderComponent::Uninit(void)
 //		nZSide = nZLeftUp + 1;
 //		nSign = 1;
 //	}
-//	CKFVec3 vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
-//	CKFVec3 vLS = vPLeftUp - vPSide;
-//	CKFVec3 vRS = vPRightDown - vPSide;
-//	CKFVec3 vNormal = (vLS * vRS) * (float)nSign;
+//	Vector3 vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
+//	Vector3 vLS = vPLeftUp - vPSide;
+//	Vector3 vRS = vPRightDown - vPSide;
+//	Vector3 vNormal = (vLS * vRS) * (float)nSign;
 //	CKFMath::VecNormalize(vNormal);
 //
 //	//中心点
 //	auto vOffsetPos = (vPLeftUp + vPRightDown) * 0.5f;
 //
 //	//回転行列の算出
-//	auto vRight = vNormal * CKFVec3(0.0f, 0.0f, 1.0f);
+//	auto vRight = vNormal * Vector3(0.0f, 0.0f, 1.0f);
 //	auto vForward = vRight * vNormal;
-//	CKFMtx44 mtxThis;
-//	mtxThis.m_af[0][0] = vRight.m_fX;
-//	mtxThis.m_af[0][1] = vRight.m_fY;
-//	mtxThis.m_af[0][2] = vRight.m_fZ;
-//	mtxThis.m_af[1][0] = vNormal.m_fX;
-//	mtxThis.m_af[1][1] = vNormal.m_fY;
-//	mtxThis.m_af[1][2] = vNormal.m_fZ;
-//	mtxThis.m_af[2][0] = vForward.m_fX;
-//	mtxThis.m_af[2][1] = vForward.m_fY;
-//	mtxThis.m_af[2][2] = vForward.m_fZ;
-//	mtxThis.m_af[3][0] = vOffsetPos.m_fX;
-//	mtxThis.m_af[3][1] = vOffsetPos.m_fY;
-//	mtxThis.m_af[3][2] = vOffsetPos.m_fZ;
+//	Matrix44 mtxThis;
+//	mtxThis.Elements[0][0] = vRight.X;
+//	mtxThis.Elements[0][1] = vRight.Y;
+//	mtxThis.Elements[0][2] = vRight.Z;
+//	mtxThis.Elements[1][0] = vNormal.X;
+//	mtxThis.Elements[1][1] = vNormal.Y;
+//	mtxThis.Elements[1][2] = vNormal.Z;
+//	mtxThis.Elements[2][0] = vForward.X;
+//	mtxThis.Elements[2][1] = vForward.Y;
+//	mtxThis.Elements[2][2] = vForward.Z;
+//	mtxThis.Elements[3][0] = vOffsetPos.X;
+//	mtxThis.Elements[3][1] = vOffsetPos.Y;
+//	mtxThis.Elements[3][2] = vOffsetPos.Z;
 //	auto vRealPos = CKFMath::TransformInverse(mtxThis, vPos);
 //	
-//	info.fPenetration = -vRealPos.m_fY;
+//	info.fPenetration = -vRealPos.Y;
 //
 //	info.bInTheField = true;
-//	info.fHeight = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * vNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * vNormal.m_fZ) / vNormal.m_fY;
+//	info.fHeight = vPSide.Y - ((vPos.X - vPSide.X) * vNormal.X + (vPos.Z - vPSide.Z) * vNormal.Z) / vNormal.Y;
 //	info.vFaceNormal = vNormal;
 //
 //	return info;
@@ -117,13 +117,13 @@ void CFieldColliderComponent::Uninit(void)
 //	引数：	vPos：ポイント位置
 //	戻り値：FINFO
 //--------------------------------------------------------------------------------
-CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const CKFVec3& vPos)
+CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const Vector3& vPos)
 {
 	FINFO info;
 	info.bInFieldRange = false;
 	info.fPenetration = 0.0f;
-	info.vFaceNormal = CKFVec3(0.0f);
-	CKFVec3 vPLeftUp, vPRightDown, vPSide;
+	info.vFaceNormal = Vector3(0.0f);
+	Vector3 vPLeftUp, vPRightDown, vPSide;
 	if (!getPointInfo(vPos, vPLeftUp, vPRightDown, vPSide, info.vFaceNormal)) { return info; }
 	
 	info.bInFieldRange = true;
@@ -133,8 +133,8 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 	auto fDot = CKFMath::Vec3Dot(CKFMath::sc_vUp, info.vFaceNormal);
 	if (fDot > 0.5f) 
 	{
-		float fY = vPSide.m_fY - ((vPos.m_fX - vPSide.m_fX) * info.vFaceNormal.m_fX + (vPos.m_fZ - vPSide.m_fZ) * info.vFaceNormal.m_fZ) / info.vFaceNormal.m_fY;
-		info.fPenetration = fY - vPos.m_fY;
+		float fY = vPSide.Y - ((vPos.X - vPSide.X) * info.vFaceNormal.X + (vPos.Z - vPSide.Z) * info.vFaceNormal.Z) / info.vFaceNormal.Y;
+		info.fPenetration = fY - vPos.Y;
 		info.vFaceNormal = CKFMath::sc_vUp;
 		return info;
 	}
@@ -147,22 +147,22 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 	CKFMath::VecNormalize(vRight);
 	auto vForward = vRight * info.vFaceNormal;
 	CKFMath::VecNormalize(vForward);
-	CKFMtx44 mtxThis;
-	mtxThis.m_af[0][0] = vRight.m_fX;
-	mtxThis.m_af[0][1] = vRight.m_fY;
-	mtxThis.m_af[0][2] = vRight.m_fZ;
-	mtxThis.m_af[1][0] = info.vFaceNormal.m_fX;
-	mtxThis.m_af[1][1] = info.vFaceNormal.m_fY;
-	mtxThis.m_af[1][2] = info.vFaceNormal.m_fZ;
-	mtxThis.m_af[2][0] = vForward.m_fX;
-	mtxThis.m_af[2][1] = vForward.m_fY;
-	mtxThis.m_af[2][2] = vForward.m_fZ;
-	mtxThis.m_af[3][0] = vOffsetPos.m_fX;
-	mtxThis.m_af[3][1] = vOffsetPos.m_fY;
-	mtxThis.m_af[3][2] = vOffsetPos.m_fZ;
+	Matrix44 mtxThis;
+	mtxThis.Elements[0][0] = vRight.X;
+	mtxThis.Elements[0][1] = vRight.Y;
+	mtxThis.Elements[0][2] = vRight.Z;
+	mtxThis.Elements[1][0] = info.vFaceNormal.X;
+	mtxThis.Elements[1][1] = info.vFaceNormal.Y;
+	mtxThis.Elements[1][2] = info.vFaceNormal.Z;
+	mtxThis.Elements[2][0] = vForward.X;
+	mtxThis.Elements[2][1] = vForward.Y;
+	mtxThis.Elements[2][2] = vForward.Z;
+	mtxThis.Elements[3][0] = vOffsetPos.X;
+	mtxThis.Elements[3][1] = vOffsetPos.Y;
+	mtxThis.Elements[3][2] = vOffsetPos.Z;
 	auto vRealPos = CKFMath::TransformInverse(mtxThis, vPos);
 
-	if (vRealPos.m_fY < 0.0f)
+	if (vRealPos.Y < 0.0f)
 	{
  		int n = 0;
 	}
@@ -171,7 +171,7 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 	vRight = CKFMath::sc_vUp * info.vFaceNormal;
 	info.vFaceNormal = vRight * CKFMath::sc_vUp;
 	CKFMath::VecNormalize(info.vFaceNormal);
-	info.fPenetration = -vRealPos.m_fY;
+	info.fPenetration = -vRealPos.Y;
 	return info;
 }
 
@@ -185,18 +185,18 @@ CFieldColliderComponent::FINFO CFieldColliderComponent::GetProjectionInfo(const 
 //			vecOut：範囲内の頂点データ(出力)
 //	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CFieldColliderComponent::GetVtxByRange(const CKFVec3& vBegin, const CKFVec3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<CKFVec3>& vecOut)
+bool CFieldColliderComponent::GetVtxByRange(const Vector3& vBegin, const Vector3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<Vector3>& vecOut)
 {
-	CKFVec3 vMin = CKFVec3(min(vBegin.m_fX, vEnd.m_fX), min(vBegin.m_fY, vEnd.m_fY), min(vBegin.m_fZ, vEnd.m_fZ));
-	CKFVec3 vMax = CKFVec3(max(vBegin.m_fX, vEnd.m_fX), max(vBegin.m_fY, vEnd.m_fY), max(vBegin.m_fZ, vEnd.m_fZ));
+	Vector3 vMin = Vector3(min(vBegin.X, vEnd.X), min(vBegin.Y, vEnd.Y), min(vBegin.Z, vEnd.Z));
+	Vector3 vMax = Vector3(max(vBegin.X, vEnd.X), max(vBegin.Y, vEnd.Y), max(vBegin.Z, vEnd.Z));
 
 	//範囲を算出
-	CKFVec3 vPosCenter = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
-	CKFVec3 vStartPos = vPosCenter + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
-	int nXMin = (int)(((vMin.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZMin = -(int)(((vMin.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
-	int nXMax = 1 + (int)(((vMax.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZMax = 1 - (int)(((vMax.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	Vector3 vPosCenter = Vector3(m_mtxOffset.Elements[3][0], m_mtxOffset.Elements[3][1], m_mtxOffset.Elements[3][2]);
+	Vector3 vStartPos = vPosCenter + Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
+	int nXMin = (int)(((vMin.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZMin = -(int)(((vMin.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	int nXMax = 1 + (int)(((vMax.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZMax = 1 - (int)(((vMax.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 	nXMin = nXMin < 0 ? 0 : nXMin;
 	nZMin = nZMin < 0 ? 0 : nZMin;
 	nXMax = nXMax > m_nNumBlockX + 1 ? m_nNumBlockX + 1 : nXMax;
@@ -254,7 +254,7 @@ void CFieldColliderComponent::load(const string& strFieldName)
 	fread(&m_nNumBlockZ, sizeof(int), 1, pFile);
 
 	//ブロックSizeの読込
-	fread(&m_vBlockSize, sizeof(CKFVec2), 1, pFile);
+	fread(&m_vBlockSize, sizeof(Vector2), 1, pFile);
 
 	//頂点データ数の読込
 	int nNumVtx;
@@ -262,7 +262,7 @@ void CFieldColliderComponent::load(const string& strFieldName)
 
 	//頂点データの読込
 	m_vectorVtx.resize(nNumVtx);
-	fread(&m_vectorVtx[0], sizeof(CKFVec3), nNumVtx, pFile);
+	fread(&m_vectorVtx[0], sizeof(Vector3), nNumVtx, pFile);
 
 	fclose(pFile);
 	return;
@@ -274,12 +274,12 @@ void CFieldColliderComponent::load(const string& strFieldName)
 //	引数：	strFieldName：フィールド名前
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-bool CFieldColliderComponent::getPointInfo(const CKFVec3& vPos, CKFVec3& vPLeftUp, CKFVec3& vPRightDown, CKFVec3& vPSide, CKFVec3& vFaceNormal)
+bool CFieldColliderComponent::getPointInfo(const Vector3& vPos, Vector3& vPLeftUp, Vector3& vPRightDown, Vector3& vPSide, Vector3& vFaceNormal)
 {
-	auto vPosCenter = CKFVec3(m_mtxOffset.m_af[3][0], m_mtxOffset.m_af[3][1], m_mtxOffset.m_af[3][2]);
-	auto vStartPos = vPosCenter + CKFVec3(-m_nNumBlockX * 0.5f * m_vBlockSize.m_fX, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.m_fY);
-	int nXLeftUp = (int)(((vPos.m_fX - vStartPos.m_fX) / (m_vBlockSize.m_fX * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZLeftUp = -(int)(((vPos.m_fZ - vStartPos.m_fZ) / (m_vBlockSize.m_fY * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	auto vPosCenter = Vector3(m_mtxOffset.Elements[3][0], m_mtxOffset.Elements[3][1], m_mtxOffset.Elements[3][2]);
+	auto vStartPos = vPosCenter + Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
+	int nXLeftUp = (int)(((vPos.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZLeftUp = -(int)(((vPos.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 
 	//フィールドの範囲外だったら処理終了
 	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
@@ -290,7 +290,7 @@ bool CFieldColliderComponent::getPointInfo(const CKFVec3& vPos, CKFVec3& vPLeftU
 	int nXRightDown = nXLeftUp + 1;
 	int nZRightDown = nZLeftUp + 1;
 
-	auto vPosTarget = CKFVec3(vPos.m_fX, 0.0f, vPos.m_fZ);
+	auto vPosTarget = Vector3(vPos.X, 0.0f, vPos.Z);
 	vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
 	vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
 
@@ -300,7 +300,7 @@ bool CFieldColliderComponent::getPointInfo(const CKFVec3& vPos, CKFVec3& vPLeftU
 	auto vCross = vTL * vMid;
 	int nXSide, nZSide;
 	int nSign = 0;
-	if (vCross.m_fY >= 0.0f)
+	if (vCross.Y >= 0.0f)
 	{//LeftSide
 		nXSide = nXLeftUp + 1;
 		nZSide = nZLeftUp;

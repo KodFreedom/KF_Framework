@@ -45,7 +45,7 @@ public:
 	void			SetStart(const float& fStart);
 	void			SetEnd(const float& fEnd);
 	void			SetDensity(const float& fDensity);
-	void			SetColor(const CKFColor& cColor);
+	void			SetColor(const Color& cColor);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -62,5 +62,5 @@ private:
 	float			m_fStart;
 	float			m_fEnd;
 	float			m_fDensity;
-	CKFColor		m_cColor;
+	Color		m_cColor;
 };

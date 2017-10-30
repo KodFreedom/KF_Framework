@@ -25,15 +25,15 @@ public:
 	//--------------------------------------------------------------------------------
 	CSphereColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const float& fRadius)
 		: CColliderComponent(pGameObj, CS::COL_SPHERE, mode)
-		, m_fRadius(fRadius) {}
+		, Radius(fRadius) {}
 	~CSphereColliderComponent() {}
 
 	//GetŠÖ”
-	float	GetRadius(void) { return m_fRadius; }
+	float	GetRadius(void) { return Radius; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  ’è”’è‹`
 	//--------------------------------------------------------------------------------
-	float		m_fRadius;	//”¼Œa
+	float		Radius;	//”¼Œa
 };

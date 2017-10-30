@@ -40,7 +40,7 @@ public:
 
 	//Setä÷êî
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }
-	void	SetPos(const CKFVec3& vPos);
+	void	SetPos(const Vector3& vPos);
 
 	//Save
 	void	SaveAs(const string& strFileName);
@@ -79,7 +79,7 @@ private:
 	{
 		INFO() : pTransform(nullptr), vRot(CKFMath::sc_vZero) {}
 		CTransformComponent*	pTransform;
-		CKFVec3					vRot;
+		Vector3					vRot;
 	};
 
 	//--------------------------------------------------------------------------------

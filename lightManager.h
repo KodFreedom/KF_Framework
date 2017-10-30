@@ -19,18 +19,18 @@ public:
 	CLight();
 	~CLight() {}
 
-	void Init(const int &nID, const CKFVec3 &vDir);
+	void Init(const int &nID, const Vector3 &vDir);
 	void Uninit(void);
 
-	void SetDirection(const CKFVec3 &vDir);
+	void SetDirection(const Vector3 &vDir);
 
 private:
 	void SetLight(void);
 
 	int			m_nID;
-	CKFColor	m_cDiffuse;
-	CKFColor	m_cAmbient;
-	CKFVec3		m_vDirection;
+	Color	m_cDiffuse;
+	Color	m_cAmbient;
+	Vector3		Direction;
 };
 
 class CLightManager
@@ -45,8 +45,8 @@ public:
 	void	TurnAllLightOff(void);
 	void	TurnAllLightOn(void);
 	void	ReleaseAll(void);
-	int		CreateDirectionalLight(const CKFVec3 &vDir);
-	void	SetLightDirection(const int &nLightID, const CKFVec3 &vDir);
+	int		CreateDirectionalLight(const Vector3 &vDir);
+	void	SetLightDirection(const int &nLightID, const Vector3 &vDir);
 
 private:
 	list<CLight*> m_listLight;

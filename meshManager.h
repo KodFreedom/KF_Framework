@@ -49,8 +49,8 @@ public:
 	auto	GetRenderInfo(const string& strName) const { return m_umMesh.at(strName).renderInfo; }
 
 	//Editoróp
-	void	CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const CKFVec2& vBlockSize);
-	void	UpdateEditorField(const vector<CKFVec3>& vecVtx, const list<int>& listChoosenIdx);
+	void	CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const Vector2& vBlockSize);
+	void	UpdateEditorField(const vector<Vector3>& vecVtx, const list<int>& listChoosenIdx);
 	void	SaveEditorFieldAs(const string& strFileName);
 
 	//Getä÷êî

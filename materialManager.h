@@ -21,7 +21,7 @@ class CKFMaterial
 {
 public:
 	CKFMaterial();
-	CKFMaterial(const CKFColor& cAmbient, const CKFColor& cDiffuse, const CKFColor& cSpecular, const CKFColor& cEmissive, const float& fPower)
+	CKFMaterial(const Color& cAmbient, const Color& cDiffuse, const Color& cSpecular, const Color& cEmissive, const float& fPower)
 		: m_cAmbient(cAmbient)
 		, m_cDiffuse(cDiffuse)
 		, m_cSpecular(cSpecular)
@@ -30,10 +30,10 @@ public:
 	{}
 	~CKFMaterial() {}
 
-	CKFColor	m_cAmbient;		// 環境光の反射率
-	CKFColor	m_cDiffuse;		// 漫射光の反射率
-	CKFColor	m_cSpecular;	// 鏡面光の反射率
-	CKFColor	m_cEmissive;	// 自発光
+	Color	m_cAmbient;		// 環境光の反射率
+	Color	m_cDiffuse;		// 漫射光の反射率
+	Color	m_cSpecular;	// 鏡面光の反射率
+	Color	m_cEmissive;	// 自発光
 	float		m_fPower;		// ハイライトのシャープネス
 
 	//キャスト
@@ -70,7 +70,7 @@ public:
 		m_umMaterial.clear();
 		delete this; 
 	}
-	const unsigned short	SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
+	const unsigned short	SaveMaterial(const Color &cAmbient, const Color &cDiffuse, const Color &cSpecular, const Color &cEmissive, const float &fPower);
 	const CKFMaterial&		GetMaterial(const unsigned short& usID);
 
 private:

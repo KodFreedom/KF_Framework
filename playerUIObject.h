@@ -25,7 +25,7 @@ public:
 	CPlayerUIObject(CPlayerBehaviorComponent* const pPlayerBehavior)
 		: C2DUIObject(0)
 		, m_pPlayerBehavior(pPlayerBehavior)
-		, m_vFaceUVBegin(CKFVec2(0.0f)) {}
+		, m_vFaceUVBegin(Vector2(0.0f)) {}
 	~CPlayerUIObject() {}
 
 	bool Init(void) override;
@@ -38,19 +38,19 @@ private:
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
 	static const float		sc_fScreenRate;
-	static const CKFVec2	sc_vLifeGaugeSize;
-	static const CKFVec2	sc_vLifeGaugePosLeftTop;
-	static const CKFColor	sc_cLifeGaugeColorMax;
-	static const CKFColor	sc_cLifeGaugeColorMin;
-	static const CKFVec2	sc_vCoverSize;
-	static const CKFVec2	sc_vCoverPosCenter;
-	static const CKFVec2	sc_vFaceSize;
-	static const CKFVec2	sc_vFacePosCenter;
-	static const CKFVec2	sc_vFaceUVSize;
+	static const Vector2	sc_vLifeGaugeSize;
+	static const Vector2	sc_vLifeGaugePosLeftTop;
+	static const Color	sc_cLifeGaugeColorMax;
+	static const Color	sc_cLifeGaugeColorMin;
+	static const Vector2	sc_vCoverSize;
+	static const Vector2	sc_vCoverPosCenter;
+	static const Vector2	sc_vFaceSize;
+	static const Vector2	sc_vFacePosCenter;
+	static const Vector2	sc_vFaceUVSize;
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CKFVec2						m_vFaceUVBegin;
+	Vector2						m_vFaceUVBegin;
 	CPlayerBehaviorComponent*	m_pPlayerBehavior;
 };

@@ -260,19 +260,19 @@ void CDebugManager::showCameraWindow(void)
 	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
 
 	// PosEye
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosEye.m_fX, pCamera->m_vPosEye.m_fY, pCamera->m_vPosEye.m_fZ);
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosEye.X, pCamera->m_vPosEye.Y, pCamera->m_vPosEye.Z);
 
 	// PosAt
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosAt.m_fX, pCamera->m_vPosAt.m_fY, pCamera->m_vPosAt.m_fZ);
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosAt.X, pCamera->m_vPosAt.Y, pCamera->m_vPosAt.Z);
 
 	// Forward
-	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.m_fX, pCamera->m_vVecLook.m_fY, pCamera->m_vVecLook.m_fZ);
+	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.X, pCamera->m_vVecLook.Y, pCamera->m_vVecLook.Z);
 
 	// Up
-	ImGui::Text("Up : %f %f %f", pCamera->m_vVecUp.m_fX, pCamera->m_vVecUp.m_fY, pCamera->m_vVecUp.m_fZ);
+	ImGui::Text("Up : %f %f %f", pCamera->m_vVecUp.X, pCamera->m_vVecUp.Y, pCamera->m_vVecUp.Z);
 
 	// Right
-	ImGui::Text("Right : %f %f %f", pCamera->m_vVecRight.m_fX, pCamera->m_vVecRight.m_fY, pCamera->m_vVecRight.m_fZ);
+	ImGui::Text("Right : %f %f %f", pCamera->m_vVecRight.X, pCamera->m_vVecRight.Y, pCamera->m_vVecRight.Z);
 
 	// End
 	ImGui::End();
@@ -294,7 +294,7 @@ void CDebugManager::showPlayerWindow(void)
 
 	// Trans
 	auto pTrans = m_pPlayer->GetTransformComponent();
-	ImGui::InputFloat3("Trans", &pTrans->m_vPosNext.m_fX);
+	ImGui::InputFloat3("Trans", &pTrans->m_vPosNext.X);
 
 	// Actor Behavior
 	auto pActor = static_cast<CActorBehaviorComponent*>(m_pPlayer->GetBehaviorComponent().front());
