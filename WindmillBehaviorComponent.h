@@ -26,7 +26,7 @@ public:
 	//--------------------------------------------------------------------------------
 	CWindmillBehaviorComponent(CGameObject* const pGameObj)
 		: CBehaviorComponent(pGameObj)
-		, m_fRotSpeed(0.01f)
+		, RotSpeed(0.01f)
 		, m_pFan(nullptr)
 	{}
 	~CWindmillBehaviorComponent() {}
@@ -48,6 +48,6 @@ private:
 	//--------------------------------------------------------------------------------
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
-	float			m_fRotSpeed;
+	float			RotSpeed;
 	CGameObject*	m_pFan;
 };
