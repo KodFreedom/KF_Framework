@@ -6,6 +6,9 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #define USING_DIRECTX
+#ifdef USING_DIRECTX
+#define DIRECTX_MATH_VERSION 9
+#endif
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -13,7 +16,7 @@
 #include <math.h>
 #include <time.h>
 
-#ifdef USING_DIRECTX
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
 #include <d3dx9.h>
 #endif
 
@@ -24,6 +27,13 @@
 
 namespace KF
 {
+	//--------------------------------------------------------------------------------
+	//  前方宣言
+	//--------------------------------------------------------------------------------
+	class Quaternion;
+	class Matrix44;
+	class Ray;
+
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
@@ -44,8 +54,12 @@ namespace KF
 		float X;
 		float Y;
 
+		// 定数定義
+		static const Vector2 Zero;
+		static const Vector2 One;
+
 		// キャスト
-#ifdef USING_DIRECTX
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
 		operator D3DXVECTOR2() const;
 #endif
 
@@ -53,26 +67,27 @@ namespace KF
 		Vector2& operator=(const Vector2& value);
 		bool operator==(const Vector2& value) const;
 
-		Vector2 operator+(const Vector2& value) const;
+		Vector2& operator+(const Vector2& value) const;
 		void operator+=(const Vector2& value);
 
-		Vector2 operator-(const Vector2& value) const;
+		Vector2& operator-(const Vector2& value) const;
 		void operator-=(const Vector2& value);
 
-		Vector2 operator*(const float& value) const;
+		Vector2& operator*(const float& value) const;
 		void operator*=(const float& value);
 		float operator*(const Vector2& value) const;
 
 		// メソッド
-		float		Dot(const Vector2& value) const;
-		float		Magnitude(void) const;
-		float		SquareMagnitude(void) const;
-		void		Normalize(void);
-		Vector2&	Normalized(void) const;
-		float		Radian(void) const;
+		float			Dot(const Vector2& value) const;
+		float			Magnitude(void) const;
+		float			SquareMagnitude(void) const;
+		void			Normalize(void);
+		Vector2&		Normalized(void) const;
+		float			ToRadian(void) const;
+		Ray&			ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse);
 
 		// 静的メソッド
-		static float RadianBetween(const Vector2& valueL, const Vector2& valueR);
+		static float	RadianBetween(const Vector2& valueL, const Vector2& valueR);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -103,7 +118,7 @@ namespace KF
 
 		// キャスト
 		operator Vector2() const;
-#ifdef USING_DIRECTX
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
 		operator D3DXVECTOR3() const;
 #endif
 
@@ -112,19 +127,19 @@ namespace KF
 		bool operator==(const Vector3& value) const;
 		bool operator!=(const Vector3& value) const;
 
-		Vector3 operator+(const Vector3& value) const;
+		Vector3& operator+(const Vector3& value) const;
 		void operator+=(const Vector3& value);
 
-		Vector3 operator-(const Vector3& value) const;
+		Vector3& operator-(const Vector3& value) const;
 		void operator-=(const Vector3& value);
 
-		Vector3 operator*(const float& value) const;
+		Vector3& operator*(const float& value) const;
 		void operator*=(const float& value);
 
-		Vector3 operator*(const Vector3& value) const;
+		Vector3& operator*(const Vector3& value) const;
 		void operator*=(const Vector3& value);
 
-		Vector3 operator/(const float& value) const;
+		Vector3& operator/(const float& value) const;
 		void operator/=(const float& value);
 
 		// メソッド
@@ -133,71 +148,17 @@ namespace KF
 		float			SquareMagnitude(void) const;
 		void			Normalize(void);
 		Vector3&		Normalized(void) const;
+		Quaternion&		ToQuaternion(void) const;
 		
 		// 静的メソッド
-		static float	Distance(const Vector3& valueL, const Vector3& valueR);
-		static float	SquareDistance(const Vector3& valueL, const Vector3& valueR);
-		static Vector3&	TransformCoord(const Vector3& value, const Matrix44& rotation);
-		static Vector3&	TransformNormal(const Vector3& value, const Matrix44& rotation);
-		static Vector3&	TransformInverse(const Vector3& value, const Matrix44& matrix);
+		static float	DistanceBetween(const Vector3& pointA, const Vector3& pointB);
+		static float	SquareDistanceBetween(const Vector3& pointA, const Vector3& pointB);
+		static Vector3&	TransformCoord(const Vector3& point, const Matrix44& transform);
+		static Vector3&	TransformNormal(const Vector3& normal, const Matrix44& transform);
+		static Vector3&	TransformInverse(const Vector3& point, const Matrix44& transform);
 		static Vector3&	Scale(const Vector3& value, const Vector3& scale);
-		static float	RadianBetween(const Vector3& valueL, const Vector3& valueR);
-		static Vector3&	EulerBetween(const Vector3& from, const Vector3& to);
-		static Vector3&	ProjectOnPlane(const Vector3& value, const Vector3& planeNormal, const Vector3& currentNormal = Vector3::Up);
-	};
-
-	//--------------------------------------------------------------------------------
-	//  Matrix4*4
-	//--------------------------------------------------------------------------------
-	class Matrix44
-	{
-	public:
-		Matrix44();
-		Matrix44(
-			const float& element11, const float& element12, const float& element13, const float& element14,
-			const float& element21, const float& element22, const float& element23, const float& element24,
-			const float& element31, const float& element32, const float& element33, const float& element34,
-			const float& element41, const float& element42, const float& element43, const float& element44);
-		~Matrix44() {}
-
-		// 定数定義
-		static const Matrix44 Identity;
-
-		// メンバー変数
-		union 
-		{
-			struct 
-			{
-				float Element11, Element12, Element13, Element14;
-				float Element21, Element22, Element23, Element24;
-				float Element31, Element32, Element33, Element34;
-				float Element41, Element42, Element43, Element44;
-			};
-			float Elements[4][4];
-		};
-
-		// キャスト
-#ifdef USING_DIRECTX
-		operator D3DXMATRIX() const;
-#endif
-
-		// 算術演算子
-		Matrix44& operator=(const Matrix44& value);
-		Matrix44 operator*(const Matrix44& value) const;
-		void operator*=(const Matrix44& value);
-
-		// メソッド
-		Vector3&			ToEular(void) const;
-		Matrix44&			Transpose(void) const;
-
-		// 静的メソッド
-		static Matrix44&	RotationByAxis(const Vector3& axis, const float& radian);
-		static Matrix44&	RotationYawPitchRoll(const Vector3& euler);
-		static Matrix44&	Translation(const Vector3& translation);
-
-#ifdef USING_DIRECTX
-		static Matrix44&	ToMatrix44(const D3DXMATRIX& value);
-#endif
+		static Vector3&	EulerBetween(const Vector3& directionA, const Vector3& directionB);
+		static Vector3&	ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal = Vector3::Up);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -217,9 +178,64 @@ namespace KF
 		float Z;
 		float W;
 
-		//算術演算子
-		Vector4 operator*(const Matrix44& mtxValue) const;
-		void operator*=(const Matrix44& mtxValue);
+		// 算術演算子
+		Vector4 operator*(const Matrix44& matrix) const;
+		void operator*=(const Matrix44& matrix);
+	};
+
+	//--------------------------------------------------------------------------------
+	//  Matrix4*4
+	//--------------------------------------------------------------------------------
+	class Matrix44
+	{
+	public:
+		Matrix44();
+		Matrix44(
+			const float& element11, const float& element12, const float& element13, const float& element14,
+			const float& element21, const float& element22, const float& element23, const float& element24,
+			const float& element31, const float& element32, const float& element33, const float& element34,
+			const float& element41, const float& element42, const float& element43, const float& element44);
+		~Matrix44() {}
+
+		// メンバー変数
+		union 
+		{
+			struct 
+			{
+				float Element11, Element12, Element13, Element14;
+				float Element21, Element22, Element23, Element24;
+				float Element31, Element32, Element33, Element34;
+				float Element41, Element42, Element43, Element44;
+			};
+			float Elements[4][4];
+		};
+
+		// 定数定義
+		static const Matrix44 Identity;
+
+		// キャスト
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+		operator D3DXMATRIX() const;
+#endif
+
+		// 算術演算子
+		Matrix44& operator=(const Matrix44& value);
+		Matrix44& operator*(const Matrix44& value) const;
+		void operator*=(const Matrix44& value);
+
+		// メソッド
+		Vector3&			ToEular(void) const;
+		Quaternion&			ToQuaternion(void) const;
+		Matrix44&			Transpose(void) const;
+
+		// 静的メソッド
+		static Matrix44&	RotationAxis(const Vector3& axis, const float& radian);
+		static Matrix44&	RotationYawPitchRoll(const Vector3& euler);
+		static Matrix44&	Translation(const Vector3& translation);
+
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+		static Matrix44&	ToMatrix44(const D3DXMATRIX& value);
+#endif
 	};
 
 	//--------------------------------------------------------------------------------
@@ -233,30 +249,41 @@ namespace KF
 		Quaternion(const float& x, const float& y, const float& z, const float& w) : X(x), Y(y), Z(z), W(w) {}
 		~Quaternion() {}
 
-		// 定数定義
-		static const Quaternion Identity;
-
 		// メンバー変数
 		float X;
 		float Y;
 		float Z;
 		float W;
 
-		//キャスト
-#ifdef USING_DIRECTX
+		// 定数定義
+		static const Quaternion Identity;
+
+		// キャスト
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
 		operator D3DXQUATERNION () const;
 #endif
 
-		//算術演算子
-		Quaternion operator+(const Quaternion& value) const;
+		// 算術演算子
+		Quaternion& operator+(const Quaternion& value) const;
 		void operator+=(const Quaternion& value);
-		Quaternion operator-(const Quaternion& value) const;
+		Quaternion& operator-(const Quaternion& value) const;
 		void operator-=(const Quaternion& value);
-		Quaternion operator*(const float& value) const;
+		Quaternion& operator*(const float& value) const;
 		void operator*=(const float& value);
+		Quaternion& operator/(const float& value) const;
 		void operator/=(const float& value);
-		Quaternion operator*(const Quaternion& value) const;
+		Quaternion& operator*(const Quaternion& value) const;
 		void operator*=(const Quaternion& value);
+
+		// メソッド
+		float			Dot(const Quaternion& value) const;
+		float			SquareMagnitude(void) const;
+		float			Magnitude(void) const;
+		void			Normalize(void);
+		Quaternion&		Normalized(void) const;
+		Quaternion&		MultiplySeparately(const Quaternion& value) const;
+		Vector3&		ToEuler(void);
+		Matrix44&		ToMatrix(void);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -284,7 +311,7 @@ namespace KF
 		float A;
 
 		//キャスト
-#ifdef USING_DIRECTX
+#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
 		operator D3DCOLORVALUE () const;
 		operator unsigned long() const;
 #endif
@@ -293,13 +320,13 @@ namespace KF
 		Color& operator=(const Color& value);
 		bool operator==(const Color& value);
 
-		Color operator+(const Color& value) const;
+		Color& operator+(const Color& value) const;
 		void operator+=(const Color& value);
 
-		Color operator-(const Color& value) const;
+		Color& operator-(const Color& value) const;
 		void operator-=(const Color& value);
 
-		Color operator*(const float& value) const;
+		Color& operator*(const float& value) const;
 		void operator*=(const float& value);
 	};
 
@@ -310,8 +337,8 @@ namespace KF
 	{
 	public:
 		Ray()
-			: Origin(Vector3(0.0f))
-			, Direction(Vector3(0.0f))
+			: Origin(Vector3::Zero)
+			, Direction(Vector3::Zero)
 		{}
 		Ray(const Vector3& vOrigin, const Vector3& vDirection)
 			: Origin(vOrigin)
@@ -319,74 +346,40 @@ namespace KF
 		{}
 		~Ray() {}
 
+		// メンバー変数
 		Vector3 Origin;
 		Vector3 Direction;
+
+		// メソッド
+		void		Transform(const Matrix44& transform);
 	};
 
-	//--------------------------------------------------------------------------------
-	//
-	//  計算式定義
-	//
-	//--------------------------------------------------------------------------------
 	//--------------------------------------------------------------------------------
 	//	ランダム
 	//--------------------------------------------------------------------------------
 	namespace Random
 	{
-		void	Init(void);
-		int		Range(const int& min, const int& max);
-		float	Range(const float& min, const float& max);
-		Vector3	Range(const Vector3& min, const Vector3& max);
+		void		Init(void);
+		int			Range(const int& min, const int& max);
+		float		Range(const float& min, const float& max);
+		Vector3&	Range(const Vector3& min, const Vector3& max);
 	};
 
 	//--------------------------------------------------------------------------------
 	//	計算式
 	//--------------------------------------------------------------------------------
-	class CKFMath
+	namespace Math
 	{
-	public:
-		//--------------------------------------------------------------------------------
-		//  関数定義
-		//--------------------------------------------------------------------------------
-		//Quaternion計算
-		static void				QuaternionIdentity(Quaternion& qValue);
-		static float			QuaternionMagnitudeSquare(const Quaternion& qValue);
-		static float			QuaternionMagnitude(const Quaternion& qValue);
-		static void				QuaternionNormalize(Quaternion& qValue);
-		static float			QuaternionDot(const Quaternion& qL, const Quaternion& qR);
-		static Vector3			QuaternionToEuler(const Quaternion& quaternion);
-		static Matrix44			QuaternionToMtx(const Quaternion& qValue);
-		static Quaternion		QuaternionMultiplyXYZW(const Quaternion& qL, const Quaternion& qR);
-		static Quaternion		EulerToQuaternion(const Vector3& vVec);
-		static Quaternion		MtxToQuaternion(const Matrix44& mtxRot);
+		// Lerp
+		Vector3		Lerp(const Vector3& from, const Vector3& to, const float& time);
+		float		Lerp(const float& from, const float& to, const float& time);
+		Color		Lerp(const Color& from, const Color& to, const float& time);
 
-		//Ray計算
-		static Ray			CalculatePickingRay(const Vector2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11, const Matrix44& mtxViewInverse);
-		static Ray			ChangePosToRay(const Vector2& vScreenPos, const float& fViewportWidth, const float& fViewportHeight, const float& fProjMtx00, const float& fProjMtx11);
-		static void				TransformRay(Ray& ray, const Matrix44& mtxTrans);
+		// Slerp
+		Vector3		Slerp(const Vector3& from, const Vector3& to, const float& time);
+		Quaternion	Slerp(const Quaternion& from, const Quaternion& to, const float& time);
 
-		//Lerp関数
-		static Vector3			LerpVec3(const Vector3& vVecFrom, const Vector3& vVecTo, const float& fTime);
-		static Vector3			LerpNormal(const Vector3& vNormalFrom, const Vector3& vNormalTo, const float& fTime);
-		static float			LerpFloat(const float& fFrom, const float& fTo, const float& fTime);
-		static Color			LerpColor(const Color& cFrom, const Color& cTo, const float& fTime);
-		static Quaternion	SlerpQuaternion(const Quaternion& qFrom, const Quaternion& qTo, const float& fTime);
-
-		//Clamp関数
-		static void				ClampFloat(float& fValue, const float& fMin, const float& fMax);
-
-		//ほかの計算
-		static void				NormalizeColor(Color& cColor);
-		static void				NormalizeRotInTwoPi(float& fRot);
-		static void				NormalizeRotInTwoPi(Vector3& vRot);
-		static void				NormalizeRotInPi(float& fRot);
-		static void				NormalizeRotInPi(Vector3& vRot);
-		static void				NormalizeRotInZeroToTwoPi(float& fRot);
-		static void				NormalizeRotInZeroToTwoPi(Vector3& vRot);
-		static float			CalculateZDepth(const Vector3& vPos, const Vector3& vCameraEye, const Vector3& vCameraAt);
-
-	private:
-		CKFMath() {}
-		~CKFMath() {}
-	};
+		// Clamp
+		float		Clamp(const float& value, const float& min, const float& max);
+	}
 }
