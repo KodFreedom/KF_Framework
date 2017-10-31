@@ -94,7 +94,7 @@ void CRenderManager::Clear(void)
 void CRenderManager::init(void)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	
 	pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// ƒ¿ƒuƒŒƒ“ƒh‚ðs‚¤
@@ -137,7 +137,7 @@ void CRenderManager::uninit(void)
 void CRenderManager::setRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 	if (rp == RP_3D_ALPHATEST)
 	{//Alpha Test
@@ -157,7 +157,7 @@ void CRenderManager::setRenderState(const RENDER_PRIORITY& rp, const RENDER_STAT
 void CRenderManager::resetRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 	if (rp == RP_3D_ALPHATEST)
 	{//ZTEST

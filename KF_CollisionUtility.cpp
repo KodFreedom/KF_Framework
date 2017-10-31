@@ -92,7 +92,7 @@ void CCollisionDetector::CheckSphereWithSphere(CSphereColliderComponent& sphereL
 	}
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -173,9 +173,9 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	if (CKFMath::VecMagnitudeSquare(pCollision->m_vCollisionNormal) == 0.0f)
 	{//中心がobbの中にある
 		auto pTrans = sphere.GetGameObject()->GetTransformComponent();
-		auto vPos = pTrans->GetPos();
-		auto vPosNext = pTrans->GetPosNext();
-		pCollision->m_vCollisionNormal = vPos - vPosNext;
+		auto Position = pTrans->GetPos();
+		auto PositionNext = pTrans->GetPosNext();
+		pCollision->m_vCollisionNormal = Position - PositionNext;
 	}
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
@@ -200,7 +200,7 @@ void CCollisionDetector::CheckSphereWithAABB(CSphereColliderComponent& sphere, C
 	}
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -281,9 +281,9 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	if (CKFMath::VecMagnitudeSquare(pCollision->m_vCollisionNormal) == 0.0f)
 	{//中心がobbの中にある
 		auto pTrans = sphere.GetGameObject()->GetTransformComponent();
-		auto vPos = pTrans->GetPos();
-		auto vPosNext = pTrans->GetPosNext();
-		pCollision->m_vCollisionNormal = vPos - vPosNext;
+		auto Position = pTrans->GetPos();
+		auto PositionNext = pTrans->GetPosNext();
+		pCollision->m_vCollisionNormal = Position - PositionNext;
 	}
 	CKFMath::VecNormalize(pCollision->m_vCollisionNormal);
 	pCollision->m_vCollisionPos = vClosestPos;
@@ -308,7 +308,7 @@ void CCollisionDetector::CheckSphereWithOBB(CSphereColliderComponent& sphere, CO
 	}
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -348,11 +348,11 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	}
 
 	//XYZ軸一番深度が浅いの軸を洗い出す
-	const auto& vPosL = aabbL.GetWorldPosNext();
+	const auto& PositionL = aabbL.GetWorldPosNext();
 	const auto& vHalfSizeL = aabbL.GetHalfSize();
-	const auto& vPosR = aabbR.GetWorldPosNext();
+	const auto& PositionR = aabbR.GetWorldPosNext();
 	const auto& vHalfSizeR = aabbR.GetHalfSize();
-	auto vMidLine = vPosL - vPosR;
+	auto vMidLine = PositionL - PositionR;
 	auto vDisNoCol = vHalfSizeL + vHalfSizeR;
 	auto fPenetrationX = vDisNoCol.X - fabsf(vMidLine.X);
 	auto fPenetrationY = vDisNoCol.Y - fabsf(vMidLine.Y);
@@ -399,7 +399,7 @@ void CCollisionDetector::CheckAABBWithAABB(CAABBColliderComponent& aabbL, CAABBC
 	}
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo info;
@@ -516,7 +516,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		//物理演算システムにレジストリ
 		auto pCollision = new CCollision;
 		*pCollision = collisionDepthMaxL;
-		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxL);
 	}
 
@@ -540,7 +540,7 @@ void CCollisionDetector::CheckBoxWithBox(CBoxColliderComponent& boxL, CBoxCollid
 		//物理演算システムにレジストリ
 		auto pCollision = new CCollision;
 		*pCollision = collisionDepthMaxR;
-		CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+		Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 		info.m_listCollision.push_back(&collisionDepthMaxR);
 	}
 
@@ -609,7 +609,7 @@ void CCollisionDetector::CheckSphereWithField(CSphereColliderComponent& sphere, 
 	pCollision->m_pRigidBodyTwo = nullptr;
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo cInfo;
@@ -694,7 +694,7 @@ void CCollisionDetector::CheckBoxWithField(CBoxColliderComponent& box, CFieldCol
 	}
 
 	//物理演算システムにレジストリ
-	CMain::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
+	Main::GetManager()->GetPhysicsSystem()->RegisterCollision(pCollision);
 
 	//OnCollision
 	CCollisionInfo cInfo;
@@ -729,8 +729,8 @@ bool CCollisionDetector::CheckRayWithBox(const Ray& ray, const float& fDistance,
 	CCollision collision;
 	if (checkPointWithBox(collision, ray.Origin, box))
 	{
-		infoOut.m_vNormal = collision.m_vCollisionNormal;
-		infoOut.m_vPos = ray.Origin;
+		infoOut.m_Normal = collision.m_vCollisionNormal;
+		infoOut.m_Position = ray.Origin;
 		infoOut.m_pCollider = &box;
 		infoOut.m_fDistance = collision.m_fPenetration;
 		return true;
@@ -739,8 +739,8 @@ bool CCollisionDetector::CheckRayWithBox(const Ray& ray, const float& fDistance,
 	auto& vRayEnd = ray.Origin + ray.Direction * fDistance;
 	if (checkPointWithBox(collision, vRayEnd, box))
 	{
-		infoOut.m_vNormal = collision.m_vCollisionNormal;
-		infoOut.m_vPos = vRayEnd;
+		infoOut.m_Normal = collision.m_vCollisionNormal;
+		infoOut.m_Position = vRayEnd;
 		infoOut.m_pCollider = &box;
 		infoOut.m_fDistance = collision.m_fPenetration;
 		return true;
@@ -793,9 +793,9 @@ bool CCollisionDetector::CheckRayWithSphere(const Ray& ray, const float& fDistan
 
 	infoOut.m_fDistance = fTimingMin;
 	infoOut.m_pCollider = &sphere;
-	infoOut.m_vPos = ray.Origin + ray.Direction * fTimingMin;
-	infoOut.m_vNormal = infoOut.m_vPos - vSpherePos;
-	CKFMath::VecNormalize(infoOut.m_vNormal);
+	infoOut.m_Position = ray.Origin + ray.Direction * fTimingMin;
+	infoOut.m_Normal = infoOut.m_Position - vSpherePos;
+	CKFMath::VecNormalize(infoOut.m_Normal);
 	return true;
 }
 
@@ -824,7 +824,7 @@ bool CCollisionDetector::CheckRayWithField(const Ray& ray, const float& fDistanc
 	if (!info.bInFieldRange) { return false; }
 	if (info.fPenetration < 0.0f) { return false; }
 	infoOut.m_fDistance = info.fPenetration;
-	infoOut.m_vNormal = info.vFaceNormal;
+	infoOut.m_Normal = info.vFaceNormal;
 	infoOut.m_pCollider = &field;
 	return true;
 }
@@ -1074,14 +1074,14 @@ bool CCollisionDetector::checkOverlapOnAxis(const Vector2& vMinL, const Vector2&
 //--------------------------------------------------------------------------------
 bool CCollisionDetector::checkOverlapAABB(const CAABBColliderComponent& aabbL, const CAABBColliderComponent& aabbR)
 {
-	const auto& vPosL = aabbL.GetWorldPosNext();
+	const auto& PositionL = aabbL.GetWorldPosNext();
 	const auto& vHalfSizeL = aabbL.GetHalfSize();
-	const auto& vPosR = aabbR.GetWorldPosNext();
+	const auto& PositionR = aabbR.GetWorldPosNext();
 	const auto& vHalfSizeR = aabbR.GetHalfSize();
-	auto& vMinL = vPosL - vHalfSizeL;
-	auto& vMaxL = vPosL + vHalfSizeL;
-	auto& vMinR = vPosR - vHalfSizeR;
-	auto& vMaxR = vPosR + vHalfSizeR;
+	auto& vMinL = PositionL - vHalfSizeL;
+	auto& vMaxL = PositionL + vHalfSizeL;
+	auto& vMinR = PositionR - vHalfSizeR;
+	auto& vMaxR = PositionR + vHalfSizeR;
 
 	//AABB同士がxyz軸上に重ねてるかどうかをチェックする
 	bool bAnswer = checkOverlapOnAxis(Vector2(vMinL.Y, vMinL.Z), Vector2(vMaxL.Y, vMaxL.Z), Vector2(vMinR.Y, vMinR.Z), Vector2(vMaxR.Y, vMaxR.Z))	//X軸

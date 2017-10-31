@@ -42,7 +42,7 @@ const Color			Color::Green = Color(0.0f, 1.0f, 0.0f, 1.0f);
 //	引数：	なし
 //	戻り値：D3DXVECTOR2
 //--------------------------------------------------------------------------------
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 Vector2::operator D3DXVECTOR2() const
 {
 	D3DXVECTOR2 result;
@@ -288,7 +288,7 @@ Vector3::operator Vector2() const
 //	引数：	なし
 //	戻り値：D3DXVECTOR3
 //--------------------------------------------------------------------------------
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 Vector3::operator D3DXVECTOR3() const
 {
 	D3DXVECTOR3 result;
@@ -520,7 +520,7 @@ Quaternion&	Vector3::ToQuaternion(void) const
 {
 	// Todo : 計算式を調べる
 	Quaternion result;
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	D3DXQUATERNION resultDX;
 	D3DXQuaternionRotationYawPitchRoll(&resultDX, Y, X, Z);
 	result.X = resultDX.x;
@@ -772,7 +772,7 @@ Matrix44::Matrix44(
 //	引数：	なし
 //	戻り値：D3DXMATRIX
 //--------------------------------------------------------------------------------
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 Matrix44::operator D3DXMATRIX() const
 {
 	D3DXMATRIX result;
@@ -1007,7 +1007,7 @@ Matrix44& Matrix44::Translation(const Vector3& translation)
 //	引数：	value：D3DXMATRIX
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 Matrix44& Matrix44::ToMatrix44(const D3DXMATRIX& value)
 {
 	Matrix44 result;
@@ -1031,7 +1031,7 @@ Matrix44& Matrix44::ToMatrix44(const D3DXMATRIX& value)
 //	引数：	なし
 //	戻り値：D3DXQUATERNION
 //--------------------------------------------------------------------------------
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 Quaternion::operator D3DXQUATERNION() const
 {
 	D3DXQUATERNION result;
@@ -1250,7 +1250,7 @@ Quaternion& Quaternion::MultiplySeparately(const Quaternion& value) const
 Vector3& Quaternion::ToEuler(void)
 {
 	Vector3 result;
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	D3DXQUATERNION quaternion = *this;
 	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(1.0f, 0.0f, 0.0f), &result.X);
 	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &result.Y);
@@ -1403,7 +1403,7 @@ void Color::operator*=(const float& value)
 	A *= value;
 }
 
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
 //	関数名：operator D3DCOLORVALUE()
 //  関数説明：キャスト(D3DCOLORVALUE)
@@ -1584,7 +1584,7 @@ Quaternion Math::Slerp(const Quaternion& from, const Quaternion& to, const float
 	if (time <= 0.0f) { return from; }
 	if (time >= 1.0f) { return to; }
 	Quaternion result;
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	D3DXQUATERNION fromDX = from;
 	D3DXQUATERNION toDX = to;
 	D3DXQUATERNION resultDX;
@@ -1735,11 +1735,11 @@ void CKFMath::NormalizeRotInZeroToTwoPi(Vector3& vRot)
 //  CalculateZDepth
 //	Z深度情報算出
 //--------------------------------------------------------------------------------
-float CKFMath::CalculateZDepth(const Vector3& vPos, const Vector3& vCameraEye, const Vector3& vCameraAt)
+float CKFMath::CalculateZDepth(const Vector3& Position, const Vector3& vCameraEye, const Vector3& vCameraAt)
 {
 	Vector3 vCameraForward = vCameraAt - vCameraEye;
-	Vector3 vPosToCamera = vPos - vCameraEye;
-	float fDepth = Vec3Dot(vCameraForward, vPosToCamera);
+	Vector3 PositionToCamera = Position - vCameraEye;
+	float fDepth = Vec3Dot(vCameraForward, PositionToCamera);
 	return fDepth;
 }
 */

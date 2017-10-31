@@ -26,7 +26,7 @@
 //void C2DRenderComponent::Render(void)
 //{
 //#ifdef USING_DIRECTX
-//	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+//	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 //
 //	// 頂点バッファをデータストリームに設定
 //	pDevice->SetStreamSource(
@@ -39,7 +39,7 @@
 //	pDevice->SetFVF(FVF_VERTEX_2D);
 //
 //	// テクスチャの設定
-//	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+//	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 //	pDevice->SetTexture(0, pTexture);
 //
 //	// ポリゴンの描画

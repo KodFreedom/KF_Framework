@@ -56,7 +56,7 @@ void CTextureManager::UseTexture(const string& strName)
 #ifdef USING_DIRECTX
 	TEXTURE texture;
 	texture.usNumUsers = 1;
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	string strPath = "data/TEXTURE/" + strName;
 	HRESULT hr = D3DXCreateTextureFromFile(pDevice, strPath.c_str(), &texture.pTexture);
 	if (FAILED(hr))

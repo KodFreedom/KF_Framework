@@ -220,21 +220,21 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 Vector3 CActorBehaviorComponent::checkGroundStatus(void)
 {
 	CRaycastHitInfo rayHit;
-	auto vPos = m_pGameObj->GetTransformComponent()->GetPos();
-	auto pCollisionSystem = CMain::GetManager()->GetCollisionSystem();
-	if (pCollisionSystem->RayCast(vPos, CKFMath::sc_vDown, GroundCheckDistance, rayHit, m_pGameObj))
+	auto Position = m_pGameObj->GetTransformComponent()->GetPos();
+	auto pCollisionSystem = Main::GetManager()->GetCollisionSystem();
+	if (pCollisionSystem->RayCast(Position, CKFMath::sc_vDown, GroundCheckDistance, rayHit, m_pGameObj))
 	{
 		//To do : Jump Damage
 		if (!m_bIsGrounded)
 		{
-			float fFallDis = m_fMaxPosY - vPos.Y;
+			float fFallDis = m_fMaxPosY - Position.Y;
 		}
-		m_fMaxPosY = vPos.Y;
+		m_fMaxPosY = Position.Y;
 		m_bIsGrounded = true;
-		return rayHit.m_vNormal;
+		return rayHit.m_Normal;
 	}
 
-	m_fMaxPosY = m_fMaxPosY < vPos.Y ? vPos.Y : m_fMaxPosY;
+	m_fMaxPosY = m_fMaxPosY < Position.Y ? Position.Y : m_fMaxPosY;
 	m_bIsGrounded = false;
 	return CKFMath::sc_vUp;
 }

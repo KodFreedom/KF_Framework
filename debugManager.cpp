@@ -144,7 +144,7 @@ void CDebugManager::DisplayScroll(const string& strInfo)
 void CDebugManager::init(HWND hWnd)
 {
 #ifdef USING_DIRECTX
-	ImGui_ImplDX9_Init(hWnd, CMain::GetManager()->GetRenderer()->GetDevice());
+	ImGui_ImplDX9_Init(hWnd, Main::GetManager()->GetRenderer()->GetDevice());
 #endif // USING_DIRECTX
 }
 
@@ -165,7 +165,7 @@ void CDebugManager::uninit(void)
 //--------------------------------------------------------------------------------
 void CDebugManager::showMainWindow(void)
 {
-	auto pRenderer = CMain::GetManager()->GetRenderer();
+	auto pRenderer = Main::GetManager()->GetRenderer();
 	auto cBGColor = pRenderer->GetBGColor();
 	auto bWireFrame = pRenderer->GetWireFrameFlag();
 
@@ -211,7 +211,7 @@ void CDebugManager::showMainWindow(void)
 void CDebugManager::showCollisionSystemWindow(void)
 {
 	if (!m_bCollisionSystemWindow) { return; }
-	auto pCS = CMain::GetManager()->GetCollisionSystem();
+	auto pCS = Main::GetManager()->GetCollisionSystem();
 	
 	// Begin
 	if (!ImGui::Begin("Collision System Debug Window", &m_bCollisionSystemWindow))
@@ -247,7 +247,7 @@ void CDebugManager::showCollisionSystemWindow(void)
 void CDebugManager::showCameraWindow(void)
 {
 	if (!m_bCameraWindow) { return; }
-	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
+	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
 
 	// Begin
 	if (!ImGui::Begin("Camera Window", &m_bCameraWindow))
@@ -260,10 +260,10 @@ void CDebugManager::showCameraWindow(void)
 	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
 
 	// PosEye
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosEye.X, pCamera->m_vPosEye.Y, pCamera->m_vPosEye.Z);
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_PositionEye.X, pCamera->m_PositionEye.Y, pCamera->m_PositionEye.Z);
 
 	// PosAt
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_vPosAt.X, pCamera->m_vPosAt.Y, pCamera->m_vPosAt.Z);
+	ImGui::Text("PosEye : %f %f %f", pCamera->m_PositionAt.X, pCamera->m_PositionAt.Y, pCamera->m_PositionAt.Z);
 
 	// Forward
 	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.X, pCamera->m_vVecLook.Y, pCamera->m_vVecLook.Z);
@@ -294,7 +294,7 @@ void CDebugManager::showPlayerWindow(void)
 
 	// Trans
 	auto pTrans = m_pPlayer->GetTransformComponent();
-	ImGui::InputFloat3("Trans", &pTrans->m_vPosNext.X);
+	ImGui::InputFloat3("Trans", &pTrans->m_PositionNext.X);
 
 	// Actor Behavior
 	auto pActor = static_cast<CActorBehaviorComponent*>(m_pPlayer->GetBehaviorComponent().front());
@@ -312,7 +312,7 @@ void CDebugManager::showPlayerWindow(void)
 void CDebugManager::showFogWindow(void)
 {
 	if (!m_bFogWindow) { return; }
-	auto pFog = CMain::GetManager()->GetFog();
+	auto pFog = Main::GetManager()->GetFog();
 
 	// Begin
 	if (!ImGui::Begin("Fog Window", &m_bFogWindow))

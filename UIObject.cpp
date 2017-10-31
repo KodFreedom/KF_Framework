@@ -21,7 +21,7 @@
 CUIObject::CUIObject(const unsigned short& usOrder)
 	: m_usOrder(usOrder)
 {
-	CMain::GetManager()->GetUISystem()->Register(this);
+	Main::GetManager()->GetUISystem()->Register(this);
 }
 
 //--------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ CUIObject::CUIObject(const unsigned short& usOrder)
 //--------------------------------------------------------------------------------
 void CUIObject::Release(void)
 {
-	CMain::GetManager()->GetUISystem()->Deregister(this);
+	Main::GetManager()->GetUISystem()->Deregister(this);
 	Uninit();
 	delete this;
 }

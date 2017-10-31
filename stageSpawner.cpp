@@ -58,11 +58,11 @@ void CStageSpawner::LoadStage(const string& strStageName)
 		//ˆÊ’u‰ñ“]‚Ì“Ç
 		for (int nCntModel = 0; nCntModel < nNum; ++nCntModel)
 		{
-			Vector3 vPos;
-			fread(&vPos, sizeof(Vector3), 1, pFile);
+			Vector3 Position;
+			fread(&Position, sizeof(Vector3), 1, pFile);
 			Quaternion qRot;
 			fread(&qRot, sizeof(Quaternion), 1, pFile);
-			auto pObj = CGameObjectSpawner::CreateModel(strModelName, vPos, qRot, Vector3(1.0f));
+			auto pObj = CGameObjectSpawner::CreateModel(strModelName, Position, qRot, Vector3(1.0f));
 			if (strModelName == "Medieval_Windmill.model")
 			{
 				auto pBehavior = new CWindmillBehaviorComponent(pObj);

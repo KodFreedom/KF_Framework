@@ -21,7 +21,7 @@ void CMeshComponent::Uninit(void)
 {
 	if (!m_strMeshName.empty())
 	{
-		CMain::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
+		Main::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
 		m_strMeshName.clear();
 	}
 }
@@ -33,10 +33,10 @@ void CMeshComponent::SetMeshName(const string& strMeshName)
 {
 	if (!m_strMeshName.empty())
 	{
-		CMain::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
+		Main::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
 		m_strMeshName.clear();
 	}
 
 	m_strMeshName = strMeshName;
-	CMain::GetManager()->GetMeshManager()->UseMesh(m_strMeshName);
+	Main::GetManager()->GetMeshManager()->UseMesh(m_strMeshName);
 }

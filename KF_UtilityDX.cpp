@@ -20,9 +20,9 @@
 //--------------------------------------------------------------------------------
 //  頂点生成
 //--------------------------------------------------------------------------------
-bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& vPosCenter, const Vector2& vSize, const Vector2& vUVBegin, const Vector2& vUVSize, const float& fRot, const Color& cColor)
+bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionCenter, const Vector2& vSize, const Vector2& UVBegin, const Vector2& UVSize, const float& fRot, const Color& cColor)
 {
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ
@@ -52,32 +52,32 @@ bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2
 	float fAngle = atan2f(vSize.Y, vSize.X);
 
 	//頂点座標の設定（2D座標、右回り）
-	pVtx[0].vPos = Vector3(vPosCenter.X + cosf(fRot + KF_PI + fAngle) * fLength,
-		vPosCenter.Y + sinf(fRot + KF_PI + fAngle) * fLength, 0.0f);
-	pVtx[1].vPos = Vector3(vPosCenter.X + cosf(fRot - fAngle) * fLength,
-		vPosCenter.Y + sinf(fRot - fAngle) * fLength, 0.0f);
-	pVtx[2].vPos = Vector3(vPosCenter.X + cosf(fRot - KF_PI - fAngle) * fLength,
-		vPosCenter.Y + sinf(fRot - KF_PI - fAngle) * fLength, 0.0f);
-	pVtx[3].vPos = Vector3(vPosCenter.X + cosf(fRot + fAngle) * fLength,
-		vPosCenter.Y + sinf(fRot + fAngle) * fLength, 0.0f);
+	pVtx[0].Position = Vector3(PositionCenter.X + cosf(fRot + KF_PI + fAngle) * fLength,
+		PositionCenter.Y + sinf(fRot + KF_PI + fAngle) * fLength, 0.0f);
+	pVtx[1].Position = Vector3(PositionCenter.X + cosf(fRot - fAngle) * fLength,
+		PositionCenter.Y + sinf(fRot - fAngle) * fLength, 0.0f);
+	pVtx[2].Position = Vector3(PositionCenter.X + cosf(fRot - KF_PI - fAngle) * fLength,
+		PositionCenter.Y + sinf(fRot - KF_PI - fAngle) * fLength, 0.0f);
+	pVtx[3].Position = Vector3(PositionCenter.X + cosf(fRot + fAngle) * fLength,
+		PositionCenter.Y + sinf(fRot + fAngle) * fLength, 0.0f);
 
 	//頂点カラー設定
-	pVtx[0].ulColor = cColor;
-	pVtx[1].ulColor = cColor;
-	pVtx[2].ulColor = cColor;
-	pVtx[3].ulColor = cColor;
+	pVtx[0].Color = cColor;
+	pVtx[1].Color = cColor;
+	pVtx[2].Color = cColor;
+	pVtx[3].Color = cColor;
 
 	//頂点UV設定
-	pVtx[0].vUV = vUVBegin;
-	pVtx[1].vUV = vUVBegin + Vector2(vUVSize.X, 0.0f);
-	pVtx[2].vUV = vUVBegin + Vector2(0.0f, vUVSize.Y);
-	pVtx[3].vUV = vUVBegin + vUVSize;
+	pVtx[0].UV = UVBegin;
+	pVtx[1].UV = UVBegin + Vector2(UVSize.X, 0.0f);
+	pVtx[2].UV = UVBegin + Vector2(0.0f, UVSize.Y);
+	pVtx[3].UV = UVBegin + UVSize;
 
 	//rhwの設定(必ず1.0f)
-	pVtx[0].fRhw = 1.0f;
-	pVtx[1].fRhw = 1.0f;
-	pVtx[2].fRhw = 1.0f;
-	pVtx[3].fRhw = 1.0f;
+	pVtx[0].Rhw = 1.0f;
+	pVtx[1].Rhw = 1.0f;
+	pVtx[2].Rhw = 1.0f;
+	pVtx[3].Rhw = 1.0f;
 
 	//仮想アドレス解放
 	pVtxBuffer->Unlock();
@@ -88,9 +88,9 @@ bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2
 //--------------------------------------------------------------------------------
 //  頂点生成(ゲージ)
 //--------------------------------------------------------------------------------
-bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& vPosLeftTop, const Vector2& vSize, const Color& cColor, const Vector2& vUVBegin, const Vector2& vUVSize)
+bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
 {
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
 	//頂点バッファ
@@ -116,28 +116,28 @@ bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Ve
 	pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定（2D座標、右回り）
-	pVtx[0].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f);
-	pVtx[1].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(vSize.X, 0.0f, 0.0f);
-	pVtx[2].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(0.0f, vSize.Y, 0.0f);
-	pVtx[3].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(vSize.X, vSize.Y, 0.0f);
+	pVtx[0].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f);
+	pVtx[1].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(vSize.X, 0.0f, 0.0f);
+	pVtx[2].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(0.0f, vSize.Y, 0.0f);
+	pVtx[3].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(vSize.X, vSize.Y, 0.0f);
 
 	//頂点カラー設定
-	pVtx[0].ulColor = cColor;
-	pVtx[1].ulColor = cColor;
-	pVtx[2].ulColor = cColor;
-	pVtx[3].ulColor = cColor;
+	pVtx[0].Color = cColor;
+	pVtx[1].Color = cColor;
+	pVtx[2].Color = cColor;
+	pVtx[3].Color = cColor;
 
 	//頂点UV設定
-	pVtx[0].vUV = vUVBegin;
-	pVtx[1].vUV = vUVBegin + Vector2(vUVSize.X, 0.0f);
-	pVtx[2].vUV = vUVBegin + Vector2(0.0f, vUVSize.Y);
-	pVtx[3].vUV = vUVBegin + vUVSize;
+	pVtx[0].UV = UVBegin;
+	pVtx[1].UV = UVBegin + Vector2(UVSize.X, 0.0f);
+	pVtx[2].UV = UVBegin + Vector2(0.0f, UVSize.Y);
+	pVtx[3].UV = UVBegin + UVSize;
 
 	//rhwの設定(必ず1.0f)
-	pVtx[0].fRhw = 1.0f;
-	pVtx[1].fRhw = 1.0f;
-	pVtx[2].fRhw = 1.0f;
-	pVtx[3].fRhw = 1.0f;
+	pVtx[0].Rhw = 1.0f;
+	pVtx[1].Rhw = 1.0f;
+	pVtx[2].Rhw = 1.0f;
+	pVtx[3].Rhw = 1.0f;
 
 	//仮想アドレス解放
 	pVtxBuffer->Unlock();
@@ -148,7 +148,7 @@ bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Ve
 //--------------------------------------------------------------------------------
 //  頂点更新(ゲージ)
 //--------------------------------------------------------------------------------
-void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& vPosLeftTop, const Vector2& vSize, const float& fRate, const Color& cColor, const Vector2& vUVBegin, const Vector2& vUVSize)
+void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const float& fRate, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
 {
 	// 頂点情報を設定
 	//仮想アドレスを取得するためのポインタ
@@ -158,22 +158,22 @@ void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const 
 	pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定（2D座標、右回り）
-	pVtx[0].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f);
-	pVtx[1].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(vSize.X * fRate, 0.0f, 0.0f);
-	pVtx[2].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(0.0f, vSize.Y, 0.0f);
-	pVtx[3].vPos = Vector3(vPosLeftTop.X, vPosLeftTop.Y, 0.0f) + Vector3(vSize.X * fRate, vSize.Y, 0.0f);
+	pVtx[0].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f);
+	pVtx[1].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(vSize.X * fRate, 0.0f, 0.0f);
+	pVtx[2].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(0.0f, vSize.Y, 0.0f);
+	pVtx[3].Position = Vector3(PositionLeftTop.X, PositionLeftTop.Y, 0.0f) + Vector3(vSize.X * fRate, vSize.Y, 0.0f);
 
 	//頂点カラー設定
-	pVtx[0].ulColor = cColor;
-	pVtx[1].ulColor = cColor;
-	pVtx[2].ulColor = cColor;
-	pVtx[3].ulColor = cColor;
+	pVtx[0].Color = cColor;
+	pVtx[1].Color = cColor;
+	pVtx[2].Color = cColor;
+	pVtx[3].Color = cColor;
 
 	//頂点UV設定
-	pVtx[0].vUV = vUVBegin;
-	pVtx[1].vUV = vUVBegin + Vector2(vUVSize.X * fRate, 0.0f);
-	pVtx[2].vUV = vUVBegin + Vector2(0.0f, vUVSize.Y);
-	pVtx[3].vUV = vUVBegin + Vector2(vUVSize.X * fRate, vUVSize.Y);
+	pVtx[0].UV = UVBegin;
+	pVtx[1].UV = UVBegin + Vector2(UVSize.X * fRate, 0.0f);
+	pVtx[2].UV = UVBegin + Vector2(0.0f, UVSize.Y);
+	pVtx[3].UV = UVBegin + Vector2(UVSize.X * fRate, UVSize.Y);
 
 	//仮想アドレス解放
 	pVtxBuffer->Unlock();
@@ -182,7 +182,7 @@ void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const 
 //--------------------------------------------------------------------------------
 //  頂点更新(UV)
 //--------------------------------------------------------------------------------
-void CKFUtilityDX::UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& vUVBegin, const Vector2& vUVSize)
+void CKFUtilityDX::UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& UVBegin, const Vector2& UVSize)
 {
 	// 頂点情報を設定
 	//仮想アドレスを取得するためのポインタ
@@ -192,10 +192,10 @@ void CKFUtilityDX::UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& 
 	pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点UV設定
-	pVtx[0].vUV = vUVBegin;
-	pVtx[1].vUV = vUVBegin + Vector2(vUVSize.X, 0.0f);
-	pVtx[2].vUV = vUVBegin + Vector2(0.0f, vUVSize.Y);
-	pVtx[3].vUV = vUVBegin + vUVSize;
+	pVtx[0].UV = UVBegin;
+	pVtx[1].UV = UVBegin + Vector2(UVSize.X, 0.0f);
+	pVtx[2].UV = UVBegin + Vector2(0.0f, UVSize.Y);
+	pVtx[3].UV = UVBegin + UVSize;
 
 	//仮想アドレス解放
 	pVtxBuffer->Unlock();

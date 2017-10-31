@@ -46,7 +46,7 @@ CGameObject::CGameObject(const GOMLAYER& layer)
 	m_listpBehavior.clear();
 	m_listpCollider.clear();
 	m_pTransform = new CTransformComponent(this);
-	CMain::GetManager()->GetGameObjectManager()->Register(this, m_layer);
+	Main::GetManager()->GetGameObjectManager()->Register(this, m_layer);
 }
 
 //--------------------------------------------------------------------------------

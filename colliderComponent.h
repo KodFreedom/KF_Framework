@@ -42,7 +42,7 @@ public:
 	//Setä÷êî
 	void				SetTrigger(const bool& bTrigger) { m_bTrigger = bTrigger; }
 	void				SetTag(const string& strTag) { m_strTag = strTag; }
-	void				SetOffset(const Vector3& vPos, const Vector3& vRot = Vector3(0.0f));
+	void				SetOffset(const Vector3& Position, const Vector3& vRot = Vector3(0.0f));
 
 	//Getä÷êî
 	Vector3				GetLocalPos(void) const { return Vector3(m_mtxOffset.Elements[3][0], m_mtxOffset.Elements[3][1], m_mtxOffset.Elements[3][2]); }

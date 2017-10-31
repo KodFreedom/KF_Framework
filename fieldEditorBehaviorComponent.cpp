@@ -25,8 +25,8 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 	, m_nNumBlockX(100)
 	, m_nNumBlockZ(100)
 	, m_vBlockSize(Vector2(3.0f))
-	, m_vPosMin(Vector3(0.0f))
-	, m_vPosMax(Vector3(0.0f))
+	, m_PositionMin(Vector3(0.0f))
+	, m_PositionMax(Vector3(0.0f))
 	, m_vEditorPos(Vector3(0.0f))
 	, m_fEditorRadius(0.0f)
 	, RaiseSpeed(1.0f)
@@ -36,7 +36,7 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 	m_vectorVtx.clear();
 
 	//Mesh生成
-	CMain::GetManager()->GetMeshManager()->CreateEditorField(m_nNumBlockX, m_nNumBlockZ, m_vBlockSize);
+	Main::GetManager()->GetMeshManager()->CreateEditorField(m_nNumBlockX, m_nNumBlockZ, m_vBlockSize);
 }
 
 //--------------------------------------------------------------------------------
@@ -52,19 +52,19 @@ bool CFieldEditorBehaviorComponent::Init(void)
 	{
 		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
 		{
-			auto& vPos = vStartPos
+			auto& Position = vStartPos
 				+ Vector3(nCntX * m_vBlockSize.X, 0.0f, -nCntZ * m_vBlockSize.Y);
-			m_vectorVtx[nCntVtx] = vPos;
+			m_vectorVtx[nCntVtx] = Position;
 			++nCntVtx;
 		}
 	}
 
 	auto& vHalfSize = Vector3(m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	m_vPosMin = vHalfSize * -1.0f;
-	m_vPosMax = vHalfSize;
+	m_PositionMin = vHalfSize * -1.0f;
+	m_PositionMax = vHalfSize;
 	
 	auto info = getInfo();
-	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+	Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 
 	return true;
 }
@@ -85,7 +85,7 @@ void CFieldEditorBehaviorComponent::Update(void)
 	if (!m_bActive) { return; }
 	showMainWindow();
 
-	auto pInput = CMain::GetManager()->GetInputManager();
+	auto pInput = Main::GetManager()->GetInputManager();
 
 	//拡縮
 	auto fValue = (float)pInput->GetKeyPress(CInputManager::K_EXTEND)
@@ -103,22 +103,22 @@ void CFieldEditorBehaviorComponent::Update(void)
 		m_vectorVtx[nIdx].Y += fValue * RaiseSpeed;
 	}
 
-	CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+	Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 }
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-void CFieldEditorBehaviorComponent::AdjustPosInField(Vector3& vPos, const bool& bAdjustHeight)
+void CFieldEditorBehaviorComponent::AdjustPosInField(Vector3& Position, const bool& bAdjustHeight)
 {
 	//範囲内にする
-	vPos.X = vPos.X < m_vPosMin.X ? m_vPosMin.X : vPos.X > m_vPosMax.X ? m_vPosMax.X : vPos.X;
-	vPos.Z = vPos.Z < m_vPosMin.Z ? m_vPosMin.Z : vPos.Z > m_vPosMax.Z ? m_vPosMax.Z : vPos.Z;
+	Position.X = Position.X < m_PositionMin.X ? m_PositionMin.X : Position.X > m_PositionMax.X ? m_PositionMax.X : Position.X;
+	Position.Z = Position.Z < m_PositionMin.Z ? m_PositionMin.Z : Position.Z > m_PositionMax.Z ? m_PositionMax.Z : Position.Z;
 
 	//高さの調節
 	if (bAdjustHeight)
 	{
-		vPos.Y = getHeight(vPos);
+		Position.Y = getHeight(Position);
 	}
 }
 
@@ -134,7 +134,7 @@ void CFieldEditorBehaviorComponent::SetActive(const bool& bActive)
 	if (!m_bActive)
 	{//Field Reset
 		EINFO info;
-		CMain::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+		Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
 	}
 }
 
@@ -147,7 +147,7 @@ void CFieldEditorBehaviorComponent::SetActive(const bool& bActive)
 void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
 {
 	//フィールドメッシュの保存
-	CMain::GetManager()->GetMeshManager()->SaveEditorFieldAs(strFileName);
+	Main::GetManager()->GetMeshManager()->SaveEditorFieldAs(strFileName);
 
 	//フィールドの保存
 	string strName = "data/FIELD/" + strFileName + ".field";
@@ -176,11 +176,11 @@ void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-float CFieldEditorBehaviorComponent::getHeight(const Vector3& vPos)
+float CFieldEditorBehaviorComponent::getHeight(const Vector3& Position)
 {
 	auto& vStartPos = Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	int nXLeftUp = (int)(((vPos.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZLeftUp = -(int)(((vPos.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	int nXLeftUp = (int)(((Position.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
+	int nZLeftUp = -(int)(((Position.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
 
 	//フィールドの範囲外だったら処理終了
 	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
@@ -191,13 +191,13 @@ float CFieldEditorBehaviorComponent::getHeight(const Vector3& vPos)
 	int nXRightDown = nXLeftUp + 1;
 	int nZRightDown = nZLeftUp + 1;
 
-	auto& vPosTarget = Vector3(vPos.X, 0.0f, vPos.Z);
+	auto& PositionTarget = Vector3(Position.X, 0.0f, Position.Z);
 	auto& vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
 	auto& vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
 
 	//Check Side
 	auto& vMid = vPRightDown - vPLeftUp;
-	auto& vTL = vPosTarget - vPLeftUp;
+	auto& vTL = PositionTarget - vPLeftUp;
 	auto& vCross = vTL * vMid;
 	int nXSide, nZSide;
 	int nSign = 0;
@@ -216,10 +216,10 @@ float CFieldEditorBehaviorComponent::getHeight(const Vector3& vPos)
 	auto& vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
 	auto& vLS = vPLeftUp - vPSide;
 	auto& vRS = vPRightDown - vPSide;
-	auto& vNormal = (vLS * vRS) * (float)nSign;
-	CKFMath::VecNormalize(vNormal);
+	auto& Normal = (vLS * vRS) * (float)nSign;
+	CKFMath::VecNormalize(Normal);
 
-	auto fHeight = vPSide.Y - ((vPos.X - vPSide.X) * vNormal.X + (vPos.Z - vPSide.Z) * vNormal.Z) / vNormal.Y;
+	auto fHeight = vPSide.Y - ((Position.X - vPSide.X) * Normal.X + (Position.Z - vPSide.Z) * Normal.Z) / Normal.Y;
 
 	return fHeight;
 }
@@ -253,9 +253,9 @@ CFieldEditorBehaviorComponent::EINFO CFieldEditorBehaviorComponent::getInfo(void
 		for (int nCntX = nXMin; nCntX <= nXMax; ++nCntX)
 		{
 			auto nIdx = nCntZ * (m_nNumBlockZ + 1) + nCntX;
-			auto vPos = m_vectorVtx[nIdx];
-			vPos.Y = 0.0f;
-			if (CKFMath::VecMagnitudeSquare(vPos - vEditorPos) <= m_fEditorRadius * m_fEditorRadius)
+			auto Position = m_vectorVtx[nIdx];
+			Position.Y = 0.0f;
+			if (CKFMath::VecMagnitudeSquare(Position - vEditorPos) <= m_fEditorRadius * m_fEditorRadius)
 			{
 				info.listChoosenIdx.push_back(nIdx);
 			}

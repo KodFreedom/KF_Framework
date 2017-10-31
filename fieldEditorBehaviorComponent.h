@@ -36,12 +36,12 @@ public:
 	void	OnCollision(CCollisionInfo& collisionInfo) override {}
 
 	//Getä÷êî
-	void	AdjustPosInField(Vector3& vPos, const bool& bAdjustHeight);
+	void	AdjustPosInField(Vector3& Position, const bool& bAdjustHeight);
 	bool	GetActive(void) const { return m_bActive; }
 
 	//Setä÷êî
 	void	SetActive(const bool& bActive);
-	void	SetPos(const Vector3& vPos) { m_vEditorPos = vPos; }
+	void	SetPos(const Vector3& Position) { m_vEditorPos = Position; }
 
 	//Save
 	void	SaveAs(const string& strFileName);
@@ -58,7 +58,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	float			getHeight(const Vector3& vPos);
+	float			getHeight(const Vector3& Position);
 	EINFO			getInfo(void);
 	void			showMainWindow(void);
 
@@ -69,8 +69,8 @@ private:
 	int				m_nNumBlockZ;
 	Vector2			m_vBlockSize;
 	vector<Vector3>	m_vectorVtx;
-	Vector3			m_vPosMin;
-	Vector3			m_vPosMax;
+	Vector3			m_PositionMin;
+	Vector3			m_PositionMax;
 	Vector3			m_vEditorPos;
 	float			m_fEditorRadius;
 	float			RaiseSpeed;

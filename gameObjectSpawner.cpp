@@ -33,7 +33,7 @@
 //--------------------------------------------------------------------------------
 //  SkyBox生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateSkyBox(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
+CGameObject* CGameObjectSpawner::CreateSkyBox(const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -48,8 +48,8 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const Vector3& vPos, const Vector3
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->RotByEuler(vRot);
@@ -85,7 +85,7 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateCube(const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
+CGameObject* CGameObjectSpawner::CreateCube(const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -105,8 +105,8 @@ CGameObject* CGameObjectSpawner::CreateCube(const Vector3& vPos, const Vector3& 
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->RotByEuler(vRot);
@@ -119,7 +119,7 @@ CGameObject* CGameObjectSpawner::CreateCube(const Vector3& vPos, const Vector3& 
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
+CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObject;
 
@@ -136,8 +136,8 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vecto
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->RotByEuler(vRot);
@@ -150,7 +150,7 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vecto
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& vPos)
+CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& Position)
 {
 	auto pObj = new CGameObject;
 
@@ -166,8 +166,8 @@ CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& vPos)
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 
 	//初期化
 	pObj->Init();
@@ -178,12 +178,12 @@ CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& vPos)
 //	関数名：CreateModel
 //  関数説明：モデルファイルからゲームオブジェクト作成
 //	引数：	strFilePath：ファイルの名前 
-//			vPos
+//			Position
 //			qRot
 //			vScale
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const Vector3& vPos, const Quaternion& qRot, const Vector3& vScale)
+CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale)
 {
 	string strName, strType;
 	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
@@ -201,8 +201,8 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const Ve
 
 	//Trans
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->SetRot(qRot);
@@ -240,12 +240,12 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	pObj->SetName(strNodeName);
 
 	//Offset
-	Vector3 vPos, vRot, vScale;
-	fread_s(&vPos, sizeof(Vector3), sizeof(Vector3), 1, pFile);
+	Vector3 Position, vRot, vScale;
+	fread_s(&Position, sizeof(Vector3), sizeof(Vector3), 1, pFile);
 	fread_s(&vRot, sizeof(Vector3), sizeof(Vector3), 1, pFile);
 	fread_s(&vScale, sizeof(Vector3), sizeof(Vector3), 1, pFile);
 	auto pTrans = pObj->GetTransformComponent();
-	if (pParent) { pTrans->RegisterParent(pParent, vPos, vRot); }
+	if (pParent) { pTrans->RegisterParent(pParent, Position, vRot); }
 
 	//Collider
 	int nNumCollider = 0;

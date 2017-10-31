@@ -40,7 +40,7 @@ public:
 
 	//Setä÷êî
 	void	SetActive(const bool& bActive) { m_bActive = bActive; }
-	void	SetPos(const Vector3& vPos);
+	void	SetPos(const Vector3& Position);
 
 	//Save
 	void	SaveAs(const string& strFileName);

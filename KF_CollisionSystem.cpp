@@ -141,7 +141,7 @@ void CKFCollisionSystem::Update(void)
 void CKFCollisionSystem::LateUpdate(void)
 {
 #ifdef _DEBUG
-	auto pDebug = CMain::GetManager()->GetDebugManager();
+	auto pDebug = Main::GetManager()->GetDebugManager();
 	pDebug->DisplayAlways("Colliderî•ñ : \n");
 	for (int nCntMode = 0; nCntMode < MODE_MAX; ++nCntMode)
 	{
@@ -292,8 +292,8 @@ void CKFCollisionSystem::DrawCollider(void)
 {
 	if (!m_bDrawCollider) { return; }
 
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.png");
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	pDevice->SetTexture(0, pTexture);
 
@@ -301,13 +301,13 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[DYNAMIC][COL_SPHERE])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		D3DXVECTOR3 vPos = pCol->GetWorldPosNext();
+		D3DXVECTOR3 Position = pCol->GetWorldPosNext();
 		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
 		D3DXMATRIX mtx,mtxPos,mtxScale;
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.x, vPos.y, vPos.z);
+		D3DXMatrixTranslation(&mtxPos, Position.x, Position.y, Position.z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshSphere->DrawSubset(0);
@@ -316,13 +316,13 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[STATIC][COL_SPHERE])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPosNext();
+		auto Position = pCol->GetWorldPosNext();
 		float fRadius = ((CSphereColliderComponent*)pCol)->GetRadius();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
+		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshSphere->DrawSubset(0);
@@ -332,13 +332,13 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[DYNAMIC][COL_AABB])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPosNext();
+		auto Position = pCol->GetWorldPosNext();
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
+		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshCube->DrawSubset(0);
@@ -347,13 +347,13 @@ void CKFCollisionSystem::DrawCollider(void)
 	for (auto pCol : m_alistCollider[STATIC][COL_AABB])
 	{
 		if (!pCol->GetGameObject()->IsActive()) { continue; }
-		auto vPos = pCol->GetWorldPosNext();
+		auto Position = pCol->GetWorldPosNext();
 		auto vHalfSize = ((CAABBColliderComponent*)pCol)->GetHalfSize();
 		D3DXMATRIX mtx, mtxPos, mtxScale;
 		D3DXMatrixIdentity(&mtx);
 		D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 		mtx *= mtxScale;
-		D3DXMatrixTranslation(&mtxPos, vPos.X, vPos.Y, vPos.Z);
+		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
 		m_pMeshCube->DrawSubset(0);
@@ -404,8 +404,8 @@ void CKFCollisionSystem::DrawCollider(void)
 void CKFCollisionSystem::init(void)
 {
 #ifdef _DEBUG
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.png");
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+	Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
 	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
 	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
 #endif
@@ -430,7 +430,7 @@ void CKFCollisionSystem::uninit(void)
 #ifdef _DEBUG
 	SAFE_RELEASE(m_pMeshSphere);
 	SAFE_RELEASE(m_pMeshCube);
-	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
+	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
 #endif
 }
 

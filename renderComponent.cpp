@@ -28,7 +28,7 @@
 bool CRenderComponent::Init(void)
 {
 	auto pMesh = m_pGameObj->GetMeshComponent();
-	auto pMeshManager = CMain::GetManager()->GetMeshManager();
+	auto pMeshManager = Main::GetManager()->GetMeshManager();
 	auto renderInfo = pMeshManager->GetRenderInfo(pMesh->GetMeshName());
 	
 	if (!renderInfo.strTex.empty()) { SetTexName(renderInfo.strTex); }
@@ -44,7 +44,7 @@ void CRenderComponent::Uninit(void)
 {
 	if (!m_strTexName.empty())
 	{
-		CMain::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
+		Main::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
 		m_strTexName.clear();
 	}
 }
@@ -54,7 +54,7 @@ void CRenderComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CRenderComponent::Update(void)
 {
-	CMain::GetManager()->GetRenderManager()->Register(this, m_renderPriority, m_renderState);
+	Main::GetManager()->GetRenderManager()->Register(this, m_renderPriority, m_renderState);
 }
 
 //--------------------------------------------------------------------------------
@@ -64,10 +64,10 @@ void CRenderComponent::SetTexName(const string& strTexName)
 {
 	if (!m_strTexName.empty())
 	{
-		CMain::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
+		Main::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
 		m_strTexName.clear();
 	}
 
 	m_strTexName = strTexName;
-	CMain::GetManager()->GetTextureManager()->UseTexture(m_strTexName);
+	Main::GetManager()->GetTextureManager()->UseTexture(m_strTexName);
 }

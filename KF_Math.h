@@ -7,7 +7,7 @@
 #pragma once
 #define USING_DIRECTX
 #ifdef USING_DIRECTX
-#define DIRECTX_MATH_VERSION 9
+#define DIRECTX_VERSION 9
 #endif
 
 //--------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 #include <math.h>
 #include <time.h>
 
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
 #endif
 
@@ -59,7 +59,7 @@ namespace KF
 		static const Vector2 One;
 
 		// キャスト
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXVECTOR2() const;
 #endif
 
@@ -118,7 +118,7 @@ namespace KF
 
 		// キャスト
 		operator Vector2() const;
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXVECTOR3() const;
 #endif
 
@@ -214,7 +214,7 @@ namespace KF
 		static const Matrix44 Identity;
 
 		// キャスト
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXMATRIX() const;
 #endif
 
@@ -233,7 +233,7 @@ namespace KF
 		static Matrix44&	RotationYawPitchRoll(const Vector3& euler);
 		static Matrix44&	Translation(const Vector3& translation);
 
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		static Matrix44&	ToMatrix44(const D3DXMATRIX& value);
 #endif
 	};
@@ -259,7 +259,7 @@ namespace KF
 		static const Quaternion Identity;
 
 		// キャスト
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXQUATERNION () const;
 #endif
 
@@ -311,7 +311,7 @@ namespace KF
 		float A;
 
 		//キャスト
-#if defined(DIRECTX_MATH_VERSION) && (DIRECTX_MATH_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DCOLORVALUE () const;
 		operator unsigned long() const;
 #endif

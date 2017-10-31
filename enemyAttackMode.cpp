@@ -30,10 +30,10 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	}
 
 	auto pTransform = enemy.GetGameObject()->GetTransformComponent();
-	auto vPosTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
-	auto vPosThis = pTransform->GetPosNext();
+	auto PositionTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
+	auto PositionThis = pTransform->GetPosNext();
 	auto vForward = pTransform->GetForwardNext();
-	auto vDiff = vPosTarget - vPosThis;
+	auto vDiff = PositionTarget - PositionThis;
 	auto vDir = vDiff;
 	CKFMath::VecNormalize(vDir);
 

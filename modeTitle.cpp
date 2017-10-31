@@ -50,7 +50,7 @@ CModeTitle::~CModeTitle()
 void CModeTitle::Init(void)
 {
 	//ライトの初期化
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
+	Main::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CCamera;
@@ -67,9 +67,9 @@ void CModeTitle::Update(void)
 {
 	CMode::Update();
 
-	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (Main::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
 	{
-		CMain::GetManager()->GetFade()->FadeToMode(new CModeDemo);
+		Main::GetManager()->GetFade()->FadeToMode(new CModeDemo);
 	}
 }
 
@@ -95,5 +95,5 @@ void CModeTitle::uninit(void)
 	CMode::uninit();
 
 	//ライトの破棄
-	CMain::GetManager()->GetLightManager()->ReleaseAll();
+	Main::GetManager()->GetLightManager()->ReleaseAll();
 }

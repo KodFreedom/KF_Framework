@@ -39,8 +39,8 @@
 //--------------------------------------------------------------------------------
 CCamera::CCamera()
 	: m_vMovement(Vector3(0.0f))
-	, m_vPosAt(Vector3(0.0f))
-	, m_vPosEye(Vector3(0.0f, 5.0f, -5.0f))
+	, m_PositionAt(Vector3(0.0f))
+	, m_PositionEye(Vector3(0.0f, 5.0f, -5.0f))
 	, m_vVecLook(Vector3(0.0f))
 	, m_vVecUp(Vector3(0.0f, 1.0f, 0.0f))
 	, m_vVecRight(Vector3(1.0f, 0.0f, 0.0f))
@@ -62,9 +62,9 @@ CCamera::~CCamera()
 //--------------------------------------------------------------------------------
 void CCamera::Init(void)
 {
-	m_vVecLook = m_vPosAt - m_vPosEye;
+	m_vVecLook = m_PositionAt - m_PositionEye;
 	CKFMath::VecNormalize(m_vVecLook);
-	m_fDistance = CKFMath::VecMagnitude(m_vPosEye - m_vPosAt);
+	m_fDistance = CKFMath::VecMagnitude(m_PositionEye - m_PositionAt);
 	CCamera::NormalizeCamera();
 }
 
@@ -80,8 +80,8 @@ void CCamera::Uninit(void)
 //--------------------------------------------------------------------------------
 void CCamera::Update(void)
 {
-//	CMouseDX *pMouse = CMain::GetManager()->GetMouse();
-//	CJoystickDX* pJoystick = CMain::GetManager()->GetJoystickDX();
+//	CMouseDX *pMouse = Main::GetManager()->GetMouse();
+//	CJoystickDX* pJoystick = Main::GetManager()->GetJoystickDX();
 //	Vector3 vRot = Vector3(0.0f);
 //	float fZoomSpeed = 0.0f;
 //
@@ -146,7 +146,7 @@ void CCamera::Update(void)
 void CCamera::LateUpdate(void)
 {
 	NormalizeCamera();
-	m_vPosEye = m_vPosAt - m_vVecLook * m_fDistance;
+	m_PositionEye = m_PositionAt - m_vVecLook * m_fDistance;
 }
 
 //--------------------------------------------------------------------------------
@@ -155,11 +155,11 @@ void CCamera::LateUpdate(void)
 void CCamera::Set(void)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 	//View行列
 	D3DXMATRIX mtxView;
-	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)m_vPosEye,& (D3DXVECTOR3)m_vPosAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
+	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)m_PositionEye,& (D3DXVECTOR3)m_PositionAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
 	pDevice->SetTransform(D3DTS_VIEW,&mtxView);
 
 	//プロジェクション行列
@@ -202,16 +202,16 @@ D3DXMATRIX CCamera::GetMtxViewInverse(void)
 //--------------------------------------------------------------------------------
 void CCamera::MoveCamera(const Vector3& vMovement)
 {
-	m_vPosEye += vMovement;
-	m_vPosAt += vMovement;
+	m_PositionEye += vMovement;
+	m_PositionAt += vMovement;
 }
 
 //--------------------------------------------------------------------------------
 //  移動処理
 //--------------------------------------------------------------------------------
-void CCamera::LookAtHere(const Vector3& vPos)
+void CCamera::LookAtHere(const Vector3& Position)
 {
-	m_vMovement = vPos - m_vPosAt;
+	m_vMovement = Position - m_PositionAt;
 }
 
 //--------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ Vector3 CCamera::GetVecRight(void)
 //--------------------------------------------------------------------------------
 Vector3 CCamera::GetPosAt(void)
 {
-	return m_vPosAt;
+	return m_PositionAt;
 }
 
 //--------------------------------------------------------------------------------
@@ -251,20 +251,20 @@ Vector3 CCamera::GetPosAt(void)
 //--------------------------------------------------------------------------------
 Vector3 CCamera::GetPosEye(void)
 {
-	return m_vPosEye;
+	return m_PositionEye;
 }
 
 //--------------------------------------------------------------------------------
 //  カメラ設定
 //--------------------------------------------------------------------------------
-void CCamera::SetCamera(const Vector3& vPosAt, const Vector3& vPosEye, const Vector3& vUp, const Vector3& vRight)
+void CCamera::SetCamera(const Vector3& PositionAt, const Vector3& PositionEye, const Vector3& vUp, const Vector3& vRight)
 {
-	m_vPosAt = vPosAt;
-	m_vPosEye = vPosEye;
+	m_PositionAt = PositionAt;
+	m_PositionEye = PositionEye;
 	m_vVecUp = vUp;
 	m_vVecRight = vRight;
-	m_vVecLook = m_vPosAt - m_vPosEye;
-	m_fDistance = CKFMath::VecMagnitude((m_vPosEye - m_vPosAt));
+	m_vVecLook = m_PositionAt - m_PositionEye;
+	m_fDistance = CKFMath::VecMagnitude((m_PositionEye - m_PositionAt));
 	NormalizeCamera();
 }
 

@@ -78,15 +78,15 @@ public:
 	CRaycastHitInfo()
 		: m_pCollider(nullptr)
 		, m_fDistance(0.0f)
-		, m_vNormal(Vector3(0.0f))
-		, m_vPos(Vector3(0.0f))
+		, m_Normal(Vector3(0.0f))
+		, m_Position(Vector3(0.0f))
 	{}
 	~CRaycastHitInfo() {}
 
 	CColliderComponent*		m_pCollider;	//衝突相手のコライダー
 	float					m_fDistance;	//レイの始点と衝突点との距離
-	Vector3					m_vNormal;		//衝突点の面法線
-	Vector3					m_vPos;			//衝突点の位置
+	Vector3					m_Normal;		//衝突点の面法線
+	Vector3					m_Position;			//衝突点の位置
 };
 
 //--------------------------------------------------------------------------------

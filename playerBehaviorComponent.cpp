@@ -57,9 +57,9 @@ void CPlayerBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CPlayerBehaviorComponent::Update(void)
 {
-	auto pInput = CMain::GetManager()->GetInputManager();
+	auto pInput = Main::GetManager()->GetInputManager();
 	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
+	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.X + vCamForward * vAxis.Y;
 	CKFMath::VecNormalize(vMove);
@@ -75,7 +75,7 @@ void CPlayerBehaviorComponent::LateUpdate(void)
 {
 	if (m_actor.GetLifeNow() <= 0.0f)
 	{
-		auto pMode = CMain::GetManager()->GetMode();
+		auto pMode = Main::GetManager()->GetMode();
 		auto pModeDemo = dynamic_cast<CModeDemo*>(pMode);
 		pModeDemo->EndMode(true);
 	}
@@ -91,7 +91,7 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 		if (collider.GetTag()._Equal("weapon") && colliderThis.GetTag()._Equal("body"))
 		{
 #ifdef _DEBUG
-			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted by" + collider.GetGameObject()->GetParentName() + "!");
+			Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted by" + collider.GetGameObject()->GetParentName() + "!");
 #endif
 			m_actor.Hit(5.0f);
 		}
@@ -101,7 +101,7 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 	{
 		if (colliderThis.GetTag()._Equal("body"))
 		{
-			auto pMode = CMain::GetManager()->GetMode();
+			auto pMode = Main::GetManager()->GetMode();
 			auto pModeDemo = dynamic_cast<CModeDemo*>(pMode);
 			pModeDemo->EndMode(false);
 		}

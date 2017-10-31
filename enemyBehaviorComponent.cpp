@@ -74,7 +74,7 @@ void CEnemyBehaviorComponent::LateUpdate(void)
 	if (m_actor.GetLifeNow() <= 0.0f)
 	{
 #ifdef _DEBUG
-		CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is dead!\n");
+		Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is dead!\n");
 #endif
 		m_pGameObj->SetAlive(false);
 	}
@@ -90,7 +90,7 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 		if (colliderThis.GetTag()._Equal("detector") && !m_pTarget)
 		{//“GŒŸ’m”ÍˆÍ
 #ifdef _DEBUG
-			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " find " + collider.GetGameObject()->GetName() + "!\n");
+			Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " find " + collider.GetGameObject()->GetName() + "!\n");
 #endif
 			m_pTarget = collider.GetGameObject();
 			ChangeMode(new CEnemyAttackMode);
@@ -99,7 +99,7 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 		if (collider.GetTag()._Equal("weapon") && colliderThis.GetTag()._Equal("body"))
 		{
 #ifdef _DEBUG
-			CMain::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted!\n");
+			Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted!\n");
 #endif
 
 			m_actor.Hit(25.0f);

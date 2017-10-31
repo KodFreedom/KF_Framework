@@ -205,7 +205,8 @@
     <ClCompile Include="motionStatus.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
     <ClCompile Include="playerUIObject.cpp" />
-    <ClCompile Include="rendererDX.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="rendererDirectX9.cpp" />
     <ClCompile Include="renderManager.cpp" />
     <ClCompile Include="renderState.cpp" />
     <ClCompile Include="soundManager.cpp" />
@@ -279,7 +280,8 @@
     <ClInclude Include="OBBColliderComponent.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerUIObject.h" />
-    <ClInclude Include="rendererDX.h" />
+    <ClInclude Include="renderer.h" />
+    <ClInclude Include="rendererDirectX9.h" />
     <ClInclude Include="renderManager.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbodyComponent.h" />

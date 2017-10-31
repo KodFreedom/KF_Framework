@@ -1,38 +1,48 @@
 //--------------------------------------------------------------------------------
-//  メインマネージャ
-//　manager.h
+//
+//　renderer.h
 //	Author : Xu Wenjie
-//	Date   : 2016-11-22
+//	Date   : 2017-11-01
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class Manager
+class Renderer
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	static Manager* Create(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode);
-	static void		Release(void);
-	static auto		Instance(void) { return instance; }
+	static Renderer* Create(HWND hWnd, BOOL isWindowMode);
+	static void		 Release(void);
+	static auto		 Instance(void) { return instance; }
 
-	void Update(void);
-	void LateUpdate(void);
-	void Draw(void);
-private:
+	virtual bool BeginRender(void) = 0;
+	virtual void EndRender(void) = 0;
+
+	//Get関数
+	auto GetBackgroundColor(void) const { return backgroundColor; }
+	auto GetWireFrameFlag(void) const { return enableWireFrameMode; }
+
+	//Set関数
+	void		 SetBackgroundColor(const Color& color) { backgroundColor = color; }
+	virtual void SetWireFrameFlag(const bool& isEnable) { enableWireFrameMode = isEnable; }
+
+protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	Manager() {}
-	~Manager() {}
-	bool init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode);
-	void uninit(void);
+	Renderer() : backgroundColor(Color::Black), enableWireFrameMode(false) {}
+	~Renderer() {}
+	virtual bool init(HWND hWnd, BOOL isWindowMode) = 0;
+	virtual void uninit(void) = 0;
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	static Manager*		instance;
+	static Renderer* instance;
+	Color			 backgroundColor;
+	bool			 enableWireFrameMode;
 };

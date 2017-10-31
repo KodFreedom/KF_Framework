@@ -49,13 +49,13 @@ CModeEditor::~CModeEditor()
 void CModeEditor::Init(void)
 {
 	//ライトの初期化
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
+	Main::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CEditorCamera;
 	m_pCamera->Init();
 
-	CMain::GetManager()->GetInputManager()->SetEditorMode(true);
+	Main::GetManager()->GetInputManager()->SetEditorMode(true);
 
 	//ゲームオブジェクトの初期化
 	auto pEditorField = CGameObjectSpawner::CreateEditorField();
@@ -94,9 +94,9 @@ void CModeEditor::uninit(void)
 	CMode::uninit();
 
 	//ライトの破棄
-	CMain::GetManager()->GetLightManager()->ReleaseAll();
+	Main::GetManager()->GetLightManager()->ReleaseAll();
 
-	CMain::GetManager()->GetInputManager()->SetEditorMode(false);
+	Main::GetManager()->GetInputManager()->SetEditorMode(false);
 }
 #endif // _DEBUG
 

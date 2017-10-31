@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　rendererDX.cpp
+//　rendererDirectX9.cpp
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
@@ -9,8 +9,8 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include "rendererDirectX9.h"
 
 #ifdef _DEBUG
 #include "manager.h"
@@ -19,46 +19,68 @@
 #endif
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//  public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//	関数名：BeginRender
+//  関数説明：描画開始
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-CRendererDX::CRendererDX()
-	: m_pD3D(nullptr)
-	, m_pD3DDevice(nullptr)
-	, m_bWireFrame(false)
-	, m_cBGColor(CKFMath::sc_cBlue)
+bool RendererDirectX9::BeginRender(void)
 {
+	// バックバッファ＆Ｚバッファのクリア
+	lpD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), backgroundColor, 1.0f, 0);
+	return (bool)lpD3DDevice->BeginScene();
 }
 
 //--------------------------------------------------------------------------------
-//  デストラクタ
+//	関数名：EndRender
+//  関数説明：描画終了
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-CRendererDX::~CRendererDX()
+void RendererDirectX9::EndRender(void)
 {
+	lpD3DDevice->EndScene();
+
+	// バックバッファとフロントバッファの入れ替え
+	lpD3DDevice->Present(NULL, NULL, NULL, NULL);
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：SetWireFrameFlag
+//  関数説明：レンダーモード設定
+//	引数：	isEnable：WireFrameフラグ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void RendererDirectX9::SetWireFrameFlag(const bool& isEnable)
+{
+	Renderer::SetWireFrameFlag(isEnable);
+	lpD3DDevice->SetRenderState(D3DRS_FILLMODE, isEnable ? D3DFILL_WIREFRAME : D3DFILL_SOLID);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  private
+//
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
+bool RendererDirectX9::init(HWND hWnd, BOOL isWindowMode)
 {
 	D3DPRESENT_PARAMETERS d3dpp;
 	D3DDISPLAYMODE d3ddm;
 
 	// Direct3Dオブジェクトの作成
-	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-	if (m_pD3D == NULL)
-	{
-		return false;
-	}
+	lpDirect3D9 = Direct3DCreate9(D3D_SDK_VERSION);
+	if (nullptr == lpDirect3D9) return false;
 
 	// 現在のディスプレイモードを取得
-	if (FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm)))
-	{
-		return false;
-	}
+	if (FAILED(lpDirect3D9->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm))) return false;
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));									// ワークをゼロクリア
@@ -69,35 +91,36 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	d3dpp.SwapEffect					= D3DSWAPEFFECT_DISCARD;		// 映像信号に同期してフリップする
 	d3dpp.EnableAutoDepthStencil		= TRUE;							// デプスバッファ（Ｚバッファ）とステンシルバッファを作成
 	d3dpp.AutoDepthStencilFormat		= D3DFMT_D16;					// デプスバッファとして16bitを使う
-	d3dpp.Windowed						= bWindow;						// ウィンドウモード
+	d3dpp.Windowed						= isWindowMode;						// ウィンドウモード
 	d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;		// リフレッシュレート
 	d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
-	//抗劇歯
+	
+	// 抗劇歯
 	//d3dpp.MultiSampleType				= D3DMULTISAMPLE_8_SAMPLES;		// アンチエイジングの使用
 
 	// デバイスの生成
 	// ディスプレイアダプタを表すためのデバイスを作成
 	// 描画と頂点処理をハードウェアで行なう
-	if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+	if (FAILED(lpDirect3D9->CreateDevice(D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
 		hWnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING,
-		&d3dpp, &m_pD3DDevice)))
+		&d3dpp, &lpD3DDevice)))
 	{
 		// 上記の設定が失敗したら
 		// 描画をハードウェアで行い、頂点処理はCPUで行なう
-		if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+		if (FAILED(lpDirect3D9->CreateDevice(D3DADAPTER_DEFAULT,
 			D3DDEVTYPE_HAL,
 			hWnd,
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-			&d3dpp, &m_pD3DDevice)))
+			&d3dpp, &lpD3DDevice)))
 		{
 			// 上記の設定が失敗したら
 			// 描画と頂点処理をCPUで行なう
-			if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT,
+			if (FAILED(lpDirect3D9->CreateDevice(D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_REF, hWnd,
 				D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-				&d3dpp, &m_pD3DDevice)))
+				&d3dpp, &lpD3DDevice)))
 			{
 				// 生成失敗
 				return false;
@@ -105,8 +128,8 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 		}
 	}
 
-	//抗劇歯
-	//if (FAILED(m_pD3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
+	// 抗劇歯
+	//if (FAILED(lpDirect3D9->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
 	//	D3DDEVTYPE_HAL,
 	//	D3DFMT_R8G8B8,
 	//	FALSE,
@@ -116,7 +139,6 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 	//	//
 	//}
 
-
 	SetWireFrameFlag(false);
 	return true;
 }
@@ -124,59 +146,9 @@ bool CRendererDX::Init(HWND hWnd, BOOL bWindow)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CRendererDX::Release(void)
+void RendererDirectX9::uninit(void)
 {
-	// デバイスの破棄
-	SAFE_RELEASE(m_pD3DDevice);
-
-	// Direct3Dオブジェクトの破棄
-	SAFE_RELEASE(m_pD3D);
-
-	delete this;
+	SAFE_RELEASE(lpD3DDevice);
+	SAFE_RELEASE(lpDirect3D9);
 }
-
-//--------------------------------------------------------------------------------
-//  描画開始
-//--------------------------------------------------------------------------------
-bool CRendererDX::BeginRender(void)
-{
-	// バックバッファ＆Ｚバッファのクリア
-	m_pD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), m_cBGColor, 1.0f, 0);
-
-	// Direct3Dによる描画の開始
-	if (FAILED(m_pD3DDevice->BeginScene())) { return false; }
-
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-//  描画終了
-//--------------------------------------------------------------------------------
-void CRendererDX::EndRender(void)
-{
-	// Direct3Dによる描画の終了
-	m_pD3DDevice->EndScene();
-
-	// バックバッファとフロントバッファの入れ替え
-	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
-}
-
-//--------------------------------------------------------------------------------
-// レンダーモード設定
-//--------------------------------------------------------------------------------
-void CRendererDX::SetWireFrameFlag(const bool& bFlag)
-{
-	m_bWireFrame = bFlag;
-
-	if (m_bWireFrame)
-	{
-		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);//ワイヤーフレーム
-	}
-	else
-	{
-		m_pD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);	//塗りつぶし
-	}
-
-}
-
 #endif

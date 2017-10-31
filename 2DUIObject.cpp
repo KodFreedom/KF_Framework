@@ -35,7 +35,7 @@ void C2DUIObject::Uninit(void)
 {
 	for (auto itr = m_listSprite.begin(); itr != m_listSprite.end();)
 	{
-		CMain::GetManager()->GetTextureManager()->DisuseTexture(itr->strTexName);
+		Main::GetManager()->GetTextureManager()->DisuseTexture(itr->strTexName);
 		SAFE_RELEASE(itr->pVtxBuffer);
 		itr = m_listSprite.erase(itr);
 	}
@@ -49,7 +49,7 @@ void C2DUIObject::Draw(void)
 	for (auto itr = m_listSprite.begin(); itr != m_listSprite.end(); ++itr)
 	{
 #ifdef USING_DIRECTX
-		LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+		LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 		// 頂点バッファをデータストリームに設定
 		pDevice->SetStreamSource(
@@ -62,7 +62,7 @@ void C2DUIObject::Draw(void)
 		pDevice->SetFVF(FVF_VERTEX_2D);
 
 		// テクスチャの設定
-		LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(itr->strTexName);
+		LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture(itr->strTexName);
 		pDevice->SetTexture(0, pTexture);
 
 		// ポリゴンの描画

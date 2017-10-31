@@ -43,7 +43,7 @@ void CFog::SetEnable(const bool& bEnable)
 {
 	m_bEnable = bEnable;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_FOGENABLE, m_bEnable);
 #endif // USING_DIRECTX
 }
@@ -55,7 +55,7 @@ void CFog::SetEnableRangeFog(const bool& bEnable)
 {
 	m_bEnableRangeFog = bEnable;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_RANGEFOGENABLE, m_bEnableRangeFog);
 #endif // USING_DIRECTX
 }
@@ -67,7 +67,7 @@ void CFog::SetStart(const float& fStart)
 {
 	m_fStart = fStart;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_FOGSTART, *((LPDWORD)(&m_fStart)));
 #endif // USING_DIRECTX
 }
@@ -79,7 +79,7 @@ void CFog::SetEnd(const float& fEnd)
 {
 	m_fEnd = fEnd;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_FOGEND, *((LPDWORD)(&m_fEnd)));
 #endif // USING_DIRECTX
 }
@@ -91,7 +91,7 @@ void CFog::SetDensity(const float& fDensity)
 {
 	m_fDensity = fDensity;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_FOGDENSITY, *((LPDWORD)(&m_fDensity)));
 #endif // USING_DIRECTX
 }
@@ -103,7 +103,7 @@ void CFog::SetColor(const Color& cColor)
 {
 	m_cColor = cColor;
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	pDevice->SetRenderState(D3DRS_FOGCOLOR, m_cColor);
 #endif // USING_DIRECTX
 }
@@ -117,7 +117,7 @@ void CFog::SetColor(const Color& cColor)
 void CFog::init(void)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	
 	// フォグを有効にする
 	pDevice->SetRenderState(D3DRS_FOGENABLE, m_bEnable);
@@ -149,7 +149,7 @@ void CFog::init(void)
 void CFog::uninit(void)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 	// フォグを無効にする
 	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);

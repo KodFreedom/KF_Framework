@@ -69,8 +69,8 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Vector3			m_vPosAtNext;		//注視点の位置
-	Vector3			m_vPosEyeNext;		//カメラの位置
+	Vector3			m_PositionAtNext;		//注視点の位置
+	Vector3			m_PositionEyeNext;		//カメラの位置
 	Vector3			m_vVecLookNext;		//カメラの前方向情報
 	Vector3			m_vVecUpNext;		//カメラの上方向情報
 	Vector3			m_vVecRightNext;	//カメラの右方向情報

@@ -29,13 +29,13 @@
 void C3DMeshRenderComponent::Render(void)
 {
 	auto pMesh = m_pGameObj->GetMeshComponent();
-	const auto pMeshInfo = CMain::GetManager()->GetMeshManager()->GetMesh(pMesh->GetMeshName());
+	const auto pMeshInfo = Main::GetManager()->GetMeshManager()->GetMesh(pMesh->GetMeshName());
 
 	//マトリクス算出
 	auto mtxWorld = m_pGameObj->GetTransformComponent()->GetMatrix();
 
 #ifdef USING_DIRECTX
-	auto pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	
 	//マトリックス設定
 	D3DXMATRIX mtx = mtxWorld;
@@ -55,11 +55,11 @@ void C3DMeshRenderComponent::Render(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	auto pTexture = CMain::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+	auto pTexture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
 	pDevice->SetTexture(0, pTexture);
 
 	// マテリアルの設定
-	D3DMATERIAL9 mat = CMain::GetManager()->GetMaterialManager()->GetMaterial(m_usMatID);
+	D3DMATERIAL9 mat = Main::GetManager()->GetMaterialManager()->GetMaterial(m_usMatID);
 	pDevice->SetMaterial(&mat);
 
 	//プリミティブ描画

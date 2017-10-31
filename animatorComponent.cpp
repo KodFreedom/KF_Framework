@@ -540,7 +540,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 					nCntPos++;
 				}
 
-				auto vPos = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
+				auto Position = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 				//Rot
 				fgets(strRead, sizeof(strRead), pFile);
@@ -562,7 +562,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 				auto vRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
 				auto qRot = CKFMath::EulerToQuaternion(vRot);
-				auto nodeKey = CNodeKey(vPos, qRot);
+				auto nodeKey = CNodeKey(Position, qRot);
 				motionKey.m_listNodesKey.push_back(nodeKey);
 			}
 

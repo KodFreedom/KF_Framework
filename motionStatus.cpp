@@ -34,9 +34,9 @@ void CNormalMotionStatus::Update(CAnimatorComponent& animator)
 	for (auto pObj : animator.m_vecBorns)
 	{//Nodeごと位置回転更新
 		auto pTrans = pObj->GetTransformComponent();
-		auto& vPosNew = CKFMath::LerpVec3(itrNodeKey->c_vPos, itrNodeKeyNext->c_vPos, fRate);
+		auto& PositionNew = CKFMath::LerpVec3(itrNodeKey->c_Position, itrNodeKeyNext->c_Position, fRate);
 		auto& qRotNew = CKFMath::SlerpQuaternion(itrNodeKey->c_qRot, itrNodeKeyNext->c_qRot, fRate);
-		pTrans->SetPosNext(vPosNew);
+		pTrans->SetPosNext(PositionNew);
 		pTrans->SetRotNext(qRotNew);
 		++itrNodeKey;
 		++itrNodeKeyNext;
@@ -163,23 +163,23 @@ void CBlendMotionStatus::Update(CAnimatorComponent& animator)
 
 	for (auto pObj : animator.m_vecBorns)
 	{//Nodeごと位置回転更新
-		Vector3 vPosNew;
+		Vector3 PositionNew;
 		Quaternion qRotNew;
 
 		if (!pMotion->m_bLoop)
 		{//ループしないなら最後の1フレームのままにする
-			vPosNew = itrNodeKey->c_vPos;
+			PositionNew = itrNodeKey->c_Position;
 			qRotNew = itrNodeKey->c_qRot;
 		}
 		else
 		{
-			vPosNew = CKFMath::LerpVec3(itrNodeKey->c_vPos, itrNodeKeyNext->c_vPos, fRate);
+			PositionNew = CKFMath::LerpVec3(itrNodeKey->c_Position, itrNodeKeyNext->c_Position, fRate);
 			qRotNew = CKFMath::SlerpQuaternion(itrNodeKey->c_qRot, itrNodeKeyNext->c_qRot, fRate);
 		}
 		
-		auto vBlendPosNew = CKFMath::LerpVec3(itrBlendKey->c_vPos, itrBlendKeyNext->c_vPos, fBlendRate);
+		auto vBlendPosNew = CKFMath::LerpVec3(itrBlendKey->c_Position, itrBlendKeyNext->c_Position, fBlendRate);
 		auto qBlendRotNew = CKFMath::SlerpQuaternion(itrBlendKey->c_qRot, itrBlendKeyNext->c_qRot, fBlendRate);
-		auto vTruePos = vPosNew * (1.0f - fMotionBlendRate) + vBlendPosNew * fMotionBlendRate;
+		auto vTruePos = PositionNew * (1.0f - fMotionBlendRate) + vBlendPosNew * fMotionBlendRate;
 		auto qTrueRot = qRotNew * (1.0f - fMotionBlendRate) + qBlendRotNew * fMotionBlendRate;
 		
 		auto pTrans = pObj->GetTransformComponent();

@@ -47,18 +47,18 @@ public:
 	~CKFUtilityDX() {}
 
 	static bool MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
-		const Vector2& vPosCenter, const Vector2& vSize,
-		const Vector2& vUVBegin = Vector2(0.0f), const Vector2& vUVSize = Vector2(1.0f),
+		const Vector2& PositionCenter, const Vector2& vSize,
+		const Vector2& UVBegin = Vector2(0.0f), const Vector2& UVSize = Vector2(1.0f),
 		const float& fRot = 0.0f, const Color& cColor = Color(1.0f));
 	static bool MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
-		const Vector2& vPosLeftTop, const Vector2& vSize,
+		const Vector2& PositionLeftTop, const Vector2& vSize,
 		const Color& cColor = Color(1.0f),
-		const Vector2& vUVBegin = Vector2(0.0f), const Vector2& vUVSize = Vector2(1.0f));
+		const Vector2& UVBegin = Vector2(0.0f), const Vector2& UVSize = Vector2(1.0f));
 	static void UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
-		const Vector2& vPosLeftTop, const Vector2& vSize,
+		const Vector2& PositionLeftTop, const Vector2& vSize,
 		const float& fRate, const Color& cColor = Color(1.0f),
-		const Vector2& vUVBegin = Vector2(0.0f), const Vector2& vUVSize = Vector2(1.0f));
-	static void UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& vUVBegin, const Vector2& vUVSize);
+		const Vector2& UVBegin = Vector2(0.0f), const Vector2& UVSize = Vector2(1.0f));
+	static void UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& UVBegin, const Vector2& UVSize);
 	//static void DrawSprite(const SPRITE2D& sprite);
 };
 #endif

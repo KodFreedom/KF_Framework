@@ -72,7 +72,7 @@ void CMode::uninit(void)
 	//ƒJƒƒ‰‚Ì”jŠü
 	SAFE_RELEASE(m_pCamera);
 
-	auto pManager = CMain::GetManager();
+	auto pManager = Main::GetManager();
 	pManager->GetPhysicsSystem()->Clear();
 	pManager->GetGameObjectManager()->ReleaseAll();
 	pManager->GetUISystem()->ReleaseAll();

@@ -57,7 +57,7 @@ void CGameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
+CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObjectActor;
 
@@ -80,8 +80,8 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->RotByEuler(vRot);
@@ -98,7 +98,7 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const Vector3& vPos, const Vector3& vRot, const Vector3& vScale)
+CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
 	auto pObj = new CGameObjectActor;
 
@@ -128,8 +128,8 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const V
 
 	//パラメーター
 	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
 	pTrans->SetScaleNext(vScale);
 	pTrans->RotByEuler(vRot);

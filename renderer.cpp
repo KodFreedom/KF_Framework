@@ -1,58 +1,53 @@
 //--------------------------------------------------------------------------------
 //
-//　BGUIObject.cpp
+//　renderer.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-08-28
+//	Date   : 2017-11-01
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "textureManager.h"
-#include "BGUIObject.h"
-
-#ifdef USING_DIRECTX
-#include "KF_UtilityDX.h"
+#include "renderer.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include "rendererDirectX9.h"
 #endif
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  静的メンバー変数宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CBGUIObject::CBGUIObject()
-	: C2DUIObject(100)
-{
-}
+Renderer* Renderer::instance = nullptr;
 
 //--------------------------------------------------------------------------------
-//  初期化
+//
+//  public
+//
 //--------------------------------------------------------------------------------
-bool CBGUIObject::Init(const string& strTexName)
+//--------------------------------------------------------------------------------
+//	関数名：Create
+//  関数説明：生成処理
+//	引数：	hInstance：値
+//			hWnd：
+//			isWindowMode：
+//	戻り値：Manager*
+//--------------------------------------------------------------------------------
+Renderer* Renderer::Create(HWND hWnd, BOOL isWindowMode)
 {
-	C2DUIObject::Init();
-	SPRITE sprite;
-	sprite.strTexName = strTexName;
-	auto pTexManager = Main::GetManager()->GetTextureManager();
-	pTexManager->UseTexture(sprite.strTexName);
-	sprite.usNumPolygon = 2;
-
-#ifdef USING_DIRECTX
-	Vector2 vScreenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	CKFUtilityDX::MakeVertex(sprite.pVtxBuffer, vScreenSize * 0.5f, vScreenSize);
+	if (instance) return nullptr;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	instance = new RendererDirectX9;
 #endif
-	m_listSprite.push_back(sprite);
-	return true;
+	instance->init(hWnd, isWindowMode);
+	return instance;
 }
 
 //--------------------------------------------------------------------------------
-//  作成
+//	関数名：Release
+//  関数説明：破棄処理
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-CBGUIObject* CBGUIObject::Create(const string& strTexName)
+void Renderer::Release(void)
 {
-	auto pUI = new CBGUIObject;
-	pUI->Init(strTexName);
-	return pUI;
+	SAFE_RELEASE(instance);
 }

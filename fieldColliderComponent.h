@@ -56,8 +56,8 @@ public:
 	void	Uninit(void) override;
 
 	//Getä÷êî
-	//INFO	GetPointInfo(const Vector3& vPos);
-	FINFO	GetProjectionInfo(const Vector3& vPos);
+	//INFO	GetPointInfo(const Vector3& Position);
+	FINFO	GetProjectionInfo(const Vector3& Position);
 	bool	GetVtxByRange(const Vector3& vBegin, const Vector3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<Vector3>& vecOut);
 
 private:
@@ -65,7 +65,7 @@ private:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	void	load(const string& strFieldName);
-	bool	getPointInfo(const Vector3& vPos, Vector3& vPLeftUp, Vector3& vPRightDown, Vector3& vPSide, Vector3& vFaceNormal);
+	bool	getPointInfo(const Vector3& Position, Vector3& vPLeftUp, Vector3& vPRightDown, Vector3& vPSide, Vector3& vFaceNormal);
 	
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

@@ -1,53 +1,43 @@
 //--------------------------------------------------------------------------------
-//	アクター
-//　gameObjectActor.h
+//
+//　rendererDirectX9.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
 #pragma once
-
+#include "main.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "gameObject.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class CAnimatorComponent;
+#include "renderer.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObjectActor : public CGameObject
+class RendererDirectX9 : public Renderer
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObjectActor(const GOMLAYER& layer = L_DEFAULT);
-	~CGameObjectActor() {}
-
-	bool Init(void) override;
-	void LateUpdate(void) override;
-
-	//Get関数
-	auto GetAnimatorComponent(void) const { return m_pAnimator; }
-	
-	//Set関数
-
-	//生成関数
-	static CGameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-	static CGameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
+	RendererDirectX9() : Renderer(), lpDirect3D9(nullptr), lpD3DDevice(nullptr) {}
+	~RendererDirectX9() {}
+	bool BeginRender(void) override;
+	void EndRender(void) override;
+	void SetWireFrameFlag(const bool& isEnable) override;
 
 private:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
+	bool init(HWND hWnd, BOOL isWindowMode) override;
 	void uninit(void) override;
 
 	//--------------------------------------------------------------------------------
-	//  変数宣言
+	//  変数定義
 	//--------------------------------------------------------------------------------
-	CAnimatorComponent* m_pAnimator;
+	LPDIRECT3D9			lpDirect3D9;	// Direct3Dオブジェクト
+	LPDIRECT3DDEVICE9	lpD3DDevice;	// Deviceオブジェクト(描画に必要)
 };
+#endif

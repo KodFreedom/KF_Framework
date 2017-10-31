@@ -114,9 +114,9 @@ void CModelEditorBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  SetPos
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::SetPos(const Vector3& vPos)
+void CModelEditorBehaviorComponent::SetPos(const Vector3& Position)
 {
-	m_aObjInfoDemo[(int)m_modelType].pTransform->SetPosNext(vPos);
+	m_aObjInfoDemo[(int)m_modelType].pTransform->SetPosNext(Position);
 }
 
 //--------------------------------------------------------------------------------
@@ -149,8 +149,8 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 		//ˆÊ’u‰ñ“]‚Ì•Û‘¶
 		for (auto& info : m_alistCreated[nCnt])
 		{
-			auto vPos = info.pTransform->GetPos();
-			fwrite(&vPos, sizeof(Vector3), 1, pFile);
+			auto Position = info.pTransform->GetPos();
+			fwrite(&Position, sizeof(Vector3), 1, pFile);
 			auto qRot = info.pTransform->GetRot();
 			fwrite(&qRot, sizeof(Quaternion), 1, pFile);
 		}
@@ -172,9 +172,9 @@ void CModelEditorBehaviorComponent::create(void)
 	auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[(int)m_modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
 	auto pTrans = pObj->GetTransformComponent();
 	auto infoNow = m_aObjInfoDemo[(int)m_modelType];
-	auto& vPos = infoNow.pTransform->GetPos();
+	auto& Position = infoNow.pTransform->GetPos();
 	auto& qRot = infoNow.pTransform->GetRot();
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPosNext(Position);
 	pTrans->SetRotNext(qRot);
 	INFO info;
 	info.pTransform = pTrans;
@@ -278,11 +278,11 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 				wsprintf(aBuf, "%s_%d", m_aStrName[nCnt].c_str(), nCntObj);
 				if (ImGui::TreeNode(aBuf))
 				{
-					auto vPos = itr->pTransform->GetPos();
+					auto Position = itr->pTransform->GetPos();
 					auto vScale = itr->pTransform->GetScale();
 
 					//Offset
-					if (ImGui::InputFloat3("Trans", &vPos.X)) { itr->pTransform->SetPosNext(vPos); }
+					if (ImGui::InputFloat3("Trans", &Position.X)) { itr->pTransform->SetPosNext(Position); }
 					if (ImGui::InputFloat3("Rot", &itr->vRot.X, 0.0f, KF_PI * 2.0f)) { itr->pTransform->SetRotNext(itr->vRot); }
 					if (ImGui::InputFloat3("Scale", &vScale.X)) { itr->pTransform->SetScaleNext(vScale); }
 

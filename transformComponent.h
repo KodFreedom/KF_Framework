@@ -39,8 +39,8 @@ public:
 	void					RegisterParent(CTransformComponent* pParent, const Vector3& vOffsetPos = Vector3(0.0f), const Vector3& vOffsetRot = Vector3(0.0f));
 
 	//Get関数
-	const auto&				GetPos(void) const { return m_vPos; }
-	const auto&				GetPosNext(void) const { return m_vPosNext; }
+	const auto&				GetPos(void) const { return m_Position; }
+	const auto&				GetPosNext(void) const { return m_PositionNext; }
 	const Quaternion		GetRot(void) const;
 	const Quaternion		GetRotNext(void) const;
 	const Vector3			GetEulerRot(void) const;
@@ -60,12 +60,12 @@ public:
 	auto&					GetChildren(void) { return m_listChildren; }
 
 	//Set関数
-	void					SetPos(const Vector3& vPos) { m_vPos = vPos; }
-	void					SetPosNext(const Vector3& vPosNext) { m_vPosNext = vPosNext; }
+	void					SetPos(const Vector3& Position) { m_Position = Position; }
+	void					SetPosNext(const Vector3& PositionNext) { m_PositionNext = PositionNext; }
 	void					SetRot(const Quaternion& qRot);
 	void					SetRotNext(const Quaternion& qRotNext);
 	void					SetRotNext(const Vector3& vRot);
-	void					MovePosNext(const Vector3& vMovement) { m_vPosNext += vMovement; }
+	void					MovePosNext(const Vector3& vMovement) { m_PositionNext += vMovement; }
 	void					SetScale(const Vector3& vScale) { m_vScale = vScale; }
 	void					SetScaleNext(const Vector3& vScaleNext) { m_vScaleNext = vScaleNext; }
 	void					SetForward(const Vector3& vForward) { m_vForward = vForward; }
@@ -75,9 +75,9 @@ public:
 	void					SetRight(const Vector3& vRight) { m_vRight = vRight; }
 	void					SetRightNext(const Vector3& vRight) { m_vRightNext = vRight; }
 	void					SetMatrix(const Matrix44& mtx) { m_mtxThis = mtx; }
-	void					SetOffset(const Vector3& vPos, const Vector3& vRot)
+	void					SetOffset(const Vector3& Position, const Vector3& vRot)
 	{
-		m_vOffsetPos = vPos;
+		m_vOffsetPos = Position;
 		m_vOffsetRot = vRot;
 	}
 
@@ -105,8 +105,8 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	//パラメーター
-	Vector3		m_vPos;			//オブジェクト位置
-	Vector3		m_vPosNext;		//次のオブジェクト位置
+	Vector3		m_Position;			//オブジェクト位置
+	Vector3		m_PositionNext;		//次のオブジェクト位置
 	Vector3		m_vScale;		//オブジェクトサイズ
 	Vector3		m_vScaleNext;	//次のオブジェクトサイズ
 	Vector3		m_vForward;		//オブジェクトの前方向

@@ -22,8 +22,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CTransformComponent::CTransformComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-	, m_vPos(CKFMath::sc_vZero)
-	, m_vPosNext(CKFMath::sc_vZero)
+	, m_Position(CKFMath::sc_vZero)
+	, m_PositionNext(CKFMath::sc_vZero)
 	, m_vScale(CKFMath::sc_vZero)
 	, m_vScaleNext(CKFMath::sc_vZero)
 	, m_vForward(CKFMath::sc_vForward)
@@ -83,7 +83,7 @@ void  CTransformComponent::UpdateMatrix(const Matrix44& mtxParent)
 //--------------------------------------------------------------------------------
 void CTransformComponent::SwapParam(void)
 {
-	m_vPos = m_vPosNext;
+	m_Position = m_PositionNext;
 	m_vScale = m_vScaleNext;
 	m_vForward = m_vForwardNext;
 	m_vRight = m_vRightNext;
@@ -219,9 +219,9 @@ const Matrix44 CTransformComponent::GetMatrixWorldNext(void) const
 	auto mtxWorld = GetMatrixRotNext();
 
 	//平行移動
-	mtxWorld.Elements[3][0] = m_vPosNext.X;
-	mtxWorld.Elements[3][1] = m_vPosNext.Y;
-	mtxWorld.Elements[3][2] = m_vPosNext.Z;
+	mtxWorld.Elements[3][0] = m_PositionNext.X;
+	mtxWorld.Elements[3][1] = m_PositionNext.Y;
+	mtxWorld.Elements[3][2] = m_PositionNext.Z;
 
 	//親のマトリクス取得
 	if (m_pParent)
@@ -437,7 +437,7 @@ void  CTransformComponent::calculateMtxThis(void)
 
 	//平行移動
 	Matrix44 mtxPos;
-	CKFMath::MtxTranslation(mtxPos, m_vPos);
+	CKFMath::MtxTranslation(mtxPos, m_Position);
 	m_mtxThis *= mtxPos;
 }
 

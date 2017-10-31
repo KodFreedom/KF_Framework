@@ -129,19 +129,19 @@ void CEditorControllerBehaviorComponent::showMainWindow(void)
 void CEditorControllerBehaviorComponent::showPosWindow(void)
 {
 	//標的操作
-	auto pInput = CMain::GetManager()->GetInputManager();
+	auto pInput = Main::GetManager()->GetInputManager();
 	auto pTrans = m_pGameObj->GetTransformComponent();
-	auto vPos = pTrans->GetPos();
+	auto Position = pTrans->GetPos();
 	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-	auto pCamera = CMain::GetManager()->GetMode()->GetCamera();
+	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.X * m_fMoveSpeed + vCamForward * vAxis.Y * m_fMoveSpeed;
 	auto fHeight = (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
-	vPos += vMove;
-	vPos.Y += fHeight * m_fMoveSpeed;;
+	Position += vMove;
+	Position.Y += fHeight * m_fMoveSpeed;;
 
 	//Adjust Pos
-	m_pFieldEditor->AdjustPosInField(vPos, m_bAutoHeight);
+	m_pFieldEditor->AdjustPosInField(Position, m_bAutoHeight);
 
 	//ImGui
 	ImGui::Text("Move : W A S D");
@@ -149,19 +149,19 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	ImGui::Text("CameraRot : RightClick + MouseMove");
 	ImGui::Text("CameraZoom : RightClick + MouseWheel");
 	ImGui::InputFloat("Move / Raise Speed", &m_fMoveSpeed);
-	ImGui::InputFloat3("Pos", &vPos.X);
+	ImGui::InputFloat3("Pos", &Position.X);
 
 	//操作位置の更新
-	m_pFieldEditor->SetPos(vPos);
-	m_pModelEditor->SetPos(vPos);
+	m_pFieldEditor->SetPos(Position);
+	m_pModelEditor->SetPos(Position);
 
 	//カメラの移動
-	auto vMovement = vPos - pTrans->GetPos();
+	auto vMovement = Position - pTrans->GetPos();
 	pCamera->MoveCamera(vMovement);
 
 	//Pos設定
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	pTrans->SetPos(Position);
+	pTrans->SetPosNext(Position);
 }
 
 #endif // _DEBUG

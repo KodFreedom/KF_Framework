@@ -183,9 +183,6 @@
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="rendererDX.cpp">
-      <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderState.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
     </ClCompile>
@@ -336,6 +333,12 @@
     <ClCompile Include="fog.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>ソース ファイル\Base\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="rendererDirectX9.cpp">
+      <Filter>ソース ファイル\Base\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -376,9 +379,6 @@
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="rendererDX.h">
-      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="meshComponent.h">
       <Filter>ヘッダー ファイル\Component\Mesh</Filter>
@@ -562,6 +562,12 @@
     </ClInclude>
     <ClInclude Include="fog.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="rendererDirectX9.h">
+      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -60,7 +60,7 @@ CModeDemo::~CModeDemo()
 void CModeDemo::Init(void)
 {	
 	//ライトの初期化
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
+	Main::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CActionGameCamera;
@@ -74,7 +74,7 @@ void CModeDemo::Init(void)
 	pPlayer->SetName("Player");
 
 #ifdef _DEBUG
-	CMain::GetManager()->GetDebugManager()->SetPlayer(pPlayer);
+	Main::GetManager()->GetDebugManager()->SetPlayer(pPlayer);
 #endif // _DEBUG
 	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-50.0, 30.0f, -7.0f), Vector3(0.0f), Vector3(1.0f));
 	//pEnemy->SetName("Enemy00");
@@ -85,7 +85,7 @@ void CModeDemo::Init(void)
 	CGameObjectSpawner::CreateGoal(Vector3(112.0f, 16.0f, 51.0f));
 	m_pCamera->SetTarget(pPlayer);
 
-	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
+	//Main::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------
@@ -103,9 +103,9 @@ void CModeDemo::LateUpdate(void)
 {
 	CMode::LateUpdate();
 
-	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
+	if (Main::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
 	{
-		CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
+		Main::GetManager()->GetFade()->FadeToMode(new CModeResult);
 	}
 }
 
@@ -123,8 +123,8 @@ void CModeDemo::uninit(void)
 	CMode::uninit();
 
 	//ライトの破棄
-	CMain::GetManager()->GetLightManager()->ReleaseAll();
+	Main::GetManager()->GetLightManager()->ReleaseAll();
 
 	//BGMの停止
-	CMain::GetManager()->GetSoundManager()->StopAll();
+	Main::GetManager()->GetSoundManager()->StopAll();
 }

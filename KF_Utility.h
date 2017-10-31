@@ -14,6 +14,7 @@
 //  ディファイン
 //--------------------------------------------------------------------------------
 #define SAFE_RELEASE(p)		if(p){ p->Release(); p = nullptr; }
+#define SAFE_UNINIT(p)		if(p){ p->uninit(); delete p; p = nullptr; }
 #define SAFE_DELETE(p)		if(p){ delete p; p = nullptr; }
 
 //--------------------------------------------------------------------------------

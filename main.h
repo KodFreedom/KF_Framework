@@ -12,7 +12,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
-//STL
+// STL
 #include <list>
 #include <vector>
 #include <unordered_map>
@@ -22,16 +22,19 @@
 #include <assert.h>
 using namespace std;
 
-//OpenMP
+// OpenMP
 #include <omp.h>
 
-//KF関数
+// KF関数
 #include "KF_Math.h"
 #include "KF_Utility.h"
+using namespace KF;
 
-//DirectX系
+// DirectX系
 #ifdef USING_DIRECTX
+#if (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
+#endif
 #define DIRECTINPUT_VERSION (0x0800)
 #include <dinput.h>
 #include <XAudio2.h>//sound
@@ -40,9 +43,12 @@ using namespace std;
 //--------------------------------------------------------------------------------
 //  ライブラリ読み込み
 //--------------------------------------------------------------------------------
+// DirectX系
 #ifdef USING_DIRECTX
+#if (DIRECTX_VERSION == 9)
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
+#endif
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dinput8.lib")
 #endif
@@ -66,54 +72,41 @@ using namespace std;
 #endif											
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class CManager;
-
-//--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
-typedef struct
-{
-	Vector3			vPos;	//xyz
-	float			fRhw;	//rhw
-	unsigned long	ulColor;//色
-	Vector2			vUV;	//テクスチャ
-}VERTEX_2D;//2D頂点情報構造体　頂点フォーマットと構造を合わせること
+struct VERTEX_2D
+{// 2D頂点情報構造体　頂点フォーマットと構造を合わせること
+	Vector3			Position;
+	float			Rhw;
+	unsigned long	Color;
+	Vector2			UV;
+};
 
-typedef struct//頂点情報構造体　上の頂点フォーマットと構造を合わせること
-{
-	Vector3			vPos;	//xyz
-	Vector3			vNormal;//法線
-	unsigned long	ulColor;//色
-	Vector2			vUV;	//uv
-}VERTEX_3D;//3D頂点情報構造体　頂点フォーマットと構造を合わせること
+struct VERTEX_3D
+{// 3D頂点情報構造体　頂点フォーマットと構造を合わせること
+	Vector3			Position;
+	Vector3			Normal;
+	unsigned long	Color;
+	Vector2			UV;
+};
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CMain
+class Main
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	static int				Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow);
-
-	//Get関数
-	static CManager*		GetManager(void) { return m_pManager; }
+	static int				WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow);
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMain() {}
-	~CMain() {}
+	Main() {}
+	~Main() {}
 
 	static LRESULT CALLBACK	wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static void				closeApp(HWND hWnd);
-
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	static CManager*		m_pManager;
 };

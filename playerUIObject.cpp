@@ -40,7 +40,7 @@ const Vector2	CPlayerUIObject::sc_vFaceUVSize = Vector2(0.25f, 1.0f);
 //--------------------------------------------------------------------------------
 bool CPlayerUIObject::Init(void)
 {
-	auto pTexManager = CMain::GetManager()->GetTextureManager();
+	auto pTexManager = Main::GetManager()->GetTextureManager();
 	
 	//HPGauge
 	SPRITE sHP;

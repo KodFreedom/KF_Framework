@@ -15,11 +15,6 @@
 #endif
 
 //--------------------------------------------------------------------------------
-//  静的メンバ変数宣言
-//--------------------------------------------------------------------------------
-CManager*	CMain::m_pManager = nullptr;
-
-//--------------------------------------------------------------------------------
 //	extern関数
 //--------------------------------------------------------------------------------
 #ifdef _DEBUG
@@ -29,9 +24,9 @@ extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, 
 //--------------------------------------------------------------------------------
 //	メイン関数
 //--------------------------------------------------------------------------------
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
 {
-	return CMain::Main(hInstance, hPrevInstance, IpCmdLine, nCmdShow);
+	return Main::WinMain(hInstance, hPrevInstance, IpCmdLine, cmdShow);
 }
 
 //--------------------------------------------------------------------------------
@@ -46,7 +41,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 //			nCmdShow
 //	戻り値：int
 //--------------------------------------------------------------------------------
-int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
+int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(IpCmdLine);
@@ -104,22 +99,22 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 
 	//フルスクリーン
 #ifdef _DEBUG
-	bool bWindow = true;
+	bool isWindowMode = true;
 #else
-	bool bWindow = true;
+	bool isWindowMode = true;
 	UINT nID = MessageBox(hWnd, "フルスクリーンモードで起動しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
-	if (nID == IDYES) { bWindow = false; }
+	if (nID == IDYES) { isWindowMode = false; }
 #endif // _DEBUG
 
 	//Manager生成
-	m_pManager = new CManager;
-	if (!m_pManager->Init(hInstance, hWnd, bWindow))
+	if (!Manager::Create(hInstance, hWnd, isWindowMode))
 	{
+		UnregisterClass(CLASS_NAME, wcex.hInstance);
 		return -1;
-	};
+	}
 
 	//ウインドウの表示
-	ShowWindow(hWnd, nCmdShow);
+	ShowWindow(hWnd, cmdShow);
 	UpdateWindow(hWnd);
 
 	//時間カウンタ
@@ -159,24 +154,15 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 			if (fTime >= TIMER_INTERVAL)
 			{
 				nExecLastTime = nCurrentTime;
-
-				// 更新処理
-				m_pManager->Update();
-				m_pManager->LateUpdate();
-
-				// 描画処理
-				m_pManager->Draw();
+				Manager::Instance()->Update();
+				Manager::Instance()->LateUpdate();
+				Manager::Instance()->Draw();
 			}
 		}
 	}
 
 	// 終了処理
-	if (m_pManager)
-	{
-		m_pManager->Uninit();
-		delete m_pManager;
-		m_pManager = nullptr;
-	}
+	Manager::Release();
 
 	//ウインドウクラスの登録お解除
 	//第一引数：メクラス名
@@ -195,7 +181,7 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 //			lParam：メッセージの二番目のパラメータ
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Main::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _DEBUG
 	ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
@@ -240,7 +226,7 @@ LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //	引数：	hWnd：ウインドウのハンドル
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-void CMain::closeApp(HWND hWnd)
+void Main::closeApp(HWND hWnd)
 {
 	UINT nID = 0;//メッセージbox戻り値
 

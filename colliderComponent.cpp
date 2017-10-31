@@ -30,7 +30,7 @@ CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::CO
 {
 	CKFMath::MtxIdentity(m_mtxWorldNext);
 	CKFMath::MtxIdentity(m_mtxOffset);
-	CMain::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
+	Main::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ CColliderComponent::~CColliderComponent() {}
 //--------------------------------------------------------------------------------
 void CColliderComponent::Uninit(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
+	Main::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -58,12 +58,12 @@ void CColliderComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  OffsetÝ’è
 //--------------------------------------------------------------------------------
-void CColliderComponent::SetOffset(const Vector3& vPos, const Vector3& vRot)
+void CColliderComponent::SetOffset(const Vector3& Position, const Vector3& vRot)
 {
 	CKFMath::MtxRotationYawPitchRoll(m_mtxOffset, vRot);
-	m_mtxOffset.Elements[3][0] = vPos.Y;
-	m_mtxOffset.Elements[3][1] = vPos.Y;
-	m_mtxOffset.Elements[3][2] = vPos.Z;
+	m_mtxOffset.Elements[3][0] = Position.Y;
+	m_mtxOffset.Elements[3][1] = Position.Y;
+	m_mtxOffset.Elements[3][2] = Position.Z;
 }
 
 //--------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ void CColliderComponent::SetOffset(const Vector3& vPos, const Vector3& vRot)
 //--------------------------------------------------------------------------------
 void CColliderComponent::Sleep(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
+	Main::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
 }
 
 //--------------------------------------------------------------------------------
@@ -79,5 +79,5 @@ void CColliderComponent::Sleep(void)
 //--------------------------------------------------------------------------------
 void CColliderComponent::Awake(void)
 {
-	CMain::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
+	Main::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
 }

@@ -30,10 +30,10 @@ const float CFade::sc_fFadeRate = 1.0f / (120.0f * 0.5f);
 void CFade::Init(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
 
-	CMain::GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
+	Main::GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
 
 	//頂点バッファ
 	hr = pDevice->CreateVertexBuffer(
@@ -58,28 +58,28 @@ void CFade::Init(void)
 
 	//頂点位置設定
 	//頂点座標の設定（2D座標、右回り）
-	pVtx[0].vPos = Vector3(0.0f, 0.0f, 0.0f);
-	pVtx[1].vPos = Vector3(SCREEN_WIDTH, 0.0f, 0.0f);
-	pVtx[2].vPos = Vector3(0.0f, SCREEN_HEIGHT, 0.0f);
-	pVtx[3].vPos = Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+	pVtx[0].Position = Vector3(0.0f, 0.0f, 0.0f);
+	pVtx[1].Position = Vector3(SCREEN_WIDTH, 0.0f, 0.0f);
+	pVtx[2].Position = Vector3(0.0f, SCREEN_HEIGHT, 0.0f);
+	pVtx[3].Position = Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 
 	//頂点カラー設定
-	pVtx[0].ulColor = m_cColor;
-	pVtx[1].ulColor = m_cColor;
-	pVtx[2].ulColor = m_cColor;
-	pVtx[3].ulColor = m_cColor;
+	pVtx[0].Color = m_cColor;
+	pVtx[1].Color = m_cColor;
+	pVtx[2].Color = m_cColor;
+	pVtx[3].Color = m_cColor;
 
 	//頂点UV設定
-	pVtx[0].vUV = Vector2(0.0f, 0.0f);
-	pVtx[1].vUV = Vector2(1.0f, 0.0f);
-	pVtx[2].vUV = Vector2(0.0f, 1.0f);
-	pVtx[3].vUV = Vector2(1.0f, 1.0f);
+	pVtx[0].UV = Vector2(0.0f, 0.0f);
+	pVtx[1].UV = Vector2(1.0f, 0.0f);
+	pVtx[2].UV = Vector2(0.0f, 1.0f);
+	pVtx[3].UV = Vector2(1.0f, 1.0f);
 
 	//rhwの設定(必ず1.0f)
-	pVtx[0].fRhw = 1.0f;
-	pVtx[1].fRhw = 1.0f;
-	pVtx[2].fRhw = 1.0f;
-	pVtx[3].fRhw = 1.0f;
+	pVtx[0].Rhw = 1.0f;
+	pVtx[1].Rhw = 1.0f;
+	pVtx[2].Rhw = 1.0f;
+	pVtx[3].Rhw = 1.0f;
 
 	//仮想アドレス解放
 	m_pVtxBuffer->Unlock();
@@ -92,7 +92,7 @@ void CFade::Init(void)
 void CFade::Uninit(void)
 {
 #ifdef USING_DIRECTX
-	CMain::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
+	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
 	SAFE_RELEASE(m_pVtxBuffer);
 #endif
 }
@@ -131,7 +131,7 @@ void CFade::Update(void)
 
 			//Check SE & BGM(fade out effect)
 			Ade = FADE_IN;
-			CMain::GetManager()->SetMode(m_pModeNext);
+			Main::GetManager()->SetMode(m_pModeNext);
 		}
 	}
 
@@ -144,7 +144,7 @@ void CFade::Update(void)
 void CFade::Draw(void)
 {
 #ifdef USING_DIRECTX
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_2D));
@@ -153,7 +153,7 @@ void CFade::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = CMain::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
+	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
 	pDevice->SetTexture(0, pTexture);
 
 	// ポリゴンの描画
@@ -190,10 +190,10 @@ void CFade::SetColorFade(const Color &cColor)
 	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点カラーの設定(0～255の整数値)
-	pVtx[0].ulColor = cColor;
-	pVtx[1].ulColor = cColor;
-	pVtx[2].ulColor = cColor;
-	pVtx[3].ulColor = cColor;
+	pVtx[0].Color = cColor;
+	pVtx[1].Color = cColor;
+	pVtx[2].Color = cColor;
+	pVtx[3].Color = cColor;
 
 	//仮想アドレス解放
 	m_pVtxBuffer->Unlock();
