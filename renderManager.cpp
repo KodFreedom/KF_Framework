@@ -48,20 +48,20 @@ void CRenderManager::Update(void)
 void CRenderManager::Render(void)
 {
 	//Render
-	for (int nCntRP = 0; nCntRP < RP_MAX; ++nCntRP)
+	for (int ++countRP = 0; ++countRP < RP_MAX; ++++countRP)
 	{
-		for (int nCntRS = 0; nCntRS < RS_MAX; ++nCntRS)
+		for (int ++countRS = 0; ++countRS < RS_MAX; ++++countRS)
 		{
-			if (m_apRenderComponents[nCntRP][nCntRS].empty()) { continue; }
+			if (m_apRenderComponents[++countRP][++countRS].empty()) { continue; }
 
-			setRenderState((RENDER_PRIORITY)nCntRP, (RENDER_STATE)nCntRS);
+			setRenderState((RenderPriority)++countRP, (RenderState)++countRS);
 
-			for (auto pRender : m_apRenderComponents[nCntRP][nCntRS])
+			for (auto pRender : m_apRenderComponents[++countRP][++countRS])
 			{
 				pRender->Render();
 			}
 
-			resetRenderState((RENDER_PRIORITY)nCntRP, (RENDER_STATE)nCntRS);
+			resetRenderState((RenderPriority)++countRP, (RenderState)++countRS);
 		}
 	}
 
@@ -134,7 +134,7 @@ void CRenderManager::uninit(void)
 //--------------------------------------------------------------------------------
 //  setRenderState
 //--------------------------------------------------------------------------------
-void CRenderManager::setRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
+void CRenderManager::setRenderState(const RenderPriority& rp, const RenderState& rs)
 {
 #ifdef USING_DIRECTX
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
@@ -154,7 +154,7 @@ void CRenderManager::setRenderState(const RENDER_PRIORITY& rp, const RENDER_STAT
 //--------------------------------------------------------------------------------
 //  resetRenderState
 //--------------------------------------------------------------------------------
-void CRenderManager::resetRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
+void CRenderManager::resetRenderState(const RenderPriority& rp, const RenderState& rs)
 {
 #ifdef USING_DIRECTX
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();

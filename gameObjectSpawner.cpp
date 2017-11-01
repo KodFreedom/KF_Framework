@@ -38,9 +38,9 @@ CGameObject* CGameObjectSpawner::CreateSkyBox(const Vector3& Position, const Vec
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("skyBox");
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName("skyBox");
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetRenderState(RS_LIGHTOFF_CULLFACEON_MUL);
 	pRender->SetTexName("skybox000.jpg");
@@ -68,9 +68,9 @@ CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
 	string strFieldName = strStageName + "Field";
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strFieldName + ".mesh");
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName(strFieldName + ".mesh");
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("demoField.jpg");
 	pObj->SetRenderComponent(pRender);
@@ -90,9 +90,9 @@ CGameObject* CGameObjectSpawner::CreateCube(const Vector3& Position, const Vecto
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("cube");
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName("cube");
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("nomal_cube.jpg");
 	pObj->SetRenderComponent(pRender);
@@ -124,13 +124,13 @@ CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const Vecto
 	auto pObj = new CGameObject;
 
 	//Name
-	auto& strName = CKFUtility::GetFileName(strPath);
+	auto& strName = Utility::GetFileName(strPath);
 	pObj->SetName(strName);
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strPath);
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName(strPath);
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 
@@ -177,20 +177,20 @@ CGameObject* CGameObjectSpawner::CreateGoal(const Vector3& Position)
 //--------------------------------------------------------------------------------
 //	関数名：CreateModel
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	strFilePath：ファイルの名前 
+//	引数：	filePath：ファイルの名前 
 //			Position
 //			qRot
 //			vScale
 //	戻り値：CGameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale)
+CGameObject* CGameObjectSpawner::CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale)
 {
 	string strName, strType;
-	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
+	Utility::AnalyzeFilePath(filePath, strName, strType);
 	if (!strType._Equal("model")) { return nullptr; }
 	
 	//Modelファイルの開く
-	string strPath = "data/MODEL/" + strFilePath;
+	string strPath = "data/MODEL/" + filePath;
 	FILE *pFile;
 	fopen_s(&pFile, strPath.c_str(), "rb");
 
@@ -250,7 +250,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	//Collider
 	int nNumCollider = 0;
 	fread_s(&nNumCollider, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumCollider; ++nCnt)
+	for (int count = 0; count < nNumCollider; ++count)
 	{
 		int nColType = 0;
 		Vector3 vColPos, vColRot, vColScale;
@@ -283,7 +283,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	//Texture
 	int nNumTexture = 0;
 	fread_s(&nNumTexture, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumTexture; ++nCnt)
+	for (int count = 0; count < nNumTexture; ++count)
 	{
 		int nNameSize = 0;
 		fread_s(&nNameSize, sizeof(int), sizeof(int), 1, pFile);
@@ -296,7 +296,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	//Mesh
 	int nNumMesh = 0;
 	fread_s(&nNumMesh, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumMesh; ++nCnt)
+	for (int count = 0; count < nNumMesh; ++count)
 	{
 		//Mesh Name
 		int nMeshNameSize = 0;
@@ -307,7 +307,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 
 		//Check Type
 		string strName, strType;
-		CKFUtility::AnalyzeFilePath(strMeshName, strName, strType);
+		Utility::AnalyzeFilePath(strMeshName, strName, strType);
 		if (strType._Equal("mesh"))
 		{//骨なし
 			auto pChildMesh = createChildMesh(pTrans, strMeshName);
@@ -321,7 +321,7 @@ CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, F
 	//Child
 	int nNumChild = 0;
 	fread_s(&nNumChild, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumChild; ++nCnt)
+	for (int count = 0; count < nNumChild; ++count)
 	{
 		auto pChild = createChildNode(pTrans, pFile);
 	}
@@ -343,13 +343,13 @@ CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, c
 	auto pObj = new CGameObject;
 
 	//Name
-	auto& strName = CKFUtility::GetFileName(strMeshName);
+	auto& strName = Utility::GetFileName(strMeshName);
 	pObj->SetName(strName);
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strMeshName);
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName(strMeshName);
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 
@@ -371,9 +371,9 @@ CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEdito
 	auto pObj = new CGameObject;
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("data/MODEL/target.x");
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName("data/MODEL/target.x");
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
 	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
@@ -398,9 +398,9 @@ CGameObject* CGameObjectSpawner::CreateEditorField(void)
 	//コンポネント
 	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
 	pObj->AddBehavior(pBehavior);
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("field");
-	pObj->SetMeshComponent(pMesh);
+	auto mesh = new MeshComponent(pObj);
+	mesh->SetMeshName("field");
+	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pRender->SetTexName("editorField.jpg");
 	pObj->SetRenderComponent(pRender);

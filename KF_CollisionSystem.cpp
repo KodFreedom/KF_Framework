@@ -41,8 +41,8 @@
 //--------------------------------------------------------------------------------
 CKFCollisionSystem::CKFCollisionSystem()
 #ifdef _DEBUG
-	: m_pMeshSphere(nullptr)
-	, m_pMeshCube(nullptr)
+	: m_meshSphere(nullptr)
+	, m_meshCube(nullptr)
 	, m_bDrawCollider(false)
 #endif
 {
@@ -143,14 +143,14 @@ void CKFCollisionSystem::LateUpdate(void)
 #ifdef _DEBUG
 	auto pDebug = Main::GetManager()->GetDebugManager();
 	pDebug->DisplayAlways("ColliderèÓïÒ : \n");
-	for (int nCntMode = 0; nCntMode < MODE_MAX; ++nCntMode)
+	for (int countMode = 0; countMode < MODE_MAX; ++countMode)
 	{
-		pDebug->DisplayAlways(toString((COL_MODE)nCntMode) + " : ");
-		for (int nCntType = 0; nCntType < COL_MAX; ++nCntType)
+		pDebug->DisplayAlways(toString((COL_MODE)countMode) + " : ");
+		for (int countType = 0; countType < COL_MAX; ++countType)
 		{
-			int nNumCol = (int)m_alistCollider[nCntMode][nCntType].size();
+			int nNumCol = (int)m_alistCollider[countMode][countType].size();
 			pDebug->DisplayAlways(
-				toString((COL_TYPE)nCntType) +
+				toString((COL_TYPE)countType) +
 				"-" +
 				to_string(nNumCol) + "    ");
 		}
@@ -310,7 +310,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixTranslation(&mtxPos, Position.x, Position.y, Position.z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshSphere->DrawSubset(0);
+		m_meshSphere->DrawSubset(0);
 	}
 
 	for (auto pCol : m_alistCollider[STATIC][COL_SPHERE])
@@ -325,7 +325,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshSphere->DrawSubset(0);
+		m_meshSphere->DrawSubset(0);
 	}
 
 	//AABB
@@ -341,7 +341,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshCube->DrawSubset(0);
+		m_meshCube->DrawSubset(0);
 	}
 
 	for (auto pCol : m_alistCollider[STATIC][COL_AABB])
@@ -356,7 +356,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
 		mtx *= mtxPos;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshCube->DrawSubset(0);
+		m_meshCube->DrawSubset(0);
 	}
 
 	//OBB
@@ -371,7 +371,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
 		mtx *= mtxObj;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshCube->DrawSubset(0);
+		m_meshCube->DrawSubset(0);
 	}
 
 	for (auto pCol : m_alistCollider[STATIC][COL_OBB])
@@ -385,7 +385,7 @@ void CKFCollisionSystem::DrawCollider(void)
 		D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
 		mtx *= mtxObj;
 		pDevice->SetTransform(D3DTS_WORLD, &mtx);
-		m_pMeshCube->DrawSubset(0);
+		m_meshCube->DrawSubset(0);
 	}
 
 
@@ -406,8 +406,8 @@ void CKFCollisionSystem::init(void)
 #ifdef _DEBUG
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
-	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_pMeshSphere, nullptr);
-	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_pMeshCube, nullptr);
+	D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_meshSphere, nullptr);
+	D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_meshCube, nullptr);
 #endif
 }
 
@@ -428,8 +428,8 @@ void CKFCollisionSystem::uninit(void)
 	m_listField.clear();
 
 #ifdef _DEBUG
-	SAFE_RELEASE(m_pMeshSphere);
-	SAFE_RELEASE(m_pMeshCube);
+	SAFE_RELEASE(m_meshSphere);
+	SAFE_RELEASE(m_meshCube);
 	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
 #endif
 }

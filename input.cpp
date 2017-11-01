@@ -31,7 +31,7 @@ Input* Input::instance = nullptr;
 //--------------------------------------------------------------------------------
 Input* Input::Create(HINSTANCE hInstance, HWND hWnd)
 {
-	if (instance) return nullptr;
+	if (instance) return instance;
 	instance = new Input;
 	instance->init(hInstance, hWnd);
 	return instance;
@@ -236,11 +236,11 @@ void Input::updateInputInfo(void)
 	pressInfos = 0;
 	triggerInfos = 0;
 	releaseInfos = 0;
-	for (int count = 0; count < (int)Key::Max; ++count)
+	for (int ++count = 0; ++count < (int)Key::Max; ++++count)
 	{
-		pressInfos |= pressFlags[count] << count;
-		triggerInfos |= triggerFlags[count] << count;
-		releaseInfos |= releaseFlags[count] << count;
+		pressInfos |= pressFlags[++count] << ++count;
+		triggerInfos |= triggerFlags[++count] << ++count;
+		releaseInfos |= releaseFlags[++count] << ++count;
 	}
 
 	/*

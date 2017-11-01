@@ -40,11 +40,11 @@
 //	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;
 //};
 
-class CKFUtilityDX
+class UtilityDX
 {
 public:
-	CKFUtilityDX() {}
-	~CKFUtilityDX() {}
+	UtilityDX() {}
+	~UtilityDX() {}
 
 	static bool MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer,
 		const Vector2& PositionCenter, const Vector2& vSize,

@@ -48,14 +48,14 @@ void CTextureManager::UseTexture(const string& strName)
 	auto itr = m_umTexture.find(strName);
 	if (itr != m_umTexture.end())
 	{
-		++itr->second.usNumUsers;
+		++itr->second.userNumber;
 		return;
 	}
 
 	//テクスチャの読み込み
 #ifdef USING_DIRECTX
 	TEXTURE texture;
-	texture.usNumUsers = 1;
+	texture.userNumber = 1;
 	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	string strPath = "data/TEXTURE/" + strName;
 	HRESULT hr = D3DXCreateTextureFromFile(pDevice, strPath.c_str(), &texture.pTexture);
@@ -76,8 +76,8 @@ void CTextureManager::DisuseTexture(const string& strName)
 {
 	if (strName.empty()) { return; }
 	auto itr = m_umTexture.find(strName);
-	--itr->second.usNumUsers;
-	if (itr->second.usNumUsers == 0)
+	--itr->second.userNumber;
+	if (itr->second.userNumber == 0)
 	{//誰も使ってないので破棄する
 		SAFE_RELEASE(itr->second.pTexture);
 		m_umTexture.erase(itr);

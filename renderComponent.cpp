@@ -27,9 +27,9 @@
 //--------------------------------------------------------------------------------
 bool CRenderComponent::Init(void)
 {
-	auto pMesh = m_pGameObj->GetMeshComponent();
-	auto pMeshManager = Main::GetManager()->GetMeshManager();
-	auto renderInfo = pMeshManager->GetRenderInfo(pMesh->GetMeshName());
+	auto mesh = m_pGameObj->GetMeshComponent();
+	auto meshManager = Main::GetManager()->GetMeshManager();
+	auto renderInfo = meshManager->GetRenderInfo(mesh->GetMeshName());
 	
 	if (!renderInfo.strTex.empty()) { SetTexName(renderInfo.strTex); }
 	m_renderPriority = renderInfo.renderPriority;

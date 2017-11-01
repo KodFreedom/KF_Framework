@@ -47,8 +47,8 @@ public:
 	//Set関数
 	void			SetTexName(const string& strTexName);
 	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
-	void			SetRenderPriority(const RENDER_PRIORITY& rp) { m_renderPriority = rp; }
-	void			SetRenderState(const RENDER_STATE& rs) { m_renderState = rs; }
+	void			SetRenderPriority(const RenderPriority& rp) { m_renderPriority = rp; }
+	void			SetRenderState(const RenderState& rs) { m_renderState = rs; }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -65,8 +65,8 @@ protected:
 	//--------------------------------------------------------------------------------
 	string			m_strTexName;		//テクスチャ
 	unsigned short	m_usMatID;			//マテリアル
-	RENDER_PRIORITY	m_renderPriority;
-	RENDER_STATE	m_renderState;
+	RenderPriority	m_renderPriority;
+	RenderState	m_renderState;
 };
 
 //--------------------------------------------------------------------------------

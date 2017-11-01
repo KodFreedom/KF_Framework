@@ -54,7 +54,7 @@ Manager* Manager::instance = nullptr;
 //--------------------------------------------------------------------------------
 Manager* Manager::Create(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 {
-	if (instance) return nullptr;
+	if (instance) return instance;
 	instance = new Manager;
 	instance->init(hInstance, hWnd, isWindowMode);
 	return instance;
@@ -182,9 +182,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	m_pFog = CFog::Create();
 
 	Input::Create(hInstance, hWnd);
-
-	//メッシュマネージャの生成
-	m_pMeshManager = new CMeshManager;
+	MeshManager::Create();
 
 	//テクスチャマネージャの生成
 	m_pTextureManager = new CTextureManager;
@@ -270,9 +268,7 @@ void Manager::uninit(void)
 	//テクスチャマネージャの破棄
 	SAFE_RELEASE(m_pTextureManager);
 
-	//メッシュマネージャの破棄
-	SAFE_RELEASE(m_pMeshManager);
-
+	MeshManager::Release();
 	Input::Release();
 
 #ifdef _DEBUG

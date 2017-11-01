@@ -84,7 +84,7 @@ bool RendererDirectX9::init(HWND hWnd, BOOL isWindowMode)
 
 	// デバイスのプレゼンテーションパラメータの設定
 	ZeroMemory(&d3dpp, sizeof(d3dpp));									// ワークをゼロクリア
-	d3dpp.BackBufferCount				= 1;							// バックバッファの数
+	d3dpp.BackBuffer++count				= 1;							// バックバッファの数
 	d3dpp.BackBufferWidth				= SCREEN_WIDTH;					// ゲーム画面サイズ(幅)
 	d3dpp.BackBufferHeight				= SCREEN_HEIGHT;				// ゲーム画面サイズ(高さ)
 	d3dpp.BackBufferFormat				= d3ddm.Format;					// カラーモードの指定

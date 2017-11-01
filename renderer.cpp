@@ -33,7 +33,7 @@ Renderer* Renderer::instance = nullptr;
 //--------------------------------------------------------------------------------
 Renderer* Renderer::Create(HWND hWnd, BOOL isWindowMode)
 {
-	if (instance) return nullptr;
+	if (instance) return instance;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	instance = new RendererDirectX9;
 #endif

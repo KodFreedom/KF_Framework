@@ -21,18 +21,18 @@
 //--------------------------------------------------------------------------------
 //  メッシュコンポネントクラス
 //--------------------------------------------------------------------------------
-class CMeshComponent : public CComponent
+class MeshComponent : public CComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMeshComponent(CGameObject* const pGameObj)
+	MeshComponent(CGameObject* const pGameObj)
 		: CComponent(pGameObj) 
 	{
 		m_strMeshName.clear();
 	}
-	~CMeshComponent() {}
+	~MeshComponent() {}
 
 	virtual bool	Init(void) override { return true; }
 	virtual void	Uninit(void) override;
@@ -48,7 +48,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMeshComponent() : CComponent() {}
+	MeshComponent() : CComponent() {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -59,13 +59,13 @@ protected:
 //--------------------------------------------------------------------------------
 //  ヌルメッシュコンポネントクラス
 //--------------------------------------------------------------------------------
-class CNullMeshComponent : public CMeshComponent
+class CNullMeshComponent : public MeshComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CNullMeshComponent() : CMeshComponent() {}
+	CNullMeshComponent() : MeshComponent() {}
 	~CNullMeshComponent() {}
 
 	bool	Init(void) override { return true; }

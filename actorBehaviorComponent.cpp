@@ -33,7 +33,7 @@ CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)
 	, m_nLevel(0)
-	, m_nCntInvincible(0)
+	, m_countInvincible(0)
 	, m_fLifeMax(0.0f)
 	, m_fLifeNow(0.0f)
 	, Attack(0.0f)
@@ -77,7 +77,7 @@ void CActorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Update(void)
 {
-	if (m_nCntInvincible > 0) { --m_nCntInvincible; }
+	if (m_countInvincible > 0) { --m_countInvincible; }
 	
 }
 
@@ -142,8 +142,8 @@ void CActorBehaviorComponent::Act(Vector3& vMovement, const bool& bJump, const b
 //--------------------------------------------------------------------------------
 void CActorBehaviorComponent::Hit(const float& fDamage)
 {
-	if (m_nCntInvincible > 0) { return; }
-	m_nCntInvincible = 60;
+	if (m_countInvincible > 0) { return; }
+	m_countInvincible = 60;
 	m_fLifeNow -= fDamage;
 	m_fLifeNow = m_fLifeNow < 0.0f ? 0.0f : m_fLifeNow;
 }

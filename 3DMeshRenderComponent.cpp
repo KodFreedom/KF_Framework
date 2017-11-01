@@ -28,8 +28,8 @@
 //--------------------------------------------------------------------------------
 void C3DMeshRenderComponent::Render(void)
 {
-	auto pMesh = m_pGameObj->GetMeshComponent();
-	const auto pMeshInfo = Main::GetManager()->GetMeshManager()->GetMesh(pMesh->GetMeshName());
+	auto mesh = m_pGameObj->GetMeshComponent();
+	const auto meshInfo = Main::GetManager()->GetMeshManager()->GetMesh(mesh->GetMeshName());
 
 	//マトリクス算出
 	auto mtxWorld = m_pGameObj->GetTransformComponent()->GetMatrix();
@@ -44,12 +44,12 @@ void C3DMeshRenderComponent::Render(void)
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(
 		0,						//ストリーム番号
-		pMeshInfo->m_pVtxBuffer,//頂点バッファ
+		meshInfo->m_pVtxBuffer,//頂点バッファ
 		0,						//オフセット（開始位置）
 		sizeof(VERTEX_3D));		//ストライド量
 
 	// 頂点インデックスの設定
-	pDevice->SetIndices(pMeshInfo->m_pIdxBuffer);
+	pDevice->SetIndices(meshInfo->m_pIdxBuffer);
 
 	// 頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_3D);
@@ -64,11 +64,11 @@ void C3DMeshRenderComponent::Render(void)
 
 	//プリミティブ描画
 	pDevice->DrawIndexedPrimitive(
-		(_D3DPRIMITIVETYPE)pMeshInfo->m_drawType,
+		(_D3DPRIMITIVETYPE)meshInfo->CurrentType,
 		0,
 		0,
-		pMeshInfo->m_nNumVtx,
+		meshInfo->VertexNumber,
 		0,
-		pMeshInfo->m_nNumPolygon);
+		meshInfo->PolygonNumber);
 #endif
 }

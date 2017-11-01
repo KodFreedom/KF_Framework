@@ -31,7 +31,7 @@
 //	// 頂点バッファをデータストリームに設定
 //	pDevice->SetStreamSource(
 //		0,							//ストリーム番号
-//		c_pMesh->GetVtxBuffer(),	//頂点バッファ
+//		c_mesh->GetVtxBuffer(),	//頂点バッファ
 //		0,							//オフセット
 //		sizeof(VERTEX_2D));			//ストライド量
 //
@@ -45,6 +45,6 @@
 //	// ポリゴンの描画
 //	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
 //		0,							//オフセット
-//		c_pMesh->GetNumPolygon());	//ポリゴン数
+//		c_mesh->GetNumPolygon());	//ポリゴン数
 //#endif
 //}

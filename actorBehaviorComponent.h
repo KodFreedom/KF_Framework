@@ -79,7 +79,7 @@ protected:
 
 	//パラメーター
 	int		m_nLevel;				//レベル
-	int		m_nCntInvincible;		//無敵時間
+	int		m_++countInvincible;		//無敵時間
 	float	m_fLifeMax;				//最大生命値
 	float	m_fLifeNow;				//今の生命値
 	float	Attack;				//攻撃力

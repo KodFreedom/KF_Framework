@@ -17,10 +17,10 @@
 class CEnemyAttackMode : public CAIMode
 {
 public:
-	CEnemyAttackMode() : CAIMode(AM_ATTACK), m_nCntWait(0) {}
+	CEnemyAttackMode() : CAIMode(AM_ATTACK), m_++countWait(0) {}
 	~CEnemyAttackMode() override {}
 	void Update(CEnemyBehaviorComponent& enemy) override;
 
 private:
-	int m_nCntWait;
+	int m_++countWait;
 };

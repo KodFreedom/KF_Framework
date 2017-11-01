@@ -41,7 +41,7 @@ public:
 		aVtx[6] = Vector3(-m_vHalfSize.X, m_vHalfSize.Y, -m_vHalfSize.Z);
 		aVtx[7] = Vector3(m_vHalfSize.X, m_vHalfSize.Y, -m_vHalfSize.Z);
 		list<Vector3> listVtx;
-		for (int nCnt = 0; nCnt < 8; nCnt++) { listVtx.push_back(aVtx[nCnt]); }
+		for (int count = 0; count < 8; ++count) { listVtx.push_back(aVtx[count]); }
 		return listVtx;
 	}
 	list<Vector3>	GetWorldVertexes(void);

@@ -46,16 +46,16 @@ bool CFieldEditorBehaviorComponent::Init(void)
 {
 	auto& vStartPos = Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
 	m_vectorVtx.resize((m_nNumBlockX + 1) * (m_nNumBlockZ + 1));
-	int nCntVtx = 0;
+	int countVtx = 0;
 
-	for (int nCntZ = 0; nCntZ < m_nNumBlockZ + 1; nCntZ++)
+	for (int countZ = 0; countZ < m_nNumBlockZ + 1; countZ++)
 	{
-		for (int nCntX = 0; nCntX < m_nNumBlockX + 1; nCntX++)
+		for (int countX = 0; countX < m_nNumBlockX + 1; countX++)
 		{
 			auto& Position = vStartPos
-				+ Vector3(nCntX * m_vBlockSize.X, 0.0f, -nCntZ * m_vBlockSize.Y);
-			m_vectorVtx[nCntVtx] = Position;
-			++nCntVtx;
+				+ Vector3(countX * m_vBlockSize.X, 0.0f, -countZ * m_vBlockSize.Y);
+			m_vectorVtx[countVtx] = Position;
+			++countVtx;
 		}
 	}
 
@@ -248,11 +248,11 @@ CFieldEditorBehaviorComponent::EINFO CFieldEditorBehaviorComponent::getInfo(void
 	nXMax = nXMax > m_nNumBlockX ? m_nNumBlockX : nXMax;
 	nZMax = nZMax > m_nNumBlockZ ? m_nNumBlockZ : nZMax;
 
-	for (int nCntZ = nZMin; nCntZ <= nZMax; ++nCntZ)
+	for (int countZ = nZMin; countZ <= nZMax; ++countZ)
 	{
-		for (int nCntX = nXMin; nCntX <= nXMax; ++nCntX)
+		for (int countX = nXMin; countX <= nXMax; ++countX)
 		{
-			auto nIdx = nCntZ * (m_nNumBlockZ + 1) + nCntX;
+			auto nIdx = countZ * (m_nNumBlockZ + 1) + countX;
 			auto Position = m_vectorVtx[nIdx];
 			Position.Y = 0.0f;
 			if (CKFMath::VecMagnitudeSquare(Position - vEditorPos) <= m_fEditorRadius * m_fEditorRadius)

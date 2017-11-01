@@ -15,157 +15,142 @@
 #include "camera.h"
 #include "KF_Utility.h"
 #include "renderManager.h"
+#include "renderer.h"
 
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
-#endif
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  中身を削除する
+//	関数名：Use
+//  関数説明：メッシュの追加
+//	引数：	meshName：メッシュの名前
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::UnloadAll(void)
+void MeshManager::Use(const string& meshName)
 {
-	for (auto itr = m_umMesh.begin(); itr != m_umMesh.end();)
-	{
-		SAFE_RELEASE(itr->second.pMesh->m_pVtxBuffer);
-		SAFE_RELEASE(itr->second.pMesh->m_pIdxBuffer);
-		itr = m_umMesh.erase(itr);
-	}
-}
-
-//--------------------------------------------------------------------------------
-//  メッシュの追加
-//--------------------------------------------------------------------------------
-void CMeshManager::UseMesh(const string& strName)
-{
-	auto itr = m_umMesh.find(strName);
-	if (itr != m_umMesh.end()) 
-	{ //すでに存在してる
-		itr->second.usNumUsers++;
+	auto itr = meshes.find(meshName);
+	if (itr != meshes.end()) 
+	{// すでに存在してる
+		++itr->second.UserNumber;
 		return;
 	}
 
-	//メッシュの作成
-	MESH mesh;
-	if (strName.find(".mesh") != string::npos) { mesh = loadFromMesh(strName); }
-	else if (strName.find(".x") != string::npos) { mesh = loadFromXFile(strName); }
-	else if (strName._Equal("cube")) { mesh = createCube(); }
-	else if (strName._Equal("sphere")) { mesh = createSphere(); }
-	else if (strName._Equal("skyBox")) { mesh = createSkyBox(); }
-	else { assert("wrong type!!"); }
-
-	//保存
-	m_umMesh.emplace(strName, mesh);
+	// メッシュの作成
+	MeshInfo meshInfo;
+	if (meshName.find(".mesh") != string::npos) meshInfo = loadFromMesh(meshName);
+	else if (meshName.find(".x") != string::npos) meshInfo = loadFromXFile(meshName);
+	else if (meshName._Equal("cube")) meshInfo = createCube();
+	else if (meshName._Equal("sphere")) meshInfo = createSphere();
+	else if (meshName._Equal("skyBox")) meshInfo = createSkyBox();
+	else
+	{
+		assert("wrong type!!");
+		return;
+	}
+	meshes.emplace(meshName, meshInfo);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：DisuseMesh
+//	関数名：Disuse
 //  関数説明：メッシュの破棄
-//	引数：	strName：メッシュの名前
+//	引数：	meshName：メッシュの名前
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::DisuseMesh(const string& strName)
+void MeshManager::Disuse(const string& meshName)
 {
-	auto itr = m_umMesh.find(strName);
-	itr->second.usNumUsers--;
-	if (itr->second.usNumUsers == 0)
-	{//誰も使ってないので破棄する
-		delete itr->second.pMesh;
-		m_umMesh.erase(itr);
+	auto itr = meshes.find(meshName);
+	--itr->second.UserNumber;
+	if (itr->second.UserNumber == 0)
+	{// 誰も使ってないので破棄する
+		delete itr->second.CurrentMesh;
+		meshes.erase(itr);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：CreateEditorField
 //  関数説明：エディタ用フィールドの作成
-//	引数：	nNumBlockX：X方向のブロック数
-//			nNumBlockZ：Z方向のブロック数
-//			vBlockSize：ブロックのサイズ
+//	引数：	blockXNumber：X方向のブロック数
+//			blockZNumber：Z方向のブロック数
+//			blockSize：ブロックのサイズ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const Vector2& vBlockSize)
+void MeshManager::CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize)
 {
-	auto itr = m_umMesh.find("field");
-	if (itr != m_umMesh.end())
+	auto itr = meshes.find("field");
+	if (itr != meshes.end())
 	{ //すでに存在してる
-		//itr->second.usNumUsers++;
 		return;
 	}
 
-	auto pMesh = new CMesh;
-	pMesh->m_nNumVtx = (nNumBlockX + 1) * (nNumBlockZ + 1);
-	pMesh->m_nNumIdx = ((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1;
-	pMesh->m_nNumPolygon = (nNumBlockX + 2) * 2 * nNumBlockZ - 4;
-	if (!createBuffer(pMesh)) { return; }
+	auto mesh = new Mesh;
+	mesh->VertexNumber = (blockXNumber + 1) * (blockZNumber + 1);
+	mesh->IndexNumber = ((blockXNumber + 1) * 2 + 2) * blockZNumber - 1;
+	mesh->PolygonNumber = (blockXNumber + 2) * 2 * blockZNumber - 4;
+	if (!createBuffer(mesh)) { return; }
 
 #ifdef USING_DIRECTX
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	Vector3 vStartPos = Vector3(-nNumBlockX * 0.5f * vBlockSize.X, 0.0f, nNumBlockZ * 0.5f * vBlockSize.Y);
-	for (int nCntZ = 0; nCntZ < nNumBlockZ + 1; nCntZ++)
+	mesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	Vector3 vStartPos = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	for (int ++countZ = 0; ++countZ < blockZNumber + 1; ++countZ++)
 	{
-		for (int nCntX = 0; nCntX < nNumBlockX + 1; nCntX++)
+		for (int ++countX = 0; ++countX < blockXNumber + 1; ++countX++)
 		{
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].Position = vStartPos
-				+ Vector3(nCntX * vBlockSize.X, 0.0f, -nCntZ * vBlockSize.Y);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].UV = Vector2(nCntX * 1.0f / (float)nNumBlockX, nCntZ * 1.0f / (float)nNumBlockX);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[nCntZ * (nNumBlockX + 1) + nCntX].Normal = Vector3(0.0f, 1.0f, 0.0f);
+			pVtx[++countZ * (blockXNumber + 1) + ++countX].Position = vStartPos
+				+ Vector3(++countX * blockSize.X, 0.0f, -++countZ * blockSize.Y);
+			pVtx[++countZ * (blockXNumber + 1) + ++countX].UV = Vector2(++countX * 1.0f / (float)blockXNumber, ++countZ * 1.0f / (float)blockXNumber);
+			pVtx[++countZ * (blockXNumber + 1) + ++countX].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+			pVtx[++countZ * (blockXNumber + 1) + ++countX].Normal = Vector3(0.0f, 1.0f, 0.0f);
 		}
 	}
 
 	//仮想アドレス解放
-	pMesh->m_pVtxBuffer->Unlock();
+	mesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	mesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int nCntZ = 0; nCntZ < nNumBlockZ; nCntZ++)
+	for (int ++countZ = 0; ++countZ < blockZNumber; ++countZ++)
 	{
-		for (int nCntX = 0; nCntX < (nNumBlockX + 1) * 2 + 2; nCntX++)
+		for (int ++countX = 0; ++countX < (blockXNumber + 1) * 2 + 2; ++countX++)
 		{
-			if (nCntX < (nNumBlockX + 1) * 2)
+			if (++countX < (blockXNumber + 1) * 2)
 			{
-				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = nCntX / 2 + (nCntX + 1) % 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
+				pIdx[++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX] = ++countX / 2 + (++countX + 1) % 2 * (blockXNumber + 1) + ++countZ * (blockXNumber + 1);
 			}
-			else if (nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX < (((nNumBlockX + 1) * 2 + 2) * nNumBlockZ - 1))//縮退ポリゴン
+			else if (++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX < (((blockXNumber + 1) * 2 + 2) * blockZNumber - 1))//縮退ポリゴン
 			{
-				pIdx[nCntZ * ((nNumBlockX + 1) * 2 + 2) + nCntX] = (nCntX - 1) / 2 % (nNumBlockX + 1) + nCntX % 2 * 2 * (nNumBlockX + 1) + nCntZ * (nNumBlockX + 1);
+				pIdx[++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX] = (++countX - 1) / 2 % (blockXNumber + 1) + ++countX % 2 * 2 * (blockXNumber + 1) + ++countZ * (blockXNumber + 1);
 			}
 		}
 	}
 
-	pMesh->m_pIdxBuffer->Unlock();
+	mesh->m_pIdxBuffer->Unlock();
 #endif
 
 	//メッシュの作成
-	MESH mesh;
-	mesh.pMesh = pMesh;
+	MeshInfo info;
+	info.CurrentMesh = mesh;
 
 	//保存
-	m_umMesh.emplace("field", mesh);
+	meshes.emplace("field", info);
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：UpdateEditorField
 //  関数説明：エディタ用フィールドデータの更新
-//	引数：	vecVtx：頂点データ
-//			listChoosenIdx：選択された頂点のインデックス
+//	引数：	vertexes：頂点データ
+//			choosenIndexes：選択された頂点のインデックス
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::UpdateEditorField(const vector<Vector3>& vecVtx, const list<int>& listChoosenIdx)
+void MeshManager::UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes)
 {
 #ifdef USING_DIRECTX
 
@@ -173,123 +158,122 @@ void CMeshManager::UpdateEditorField(const vector<Vector3>& vecVtx, const list<i
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	auto pMesh = GetMesh("field");
-	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	auto cColor = Color(1.0f);
-	for (int nCnt = 0; nCnt < (int)vecVtx.size(); ++nCnt)
+	auto mesh = GetMeshBy("field");
+	mesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	auto color = Color(1.0f);
+	for (int ++count = 0; ++count < (int)vertexes.size(); ++++count)
 	{
-		pVtx[nCnt].Position = vecVtx[nCnt];
-		pVtx[nCnt].Color = cColor;
+		pVtx[++count].Position = vertexes[++count];
+		pVtx[++count].Color = color;
 	}
 
 	//Choosen Color
-	int nNumBlockX = 100;
-	int nNumBlockZ = 100;
-	auto cRed = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	for (auto nIdx : listChoosenIdx)
+	int blockXNumber = 100;
+	int blockZNumber = 100;
+	for (auto index : choosenIndexes)
 	{
-		pVtx[nIdx].Color = cRed;
+		pVtx[index].Color = Color::Red;
 
 		//法線計算
-		int nCntZ = nIdx / (nNumBlockZ + 1);
-		int nCntX = nIdx - nCntZ * (nNumBlockZ + 1);
-		Vector3 Normal;
-		Vector3 PositionThis = pVtx[nIdx].Position;
-		Vector3 PositionLeft;
-		Vector3 PositionRight;
-		Vector3 PositionTop;
-		Vector3 PositionBottom;
+		int ++countZ = index / (blockZNumber + 1);
+		int ++countX = index - ++countZ * (blockZNumber + 1);
+		Vector3 normal;
+		Vector3 positionThis = pVtx[index].Position;
+		Vector3 positionLeft;
+		Vector3 positionRight;
+		Vector3 positionTop;
+		Vector3 positionBottom;
 
-		if (nCntX == 0)
+		if (++countX == 0)
 		{
-			PositionLeft = PositionThis;
-			PositionRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].Position;
+			positionLeft = positionThis;
+			positionRight = pVtx[++countZ * (blockXNumber + 1) + ++countX + 1].Position;
 		}
-		else if (nCntX < nNumBlockX)
+		else if (++countX < blockXNumber)
 		{
-			PositionLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].Position;
-			PositionRight = pVtx[nCntZ * (nNumBlockX + 1) + nCntX + 1].Position;
+			positionLeft = pVtx[++countZ * (blockXNumber + 1) + ++countX - 1].Position;
+			positionRight = pVtx[++countZ * (blockXNumber + 1) + ++countX + 1].Position;
 		}
 		else
 		{
-			PositionLeft = pVtx[nCntZ * (nNumBlockX + 1) + nCntX - 1].Position;
-			PositionRight = PositionThis;
+			positionLeft = pVtx[++countZ * (blockXNumber + 1) + ++countX - 1].Position;
+			positionRight = positionThis;
 		}
 
-		if (nCntZ == 0)
+		if (++countZ == 0)
 		{
-			PositionTop = PositionThis;
-			PositionBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].Position;
+			positionTop = positionThis;
+			positionBottom = pVtx[(++countZ + 1) * (blockXNumber + 1) + ++countX].Position;
 		}
-		else if (nCntZ < nNumBlockZ)
+		else if (++countZ < blockZNumber)
 		{
-			PositionTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].Position;
-			PositionBottom = pVtx[(nCntZ + 1) * (nNumBlockX + 1) + nCntX].Position;
+			positionTop = pVtx[(++countZ - 1) * (blockXNumber + 1) + ++countX].Position;
+			positionBottom = pVtx[(++countZ + 1) * (blockXNumber + 1) + ++countX].Position;
 		}
 		else
 		{
-			PositionTop = pVtx[(nCntZ - 1) * (nNumBlockX + 1) + nCntX].Position;
-			PositionBottom = PositionThis;
+			positionTop = pVtx[(++countZ - 1) * (blockXNumber + 1) + ++countX].Position;
+			positionBottom = positionThis;
 		}
-		Normal = (PositionRight - PositionLeft) * (PositionBottom - PositionTop);
-		CKFMath::VecNormalize(Normal);
-		pVtx[nIdx].Normal = Normal;
+		normal = (positionRight - positionLeft) * (positionBottom - positionTop);
+		pVtx[index].Normal = normal.Normalized();
 	}
 
 	//仮想アドレス解放
-	pMesh->m_pVtxBuffer->Unlock();
+	mesh->m_pVtxBuffer->Unlock();
 #endif
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：SaveEditorFieldAs
 //  関数説明：エディタ用フィールドデータの保存
-//	引数：	strFileName：ファイル名
+//	引数：	fileName：ファイル名
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CMeshManager::SaveEditorFieldAs(const string& strFileName)
+void MeshManager::SaveEditorFieldAs(const string& fileName)
 {
 #ifdef USING_DIRECTX
-	auto pMesh = GetMesh("field");
+	auto mesh = GetMeshBy("field");
 
 	//file open
-	string strName = "data/MESH/" + strFileName + ".mesh";
+	string strName = "data/MESH/" + fileName + ".mesh";
 	FILE *pFile;
 	fopen_s(&pFile, strName.c_str(), "wb");
 
 	//DrawType
-	int nDrawType = (int)DT_TRIANGLESTRIP;
-	fwrite(&nDrawType, sizeof(int), 1, pFile);
+	int drawType = (int)TriangleStrip;
+	fwrite(&drawType, sizeof(int), 1, pFile);
 
 	//NumVtx
-	fwrite(&pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+	fwrite(&mesh->VertexNumber, sizeof(int), 1, pFile);
 
 	//NumIdx
-	fwrite(&pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+	fwrite(&mesh->IndexNumber, sizeof(int), 1, pFile);
 
 	//NumPolygon
-	fwrite(&pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+	fwrite(&mesh->PolygonNumber, sizeof(int), 1, pFile);
 
 	//Vtx&Idx
 	//頂点データ
 	VERTEX_3D* pVtx;
-	pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	mesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+
 	//色を白に戻す
-	unsigned long Color = Color(1.0f);
-	for (int nCnt = 0; nCnt < pMesh->m_nNumVtx; ++nCnt)
+	unsigned long white = Color::White;
+	for (int ++count = 0; ++count < mesh->VertexNumber; ++++count)
 	{
-		pVtx[nCnt].Color = Color;
+		pVtx[++count].Color = white;
 	}
 
 	//保存
-	fwrite(pVtx, sizeof(VERTEX_3D), pMesh->m_nNumVtx, pFile);
-	pMesh->m_pVtxBuffer->Unlock();
+	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, pFile);
+	mesh->m_pVtxBuffer->Unlock();
 	
 	//インデックス
 	WORD* pIdx;
-	pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), pMesh->m_nNumIdx, pFile);
-	pMesh->m_pIdxBuffer->Unlock();
+	mesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, pFile);
+	mesh->m_pIdxBuffer->Unlock();
 	
 	//Texture
 	int nTexSize = 0;
@@ -313,15 +297,28 @@ void CMeshManager::SaveEditorFieldAs(const string& strFileName)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void MeshManager::uninit(void)
+{
+	for (auto itr = meshes.begin(); itr != meshes.end();)
+	{
+		SAFE_RELEASE(itr->second.CurrentMesh->m_pVtxBuffer);
+		SAFE_RELEASE(itr->second.CurrentMesh->m_pIdxBuffer);
+		itr = meshes.erase(itr);
+	}
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：loadFromMesh
 //  関数説明：メッシュファイルからデータの読込
-//	引数：	strFileName：ファイルの名前 
+//	引数：	filePath：ファイルの名前 
 //	戻り値：MESH
 //--------------------------------------------------------------------------------
-CMeshManager::MESH CMeshManager::loadFromMesh(const string& strFileName)
+MeshManager::MeshInfo MeshManager::loadFromMesh(const string& filePath)
 {
-	string strName = "data/MESH/" + strFileName;
-	MESH mesh;
+	string strName = "data/MESH/" + filePath;
+	MeshInfo info;
 	FILE *pFile;
 
 	//file open
@@ -330,211 +327,211 @@ CMeshManager::MESH CMeshManager::loadFromMesh(const string& strFileName)
 	if (!pFile) 
 	{
 		assert("failed to open file!!");
-		return mesh;
+		return info;
 	}
 	
-	mesh.pMesh = new CMesh;
+	info.CurrentMesh = new Mesh;
 
 	//DrawType
-	fread_s(&mesh.pMesh->m_drawType, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->CurrentType, sizeof(int), sizeof(int), 1, pFile);
 
 	//NumVtx
-	fread_s(&mesh.pMesh->m_nNumVtx, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->VertexNumber, sizeof(int), sizeof(int), 1, pFile);
 
 	//NumIdx
-	fread_s(&mesh.pMesh->m_nNumIdx, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->IndexNumber, sizeof(int), sizeof(int), 1, pFile);
 
 	//NumPolygon
-	fread_s(&mesh.pMesh->m_nNumPolygon, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->PolygonNumber, sizeof(int), sizeof(int), 1, pFile);
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(mesh.pMesh))
+	if (!createBuffer(info.CurrentMesh))
 	{
 		assert("failed to create buffer!!");
-		return mesh;
+		return info;
 	}
 
 	//頂点データ
 	VERTEX_3D* pVtx;
-	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fread_s(pVtx, sizeof(VERTEX_3D) * mesh.pMesh->m_nNumVtx, sizeof(VERTEX_3D), mesh.pMesh->m_nNumVtx, pFile);
-	mesh.pMesh->m_pVtxBuffer->Unlock();
+	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fread_s(pVtx, sizeof(VERTEX_3D) * info.CurrentMesh->VertexNumber, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, pFile);
+	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	mesh.pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fread_s(pIdx, sizeof(WORD) * mesh.pMesh->m_nNumIdx, sizeof(WORD), mesh.pMesh->m_nNumIdx, pFile);
-	mesh.pMesh->m_pIdxBuffer->Unlock();
+	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fread_s(pIdx, sizeof(WORD) * info.CurrentMesh->IndexNumber, sizeof(WORD), info.CurrentMesh->IndexNumber, pFile);
+	info.CurrentMesh->m_pIdxBuffer->Unlock();
 #endif
 
 	//Texture
-	int nSize;
-	fread_s(&nSize, sizeof(int), sizeof(int), 1, pFile);
-	mesh.renderInfo.strTex.resize(nSize);
-	fread_s(&mesh.renderInfo.strTex[0], nSize, sizeof(char), nSize, pFile);
+	int stringSize;
+	fread_s(&stringSize, sizeof(int), sizeof(int), 1, pFile);
+	info.CurrentRenderInfo.TextureName.resize(stringSize);
+	fread_s(&info.CurrentRenderInfo.TextureName[0], stringSize, sizeof(char), stringSize, pFile);
 
 	//Render Priority
-	fread_s(&mesh.renderInfo.renderPriority, sizeof(RENDER_PRIORITY), sizeof(RENDER_PRIORITY), 1, pFile);
+	fread_s(&info.CurrentRenderInfo.CurrentPriority, sizeof(RenderPriority), sizeof(RenderPriority), 1, pFile);
 
 	//Render State
-	fread_s(&mesh.renderInfo.renderState, sizeof(RENDER_STATE), sizeof(RENDER_STATE), 1, pFile);
+	fread_s(&info.CurrentRenderInfo.CurrentState, sizeof(RenderState), sizeof(RenderState), 1, pFile);
 
 	fclose(pFile);
 
-	return mesh;
+	return info;
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：loadFromXFile
 //  関数説明：Xファイルからデータの読込
-//	引数：	strPath：ファイルのパス
+//	引数：	filePath：ファイルのパス
 //	戻り値：MESH
 //--------------------------------------------------------------------------------
-CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
+MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 {
-	MESH mesh;
+	MeshInfo info;
 	FILE* pFile;
 
 	//file open
-	fopen_s(&pFile, strPath.c_str(), "r");
+	fopen_s(&pFile, filePath.c_str(), "r");
 
 	if (!pFile)
 	{
 		assert("failed to open file!!");
-		return mesh;
+		return info;
 	}
 
-	mesh.pMesh = new CMesh;
-	mesh.pMesh->m_drawType = DRAW_TYPE::DT_TRIANGLELIST;
-	vector<Vector3>		vecVtx;
-	vector<Vector3>		vecNormal;
-	vector<Vector2>		vecUV;
-	vector<Color>	vecColor;
-	vector<int>			vecIdx;
-	vector<int>			vecNormalIdx;
-	vector<int>			vecColorIdx;
+	info.CurrentMesh = new Mesh;
+	info.CurrentMesh->CurrentType = DrawType::TriangleList;
+	vector<Vector3>	vertexes;
+	vector<Vector3>	normals;
+	vector<Vector2>	uvs;
+	vector<Color>	colors;
+	vector<int>		vertexIndexes;
+	vector<int>		normalIndexes;
+	vector<int>		colorIndexes;
 
-	string strBuf;
-	while (CKFUtility::GetStrToken(pFile, "\n", strBuf) >= 0)
+	string buffer;
+	while (Utility::GetToken(pFile, "\n", buffer) >= 0)
 	{
-		if (strBuf.compare("Mesh {") == 0)
+		if (buffer.compare("Mesh {") == 0)
 		{
 			//頂点数の読込
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			stringstream ss;
-			int nNumVtx;
-			ss << strBuf;
-			ss >> nNumVtx;
+			int vertexNumber;
+			ss << buffer;
+			ss >> vertexNumber;
 
 			//頂点データの読込
-			vecVtx.resize(nNumVtx);
-			for (int nCnt = 0; nCnt < nNumVtx; ++nCnt)
+			vertexes.resize(vertexNumber);
+			for (int ++count = 0; ++count < vertexNumber; ++++count)
 			{
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecVtx[nCnt].X;
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> vertexes[++count].X;
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecVtx[nCnt].Y;
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> vertexes[++count].Y;
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecVtx[nCnt].Z;
-				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+				ss << buffer;
+				ss >> vertexes[++count].Z;
+				Utility::GetToken(pFile, "\n", buffer);
 			}
 
 			//ポリゴン数の読込
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			ss.clear();
-			ss << strBuf;
-			ss >> mesh.pMesh->m_nNumPolygon;
+			ss << buffer;
+			ss >> info.CurrentMesh->PolygonNumber;
 
 			//インデックスの読込
-			mesh.pMesh->m_nNumVtx =
-				mesh.pMesh->m_nNumIdx = mesh.pMesh->m_nNumPolygon * 3;
-			vecIdx.resize(mesh.pMesh->m_nNumIdx);
-			for (int nCnt = 0; nCnt < mesh.pMesh->m_nNumPolygon; ++nCnt)
+			info.CurrentMesh->VertexNumber =
+				info.CurrentMesh->IndexNumber = info.CurrentMesh->PolygonNumber * 3;
+			vertexIndexes.resize(info.CurrentMesh->IndexNumber);
+			for (int ++count = 0; ++count < info.CurrentMesh->PolygonNumber; ++++count)
 			{
 				//3;を飛ばす
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
-				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				Utility::GetToken(pFile, ";", buffer);
+				Utility::GetToken(pFile, ",", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecIdx[nCnt * 3];
-				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss << buffer;
+				ss >> vertexIndexes[++count * 3];
+				Utility::GetToken(pFile, ",", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecIdx[nCnt * 3 + 1];
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> vertexIndexes[++count * 3 + 1];
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecIdx[nCnt * 3 + 2];
-				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+				ss << buffer;
+				ss >> vertexIndexes[++count * 3 + 2];
+				Utility::GetToken(pFile, "\n", buffer);
 			}
 		}
 
-		if (strBuf.compare(" MeshMaterialList {") == 0)
+		if (buffer.compare(" MeshMaterialList {") == 0)
 		{
 			//Material数
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			stringstream ss;
-			int nNumColor;
-			ss << strBuf;
-			ss >> nNumColor;
-			vecColor.resize(nNumColor);
+			int colorNumber;
+			ss << buffer;
+			ss >> colorNumber;
+			colors.resize(colorNumber);
 
 			//インデックス数
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			ss.clear();
-			int nNumPolygon;
-			ss << strBuf;
-			ss >> nNumPolygon;
-			vecColorIdx.resize(nNumPolygon * 3);
+			int polygonNumber;
+			ss << buffer;
+			ss >> polygonNumber;
+			colorIndexes.resize(polygonNumber * 3);
 
 			//インデックスの読み込み
-			for (int nCnt = 0; nCnt < nNumPolygon; ++nCnt)
+			for (int ++count = 0; ++count < polygonNumber; ++++count)
 			{
-				CKFUtility::GetStrToken(pFile, ",;", strBuf);
+				Utility::GetToken(pFile, ",;", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecColorIdx[nCnt * 3];
-				vecColorIdx[nCnt * 3 + 1] = 
-					vecColorIdx[nCnt * 3 + 2] =
-					vecColorIdx[nCnt * 3];
+				ss << buffer;
+				ss >> colorIndexes[++count * 3];
+				colorIndexes[++count * 3 + 1] = 
+					colorIndexes[++count * 3 + 2] =
+					colorIndexes[++count * 3];
 			}
 
 			//マテリアルの読み込み
-			for (int nCnt = 0; nCnt < nNumColor; ++nCnt)
+			for (int ++count = 0; ++count < colorNumber; ++++count)
 			{
-				while (CKFUtility::GetStrToken(pFile, "\n", strBuf) >= 0)
+				while (Utility::GetToken(pFile, "\n", buffer) >= 0)
 				{
-					if (strBuf.compare("  Material {") == 0)
+					if (buffer.compare("  Material {") == 0)
 					{
 						//R
-						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						Utility::GetToken(pFile, ";", buffer);
 						ss.clear();
-						ss << strBuf;
-						ss >> vecColor[nCnt].R;
+						ss << buffer;
+						ss >> colors[++count].R;
 
 						//G
-						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						Utility::GetToken(pFile, ";", buffer);
 						ss.clear();
-						ss << strBuf;
-						ss >> vecColor[nCnt].G;
+						ss << buffer;
+						ss >> colors[++count].G;
 
 						//B
-						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						Utility::GetToken(pFile, ";", buffer);
 						ss.clear();
-						ss << strBuf;
-						ss >> vecColor[nCnt].B;
+						ss << buffer;
+						ss >> colors[++count].B;
 
 						//A
-						CKFUtility::GetStrToken(pFile, ";", strBuf);
+						Utility::GetToken(pFile, ";", buffer);
 						ss.clear();
-						ss << strBuf;
-						ss >> vecColor[nCnt].A;
+						ss << buffer;
+						ss >> colors[++count].A;
 
 						break;
 					}
@@ -542,93 +539,93 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 			}
 		}
 
-		if (strBuf.compare(" MeshNormals {") == 0)
+		if (buffer.compare(" MeshNormals {") == 0)
 		{
 			//法線数の読込
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			stringstream ss;
-			int nNumNormal;
-			ss << strBuf;
-			ss >> nNumNormal;
+			int normalNumber;
+			ss << buffer;
+			ss >> normalNumber;
 
 			//法線データの読込
-			vecNormal.resize(nNumNormal);
-			for (int nCnt = 0; nCnt < nNumNormal; ++nCnt)
+			normals.resize(normalNumber);
+			for (int ++count = 0; ++count < normalNumber; ++++count)
 			{
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormal[nCnt].X;
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> normals[++count].X;
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormal[nCnt].Y;
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> normals[++count].Y;
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormal[nCnt].Z;
-				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+				ss << buffer;
+				ss >> normals[++count].Z;
+				Utility::GetToken(pFile, "\n", buffer);
 			}
 
 			//法線インデックス数を読込(頂点数と同じのため)
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			ss.clear();
-			int nNumPolygonNormalIdx;
-			ss << strBuf;
-			ss >> nNumPolygonNormalIdx;
-			if (nNumPolygonNormalIdx != mesh.pMesh->m_nNumPolygon)
+			int normalIndexNumber;
+			ss << buffer;
+			ss >> normalIndexNumber;
+			if (normalIndexNumber != info.CurrentMesh->PolygonNumber)
 			{//エラー
-				MessageBox(NULL,"CMeshManager:法線数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
+				MessageBox(NULL,"MeshManager:法線数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
 			}
 
 			//法線インデックスの読込
-			vecNormalIdx.resize(nNumPolygonNormalIdx * 3);
-			for (int nCnt = 0; nCnt < mesh.pMesh->m_nNumPolygon; ++nCnt)
+			normalIndexes.resize(normalIndexNumber * 3);
+			for (int ++count = 0; ++count < info.CurrentMesh->PolygonNumber; ++++count)
 			{
 				//3;を飛ばす
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
-				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				Utility::GetToken(pFile, ";", buffer);
+				Utility::GetToken(pFile, ",", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormalIdx[nCnt * 3];
-				CKFUtility::GetStrToken(pFile, ",", strBuf);
+				ss << buffer;
+				ss >> normalIndexes[++count * 3];
+				Utility::GetToken(pFile, ",", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormalIdx[nCnt * 3 + 1];
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> normalIndexes[++count * 3 + 1];
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecNormalIdx[nCnt * 3 + 2];
-				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+				ss << buffer;
+				ss >> normalIndexes[++count * 3 + 2];
+				Utility::GetToken(pFile, "\n", buffer);
 			}
 		}
 
-		if (strBuf.compare(" MeshTextureCoords {") == 0)
+		if (buffer.compare(" MeshTextureCoords {") == 0)
 		{
 			//UV数の読込
-			CKFUtility::GetStrToken(pFile, ";", strBuf);
+			Utility::GetToken(pFile, ";", buffer);
 			stringstream ss;
-			int nNumUV;
-			ss << strBuf;
-			ss >> nNumUV;
-			if (nNumUV != vecVtx.size())
+			int uvNumber;
+			ss << buffer;
+			ss >> uvNumber;
+			if (uvNumber != vertexes.size())
 			{//エラー
-				MessageBox(NULL, "CMeshManager:UV数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
+				MessageBox(NULL, "MeshManager:UV数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
 			}
 
 			//UVデータの読込
-			vecUV.resize(nNumUV);
-			for (int nCnt = 0; nCnt < nNumUV; ++nCnt)
+			uvs.resize(uvNumber);
+			for (int ++count = 0; ++count < uvNumber; ++++count)
 			{
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecUV[nCnt].X;
-				CKFUtility::GetStrToken(pFile, ";", strBuf);
+				ss << buffer;
+				ss >> uvs[++count].X;
+				Utility::GetToken(pFile, ";", buffer);
 				ss.clear();
-				ss << strBuf;
-				ss >> vecUV[nCnt].Y;
-				CKFUtility::GetStrToken(pFile, "\n", strBuf);
+				ss << buffer;
+				ss >> uvs[++count].Y;
+				Utility::GetToken(pFile, "\n", buffer);
 			}
 		}
 	}
@@ -636,251 +633,251 @@ CMeshManager::MESH CMeshManager::loadFromXFile(const string& strPath)
 	fclose(pFile);
 	
 #ifdef USING_DIRECTX
-	if (!createBuffer(mesh.pMesh))
+	if (!createBuffer(info.CurrentMesh))
 	{
 		assert("failed to create buffer!!");
-		return mesh;
+		return info;
 	}
 
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int nCnt = 0; nCnt < mesh.pMesh->m_nNumIdx; ++nCnt)
+	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
 	{
-		pVtx[nCnt].Position = vecVtx[vecIdx[nCnt]];
-		pVtx[nCnt].Normal = vecNormal[vecNormalIdx[nCnt]];
-		pVtx[nCnt].UV = vecUV[vecIdx[nCnt]];
-		pVtx[nCnt].Color = vecColor[vecColorIdx[nCnt]];
+		pVtx[++count].Position = vertexes[vertexIndexes[++count]];
+		pVtx[++count].Normal = normals[normalIndexes[++count]];
+		pVtx[++count].UV = uvs[vertexIndexes[++count]];
+		pVtx[++count].Color = colors[colorIndexes[++count]];
 	}
 
 	//仮想アドレス解放
-	mesh.pMesh->m_pVtxBuffer->Unlock();
+	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	mesh.pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int nCnt = 0; nCnt < mesh.pMesh->m_nNumIdx; ++nCnt)
+	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
 	{
-		pIdx[nCnt] = nCnt;
+		pIdx[++count] = ++count;
 	}
 
-	mesh.pMesh->m_pIdxBuffer->Unlock();
+	info.CurrentMesh->m_pIdxBuffer->Unlock();
 #endif
 
-	return mesh;
+	return info;
 }
 
 //--------------------------------------------------------------------------------
 //  Cubeの作成
 //--------------------------------------------------------------------------------
-CMeshManager::MESH CMeshManager::createCube(void)
+MeshManager::MeshInfo MeshManager::createCube(void)
 {
-	MESH mesh;
-	mesh.pMesh = new CMesh;
-	mesh.pMesh->m_nNumVtx = 6 * 4;
-	mesh.pMesh->m_nNumIdx = 6 * 4 + 5 * 2;
-	mesh.pMesh->m_nNumPolygon = 6 * 2 + 5 * 4;
+	MeshInfo info;
+	info.CurrentMesh = new Mesh;
+	info.CurrentMesh->VertexNumber = 6 * 4;
+	info.CurrentMesh->IndexNumber = 6 * 4 + 5 * 2;
+	info.CurrentMesh->PolygonNumber = 6 * 2 + 5 * 4;
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(mesh.pMesh))
+	if (!createBuffer(info.CurrentMesh))
 	{
 		assert("failed to create buffer!!");
-		return mesh;
+		return info;
 	}
 
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	Vector3 vHalfSize = Vector3(1.0f) * 0.5f;
-	Color cColor = Color(1.0f);
-	int nCntVtx = 0;
+	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	Vector3 halfSize = Vector3::One * 0.5f;
+	Color color = Color::White;
+	int ++countVertex = 0;
 
 	//正面
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
-			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
-			-vHalfSize.Z);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 0.0f, -1.0f);
+		pVtx[++countVertex].Position = Vector3(
+			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
+			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+			-halfSize.Z);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, -1.0f);
 
-		nCntVtx++;
+		++++countVertex;
 	}
 
 	//上
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
-			vHalfSize.Y,
-			vHalfSize.Z - (nCnt / 2) * vHalfSize.Z * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 1.0f, 0.0f);
+		pVtx[++countVertex].Position = Vector3(
+			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
+			halfSize.Y,
+			halfSize.Z - (++count / 2) * halfSize.Z * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 1.0f, 0.0f);
 
-		nCntVtx++;
+		++++countVertex;
 	}
 
 	//左
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-vHalfSize.X,
-			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
-			vHalfSize.Z - (nCnt % 2) * vHalfSize.Z * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(-1.0f, 0.0f, 0.0f);
+		pVtx[++countVertex].Position = Vector3(
+			-halfSize.X,
+			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+			halfSize.Z - (++count % 2) * halfSize.Z * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(-1.0f, 0.0f, 0.0f);
 
-		nCntVtx++;
+		++++countVertex;
 	}
 
 	//下
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-vHalfSize.X + (nCnt % 2) * vHalfSize.X * 2.0f,
-			-vHalfSize.Y,
-			-vHalfSize.Z + (nCnt / 2) * vHalfSize.Z * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, -1.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
+			-halfSize.Y,
+			-halfSize.Z + (++count / 2) * halfSize.Z * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(0.0f, -1.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//右
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			vHalfSize.X,
-			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
-			-vHalfSize.Z + (nCnt % 2) * vHalfSize.Z * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(1.0f, 0.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			halfSize.X,
+			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+			-halfSize.Z + (++count % 2) * halfSize.Z * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(1.0f, 0.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//後ろ
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			vHalfSize.X - (nCnt % 2) * vHalfSize.X * 2.0f,
-			vHalfSize.Y - (nCnt / 2) * vHalfSize.Y * 2.0f,
-			vHalfSize.Z);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 1.0f, (nCnt / 2) * 1.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 0.0f, 1.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			halfSize.X - (++count % 2) * halfSize.X * 2.0f,
+			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+			halfSize.Z);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
+		pVtx[++countVertex].Color = color;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, 1.0f);
+		++++countVertex;
 	}
 
 	//仮想アドレス解放
-	mesh.pMesh->m_pVtxBuffer->Unlock();
+	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	mesh.pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int nCnt = 0; nCnt < mesh.pMesh->m_nNumIdx; nCnt++)
+	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
 	{
-		if (nCnt % 6 < 4)
+		if (++count % 6 < 4)
 		{
-			pIdx[nCnt] = (WORD)((nCnt / 6) * 4 + (nCnt % 6) % 4);
+			pIdx[++count] = (WORD)((++count / 6) * 4 + (++count % 6) % 4);
 		}
 		else
-		{//縮退
-			pIdx[nCnt] = (WORD)((nCnt / 6) * 4 + (nCnt % 2) + 3);
+		{// 縮退
+			pIdx[++count] = (WORD)((++count / 6) * 4 + (++count % 2) + 3);
 		}
 	}
 
-	mesh.pMesh->m_pIdxBuffer->Unlock();
+	info.CurrentMesh->m_pIdxBuffer->Unlock();
 
-	//Modelファイルの保存
-	string strFileName = "data/MODEL/cube.model";
+	// Modelファイルの保存
+	string fileName = "data/MODEL/cube.model";
 	FILE *pFile;
 
-	//file open
-	fopen_s(&pFile, strFileName.c_str(), "wb");
+	// file open
+	fopen_s(&pFile, fileName.c_str(), "wb");
 
-	//Node名
-	string strNodeName = "cube";
-	int nSize = (int)strNodeName.size();
-	fwrite(&nSize, sizeof(int), 1, pFile);
-	fwrite(&strNodeName[0], sizeof(char), nSize, pFile);
+	// Node名
+	string nodeName = "cube";
+	int stringSize = (int)nodeName.size();
+	fwrite(&stringSize, sizeof(int), 1, pFile);
+	fwrite(&nodeName[0], sizeof(char), stringSize, pFile);
 
 	//Offset
-	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
-	fwrite(&CKFMath::sc_vOne, sizeof(Vector3), 1, pFile);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
+	fwrite(&Vector3::One, sizeof(Vector3), 1, pFile);
 
 	//Collider
-	int nNumCollider = 1;
-	fwrite(&nNumCollider, sizeof(int), 1, pFile);
+	int colliderNumber = 1;
+	fwrite(&colliderNumber, sizeof(int), 1, pFile);
 
-	int nType = 1;
-	fwrite(&nType, sizeof(int), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
-	fwrite(&CKFMath::sc_vZero, sizeof(Vector3), 1, pFile);
-	fwrite(&CKFMath::sc_vOne, sizeof(Vector3), 1, pFile);
+	int type = 1;
+	fwrite(&type, sizeof(int), 1, pFile);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
+	fwrite(&Vector3::One, sizeof(Vector3), 1, pFile);
 
 	//Texture
-	int nNumTexture = 1;
-	fwrite(&nNumTexture, sizeof(int), 1, pFile);
-	string strTexture = "nomal_cube.jpg";
-	nSize = strTexture.size();
-	fwrite(&nSize, sizeof(int), 1, pFile);
-	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
+	int textureNumber = 1;
+	fwrite(&textureNumber, sizeof(int), 1, pFile);
+	string textureName = "nomal_cube.jpg";
+	stringSize = textureName.size();
+	fwrite(&stringSize, sizeof(int), 1, pFile);
+	fwrite(&textureName[0], sizeof(char), stringSize, pFile);
 
 	//Mesh
-	int nNumMesh = 1;
-	fwrite(&nNumMesh, sizeof(int), 1, pFile);
-	string strMeshName = strNodeName + ".mesh";
-	nSize = (int)strMeshName.size();
-	fwrite(&nSize, sizeof(int), 1, pFile);
-	fwrite(&strMeshName[0], sizeof(char), nSize, pFile);
+	int meshNumber = 1;
+	fwrite(&meshNumber, sizeof(int), 1, pFile);
+	string meshName = nodeName + ".mesh";
+	stringSize = (int)meshName.size();
+	fwrite(&stringSize, sizeof(int), 1, pFile);
+	fwrite(&meshName[0], sizeof(char), stringSize, pFile);
 
 	fclose(pFile);
 
 	//Mesh
-	strFileName = "data/MESH/cube.mesh";
+	fileName = "data/MESH/cube.mesh";
 
 	//file open
-	fopen_s(&pFile, strFileName.c_str(), "wb");
+	fopen_s(&pFile, fileName.c_str(), "wb");
 
 	//DrawType
-	int nDrawType = (int)mesh.pMesh->m_drawType;
-	fwrite(&nDrawType, sizeof(int), 1, pFile);
+	int drawType = (int)info.CurrentMesh->CurrentType;
+	fwrite(&drawType, sizeof(int), 1, pFile);
 
 	//NumVtx
-	fwrite(&mesh.pMesh->m_nNumVtx, sizeof(int), 1, pFile);
+	fwrite(&info.CurrentMesh->VertexNumber, sizeof(int), 1, pFile);
 
 	//NumIdx
-	fwrite(&mesh.pMesh->m_nNumIdx, sizeof(int), 1, pFile);
+	fwrite(&info.CurrentMesh->IndexNumber, sizeof(int), 1, pFile);
 
 	//NumPolygon
-	fwrite(&mesh.pMesh->m_nNumPolygon, sizeof(int), 1, pFile);
+	fwrite(&info.CurrentMesh->PolygonNumber, sizeof(int), 1, pFile);
 
 	//Vtx&Idx
-	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fwrite(pVtx, sizeof(VERTEX_3D), mesh.pMesh->m_nNumVtx, pFile);
-	mesh.pMesh->m_pVtxBuffer->Unlock();
-	mesh.pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), mesh.pMesh->m_nNumIdx, pFile);
-	mesh.pMesh->m_pIdxBuffer->Unlock();
+	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fwrite(pVtx, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, pFile);
+	info.CurrentMesh->m_pVtxBuffer->Unlock();
+	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fwrite(pIdx, sizeof(WORD), info.CurrentMesh->IndexNumber, pFile);
+	info.CurrentMesh->m_pIdxBuffer->Unlock();
 
 	//Texture
-	strTexture = "nomal_cube.jpg";
-	nSize = strTexture.size();
-	fwrite(&nSize, sizeof(int), 1, pFile);
-	fwrite(&strTexture[0], sizeof(char), nSize, pFile);
+	textureName = "nomal_cube.jpg";
+	stringSize = textureName.size();
+	fwrite(&stringSize, sizeof(int), 1, pFile);
+	fwrite(&textureName[0], sizeof(char), stringSize, pFile);
 
 	//RenderPriority
 	auto rp = RP_3D;
@@ -893,163 +890,163 @@ CMeshManager::MESH CMeshManager::createCube(void)
 	fclose(pFile);
 #endif
 
-	return mesh;
+	return info;
 }
 
 //--------------------------------------------------------------------------------
 //  Sphereの作成
 //--------------------------------------------------------------------------------
-CMeshManager::MESH CMeshManager::createSphere(void)
+MeshManager::MeshInfo MeshManager::createSphere(void)
 {
-	MESH mesh;
+	MeshInfo info;
 	assert("未実装!!");
-	return mesh;
+	return info;
 }
 
 //--------------------------------------------------------------------------------
 //  SkyBoxの作成
 //--------------------------------------------------------------------------------
-CMeshManager::MESH CMeshManager::createSkyBox(void)
+MeshManager::MeshInfo MeshManager::createSkyBox(void)
 {
-	MESH mesh;
-	mesh.pMesh = new CMesh;
-	mesh.pMesh->m_nNumVtx = 6 * 4;
-	mesh.pMesh->m_nNumIdx = 6 * 4 + 5 * 2;
-	mesh.pMesh->m_nNumPolygon = 6 * 2 + 5 * 4;
+	MeshInfo info;
+	info.CurrentMesh = new Mesh;
+	info.CurrentMesh->VertexNumber = 6 * 4;
+	info.CurrentMesh->IndexNumber = 6 * 4 + 5 * 2;
+	info.CurrentMesh->PolygonNumber = 6 * 2 + 5 * 4;
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(mesh.pMesh))
+	if (!createBuffer(info.CurrentMesh))
 	{
 		assert("failed to create buffer!!");
-		return mesh;
+		return info;
 	}
 
 	//仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	mesh.pMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	float fLength = (float)CCamera::DEFAULT_FAR * 0.5f;
-	auto cColor = CKFMath::sc_cWhite;
-	int nCntVtx = 0;
-	float fUVtweens = 1.0f / 1024.0f;	//隙間を無くすためにUVを1px縮める
+	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	float length = (float)CCamera::DEFAULT_FAR * 0.5f;
+	unsigned long white = Color::White;
+	int ++countVertex = 0;
+	float uvTweens = 1.0f / 1024.0f;	//隙間を無くすためにUVを1px縮める
 
 	//正面
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			fLength - (nCnt % 2) * fLength * 2.0f,
-			fLength - (nCnt / 2) * fLength * 2.0f,
-			-fLength);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 0.0f, 1.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			length - (++count % 2) * length * 2.0f,
+			length - (++count / 2) * length * 2.0f,
+			-length);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, 1.0f);
+		++++countVertex;
 	}
 
 	//上
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			fLength - (nCnt % 2) * fLength * 2.0f,
-			fLength,
-			fLength - (nCnt / 2) * fLength * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, -1.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			length - (++count % 2) * length * 2.0f,
+			length,
+			length - (++count / 2) * length * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(0.0f, -1.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//左
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-fLength,
-			fLength - (nCnt / 2) * fLength * 2.0f,
-			-fLength + (nCnt % 2) * fLength * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + 0.5f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(1.0f, 0.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			-length,
+			length - (++count / 2) * length * 2.0f,
+			-length + (++count % 2) * length * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.5f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(1.0f, 0.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//下
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			fLength - (nCnt % 2) * fLength * 2.0f,
-			-fLength,
-			-fLength + (nCnt / 2) * fLength * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + 2.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 1.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			length - (++count % 2) * length * 2.0f,
+			-length,
+			-length + (++count / 2) * length * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + 2.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 1.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//右
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			fLength,
-			fLength - (nCnt / 2) * fLength * 2.0f,
-			fLength - (nCnt % 2) * fLength * 2.0f);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(-1.0f, 0.0f, 0.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			length,
+			length - (++count / 2) * length * 2.0f,
+			length - (++count % 2) * length * 2.0f);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(-1.0f, 0.0f, 0.0f);
+		++++countVertex;
 	}
 
 	//後ろ
-	for (int nCnt = 0; nCnt < 4; nCnt++)
+	for (int ++count = 0; ++count < 4; ++++count)
 	{
-		pVtx[nCntVtx].Position = Vector3(
-			-fLength + (nCnt % 2) * fLength * 2.0f,
-			fLength - (nCnt / 2) * fLength * 2.0f,
-			fLength);
-		pVtx[nCntVtx].UV = Vector2((nCnt % 2) * 0.25f + 0.75f + fUVtweens - (nCnt % 2) * fUVtweens * 2.0f,
-			(nCnt / 2) * 1.0f / 3.0f + 1.0f / 3.0f + fUVtweens - (nCnt / 2) * fUVtweens * 2.0f);
-		pVtx[nCntVtx].Color = cColor;
-		pVtx[nCntVtx].Normal = Vector3(0.0f, 0.0f, -1.0f);
-		nCntVtx++;
+		pVtx[++countVertex].Position = Vector3(
+			-length + (++count % 2) * length * 2.0f,
+			length - (++count / 2) * length * 2.0f,
+			length);
+		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.75f + uvTweens - (++count % 2) * uvTweens * 2.0f,
+			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
+		pVtx[++countVertex].Color = white;
+		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, -1.0f);
+		++++countVertex;
 	}
 
 	//仮想アドレス解放
-	mesh.pMesh->m_pVtxBuffer->Unlock();
+	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	mesh.pMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int nCnt = 0; nCnt < 6 * 4 + 5 * 2; nCnt++)
+	for (int ++count = 0; ++count < 6 * 4 + 5 * 2; ++++count)
 	{
-		if (nCnt % 6 < 4)
+		if (++count % 6 < 4)
 		{
-			pIdx[nCnt] = (nCnt / 6) * 4 + (nCnt % 6) % 4;
+			pIdx[++count] = (++count / 6) * 4 + (++count % 6) % 4;
 		}
 		else
 		{//縮退
-			pIdx[nCnt] = (nCnt / 6) * 4 + (nCnt % 2) + 3;
+			pIdx[++count] = (++count / 6) * 4 + (++count % 2) + 3;
 		}
 	}
 
-	mesh.pMesh->m_pIdxBuffer->Unlock();
+	info.CurrentMesh->m_pIdxBuffer->Unlock();
 #endif
 	
 	//Render State
-	mesh.renderInfo.renderState = RS_LIGHTOFF_CULLFACEON_MUL;
+	info.CurrentRenderInfo.CurrentState = RS_LIGHTOFF_CULLFACEON_MUL;
 
-	return mesh;
+	return info;
 }
 
 //--------------------------------------------------------------------------------
 //  バッファの作成
 //--------------------------------------------------------------------------------
-bool CMeshManager::createBuffer(CMesh* pMesh)
+bool MeshManager::createBuffer(Mesh* mesh)
 {
 #ifdef USING_DIRECTX
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
@@ -1057,31 +1054,31 @@ bool CMeshManager::createBuffer(CMesh* pMesh)
 
 	//頂点バッファ
 	hr = pDevice->CreateVertexBuffer(
-		sizeof(VERTEX_3D) * pMesh->m_nNumVtx,	//作成したい頂点バッファのサイズ
+		sizeof(VERTEX_3D) * mesh->VertexNumber,	//作成したい頂点バッファのサイズ
 		D3DUSAGE_WRITEONLY,						//頂点バッファの使用方法
 		FVF_VERTEX_3D,							//書かなくても大丈夫
 		D3DPOOL_MANAGED,						//メモリ管理方法(managed：デバイスにお任せ)
-		&pMesh->m_pVtxBuffer,					//頂点バッファのポインタ
+		&mesh->m_pVtxBuffer,					//頂点バッファのポインタ
 		NULL);
 
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "CMeshManager : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, "MeshManager : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 
 	//インデックスバッファの作成
 	hr = pDevice->CreateIndexBuffer(
-		sizeof(WORD) * pMesh->m_nNumIdx,
+		sizeof(WORD) * mesh->IndexNumber,
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
-		&pMesh->m_pIdxBuffer,
+		&mesh->m_pIdxBuffer,
 		NULL);
 
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "CMeshManager : CreateIndexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, "MeshManager : CreateIndexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 #endif

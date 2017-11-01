@@ -49,7 +49,7 @@ private:
 	struct SOUNDPARAM
 	{
 		string strFileName;	// ファイル名
-		int nCntLoop;		// ループカウント
+		int ++countLoop;		// ループカウント
 	};
 
 	HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD *pChunkDataPosition);

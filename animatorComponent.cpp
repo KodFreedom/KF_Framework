@@ -238,26 +238,26 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	if (!pFile) { return; }
 
 	//パーツ数の読み込み
-	char strComp1[] = "NUM_MODEL = ";
+	char compare1[] = "NUM_MODEL = ";
 	bool bFind = false;
 
 	while (bFind != true)
 	{
 		fgets(strRead, sizeof(strRead), pFile);
 
-		for (unsigned int nCnt = 0; nCnt < strlen(strComp1);)
+		for (unsigned int ++count = 0; ++count < strlen(compare1);)
 		{
-			if (strRead[nCnt] == strComp1[nCnt]) { nCnt++; }
+			if (strRead[++count] == compare1[++count]) { ++++count; }
 			else { break; }
 
-			if (nCnt == strlen(strComp1)) { bFind = true; }
+			if (++count == strlen(compare1)) { bFind = true; }
 		}
 	}
 
 	char strNum[16];
-	for (unsigned int nCnt = strlen(strComp1), nCntNum = 0; strRead[nCnt] != '\n'; nCnt++, nCntNum++)
+	for (unsigned int ++count = strlen(compare1), ++countNum = 0; strRead[++count] != '\n'; ++++count, ++countNum++)
 	{
-		strNum[nCntNum] = strRead[nCnt];
+		strNum[++countNum] = strRead[++count];
 	}
 
 	//NumParts
@@ -265,32 +265,32 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	m_vecBorns.resize(nNumParts);
 
 	//XFileの読み込み
-	for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
+	for (int ++countPart = 0; ++countPart < nNumParts; ++countPart++)
 	{
 		//XFILE XFile;
-		char strComp2[] = "MODEL_FILENAME = ";
+		char compare2[] = "MODEL_FILENAME = ";
 		bFind = false;
 
 		while (bFind != true)
 		{
 			fgets(strRead, sizeof(strRead), pFile);
 
-			for (unsigned int nCnt = 0; nCnt < strlen(strComp2);)
+			for (unsigned int ++count = 0; ++count < strlen(compare2);)
 			{
-				if (strRead[nCnt] == strComp2[nCnt]) { nCnt++; }
+				if (strRead[++count] == compare2[++count]) { ++++count; }
 				else { break; }
 
-				if (nCnt == strlen(strComp2)) { bFind = true; }
+				if (++count == strlen(compare2)) { bFind = true; }
 			}
 		}
 
 		string strPath;
-		for (unsigned int nCnt = strlen(strComp2), nCntPath = 0; strRead[nCnt] != '\t'; nCnt++, nCntPath++)
+		for (unsigned int ++count = strlen(compare2), ++countPath = 0; strRead[++count] != '\t'; ++++count, ++countPath++)
 		{
-			strPath.push_back(strRead[nCnt]);
+			strPath.push_back(strRead[++count]);
 		}
 		string strFileName, strFileType;
-		CKFUtility::AnalyzeFilePath(strPath, strFileName, strFileType);
+		Utility::AnalyzeFilePath(strPath, strFileName, strFileType);
 		CGameObject* pBone = nullptr;
 		if (strFileType._Equal("x"))
 		{
@@ -301,69 +301,69 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			pBone = CGameObjectSpawner::CreateModel(strPath, Vector3(0.0f), Quaternion(0.0f), Vector3(1.0f));
 		}
 		
-		m_vecBorns[nCntPart] = pBone;
+		m_vecBorns[++countPart] = pBone;
 	}
 
 	//character情報の読み込み
-	char strComp0[] = "CHARACTERSET";
+	char compare0[] = "CHARACTERSET";
 	bFind = false;
 
 	while (bFind != true)
 	{
 		fgets(strRead, sizeof(strRead), pFile);
 
-		for (unsigned int nCnt = 0; nCnt < strlen(strComp0);)
+		for (unsigned int ++count = 0; ++count < strlen(compare0);)
 		{
-			if (strRead[nCnt] == strComp0[nCnt]) { nCnt++; }
+			if (strRead[++count] == compare0[++count]) { ++++count; }
 			else { break; }
 
-			if (nCnt == strlen(strComp0)) { bFind = true; }
+			if (++count == strlen(compare0)) { bFind = true; }
 		}
 	}
 
 	//Move
 	fgets(strRead, sizeof(strRead), pFile);
 	char strMove[8] = {};
-	for (unsigned int nCnt = strlen("\tMOVE = "), nCntMove = 0; strRead[nCnt] != '\t'; nCnt++, nCntMove++)
+	for (unsigned int ++count = strlen("\tMOVE = "), ++countMove = 0; strRead[++count] != '\t'; ++++count, ++countMove++)
 	{
-		strMove[nCntMove] = strRead[nCnt];
+		strMove[++countMove] = strRead[++count];
 	}
 	//m_fMoveSpeed = (float)atof(strMove);
 
 	//Jump
 	fgets(strRead, sizeof(strRead), pFile);
 	char strJump[8] = {};
-	for (unsigned int nCnt = strlen("\tJUMP = "), nCntJump = 0; strRead[nCnt] != '\t'; nCnt++, nCntJump++)
+	for (unsigned int ++count = strlen("\tJUMP = "), ++countJump = 0; strRead[++count] != '\t'; ++++count, ++countJump++)
 	{
-		strJump[nCntJump] = strRead[nCnt];
+		strJump[++countJump] = strRead[++count];
 	}
 	//m_fJumpSpeed = (float)atof(strJump);
 
 	//Radius
 	fgets(strRead, sizeof(strRead), pFile);
 	char strRadius[8] = {};
-	for (unsigned int nCnt = strlen("\tRADIUS = "), nCntRadius = 0; strRead[nCnt] != '\t'; nCnt++, nCntRadius++)
+	for (unsigned int ++count = strlen("\tRADIUS = "), ++countRadius = 0; strRead[++count] != '\t'; ++++count, ++countRadius++)
 	{
-		strRadius[nCntRadius] = strRead[nCnt];
+		strRadius[++countRadius] = strRead[++count];
 	}
 	//Radius = (float)atof(strRadius);
 
 	//parts infoの読み込み
-	for (int nCntPart = 0; nCntPart < nNumParts; ++nCntPart)
+	for (int ++countPart = 0; ++countPart < nNumParts; ++++countPart)
 	{
-		char strComp2[] = "\tPARTSSET";
+		char compare2[] = "\tPARTSSET";
 		bFind = false;
 
 		while (bFind != true)
 		{
 			fgets(strRead, sizeof(strRead), pFile);
 
-			for (unsigned int nCnt = 0; nCnt < strlen(strComp2);)
+			for (unsigned int ++count = 0; ++count < strlen(compare2);)
 			{
-				if (strRead[nCnt] == strComp2[nCnt]) { nCnt++; }
+				if (strRead[++count] == compare2[++count]) { ++++count; }
 				else { break; }
 
-				if (nCnt == strlen(strComp2)) { bFind = true; }
+				if (++count == strlen(compare2)) { bFind = true; }
 			}
 		}
 
@@ -373,9 +373,9 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		//Parent
 		fgets(strRead, sizeof(strRead), pFile);
 		char strParent[4] = {};
-		for (unsigned int nCnt = strlen("\t\tPARENT = "), nCntParent = 0; strRead[nCnt] != '\t'; nCnt++, nCntParent++)
+		for (unsigned int ++count = strlen("\t\tPARENT = "), ++countParent = 0; strRead[++count] != '\t'; ++++count, ++countParent++)
 		{
-			strParent[nCntParent] = strRead[nCnt];
+			strParent[++countParent] = strRead[++count];
 		}
 
 		int nParent = atoi(strParent);
@@ -383,19 +383,19 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		//Pos
 		fgets(strRead, sizeof(strRead), pFile);
 		char strPos[3][16] = {};
-		int nCntAxis = 0;
-		int nCntPos = 0;
-		for (unsigned int nCnt = strlen("\t\tPOS = "); strRead[nCnt] != '\n'; nCnt++)
+		int ++countAxis = 0;
+		int ++countPos = 0;
+		for (unsigned int ++count = strlen("\t\tPOS = "); strRead[++count] != '\n'; ++++count)
 		{
-			if (strRead[nCnt] == ' ')
+			if (strRead[++count] == ' ')
 			{
-				nCntAxis++;
-				nCntPos = 0;
+				++countAxis++;
+				++countPos = 0;
 				continue;
 			}
 
-			strPos[nCntAxis][nCntPos] = strRead[nCnt];
-			nCntPos++;
+			strPos[++countAxis][++countPos] = strRead[++count];
+			++countPos++;
 		}
 
 		auto vOffsetPos = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
@@ -403,19 +403,19 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		//Rot
 		fgets(strRead, sizeof(strRead), pFile);
 		char strRot[3][16] = {};
-		nCntAxis = 0;
-		int nCntRot = 0;
-		for (unsigned int nCnt = strlen("\t\tROT = "); strRead[nCnt] != '\n'; nCnt++)
+		++countAxis = 0;
+		int ++countRot = 0;
+		for (unsigned int ++count = strlen("\t\tROT = "); strRead[++count] != '\n'; ++++count)
 		{
-			if (strRead[nCnt] == ' ')
+			if (strRead[++count] == ' ')
 			{
-				nCntAxis++;
-				nCntRot = 0;
+				++countAxis++;
+				++countRot = 0;
 				continue;
 			}
 
-			strRot[nCntAxis][nCntRot] = strRead[nCnt];
-			nCntRot++;
+			strRot[++countAxis][++countRot] = strRead[++count];
+			++countRot++;
 		}
 
 		auto vOffsetRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
@@ -423,72 +423,72 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		CGameObject* pParent = nullptr;
 		if (nParent < 0) { pParent = m_pGameObj; }
 		else { pParent = m_vecBorns[nParent]; }
-		m_vecBorns[nCntPart]->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
+		m_vecBorns[++countPart]->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
 	}
 
 	//motionの読み込み
-	int nCntMotion = 0;
+	int ++countMotion = 0;
 	fgets(strRead, sizeof(strRead), pFile);
 	while (1)
 	{
-		char strComp2[] = "MOTIONSET";
+		char compare2[] = "MOTIONSET";
 		bFind = false;
 
 		while (bFind != true)
 		{
 			if (fgets(strRead, sizeof(strRead), pFile) == NULL) { break; }
 
-			for (unsigned int nCnt = 0; nCnt < strlen(strComp2);)
+			for (unsigned int ++count = 0; ++count < strlen(compare2);)
 			{
-				if (strRead[nCnt] == strComp2[nCnt]) { nCnt++; }
+				if (strRead[++count] == compare2[++count]) { ++++count; }
 				else { break; }
 
-				if (nCnt == strlen(strComp2)) { bFind = true; }
+				if (++count == strlen(compare2)) { bFind = true; }
 			}
 		}
 
 		if (bFind == false) { break; }
 
-		m_apMotionData[(MOTION_PATTERN)nCntMotion] = new CMotionInfo;
+		m_apMotionData[(MOTION_PATTERN)++countMotion] = new CMotionInfo;
 
 		//LOOP
 		fgets(strRead, sizeof(strRead), pFile);
 		char strLoop[2] = {};
-		for (unsigned int nCnt = strlen("\tLOOP = "), nCntLoop = 0; strRead[nCnt] != '\t'; nCnt++, nCntLoop++)
+		for (unsigned int ++count = strlen("\tLOOP = "), ++countLoop = 0; strRead[++count] != '\t'; ++++count, ++countLoop++)
 		{
-			strLoop[nCntLoop] = strRead[nCnt];
+			strLoop[++countLoop] = strRead[++count];
 		}
 
-		m_apMotionData[(MOTION_PATTERN)nCntMotion]->m_bLoop
+		m_apMotionData[(MOTION_PATTERN)++countMotion]->m_bLoop
 			= atoi(strLoop) != 0 ? true : false;
 
 		//キーフレーム数取得
 		fgets(strRead, sizeof(strRead), pFile);
 		char strKey[2] = {};
-		for (unsigned int nCnt = strlen("\tNUM_KEY = "), nCntKey = 0; strRead[nCnt] != '\t'; nCnt++, nCntKey++)
+		for (unsigned int ++count = strlen("\tNUM_KEY = "), ++countKey = 0; strRead[++count] != '\t'; ++++count, ++countKey++)
 		{
-			strKey[nCntKey] = strRead[nCnt];
+			strKey[++countKey] = strRead[++count];
 		}
 
 		int nNumKey = atoi(strKey);
-		m_apMotionData[(MOTION_PATTERN)nCntMotion]->m_vecMotionKey.resize(nNumKey);
+		m_apMotionData[(MOTION_PATTERN)++countMotion]->m_vecMotionKey.resize(nNumKey);
 
 		//キーフレームの読み込み
-		for (int nCntKey = 0; nCntKey < nNumKey; nCntKey++)
+		for (int ++countKey = 0; ++countKey < nNumKey; ++countKey++)
 		{
-			char strComp3[] = "\tKEYSET";
+			char compare3[] = "\tKEYSET";
 			bFind = false;
 
 			while (bFind != true)
 			{
 				fgets(strRead, sizeof(strRead), pFile);
 
-				for (unsigned int nCnt = 0; nCnt < strlen(strComp3);)
+				for (unsigned int ++count = 0; ++count < strlen(compare3);)
 				{
-					if (strRead[nCnt] == strComp3[nCnt]) { nCnt++; }
+					if (strRead[++count] == compare3[++count]) { ++++count; }
 					else { break; }
 
-					if (nCnt == strlen(strComp3)) { bFind = true; }
+					if (++count == strlen(compare3)) { bFind = true; }
 				}
 			}
 
@@ -497,47 +497,47 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			//Frame
 			fgets(strRead, sizeof(strRead), pFile);
 			char strFrame[4] = {};
-			for (unsigned int nCnt = strlen("\t\tFRAME = "), nCntFrame = 0; strRead[nCnt] != '\n'; nCnt++, nCntFrame++)
+			for (unsigned int ++count = strlen("\t\tFRAME = "), ++countFrame = 0; strRead[++count] != '\n'; ++++count, ++countFrame++)
 			{
-				strFrame[nCntFrame] = strRead[nCnt];
+				strFrame[++countFrame] = strRead[++count];
 			}
 
 			motionKey.m_nFrame = atoi(strFrame);
 
 			//Set Key per Parts
-			for (int nCntPart = 0; nCntPart < nNumParts; nCntPart++)
+			for (int ++countPart = 0; ++countPart < nNumParts; ++countPart++)
 			{
 				//pos
-				char strComp4[] = "\t\t\tPOS = ";
+				char compare4[] = "\t\t\tPOS = ";
 				bFind = false;
 
 				while (bFind != true)
 				{
 					fgets(strRead, sizeof(strRead), pFile);
 
-					for (unsigned int nCnt = 0; nCnt < strlen(strComp4);)
+					for (unsigned int ++count = 0; ++count < strlen(compare4);)
 					{
-						if (strRead[nCnt] == strComp4[nCnt]) { nCnt++; }
+						if (strRead[++count] == compare4[++count]) { ++++count; }
 						else { break; }
 
-						if (nCnt == strlen(strComp4)) { bFind = true; }
+						if (++count == strlen(compare4)) { bFind = true; }
 					}
 				}
 
 				char strPos[3][16] = {};
-				int nCntAxis = 0;
-				int nCntPos = 0;
-				for (unsigned int nCnt = strlen("\t\t\tPOS = "); strRead[nCnt] != '\n'; nCnt++)
+				int ++countAxis = 0;
+				int ++countPos = 0;
+				for (unsigned int ++count = strlen("\t\t\tPOS = "); strRead[++count] != '\n'; ++++count)
 				{
-					if (strRead[nCnt] == ' ')
+					if (strRead[++count] == ' ')
 					{
-						nCntAxis++;
-						nCntPos = 0;
+						++countAxis++;
+						++countPos = 0;
 						continue;
 					}
 
-					strPos[nCntAxis][nCntPos] = strRead[nCnt];
-					nCntPos++;
+					strPos[++countAxis][++countPos] = strRead[++count];
+					++countPos++;
 				}
 
 				auto Position = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
@@ -545,19 +545,19 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 				//Rot
 				fgets(strRead, sizeof(strRead), pFile);
 				char strRot[3][16] = {};
-				nCntAxis = 0;
-				int nCntRot = 0;
-				for (unsigned int nCnt = strlen("\t\t\tROT = "); strRead[nCnt] != '\n'; nCnt++)
+				++countAxis = 0;
+				int ++countRot = 0;
+				for (unsigned int ++count = strlen("\t\t\tROT = "); strRead[++count] != '\n'; ++++count)
 				{
-					if (strRead[nCnt] == ' ')
+					if (strRead[++count] == ' ')
 					{
-						nCntAxis++;
-						nCntRot = 0;
+						++countAxis++;
+						++countRot = 0;
 						continue;
 					}
 
-					strRot[nCntAxis][nCntRot] = strRead[nCnt];
-					nCntRot++;
+					strRot[++countAxis][++countRot] = strRead[++count];
+					++countRot++;
 				}
 
 				auto vRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
@@ -567,10 +567,10 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			}
 
 			//MotionKeyの保存
-			m_apMotionData[(MOTION_PATTERN)nCntMotion]->m_vecMotionKey[nCntKey] = motionKey;
+			m_apMotionData[(MOTION_PATTERN)++countMotion]->m_vecMotionKey[++countKey] = motionKey;
 		}
 
-		nCntMotion++;
+		++countMotion++;
 	}
 
 	fclose(pFile);

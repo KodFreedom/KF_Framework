@@ -25,13 +25,13 @@
 //class C2DRenderComponent : public CRenderComponent
 //{
 //public:
-//	C2DRenderComponent(C2DMeshComponent* const pMesh, CGameObject* const pGameObj)
-//		: CRenderComponent(pGameObj), c_pMesh(pMesh) {}
+//	C2DRenderComponent(C2DMeshComponent* const mesh, CGameObject* const pGameObj)
+//		: CRenderComponent(pGameObj), c_mesh(mesh) {}
 //	~C2DRenderComponent() {}
 //
 //	void	Render(void) override;
 //
 //private:
-//	C2DMeshComponent* const c_pMesh;
+//	C2DMeshComponent* const c_mesh;
 //};
 //

@@ -48,7 +48,7 @@ bool CPlayerUIObject::Init(void)
 	sHP.strTexName = "playerUILifeGauge.png";
 	pTexManager->UseTexture(sHP.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertexGauge(sHP.pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, sc_cLifeGaugeColorMax);
+	UtilityDX::MakeVertexGauge(sHP.pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, sc_cLifeGaugeColorMax);
 #endif
 	m_listSprite.push_back(sHP);
 
@@ -64,7 +64,7 @@ bool CPlayerUIObject::Init(void)
 	sCover.strTexName = "playerUICover.png";
 	pTexManager->UseTexture(sCover.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertex(sCover.pVtxBuffer, sc_vCoverPosCenter, sc_vCoverSize);
+	UtilityDX::MakeVertex(sCover.pVtxBuffer, sc_vCoverPosCenter, sc_vCoverSize);
 #endif
 	m_listSprite.push_back(sCover);
 
@@ -74,7 +74,7 @@ bool CPlayerUIObject::Init(void)
 	sFace.strTexName = "playerUIFace.png";
 	pTexManager->UseTexture(sFace.strTexName);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::MakeVertex(sFace.pVtxBuffer, sc_vFacePosCenter, sc_vFaceSize, m_vFaceUVBegin, sc_vFaceUVSize);
+	UtilityDX::MakeVertex(sFace.pVtxBuffer, sc_vFacePosCenter, sc_vFaceSize, m_vFaceUVBegin, sc_vFaceUVSize);
 #endif
 	m_listSprite.push_back(sFace);
 
@@ -94,7 +94,7 @@ void CPlayerUIObject::Update(void)
 	float fLifeRate = actorBehavior.GetLifeNow() / actorBehavior.GetLifeMax();
 	Color cColor = CKFMath::LerpColor(sc_cLifeGaugeColorMin, sc_cLifeGaugeColorMax, fLifeRate);
 #ifdef USING_DIRECTX
-	CKFUtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);
+	UtilityDX::UpdateVertexGauge(itr->pVtxBuffer, sc_vLifeGaugePosLeftTop, sc_vLifeGaugeSize, fLifeRate, cColor);
 #endif
 	++itr;
 
@@ -114,7 +114,7 @@ void CPlayerUIObject::Update(void)
 	float fFaceU = 0.25f * (int)((0.75f - fLifeRate) * 4.0f);
 	fFaceU = fFaceU < 0.0f ? 0.0f : fFaceU;
 #ifdef USING_DIRECTX
-	CKFUtilityDX::UpdateUV(itr->pVtxBuffer, Vector2(fFaceU, 0.0f), sc_vFaceUVSize);
+	UtilityDX::UpdateUV(itr->pVtxBuffer, Vector2(fFaceU, 0.0f), sc_vFaceUVSize);
 #endif
 }
 

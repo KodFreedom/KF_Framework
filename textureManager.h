@@ -49,7 +49,7 @@ private:
 	//--------------------------------------------------------------------------------
 	struct TEXTURE
 	{
-		unsigned short		usNumUsers;	//今使ってるオブジェクト数
+		unsigned short		userNumber;	//今使ってるオブジェクト数
 #ifdef USING_DIRECTX
 		LPDIRECT3DTEXTURE9	pTexture;	//テクスチャ
 #endif

@@ -41,7 +41,7 @@ bool CBGUIObject::Init(const string& strTexName)
 
 #ifdef USING_DIRECTX
 	Vector2 vScreenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	CKFUtilityDX::MakeVertex(sprite.pVtxBuffer, vScreenSize * 0.5f, vScreenSize);
+	UtilityDX::MakeVertex(sprite.pVtxBuffer, vScreenSize * 0.5f, vScreenSize);
 #endif
 	m_listSprite.push_back(sprite);
 	return true;

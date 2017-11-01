@@ -14,12 +14,22 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CMesh;
+class Mesh;
+
+//--------------------------------------------------------------------------------
+//  構造体定義
+//--------------------------------------------------------------------------------
+struct RenderInfo
+{
+	string			TextureName;
+	RenderPriority	CurrentPriority;
+	RenderState		CurrentState;
+};
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CMeshManager
+class MeshManager
 {
 #ifdef _DEBUG
 	friend class DebugObserver;
@@ -27,66 +37,66 @@ class CMeshManager
 
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	struct RENDER_INFO
-	{
-		string			strTex;
-		RENDER_PRIORITY renderPriority;
-		RENDER_STATE	renderState;
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CMeshManager() { m_umMesh.clear(); }
-	~CMeshManager() {}
-
-	void	Release(void) { UnloadAll(); delete this; }
-	void	UnloadAll(void);
-	void	UseMesh(const string& strName);
-	void	DisuseMesh(const string& strName);
-	auto	GetRenderInfo(const string& strName) const { return m_umMesh.at(strName).renderInfo; }
-
+	static MeshManager* Create(void)
+	{
+		if (instance) return instance;
+		instance = new MeshManager;
+		instance->init();
+		return instance;
+	}
+	static void			Release(void) { SAFE_UNINIT(instance); }
+	static auto			Instance(void) { return instance; }
+	
+	void	Use(const string& meshName);
+	void	Disuse(const string& meshName);
+	
 	//Editor用
-	void	CreateEditorField(const int nNumBlockX, const int nNumBlockZ, const Vector2& vBlockSize);
-	void	UpdateEditorField(const vector<Vector3>& vecVtx, const list<int>& listChoosenIdx);
-	void	SaveEditorFieldAs(const string& strFileName);
+	void	CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize);
+	void	UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes);
+	void	SaveEditorFieldAs(const string& fileName);
 
 	//Get関数
-	CMesh*	GetMesh(const string& strName) { return m_umMesh.at(strName).pMesh; }
+	auto	GetRenderInfoBy(const string& meshName) const { return meshes.at(meshName).CurrentRenderInfo; }
+	auto	GetMeshBy(const string& meshName) { return meshes.at(meshName).CurrentMesh; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct MESH
+	struct MeshInfo
 	{
-		MESH()
-			: usNumUsers(1)
-			, pMesh(nullptr)
+		MeshInfo()
+			: UserNumber(1)
+			, CurrentMesh(nullptr)
 		{
-			renderInfo.strTex.clear();
-			renderInfo.renderPriority = RP_3D;
-			renderInfo.renderState = RS_LIGHTON_CULLFACEON_MUL;
+			CurrentRenderInfo.TextureName.clear();
+			CurrentRenderInfo.CurrentPriority = RP_3D;
+			CurrentRenderInfo.CurrentState = RS_LIGHTON_CULLFACEON_MUL;
 		}
-		unsigned short	usNumUsers;
-		CMesh*			pMesh;
-		RENDER_INFO		renderInfo;
+		unsigned short	UserNumber;
+		Mesh*			CurrentMesh;
+		RenderInfo		CurrentRenderInfo;
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	MESH	loadFromMesh(const string& strFileName);
-	MESH	loadFromXFile(const string& strPath);
-	MESH	createCube(void);
-	MESH	createSphere(void);
-	MESH	createSkyBox(void);
-	bool	createBuffer(CMesh* pMesh);
+	MeshManager() { meshes.clear(); }
+	~MeshManager() {}
+	void		init(void) {};
+	void		uninit(void);
+	MeshInfo	loadFromMesh(const string& filePath);
+	MeshInfo	loadFromXFile(const string& filePath);
+	MeshInfo	createCube(void);
+	MeshInfo	createSphere(void);
+	MeshInfo	createSkyBox(void);
+	bool		createBuffer(Mesh* mesh);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, MESH> m_umMesh;
+	unordered_map<string, MeshInfo> meshes;
+	static MeshManager*			instance;
 };

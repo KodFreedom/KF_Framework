@@ -24,11 +24,11 @@ namespace KF
 {
 	namespace Utility
 	{
-		int		GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
-		int		GetStrToken(string& str, const string& strToken, string& strBuf);
-		int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
-		int		GetStrCount(string& str, const string& strToken, const string& strComp);
-		string	GetFileName(const string& strFilePath);
+		int		GetToken(FILE* filePointer, const string& token, string& buffer);
+		int		GetToken(string& str, const string& token, string& buffer);
+		int		GetStringCount(FILE* filePointer, const string& token, const string& compareString);
+		int		GetStringCount(string& str, const string& token, const string& compareString);
+		string	GetFileName(const string& filePath);
 		void	AnalyzeFilePath(const string& strTexPath, string& strName, string& strType);
 	}
 }

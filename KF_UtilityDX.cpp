@@ -20,7 +20,7 @@
 //--------------------------------------------------------------------------------
 //  頂点生成
 //--------------------------------------------------------------------------------
-bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionCenter, const Vector2& vSize, const Vector2& UVBegin, const Vector2& UVSize, const float& fRot, const Color& cColor)
+bool UtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionCenter, const Vector2& vSize, const Vector2& UVBegin, const Vector2& UVSize, const float& fRot, const Color& cColor)
 {
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
@@ -36,7 +36,7 @@ bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2
 
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "CKFUtilityDX : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, "UtilityDX : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 
@@ -88,7 +88,7 @@ bool CKFUtilityDX::MakeVertex(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2
 //--------------------------------------------------------------------------------
 //  頂点生成(ゲージ)
 //--------------------------------------------------------------------------------
-bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
+bool UtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
 {
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	HRESULT hr;
@@ -104,7 +104,7 @@ bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Ve
 
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "CKFUtilityDX : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, "UtilityDX : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 
@@ -148,7 +148,7 @@ bool CKFUtilityDX::MakeVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Ve
 //--------------------------------------------------------------------------------
 //  頂点更新(ゲージ)
 //--------------------------------------------------------------------------------
-void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const float& fRate, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
+void UtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& PositionLeftTop, const Vector2& vSize, const float& fRate, const Color& cColor, const Vector2& UVBegin, const Vector2& UVSize)
 {
 	// 頂点情報を設定
 	//仮想アドレスを取得するためのポインタ
@@ -182,7 +182,7 @@ void CKFUtilityDX::UpdateVertexGauge(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const 
 //--------------------------------------------------------------------------------
 //  頂点更新(UV)
 //--------------------------------------------------------------------------------
-void CKFUtilityDX::UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& UVBegin, const Vector2& UVSize)
+void UtilityDX::UpdateUV(LPDIRECT3DVERTEXBUFFER9& pVtxBuffer, const Vector2& UVBegin, const Vector2& UVSize)
 {
 	// 頂点情報を設定
 	//仮想アドレスを取得するためのポインタ

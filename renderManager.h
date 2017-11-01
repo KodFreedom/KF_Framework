@@ -20,7 +20,7 @@ class CRenderState;
 //--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-enum RENDER_PRIORITY
+enum RenderPriority
 {//レンダー優先度
 	RP_3D = 0,
 	RP_3D_ALPHATEST,
@@ -28,7 +28,7 @@ enum RENDER_PRIORITY
 	RP_MAX
 };
 
-enum RENDER_STATE
+enum RenderState
 {//レンダーステート
 	RS_LIGHTOFF_CULLFACEON_MUL = 0,	//ライトオフ、両面描画、乗算合成
 	RS_LIGHTOFF_CULLFACEOFF_MUL,	//ライトオフ、両面描画、乗算合成
@@ -63,7 +63,7 @@ public:
 		delete this;
 	}
 	void		Clear(void);
-	void		Register(CRenderComponent* pRender, const RENDER_PRIORITY& rp, const RENDER_STATE& rs)
+	void		Register(CRenderComponent* pRender, const RenderPriority& rp, const RenderState& rs)
 	{
 		m_apRenderComponents[rp][rs].push_back(pRender);
 	}
@@ -79,8 +79,8 @@ private:
 	//--------------------------------------------------------------------------------
 	void		init(void);
 	void		uninit(void);
-	void		setRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
-	void		resetRenderState(const RENDER_PRIORITY& rp, const RENDER_STATE& rs);
+	void		setRenderState(const RenderPriority& rp, const RenderState& rs);
+	void		resetRenderState(const RenderPriority& rp, const RenderState& rs);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

@@ -41,7 +41,7 @@ void CStageSpawner::LoadStage(const string& strStageName)
 	int nNumModelType = 0;
 	fread(&nNumModelType, sizeof(int), 1, pFile);
 
-	for (int nCnt = 0; nCnt < nNumModelType; ++nCnt)
+	for (int ++count = 0; ++count < nNumModelType; ++++count)
 	{
 		//ファイル名読込
 		int nSize = 0;
@@ -56,7 +56,7 @@ void CStageSpawner::LoadStage(const string& strStageName)
 		fread(&nNum, sizeof(int), 1, pFile);
 
 		//位置回転の読込
-		for (int nCntModel = 0; nCntModel < nNum; ++nCntModel)
+		for (int ++countModel = 0; ++countModel < nNum; ++++countModel)
 		{
 			Vector3 Position;
 			fread(&Position, sizeof(Vector3), 1, pFile);

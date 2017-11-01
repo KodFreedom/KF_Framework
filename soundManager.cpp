@@ -27,11 +27,11 @@ CSoundManager::CSoundManager()
 	: m_pXAudio2(NULL)
 	, m_pMasteringVoice(NULL)
 {
-	for (int nCnt = 0; nCnt < (int)SL_MAX; nCnt++)
+	for (int ++count = 0; ++count < (int)SL_MAX; ++++count)
 	{
-		m_apSourceVoice[nCnt] = NULL;
-		m_apDataAudio[nCnt] = NULL;
-		m_aSizeAudio[nCnt] = 0;
+		m_apSourceVoice[++count] = NULL;
+		m_apDataAudio[++count] = NULL;
+		m_aSizeAudio[++count] = 0;
 	}
 }
 
@@ -77,7 +77,7 @@ HRESULT	CSoundManager::LoadAll(void)
 	}
 
 	// サウンドデータの初期化
-	for (int nCntSound = 0; nCntSound < SL_MAX; nCntSound++)
+	for (int ++countSound = 0; ++countSound < SL_MAX; ++countSound++)
 	{
 		HANDLE hFile;
 		DWORD dwChunkSize = 0;
@@ -91,7 +91,7 @@ HRESULT	CSoundManager::LoadAll(void)
 		memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
 		// サウンドデータファイルの生成
-		hFile = CreateFile(m_aParam[nCntSound].strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		hFile = CreateFile(m_aParam[++countSound].strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			MessageBox(NULL, "サウンドデータファイルの生成に失敗！(1)", "警告！", MB_ICONWARNING);
@@ -137,14 +137,14 @@ HRESULT	CSoundManager::LoadAll(void)
 		}
 
 		// オーディオデータ読み込み
-		hr = CheckChunk(hFile, 'atad', &m_aSizeAudio[nCntSound], &dwChunkPosition);
+		hr = CheckChunk(hFile, 'atad', &m_aSizeAudio[++countSound], &dwChunkPosition);
 		if (FAILED(hr))
 		{
 			MessageBox(NULL, "オーディオデータ読み込みに失敗！(1)", "警告！", MB_ICONWARNING);
 			return hr;
 		}
-		m_apDataAudio[nCntSound] = (BYTE*)malloc(m_aSizeAudio[nCntSound]);
-		hr = ReadChunkData(hFile, m_apDataAudio[nCntSound], m_aSizeAudio[nCntSound], dwChunkPosition);
+		m_apDataAudio[++countSound] = (BYTE*)malloc(m_aSizeAudio[++countSound]);
+		hr = ReadChunkData(hFile, m_apDataAudio[++countSound], m_aSizeAudio[++countSound], dwChunkPosition);
 		if (FAILED(hr))
 		{
 			MessageBox(NULL, "オーディオデータ読み込みに失敗！(2)", "警告！", MB_ICONWARNING);
@@ -152,7 +152,7 @@ HRESULT	CSoundManager::LoadAll(void)
 		}
 
 		// ソースボイスの生成
-		hr = m_pXAudio2->CreateSourceVoice(&m_apSourceVoice[nCntSound], &(wfx.Format));
+		hr = m_pXAudio2->CreateSourceVoice(&m_apSourceVoice[++countSound], &(wfx.Format));
 		if (FAILED(hr))
 		{
 			MessageBox(NULL, "ソースボイスの生成に失敗！", "警告！", MB_ICONWARNING);
@@ -161,13 +161,13 @@ HRESULT	CSoundManager::LoadAll(void)
 
 		// バッファの値設定
 		memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-		buffer.AudioBytes = m_aSizeAudio[nCntSound];
-		buffer.pAudioData = m_apDataAudio[nCntSound];
+		buffer.AudioBytes = m_aSizeAudio[++countSound];
+		buffer.pAudioData = m_apDataAudio[++countSound];
 		buffer.Flags = XAUDIO2_END_OF_STREAM;
-		buffer.LoopCount = m_aParam[nCntSound].nCntLoop;
+		buffer.Loop++count = m_aParam[++countSound].++countLoop;
 
 		// オーディオバッファの登録
-		m_apSourceVoice[nCntSound]->SubmitSourceBuffer(&buffer);
+		m_apSourceVoice[++countSound]->SubmitSourceBuffer(&buffer);
 	}
 
 	return hr;
@@ -178,20 +178,20 @@ HRESULT	CSoundManager::LoadAll(void)
 //--------------------------------------------------------------------------------
 void CSoundManager::UnloadAll(void)
 {
-	for (int nCntSound = 0; nCntSound < SL_MAX; nCntSound++)
+	for (int ++countSound = 0; ++countSound < SL_MAX; ++countSound++)
 	{
-		if (m_apSourceVoice[nCntSound])
+		if (m_apSourceVoice[++countSound])
 		{
 			// 一時停止
-			m_apSourceVoice[nCntSound]->Stop(0);
+			m_apSourceVoice[++countSound]->Stop(0);
 
 			// ソースボイスの破棄
-			m_apSourceVoice[nCntSound]->DestroyVoice();
-			m_apSourceVoice[nCntSound] = NULL;
+			m_apSourceVoice[++countSound]->DestroyVoice();
+			m_apSourceVoice[++countSound] = NULL;
 
 			// オーディオデータの開放
-			free(m_apDataAudio[nCntSound]);
-			m_apDataAudio[nCntSound] = NULL;
+			free(m_apDataAudio[++countSound]);
+			m_apDataAudio[++countSound] = NULL;
 		}
 	}
 
@@ -223,7 +223,7 @@ void CSoundManager::Play(SOUND_LABEL label)
 	buffer.AudioBytes = m_aSizeAudio[label];
 	buffer.pAudioData = m_apDataAudio[label];
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
-	buffer.LoopCount = m_aParam[label].nCntLoop;
+	buffer.Loop++count = m_aParam[label].++countLoop;
 
 	// 状態取得
 	m_apSourceVoice[label]->GetState(&xa2state);
@@ -301,12 +301,12 @@ bool CSoundManager::IsPlaying(SOUND_LABEL label)
 //--------------------------------------------------------------------------------
 void CSoundManager::StopAll(void)
 {
-	for (int nCntSound = 0; nCntSound < SL_MAX; nCntSound++)
+	for (int ++countSound = 0; ++countSound < SL_MAX; ++countSound++)
 	{
-		if (m_apSourceVoice[nCntSound])
+		if (m_apSourceVoice[++countSound])
 		{
 			// 一時停止
-			m_apSourceVoice[nCntSound]->Stop(0);
+			m_apSourceVoice[++countSound]->Stop(0);
 		}
 	}
 }

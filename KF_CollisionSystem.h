@@ -155,8 +155,8 @@ private:
 	list<CColliderComponent*> m_listField;
 
 #ifdef _DEBUG
-	LPD3DXMESH	m_pMeshSphere;
-	LPD3DXMESH	m_pMeshCube;
+	LPD3DXMESH	m_meshSphere;
+	LPD3DXMESH	m_meshCube;
 	bool		m_bDrawCollider;
 #endif
 };

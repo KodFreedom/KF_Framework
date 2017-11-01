@@ -42,7 +42,7 @@
 //--------------------------------------------------------------------------------
 DebugObserver* DebugObserver::Create(HWND hWnd)
 {
-	if (instance) return nullptr;
+	if (instance) return instance;
 	instance = new DebugObserver;
 	instance->init(hWnd);
 	return instance;
@@ -82,10 +82,10 @@ void DebugObserver::LateUpdate(void)
 
 	if (!debugLog.empty())
 	{
-		++crollCounter;
-		if (crollCounter >= scrollTime)
+		++croll++counter;
+		if (croll++counter >= scrollTime)
 		{//一番目のstringを削除する
-			crollCounter = 0;
+			croll++counter = 0;
 			debugLog.erase(debugLog.begin());
 		}
 
@@ -151,7 +151,7 @@ void DebugObserver::DisplayScroll(const string& strInfo)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 DebugObserver::DebugObserver()
-	: crollCounter(0)
+	: croll++counter(0)
 	, enableCollisionSystemWindow(false)
 	, enableCameraWindow(false)
 	, enablePlayerWindow(false)

@@ -26,7 +26,7 @@ public:
 	static CGameObject* CreateField(const string& strStageName);
 	static CGameObject* CreateCube(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
 	static CGameObject* CreateXModel(const string& strPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static CGameObject* CreateModel(const string& strFilePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
+	static CGameObject* CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
 	static CGameObject* CreateGoal(const Vector3& Position);
 
 #ifdef _DEBUG

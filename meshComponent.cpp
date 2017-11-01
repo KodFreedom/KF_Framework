@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 //  èIóπèàóù
 //--------------------------------------------------------------------------------
-void CMeshComponent::Uninit(void)
+void MeshComponent::Uninit(void)
 {
 	if (!m_strMeshName.empty())
 	{
@@ -29,7 +29,7 @@ void CMeshComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  çXêVèàóù
 //--------------------------------------------------------------------------------
-void CMeshComponent::SetMeshName(const string& strMeshName)
+void MeshComponent::SetMeshName(const string& strMeshName)
 {
 	if (!m_strMeshName.empty())
 	{

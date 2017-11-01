@@ -44,7 +44,7 @@ public:
 		for (auto pBehavior : m_listpBehavior) { if (!pBehavior->Init()) { assert("init behavior error!!"); return false; } }
 		if (!m_pRigidbody->Init()) { assert("init rigidbody error!!");  return false; }
 		for (auto pCollider : m_listpCollider) { if (!pCollider->Init()) { assert("init collider error!!");  return false; } }
-		if (!m_pMesh->Init()) { assert("init mesh error!!");  return false; }
+		if (!m_mesh->Init()) { assert("init mesh error!!");  return false; }
 		if (!m_pRender->Init()) { assert("init render error!!");  return false; }
 		return true;
 	}
@@ -61,7 +61,7 @@ public:
 		if (!m_bActive) { return; }
 		m_pRigidbody->LateUpdate();
 		for (auto pBehavior : m_listpBehavior) { pBehavior->LateUpdate(); }
-		m_pMesh->Update();
+		m_mesh->Update();
 		m_pTransform->UpdateMatrix();
 		m_pRender->Update();
 	}
@@ -74,7 +74,7 @@ public:
 	//Get関数
 	auto		GetTransformComponent(void) const { return m_pTransform; }
 	auto&		GetBehaviorComponent(void) { return m_listpBehavior; }
-	auto		GetMeshComponent(void) const { return m_pMesh; }
+	auto		GetMeshComponent(void) const { return m_mesh; }
 	auto		GetRigidbodyComponent(void) const { return m_pRigidbody; }
 	auto&		GetColliderComponent(void) const { return m_listpCollider; }
 	const auto&	GetName(void) const { return m_strName; }
@@ -88,14 +88,14 @@ public:
 	bool		IsActive(void) const { return m_bActive; }
 
 	//Set関数
-	void		SetMeshComponent(CMeshComponent* pMesh) 
+	void		SetMeshComponent(MeshComponent* mesh) 
 	{
 		//Release
-		if (m_pMesh != &s_nullMesh) { SAFE_RELEASE(m_pMesh); }
+		if (m_mesh != &s_nullMesh) { SAFE_RELEASE(m_mesh); }
 
 		//Set
-		if (!pMesh) { m_pMesh = &s_nullMesh; }
-		else { m_pMesh = pMesh; }
+		if (!mesh) { m_mesh = &s_nullMesh; }
+		else { m_mesh = mesh; }
 	}
 	void		SetRenderComponent(CRenderComponent* pRender) 
 	{
@@ -152,7 +152,7 @@ protected:
 			(*itr)->Release();
 			itr = m_listpCollider.erase(itr);
 		}
-		m_pMesh->Release();
+		m_mesh->Release();
 		m_pRender->Release();
 	}
 
@@ -163,7 +163,7 @@ protected:
 	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
 	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
 	list<CColliderComponent*>	m_listpCollider;//コリジョンパーツ
-	CMeshComponent*				m_pMesh;		//メッシュパーツ
+	MeshComponent*				m_mesh;		//メッシュパーツ
 	CRenderComponent*			m_pRender;		//描画処理パーツ
 
 private:

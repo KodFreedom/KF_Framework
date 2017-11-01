@@ -94,7 +94,7 @@ private:
 	BYTE triggerStates[keyNumber];
 	BYTE releaseStates[keyNumber];
 	BYTE repeatStates[keyNumber];
-	int	 repeatCounters[keyNumber];
+	int	 repeat++counters[keyNumber];
 };
 
 //--------------------------------------------------------------------------------

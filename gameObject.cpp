@@ -38,7 +38,7 @@ CGameObject::CGameObject(const GOMLAYER& layer)
 	, m_bActive(true)
 	, m_bAlive(true)
 	, m_pRigidbody(&s_nullRigidbody)
-	, m_pMesh(&s_nullMesh)
+	, m_mesh(&s_nullMesh)
 	, m_pRender(&s_nullRender)
 {
 	m_strName.clear();

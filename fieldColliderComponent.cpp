@@ -213,13 +213,13 @@ bool CFieldColliderComponent::GetVtxByRange(const Vector3& vBegin, const Vector3
 	nNumVtxXOut = nXMax - nXMin;
 	nNumVtxZOut = nZMax - nZMin;
 	vecOut.resize(nNumVtxXOut * nNumVtxZOut);
-	int nCnt = 0;
-	for (int nCntZ = nZMin; nCntZ <= nZMax; nCntZ++)
+	int count = 0;
+	for (int countZ = nZMin; countZ <= nZMax; countZ++)
 	{
-		for (int nCntX = nXMin; nCntX <= nXMax; nCntX++)
+		for (int countX = nXMin; countX <= nXMax; countX++)
 		{
-			vecOut[nCnt] = m_vectorVtx[nCntZ * (m_nNumBlockX + 1) + nCntX];
-			nCnt++;
+			vecOut[count] = m_vectorVtx[countZ * (m_nNumBlockX + 1) + countX];
+			++count;
 		}
 	}
 

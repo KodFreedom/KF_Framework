@@ -67,11 +67,11 @@ bool CModelEditorBehaviorComponent::Init(void)
 	m_aStrName[MT_MED_BRIDGE] = "Medieval Bridge";
 
 	//Demo Objectの作成
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[nCnt] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
+		auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[count] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
 		pObj->SetActive(false);
-		m_aObjInfoDemo[nCnt].pTransform = pObj->GetTransformComponent();
+		m_aObjInfoDemo[count].pTransform = pObj->GetTransformComponent();
 	}
 	return true;
 }
@@ -135,19 +135,19 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 	int nTypeSize = (int)MT_MAX;
 	fwrite(&nTypeSize, sizeof(int), 1, pFile);
 
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
 		//ファイル名保存
-		int nSize = (int)m_aStrName[nCnt].size();
+		int nSize = (int)m_aStrName[count].size();
 		fwrite(&nSize, sizeof(int), 1, pFile);
-		fwrite(&m_aStrName[nCnt][0], sizeof(char), nSize, pFile);
+		fwrite(&m_aStrName[count][0], sizeof(char), nSize, pFile);
 
 		//モデル数の保存
-		int nNum = m_alistCreated[nCnt].size();
+		int nNum = m_alistCreated[count].size();
 		fwrite(&nNum, sizeof(int), 1, pFile);
 
 		//位置回転の保存
-		for (auto& info : m_alistCreated[nCnt])
+		for (auto& info : m_alistCreated[count])
 		{
 			auto Position = info.pTransform->GetPos();
 			fwrite(&Position, sizeof(Vector3), 1, pFile);
@@ -210,9 +210,9 @@ void CModelEditorBehaviorComponent::showMainWindow(void)
 	if (ImGui::Button("Create")) { create(); }
 
 	//モデルリスト
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		ImGui::Text("%s : %d", m_aStrName[nCnt].c_str(), (int)m_alistCreated[nCnt].size());
+		ImGui::Text("%s : %d", m_aStrName[count].c_str(), (int)m_alistCreated[count].size());
 	}
 	if (ImGui::Button("Show Created List")) { m_bShowCreatedList ^= 1; }
 
@@ -227,33 +227,33 @@ void CModelEditorBehaviorComponent::showTypeListBox(void)
 {
 	//new
 	char **arr = new char*[MT_MAX];
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		auto& strName = m_aStrName[nCnt];
+		auto& strName = m_aStrName[count];
 		int nNumChar = (int)strName.size();
-		arr[nCnt] = new char[nNumChar + 1];
-		for (int nCntChar = 0; nCntChar < nNumChar; ++nCntChar)
+		arr[count] = new char[nNumChar + 1];
+		for (int countChar = 0; countChar < nNumChar; ++countChar)
 		{
-			arr[nCnt][nCntChar] = strName[nCntChar];
+			arr[count][countChar] = strName[countChar];
 		}
-		arr[nCnt][nNumChar] = '\0';
+		arr[count][nNumChar] = '\0';
 	}
 
 	//Type
 	if (ImGui::ListBox("Model Type\n", (int*)&m_modelType, arr, MT_MAX))
 	{
 		//モデルアクティブの設定
-		for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+		for (int count = 0; count < (int)MT_MAX; ++count)
 		{
-			m_aObjInfoDemo[nCnt].pTransform->GetGameObject()->SetActive(m_modelType == (MODEL_TYPE)nCnt);
+			m_aObjInfoDemo[count].pTransform->GetGameObject()->SetActive(m_modelType == (MODEL_TYPE)count);
 		}
 	}
 
 	//delete
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		delete[] arr[nCnt];
-		arr[nCnt] = nullptr;
+		delete[] arr[count];
+		arr[count] = nullptr;
 	}
 	delete[] arr;
 	arr = nullptr;
@@ -266,16 +266,16 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 {
 	if (!m_bShowCreatedList) { return; }
 
-	for (int nCnt = 0; nCnt < (int)MT_MAX; ++nCnt)
+	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		if (ImGui::TreeNode(m_aStrName[nCnt].c_str()))
+		if (ImGui::TreeNode(m_aStrName[count].c_str()))
 		{
-			int nCntObj = 0;
-			for (auto itr = m_alistCreated[nCnt].begin(); itr != m_alistCreated[nCnt].end();)
+			int countObj = 0;
+			for (auto itr = m_alistCreated[count].begin(); itr != m_alistCreated[count].end();)
 			{
 				bool bDelete = false;
 				char aBuf[128];
-				wsprintf(aBuf, "%s_%d", m_aStrName[nCnt].c_str(), nCntObj);
+				wsprintf(aBuf, "%s_%d", m_aStrName[count].c_str(), countObj);
 				if (ImGui::TreeNode(aBuf))
 				{
 					auto Position = itr->pTransform->GetPos();
@@ -294,12 +294,12 @@ void CModelEditorBehaviorComponent::showCreatedList(void)
 				if (bDelete)
 				{
 					itr->pTransform->GetGameObject()->SetAlive(false);
-					itr = m_alistCreated[nCnt].erase(itr);
+					itr = m_alistCreated[count].erase(itr);
 				}
 				else
 				{
 					++itr;
-					++nCntObj;
+					++countObj;
 				}
 			}
 			ImGui::TreePop();

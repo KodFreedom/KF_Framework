@@ -105,9 +105,9 @@ void CFade::Update(void)
 	if (Ade == FADE_NONE) { return; }
 
 	//fadeŽžŠÔƒJƒEƒ“ƒg
-	if (m_nCnt != 0)
+	if (m_++count != 0)
 	{
-		m_nCnt -= 1;
+		m_++count -= 1;
 		return;
 	}
 
@@ -174,7 +174,7 @@ void CFade::FadeToMode(CMode* pModeNext)
 
 	Ade = FADE_OUT;
 	m_pModeNext = pModeNext;
-	m_nCnt = 10;
+	m_++count = 10;
 }
 
 //--------------------------------------------------------------------------------
