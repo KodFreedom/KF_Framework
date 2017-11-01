@@ -80,17 +80,17 @@ void CCamera::Uninit(void)
 //--------------------------------------------------------------------------------
 void CCamera::Update(void)
 {
-//	CMouseDX *pMouse = Main::GetManager()->GetMouse();
-//	CJoystickDX* pJoystick = Main::GetManager()->GetJoystickDX();
+//	MouseDX *pMouse = Main::GetManager()->GetMouse();
+//	JoystickDX* pJoystick = Main::GetManager()->GetJoystickDX();
 //	Vector3 vRot = Vector3(0.0f);
 //	float fZoomSpeed = 0.0f;
 //
 //	//’–Ú“_‰ñ“]
-//	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisX() != 0)
+//	if (pMouse->GetMousePress(MouseDX::MouseRight) && pMouse->GetMouseAxisX() != 0)
 //	{
 //		vRot.Y = KF_PI * ((float)pMouse->GetMouseAxisX() / SCREEN_WIDTH);
 //	}
-//	if (pMouse->GetMousePress(CMouseDX::MOUSE_RIGHT) && pMouse->GetMouseAxisY() != 0)
+//	if (pMouse->GetMousePress(MouseDX::MouseRight) && pMouse->GetMouseAxisY() != 0)
 //	{
 //		vRot.X = KF_PI * ((float)pMouse->GetMouseAxisY() / SCREEN_HEIGHT);
 //	}
@@ -103,9 +103,9 @@ void CCamera::Update(void)
 //
 //	if (pJoystick->GetAttached())
 //	{
-//		float fRAxisX = (float)pJoystick->GetRStickAxisX() / CJoystickDX::sc_nStickAxisMax;
-//		float fRAxisY = (float)pJoystick->GetRStickAxisY() / CJoystickDX::sc_nStickAxisMax;
-//		float fLTRT = (float)pJoystick->GetLTandRT() / CJoystickDX::sc_nStickAxisMax;
+//		float fRAxisX = (float)pJoystick->GetRStickAxisX() / JoystickDX::sc_nStickAxisMax;
+//		float fRAxisY = (float)pJoystick->GetRStickAxisY() / JoystickDX::sc_nStickAxisMax;
+//		float fLTRT = (float)pJoystick->GetLTandRT() / JoystickDX::sc_nStickAxisMax;
 //
 //#ifdef _DEBUG
 //			//char aBuf[256] = {};

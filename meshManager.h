@@ -22,7 +22,7 @@ class CMesh;
 class CMeshManager
 {
 #ifdef _DEBUG
-	friend class CDebugManager;
+	friend class DebugObserver;
 #endif // _DEBUG
 
 public:

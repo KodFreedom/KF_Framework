@@ -163,7 +163,7 @@
     <ClCompile Include="boxColliderComponent.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="colliderComponent.cpp" />
-    <ClCompile Include="debugManager.cpp" />
+    <ClCompile Include="debugObserver.cpp" />
     <ClCompile Include="fog.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -182,8 +182,8 @@
     <ClCompile Include="gameObjectActor.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gameObjectSpawner.cpp" />
-    <ClCompile Include="inputDX.cpp" />
-    <ClCompile Include="inputManager.cpp" />
+    <ClCompile Include="inputDeviceDX.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="KF_CollisionSystem.cpp" />
     <ClCompile Include="KF_CollisionUtility.cpp" />
     <ClCompile Include="KF_Math.cpp" />
@@ -230,7 +230,7 @@
     <ClInclude Include="BGUIObject.h" />
     <ClInclude Include="boxColliderComponent.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="debugManager.h" />
+    <ClInclude Include="debugObserver.h" />
     <ClInclude Include="editorControllerBehaviorComponent.h" />
     <ClInclude Include="enemyAttackMode.h" />
     <ClInclude Include="enemyNormalMode.h" />
@@ -257,8 +257,8 @@
     <ClInclude Include="KF_Utility.h" />
     <ClInclude Include="modeEditor.h" />
     <ClInclude Include="modelEditorBehaviorComponent.h" />
-    <ClInclude Include="inputDX.h" />
-    <ClInclude Include="inputManager.h" />
+    <ClInclude Include="inputDeviceDX.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="KF_CollisionSystem.h" />
     <ClInclude Include="KF_Math.h" />
     <ClInclude Include="KF_PhysicsSystem.h" />

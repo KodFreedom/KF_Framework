@@ -11,7 +11,7 @@
 #include "manager.h"
 #include "renderer.h"
 #include "renderManager.h"
-#include "inputManager.h"
+#include "input.h"
 #include "meshManager.h"
 #include "textureManager.h"
 #include "lightManager.h"
@@ -31,7 +31,7 @@
 
 #ifdef _DEBUG
 #include "modeEditor.h"
-#include "debugManager.h"
+#include "debugObserver.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -77,12 +77,11 @@ void Manager::Release(void)
 void Manager::Update(void)
 {
 #ifdef _DEBUG
-	//Debugマネージャの更新
-	m_pDebugManager->Update();
+	DebugObserver::Instance()->Update();
 #endif
 
 	//入力更新
-	m_pInputManager->Update();
+	Input::Instance()->Update();
 
 	//モード更新
 	m_pMode->Update();
@@ -121,8 +120,7 @@ void Manager::LateUpdate(void)
 	m_pRenderManager->Update();
 
 #ifdef _DEBUG
-	//Debugマネージャの更新
-	m_pDebugManager->LateUpdate();
+	DebugObserver::Instance()->LateUpdate();
 #endif
 }
 
@@ -141,7 +139,7 @@ void Manager::Draw(void)
 		m_pUISystem->DrawAll();
 		m_pFade->Draw();
 #ifdef _DEBUG
-		m_pDebugManager->Draw();
+		DebugObserver::Instance()->Draw();
 #endif
 		Renderer::Instance()->EndRender();
 	}
@@ -174,8 +172,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	if (!Renderer::Create(hWnd, isWindowMode)) return false;
 
 #ifdef _DEBUG
-	//Debugマネージャの生成
-	m_pDebugManager = CDebugManager::Create(hWnd);
+	DebugObserver::Create(hWnd);
 #endif
 
 	//レンダーマネージャの生成
@@ -184,13 +181,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	//フォグの生成
 	m_pFog = CFog::Create();
 
-	//入力の生成
-	m_pInputManager = new CInputManager;
-	if (!m_pInputManager->Init(hInstance, hWnd))
-	{
-		MessageBox(NULL, "m_pInputManager->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return false;
-	}
+	Input::Create(hInstance, hWnd);
 
 	//メッシュマネージャの生成
 	m_pMeshManager = new CMeshManager;
@@ -282,12 +273,10 @@ void Manager::uninit(void)
 	//メッシュマネージャの破棄
 	SAFE_RELEASE(m_pMeshManager);
 
-	//入力マネージャの破棄
-	SAFE_RELEASE(m_pInputManager);
+	Input::Release();
 
 #ifdef _DEBUG
-	//Debugマネージャの破棄
-	SAFE_RELEASE(m_pDebugManager);
+	DebugObserver::Release();
 #endif
 
 	//フォグの破棄

@@ -53,7 +53,7 @@ void CEditorCamera::Init(void)
 void CEditorCamera::Update(void)
 {
 	auto pInput = Main::GetManager()->GetInputManager();
-	if (!pInput->GetMouse()->GetMousePress(CMouseDX::MOUSE_RIGHT)) { return; }
+	if (!pInput->GetMouse()->GetMousePress(MouseDX::MouseRight)) { return; }
 	
 	Vector3 vRot;
 	float fZoomSpeed = 0.0f;

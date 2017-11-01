@@ -381,5 +381,8 @@ namespace KF
 
 		// Clamp
 		float		Clamp(const float& value, const float& min, const float& max);
+
+		// Max
+		float		AbsMax(const float& valueA, const float& valueB);
 	}
 }

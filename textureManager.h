@@ -20,7 +20,7 @@
 class CTextureManager
 {
 #ifdef _DEBUG
-	friend class CDebugManager;
+	friend class DebugObserver;
 #endif // _DEBUG
 
 public:

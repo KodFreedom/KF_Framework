@@ -6,19 +6,21 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "inputManager.h"
+#include "input.h"
 
 #ifdef _DEBUG
-#include "debugManager.h"
-#include "ImGui\imgui.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
+#endif
 #endif
 
 //--------------------------------------------------------------------------------
 //	externä÷êî
 //--------------------------------------------------------------------------------
 #ifdef _DEBUG
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
 #endif
 
 //--------------------------------------------------------------------------------

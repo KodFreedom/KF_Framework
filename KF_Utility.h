@@ -20,17 +20,15 @@
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
-class CKFUtility
+namespace KF
 {
-public:
-	static int		GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
-	static int		GetStrToken(string& str, const string& strToken, string& strBuf);
-	static int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
-	static int		GetStrCount(string& str, const string& strToken, const string& strComp);
-	static string	GetFileName(const string& strFilePath);
-	static void		AnalyzeFilePath(const string& strTexPath, string& strName, string& strType);
-
-private:
-	CKFUtility() {}
-	~CKFUtility() {}
-};
+	namespace Utility
+	{
+		int		GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
+		int		GetStrToken(string& str, const string& strToken, string& strBuf);
+		int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
+		int		GetStrCount(string& str, const string& strToken, const string& strComp);
+		string	GetFileName(const string& strFilePath);
+		void	AnalyzeFilePath(const string& strTexPath, string& strName, string& strType);
+	}
+}

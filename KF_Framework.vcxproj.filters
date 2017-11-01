@@ -145,6 +145,12 @@
     <Filter Include="ソース ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{06ee83df-d177-4aae-bcba-0f0d5327dbc0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Input">
+      <UniqueIdentifier>{c686e9e9-2cb4-4634-acaf-007e2ea2169b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Input">
+      <UniqueIdentifier>{ed1fdc03-55fa-436b-a8b2-86689938f012}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -161,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="inputDX.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="textureManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -206,9 +209,6 @@
     </ClCompile>
     <ClCompile Include="actionGameCamera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="inputManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="transformComponent.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
@@ -288,9 +288,6 @@
     <ClCompile Include="BGUIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="debugManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="motionStatus.cpp">
       <Filter>ソース ファイル\Motion</Filter>
     </ClCompile>
@@ -339,6 +336,15 @@
     <ClCompile Include="rendererDirectX9.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="debugObserver.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="inputDeviceDX.cpp">
+      <Filter>ソース ファイル\Base\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\Base\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -355,9 +361,6 @@
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="inputDX.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="KF_UtilityDX.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -415,9 +418,6 @@
     </ClInclude>
     <ClInclude Include="editorCamera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="inputManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="transformComponent.h">
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
@@ -518,9 +518,6 @@
     <ClInclude Include="BGUIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
-    <ClInclude Include="debugManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="motionStatus.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
     </ClInclude>
@@ -568,6 +565,15 @@
     </ClInclude>
     <ClInclude Include="rendererDirectX9.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="debugObserver.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="inputDeviceDX.h">
+      <Filter>ヘッダー ファイル\Base\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -88,16 +88,16 @@ void CFieldEditorBehaviorComponent::Update(void)
 	auto pInput = Main::GetManager()->GetInputManager();
 
 	//Šgk
-	auto fValue = (float)pInput->GetKeyPress(CInputManager::K_EXTEND)
-		- (float)pInput->GetKeyPress(CInputManager::K_SHRINK);
+	auto fValue = (float)pInput->GetKeyPress(Input::Extend)
+		- (float)pInput->GetKeyPress(Input::Shrink);
 	m_fEditorRadius += fValue * m_fExtendSpeed;
 	m_fEditorRadius = m_fEditorRadius < 0.0f ? 0.0f : m_fEditorRadius;
 	
 	auto info = getInfo();
 
 	//¡~
-	fValue = (float)pInput->GetKeyPress(CInputManager::K_RAISE)
-		- (float)pInput->GetKeyPress(CInputManager::K_REDUCE);
+	fValue = (float)pInput->GetKeyPress(Input::Raise)
+		- (float)pInput->GetKeyPress(Input::Reduce);
 	for (auto nIdx : info.listChoosenIdx)
 	{
 		m_vectorVtx[nIdx].Y += fValue * RaiseSpeed;

@@ -26,7 +26,7 @@ class CAnimatorComponent;
 class CActorBehaviorComponent : public CBehaviorComponent
 {
 #ifdef _DEBUG
-	friend class CDebugManager;
+	friend class DebugObserver;
 #endif // _DEBUG
 
 public:

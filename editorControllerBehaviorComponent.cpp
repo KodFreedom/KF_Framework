@@ -136,7 +136,7 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.X * m_fMoveSpeed + vCamForward * vAxis.Y * m_fMoveSpeed;
-	auto fHeight = (float)(pInput->GetKeyPress(CInputManager::K_LEFT) - pInput->GetKeyPress(CInputManager::K_RIGHT));
+	auto fHeight = (float)(pInput->GetKeyPress(Input::Left) - pInput->GetKeyPress(Input::Right));
 	Position += vMove;
 	Position.Y += fHeight * m_fMoveSpeed;;
 

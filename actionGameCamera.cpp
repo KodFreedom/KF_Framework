@@ -82,7 +82,7 @@ void CActionGameCamera::Update(void)
 {
 	SwitchParam();
 
-	CInputManager *pInput = Main::GetManager()->GetInputManager();
+	Input *pInput = Main::GetManager()->GetInputManager();
 	Vector3 vRot = Vector3(0.0f);
 	float fZoomSpeed = 0.0f;
 

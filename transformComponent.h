@@ -17,7 +17,7 @@
 class CTransformComponent : public CComponent
 {
 #ifdef _DEBUG
-	friend class CDebugManager;
+	friend class DebugObserver;
 #endif // _DEBUG
 
 public:

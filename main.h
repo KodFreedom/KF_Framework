@@ -31,29 +31,26 @@ using namespace std;
 using namespace KF;
 
 // DirectX系
-#ifdef USING_DIRECTX
-#if (DIRECTX_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
 #endif
 #define DIRECTINPUT_VERSION (0x0800)
 #include <dinput.h>
 #include <XAudio2.h>//sound
-#endif
 
 //--------------------------------------------------------------------------------
 //  ライブラリ読み込み
 //--------------------------------------------------------------------------------
 // DirectX系
-#ifdef USING_DIRECTX
-#if (DIRECTX_VERSION == 9)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #endif
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dinput8.lib")
-#endif
 
-#pragma comment(lib,"winmm.lib")	//システム時刻取得に必要
+// システム時刻取得に必要
+#pragma comment(lib,"winmm.lib")	
 
 //--------------------------------------------------------------------------------
 //  定数定義

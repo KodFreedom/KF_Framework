@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	debug表示管理処理
-//　debugManager.cpp
+//	debug観察者
+//　debugObserver.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-09-07
 //--------------------------------------------------------------------------------
@@ -10,7 +10,8 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "debugManager.h"
+#include "debugObserver.h"
+#include "renderer.h"
 #include "ImGui\imgui.h"
 #include "KF_CollisionSystem.h"
 #include "textureManager.h"
@@ -22,40 +23,48 @@
 #include "actorBehaviorComponent.h"
 #include "fog.h"
 
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
-#endif // USING_DIRECTX
+#endif
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//	関数名：Create
+//  関数説明：生成処理
+//	引数：	hInstance：値
+//			hWnd：
+//			isWindowMode：
+//	戻り値：DebugObserver*
 //--------------------------------------------------------------------------------
-CDebugManager::CDebugManager()
-	: m_usCntScroll(0)
-	, m_bCollisionSystemWindow(false)
-	, m_bCameraWindow(false)
-	, m_bPlayerWindow(false)
-	, m_bFogWindow(false)
-	, m_pPlayer(nullptr)
+DebugObserver* DebugObserver::Create(HWND hWnd)
 {
-	m_strDebugInfo.clear();
-	m_listStrDebugScroll.clear();
+	if (instance) return nullptr;
+	instance = new DebugObserver;
+	instance->init(hWnd);
+	return instance;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Release
+//  関数説明：破棄処理
+//	引数：	なし
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void DebugObserver::Release(void)
+{
+	SAFE_UNINIT(instance);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CDebugManager::Update(void)
+void DebugObserver::Update(void)
 {
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	ImGui_ImplDX9_NewFrame();
 #endif // USING_DIRECTX
 }
@@ -63,7 +72,7 @@ void CDebugManager::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CDebugManager::LateUpdate(void)
+void DebugObserver::LateUpdate(void)
 {
 	showMainWindow();
 	showCollisionSystemWindow();
@@ -71,18 +80,18 @@ void CDebugManager::LateUpdate(void)
 	showPlayerWindow();
 	showFogWindow();
 
-	if (!m_listStrDebugScroll.empty())
+	if (!debugLog.empty())
 	{
-		++m_usCntScroll;
-		if (m_usCntScroll >= sc_usScrollTime)
+		++crollCounter;
+		if (crollCounter >= scrollTime)
 		{//一番目のstringを削除する
-			m_usCntScroll = 0;
-			m_listStrDebugScroll.erase(m_listStrDebugScroll.begin());
+			crollCounter = 0;
+			debugLog.erase(debugLog.begin());
 		}
 
-		for (auto& str : m_listStrDebugScroll)
+		for (auto& str : debugLog)
 		{//Debug表示に追加する
-			m_strDebugInfo += str;
+			debugInfo += str;
 		}
 	}
 }
@@ -90,13 +99,13 @@ void CDebugManager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void CDebugManager::Draw(void)
+void DebugObserver::Draw(void)
 {
 	//描画
 	ImGui::Render();
 
 	//前フレームの文字列を削除
-	m_strDebugInfo.clear();
+	debugInfo.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -105,9 +114,9 @@ void CDebugManager::Draw(void)
 //	引数：	strInfo：表示したい文字列
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CDebugManager::DisplayAlways(const string& strInfo)
+void DebugObserver::DisplayAlways(const string& strInfo)
 {
-	m_strDebugInfo.append(strInfo);
+	debugInfo.append(strInfo);
 }
 
 //--------------------------------------------------------------------------------
@@ -116,9 +125,9 @@ void CDebugManager::DisplayAlways(const string& strInfo)
 //	引数：	cInfo：表示したい文字
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CDebugManager::DisplayAlways(const char& cInfo)
+void DebugObserver::DisplayAlways(const char& cInfo)
 {
-	m_strDebugInfo.push_back(cInfo);
+	debugInfo.push_back(cInfo);
 }
 
 //--------------------------------------------------------------------------------
@@ -128,9 +137,9 @@ void CDebugManager::DisplayAlways(const char& cInfo)
 //	引数：	strInfo：表示したい文字列
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void CDebugManager::DisplayScroll(const string& strInfo)
+void DebugObserver::DisplayScroll(const string& strInfo)
 {
-	m_listStrDebugScroll.push_back(strInfo);
+	debugLog.push_back(strInfo);
 }
 
 //--------------------------------------------------------------------------------
@@ -139,11 +148,26 @@ void CDebugManager::DisplayScroll(const string& strInfo)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+DebugObserver::DebugObserver()
+	: crollCounter(0)
+	, enableCollisionSystemWindow(false)
+	, enableCameraWindow(false)
+	, enablePlayerWindow(false)
+	, enableFogWindow(false)
+	, player(nullptr)
+{
+	debugInfo.clear();
+	debugLog.clear();
+}
+
+//--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-void CDebugManager::init(HWND hWnd)
+void DebugObserver::init(HWND hWnd)
 {
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	ImGui_ImplDX9_Init(hWnd, Main::GetManager()->GetRenderer()->GetDevice());
 #endif // USING_DIRECTX
 }
@@ -151,23 +175,23 @@ void CDebugManager::init(HWND hWnd)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CDebugManager::uninit(void)
+void DebugObserver::uninit(void)
 {
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	ImGui_ImplDX9_Shutdown();
 #endif // USING_DIRECTX
 
-	m_strDebugInfo.clear();
+	debugInfo.clear();
 }
 
 //--------------------------------------------------------------------------------
 //  showMainWindow
 //--------------------------------------------------------------------------------
-void CDebugManager::showMainWindow(void)
+void DebugObserver::showMainWindow(void)
 {
-	auto pRenderer = Main::GetManager()->GetRenderer();
-	auto cBGColor = pRenderer->GetBGColor();
-	auto bWireFrame = pRenderer->GetWireFrameFlag();
+	auto renderer = Renderer::Instance();
+	auto backgroundColor = renderer->GetBackgroundColor();
+	auto enableWireFrame = renderer->GetWireFrameFlag();
 
 	// Begin
 	if (!ImGui::Begin("Main Debug Window"))
@@ -180,26 +204,25 @@ void CDebugManager::showMainWindow(void)
 	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	
 	// BG Color
-	if (ImGui::ColorEdit3("BG Color", (float*)&cBGColor))
+	if (ImGui::ColorEdit3("BG Color", (float*)&backgroundColor))
 	{
-		pRenderer->SetBGColor(cBGColor);
+		renderer->SetBackgroundColor(backgroundColor);
 	}
-	
 
 	// WireFrame
-	if (ImGui::Checkbox("WireFrame", &bWireFrame)){ pRenderer->SetWireFrameFlag(bWireFrame); }
+	if (ImGui::Checkbox("WireFrame", &enableWireFrame)) { renderer->SetWireFrameFlag(enableWireFrame); }
 	
 	// Collision System
-	if (ImGui::Button("Collision System")) { m_bCollisionSystemWindow ^= 1; }
+	if (ImGui::Button("Collision System")) { enableCollisionSystemWindow ^= 1; }
 
 	// Camera Window
-	if (ImGui::Button("Camera")) { m_bCameraWindow ^= 1; }
+	if (ImGui::Button("Camera")) { enableCameraWindow ^= 1; }
 
 	// Player Window
-	if (ImGui::Button("Player")) { m_bPlayerWindow ^= 1; }
+	if (ImGui::Button("Player")) { enablePlayerWindow ^= 1; }
 
 	// Fog Window
-	if (ImGui::Button("Fog")) { m_bFogWindow ^= 1; }
+	if (ImGui::Button("Fog")) { enableFogWindow ^= 1; }
 
 	// End
 	ImGui::End();
@@ -208,13 +231,13 @@ void CDebugManager::showMainWindow(void)
 //--------------------------------------------------------------------------------
 //  showCollisionSystemWindow
 //--------------------------------------------------------------------------------
-void CDebugManager::showCollisionSystemWindow(void)
+void DebugObserver::showCollisionSystemWindow(void)
 {
-	if (!m_bCollisionSystemWindow) { return; }
+	if (!enableCollisionSystemWindow) { return; }
 	auto pCS = Main::GetManager()->GetCollisionSystem();
 	
 	// Begin
-	if (!ImGui::Begin("Collision System Debug Window", &m_bCollisionSystemWindow))
+	if (!ImGui::Begin("Collision System Debug Window", &enableCollisionSystemWindow))
 	{
 		ImGui::End();
 		return;
@@ -244,13 +267,13 @@ void CDebugManager::showCollisionSystemWindow(void)
 //--------------------------------------------------------------------------------
 //  showCameraWindow
 //--------------------------------------------------------------------------------
-void CDebugManager::showCameraWindow(void)
+void DebugObserver::showCameraWindow(void)
 {
-	if (!m_bCameraWindow) { return; }
+	if (!enableCameraWindow) { return; }
 	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
 
 	// Begin
-	if (!ImGui::Begin("Camera Window", &m_bCameraWindow))
+	if (!ImGui::Begin("Camera Window", &enableCameraWindow))
 	{
 		ImGui::End();
 		return;
@@ -281,23 +304,23 @@ void CDebugManager::showCameraWindow(void)
 //--------------------------------------------------------------------------------
 //  showPlayerWindow
 //--------------------------------------------------------------------------------
-void CDebugManager::showPlayerWindow(void)
+void DebugObserver::showPlayerWindow(void)
 {
-	if (!m_bPlayerWindow || !m_pPlayer) { return; }
+	if (!enablePlayerWindow || !player) { return; }
 
 	// Begin
-	if (!ImGui::Begin("Player Window", &m_bCameraWindow))
+	if (!ImGui::Begin("Player Window", &enableCameraWindow))
 	{
 		ImGui::End();
 		return;
 	}
 
 	// Trans
-	auto pTrans = m_pPlayer->GetTransformComponent();
+	auto pTrans = player->GetTransformComponent();
 	ImGui::InputFloat3("Trans", &pTrans->m_PositionNext.X);
 
 	// Actor Behavior
-	auto pActor = static_cast<CActorBehaviorComponent*>(m_pPlayer->GetBehaviorComponent().front());
+	auto pActor = static_cast<CActorBehaviorComponent*>(player->GetBehaviorComponent().front());
 	ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
 	ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
 	ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
@@ -309,13 +332,13 @@ void CDebugManager::showPlayerWindow(void)
 //--------------------------------------------------------------------------------
 //  showFogWindow
 //--------------------------------------------------------------------------------
-void CDebugManager::showFogWindow(void)
+void DebugObserver::showFogWindow(void)
 {
-	if (!m_bFogWindow) { return; }
+	if (!enableFogWindow) { return; }
 	auto pFog = Main::GetManager()->GetFog();
 
 	// Begin
-	if (!ImGui::Begin("Fog Window", &m_bFogWindow))
+	if (!ImGui::Begin("Fog Window", &enableFogWindow))
 	{
 		ImGui::End();
 		return;

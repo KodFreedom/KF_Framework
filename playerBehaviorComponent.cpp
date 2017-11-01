@@ -63,8 +63,8 @@ void CPlayerBehaviorComponent::Update(void)
 	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
 	auto vMove = pCamera->GetVecRight() * vAxis.X + vCamForward * vAxis.Y;
 	CKFMath::VecNormalize(vMove);
-	auto bJump = pInput->GetKeyTrigger(CInputManager::K_JUMP);
-	auto bAttack = pInput->GetKeyTrigger(CInputManager::K_ATTACK);
+	auto bJump = pInput->GetKeyTrigger(Input::Jump);
+	auto bAttack = pInput->GetKeyTrigger(Input::Attack);
 	m_actor.Act(vMove, bJump, bAttack);;
 }
 

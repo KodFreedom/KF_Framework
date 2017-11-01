@@ -1644,6 +1644,17 @@ float Math::Clamp(const float& value, const float& min, const float& max)
 	return value < min ? min : value > max ? max : value;
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：AbsMax
+//  関数説明：絶対値が大きい方を返す
+//	引数：	valueA、valueB：比較値
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Math::AbsMax(const float& valueA, const float& valueB)
+{
+	return fabsf(valueA) >= fabsf(valueB) ? valueA : valueB;
+}
+
 /*
 //--------------------------------------------------------------------------------
 //  Others

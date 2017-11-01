@@ -67,7 +67,7 @@ void CModeResult::Update(void)
 {
 	CMode::Update();
 
-	if (Main::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (Main::GetManager()->GetInputManager()->GetKeyTrigger(Input::KEY::Submit))
 	{
 		Main::GetManager()->GetFade()->FadeToMode(new CModeTitle);
 	}

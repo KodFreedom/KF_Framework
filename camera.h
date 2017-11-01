@@ -21,7 +21,7 @@ class CGameObject;
 class CCamera
 {
 #ifdef _DEBUG
-	friend class CDebugManager;
+	friend class DebugObserver;
 #endif // _DEBUG
 
 

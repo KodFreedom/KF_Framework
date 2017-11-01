@@ -1,79 +1,72 @@
 //--------------------------------------------------------------------------------
-//	debug表示管理処理
-//　debugManager.h
+//	debug観察者
+//　debugObserver.h
 //	Author : Xu Wenjie
 //	Date   : 2017-09-07
 //--------------------------------------------------------------------------------
 #pragma once
 
 #ifdef _DEBUG
+#include "main.h"
+
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObjectActor;
+class CActorBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
-class CDebugManager
+class DebugObserver
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CDebugManager();
-	~CDebugManager() {}
+	static DebugObserver* Create(HWND hWnd);
+	static void			  Release(void);
+	static auto			  Instance(void) { return instance; }
 
-	static auto Create(HWND hWnd)
-	{
-		auto pDM = new CDebugManager;
-		pDM->init(hWnd);
-		return pDM;
-	}
-	void		Update(void);
-	void		LateUpdate(void);
-	void		Draw(void);
-	void		Release(void)
-	{
-		uninit();
-		delete this;
-	}
-
-	void		DisplayAlways(const string& strInfo);
-	void		DisplayAlways(const char& cInfo);
-	void		DisplayScroll(const string& strInfo);
-
-	void		SetPlayer(CGameObjectActor* pPlayer) { m_pPlayer = pPlayer; }
+	void Update(void);
+	void LateUpdate(void);
+	void Draw(void);
+	void DisplayAlways(const string& strInfo);
+	void DisplayAlways(const char& cInfo);
+	void DisplayScroll(const string& strInfo);
+	void SetPlayer(CActorBehaviorComponent* actor) { player = actor; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const unsigned short sc_usScrollTime = 1 * 30;
+	static const unsigned short scrollTime = 1 * 30;
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void			init(HWND hWnd);
-	void			uninit(void);
-	void			showMainWindow(void);
-	void			showCollisionSystemWindow(void);
-	void			showCameraWindow(void);
-	void			showPlayerWindow(void);
-	void			showFogWindow(void);
-	void			showTextureManagerWindow(void);
-	void			showMeshManagerWindow(void);
+	DebugObserver();
+	~DebugObserver() {}
+	void init(HWND hWnd);
+	void uninit(void);
+	void showMainWindow(void);
+	void showCollisionSystemWindow(void);
+	void showCameraWindow(void);
+	void showPlayerWindow(void);
+	void showFogWindow(void);
+	void showTextureManagerWindow(void);
+	void showMeshManagerWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string				m_strDebugInfo;
-	list<string>		m_listStrDebugScroll;
-	unsigned short		m_usCntScroll;
-	bool				m_bCollisionSystemWindow;
-	bool				m_bCameraWindow;
-	bool				m_bPlayerWindow;
-	bool				m_bFogWindow;
-	CGameObjectActor*	m_pPlayer;
+	string						debugInfo;
+	list<string>				debugLog;
+	unsigned short				crollCounter;
+	bool						enableCollisionSystemWindow;
+	bool						enableCameraWindow;
+	bool						enablePlayerWindow;
+	bool						enableFogWindow;
+	CActorBehaviorComponent*	player;
+	static DebugObserver*		instance;
 };
 #endif//_DEBUG
