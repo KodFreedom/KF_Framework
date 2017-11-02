@@ -1,35 +1,21 @@
 //--------------------------------------------------------------------------------
 //
-//　LightManager.cpp
+//　light.h
 //	Author : Xu Wenjie
 //	Date   : 2017-11-02
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  インクルードファイル
+//--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "lightManager.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-LightManager* LightManager::instance = nullptr;
+#include "light.h"
 
 //--------------------------------------------------------------------------------
 //
 //  public
 //
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  ライトの生成処理
-//--------------------------------------------------------------------------------
-int	LightManager::CreateLight(const LightType& type,
-	const Vector3& position = Vector3::Zero, const Vector3& direction = Vector3::Forward,
-	const Color& diffuse = Color::White, const Color& ambient = Color::Gray)
-{
-	int id = lights.size();
-	auto light = new Light(type, position, direction, diffuse, ambient);
-	lights.emplace(id, light);
-	return id;
-}
+
 
 //--------------------------------------------------------------------------------
 //
@@ -37,33 +23,45 @@ int	LightManager::CreateLight(const LightType& type,
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化処理
+//  コンストラクタ
 //--------------------------------------------------------------------------------
-void LightManager::init(void)
+Light::Light(const int id, const LightType& type, const Vector3& position, const Vector3& direction, const Color& diffuse, const Color& ambient)
+	: id(id)
+	, type(type)
+	, position(position)
+	, direction(direction)
+	, diffuse(diffuse)
+	, ambient(ambient)
 {
-	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	set();
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
+//  デストラクタ
 //--------------------------------------------------------------------------------
-void LightManager::uninit(void)
+Light::~Light()
 {
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-
-	ReleaseAll();
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	pDevice->LightEnable(id, FALSE);
+#endif
 }
 
 //--------------------------------------------------------------------------------
-//  全てのライトを削除
+//  設定処理
 //--------------------------------------------------------------------------------
-void LightManager::ReleaseAll(void)
+void Light::set(void)
 {
-	for (auto iterator = lights.begin(); iterator != lights.end();)
-	{
-		delete iterator->second;
-		iterator = lights.erase(iterator);
-	}
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+	D3DLIGHT9 lightInfo;
+	ZeroMemory(&lightInfo, sizeof(D3DLIGHT9));
+	lightInfo.Type = (_D3DLIGHTTYPE)type;
+	lightInfo.Diffuse = diffuse;
+	lightInfo.Ambient = ambient;
+	lightInfo.Position = position;
+	lightInfo.Direction = direction;
+	pDevice->SetLight(id, &lightInfo);
+	pDevice->LightEnable(id, TRUE);
+#endif
 }

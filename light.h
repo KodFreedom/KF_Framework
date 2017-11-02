@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　LightManager.h
+//　light.h
 //	Author : Xu Wenjie
 //	Date   : 2017-11-02
 //--------------------------------------------------------------------------------
@@ -9,51 +9,65 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "light.h"
+
+//--------------------------------------------------------------------------------
+//  列挙型定義
+//--------------------------------------------------------------------------------
+enum LightType
+{
+	Point = 1,
+	Spot = 2,
+	Directional = 3,
+};
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class LightManager
+class Light
 {
+	friend class LightManager;
+
 public:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	static auto	Create(void)
+	void SetPosition(const Vector3& newPosition)
 	{
-		if (instance) return instance;
-		instance = new LightManager;
-		instance->init();
-		return instance;
+		position = newPosition;
+		set();
 	}
-	static void Release(void) { SAFE_UNINIT(instance); }
-	static auto Instance(void) { return instance; }
-
-	int		CreateLight(const LightType& type,
-		const Vector3& position = Vector3::Zero, const Vector3& direction = Vector3::Forward,
-		const Color& diffuse = Color::White, const Color& ambient = Color::Gray);
-	void	ReleaseLight(int lightID)
+	void SetDirection(const Vector3& newDirection)
 	{
-		auto iterator = lights.find(lightID);
-		if (iterator == lights.end()) return;
-		delete iterator->second;
-		lights.erase(iterator);
+		direction = newDirection;
+		set();
 	}
-	void	ReleaseAll(void);
+	void SetDiffuse(const Color& newDiffuse)
+	{
+		diffuse = newDiffuse;
+		set();
+	}
+	void SetAmbient(const Color& newAmbient)
+	{
+		ambient = newAmbient;
+		set();
+	}
 
 private:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	LightManager() { lights.clear(); }
-	~LightManager() {}
-	void init(void);
-	void uninit(void);
+	Light(const int id, const LightType& type, const Vector3& position, const Vector3& direction, const Color& diffuse, const Color& ambient);
+	~Light();
+	void set(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<int, Light*>	lights;
-	static LightManager*		instance;
+	int			id;
+	LightType	type;
+	Vector3		position;
+	Vector3		direction;
+	Color		diffuse;
+	Color		ambient;
 };
+

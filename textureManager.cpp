@@ -29,10 +29,10 @@ void TextureManager::Use(const string& textureName)
 	if (textureName.empty()) return;
 
 	//‚·‚Å‚É“Ç‚İ‚ñ‚¾‚çˆ—I—¹
-	auto itr = textures.find(textureName);
-	if (itr != textures.end())
+	auto iterator = textures.find(textureName);
+	if (iterator != textures.end())
 	{
-		++itr->second.userNumber;
+		++iterator->second.userNumber;
 		return;
 	}
 
@@ -59,15 +59,15 @@ void TextureManager::Use(const string& textureName)
 void TextureManager::Disuse(const string& textureName)
 {
 	if (textureName.empty()) return;
-	auto itr = textures.find(textureName);
-	if (itr == textures.end()) return;
-	--itr->second.userNumber;
-	if (itr->second.userNumber == 0)
+	auto iterator = textures.find(textureName);
+	if (iterator == textures.end()) return;
+	--iterator->second.userNumber;
+	if (iterator->second.userNumber == 0)
 	{// ’N‚àg‚Á‚Ä‚È‚¢‚Ì‚Å”jŠü‚·‚é
 #ifdef USING_DIRECTX
-		SAFE_RELEASE(itr->second.texturePointer);
+		SAFE_RELEASE(iterator->second.texturePointer);
 #endif
-		textures.erase(itr);
+		textures.erase(iterator);
 	}
 }
 //--------------------------------------------------------------------------------
@@ -80,11 +80,11 @@ void TextureManager::Disuse(const string& textureName)
 //--------------------------------------------------------------------------------
 void TextureManager::uninit(void)
 {
-	for (auto itr = textures.begin(); itr != textures.end();)
+	for (auto iterator = textures.begin(); iterator != textures.end();)
 	{
 #ifdef USING_DIRECTX
-		SAFE_RELEASE(itr->second.texturePointer);
+		SAFE_RELEASE(iterator->second.texturePointer);
 #endif
-		itr = textures.erase(itr);
+		iterator = textures.erase(iterator);
 	}
 }

@@ -300,6 +300,7 @@ namespace KF
 		// ’è”’è‹`
 		static const Color White;
 		static const Color Black;
+		static const Color Gray;
 		static const Color Red;
 		static const Color Blue;
 		static const Color Green;

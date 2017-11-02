@@ -14,96 +14,97 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
+MaterialManager* MaterialManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//	Material
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	CKFMaterial
+//
+//  public
+//
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CKFMaterial::CKFMaterial()
-	: m_cAmbient(CKFMath::sc_cWhite)
-	, m_cDiffuse(CKFMath::sc_cWhite)
-	, m_cEmissive(CKFMath::sc_cWhite)
-	, m_cSpecular(CKFMath::sc_cWhite)
-	, m_fPower(1.0f)
-{}
-
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
 //  キャスト(D3DMATERIAL9)
 //	DXの環境のため(マテリアル)オーバーロードする
 //--------------------------------------------------------------------------------
-CKFMaterial::operator D3DMATERIAL9() const
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Material::operator D3DMATERIAL9() const
 {
-	D3DMATERIAL9 vAnswer;
-	vAnswer.Ambient = m_cAmbient;
-	vAnswer.Diffuse = m_cDiffuse;
-	vAnswer.Emissive = m_cEmissive;
-	vAnswer.Specular = m_cSpecular;
-	vAnswer.Power = m_fPower;
-	return vAnswer;
+	D3DMATERIAL9 result;
+	result.Ambient = ambient;
+	result.Diffuse = diffuse;
+	result.Emissive = emissive;
+	result.Specular = specular;
+	result.Power = power;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
 //	operator==
 //--------------------------------------------------------------------------------
-bool CKFMaterial::operator==(const CKFMaterial& mat) const
+bool Material::operator==(const Material& material) const
 {
-	if (this->m_cAmbient == mat.m_cAmbient
-		&& this->m_cDiffuse == mat.m_cDiffuse
-		&& this->m_cEmissive == mat.m_cEmissive
-		&& this->m_cSpecular == mat.m_cSpecular
-		&& this->m_fPower == mat.m_fPower)
-	{ return true; }
-	return false;
+	return this->ambient == material.ambient
+		&& this->diffuse == material.diffuse
+		&& this->emissive == material.emissive
+		&& this->specular == material.specular
+		&& this->power == material.power;
 }
 
 //--------------------------------------------------------------------------------
-//	CMaterialManager
+//
+//	MaterialManager
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	コンストラクタ
+//
+//  public
+//
 //--------------------------------------------------------------------------------
-CMaterialManager::CMaterialManager()
-{
-	m_umMaterial.clear();
-
-	//Normal
-	SaveMaterial(CKFMath::sc_cWhite, CKFMath::sc_cWhite, CKFMath::sc_cBlack, CKFMath::sc_cBlack, 1.0f);
-}
-
 //--------------------------------------------------------------------------------
 //  SaveMaterial
 //--------------------------------------------------------------------------------
-const unsigned short CMaterialManager::SaveMaterial(const Color &cAmbient, const Color &cDiffuse, const Color &cSpecular, const Color &cEmissive, const float &fPower)
+const unsigned short MaterialManager::SaveMaterial(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power)
 {
-	auto& mat = CKFMaterial(cAmbient, cDiffuse, cSpecular, cEmissive, fPower);
+	auto& newMaterial = Material(ambient, diffuse, specular, emissive, power);
 
 	//今までのマテリアルと比較する
-	for (auto& mMat : m_umMaterial)
+	for (auto& material : materials)
 	{
-		if (mMat.second == mat)
+		if (material.second == newMaterial)
 		{//すでにあるならIDを返す
-			return mMat.first;
+			return material.first;
 		}
 	}
 
 	//Mapに追加する
-	auto usID = (unsigned short)m_umMaterial.size();
-	m_umMaterial.emplace(usID, mat);
-
-	return usID;
+	auto id = (unsigned short)materials.size();
+	materials.emplace(id, newMaterial);
+	return id;
 }
 
 //--------------------------------------------------------------------------------
 //  GetMaterial
 //--------------------------------------------------------------------------------
-const CKFMaterial& CMaterialManager::GetMaterial(const unsigned short& usID)
+const Material& MaterialManager::GetMaterial(const unsigned short& usID)
 {
-	return m_umMaterial.at(usID);
+	return materials.at(usID);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	コンストラクタ
+//--------------------------------------------------------------------------------
+MaterialManager::MaterialManager()
+{
+	materials.clear();
+	SaveMaterial(Color::White, Color::White, Color::Black, Color::Black, 1.0f);
 }

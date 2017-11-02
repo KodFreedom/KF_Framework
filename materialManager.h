@@ -7,75 +7,72 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-#define CMM CMaterialManager	//CMaterialManagerの略称
-
-//--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //	マテリアル
 //--------------------------------------------------------------------------------
-class CKFMaterial
+class Material
 {
 public:
-	CKFMaterial();
-	CKFMaterial(const Color& cAmbient, const Color& cDiffuse, const Color& cSpecular, const Color& cEmissive, const float& fPower)
-		: m_cAmbient(cAmbient)
-		, m_cDiffuse(cDiffuse)
-		, m_cSpecular(cSpecular)
-		, m_cEmissive(cEmissive)
-		, m_fPower(fPower)
+	Material(const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, const float& power)
+		: ambient(ambient)
+		, diffuse(diffuse)
+		, specular(specular)
+		, emissive(emissive)
+		, power(power)
 	{}
-	~CKFMaterial() {}
+	~Material() {}
 
-	Color	m_cAmbient;		// 環境光の反射率
-	Color	m_cDiffuse;		// 漫射光の反射率
-	Color	m_cSpecular;	// 鏡面光の反射率
-	Color	m_cEmissive;	// 自発光
-	float		m_fPower;		// ハイライトのシャープネス
+	Color	ambient;	// 環境光の反射率
+	Color	diffuse;	// 漫射光の反射率
+	Color	specular;	// 鏡面光の反射率
+	Color	emissive;	// 自発光
+	float	power;		// ハイライトのシャープネス
 
 	//キャスト
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	operator D3DMATERIAL9 () const;
 #endif
 
 	//operator
-	bool operator==(const CKFMaterial& mat) const;
+	bool operator==(const Material& material) const;
 };
 
 //--------------------------------------------------------------------------------
 //	マテリアルマネージャ
 //--------------------------------------------------------------------------------
-class CMaterialManager
+class MaterialManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  列挙型定義
-	//--------------------------------------------------------------------------------
-	enum MAT_TYPE
-	{
-		MT_NORMAL = 0,
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMaterialManager();
-	~CMaterialManager() {}
-
-	void					Release(void) 
+	static auto	Create(void)
 	{
-		m_umMaterial.clear();
-		delete this; 
+		if (instance) return instance;
+		instance = new MaterialManager;
+		instance->init();
+		return instance;
 	}
-	const unsigned short	SaveMaterial(const Color &cAmbient, const Color &cDiffuse, const Color &cSpecular, const Color &cEmissive, const float &fPower);
-	const CKFMaterial&		GetMaterial(const unsigned short& usID);
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
+	const unsigned short	SaveMaterial(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power);
+	const Material&			GetMaterial(const unsigned short& usID);
 
 private:
 	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	MaterialManager();
+	~MaterialManager() {}
+	void init(void) {}
+	void uninit(void) { materials.clear(); }
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<unsigned short, CKFMaterial> m_umMaterial;
+	unordered_map<unsigned short, Material> materials;
+	static MaterialManager*					instance;
 };

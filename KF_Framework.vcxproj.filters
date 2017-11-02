@@ -151,6 +151,12 @@
     <Filter Include="ソース ファイル\Base\Input">
       <UniqueIdentifier>{ed1fdc03-55fa-436b-a8b2-86689938f012}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Light">
+      <UniqueIdentifier>{595f0086-f2fb-4877-98af-42862f1eb68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Light">
+      <UniqueIdentifier>{887ea52b-2460-4d6c-8883-f0338224c7ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -169,9 +175,6 @@
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
     <ClCompile Include="textureManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="lightManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="manager.cpp">
@@ -345,6 +348,12 @@
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
     </ClCompile>
+    <ClCompile Include="lightManager.cpp">
+      <Filter>ソース ファイル\Base\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\Base\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -364,9 +373,6 @@
     </ClInclude>
     <ClInclude Include="KF_UtilityDX.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="lightManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="manager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
@@ -574,6 +580,12 @@
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="lightManager.h">
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

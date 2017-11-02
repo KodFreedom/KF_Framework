@@ -184,17 +184,8 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	Input::Create(hInstance, hWnd);
 	MeshManager::Create();
 	TextureManager::Create();
-
-	//ライトマネージャの生成
-	m_pLightManager = new CLightManager;
-	if (!m_pLightManager->Init())
-	{
-		MessageBox(NULL, "m_pLightManager->Init ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-		return false;
-	}
-
-	//マテリアルマネージャの生成
-	m_pMaterialManager = new CMaterialManager;
+	LightManager::Create();
+	MaterialManager::Create();
 
 	//コリジョンシステム
 	m_pCollisionSystem = CKFCollisionSystem::Create();
@@ -252,17 +243,8 @@ void Manager::uninit(void)
 	//コリジョンシステムの破棄
 	SAFE_RELEASE(m_pCollisionSystem);
 
-	//マテリアルマネージャの破棄
-	SAFE_RELEASE(m_pMaterialManager);
-
-	//ライトマネージャの破棄
-	if (m_pLightManager)
-	{
-		m_pLightManager->Uninit();
-		delete m_pLightManager;
-		m_pLightManager = nullptr;
-	}
-
+	MaterialManager::Release();
+	LightManager::Release();
 	TextureManager::Release();
 	MeshManager::Release();
 	Input::Release();
