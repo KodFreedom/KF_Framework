@@ -82,10 +82,10 @@ void DebugObserver::LateUpdate(void)
 
 	if (!debugLog.empty())
 	{
-		++croll++counter;
-		if (croll++counter >= scrollTime)
+		++crollcounter;
+		if (crollcounter >= scrollTime)
 		{//一番目のstringを削除する
-			croll++counter = 0;
+			crollcounter = 0;
 			debugLog.erase(debugLog.begin());
 		}
 
@@ -151,7 +151,7 @@ void DebugObserver::DisplayScroll(const string& strInfo)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 DebugObserver::DebugObserver()
-	: croll++counter(0)
+	: crollcounter(0)
 	, enableCollisionSystemWindow(false)
 	, enableCameraWindow(false)
 	, enablePlayerWindow(false)

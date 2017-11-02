@@ -77,7 +77,7 @@ KeyboardDX::KeyboardDX() : InputDeviceDX()
 	ZeroMemory(triggerStates, sizeof triggerStates);
 	ZeroMemory(releaseStates, sizeof releaseStates);
 	ZeroMemory(repeatStates, sizeof repeatStates);
-	ZeroMemory(repeat++counters, sizeof repeat++counters);
+	ZeroMemory(repeatcounters, sizeof repeatcounters);
 }
 
 //--------------------------------------------------------------------------------
@@ -134,27 +134,27 @@ void KeyboardDX::Update(void)
 
 	if (SUCCEEDED(hr))
 	{
-		for (int ++count = 0; ++count < keyNumber; ++++count)
+		for (int count = 0; count < keyNumber; ++count)
 		{
-			triggerStates[++count] = (currentStates[++count] ^ nextKeyStates[++count]) & nextKeyStates[++count];
-			releaseStates[++count] = (currentStates[++count] ^ nextKeyStates[++count]) & ~nextKeyStates[++count];
-			repeatStates[++count] = triggerStates[++count];
+			triggerStates[count] = (currentStates[count] ^ nextKeyStates[count]) & nextKeyStates[count];
+			releaseStates[count] = (currentStates[count] ^ nextKeyStates[count]) & ~nextKeyStates[count];
+			repeatStates[count] = triggerStates[count];
 
-			if (nextKeyStates[++count])
+			if (nextKeyStates[count])
 			{
-				repeat++counters[++count]++;
-				if (repeat++counters[++count] >= repeatTime)
+				repeatcounters[count]++;
+				if (repeatcounters[count] >= repeatTime)
 				{
-					repeatStates[++count] = nextKeyStates[++count];
+					repeatStates[count] = nextKeyStates[count];
 				}
 			}
 			else
 			{
-				repeat++counters[++count] = 0;
-				repeatStates[++count] = 0;
+				repeatcounters[count] = 0;
+				repeatStates[count] = 0;
 			}
 
-			currentStates[++count] = nextKeyStates[++count];
+			currentStates[count] = nextKeyStates[count];
 		}
 	}
 	else
@@ -247,10 +247,10 @@ void MouseDX::Update(void)
 	if (SUCCEEDED(hr))
 	{
 		//Button更新
-		for (int ++counter = 0; ++counter < sizeof(nextState.rgbButtons); ++counter++)
+		for (int counter = 0; counter < sizeof(nextState.rgbButtons); counter++)
 		{
-			triggerState.rgbButtons[++counter] = (currentState.rgbButtons[++counter] ^ nextState.rgbButtons[++counter]) & nextState.rgbButtons[++counter];
-			releaseState.rgbButtons[++counter] = (currentState.rgbButtons[++counter] ^ nextState.rgbButtons[++counter]) & ~nextState.rgbButtons[++counter];
+			triggerState.rgbButtons[counter] = (currentState.rgbButtons[counter] ^ nextState.rgbButtons[counter]) & nextState.rgbButtons[counter];
+			releaseState.rgbButtons[counter] = (currentState.rgbButtons[counter] ^ nextState.rgbButtons[counter]) & ~nextState.rgbButtons[counter];
 		}
 
 		//マウス位置更新
@@ -342,10 +342,10 @@ void JoystickDX::Update(void)
 		isAttached = true;
 
 		//Button更新
-		for (int ++count = 0; ++count < sizeof(nextState.rgbButtons); ++++count)
+		for (int count = 0; count < sizeof(nextState.rgbButtons); ++count)
 		{
-			triggerState.rgbButtons[++count] = (currentState.rgbButtons[++count] ^ nextState.rgbButtons[++count]) & nextState.rgbButtons[++count];
-			releaseState.rgbButtons[++count] = (currentState.rgbButtons[++count] ^ nextState.rgbButtons[++count]) & ~nextState.rgbButtons[++count];
+			triggerState.rgbButtons[count] = (currentState.rgbButtons[count] ^ nextState.rgbButtons[count]) & nextState.rgbButtons[count];
+			releaseState.rgbButtons[count] = (currentState.rgbButtons[count] ^ nextState.rgbButtons[count]) & ~nextState.rgbButtons[count];
 		}
 
 		//LStick更新
@@ -365,18 +365,18 @@ void JoystickDX::Update(void)
 		releaseState.lRz = (currentState.lRz ^ nextState.lRz) & ~nextState.lRz;
 
 		//2つの追加軸
-		for (int ++count = 0; ++count < 2; ++++count)
+		for (int count = 0; count < 2; ++count)
 		{
 			//キートリガー、リリース情報の取得
-			triggerState.rglSlider[++count] = (currentState.rglSlider[++count] ^ nextState.rglSlider[++count]) & nextState.rglSlider[++count];
-			releaseState.rglSlider[++count] = (currentState.rglSlider[++count] ^ nextState.rglSlider[++count]) & ~nextState.rglSlider[++count];
+			triggerState.rglSlider[count] = (currentState.rglSlider[count] ^ nextState.rglSlider[count]) & nextState.rglSlider[count];
+			releaseState.rglSlider[count] = (currentState.rglSlider[count] ^ nextState.rglSlider[count]) & ~nextState.rglSlider[count];
 		}
 
 		//Pov
-		for (int ++count = 0; ++count < sizeof(nextState.rgdwPOV); ++++count)
+		for (int count = 0; count < sizeof(nextState.rgdwPOV); ++count)
 		{
-			triggerState.rgdwPOV[++count] = (currentState.rgdwPOV[++count] != nextState.rgdwPOV[++count]) * nextState.rgdwPOV[++count];
-			releaseState.rgdwPOV[++count] = (currentState.rgdwPOV[++count] != nextState.rgdwPOV[++count]) * currentState.rgdwPOV[++count];
+			triggerState.rgdwPOV[count] = (currentState.rgdwPOV[count] != nextState.rgdwPOV[count]) * nextState.rgdwPOV[count];
+			releaseState.rgdwPOV[count] = (currentState.rgdwPOV[count] != nextState.rgdwPOV[count]) * currentState.rgdwPOV[count];
 		}
 
 		currentState = nextState;

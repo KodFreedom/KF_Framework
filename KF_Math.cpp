@@ -13,16 +13,16 @@ using namespace KF;
 //--------------------------------------------------------------------------------
 //  ê√ìIÉÅÉìÉoïœêî
 //--------------------------------------------------------------------------------
-const Vector2		Vector2::Zero = Vector2(0.0f);
-const Vector2		Vector2::One = Vector2(1.0f);
-const Vector3		Vector3::Zero = Vector3(0.0f);
-const Vector3		Vector3::One = Vector3(1.0f);
-const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);
-const Vector3		Vector3::Down = Vector3(0.0f, -1.0f, 0.0f);
-const Vector3		Vector3::Left = Vector3(-1.0f, 0.0f, 0.0f);
-const Vector3		Vector3::Right = Vector3(1.0f, 0.0f, 0.0f);
-const Vector3		Vector3::Forward = Vector3(0.0f, 0.0f, 1.0f);
-const Vector3		Vector3::Back = Vector3(0.0f, 0.0f, -1.0f);
+const Vector2		Vector2::Zero = Vector2(0.0f);					// Vector( 0, 0 )
+const Vector2		Vector2::One = Vector2(1.0f);					// Vector( 1, 1 )
+const Vector3		Vector3::Zero = Vector3(0.0f);					// Vector( 0, 0, 0 )
+const Vector3		Vector3::One = Vector3(1.0f);					// Vector( 1, 1, 1 )
+const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);		// Vector( 0, 1, 0 )
+const Vector3		Vector3::Down = Vector3(0.0f, -1.0f, 0.0f);		// Vector( 0,-1, 0 )
+const Vector3		Vector3::Left = Vector3(-1.0f, 0.0f, 0.0f);		// Vector(-1, 0, 0 )
+const Vector3		Vector3::Right = Vector3(1.0f, 0.0f, 0.0f);		// Vector( 1, 0, 0 )
+const Vector3		Vector3::Forward = Vector3(0.0f, 0.0f, 1.0f);	// Vector( 0, 0, 1 )
+const Vector3		Vector3::Back = Vector3(0.0f, 0.0f, -1.0f);		// Vector( 0, 0,-1 )
 const Matrix44		Matrix44::Identity = Matrix44();
 const Quaternion	Quaternion::Identity = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 const Color			Color::White = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -778,7 +778,7 @@ Matrix44::operator D3DXMATRIX() const
 	D3DXMATRIX result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; ++countX)
+		for (int countX = 0; countX < 4; countX)
 		{
 			result(countY, countX) = Elements[countY][countX];
 		}
@@ -810,7 +810,7 @@ Matrix44& Matrix44::operator*(const Matrix44 &value) const
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; ++countX)
+		for (int countX = 0; countX < 4; countX)
 		{
 			result.Elements[countY][countX] =
 				Elements[countY][0] * value.Elements[0][countX] + 
@@ -833,7 +833,7 @@ void Matrix44::operator*=(const Matrix44 &value)
 	Matrix44 copy = *this;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; ++countX)
+		for (int countX = 0; countX < 4; countX)
 		{
 			Elements[countY][countX] =
 				copy.Elements[countY][0] * value.Elements[0][countX] +
@@ -924,7 +924,7 @@ Matrix44& Matrix44::Transpose(void) const
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; ++countX)
+		for (int countX = 0; countX < 4; countX)
 		{
 			result.Elements[countY][countX] = Elements[countX][countY];
 		}
@@ -1013,7 +1013,7 @@ Matrix44& Matrix44::ToMatrix44(const D3DXMATRIX& value)
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; ++countX)
+		for (int countX = 0; countX < 4; countX)
 		{
 			result.Elements[countY][countX] = value(countY, countX);
 		}

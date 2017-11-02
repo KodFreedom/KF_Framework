@@ -29,7 +29,7 @@ public:
 		: Ade(FADE_IN)
 		, m_pModeNext(NULL)
 		, m_cColor(Color(0.0f, 0.0f, 0.0f, 1.0f))
-		, m_++count(0)
+		, m_count(0)
 #ifdef USING_DIRECTX
 		, m_pVtxBuffer(NULL)
 #endif
@@ -78,7 +78,7 @@ private:
 	Color					m_cColor;
 	FADE						Ade;
 	CMode*						m_pModeNext;
-	int							m_++count;
+	int							m_count;
 
 #ifdef USING_DIRECTX
 	LPDIRECT3DVERTEXBUFFER9		m_pVtxBuffer;	//頂点バッファ管理インターフェースポインタ

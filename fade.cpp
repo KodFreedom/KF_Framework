@@ -105,9 +105,9 @@ void CFade::Update(void)
 	if (Ade == FADE_NONE) { return; }
 
 	//fade時間カウント
-	if (m_++count != 0)
+	if (m_count != 0)
 	{
-		m_++count -= 1;
+		m_count -= 1;
 		return;
 	}
 
@@ -153,8 +153,8 @@ void CFade::Draw(void)
 	pDevice->SetFVF(FVF_VERTEX_2D);
 
 	// テクスチャの設定
-	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
-	pDevice->SetTexture(0, pTexture);
+	LPDIRECT3DTEXTURE9 texture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
+	pDevice->SetTexture(0, texture);
 
 	// ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
@@ -174,7 +174,7 @@ void CFade::FadeToMode(CMode* pModeNext)
 
 	Ade = FADE_OUT;
 	m_pModeNext = pModeNext;
-	m_++count = 10;
+	m_count = 10;
 }
 
 //--------------------------------------------------------------------------------

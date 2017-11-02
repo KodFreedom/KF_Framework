@@ -59,16 +59,16 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 		return;
 	}
 
-	if(m_++countWait > 0)
+	if(m_countWait > 0)
 	{
-		--m_++countWait;
+		--m_countWait;
 		return;
 	}
 
 	if (fDisSquare <= 2.6f * 2.6f)
 	{//‹——£‚ª’Z‚¢‚È‚çUŒ‚
 		bAttack = true;
-		m_++countWait = 120;
+		m_countWait = 120;
 	}
 	else
 	{//‘ŠŽè‚ÉŒü‚©‚Á‚ÄˆÚ“®‚·‚é

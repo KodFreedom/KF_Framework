@@ -183,9 +183,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 
 	Input::Create(hInstance, hWnd);
 	MeshManager::Create();
-
-	//テクスチャマネージャの生成
-	m_pTextureManager = new CTextureManager;
+	TextureManager::Create();
 
 	//ライトマネージャの生成
 	m_pLightManager = new CLightManager;
@@ -265,9 +263,7 @@ void Manager::uninit(void)
 		m_pLightManager = nullptr;
 	}
 
-	//テクスチャマネージャの破棄
-	SAFE_RELEASE(m_pTextureManager);
-
+	TextureManager::Release();
 	MeshManager::Release();
 	Input::Release();
 

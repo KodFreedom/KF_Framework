@@ -11,13 +11,13 @@
 #include "KF_Utility.h"
 
 //--------------------------------------------------------------------------------
-//	関数名：GetToken
+//	関数名：GetStringUntilToken
 //  関数説明：アクション（移動、跳ぶ、攻撃）
 //	引数：	vDirection：移動方向
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-int Utility::GetToken(FILE* filePointer, const string& token, string& buffer)
+int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string& buffer)
 {
 	char c;
 	buffer.clear();
@@ -36,19 +36,19 @@ int Utility::GetToken(FILE* filePointer, const string& token, string& buffer)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetToken
+//	関数名：GetStringUntilToken
 //  関数説明：アクション（移動、跳ぶ、攻撃）
 //	引数：	vDirection：移動方向
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-int Utility::GetToken(string& str, const string& token, string& buffer)
+int Utility::GetStringUntilToken(string& file, const string& token, string& buffer)
 {
 	buffer.clear();
-	for (auto itr = str.begin(); itr != str.end();)
+	for (auto itr = file.begin(); itr != file.end();)
 	{
 		auto c = *itr;
-		itr = str.erase(itr);
+		itr = file.erase(itr);
 		for (int count = 0; count < (int)token.length(); ++count)
 		{
 			if (c == token.at(count))
@@ -73,7 +73,7 @@ int Utility::GetStringCount(FILE* filePointer, const string& token, const string
 {
 	int count = 0;
 	string buffer;
-	while (GetToken(filePointer, token, buffer) >= 0)
+	while (GetStringUntilToken(filePointer, token, buffer) >= 0)
 	{
 		if (buffer.compare(compareString) == 0)
 		{
@@ -94,11 +94,11 @@ int Utility::GetStringCount(FILE* filePointer, const string& token, const string
 //			bJump：跳ぶフラグ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-int Utility::GetStringCount(string& str, const string& token, const string& compareString)
+int Utility::GetStringCount(string& file, const string& token, const string& compareString)
 {
 	int count = 0;
 	string buffer;
-	while (GetToken(str, token, buffer) >= 0)
+	while (GetStringUntilToken(file, token, buffer) >= 0)
 	{
 		if (buffer.compare(compareString) == 0)
 		{
@@ -109,51 +109,25 @@ int Utility::GetStringCount(string& str, const string& token, const string& comp
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetFileName
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：AnalyzeFilePath
+//  関数説明：パスから名前とタイプを解析する
+//	引数：	filePath：パス
+//	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-string Utility::GetFileName(const string& filePath)
+Utility::FileInfo Utility::AnalyzeFilePath(const string& filePath)
 {
+	FileInfo info;
 	auto copy = filePath;
-
-	//逆転
 	reverse(copy.begin(), copy.end());
 
 	//ファイル型の取得
-	string strType;
-	GetToken(copy, ".", strType);
-
-	//ファイル名の取得
-	string strName;
-	GetToken(copy, "\\/", strName);
-	reverse(strName.begin(), strName.end());
-	return strName;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：GetStringCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Utility::AnalyzeFilePath(const string& strTexPath, string& strName, string& strType)
-{
-	auto copy = strTexPath;
-
-	//逆転
-	reverse(copy.begin(), copy.end());
-
-	//ファイル型の取得
-	if (GetToken(copy, ".", strType) > 0)
+	if (GetStringUntilToken(copy, ".", info.Type) > 0)
 	{
-		reverse(strType.begin(), strType.end());
+		reverse(info.Type.begin(), info.Type.end());
 	}
 
 	//ファイル名の取得
-	GetToken(copy, "\\/", strName);
-	reverse(strName.begin(), strName.end());
+	GetStringUntilToken(copy, "\\/", info.Name);
+	reverse(info.Name.begin(), info.Name.end());
+	return info;
 }

@@ -39,27 +39,27 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
-	static MeshManager* Create(void)
+	static auto Create(void)
 	{
 		if (instance) return instance;
 		instance = new MeshManager;
 		instance->init();
 		return instance;
 	}
-	static void			Release(void) { SAFE_UNINIT(instance); }
-	static auto			Instance(void) { return instance; }
+	static void	Release(void) { SAFE_UNINIT(instance); }
+	static auto	Instance(void) { return instance; }
 	
-	void	Use(const string& meshName);
-	void	Disuse(const string& meshName);
+	void		Use(const string& meshName);
+	void		Disuse(const string& meshName);
 	
 	//Editoróp
-	void	CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize);
-	void	UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes);
-	void	SaveEditorFieldAs(const string& fileName);
+	void		CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize);
+	void		UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes);
+	void		SaveEditorFieldAs(const string& fileName);
 
 	//Getä÷êî
-	auto	GetRenderInfoBy(const string& meshName) const { return meshes.at(meshName).CurrentRenderInfo; }
-	auto	GetMeshBy(const string& meshName) { return meshes.at(meshName).CurrentMesh; }
+	auto		GetRenderInfoBy(const string& meshName) const { return meshes.at(meshName).CurrentRenderInfo; }
+	auto		GetMeshBy(const string& meshName) { return meshes.at(meshName).CurrentMesh; }
 
 private:
 	//--------------------------------------------------------------------------------

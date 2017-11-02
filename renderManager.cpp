@@ -48,20 +48,20 @@ void CRenderManager::Update(void)
 void CRenderManager::Render(void)
 {
 	//Render
-	for (int ++countRP = 0; ++countRP < RP_MAX; ++++countRP)
+	for (int countRP = 0; countRP < RP_MAX; ++countRP)
 	{
-		for (int ++countRS = 0; ++countRS < RS_MAX; ++++countRS)
+		for (int countRS = 0; countRS < RS_MAX; ++countRS)
 		{
-			if (m_apRenderComponents[++countRP][++countRS].empty()) { continue; }
+			if (m_apRenderComponents[countRP][countRS].empty()) { continue; }
 
-			setRenderState((RenderPriority)++countRP, (RenderState)++countRS);
+			setRenderState((RenderPriority)countRP, (RenderState)countRS);
 
-			for (auto pRender : m_apRenderComponents[++countRP][++countRS])
+			for (auto pRender : m_apRenderComponents[countRP][countRS])
 			{
 				pRender->Render();
 			}
 
-			resetRenderState((RenderPriority)++countRP, (RenderState)++countRS);
+			resetRenderState((RenderPriority)countRP, (RenderState)countRS);
 		}
 	}
 

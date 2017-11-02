@@ -248,9 +248,9 @@ CFieldEditorBehaviorComponent::EINFO CFieldEditorBehaviorComponent::getInfo(void
 	nXMax = nXMax > m_nNumBlockX ? m_nNumBlockX : nXMax;
 	nZMax = nZMax > m_nNumBlockZ ? m_nNumBlockZ : nZMax;
 
-	for (int countZ = nZMin; countZ <= nZMax; ++countZ)
+	for (int countZ = nZMin; countZ <= nZMax; countZ)
 	{
-		for (int countX = nXMin; countX <= nXMax; ++countX)
+		for (int countX = nXMin; countX <= nXMax; countX)
 		{
 			auto nIdx = countZ * (m_nNumBlockZ + 1) + countX;
 			auto Position = m_vectorVtx[nIdx];

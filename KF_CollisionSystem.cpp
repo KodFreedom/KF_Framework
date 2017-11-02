@@ -293,9 +293,9 @@ void CKFCollisionSystem::DrawCollider(void)
 	if (!m_bDrawCollider) { return; }
 
 	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
+	LPDIRECT3DTEXTURE9 texturePointer = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	pDevice->SetTexture(0, pTexture);
+	pDevice->SetTexture(0, texturePointer);
 
 	//sphere
 	for (auto pCol : m_alistCollider[DYNAMIC][COL_SPHERE])

@@ -39,8 +39,8 @@
 //	pDevice->SetFVF(FVF_VERTEX_2D);
 //
 //	// テクスチャの設定
-//	LPDIRECT3DTEXTURE9 pTexture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
-//	pDevice->SetTexture(0, pTexture);
+//	LPDIRECT3DTEXTURE9 texture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+//	pDevice->SetTexture(0, texture);
 //
 //	// ポリゴンの描画
 //	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,

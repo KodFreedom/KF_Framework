@@ -236,11 +236,11 @@ void Input::updateInputInfo(void)
 	pressInfos = 0;
 	triggerInfos = 0;
 	releaseInfos = 0;
-	for (int ++count = 0; ++count < (int)Key::Max; ++++count)
+	for (int count = 0; count < (int)Key::Max; ++count)
 	{
-		pressInfos |= pressFlags[++count] << ++count;
-		triggerInfos |= triggerFlags[++count] << ++count;
-		releaseInfos |= releaseFlags[++count] << ++count;
+		pressInfos |= pressFlags[count] << count;
+		triggerInfos |= triggerFlags[count] << count;
+		releaseInfos |= releaseFlags[count] << count;
 	}
 
 	/*

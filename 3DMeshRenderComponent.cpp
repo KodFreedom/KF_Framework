@@ -55,8 +55,8 @@ void C3DMeshRenderComponent::Render(void)
 	pDevice->SetFVF(FVF_VERTEX_3D);
 
 	// テクスチャの設定
-	auto pTexture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
-	pDevice->SetTexture(0, pTexture);
+	auto texture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+	pDevice->SetTexture(0, texture);
 
 	// マテリアルの設定
 	D3DMATERIAL9 mat = Main::GetManager()->GetMaterialManager()->GetMaterial(m_usMatID);

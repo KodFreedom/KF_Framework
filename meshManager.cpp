@@ -97,16 +97,16 @@ void MeshManager::CreateEditorField(const int blockXNumber, const int blockZNumb
 
 	//頂点バッファをロックして、仮想アドレスを取得する
 	mesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	Vector3 vStartPos = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
-	for (int ++countZ = 0; ++countZ < blockZNumber + 1; ++countZ++)
+	auto& startPosition = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	for (int countZ = 0; countZ < blockZNumber + 1; ++countZ)
 	{
-		for (int ++countX = 0; ++countX < blockXNumber + 1; ++countX++)
+		for (int countX = 0; countX < blockXNumber + 1; ++countX)
 		{
-			pVtx[++countZ * (blockXNumber + 1) + ++countX].Position = vStartPos
-				+ Vector3(++countX * blockSize.X, 0.0f, -++countZ * blockSize.Y);
-			pVtx[++countZ * (blockXNumber + 1) + ++countX].UV = Vector2(++countX * 1.0f / (float)blockXNumber, ++countZ * 1.0f / (float)blockXNumber);
-			pVtx[++countZ * (blockXNumber + 1) + ++countX].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[++countZ * (blockXNumber + 1) + ++countX].Normal = Vector3(0.0f, 1.0f, 0.0f);
+			pVtx[countZ * (blockXNumber + 1) + countX].Position = startPosition
+				+ Vector3(countX * blockSize.X, 0.0f, -countZ * blockSize.Y);
+			pVtx[countZ * (blockXNumber + 1) + countX].UV = Vector2(countX * 1.0f / (float)blockXNumber, countZ * 1.0f / (float)blockXNumber);
+			pVtx[countZ * (blockXNumber + 1) + countX].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+			pVtx[countZ * (blockXNumber + 1) + countX].Normal = Vector3(0.0f, 1.0f, 0.0f);
 		}
 	}
 
@@ -117,17 +117,17 @@ void MeshManager::CreateEditorField(const int blockXNumber, const int blockZNumb
 	WORD *pIdx;
 	mesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int ++countZ = 0; ++countZ < blockZNumber; ++countZ++)
+	for (int countZ = 0; countZ < blockZNumber; ++countZ)
 	{
-		for (int ++countX = 0; ++countX < (blockXNumber + 1) * 2 + 2; ++countX++)
+		for (int countX = 0; countX < (blockXNumber + 1) * 2 + 2; ++countX)
 		{
-			if (++countX < (blockXNumber + 1) * 2)
+			if (countX < (blockXNumber + 1) * 2)
 			{
-				pIdx[++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX] = ++countX / 2 + (++countX + 1) % 2 * (blockXNumber + 1) + ++countZ * (blockXNumber + 1);
+				pIdx[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = countX / 2 + (countX + 1) % 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
 			}
-			else if (++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX < (((blockXNumber + 1) * 2 + 2) * blockZNumber - 1))//縮退ポリゴン
+			else if (countZ * ((blockXNumber + 1) * 2 + 2) + countX < (((blockXNumber + 1) * 2 + 2) * blockZNumber - 1))//縮退ポリゴン
 			{
-				pIdx[++countZ * ((blockXNumber + 1) * 2 + 2) + ++countX] = (++countX - 1) / 2 % (blockXNumber + 1) + ++countX % 2 * 2 * (blockXNumber + 1) + ++countZ * (blockXNumber + 1);
+				pIdx[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = (countX - 1) / 2 % (blockXNumber + 1) + countX % 2 * 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
 			}
 		}
 	}
@@ -161,10 +161,10 @@ void MeshManager::UpdateEditorField(const vector<Vector3>& vertexes, const list<
 	auto mesh = GetMeshBy("field");
 	mesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	auto color = Color(1.0f);
-	for (int ++count = 0; ++count < (int)vertexes.size(); ++++count)
+	for (int count = 0; count < (int)vertexes.size(); ++count)
 	{
-		pVtx[++count].Position = vertexes[++count];
-		pVtx[++count].Color = color;
+		pVtx[count].Position = vertexes[count];
+		pVtx[count].Color = color;
 	}
 
 	//Choosen Color
@@ -175,8 +175,8 @@ void MeshManager::UpdateEditorField(const vector<Vector3>& vertexes, const list<
 		pVtx[index].Color = Color::Red;
 
 		//法線計算
-		int ++countZ = index / (blockZNumber + 1);
-		int ++countX = index - ++countZ * (blockZNumber + 1);
+		int countZ = index / (blockZNumber + 1);
+		int countX = index - countZ * (blockZNumber + 1);
 		Vector3 normal;
 		Vector3 positionThis = pVtx[index].Position;
 		Vector3 positionLeft;
@@ -184,35 +184,35 @@ void MeshManager::UpdateEditorField(const vector<Vector3>& vertexes, const list<
 		Vector3 positionTop;
 		Vector3 positionBottom;
 
-		if (++countX == 0)
+		if (countX == 0)
 		{
 			positionLeft = positionThis;
-			positionRight = pVtx[++countZ * (blockXNumber + 1) + ++countX + 1].Position;
+			positionRight = pVtx[countZ * (blockXNumber + 1) + countX + 1].Position;
 		}
-		else if (++countX < blockXNumber)
+		else if (countX < blockXNumber)
 		{
-			positionLeft = pVtx[++countZ * (blockXNumber + 1) + ++countX - 1].Position;
-			positionRight = pVtx[++countZ * (blockXNumber + 1) + ++countX + 1].Position;
+			positionLeft = pVtx[countZ * (blockXNumber + 1) + countX - 1].Position;
+			positionRight = pVtx[countZ * (blockXNumber + 1) + countX + 1].Position;
 		}
 		else
 		{
-			positionLeft = pVtx[++countZ * (blockXNumber + 1) + ++countX - 1].Position;
+			positionLeft = pVtx[countZ * (blockXNumber + 1) + countX - 1].Position;
 			positionRight = positionThis;
 		}
 
-		if (++countZ == 0)
+		if (countZ == 0)
 		{
 			positionTop = positionThis;
-			positionBottom = pVtx[(++countZ + 1) * (blockXNumber + 1) + ++countX].Position;
+			positionBottom = pVtx[(countZ + 1) * (blockXNumber + 1) + countX].Position;
 		}
-		else if (++countZ < blockZNumber)
+		else if (countZ < blockZNumber)
 		{
-			positionTop = pVtx[(++countZ - 1) * (blockXNumber + 1) + ++countX].Position;
-			positionBottom = pVtx[(++countZ + 1) * (blockXNumber + 1) + ++countX].Position;
+			positionTop = pVtx[(countZ - 1) * (blockXNumber + 1) + countX].Position;
+			positionBottom = pVtx[(countZ + 1) * (blockXNumber + 1) + countX].Position;
 		}
 		else
 		{
-			positionTop = pVtx[(++countZ - 1) * (blockXNumber + 1) + ++countX].Position;
+			positionTop = pVtx[(countZ - 1) * (blockXNumber + 1) + countX].Position;
 			positionBottom = positionThis;
 		}
 		normal = (positionRight - positionLeft) * (positionBottom - positionTop);
@@ -236,22 +236,22 @@ void MeshManager::SaveEditorFieldAs(const string& fileName)
 	auto mesh = GetMeshBy("field");
 
 	//file open
-	string strName = "data/MESH/" + fileName + ".mesh";
-	FILE *pFile;
-	fopen_s(&pFile, strName.c_str(), "wb");
+	string filePath = "data/MESH/" + fileName + ".mesh";
+	FILE *filePointer;
+	fopen_s(&filePointer, filePath.c_str(), "wb");
 
 	//DrawType
 	int drawType = (int)TriangleStrip;
-	fwrite(&drawType, sizeof(int), 1, pFile);
+	fwrite(&drawType, sizeof(int), 1, filePointer);
 
 	//NumVtx
-	fwrite(&mesh->VertexNumber, sizeof(int), 1, pFile);
+	fwrite(&mesh->VertexNumber, sizeof(int), 1, filePointer);
 
 	//NumIdx
-	fwrite(&mesh->IndexNumber, sizeof(int), 1, pFile);
+	fwrite(&mesh->IndexNumber, sizeof(int), 1, filePointer);
 
 	//NumPolygon
-	fwrite(&mesh->PolygonNumber, sizeof(int), 1, pFile);
+	fwrite(&mesh->PolygonNumber, sizeof(int), 1, filePointer);
 
 	//Vtx&Idx
 	//頂点データ
@@ -260,34 +260,34 @@ void MeshManager::SaveEditorFieldAs(const string& fileName)
 
 	//色を白に戻す
 	unsigned long white = Color::White;
-	for (int ++count = 0; ++count < mesh->VertexNumber; ++++count)
+	for (int count = 0; count < mesh->VertexNumber; ++count)
 	{
-		pVtx[++count].Color = white;
+		pVtx[count].Color = white;
 	}
 
 	//保存
-	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, pFile);
+	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, filePointer);
 	mesh->m_pVtxBuffer->Unlock();
 	
 	//インデックス
 	WORD* pIdx;
 	mesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, pFile);
+	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, filePointer);
 	mesh->m_pIdxBuffer->Unlock();
 	
 	//Texture
 	int nTexSize = 0;
-	fwrite(&nTexSize, sizeof(int), 1, pFile);
+	fwrite(&nTexSize, sizeof(int), 1, filePointer);
 
 	//RenderPriority
 	auto rp = RP_3D;
-	fwrite(&rp, sizeof(rp), 1, pFile);
+	fwrite(&rp, sizeof(rp), 1, filePointer);
 
 	//RenderState
 	auto rs = RS_LIGHTON_CULLFACEON_MUL;
-	fwrite(&rs, sizeof(rs), 1, pFile);
+	fwrite(&rs, sizeof(rs), 1, filePointer);
 
-	fclose(pFile);
+	fclose(filePointer);
 #endif
 }
 
@@ -317,14 +317,14 @@ void MeshManager::uninit(void)
 //--------------------------------------------------------------------------------
 MeshManager::MeshInfo MeshManager::loadFromMesh(const string& filePath)
 {
-	string strName = "data/MESH/" + filePath;
+	string filePath = "data/MESH/" + filePath;
 	MeshInfo info;
-	FILE *pFile;
+	FILE *filePointer;
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "rb");
+	fopen_s(&filePointer, filePath.c_str(), "rb");
 
-	if (!pFile) 
+	if (!filePointer) 
 	{
 		assert("failed to open file!!");
 		return info;
@@ -333,16 +333,16 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& filePath)
 	info.CurrentMesh = new Mesh;
 
 	//DrawType
-	fread_s(&info.CurrentMesh->CurrentType, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->CurrentType, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumVtx
-	fread_s(&info.CurrentMesh->VertexNumber, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->VertexNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumIdx
-	fread_s(&info.CurrentMesh->IndexNumber, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->IndexNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumPolygon
-	fread_s(&info.CurrentMesh->PolygonNumber, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&info.CurrentMesh->PolygonNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 #ifdef USING_DIRECTX
 	if (!createBuffer(info.CurrentMesh))
@@ -354,29 +354,29 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& filePath)
 	//頂点データ
 	VERTEX_3D* pVtx;
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fread_s(pVtx, sizeof(VERTEX_3D) * info.CurrentMesh->VertexNumber, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, pFile);
+	fread_s(pVtx, sizeof(VERTEX_3D) * info.CurrentMesh->VertexNumber, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, filePointer);
 	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
 	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fread_s(pIdx, sizeof(WORD) * info.CurrentMesh->IndexNumber, sizeof(WORD), info.CurrentMesh->IndexNumber, pFile);
+	fread_s(pIdx, sizeof(WORD) * info.CurrentMesh->IndexNumber, sizeof(WORD), info.CurrentMesh->IndexNumber, filePointer);
 	info.CurrentMesh->m_pIdxBuffer->Unlock();
 #endif
 
 	//Texture
 	int stringSize;
-	fread_s(&stringSize, sizeof(int), sizeof(int), 1, pFile);
+	fread_s(&stringSize, sizeof(int), sizeof(int), 1, filePointer);
 	info.CurrentRenderInfo.TextureName.resize(stringSize);
-	fread_s(&info.CurrentRenderInfo.TextureName[0], stringSize, sizeof(char), stringSize, pFile);
+	fread_s(&info.CurrentRenderInfo.TextureName[0], stringSize, sizeof(char), stringSize, filePointer);
 
 	//Render Priority
-	fread_s(&info.CurrentRenderInfo.CurrentPriority, sizeof(RenderPriority), sizeof(RenderPriority), 1, pFile);
+	fread_s(&info.CurrentRenderInfo.CurrentPriority, sizeof(RenderPriority), sizeof(RenderPriority), 1, filePointer);
 
 	//Render State
-	fread_s(&info.CurrentRenderInfo.CurrentState, sizeof(RenderState), sizeof(RenderState), 1, pFile);
+	fread_s(&info.CurrentRenderInfo.CurrentState, sizeof(RenderState), sizeof(RenderState), 1, filePointer);
 
-	fclose(pFile);
+	fclose(filePointer);
 
 	return info;
 }
@@ -390,12 +390,12 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& filePath)
 MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 {
 	MeshInfo info;
-	FILE* pFile;
+	FILE* filePointer;
 
 	//file open
-	fopen_s(&pFile, filePath.c_str(), "r");
+	fopen_s(&filePointer, filePath.c_str(), "r");
 
-	if (!pFile)
+	if (!filePointer)
 	{
 		assert("failed to open file!!");
 		return info;
@@ -412,12 +412,12 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 	vector<int>		colorIndexes;
 
 	string buffer;
-	while (Utility::GetToken(pFile, "\n", buffer) >= 0)
+	while (Utility::GetStringUntilToken(filePointer, "\n", buffer) >= 0)
 	{
 		if (buffer.compare("Mesh {") == 0)
 		{
 			//頂点数の読込
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			stringstream ss;
 			int vertexNumber;
 			ss << buffer;
@@ -425,25 +425,25 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 
 			//頂点データの読込
 			vertexes.resize(vertexNumber);
-			for (int ++count = 0; ++count < vertexNumber; ++++count)
+			for (int count = 0; count < vertexNumber; ++count)
 			{
-				Utility::GetToken(pFile, ";", buffer);
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexes[++count].X;
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> vertexes[count].X;
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexes[++count].Y;
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> vertexes[count].Y;
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexes[++count].Z;
-				Utility::GetToken(pFile, "\n", buffer);
+				ss >> vertexes[count].Z;
+				Utility::GetStringUntilToken(filePointer, "\n", buffer);
 			}
 
 			//ポリゴン数の読込
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			ss.clear();
 			ss << buffer;
 			ss >> info.CurrentMesh->PolygonNumber;
@@ -452,30 +452,30 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 			info.CurrentMesh->VertexNumber =
 				info.CurrentMesh->IndexNumber = info.CurrentMesh->PolygonNumber * 3;
 			vertexIndexes.resize(info.CurrentMesh->IndexNumber);
-			for (int ++count = 0; ++count < info.CurrentMesh->PolygonNumber; ++++count)
+			for (int count = 0; count < info.CurrentMesh->PolygonNumber; ++count)
 			{
 				//3;を飛ばす
-				Utility::GetToken(pFile, ";", buffer);
-				Utility::GetToken(pFile, ",", buffer);
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
+				Utility::GetStringUntilToken(filePointer, ",", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexIndexes[++count * 3];
-				Utility::GetToken(pFile, ",", buffer);
+				ss >> vertexIndexes[count * 3];
+				Utility::GetStringUntilToken(filePointer, ",", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexIndexes[++count * 3 + 1];
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> vertexIndexes[count * 3 + 1];
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> vertexIndexes[++count * 3 + 2];
-				Utility::GetToken(pFile, "\n", buffer);
+				ss >> vertexIndexes[count * 3 + 2];
+				Utility::GetStringUntilToken(filePointer, "\n", buffer);
 			}
 		}
 
 		if (buffer.compare(" MeshMaterialList {") == 0)
 		{
 			//Material数
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			stringstream ss;
 			int colorNumber;
 			ss << buffer;
@@ -483,7 +483,7 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 			colors.resize(colorNumber);
 
 			//インデックス数
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			ss.clear();
 			int polygonNumber;
 			ss << buffer;
@@ -491,47 +491,47 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 			colorIndexes.resize(polygonNumber * 3);
 
 			//インデックスの読み込み
-			for (int ++count = 0; ++count < polygonNumber; ++++count)
+			for (int count = 0; count < polygonNumber; ++count)
 			{
-				Utility::GetToken(pFile, ",;", buffer);
+				Utility::GetStringUntilToken(filePointer, ",;", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> colorIndexes[++count * 3];
-				colorIndexes[++count * 3 + 1] = 
-					colorIndexes[++count * 3 + 2] =
-					colorIndexes[++count * 3];
+				ss >> colorIndexes[count * 3];
+				colorIndexes[count * 3 + 1] = 
+					colorIndexes[count * 3 + 2] =
+					colorIndexes[count * 3];
 			}
 
 			//マテリアルの読み込み
-			for (int ++count = 0; ++count < colorNumber; ++++count)
+			for (int count = 0; count < colorNumber; ++count)
 			{
-				while (Utility::GetToken(pFile, "\n", buffer) >= 0)
+				while (Utility::GetStringUntilToken(filePointer, "\n", buffer) >= 0)
 				{
 					if (buffer.compare("  Material {") == 0)
 					{
 						//R
-						Utility::GetToken(pFile, ";", buffer);
+						Utility::GetStringUntilToken(filePointer, ";", buffer);
 						ss.clear();
 						ss << buffer;
-						ss >> colors[++count].R;
+						ss >> colors[count].R;
 
 						//G
-						Utility::GetToken(pFile, ";", buffer);
+						Utility::GetStringUntilToken(filePointer, ";", buffer);
 						ss.clear();
 						ss << buffer;
-						ss >> colors[++count].G;
+						ss >> colors[count].G;
 
 						//B
-						Utility::GetToken(pFile, ";", buffer);
+						Utility::GetStringUntilToken(filePointer, ";", buffer);
 						ss.clear();
 						ss << buffer;
-						ss >> colors[++count].B;
+						ss >> colors[count].B;
 
 						//A
-						Utility::GetToken(pFile, ";", buffer);
+						Utility::GetStringUntilToken(filePointer, ";", buffer);
 						ss.clear();
 						ss << buffer;
-						ss >> colors[++count].A;
+						ss >> colors[count].A;
 
 						break;
 					}
@@ -542,7 +542,7 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 		if (buffer.compare(" MeshNormals {") == 0)
 		{
 			//法線数の読込
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			stringstream ss;
 			int normalNumber;
 			ss << buffer;
@@ -550,25 +550,25 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 
 			//法線データの読込
 			normals.resize(normalNumber);
-			for (int ++count = 0; ++count < normalNumber; ++++count)
+			for (int count = 0; count < normalNumber; ++count)
 			{
-				Utility::GetToken(pFile, ";", buffer);
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normals[++count].X;
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> normals[count].X;
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normals[++count].Y;
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> normals[count].Y;
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normals[++count].Z;
-				Utility::GetToken(pFile, "\n", buffer);
+				ss >> normals[count].Z;
+				Utility::GetStringUntilToken(filePointer, "\n", buffer);
 			}
 
 			//法線インデックス数を読込(頂点数と同じのため)
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			ss.clear();
 			int normalIndexNumber;
 			ss << buffer;
@@ -580,30 +580,30 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 
 			//法線インデックスの読込
 			normalIndexes.resize(normalIndexNumber * 3);
-			for (int ++count = 0; ++count < info.CurrentMesh->PolygonNumber; ++++count)
+			for (int count = 0; count < info.CurrentMesh->PolygonNumber; ++count)
 			{
 				//3;を飛ばす
-				Utility::GetToken(pFile, ";", buffer);
-				Utility::GetToken(pFile, ",", buffer);
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
+				Utility::GetStringUntilToken(filePointer, ",", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normalIndexes[++count * 3];
-				Utility::GetToken(pFile, ",", buffer);
+				ss >> normalIndexes[count * 3];
+				Utility::GetStringUntilToken(filePointer, ",", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normalIndexes[++count * 3 + 1];
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> normalIndexes[count * 3 + 1];
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> normalIndexes[++count * 3 + 2];
-				Utility::GetToken(pFile, "\n", buffer);
+				ss >> normalIndexes[count * 3 + 2];
+				Utility::GetStringUntilToken(filePointer, "\n", buffer);
 			}
 		}
 
 		if (buffer.compare(" MeshTextureCoords {") == 0)
 		{
 			//UV数の読込
-			Utility::GetToken(pFile, ";", buffer);
+			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			stringstream ss;
 			int uvNumber;
 			ss << buffer;
@@ -615,22 +615,22 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 
 			//UVデータの読込
 			uvs.resize(uvNumber);
-			for (int ++count = 0; ++count < uvNumber; ++++count)
+			for (int count = 0; count < uvNumber; ++count)
 			{
-				Utility::GetToken(pFile, ";", buffer);
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> uvs[++count].X;
-				Utility::GetToken(pFile, ";", buffer);
+				ss >> uvs[count].X;
+				Utility::GetStringUntilToken(filePointer, ";", buffer);
 				ss.clear();
 				ss << buffer;
-				ss >> uvs[++count].Y;
-				Utility::GetToken(pFile, "\n", buffer);
+				ss >> uvs[count].Y;
+				Utility::GetStringUntilToken(filePointer, "\n", buffer);
 			}
 		}
 	}
 
-	fclose(pFile);
+	fclose(filePointer);
 	
 #ifdef USING_DIRECTX
 	if (!createBuffer(info.CurrentMesh))
@@ -645,12 +645,12 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 	//頂点バッファをロックして、仮想アドレスを取得する
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
+	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
 	{
-		pVtx[++count].Position = vertexes[vertexIndexes[++count]];
-		pVtx[++count].Normal = normals[normalIndexes[++count]];
-		pVtx[++count].UV = uvs[vertexIndexes[++count]];
-		pVtx[++count].Color = colors[colorIndexes[++count]];
+		pVtx[count].Position = vertexes[vertexIndexes[count]];
+		pVtx[count].Normal = normals[normalIndexes[count]];
+		pVtx[count].UV = uvs[vertexIndexes[count]];
+		pVtx[count].Color = colors[colorIndexes[count]];
 	}
 
 	//仮想アドレス解放
@@ -660,9 +660,9 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 	WORD *pIdx;
 	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
+	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
 	{
-		pIdx[++count] = ++count;
+		pIdx[count] = count;
 	}
 
 	info.CurrentMesh->m_pIdxBuffer->Unlock();
@@ -689,112 +689,110 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 		return info;
 	}
 
-	//仮想アドレスを取得するためのポインタ
+	// 仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
-	//頂点バッファをロックして、仮想アドレスを取得する
+	// 頂点バッファをロックして、仮想アドレスを取得する
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	Vector3 halfSize = Vector3::One * 0.5f;
-	Color color = Color::White;
-	int ++countVertex = 0;
+	auto& halfSize = Vector3::One * 0.5f;
+	unsigned long white = Color::White;
+	int countVertex = 0;
 
-	//正面
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 後ろ
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
-			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
+			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			-halfSize.Z);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, -1.0f);
-
-		++++countVertex;
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Back;
+		++countVertex;
 	}
 
-	//上
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 上
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
 			halfSize.Y,
-			halfSize.Z - (++count / 2) * halfSize.Z * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 1.0f, 0.0f);
-
-		++++countVertex;
+			halfSize.Z - (count / 2) * halfSize.Z * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Up;
+		++countVertex;
 	}
 
-	//左
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 左
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
+		pVtx[countVertex].Position = Vector3(
 			-halfSize.X,
-			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
-			halfSize.Z - (++count % 2) * halfSize.Z * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(-1.0f, 0.0f, 0.0f);
+			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
+			halfSize.Z - (count % 2) * halfSize.Z * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Left;
 
-		++++countVertex;
+		++countVertex;
 	}
 
-	//下
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 下
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			-halfSize.X + (++count % 2) * halfSize.X * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
 			-halfSize.Y,
-			-halfSize.Z + (++count / 2) * halfSize.Z * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(0.0f, -1.0f, 0.0f);
-		++++countVertex;
+			-halfSize.Z + (count / 2) * halfSize.Z * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Down;
+		++countVertex;
 	}
 
-	//右
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 右
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
+		pVtx[countVertex].Position = Vector3(
 			halfSize.X,
-			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
-			-halfSize.Z + (++count % 2) * halfSize.Z * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(1.0f, 0.0f, 0.0f);
-		++++countVertex;
+			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
+			-halfSize.Z + (count % 2) * halfSize.Z * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Right;
+		++countVertex;
 	}
 
-	//後ろ
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 正面
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			halfSize.X - (++count % 2) * halfSize.X * 2.0f,
-			halfSize.Y - (++count / 2) * halfSize.Y * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			halfSize.X - (count % 2) * halfSize.X * 2.0f,
+			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			halfSize.Z);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 1.0f, (++count / 2) * 1.0f);
-		pVtx[++countVertex].Color = color;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, 1.0f);
-		++++countVertex;
+		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Forward;
+		++countVertex;
 	}
 
-	//仮想アドレス解放
+	// 仮想アドレス解放
 	info.CurrentMesh->m_pVtxBuffer->Unlock();
 
-	//インデックス
+	// インデックス
 	WORD *pIdx;
 	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int ++count = 0; ++count < info.CurrentMesh->IndexNumber; ++++count)
+	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
 	{
-		if (++count % 6 < 4)
+		if (count % 6 < 4)
 		{
-			pIdx[++count] = (WORD)((++count / 6) * 4 + (++count % 6) % 4);
+			pIdx[count] = (WORD)((count / 6) * 4 + (count % 6) % 4);
 		}
 		else
 		{// 縮退
-			pIdx[++count] = (WORD)((++count / 6) * 4 + (++count % 2) + 3);
+			pIdx[count] = (WORD)((count / 6) * 4 + (count % 2) + 3);
 		}
 	}
 
@@ -802,92 +800,92 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 
 	// Modelファイルの保存
 	string fileName = "data/MODEL/cube.model";
-	FILE *pFile;
+	FILE *filePointer;
 
 	// file open
-	fopen_s(&pFile, fileName.c_str(), "wb");
+	fopen_s(&filePointer, fileName.c_str(), "wb");
 
 	// Node名
 	string nodeName = "cube";
 	int stringSize = (int)nodeName.size();
-	fwrite(&stringSize, sizeof(int), 1, pFile);
-	fwrite(&nodeName[0], sizeof(char), stringSize, pFile);
+	fwrite(&stringSize, sizeof(int), 1, filePointer);
+	fwrite(&nodeName[0], sizeof(char), stringSize, filePointer);
 
-	//Offset
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
-	fwrite(&Vector3::One, sizeof(Vector3), 1, pFile);
+	// Offset
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filePointer);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filePointer);
+	fwrite(&Vector3::One, sizeof(Vector3), 1, filePointer);
 
-	//Collider
+	// Collider
 	int colliderNumber = 1;
-	fwrite(&colliderNumber, sizeof(int), 1, pFile);
+	fwrite(&colliderNumber, sizeof(int), 1, filePointer);
 
 	int type = 1;
-	fwrite(&type, sizeof(int), 1, pFile);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, pFile);
-	fwrite(&Vector3::One, sizeof(Vector3), 1, pFile);
+	fwrite(&type, sizeof(int), 1, filePointer);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filePointer);
+	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filePointer);
+	fwrite(&Vector3::One, sizeof(Vector3), 1, filePointer);
 
-	//Texture
+	// Texture
 	int textureNumber = 1;
-	fwrite(&textureNumber, sizeof(int), 1, pFile);
+	fwrite(&textureNumber, sizeof(int), 1, filePointer);
 	string textureName = "nomal_cube.jpg";
 	stringSize = textureName.size();
-	fwrite(&stringSize, sizeof(int), 1, pFile);
-	fwrite(&textureName[0], sizeof(char), stringSize, pFile);
+	fwrite(&stringSize, sizeof(int), 1, filePointer);
+	fwrite(&textureName[0], sizeof(char), stringSize, filePointer);
 
-	//Mesh
+	// Mesh
 	int meshNumber = 1;
-	fwrite(&meshNumber, sizeof(int), 1, pFile);
+	fwrite(&meshNumber, sizeof(int), 1, filePointer);
 	string meshName = nodeName + ".mesh";
 	stringSize = (int)meshName.size();
-	fwrite(&stringSize, sizeof(int), 1, pFile);
-	fwrite(&meshName[0], sizeof(char), stringSize, pFile);
+	fwrite(&stringSize, sizeof(int), 1, filePointer);
+	fwrite(&meshName[0], sizeof(char), stringSize, filePointer);
 
-	fclose(pFile);
+	fclose(filePointer);
 
-	//Mesh
+	// Mesh
 	fileName = "data/MESH/cube.mesh";
 
-	//file open
-	fopen_s(&pFile, fileName.c_str(), "wb");
+	// file open
+	fopen_s(&filePointer, fileName.c_str(), "wb");
 
-	//DrawType
+	// DrawType
 	int drawType = (int)info.CurrentMesh->CurrentType;
-	fwrite(&drawType, sizeof(int), 1, pFile);
+	fwrite(&drawType, sizeof(int), 1, filePointer);
 
-	//NumVtx
-	fwrite(&info.CurrentMesh->VertexNumber, sizeof(int), 1, pFile);
+	// NumVtx
+	fwrite(&info.CurrentMesh->VertexNumber, sizeof(int), 1, filePointer);
 
-	//NumIdx
-	fwrite(&info.CurrentMesh->IndexNumber, sizeof(int), 1, pFile);
+	// NumIdx
+	fwrite(&info.CurrentMesh->IndexNumber, sizeof(int), 1, filePointer);
 
-	//NumPolygon
-	fwrite(&info.CurrentMesh->PolygonNumber, sizeof(int), 1, pFile);
+	// NumPolygon
+	fwrite(&info.CurrentMesh->PolygonNumber, sizeof(int), 1, filePointer);
 
-	//Vtx&Idx
+	// Vtx&Idx
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fwrite(pVtx, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, pFile);
+	fwrite(pVtx, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, filePointer);
 	info.CurrentMesh->m_pVtxBuffer->Unlock();
 	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), info.CurrentMesh->IndexNumber, pFile);
+	fwrite(pIdx, sizeof(WORD), info.CurrentMesh->IndexNumber, filePointer);
 	info.CurrentMesh->m_pIdxBuffer->Unlock();
 
-	//Texture
+	// Texture
 	textureName = "nomal_cube.jpg";
 	stringSize = textureName.size();
-	fwrite(&stringSize, sizeof(int), 1, pFile);
-	fwrite(&textureName[0], sizeof(char), stringSize, pFile);
+	fwrite(&stringSize, sizeof(int), 1, filePointer);
+	fwrite(&textureName[0], sizeof(char), stringSize, filePointer);
 
-	//RenderPriority
+	// RenderPriority
 	auto rp = RP_3D;
-	fwrite(&rp, sizeof(rp), 1, pFile);
+	fwrite(&rp, sizeof(rp), 1, filePointer);
 
-	//RenderState
+	// RenderState
 	auto rs = RS_LIGHTON_CULLFACEON_MUL;
-	fwrite(&rs, sizeof(rs), 1, pFile);
+	fwrite(&rs, sizeof(rs), 1, filePointer);
 
-	fclose(pFile);
+	fclose(filePointer);
 #endif
 
 	return info;
@@ -921,98 +919,98 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 		return info;
 	}
 
-	//仮想アドレスを取得するためのポインタ
+	// 仮想アドレスを取得するためのポインタ
 	VERTEX_3D *pVtx;
 
-	//頂点バッファをロックして、仮想アドレスを取得する
+	// 頂点バッファをロックして、仮想アドレスを取得する
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	float length = (float)CCamera::DEFAULT_FAR * 0.5f;
 	unsigned long white = Color::White;
-	int ++countVertex = 0;
+	int countVertex = 0;
 	float uvTweens = 1.0f / 1024.0f;	//隙間を無くすためにUVを1px縮める
 
-	//正面
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 後ろ
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			length - (++count % 2) * length * 2.0f,
-			length - (++count / 2) * length * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			length - (count % 2) * length * 2.0f,
+			length - (count / 2) * length * 2.0f,
 			-length);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, 1.0f);
-		++++countVertex;
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Forward;
+		++countVertex;
 	}
 
-	//上
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 上
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			length - (++count % 2) * length * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			length - (count % 2) * length * 2.0f,
 			length,
-			length - (++count / 2) * length * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(0.0f, -1.0f, 0.0f);
-		++++countVertex;
+			length - (count / 2) * length * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Down;
+		++countVertex;
 	}
 
-	//左
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 左
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
+		pVtx[countVertex].Position = Vector3(
 			-length,
-			length - (++count / 2) * length * 2.0f,
-			-length + (++count % 2) * length * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.5f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(1.0f, 0.0f, 0.0f);
-		++++countVertex;
+			length - (count / 2) * length * 2.0f,
+			-length + (count % 2) * length * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.5f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Right;
+		++countVertex;
 	}
 
-	//下
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 下
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			length - (++count % 2) * length * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			length - (count % 2) * length * 2.0f,
 			-length,
-			-length + (++count / 2) * length * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + 2.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 1.0f, 0.0f);
-		++++countVertex;
+			-length + (count / 2) * length * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + 2.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Up;
+		++countVertex;
 	}
 
-	//右
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 右
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
+		pVtx[countVertex].Position = Vector3(
 			length,
-			length - (++count / 2) * length * 2.0f,
-			length - (++count % 2) * length * 2.0f);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(-1.0f, 0.0f, 0.0f);
-		++++countVertex;
+			length - (count / 2) * length * 2.0f,
+			length - (count % 2) * length * 2.0f);
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Left;
+		++countVertex;
 	}
 
-	//後ろ
-	for (int ++count = 0; ++count < 4; ++++count)
+	// 正面
+	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[++countVertex].Position = Vector3(
-			-length + (++count % 2) * length * 2.0f,
-			length - (++count / 2) * length * 2.0f,
+		pVtx[countVertex].Position = Vector3(
+			-length + (count % 2) * length * 2.0f,
+			length - (count / 2) * length * 2.0f,
 			length);
-		pVtx[++countVertex].UV = Vector2((++count % 2) * 0.25f + 0.75f + uvTweens - (++count % 2) * uvTweens * 2.0f,
-			(++count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (++count / 2) * uvTweens * 2.0f);
-		pVtx[++countVertex].Color = white;
-		pVtx[++countVertex].Normal = Vector3(0.0f, 0.0f, -1.0f);
-		++++countVertex;
+		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.75f + uvTweens - (count % 2) * uvTweens * 2.0f,
+			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
+		pVtx[countVertex].Color = white;
+		pVtx[countVertex].Normal = Vector3::Back;
+		++countVertex;
 	}
 
 	//仮想アドレス解放
@@ -1022,15 +1020,15 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 	WORD *pIdx;
 	info.CurrentMesh->m_pIdxBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int ++count = 0; ++count < 6 * 4 + 5 * 2; ++++count)
+	for (int count = 0; count < 6 * 4 + 5 * 2; ++count)
 	{
-		if (++count % 6 < 4)
+		if (count % 6 < 4)
 		{
-			pIdx[++count] = (++count / 6) * 4 + (++count % 6) % 4;
+			pIdx[count] = (count / 6) * 4 + (count % 6) % 4;
 		}
 		else
 		{//縮退
-			pIdx[++count] = (++count / 6) * 4 + (++count % 2) + 3;
+			pIdx[count] = (count / 6) * 4 + (count % 2) + 3;
 		}
 	}
 

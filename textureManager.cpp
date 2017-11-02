@@ -4,7 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-1-23
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -12,41 +11,26 @@
 #include "manager.h"
 #include "textureManager.h"
 
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
-#endif
+//--------------------------------------------------------------------------------
+//  静的メンバー変数宣言
+//--------------------------------------------------------------------------------
+TextureManager* TextureManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//	
+//  Public
+//
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  全てのテクスチャを破棄する
-//--------------------------------------------------------------------------------
-void CTextureManager::UnloadAll(void)
-{
-	for (auto itr = m_umTexture.begin(); itr != m_umTexture.end();)
-	{
-		SAFE_RELEASE(itr->second.pTexture);
-		itr = m_umTexture.erase(itr);
-	}
-}
-
 //--------------------------------------------------------------------------------
 //  テクスチャの読み込み
 //--------------------------------------------------------------------------------
-void CTextureManager::UseTexture(const string& strName)
+void TextureManager::Use(const string& textureName)
 {
-	//何もないの場合処理終了
-	if (strName.empty()) { return; }
+	if (textureName.empty()) return;
 
 	//すでに読み込んだら処理終了
-	auto itr = m_umTexture.find(strName);
-	if (itr != m_umTexture.end())
+	auto itr = textures.find(textureName);
+	if (itr != textures.end())
 	{
 		++itr->second.userNumber;
 		return;
@@ -54,32 +38,53 @@ void CTextureManager::UseTexture(const string& strName)
 
 	//テクスチャの読み込み
 #ifdef USING_DIRECTX
-	TEXTURE texture;
-	texture.userNumber = 1;
+	TextureInfo info;
+	info.userNumber = 1;
 	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	string strPath = "data/TEXTURE/" + strName;
-	HRESULT hr = D3DXCreateTextureFromFile(pDevice, strPath.c_str(), &texture.pTexture);
+	string filePath = "data/TEXTURE/" + textureName;
+	HRESULT hr = D3DXCreateTextureFromFile(pDevice, filePath.c_str(), &info.texturePointer);
 	if (FAILED(hr))
 	{
-		string str = strPath + "が見つからない！！！";
+		string str = filePath + "が見つからない！！！";
 		MessageBox(NULL, str.c_str(), "エラー", MB_OK | MB_ICONWARNING);
-		texture.pTexture = nullptr;
+		info.texturePointer = nullptr;
 	}
-	m_umTexture.emplace(strName, texture);
+	textures.emplace(textureName, info);
 #endif
 }
 
 //--------------------------------------------------------------------------------
 //  テクスチャの破棄
 //--------------------------------------------------------------------------------
-void CTextureManager::DisuseTexture(const string& strName)
+void TextureManager::Disuse(const string& textureName)
 {
-	if (strName.empty()) { return; }
-	auto itr = m_umTexture.find(strName);
+	if (textureName.empty()) return;
+	auto itr = textures.find(textureName);
+	if (itr == textures.end()) return;
 	--itr->second.userNumber;
 	if (itr->second.userNumber == 0)
-	{//誰も使ってないので破棄する
-		SAFE_RELEASE(itr->second.pTexture);
-		m_umTexture.erase(itr);
+	{// 誰も使ってないので破棄する
+#ifdef USING_DIRECTX
+		SAFE_RELEASE(itr->second.texturePointer);
+#endif
+		textures.erase(itr);
+	}
+}
+//--------------------------------------------------------------------------------
+//	
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  全てのテクスチャを破棄する
+//--------------------------------------------------------------------------------
+void TextureManager::uninit(void)
+{
+	for (auto itr = textures.begin(); itr != textures.end();)
+	{
+#ifdef USING_DIRECTX
+		SAFE_RELEASE(itr->second.texturePointer);
+#endif
+		itr = textures.erase(itr);
 	}
 }

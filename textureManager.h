@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CTextureManager
+class TextureManager
 {
 #ifdef _DEBUG
 	friend class DebugObserver;
@@ -27,19 +27,24 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CTextureManager() { m_umTexture.clear(); }
-	~CTextureManager() {}
+	static auto	Create(void)
+	{
+		if (instance) return instance;
+		instance = new TextureManager;
+		instance->init();
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
 
-	void				Release(void) { UnloadAll(); delete this; }
-	void				UnloadAll(void);
-	void				UseTexture(const string& strName);
-	void				DisuseTexture(const string& strName);
+	void		Use(const string& textureName);
+	void		Disuse(const string& textureName);
 
 #ifdef USING_DIRECTX
-	LPDIRECT3DTEXTURE9	GetTexture(const string& strName) 
+	LPDIRECT3DTEXTURE9	GetTexture(const string& textureName)
 	{
-		if (strName.empty()) { return nullptr; }
-		return m_umTexture.at(strName).pTexture; 
+		if (textureName.empty()) return nullptr;
+		return textures.at(textureName).texturePointer;
 	}
 #endif
 
@@ -47,16 +52,25 @@ private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct TEXTURE
+	struct TextureInfo
 	{
 		unsigned short		userNumber;	//今使ってるオブジェクト数
 #ifdef USING_DIRECTX
-		LPDIRECT3DTEXTURE9	pTexture;	//テクスチャ
+		LPDIRECT3DTEXTURE9	texturePointer;	//テクスチャ
 #endif
 	};
 
 	//--------------------------------------------------------------------------------
+	//  関数宣言
+	//--------------------------------------------------------------------------------
+	TextureManager() { textures.clear(); }
+	~TextureManager() {}
+	void init(void) {};
+	void uninit(void);
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, TEXTURE> m_umTexture;
+	unordered_map<string, TextureInfo>	textures;
+	static TextureManager*				instance;
 };
