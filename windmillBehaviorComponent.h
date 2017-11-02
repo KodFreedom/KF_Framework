@@ -24,7 +24,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CWindmillBehaviorComponent(CGameObject* const pGameObj)
+	CWindmillBehaviorComponent(GameObject* const pGameObj)
 		: CBehaviorComponent(pGameObj)
 		, RotSpeed(0.01f)
 		, m_pFan(nullptr)
@@ -36,18 +36,18 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
-	void	OnCollision(CCollisionInfo& collisionInfo) override {}
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
+	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
 private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CGameObject*	findFan(CGameObject* pParent);
+	GameObject*	findFan(GameObject* pParent);
 
 	//--------------------------------------------------------------------------------
 	//  íËêîíËã`
 	//--------------------------------------------------------------------------------
 	float			RotSpeed;
-	CGameObject*	m_pFan;
+	GameObject*	m_pFan;
 };
