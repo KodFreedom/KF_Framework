@@ -1,47 +1,39 @@
 //--------------------------------------------------------------------------------
-//	AABBColliderコンポネント
-//　AABBColliderComponent.h
+//	sphereColliderコンポネント
+//　sphereCollider.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-28
+//	Date   : 2017-06-04
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "boxColliderComponent.h"
+#include "collider.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  AABBColliderポネントクラス
+//  sphereColliderポネントクラス
 //--------------------------------------------------------------------------------
-class CAABBColliderComponent : public CBoxColliderComponent
+class SphereCollider : public Collider
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CAABBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const Vector3& vHalfSize)
-		: CBoxColliderComponent(pGameObj, CS::COL_AABB, mode, vHalfSize) {}
-	~CAABBColliderComponent() {}
+	SphereCollider(GameObject* const owner, const ColliderMode& mode, const float& radius)
+		: Collider(owner, Sphere, mode)
+		, radius(radius) {}
+	~SphereCollider() {}
 
-	void	Update(void) override
-	{
-		CBoxColliderComponent::Update();
-
-		//回転を初期化する
-		m_mtxWorldNext.Elements[0][0] = 1.0f;
-		m_mtxWorldNext.Elements[0][1] = 0.0f;
-		m_mtxWorldNext.Elements[0][2] = 0.0f;
-		m_mtxWorldNext.Elements[1][0] = 0.0f;
-		m_mtxWorldNext.Elements[1][1] = 1.0f;
-		m_mtxWorldNext.Elements[1][2] = 0.0f;
-		m_mtxWorldNext.Elements[2][0] = 0.0f;
-		m_mtxWorldNext.Elements[2][1] = 0.0f;
-		m_mtxWorldNext.Elements[2][2] = 1.0f;
-	}
+	//Get関数
+	float GetRadius(void) const { return radius; }
 
 private:
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	float radius;
 };

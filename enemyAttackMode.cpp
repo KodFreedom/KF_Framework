@@ -12,7 +12,7 @@
 #include "enemyBehaviorComponent.h"
 #include "actorBehaviorComponent.h"
 #include "gameObjectActor.h"
-#include "sphereColliderComponent.h"
+#include "sphereCollider.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -44,7 +44,7 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 	{
 		if ((*itr)->GetTag()._Equal("detector"))
 		{
-			auto pSphereCollider = dynamic_cast<CSphereColliderComponent*>(*itr);
+			auto pSphereCollider = dynamic_cast<SphereCollider*>(*itr);
 			fDisMax = pSphereCollider->GetRadius();
 			break;
 		}

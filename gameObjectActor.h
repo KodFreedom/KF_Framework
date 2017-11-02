@@ -19,14 +19,14 @@ class CAnimatorComponent;
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
-class CGameObjectActor : public CGameObject
+class GameObjectActor : public GameObject
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
-	CGameObjectActor(const GOMLAYER& layer = L_DEFAULT);
-	~CGameObjectActor() {}
+	GameObjectActor(const GOMLAYER& layer = L_DEFAULT);
+	~GameObjectActor() {}
 
 	bool Init(void) override;
 	void LateUpdate(void) override;
@@ -37,8 +37,8 @@ public:
 	//Setä÷êî
 
 	//ê∂ê¨ä÷êî
-	static CGameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-	static CGameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
+	static GameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
+	static GameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
 
 private:
 	//--------------------------------------------------------------------------------

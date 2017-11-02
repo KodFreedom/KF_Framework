@@ -18,9 +18,9 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-CNullRigidbodyComponent	CGameObject::s_nullRigidbody;
-CNullMeshComponent		CGameObject::s_nullMesh;
-CNullRenderComponent	CGameObject::s_nullRender;
+CNullRigidbodyComponent	GameObject::s_nullRigidbody;
+CNullMeshComponent		GameObject::s_nullMesh;
+CNullRenderComponent	GameObject::s_nullRender;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -33,7 +33,7 @@ CNullRenderComponent	CGameObject::s_nullRender;
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOMLAYER& layer)
+GameObject::GameObject(const GOMLAYER& layer)
 	: m_layer(layer)
 	, m_bActive(true)
 	, m_bAlive(true)
@@ -42,7 +42,7 @@ CGameObject::CGameObject(const GOMLAYER& layer)
 	, m_pRender(&s_nullRender)
 {
 	m_strName.clear();
-	m_strTag.clear();
+	tag.clear();
 	m_listpBehavior.clear();
 	m_listpCollider.clear();
 	m_pTransform = new CTransformComponent(this);
@@ -52,7 +52,7 @@ CGameObject::CGameObject(const GOMLAYER& layer)
 //--------------------------------------------------------------------------------
 //  SetActive
 //--------------------------------------------------------------------------------
-void CGameObject::SetActive(const bool& bActive)
+void GameObject::SetActive(const bool& bActive)
 {
 	m_bActive = bActive;
 
@@ -67,7 +67,7 @@ void CGameObject::SetActive(const bool& bActive)
 //--------------------------------------------------------------------------------
 //  SetAlive
 //--------------------------------------------------------------------------------
-void CGameObject::SetAlive(const bool& bAlive)
+void GameObject::SetAlive(const bool& bAlive)
 {
 	m_bAlive = bAlive;
 
@@ -87,7 +87,7 @@ void CGameObject::SetAlive(const bool& bAlive)
 //--------------------------------------------------------------------------------
 //  パラメーター交換処理
 //--------------------------------------------------------------------------------
-void CGameObject::swapParam(void)
+void GameObject::swapParam(void)
 {
 	m_pTransform->SwapParam();
 }

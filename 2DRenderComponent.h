@@ -25,7 +25,7 @@
 //class C2DRenderComponent : public CRenderComponent
 //{
 //public:
-//	C2DRenderComponent(C2DMeshComponent* const mesh, CGameObject* const pGameObj)
+//	C2DRenderComponent(C2DMeshComponent* const mesh, GameObject* const pGameObj)
 //		: CRenderComponent(pGameObj), c_mesh(mesh) {}
 //	~C2DRenderComponent() {}
 //

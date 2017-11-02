@@ -13,52 +13,51 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CCollision;
+class Collision;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CKFPhysicsSystem
+class PhysicsSystem
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const Vector3 sc_vGravity;	//重力
+	static const Vector3 Gravity;
 
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	CKFPhysicsSystem() { m_listCollision.clear(); }
-	~CKFPhysicsSystem() {}
-
 	static auto	Create(void)
 	{
-		auto pPs = new CKFPhysicsSystem;
-		return pPs;
+		if (instance) return instance;
+		instance = new PhysicsSystem;
+		return instance;
 	}
-	void		Release(void)
-	{
-		uninit();
-		delete this;
-	}
-	void		Update(void);
-	void		Clear(void);
-	void		RegisterCollision(CCollision* pCollision);
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
+	void Update(void);
+	void Clear(void);
+	void Register(Collision* collision);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	void		uninit(void);
-	void		resolve(CCollision& collision);
-	void		resolveVelocity(CCollision& collision);
-	void		resolveInterpenetration(CCollision& collision);
-	float		calculateSeparatingVelocity(CCollision& collision);
-	void		calculateCollisionBasis(CCollision& collision);
+	PhysicsSystem() { collisions.clear(); }
+	~PhysicsSystem() {}
+	void	uninit(void);
+	void	resolve(Collision& collision);
+	void	resolveVelocity(Collision& collision);
+	void	resolveInterpenetration(Collision& collision);
+	float	calculateSeparatingVelocity(Collision& collision);
+	void	calculateCollisionBasis(Collision& collision);
 
 	//--------------------------------------------------------------------------------
 	//  変数宣言
 	//--------------------------------------------------------------------------------
-	list<CCollision*> m_listCollision;
+	list<Collision*>		collisions;
+	static PhysicsSystem*	instance;
 };

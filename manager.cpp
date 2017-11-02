@@ -26,8 +26,8 @@
 #include "fog.h"
 
 //物理演算処理
-#include "KF_CollisionSystem.h"
-#include "KF_PhysicsSystem.h"
+#include "collisionSystem.h"
+#include "physicsSystem.h"
 
 #ifdef _DEBUG
 #include "modeEditor.h"
@@ -186,15 +186,13 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	TextureManager::Create();
 	LightManager::Create();
 	MaterialManager::Create();
-
-	//コリジョンシステム
-	m_pCollisionSystem = CKFCollisionSystem::Create();
+	CollisionSystem::Create();
 
 	//物理演算システム
-	m_pPhysicsSystem = CKFPhysicsSystem::Create();
+	m_pPhysicsSystem = PhysicsSystem::Create();
 
 	//ゲームオブジェクトマネージャの生成
-	m_pGameObjectManager = CGameObjectManager::Create();
+	m_pGameObjectManager = GameObjectManager::Create();
 
 	//UIシステムの生成
 	m_pUISystem = new CUISystem;
@@ -240,9 +238,7 @@ void Manager::uninit(void)
 	//物理演算システムの破棄
 	SAFE_RELEASE(m_pPhysicsSystem);
 
-	//コリジョンシステムの破棄
-	SAFE_RELEASE(m_pCollisionSystem);
-
+	CollisionSystem::Release();
 	MaterialManager::Release();
 	LightManager::Release();
 	TextureManager::Release();

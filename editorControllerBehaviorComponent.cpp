@@ -31,7 +31,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(CGameObject* const pGameObj)
+CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(GameObject* const pGameObj)
 	: CBehaviorComponent(pGameObj)
 	, m_pFieldEditor(nullptr)
 	, m_pModelEditor(nullptr)
@@ -68,7 +68,7 @@ void CEditorControllerBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::SetFieldEditor(CGameObject* pFieldEditor)
+void CEditorControllerBehaviorComponent::SetFieldEditor(GameObject* pFieldEditor)
 {
 	auto listBehavior = pFieldEditor->GetBehaviorComponent();
 	if (listBehavior.empty()) { return; }

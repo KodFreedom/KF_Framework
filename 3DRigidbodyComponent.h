@@ -14,8 +14,8 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class CKFPhysicsSystem;
-class CColliderComponent;
+class PhysicsSystem;
+class Collider;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -25,10 +25,10 @@ class CColliderComponent;
 //--------------------------------------------------------------------------------
 class C3DRigidbodyComponent : public CRigidbodyComponent
 {
-	friend CKFPhysicsSystem;
+	friend PhysicsSystem;
 
 public:
-	C3DRigidbodyComponent(CGameObject* const pGameObj);
+	C3DRigidbodyComponent(GameObject* const pGameObj);
 	~C3DRigidbodyComponent() {}
 
 	bool	Init(void) override { return true; }
@@ -45,7 +45,7 @@ public:
 	void	SetMass(const float& fMass);
 	void	SetVelocity(const Vector3& vVelocity) { m_vVelocity = vVelocity; }
 	void	AddForce(const Vector3& vForce) { m_vForceAccum += vForce; }
-	//void	SetInertiaTensor(CColliderComponent* pCollider);
+	//void	SetInertiaTensor(Collider* pCollider);
 
 private:
 	//--------------------------------------------------------------------------------

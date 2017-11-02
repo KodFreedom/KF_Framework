@@ -24,7 +24,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CModelEditorBehaviorComponent(CGameObject* const pGameObj);
+	CModelEditorBehaviorComponent(GameObject* const pGameObj);
 	~CModelEditorBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -32,8 +32,8 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
-	void	OnCollision(CCollisionInfo& collisionInfo) override {}
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
+	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
 	//Getä÷êî
 	bool	GetActive(void) const { return m_bActive; }
@@ -100,7 +100,7 @@ private:
 	string			m_aStrName[MT_MAX];
 	INFO			m_aObjInfoDemo[MT_MAX];
 	list<INFO>		m_alistCreated[MT_MAX];
-	MODEL_TYPE		m_modelType;
+	MODEL_TYPE		modelType;
 	bool			m_bActive;
 	bool			m_bShowCreatedList;
 };

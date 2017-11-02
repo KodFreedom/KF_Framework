@@ -23,46 +23,46 @@
 //--------------------------------------------------------------------------------
 void CStageSpawner::LoadStage(const string& strStageName)
 {
-	CGameObjectSpawner::CreateField(strStageName);
+	GameObjectSpawner::CreateField(strStageName);
 
 	//フィールドの保存
 	string strName = "data/STAGE/" + strStageName + "Stage" + ".stage";
-	FILE *pFile;
+	FILE *filePointer;
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "rb");
+	fopen_s(&filePointer, strName.c_str(), "rb");
 
-	if (!pFile)
+	if (!filePointer)
 	{
 		MessageBox(NULL, "CStageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
 		return;
 	}
 
 	int nNumModelType = 0;
-	fread(&nNumModelType, sizeof(int), 1, pFile);
+	fread(&nNumModelType, sizeof(int), 1, filePointer);
 
 	for (int count = 0; count < nNumModelType; ++count)
 	{
 		//ファイル名読込
 		int nSize = 0;
-		fread(&nSize, sizeof(int), 1, pFile);
+		fread(&nSize, sizeof(int), 1, filePointer);
 		string strModelName;
 		strModelName.resize(nSize);
-		fread(&strModelName[0], sizeof(char), nSize, pFile);
+		fread(&strModelName[0], sizeof(char), nSize, filePointer);
 		strModelName += ".model";
 
 		//モデル数の読込
 		int nNum = 0;
-		fread(&nNum, sizeof(int), 1, pFile);
+		fread(&nNum, sizeof(int), 1, filePointer);
 
 		//位置回転の読込
 		for (int countModel = 0; countModel < nNum; ++countModel)
 		{
 			Vector3 Position;
-			fread(&Position, sizeof(Vector3), 1, pFile);
+			fread(&Position, sizeof(Vector3), 1, filePointer);
 			Quaternion qRot;
-			fread(&qRot, sizeof(Quaternion), 1, pFile);
-			auto pObj = CGameObjectSpawner::CreateModel(strModelName, Position, qRot, Vector3(1.0f));
+			fread(&qRot, sizeof(Quaternion), 1, filePointer);
+			auto pObj = GameObjectSpawner::CreateModel(strModelName, Position, qRot, Vector3(1.0f));
 			if (strModelName == "Medieval_Windmill.model")
 			{
 				auto pBehavior = new CWindmillBehaviorComponent(pObj);
@@ -72,5 +72,5 @@ void CStageSpawner::LoadStage(const string& strStageName)
 		}
 	}
 
-	fclose(pFile);
+	fclose(filePointer);
 }

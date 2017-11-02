@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  定数定義
 //--------------------------------------------------------------------------------
-#define GOM CGameObjectManager	//GameObjectManagerの略称
+#define GOM GameObjectManager	//GameObjectManagerの略称
 
 //--------------------------------------------------------------------------------
 //  列挙型定義
@@ -28,23 +28,23 @@ enum GOMLAYER
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObjectManager
+class GameObjectManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObjectManager();
-	~CGameObjectManager() {}
+	GameObjectManager();
+	~GameObjectManager() {}
 
 	static auto Create(void)
 	{
-		auto pGOM = new CGameObjectManager;
+		auto pGOM = new GameObjectManager;
 		return pGOM;
 	}
 	void		Release(void)
@@ -57,7 +57,7 @@ public:
 	void		Update(void);
 	void		LateUpdate(void);
 
-	void		Register(CGameObject* pGameObj, const GOMLAYER& layer = L_DEFAULT);
+	void		Register(GameObject* pGameObj, const GOMLAYER& layer = L_DEFAULT);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -68,5 +68,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<CGameObject*>	m_aListGameObject[L_MAX];
+	list<GameObject*>	m_aListGameObject[L_MAX];
 };

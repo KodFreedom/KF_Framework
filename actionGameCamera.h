@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -33,7 +33,7 @@ public:
 	void LateUpdate(void) override;
 
 	//Set関数
-	void SetTarget(CGameObject* pTarget) override { m_pTarget = pTarget; }
+	void SetTarget(GameObject* pTarget) override { m_pTarget = pTarget; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -69,14 +69,14 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Vector3			m_PositionAtNext;		//注視点の位置
-	Vector3			m_PositionEyeNext;		//カメラの位置
+	Vector3			PositionAtNext;		//注視点の位置
+	Vector3			PositionEyeNext;		//カメラの位置
 	Vector3			m_vVecLookNext;		//カメラの前方向情報
 	Vector3			m_vVecUpNext;		//カメラの上方向情報
 	Vector3			m_vVecRightNext;	//カメラの右方向情報
-	float			m_fDistanceNext;	//AtとEyeの距離
+	float			DistanceNext;	//AtとEyeの距離
 
-	CGameObject*	m_pTarget;			//カメラが見てるターゲット
+	GameObject*	m_pTarget;			//カメラが見てるターゲット
 	Vector3			m_vDefaultLook;		//デフォルト前方向
 	Vector3			m_vRotSpeed;		//X軸回転速度
 	float			ZoomSpeed;		//ズーム速度	

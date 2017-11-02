@@ -9,8 +9,8 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "KF_CollisionSystem.h"
-#include "KF_CollisionUtility.h"
+#include "collisionSystem.h"
+#include "collisionDetector.h"
 #include "actorBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "gameObject.h"
@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CActorBehaviorComponent::CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator)
+CActorBehaviorComponent::CActorBehaviorComponent(GameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator)
 	: CBehaviorComponent(pGameObj)
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)
@@ -219,9 +219,9 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 //--------------------------------------------------------------------------------
 Vector3 CActorBehaviorComponent::checkGroundStatus(void)
 {
-	CRaycastHitInfo rayHit;
+	RayHitInfo rayHit;
 	auto Position = m_pGameObj->GetTransformComponent()->GetPos();
-	auto pCollisionSystem = Main::GetManager()->GetCollisionSystem();
+	auto pCollisionSystem = CollisionSystem::Instance();
 	if (pCollisionSystem->RayCast(Position, CKFMath::sc_vDown, GroundCheckDistance, rayHit, m_pGameObj))
 	{
 		//To do : Jump Damage
@@ -231,7 +231,7 @@ Vector3 CActorBehaviorComponent::checkGroundStatus(void)
 		}
 		m_fMaxPosY = Position.Y;
 		m_bIsGrounded = true;
-		return rayHit.m_Normal;
+		return rayHit.Normal;
 	}
 
 	m_fMaxPosY = m_fMaxPosY < Position.Y ? Position.Y : m_fMaxPosY;

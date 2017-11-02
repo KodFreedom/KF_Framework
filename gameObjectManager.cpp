@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectManager::CGameObjectManager()
+GameObjectManager::GameObjectManager()
 {
 	for (auto& list : m_aListGameObject){ list.clear(); }
 }
@@ -30,7 +30,7 @@ CGameObjectManager::CGameObjectManager()
 //--------------------------------------------------------------------------------
 //  リリース処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::ReleaseAll(void)
+void GameObjectManager::ReleaseAll(void)
 {
 	for (auto& list : m_aListGameObject)
 	{
@@ -45,7 +45,7 @@ void CGameObjectManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::Update(void)
+void GameObjectManager::Update(void)
 {
 	for (auto& list : m_aListGameObject)
 	{
@@ -72,7 +72,7 @@ void CGameObjectManager::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void CGameObjectManager::LateUpdate(void)
+void GameObjectManager::LateUpdate(void)
 {
 	for (auto& list : m_aListGameObject)
 	{
@@ -86,7 +86,7 @@ void CGameObjectManager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトの確保
 //--------------------------------------------------------------------------------
-void CGameObjectManager::Register(CGameObject* pGameObj, const GOMLAYER& layer)
+void GameObjectManager::Register(GameObject* pGameObj, const GOMLAYER& layer)
 {
 	m_aListGameObject[layer].push_back(pGameObj);
 }
@@ -99,7 +99,7 @@ void CGameObjectManager::Register(CGameObject* pGameObj, const GOMLAYER& layer)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::uninit(void)
+void GameObjectManager::uninit(void)
 {
 	ReleaseAll();
 }

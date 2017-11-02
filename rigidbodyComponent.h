@@ -21,7 +21,7 @@
 //--------------------------------------------------------------------------------
 //  リジッドボディコンポネントクラス
 //--------------------------------------------------------------------------------
-class CRigidbodyComponent : public CComponent
+class CRigidbodyComponent : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRigidbodyComponent(CGameObject* const pGameObj, const RB_TYPE& type) : CComponent(pGameObj), m_type(type) {}
+	CRigidbodyComponent(GameObject* const pGameObj, const RB_TYPE& type) : Component(pGameObj), type(type) {}
 	~CRigidbodyComponent() {}
 
 	virtual bool	Init(void) override = 0;
@@ -45,18 +45,18 @@ public:
 	virtual void	LateUpdate(void) = 0;
 
 	//Get関数
-	const RB_TYPE	GetType(void) const { return m_type; }
+	const RB_TYPE	GetType(void) const { return type; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRigidbodyComponent() : CComponent(), m_type(RB_NULL) {}
+	CRigidbodyComponent() : Component(), type(RB_NULL) {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	RB_TYPE m_type;
+	RB_TYPE type;
 };
 
 //--------------------------------------------------------------------------------

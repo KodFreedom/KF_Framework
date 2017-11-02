@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CTransformComponent : public CComponent
+class CTransformComponent : public Component
 {
 #ifdef _DEBUG
 	friend class DebugObserver;
@@ -24,7 +24,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CTransformComponent(CGameObject* const pGameObj);
+	CTransformComponent(GameObject* const pGameObj);
 	~CTransformComponent() {}
 	
 	bool					Init(void) override { return true; }
@@ -39,8 +39,8 @@ public:
 	void					RegisterParent(CTransformComponent* pParent, const Vector3& vOffsetPos = Vector3(0.0f), const Vector3& vOffsetRot = Vector3(0.0f));
 
 	//Get関数
-	const auto&				GetPos(void) const { return m_Position; }
-	const auto&				GetPosNext(void) const { return m_PositionNext; }
+	const auto&				GetPos(void) const { return Position; }
+	const auto&				GetPosNext(void) const { return PositionNext; }
 	const Quaternion		GetRot(void) const;
 	const Quaternion		GetRotNext(void) const;
 	const Vector3			GetEulerRot(void) const;
@@ -55,17 +55,17 @@ public:
 	const Matrix44			GetMatrixRot(void) const;
 	const Matrix44			GetMatrixRotNext(void) const;
 	const Matrix44&			GetMatrix(void) const { return m_mtxThis; }
-	const Matrix44			GetMatrixWorldNext(void) const;
+	const Matrix44			GetNextWorldMatrix(void) const;
 	const auto				GetParent(void) const { return m_pParent; }
 	auto&					GetChildren(void) { return m_listChildren; }
 
 	//Set関数
-	void					SetPos(const Vector3& Position) { m_Position = Position; }
-	void					SetPosNext(const Vector3& PositionNext) { m_PositionNext = PositionNext; }
+	void					SetPos(const Vector3& Position) { Position = Position; }
+	void					SetPosNext(const Vector3& PositionNext) { PositionNext = PositionNext; }
 	void					SetRot(const Quaternion& qRot);
 	void					SetRotNext(const Quaternion& qRotNext);
 	void					SetRotNext(const Vector3& vRot);
-	void					MovePosNext(const Vector3& vMovement) { m_PositionNext += vMovement; }
+	void					MovePosNext(const Vector3& vMovement) { PositionNext += vMovement; }
 	void					SetScale(const Vector3& vScale) { m_vScale = vScale; }
 	void					SetScaleNext(const Vector3& vScaleNext) { m_vScaleNext = vScaleNext; }
 	void					SetForward(const Vector3& vForward) { m_vForward = vForward; }
@@ -105,8 +105,8 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	//パラメーター
-	Vector3		m_Position;			//オブジェクト位置
-	Vector3		m_PositionNext;		//次のオブジェクト位置
+	Vector3		Position;			//オブジェクト位置
+	Vector3		PositionNext;		//次のオブジェクト位置
 	Vector3		m_vScale;		//オブジェクトサイズ
 	Vector3		m_vScaleNext;	//次のオブジェクトサイズ
 	Vector3		m_vForward;		//オブジェクトの前方向

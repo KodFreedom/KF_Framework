@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -65,7 +65,7 @@ public:
 	void MoveCamera(const Vector3& vMovement);
 	void LookAtHere(const Vector3& Position);
 	void SetCamera(const Vector3& PositionAt, const Vector3& PositionEye, const Vector3& vUp, const Vector3& vRight);
-	virtual void SetTarget(CGameObject* pTarget) {}
+	virtual void SetTarget(GameObject* pTarget) {}
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -81,13 +81,13 @@ protected:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	Vector3			m_vMovement;
-	Vector3			m_PositionAt;			//注視点の位置
-	Vector3			m_PositionEye;			//カメラの位置
+	Vector3			PositionAt;			//注視点の位置
+	Vector3			PositionEye;			//カメラの位置
 	Vector3			m_vVecLook;			//カメラの前方向情報
 	Vector3			m_vVecUp;			//カメラの上方向情報
 	Vector3			m_vVecRight;		//カメラの右方向情報
 	D3DXMATRIX		m_mtxViewInverse;	//Viewの逆行列
-	float			m_fDistance;		//AtとEyeの距離
+	float			Distance;		//AtとEyeの距離
 	float			m_fFovY;			//画角
 	float			m_fFar;				//最大距離
 };

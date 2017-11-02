@@ -13,31 +13,31 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 class CTransformComponent;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
-class CGameObjectSpawner
+class GameObjectSpawner
 {
 public:
-	static CGameObject* CreateSkyBox(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static CGameObject* CreateField(const string& strStageName);
-	static CGameObject* CreateCube(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static CGameObject* CreateXModel(const string& strPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static CGameObject* CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
-	static CGameObject* CreateGoal(const Vector3& Position);
+	static GameObject* CreateSkyBox(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
+	static GameObject* CreateField(const string& strStageName);
+	static GameObject* CreateCube(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
+	static GameObject* CreateXModel(const string& strPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
+	static GameObject* CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
+	static GameObject* CreateGoal(const Vector3& Position);
 
 #ifdef _DEBUG
-	static CGameObject* CreateEditorController(CGameObject* pFieldEditor);
-	static CGameObject* CreateEditorField(void);
+	static GameObject* CreateEditorController(GameObject* pFieldEditor);
+	static GameObject* CreateEditorField(void);
 #endif // _DEBUG	
 
 private:
-	CGameObjectSpawner() {}
-	~CGameObjectSpawner() {}
+	GameObjectSpawner() {}
+	~GameObjectSpawner() {}
 
-	static CGameObject* createChildNode(CTransformComponent* pParent, FILE* pFile);
-	static CGameObject* createChildMesh(CTransformComponent* pParent, const string& strMeshName);
+	static GameObject* createChildNode(CTransformComponent* pParent, FILE* filePointer);
+	static GameObject* createChildMesh(CTransformComponent* pParent, const string& strMeshName);
 };

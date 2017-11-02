@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	fieldColliderコンポネント
-//　fieldColliderComponent.h
+//　fieldCollider.h
 //	Author : Xu Wenjie
 //	Date   : 2017-06-05
 //--------------------------------------------------------------------------------
@@ -9,69 +9,83 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "colliderComponent.h"
+#include "collider.h"
+
+//--------------------------------------------------------------------------------
+//  構造体定義
+//--------------------------------------------------------------------------------
+//struct INFO
+//{
+//	bool	bInTheField;
+//	float	fHeight;
+//	Vector3	SurfaceNormal;
+//};
+
+struct FieldCollisionInfo
+{
+	float   Penetration;
+	Vector3 SurfaceNormal;
+};
+
+struct VertexesInRange
+{
+	int				VertexesNumberX;
+	int				VertexesNumberZ;
+	vector<Vector3> vertexes;
+};
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  fieldColliderポネントクラス
-//--------------------------------------------------------------------------------
-class CFieldColliderComponent : public CColliderComponent
+class FieldCollider : public Collider
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	struct INFO
-	{
-		bool	bInTheField;
-		float	fHeight;
-		Vector3	vFaceNormal;
-	};
-
-	struct FINFO
-	{
-		bool	bInFieldRange;
-		float   fPenetration;
-		Vector3 vFaceNormal;
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CFieldColliderComponent(CGameObject* const pGameObj, const string& strFieldName)
-		: CColliderComponent(pGameObj, CS::COL_FIELD, CS::STATIC)
-		, m_nNumBlockX(0)
-		, m_nNumBlockZ(0)
-		, m_vBlockSize(Vector2(0.0f))
+	FieldCollider(GameObject* const owner, const string& fieldName)
+		: Collider(owner, Field, Static)
+		, blockXNumber(0)
+		, blockZNumber(0)
+		, blockSize(Vector2::Zero)
 	{
-		m_vectorVtx.clear();
-		load(strFieldName);
+		vertexes.clear();
+		load(fieldName);
 	}
+	~FieldCollider() {}
 
-	~CFieldColliderComponent() {}
-
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override;
-
-	//Get関数
-	//INFO	GetPointInfo(const Vector3& Position);
-	FINFO	GetProjectionInfo(const Vector3& Position);
-	bool	GetVtxByRange(const Vector3& vBegin, const Vector3& vEnd, int& nNumVtxXOut, int& nNumVtxZOut, vector<Vector3>& vecOut);
+	bool				Init(void) override { return true; }
+	void				Uninit(void) override
+	{
+		vertexes.clear();
+		Collider::Uninit();
+	}
+	FieldCollisionInfo*	DetectCollision(const Vector3& point) const;
+	VertexesInRange*	GetVertexesInRange(const Vector3& begin, const Vector3& end);
 
 private:
 	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct PolygonInfo
+	{
+		Vector3 LeftUp;
+		Vector3 RightDown;
+		Vector3 Side;
+		Vector3 SurfaceNormal;
+	};
+
+	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void	load(const string& strFieldName);
-	bool	getPointInfo(const Vector3& Position, Vector3& vPLeftUp, Vector3& vPRightDown, Vector3& vPSide, Vector3& vFaceNormal);
+	void			load(const string& fieldName);
+	PolygonInfo*	getPolygonBy(const Vector3& point) const;
 	
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	int				m_nNumBlockX;
-	int				m_nNumBlockZ;
-	Vector2			m_vBlockSize;
-	vector<Vector3>	m_vectorVtx;
+	int				blockXNumber;
+	int				blockZNumber;
+	Vector2			blockSize;
+	vector<Vector3>	vertexes;
 };

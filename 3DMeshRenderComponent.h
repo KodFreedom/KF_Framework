@@ -25,7 +25,7 @@ class C3DMeshComponent;
 class C3DMeshRenderComponent : public CRenderComponent
 {
 public:
-	C3DMeshRenderComponent(CGameObject* const pGameObj)
+	C3DMeshRenderComponent(GameObject* const pGameObj)
 		: CRenderComponent(pGameObj){}
 	~C3DMeshRenderComponent() {}
 

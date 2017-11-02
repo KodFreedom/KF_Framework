@@ -15,7 +15,7 @@
 #include "renderComponent.h"
 #include "rigidbodyComponent.h"
 #include "meshComponent.h"
-#include "colliderComponent.h"
+#include "collider.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -27,16 +27,16 @@
 //--------------------------------------------------------------------------------
 //  ゲームオブジェクトクラス
 //--------------------------------------------------------------------------------
-class CGameObject
+class GameObject
 {
-	friend class CGameObjectManager;
+	friend class GameObjectManager;
 
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(const GOMLAYER& layer = L_DEFAULT);
-	~CGameObject() {}
+	GameObject(const GOMLAYER& layer = L_DEFAULT);
+	~GameObject() {}
 	
 	virtual bool	Init(void) 
 	{ 
@@ -84,7 +84,7 @@ public:
 		while (pParent->GetParent()) { pParent = pParent->GetParent(); }
 		return pParent->GetGameObject()->GetName();
 	}
-	const auto&	GetTag(void) const { return m_strTag; }
+	const auto&	GetTag(void) const { return tag; }
 	bool		IsActive(void) const { return m_bActive; }
 
 	//Set関数
@@ -118,17 +118,17 @@ public:
 	void		SetActive(const bool& bActive);
 	void		SetAlive(const bool& bAlive);
 	void		SetName(const string& strName) { m_strName = strName; }
-	void		SetTag(const string& strTag) { m_strTag = strTag; }
+	void		SetTag(const string& strTag) { tag = strTag; }
 
 	void		AddBehavior(CBehaviorComponent* pBehavior)
 	{
 		m_listpBehavior.push_back(pBehavior);
 	}
-	void		AddCollider(CColliderComponent* pCollider)
+	void		AddCollider(Collider* pCollider)
 	{
 		m_listpCollider.push_back(pCollider);
 	}
-	void		DeleteCollider(CColliderComponent* pCollider)
+	void		DeleteCollider(Collider* pCollider)
 	{
 		m_listpCollider.remove(pCollider);
 	}
@@ -162,7 +162,7 @@ protected:
 	CTransformComponent*		m_pTransform;	//位置関係パーツ
 	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
 	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
-	list<CColliderComponent*>	m_listpCollider;//コリジョンパーツ
+	list<Collider*>	m_listpCollider;//コリジョンパーツ
 	MeshComponent*				m_mesh;		//メッシュパーツ
 	CRenderComponent*			m_pRender;		//描画処理パーツ
 
@@ -170,7 +170,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(CGameObject&) {}
+	GameObject(GameObject&) {}
 	
 	//--------------------------------------------------------------------------------
 	//  変数定義
@@ -178,7 +178,7 @@ private:
 	bool				m_bActive;		//活動フラグ
 	bool				m_bAlive;		//生きるフラグ
 	string				m_strName;		//オブジェクトの名前
-	string				m_strTag;		//オブジェクトのタグ
+	string				tag;		//オブジェクトのタグ
 	GOMLAYER			m_layer;		//レイヤ
 
 	//--------------------------------------------------------------------------------

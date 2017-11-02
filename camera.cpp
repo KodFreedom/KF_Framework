@@ -39,12 +39,12 @@
 //--------------------------------------------------------------------------------
 CCamera::CCamera()
 	: m_vMovement(Vector3(0.0f))
-	, m_PositionAt(Vector3(0.0f))
-	, m_PositionEye(Vector3(0.0f, 5.0f, -5.0f))
+	, PositionAt(Vector3(0.0f))
+	, PositionEye(Vector3(0.0f, 5.0f, -5.0f))
 	, m_vVecLook(Vector3(0.0f))
 	, m_vVecUp(Vector3(0.0f, 1.0f, 0.0f))
 	, m_vVecRight(Vector3(1.0f, 0.0f, 0.0f))
-	, m_fDistance(0.0f)
+	, Distance(0.0f)
 	, m_fFovY((float)DEFAULT_FOV)
 	, m_fFar((float)DEFAULT_FAR)
 {
@@ -62,9 +62,9 @@ CCamera::~CCamera()
 //--------------------------------------------------------------------------------
 void CCamera::Init(void)
 {
-	m_vVecLook = m_PositionAt - m_PositionEye;
+	m_vVecLook = PositionAt - PositionEye;
 	CKFMath::VecNormalize(m_vVecLook);
-	m_fDistance = CKFMath::VecMagnitude(m_PositionEye - m_PositionAt);
+	Distance = CKFMath::VecMagnitude(PositionEye - PositionAt);
 	CCamera::NormalizeCamera();
 }
 
@@ -136,8 +136,8 @@ void CCamera::Update(void)
 //
 //	//ズーム
 //	ZoomSpeed = CKFMath::LerpFloat(ZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
-//	m_fDistance += ZoomSpeed;
-//	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
+//	Distance += ZoomSpeed;
+//	Distance = Distance < sc_fDistanceMin ? sc_fDistanceMin : Distance > sc_fDistanceMax ? sc_fDistanceMax : Distance;
 }
 
 //--------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ void CCamera::Update(void)
 void CCamera::LateUpdate(void)
 {
 	NormalizeCamera();
-	m_PositionEye = m_PositionAt - m_vVecLook * m_fDistance;
+	PositionEye = PositionAt - m_vVecLook * Distance;
 }
 
 //--------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ void CCamera::Set(void)
 
 	//View行列
 	D3DXMATRIX mtxView;
-	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)m_PositionEye,& (D3DXVECTOR3)m_PositionAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
+	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)PositionEye,& (D3DXVECTOR3)PositionAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
 	pDevice->SetTransform(D3DTS_VIEW,&mtxView);
 
 	//プロジェクション行列
@@ -202,8 +202,8 @@ D3DXMATRIX CCamera::GetMtxViewInverse(void)
 //--------------------------------------------------------------------------------
 void CCamera::MoveCamera(const Vector3& vMovement)
 {
-	m_PositionEye += vMovement;
-	m_PositionAt += vMovement;
+	PositionEye += vMovement;
+	PositionAt += vMovement;
 }
 
 //--------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ void CCamera::MoveCamera(const Vector3& vMovement)
 //--------------------------------------------------------------------------------
 void CCamera::LookAtHere(const Vector3& Position)
 {
-	m_vMovement = Position - m_PositionAt;
+	m_vMovement = Position - PositionAt;
 }
 
 //--------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ Vector3 CCamera::GetVecRight(void)
 //--------------------------------------------------------------------------------
 Vector3 CCamera::GetPosAt(void)
 {
-	return m_PositionAt;
+	return PositionAt;
 }
 
 //--------------------------------------------------------------------------------
@@ -251,7 +251,7 @@ Vector3 CCamera::GetPosAt(void)
 //--------------------------------------------------------------------------------
 Vector3 CCamera::GetPosEye(void)
 {
-	return m_PositionEye;
+	return PositionEye;
 }
 
 //--------------------------------------------------------------------------------
@@ -259,12 +259,12 @@ Vector3 CCamera::GetPosEye(void)
 //--------------------------------------------------------------------------------
 void CCamera::SetCamera(const Vector3& PositionAt, const Vector3& PositionEye, const Vector3& vUp, const Vector3& vRight)
 {
-	m_PositionAt = PositionAt;
-	m_PositionEye = PositionEye;
+	PositionAt = PositionAt;
+	PositionEye = PositionEye;
 	m_vVecUp = vUp;
 	m_vVecRight = vRight;
-	m_vVecLook = m_PositionAt - m_PositionEye;
-	m_fDistance = CKFMath::VecMagnitude((m_PositionEye - m_PositionAt));
+	m_vVecLook = PositionAt - PositionEye;
+	Distance = CKFMath::VecMagnitude((PositionEye - PositionAt));
 	NormalizeCamera();
 }
 

@@ -14,7 +14,7 @@
 #include "modeDemo.h"
 #include "camera.h"
 #include "gameObjectActor.h"
-#include "colliderComponent.h"
+#include "collider.h"
 
 #ifdef _DEBUG
 #include "debugManager.h"
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CPlayerBehaviorComponent::CPlayerBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor)
+CPlayerBehaviorComponent::CPlayerBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor)
 	: CBehaviorComponent(pGameObj)
 	, m_actor(actor)
 {}
@@ -84,7 +84,7 @@ void CPlayerBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
+void CPlayerBehaviorComponent::OnTrigger(Collider& colliderThis, Collider& collider)
 {
 	if (collider.GetGameObject()->GetTag()._Equal("Enemy"))
 	{//武器チェック
@@ -111,7 +111,7 @@ void CPlayerBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColl
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CPlayerBehaviorComponent::OnCollision(CCollisionInfo& collisionInfo)
+void CPlayerBehaviorComponent::OnCollision(CollisionInfo& collisionInfo)
 {
 
 }

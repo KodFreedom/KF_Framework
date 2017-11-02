@@ -58,10 +58,10 @@ void CModeEditor::Init(void)
 	Main::GetManager()->GetInputManager()->SetEditorMode(true);
 
 	//ゲームオブジェクトの初期化
-	auto pEditorField = CGameObjectSpawner::CreateEditorField();
-	CGameObjectSpawner::CreateEditorController(pEditorField);
+	auto pEditorField = GameObjectSpawner::CreateEditorField();
+	GameObjectSpawner::CreateEditorController(pEditorField);
 
-	//CGameObject3D::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+	//GameObject3D::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 }
 
 //--------------------------------------------------------------------------------

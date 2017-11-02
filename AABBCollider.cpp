@@ -1,37 +1,37 @@
 //--------------------------------------------------------------------------------
-//	AIモード
-//　AIMode.h
+//	AABBColliderコンポネント
+//　AABBCollider.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
-#pragma once
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "AABBCollider.h"
+#include "gameObject.h"
+#include "transformComponent.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
+//
+//	public
+//
 //--------------------------------------------------------------------------------
-class CEnemyBehaviorComponent;
-
 //--------------------------------------------------------------------------------
-//  クラス
+//	更新処理
 //--------------------------------------------------------------------------------
-class CAIMode
+void AABBCollider::Update(void)
 {
-public:
-	enum AI_MODE
-	{
-		ANormal,
-		AM_ATTACK
-	};
+	BoxCollider::Update();
 
-	CAIMode(const AI_MODE& mode) : mode(mode) {}
-	virtual ~CAIMode() {}
-	virtual void Update(CEnemyBehaviorComponent& enemy) = 0;
-	AI_MODE	GetMode(void) const { return mode; }
-
-private:
-	AI_MODE mode;
-};
+	//回転を初期化する
+	auto& scale = owner->GetTransformComponent()->GetScaleNext();
+	nextWorldMatrix.Elements[0][0] = scale.X;
+	nextWorldMatrix.Elements[0][1] = 0.0f;
+	nextWorldMatrix.Elements[0][2] = 0.0f;
+	nextWorldMatrix.Elements[1][0] = 0.0f;
+	nextWorldMatrix.Elements[1][1] = scale.Y;
+	nextWorldMatrix.Elements[1][2] = 0.0f;
+	nextWorldMatrix.Elements[2][0] = 0.0f;
+	nextWorldMatrix.Elements[2][1] = 0.0f;
+	nextWorldMatrix.Elements[2][2] = scale.Z;
+}

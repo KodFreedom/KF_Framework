@@ -4,80 +4,81 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-06-04
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "colliderComponent.h"
+#include "collider.h"
 #include "manager.h"
 #include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  クラス
+//
+//  public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CColliderComponent::CColliderComponent(CGameObject* const pGameObj, const CS::COL_TYPE& type, const CS::COL_MODE& mode)
-	: CComponent(pGameObj)
-	, m_type(type)
-	, m_mode(mode)
-	, m_bTrigger(false)
+Collider::Collider(GameObject* const owner, const ColliderType& type, const ColliderMode& mode)
+	: Component(owner)
+	, type(type)
+	, mode(mode)
+	, isTrigger(false)
+	, nextWorldMatrix(Matrix44::Identity)
+	, offset(Matrix44::Identity)
 {
-	CKFMath::MtxIdentity(m_mtxWorldNext);
-	CKFMath::MtxIdentity(m_mtxOffset);
-	Main::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
+	CollisionSystem::Instance()->Register(this);
 }
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CColliderComponent::~CColliderComponent() {}
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CColliderComponent::Uninit(void)
+void Collider::Uninit(void)
 {
-	Main::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
+	CollisionSystem::Instance()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CColliderComponent::Update(void)
+void Collider::Update(void)
 {
-	m_mtxWorldNext = m_mtxOffset;
-	m_mtxWorldNext *= m_pGameObj->GetTransformComponent()->GetMatrixWorldNext();
+	nextWorldMatrix = offset * owner->GetTransformComponent()->GetNextWorldMatrix();
 }
 
 //--------------------------------------------------------------------------------
-//  Offset設定
+//	関数名：SetOffset
+//  関数説明：相対位置の設定
+//	引数：	position：位置
+//			rotation：回転
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CColliderComponent::SetOffset(const Vector3& Position, const Vector3& vRot)
+void Collider::SetOffset(const Vector3& position, const Vector3& rotation)
 {
-	CKFMath::MtxRotationYawPitchRoll(m_mtxOffset, vRot);
-	m_mtxOffset.Elements[3][0] = Position.Y;
-	m_mtxOffset.Elements[3][1] = Position.Y;
-	m_mtxOffset.Elements[3][2] = Position.Z;
+	offset = Matrix44::RotationYawPitchRoll(rotation);
+	offset.Elements[3][0] = position.X;
+	offset.Elements[3][1] = position.Y;
+	offset.Elements[3][2] = position.Z;
 }
 
 //--------------------------------------------------------------------------------
-//  Offset設定
+//	関数名：Sleep
+//  関数説明：一時的に当たり判定処理から抜ける
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CColliderComponent::Sleep(void)
+void Collider::Sleep(void)
 {
-	Main::GetManager()->GetCollisionSystem()->Deregister(m_mode, m_type, this);
+	CollisionSystem::Instance()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------
-//  Offset設定
+//	関数名：Awake
+//  関数説明：当たり判定処理に登録する
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CColliderComponent::Awake(void)
+void Collider::Awake(void)
 {
-	Main::GetManager()->GetCollisionSystem()->Register(m_mode, m_type, this);
+	CollisionSystem::Instance()->Register(this);
 }

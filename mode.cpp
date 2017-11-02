@@ -12,7 +12,7 @@
 #include "camera.h"
 #include "manager.h"
 #include "gameObjectManager.h"
-#include "KF_PhysicsSystem.h"
+#include "physicsSystem.h"
 #include "UISystem.h"
 #include "renderManager.h"
 

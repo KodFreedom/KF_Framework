@@ -44,12 +44,12 @@ const float CActionGameCamera::sc_fPosAtHeight = 1.0f;
 CActionGameCamera::CActionGameCamera() : CCamera()
 	, m_vRotSpeed(Vector3(0.0f))
 	, ZoomSpeed(0.0f)
-	, m_PositionAtNext(Vector3(0.0f))
-	, m_PositionEyeNext(Vector3(0.0f))
+	, PositionAtNext(Vector3(0.0f))
+	, PositionEyeNext(Vector3(0.0f))
 	, m_vVecLookNext(Vector3(0.0f))
 	, m_vVecUpNext(Vector3(0.0f))
 	, m_vVecRightNext(Vector3(0.0f))
-	, m_fDistanceNext(0.0f)
+	, DistanceNext(0.0f)
 	, m_vDefaultLook(Vector3(0.0f))
 	, m_pTarget(nullptr)
 {
@@ -63,12 +63,12 @@ void CActionGameCamera::Init(void)
 	CCamera::Init();
 
 	//ダブルバッファ初期値設定
-	m_PositionAtNext = m_PositionAt;
-	m_PositionEyeNext = m_PositionEye;
+	PositionAtNext = PositionAt;
+	PositionEyeNext = PositionEye;
 	m_vVecLookNext = m_vVecLook;
 	m_vVecRightNext = m_vVecRight;
 	m_vVecUpNext = m_vVecUp;
-	m_fDistanceNext = m_fDistance;
+	DistanceNext = Distance;
 
 	//デフォルト角度設定
 	m_vDefaultLook = Vector3(0.0f, -tanf(sc_fRotXDefault), 1.0f);
@@ -129,12 +129,12 @@ void CActionGameCamera::Update(void)
 
 	//ズーム
 	/*ZoomSpeed = CKFMath::LerpFloat(ZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
-	m_fDistance += ZoomSpeed;
-	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;*/
+	Distance += ZoomSpeed;
+	Distance = Distance < sc_fDistanceMin ? sc_fDistanceMin : Distance > sc_fDistanceMax ? sc_fDistanceMax : Distance;*/
 
 	//if (!Main::GetManager()->GetColliderManager()->CheckActionCameraCollision(this))
 	//{
-	//	m_fDistance = CKFMath::LerpFloat(m_fDistance, sc_fDistanceDef, sc_fZoomLerpTime);
+	//	Distance = CKFMath::LerpFloat(Distance, sc_fDistanceDef, sc_fZoomLerpTime);
 	//}
 
 	
@@ -148,12 +148,12 @@ void CActionGameCamera::LateUpdate(void)
 	//カメラ移動
 	if (m_pTarget)
 	{
-		m_PositionAtNext = CKFMath::LerpVec3(m_PositionAtNext, m_pTarget->GetTransformComponent()->GetPos() + Vector3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
+		PositionAtNext = CKFMath::LerpVec3(PositionAtNext, m_pTarget->GetTransformComponent()->GetPos() + Vector3(0.0f, 1.0f, 0.0f) * sc_fPosAtHeight, sc_fMoveLerpTime);
 	}
 
 	//カメラノーマライズ
 	NormalizeCamera();
-	m_PositionEyeNext = m_PositionAtNext - m_vVecLookNext * m_fDistanceNext;
+	PositionEyeNext = PositionAtNext - m_vVecLookNext * DistanceNext;
 }
 
 //--------------------------------------------------------------------------------
@@ -235,8 +235,8 @@ void CActionGameCamera::LimitRot(void)
 //--------------------------------------------------------------------------------
 void CActionGameCamera::SwitchParam(void)
 {
-	m_PositionAt = m_PositionAtNext;
-	m_PositionEye = m_PositionEyeNext;
+	PositionAt = PositionAtNext;
+	PositionEye = PositionEyeNext;
 	m_vVecLook = m_vVecLookNext;
 	m_vVecUp = m_vVecUpNext;
 	m_vVecRight = m_vVecRightNext;
@@ -248,27 +248,27 @@ void CActionGameCamera::SwitchParam(void)
 void CActionGameCamera::CheckCollision(void)
 {
 	//CColliderManager::HIT_INFO hitInfo;
-	//m_PositionEyeNext = m_PositionAtNext - m_vVecLookNext * m_fDistanceNext;
+	//PositionEyeNext = PositionAtNext - m_vVecLookNext * DistanceNext;
 
-	//if (Main::GetManager()->GetColliderManager()->SphereCast(m_PositionEyeNext, sc_fCollisionRadius, hitInfo))
+	//if (Main::GetManager()->GetColliderManager()->SphereCast(PositionEyeNext, sc_fCollisionRadius, hitInfo))
 	//{//衝突したら
 	//	//新しいカメラの算出-
 	//	Vector3 vNewPosEye = hitInfo.Position + hitInfo.Normal * sc_fCollisionRadius;
 	//	
 	//	//新しい前方向の算出
-	//	m_vVecLookNext = m_PositionAtNext - vNewPosEye;
+	//	m_vVecLookNext = PositionAtNext - vNewPosEye;
 
 	//	//新しい距離の算出
-	//	m_fDistanceNext = CKFMath::VecMagnitude(m_vVecLookNext);
+	//	DistanceNext = CKFMath::VecMagnitude(m_vVecLookNext);
 
 	//	//if (m_vVecLookNext.Y != 0.0f)
 	//	//{
-	//	//	fNewDis = fabsf((vNewPos.Y - m_PositionAtNext.Y) / m_vVecLookNext.Y);
+	//	//	fNewDis = fabsf((vNewPos.Y - PositionAtNext.Y) / m_vVecLookNext.Y);
 	//	//}
-	//	//m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, fNewDis, sc_fZoomLerpTime);
+	//	//DistanceNext = CKFMath::LerpFloat(DistanceNext, fNewDis, sc_fZoomLerpTime);
 	//}
 	//else
 	//{
-	//	m_fDistanceNext = CKFMath::LerpFloat(m_fDistanceNext, sc_fDistanceDef, sc_fZoomLerpTime);
+	//	DistanceNext = CKFMath::LerpFloat(DistanceNext, sc_fDistanceDef, sc_fZoomLerpTime);
 	//}
 }

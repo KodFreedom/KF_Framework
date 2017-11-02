@@ -12,7 +12,7 @@
 #include "manager.h"
 #include "mode.h"
 #include "gameObjectActor.h"
-#include "colliderComponent.h"
+#include "collider.h"
 #include "enemyNormalMode.h"
 #include "enemyAttackMode.h"
 
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEnemyBehaviorComponent::CEnemyBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor)
+CEnemyBehaviorComponent::CEnemyBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor)
 	: CBehaviorComponent(pGameObj)
 	, m_actor(actor)
 	, m_pTarget(nullptr)
@@ -83,7 +83,7 @@ void CEnemyBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider)
+void CEnemyBehaviorComponent::OnTrigger(Collider& colliderThis, Collider& collider)
 {
 	if (collider.GetGameObject()->GetTag()._Equal("Player"))
 	{//プレイヤー
@@ -110,7 +110,7 @@ void CEnemyBehaviorComponent::OnTrigger(CColliderComponent& colliderThis, CColli
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnCollision(CCollisionInfo& collisionInfo)
+void CEnemyBehaviorComponent::OnCollision(CollisionInfo& collisionInfo)
 {
 
 }

@@ -13,8 +13,8 @@
 #include "gameObjectSpawner.h"
 #include "transformComponent.h"
 #include "motionInfo.h"
-#include "KF_CollisionSystem.h"
-#include "sphereColliderComponent.h"
+#include "collisionSystem.h"
+#include "sphereCollider.h"
 #include "motionStatus.h"
 
 //--------------------------------------------------------------------------------
@@ -24,8 +24,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CAnimatorComponent::CAnimatorComponent(CGameObject* const pGameObj, const string& strPath)
-	: CComponent(pGameObj)
+CAnimatorComponent::CAnimatorComponent(GameObject* const pGameObj, const string& strPath)
+	: Component(pGameObj)
 	, m_motionNow(MP_NEUTAL)
 	, m_motionNext(MP_NEUTAL)
 	, m_pMotionStatus(nullptr)
@@ -229,21 +229,21 @@ MOTION_PATTERN CAnimatorComponent::getMotionNext(const MOTION_PATTERN& motion)
 //--------------------------------------------------------------------------------
 void CAnimatorComponent::analyzeFile(const string& strPath)
 {
-	FILE* pFile;
+	FILE* filePointer;
 	char strRead[256];
 
 	//file open
-	fopen_s(&pFile, strPath.c_str(), "r");
+	fopen_s(&filePointer, strPath.c_str(), "r");
 
-	if (!pFile) { return; }
+	if (!filePointer) { return; }
 
 	//パーツ数の読み込み
-	char compare1[] = "NUM_MODEL = ";
+	char compare1[] = "NUmodeL = ";
 	bool bFind = false;
 
 	while (bFind != true)
 	{
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 
 		for (unsigned int count = 0; count < strlen(compare1);)
 		{
@@ -273,7 +273,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 		while (bFind != true)
 		{
-			fgets(strRead, sizeof(strRead), pFile);
+			fgets(strRead, sizeof(strRead), filePointer);
 
 			for (unsigned int count = 0; count < strlen(compare2);)
 			{
@@ -291,14 +291,14 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		}
 		string strFileName, strFileType;
 		Utility::AnalyzeFilePath(strPath, strFileName, strFileType);
-		CGameObject* pBone = nullptr;
+		GameObject* pBone = nullptr;
 		if (strFileType._Equal("x"))
 		{
-			pBone = CGameObjectSpawner::CreateXModel(strPath, Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+			pBone = GameObjectSpawner::CreateXModel(strPath, Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 		}
 		else if (strFileType._Equal("model"))
 		{
-			pBone = CGameObjectSpawner::CreateModel(strPath, Vector3(0.0f), Quaternion(0.0f), Vector3(1.0f));
+			pBone = GameObjectSpawner::CreateModel(strPath, Vector3(0.0f), Quaternion(0.0f), Vector3(1.0f));
 		}
 		
 		m_vecBorns[countPart] = pBone;
@@ -310,7 +310,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 	while (bFind != true)
 	{
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 
 		for (unsigned int count = 0; count < strlen(compare0);)
 		{
@@ -322,7 +322,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	}
 
 	//Move
-	fgets(strRead, sizeof(strRead), pFile);
+	fgets(strRead, sizeof(strRead), filePointer);
 	char strMove[8] = {};
 	for (unsigned int count = strlen("\tMOVE = "), countMove = 0; strRead[count] != '\t'; ++count, countMove++)
 	{
@@ -331,7 +331,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	//m_fMoveSpeed = (float)atof(strMove);
 
 	//Jump
-	fgets(strRead, sizeof(strRead), pFile);
+	fgets(strRead, sizeof(strRead), filePointer);
 	char strJump[8] = {};
 	for (unsigned int count = strlen("\tJUMP = "), countJump = 0; strRead[count] != '\t'; ++count, countJump++)
 	{
@@ -340,7 +340,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 	//m_fJumpSpeed = (float)atof(strJump);
 
 	//Radius
-	fgets(strRead, sizeof(strRead), pFile);
+	fgets(strRead, sizeof(strRead), filePointer);
 	char strRadius[8] = {};
 	for (unsigned int count = strlen("\tRADIUS = "), countRadius = 0; strRead[count] != '\t'; ++count, countRadius++)
 	{
@@ -356,7 +356,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 		while (bFind != true)
 		{
-			fgets(strRead, sizeof(strRead), pFile);
+			fgets(strRead, sizeof(strRead), filePointer);
 
 			for (unsigned int count = 0; count < strlen(compare2);)
 			{
@@ -368,10 +368,10 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		}
 
 		//Index
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 
 		//Parent
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 		char strParent[4] = {};
 		for (unsigned int count = strlen("\t\tPARENT = "), countParent = 0; strRead[count] != '\t'; ++count, countParent++)
 		{
@@ -381,7 +381,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		int nParent = atoi(strParent);
 
 		//Pos
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 		char strPos[3][16] = {};
 		int countAxis = 0;
 		int countPos = 0;
@@ -401,7 +401,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		auto vOffsetPos = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 		//Rot
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 		char strRot[3][16] = {};
 		countAxis = 0;
 		int countRot = 0;
@@ -420,7 +420,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 		auto vOffsetRot = Vector3((float)atof(strRot[0]), (float)atof(strRot[1]), (float)atof(strRot[2]));
 		
-		CGameObject* pParent = nullptr;
+		GameObject* pParent = nullptr;
 		if (nParent < 0) { pParent = m_pGameObj; }
 		else { pParent = m_vecBorns[nParent]; }
 		m_vecBorns[countPart]->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
@@ -428,7 +428,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 	//motionの読み込み
 	int countMotion = 0;
-	fgets(strRead, sizeof(strRead), pFile);
+	fgets(strRead, sizeof(strRead), filePointer);
 	while (1)
 	{
 		char compare2[] = "MOTIONSET";
@@ -436,7 +436,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 		while (bFind != true)
 		{
-			if (fgets(strRead, sizeof(strRead), pFile) == NULL) { break; }
+			if (fgets(strRead, sizeof(strRead), filePointer) == NULL) { break; }
 
 			for (unsigned int count = 0; count < strlen(compare2);)
 			{
@@ -452,7 +452,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		m_apMotionData[(MOTION_PATTERN)countMotion] = new CMotionInfo;
 
 		//LOOP
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 		char strLoop[2] = {};
 		for (unsigned int count = strlen("\tLOOP = "), countLoop = 0; strRead[count] != '\t'; ++count, countLoop++)
 		{
@@ -463,7 +463,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			= atoi(strLoop) != 0 ? true : false;
 
 		//キーフレーム数取得
-		fgets(strRead, sizeof(strRead), pFile);
+		fgets(strRead, sizeof(strRead), filePointer);
 		char strKey[2] = {};
 		for (unsigned int count = strlen("\tNUM_KEY = "), countKey = 0; strRead[count] != '\t'; ++count, countKey++)
 		{
@@ -481,7 +481,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 			while (bFind != true)
 			{
-				fgets(strRead, sizeof(strRead), pFile);
+				fgets(strRead, sizeof(strRead), filePointer);
 
 				for (unsigned int count = 0; count < strlen(compare3);)
 				{
@@ -495,7 +495,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 			CMotionKey motionKey;
 
 			//Frame
-			fgets(strRead, sizeof(strRead), pFile);
+			fgets(strRead, sizeof(strRead), filePointer);
 			char strFrame[4] = {};
 			for (unsigned int count = strlen("\t\tFRAME = "), countFrame = 0; strRead[count] != '\n'; ++count, countFrame++)
 			{
@@ -513,7 +513,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 
 				while (bFind != true)
 				{
-					fgets(strRead, sizeof(strRead), pFile);
+					fgets(strRead, sizeof(strRead), filePointer);
 
 					for (unsigned int count = 0; count < strlen(compare4);)
 					{
@@ -543,7 +543,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 				auto Position = Vector3((float)atof(strPos[0]), (float)atof(strPos[1]), (float)atof(strPos[2]));
 
 				//Rot
-				fgets(strRead, sizeof(strRead), pFile);
+				fgets(strRead, sizeof(strRead), filePointer);
 				char strRot[3][16] = {};
 				countAxis = 0;
 				int countRot = 0;
@@ -573,5 +573,5 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		countMotion++;
 	}
 
-	fclose(pFile);
+	fclose(filePointer);
 }

@@ -21,9 +21,9 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CTransformComponent::CTransformComponent(CGameObject* const pGameObj) : CComponent(pGameObj)
-	, m_Position(CKFMath::sc_vZero)
-	, m_PositionNext(CKFMath::sc_vZero)
+CTransformComponent::CTransformComponent(GameObject* const pGameObj) : Component(pGameObj)
+	, Position(CKFMath::sc_vZero)
+	, PositionNext(CKFMath::sc_vZero)
 	, m_vScale(CKFMath::sc_vZero)
 	, m_vScaleNext(CKFMath::sc_vZero)
 	, m_vForward(CKFMath::sc_vForward)
@@ -83,7 +83,7 @@ void  CTransformComponent::UpdateMatrix(const Matrix44& mtxParent)
 //--------------------------------------------------------------------------------
 void CTransformComponent::SwapParam(void)
 {
-	m_Position = m_PositionNext;
+	Position = PositionNext;
 	m_vScale = m_vScaleNext;
 	m_vForward = m_vForwardNext;
 	m_vRight = m_vRightNext;
@@ -208,20 +208,20 @@ const Matrix44 CTransformComponent::GetMatrixRotNext(void) const
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetMatrixWorldNext
+//	関数名：GetNextWorldMatrix
 //  関数説明：次のフレームの世界行列の取得
 //	引数：	なし
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-const Matrix44 CTransformComponent::GetMatrixWorldNext(void) const
+const Matrix44 CTransformComponent::GetNextWorldMatrix(void) const
 {
 	//回転
 	auto mtxWorld = GetMatrixRotNext();
 
 	//平行移動
-	mtxWorld.Elements[3][0] = m_PositionNext.X;
-	mtxWorld.Elements[3][1] = m_PositionNext.Y;
-	mtxWorld.Elements[3][2] = m_PositionNext.Z;
+	mtxWorld.Elements[3][0] = PositionNext.X;
+	mtxWorld.Elements[3][1] = PositionNext.Y;
+	mtxWorld.Elements[3][2] = PositionNext.Z;
 
 	//親のマトリクス取得
 	if (m_pParent)
@@ -237,7 +237,7 @@ const Matrix44 CTransformComponent::GetMatrixWorldNext(void) const
 		CKFMath::MtxTranslation(mtxPos, m_vOffsetPos);
 		mtxWorld *= mtxPos;
 
-		mtxWorld *= m_pParent->GetMatrixWorldNext();
+		mtxWorld *= m_pParent->GetNextWorldMatrix();
 	}
 
 	return mtxWorld;
@@ -437,7 +437,7 @@ void  CTransformComponent::calculateMtxThis(void)
 
 	//平行移動
 	Matrix44 mtxPos;
-	CKFMath::MtxTranslation(mtxPos, m_Position);
+	CKFMath::MtxTranslation(mtxPos, Position);
 	m_mtxThis *= mtxPos;
 }
 

@@ -20,23 +20,23 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const pGameObj)
+CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(GameObject* const pGameObj)
 	: CBehaviorComponent(pGameObj)
-	, m_nNumBlockX(100)
-	, m_nNumBlockZ(100)
-	, m_vBlockSize(Vector2(3.0f))
-	, m_PositionMin(Vector3(0.0f))
-	, m_PositionMax(Vector3(0.0f))
+	, blockXNumber(100)
+	, blockZNumber(100)
+	, blockSize(Vector2(3.0f))
+	, PositionMin(Vector3(0.0f))
+	, PositionMax(Vector3(0.0f))
 	, m_vEditorPos(Vector3(0.0f))
 	, m_fEditorRadius(0.0f)
 	, RaiseSpeed(1.0f)
 	, m_fExtendSpeed(1.0f)
 	, m_bActive(true)
 {
-	m_vectorVtx.clear();
+	vertexes.clear();
 
 	//Mesh生成
-	Main::GetManager()->GetMeshManager()->CreateEditorField(m_nNumBlockX, m_nNumBlockZ, m_vBlockSize);
+	Main::GetManager()->GetMeshManager()->CreateEditorField(blockXNumber, blockZNumber, blockSize);
 }
 
 //--------------------------------------------------------------------------------
@@ -44,27 +44,27 @@ CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(CGameObject* const 
 //--------------------------------------------------------------------------------
 bool CFieldEditorBehaviorComponent::Init(void)
 {
-	auto& vStartPos = Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	m_vectorVtx.resize((m_nNumBlockX + 1) * (m_nNumBlockZ + 1));
+	auto& vStartPos = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	vertexes.resize((blockXNumber + 1) * (blockZNumber + 1));
 	int countVtx = 0;
 
-	for (int countZ = 0; countZ < m_nNumBlockZ + 1; countZ++)
+	for (int countZ = 0; countZ < blockZNumber + 1; countZ++)
 	{
-		for (int countX = 0; countX < m_nNumBlockX + 1; countX++)
+		for (int countX = 0; countX < blockXNumber + 1; countX++)
 		{
 			auto& Position = vStartPos
-				+ Vector3(countX * m_vBlockSize.X, 0.0f, -countZ * m_vBlockSize.Y);
-			m_vectorVtx[countVtx] = Position;
+				+ Vector3(countX * blockSize.X, 0.0f, -countZ * blockSize.Y);
+			vertexes[countVtx] = Position;
 			++countVtx;
 		}
 	}
 
-	auto& vHalfSize = Vector3(m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	m_PositionMin = vHalfSize * -1.0f;
-	m_PositionMax = vHalfSize;
+	auto& vHalfSize = Vector3(blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	PositionMin = vHalfSize * -1.0f;
+	PositionMax = vHalfSize;
 	
 	auto info = getInfo();
-	Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+	Main::GetManager()->GetMeshManager()->UpdateEditorField(vertexes, info.listChoosenIdx);
 
 	return true;
 }
@@ -74,7 +74,7 @@ bool CFieldEditorBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CFieldEditorBehaviorComponent::Uninit(void)
 {
-	m_vectorVtx.clear();
+	vertexes.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -100,10 +100,10 @@ void CFieldEditorBehaviorComponent::Update(void)
 		- (float)pInput->GetKeyPress(Input::Reduce);
 	for (auto nIdx : info.listChoosenIdx)
 	{
-		m_vectorVtx[nIdx].Y += fValue * RaiseSpeed;
+		vertexes[nIdx].Y += fValue * RaiseSpeed;
 	}
 
-	Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+	Main::GetManager()->GetMeshManager()->UpdateEditorField(vertexes, info.listChoosenIdx);
 }
 
 //--------------------------------------------------------------------------------
@@ -112,8 +112,8 @@ void CFieldEditorBehaviorComponent::Update(void)
 void CFieldEditorBehaviorComponent::AdjustPosInField(Vector3& Position, const bool& bAdjustHeight)
 {
 	//範囲内にする
-	Position.X = Position.X < m_PositionMin.X ? m_PositionMin.X : Position.X > m_PositionMax.X ? m_PositionMax.X : Position.X;
-	Position.Z = Position.Z < m_PositionMin.Z ? m_PositionMin.Z : Position.Z > m_PositionMax.Z ? m_PositionMax.Z : Position.Z;
+	Position.X = Position.X < PositionMin.X ? PositionMin.X : Position.X > PositionMax.X ? PositionMax.X : Position.X;
+	Position.Z = Position.Z < PositionMin.Z ? PositionMin.Z : Position.Z > PositionMax.Z ? PositionMax.Z : Position.Z;
 
 	//高さの調節
 	if (bAdjustHeight)
@@ -134,7 +134,7 @@ void CFieldEditorBehaviorComponent::SetActive(const bool& bActive)
 	if (!m_bActive)
 	{//Field Reset
 		EINFO info;
-		Main::GetManager()->GetMeshManager()->UpdateEditorField(m_vectorVtx, info.listChoosenIdx);
+		Main::GetManager()->GetMeshManager()->UpdateEditorField(vertexes, info.listChoosenIdx);
 	}
 }
 
@@ -151,26 +151,26 @@ void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
 
 	//フィールドの保存
 	string strName = "data/FIELD/" + strFileName + ".field";
-	FILE *pFile;
+	FILE *filePointer;
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "wb");
+	fopen_s(&filePointer, strName.c_str(), "wb");
 
 	//ブロック数の保存
-	fwrite(&m_nNumBlockX, sizeof(int), 1, pFile);
-	fwrite(&m_nNumBlockZ, sizeof(int), 1, pFile);
+	fwrite(&blockXNumber, sizeof(int), 1, filePointer);
+	fwrite(&blockZNumber, sizeof(int), 1, filePointer);
 
 	//ブロックSizeの保存
-	fwrite(&m_vBlockSize, sizeof(Vector2), 1, pFile);
+	fwrite(&blockSize, sizeof(Vector2), 1, filePointer);
 
 	//頂点データ数の保存
-	int nNumVtx = (int)m_vectorVtx.size();
-	fwrite(&nNumVtx, sizeof(int), 1, pFile);
+	int nNumVtx = (int)vertexes.size();
+	fwrite(&nNumVtx, sizeof(int), 1, filePointer);
 
 	//頂点データの保存
-	fwrite(&m_vectorVtx[0], sizeof(Vector3), nNumVtx, pFile);
+	fwrite(&vertexes[0], sizeof(Vector3), nNumVtx, filePointer);
 
-	fclose(pFile);
+	fclose(filePointer);
 }
 
 //--------------------------------------------------------------------------------
@@ -178,12 +178,12 @@ void CFieldEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 float CFieldEditorBehaviorComponent::getHeight(const Vector3& Position)
 {
-	auto& vStartPos = Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	int nXLeftUp = (int)(((Position.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZLeftUp = -(int)(((Position.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	auto& vStartPos = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	int nXLeftUp = (int)(((Position.X - vStartPos.X) / (blockSize.X * (float)blockXNumber)) * (float)blockXNumber);
+	int nZLeftUp = -(int)(((Position.Z - vStartPos.Z) / (blockSize.Y * (float)blockZNumber)) * (float)blockZNumber);
 
 	//フィールドの範囲外だったら処理終了
-	if (nXLeftUp < 0 || nXLeftUp >= m_nNumBlockX || nZLeftUp < 0 || nZLeftUp >= m_nNumBlockZ)
+	if (nXLeftUp < 0 || nXLeftUp >= blockXNumber || nZLeftUp < 0 || nZLeftUp >= blockZNumber)
 	{
 		return 0.0f;
 	}
@@ -192,8 +192,8 @@ float CFieldEditorBehaviorComponent::getHeight(const Vector3& Position)
 	int nZRightDown = nZLeftUp + 1;
 
 	auto& PositionTarget = Vector3(Position.X, 0.0f, Position.Z);
-	auto& vPLeftUp = m_vectorVtx[nZLeftUp * (m_nNumBlockX + 1) + nXLeftUp];
-	auto& vPRightDown = m_vectorVtx[nZRightDown * (m_nNumBlockX + 1) + nXRightDown];
+	auto& vPLeftUp = vertexes[nZLeftUp * (blockXNumber + 1) + nXLeftUp];
+	auto& vPRightDown = vertexes[nZRightDown * (blockXNumber + 1) + nXRightDown];
 
 	//Check Side
 	auto& vMid = vPRightDown - vPLeftUp;
@@ -213,7 +213,7 @@ float CFieldEditorBehaviorComponent::getHeight(const Vector3& Position)
 		nZSide = nZLeftUp + 1;
 		nSign = 1;
 	}
-	auto& vPSide = m_vectorVtx[nZSide * (m_nNumBlockX + 1) + nXSide];
+	auto& vPSide = vertexes[nZSide * (blockXNumber + 1) + nXSide];
 	auto& vLS = vPLeftUp - vPSide;
 	auto& vRS = vPRightDown - vPSide;
 	auto& Normal = (vLS * vRS) * (float)nSign;
@@ -232,28 +232,28 @@ CFieldEditorBehaviorComponent::EINFO CFieldEditorBehaviorComponent::getInfo(void
 	EINFO info;
 	auto vEditorPos = m_vEditorPos;
 	vEditorPos.Y = 0.0f;
-	auto vStartPos = Vector3(-m_nNumBlockX * 0.5f * m_vBlockSize.X, 0.0f, m_nNumBlockZ * 0.5f * m_vBlockSize.Y);
-	int nXLeftUp = (int)(((m_vEditorPos.X - vStartPos.X) / (m_vBlockSize.X * (float)m_nNumBlockX)) * (float)m_nNumBlockX);
-	int nZLeftUp = -(int)(((m_vEditorPos.Z - vStartPos.Z) / (m_vBlockSize.Y * (float)m_nNumBlockZ)) * (float)m_nNumBlockZ);
+	auto vStartPos = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	int nXLeftUp = (int)(((m_vEditorPos.X - vStartPos.X) / (blockSize.X * (float)blockXNumber)) * (float)blockXNumber);
+	int nZLeftUp = -(int)(((m_vEditorPos.Z - vStartPos.Z) / (blockSize.Y * (float)blockZNumber)) * (float)blockZNumber);
 	int nXRightDown = nXLeftUp + 1;
 	int nZRightDown = nZLeftUp + 1;
 
-	int nRange = (int)(m_fEditorRadius / m_vBlockSize.X);
+	int nRange = (int)(m_fEditorRadius / blockSize.X);
 	int nXMin = nXLeftUp - nRange;
 	int nXMax = nXRightDown + nRange;
 	int nZMin = nZLeftUp - nRange;
 	int nZMax = nZRightDown + nRange;
 	nXMin = nXMin < 0 ? 0 : nXMin;
 	nZMin = nZMin < 0 ? 0 : nZMin;
-	nXMax = nXMax > m_nNumBlockX ? m_nNumBlockX : nXMax;
-	nZMax = nZMax > m_nNumBlockZ ? m_nNumBlockZ : nZMax;
+	nXMax = nXMax > blockXNumber ? blockXNumber : nXMax;
+	nZMax = nZMax > blockZNumber ? blockZNumber : nZMax;
 
 	for (int countZ = nZMin; countZ <= nZMax; countZ)
 	{
 		for (int countX = nXMin; countX <= nXMax; countX)
 		{
-			auto nIdx = countZ * (m_nNumBlockZ + 1) + countX;
-			auto Position = m_vectorVtx[nIdx];
+			auto nIdx = countZ * (blockZNumber + 1) + countX;
+			auto Position = vertexes[nIdx];
 			Position.Y = 0.0f;
 			if (CKFMath::VecMagnitudeSquare(Position - vEditorPos) <= m_fEditorRadius * m_fEditorRadius)
 			{

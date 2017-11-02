@@ -32,9 +32,9 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(CGameObject* const pGameObj)
+CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(GameObject* const pGameObj)
 	: CBehaviorComponent(pGameObj)
-	, m_modelType(MT_BOX)
+	, modelType(MT_BOX)
 	, m_bActive(false)
 	, m_bShowCreatedList(false)
 {
@@ -69,7 +69,7 @@ bool CModelEditorBehaviorComponent::Init(void)
 	//Demo Objectの作成
 	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[count] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
+		auto pObj = GameObjectSpawner::CreateModel(m_aStrName[count] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
 		pObj->SetActive(false);
 		m_aObjInfoDemo[count].pTransform = pObj->GetTransformComponent();
 	}
@@ -116,7 +116,7 @@ void CModelEditorBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::SetPos(const Vector3& Position)
 {
-	m_aObjInfoDemo[(int)m_modelType].pTransform->SetPosNext(Position);
+	m_aObjInfoDemo[(int)modelType].pTransform->SetPosNext(Position);
 }
 
 //--------------------------------------------------------------------------------
@@ -126,37 +126,37 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 {
 	//フィールドの保存
 	string strName = "data/STAGE/" + strFileName + ".stage";
-	FILE *pFile;
+	FILE *filePointer;
 
 	//file open
-	fopen_s(&pFile, strName.c_str(), "wb");
+	fopen_s(&filePointer, strName.c_str(), "wb");
 
 	//ModelType数の保存
 	int nTypeSize = (int)MT_MAX;
-	fwrite(&nTypeSize, sizeof(int), 1, pFile);
+	fwrite(&nTypeSize, sizeof(int), 1, filePointer);
 
 	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
 		//ファイル名保存
 		int nSize = (int)m_aStrName[count].size();
-		fwrite(&nSize, sizeof(int), 1, pFile);
-		fwrite(&m_aStrName[count][0], sizeof(char), nSize, pFile);
+		fwrite(&nSize, sizeof(int), 1, filePointer);
+		fwrite(&m_aStrName[count][0], sizeof(char), nSize, filePointer);
 
 		//モデル数の保存
 		int nNum = m_alistCreated[count].size();
-		fwrite(&nNum, sizeof(int), 1, pFile);
+		fwrite(&nNum, sizeof(int), 1, filePointer);
 
 		//位置回転の保存
 		for (auto& info : m_alistCreated[count])
 		{
 			auto Position = info.pTransform->GetPos();
-			fwrite(&Position, sizeof(Vector3), 1, pFile);
+			fwrite(&Position, sizeof(Vector3), 1, filePointer);
 			auto qRot = info.pTransform->GetRot();
-			fwrite(&qRot, sizeof(Quaternion), 1, pFile);
+			fwrite(&qRot, sizeof(Quaternion), 1, filePointer);
 		}
 	}
 
-	fclose(pFile);
+	fclose(filePointer);
 }
 
 //--------------------------------------------------------------------------------
@@ -169,9 +169,9 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 void CModelEditorBehaviorComponent::create(void)
 {
-	auto pObj = CGameObjectSpawner::CreateModel(m_aStrName[(int)m_modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
+	auto pObj = GameObjectSpawner::CreateModel(m_aStrName[(int)modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
 	auto pTrans = pObj->GetTransformComponent();
-	auto infoNow = m_aObjInfoDemo[(int)m_modelType];
+	auto infoNow = m_aObjInfoDemo[(int)modelType];
 	auto& Position = infoNow.pTransform->GetPos();
 	auto& qRot = infoNow.pTransform->GetRot();
 	pTrans->SetPosNext(Position);
@@ -179,7 +179,7 @@ void CModelEditorBehaviorComponent::create(void)
 	INFO info;
 	info.pTransform = pTrans;
 	info.vRot = infoNow.vRot;
-	m_alistCreated[(int)m_modelType].push_back(info);
+	m_alistCreated[(int)modelType].push_back(info);
 }
 
 //--------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ void CModelEditorBehaviorComponent::showMainWindow(void)
 	showTypeListBox();
 
 	// Model Trans
-	auto& infoNow = m_aObjInfoDemo[(int)m_modelType];
+	auto& infoNow = m_aObjInfoDemo[(int)modelType];
 
 	//モデル回転
 	if(ImGui::SliderFloat3("Rot", &infoNow.vRot.X, 0.0f, KF_PI * 2.0f))
@@ -240,12 +240,12 @@ void CModelEditorBehaviorComponent::showTypeListBox(void)
 	}
 
 	//Type
-	if (ImGui::ListBox("Model Type\n", (int*)&m_modelType, arr, MT_MAX))
+	if (ImGui::ListBox("Model Type\n", (int*)&modelType, arr, MT_MAX))
 	{
 		//モデルアクティブの設定
 		for (int count = 0; count < (int)MT_MAX; ++count)
 		{
-			m_aObjInfoDemo[count].pTransform->GetGameObject()->SetActive(m_modelType == (MODEL_TYPE)count);
+			m_aObjInfoDemo[count].pTransform->GetGameObject()->SetActive(modelType == (MODEL_TYPE)count);
 		}
 	}
 

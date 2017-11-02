@@ -84,7 +84,7 @@ void CEditorCamera::Update(void)
 	Pitch(vRot.Y);
 
 	//ÉYÅ[ÉÄ
-	m_fDistance += fZoomSpeed;
-	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
+	Distance += fZoomSpeed;
+	Distance = Distance < sc_fDistanceMin ? sc_fDistanceMin : Distance > sc_fDistanceMax ? sc_fDistanceMax : Distance;
 }
 #endif // _DEBUG

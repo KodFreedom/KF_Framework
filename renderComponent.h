@@ -22,14 +22,14 @@
 //--------------------------------------------------------------------------------
 //  描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class CRenderComponent : public CComponent
+class CRenderComponent : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRenderComponent(CGameObject* const pGameObj)
-		: CComponent(pGameObj)
+	CRenderComponent(GameObject* const pGameObj)
+		: Component(pGameObj)
 		, m_usMatID(0)
 		, m_renderPriority(RP_3D)
 		, m_renderState(RS_LIGHTON_CULLFACEON_MUL)
@@ -58,7 +58,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRenderComponent() : CComponent() {}
+	CRenderComponent() : Component() {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義

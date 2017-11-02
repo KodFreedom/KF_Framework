@@ -33,7 +33,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CActorBehaviorComponent(CGameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator);
+	CActorBehaviorComponent(GameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator);
 	~CActorBehaviorComponent();
 
 	virtual bool	Init(void) override;
@@ -41,8 +41,8 @@ public:
 	virtual void	Update(void) override;
 	virtual void	LateUpdate(void) override;
 
-	virtual void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
-	virtual void	OnCollision(CCollisionInfo& collisionInfo) override {}
+	virtual void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
+	virtual void	OnCollision(CollisionInfo& collisionInfo) override {}
 
 	void	Act(Vector3& vMovement, const bool& bJump, const bool& bAttack);
 	void	Hit(const float& fDamage);

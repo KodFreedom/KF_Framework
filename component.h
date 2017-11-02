@@ -14,30 +14,19 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CComponent
+class Component
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	//enum MESSAGE
-	//{
-	//	M_MOVE,
-	//	M_JUMP,
-	//	M_LANDING,
-	//	M_MAX
-	//};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CComponent(CGameObject* const pGameObj) : m_pGameObj(pGameObj) {}
-	~CComponent() {}
+	Component(GameObject* const owner) : owner(owner) {}
+	~Component() {}
 
 	virtual bool	Init(void) = 0;
 	virtual void	Uninit(void) = 0;
@@ -46,20 +35,17 @@ public:
 		Uninit();
 		delete this;
 	}
-
-	//virtual void		ReceiveMsg(const MESSAGE &msg) {}
-
-	//Get関数
-	CGameObject* const	GetGameObject(void) const { return m_pGameObj; }
+	//virtual void	ReceiveMsg(const MESSAGE &msg) {}
+	const auto		GetGameObject(void) const { return owner; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CComponent() : m_pGameObj(nullptr) {}
+	Component() : owner(nullptr) {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CGameObject* const m_pGameObj;
+	GameObject* const owner;
 };

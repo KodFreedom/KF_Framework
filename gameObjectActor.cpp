@@ -13,8 +13,8 @@
 #include "playerBehaviorComponent.h"
 #include "enemyBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
-#include "sphereColliderComponent.h"
-#include "AABBColliderComponent.h"
+#include "sphereCollider.h"
+#include "AABBCollider.h"
 #include "playerUIObject.h"
 
 //--------------------------------------------------------------------------------
@@ -28,8 +28,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObjectActor::CGameObjectActor(const GOMLAYER& layer)
-	: CGameObject(layer)
+GameObjectActor::GameObjectActor(const GOMLAYER& layer)
+	: GameObject(layer)
 	, m_pAnimator(nullptr)
 {
 
@@ -38,9 +38,9 @@ CGameObjectActor::CGameObjectActor(const GOMLAYER& layer)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-bool CGameObjectActor::Init(void)
+bool GameObjectActor::Init(void)
 {
-	CGameObject::Init();
+	GameObject::Init();
 	m_pAnimator->Init();
 	return true;
 }
@@ -48,18 +48,18 @@ bool CGameObjectActor::Init(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CGameObjectActor::LateUpdate(void)
+void GameObjectActor::LateUpdate(void)
 {
-	CGameObject::LateUpdate();
+	GameObject::LateUpdate();
 	m_pAnimator->Update();
 }
 
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
+GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
-	auto pObj = new CGameObjectActor;
+	auto pObj = new GameObjectActor;
 
 	//Tag
 	pObj->SetTag("Player");
@@ -72,8 +72,8 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
-	//auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
-	auto pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, 0.6f);
+	//auto pCollider = new AABBCollider(pObj, DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
+	auto pCollider = new SphereCollider(pObj, DYNAMIC, 0.6f);
 	pCollider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
@@ -98,9 +98,9 @@ CGameObjectActor* CGameObjectActor::CreatePlayer(const string &modelPath, const 
 //--------------------------------------------------------------------------------
 //  生成処理
 //--------------------------------------------------------------------------------
-CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
+GameObjectActor* GameObjectActor::CreateEnemy(const string &modelPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale)
 {
-	auto pObj = new CGameObjectActor;
+	auto pObj = new GameObjectActor;
 
 	//Tag
 	pObj->SetTag("Enemy");
@@ -117,11 +117,11 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const V
 	pObj->m_listpBehavior.push_back(pEb);
 	
 	//コライダー
-	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
+	auto pCollider = new AABBCollider(pObj, DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
 	pCollider->SetOffset(Vector3(0.0f, 0.6f, 0.0f));
 	pCollider->SetTag("body");
 	pObj->AddCollider(pCollider);
-	auto pDetector = new CSphereColliderComponent(pObj, CS::DYNAMIC, 6.0f);
+	auto pDetector = new SphereCollider(pObj, DYNAMIC, 6.0f);
 	pDetector->SetTrigger(true);
 	pDetector->SetTag("detector");
 	pObj->AddCollider(pDetector);
@@ -148,8 +148,8 @@ CGameObjectActor* CGameObjectActor::CreateEnemy(const string &modelPath, const V
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CGameObjectActor::uninit(void)
+void GameObjectActor::uninit(void)
 {
-	CGameObject::uninit();
+	GameObject::uninit();
 	SAFE_RELEASE(m_pAnimator);
 }

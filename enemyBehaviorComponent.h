@@ -34,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CEnemyBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor);
+	CEnemyBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor);
 	~CEnemyBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -42,15 +42,15 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
-	void	OnCollision(CCollisionInfo& collisionInfo) override;
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
+	void	OnCollision(CollisionInfo& collisionInfo) override;
 
 	void	ChangeMode(CAIMode* pAIMode);
 private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	CGameObject*				m_pTarget;
+	GameObject*				m_pTarget;
 	CAIMode*					m_pMode;
 	CActorBehaviorComponent&	m_actor;
 };

@@ -8,12 +8,12 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObject.h"
-#include "KF_PhysicsSystem.h"
+#include "physicsSystem.h"
 #include "3DRigidbodyComponent.h"
-#include "colliderComponent.h"
-#include "sphereColliderComponent.h"
-#include "AABBColliderComponent.h"
-#include "OBBColliderComponent.h"
+#include "collider.h"
+#include "sphereCollider.h"
+#include "AABBCollider.h"
+#include "OBBCollider.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-C3DRigidbodyComponent::C3DRigidbodyComponent(CGameObject* const pGameObj)
+C3DRigidbodyComponent::C3DRigidbodyComponent(GameObject* const pGameObj)
 	: CRigidbodyComponent(pGameObj, RB_3D)
 	, m_fMass(1.0f)
 	, m_fInverseMass(1.0f)
@@ -61,7 +61,7 @@ void C3DRigidbodyComponent::Update(void)
 	auto pTrans = m_pGameObj->GetTransformComponent();
 
 	//重力加速度
-	m_vAcceleration += CKFPhysicsSystem::sc_vGravity * GravityCoefficient;
+	m_vAcceleration += PhysicsSystem::Gravity * GravityCoefficient;
 
 	//力から加速度を計算する
 	m_vAcceleration += m_vForceAccum * m_fInverseMass;
@@ -107,31 +107,31 @@ void C3DRigidbodyComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  慣性テンソルの算出
 //--------------------------------------------------------------------------------
-//void C3DRigidbodyComponent::SetInertiaTensor(CColliderComponent* pCollider)
+//void C3DRigidbodyComponent::SetInertiaTensor(Collider* pCollider)
 //{
 //	float fV00 = 1.0f;
 //	float fV11 = 1.0f;
 //	float fV22 = 1.0f;
-//	CS::COL_TYPE type = pCollider->GetType();
-//	if (type == CS::COL_SPHERE)
+//	ColliderType type = pCollider->GetType();
+//	if (type == Sphere)
 //	{
-//		float fRadius = dynamic_cast<CSphereColliderComponent*>(pCollider)->GetRadius();
+//		float fRadius = dynamic_cast<SphereCollider*>(pCollider)->GetRadius();
 //		fV00 
 //			= fV11
 //			= fV22
 //			= 0.4f * m_fMass * fRadius * fRadius;
 //	}
-//	else if (type == CS::COL_AABB)
+//	else if (type == AABB)
 //	{
-//		Vector3 vSize = dynamic_cast<CAABBColliderComponent*>(pCollider)->GetHalfSize() * 2.0f;
+//		Vector3 vSize = dynamic_cast<AABBCollider*>(pCollider)->GetHalfSize() * 2.0f;
 //		float fWork = m_fMass / 12.0f;
 //		fV00 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV11 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV22 = fWork * (vSize.Y * vSize.Y + vSize.Y * vSize.Y);
 //	}
-//	else if (type == CS::COL_OBB)
+//	else if (type == OBB)
 //	{
-//		Vector3 vSize = dynamic_cast<COBBColliderComponent*>(pCollider)->GetHalfSize() * 2.0f;
+//		Vector3 vSize = dynamic_cast<OBBCollider*>(pCollider)->GetHalfSize() * 2.0f;
 //		float fWork = m_fMass / 12.0f;
 //		fV00 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV11 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);

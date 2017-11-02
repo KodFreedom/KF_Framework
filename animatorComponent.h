@@ -18,7 +18,7 @@
 class CMotion;
 class CMotionInfo;
 class CMotionKey;
-class CColliderComponent;
+class Collider;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -26,7 +26,7 @@ class CColliderComponent;
 //--------------------------------------------------------------------------------
 //  アニメーターコンポネントクラス
 //--------------------------------------------------------------------------------
-class CAnimatorComponent : public CComponent
+class CAnimatorComponent : public Component
 {
 	//--------------------------------------------------------------------------------
 	//  フレンドクラス
@@ -39,7 +39,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CAnimatorComponent(CGameObject* const pGameObj, const string& strPath);
+	CAnimatorComponent(GameObject* const pGameObj, const string& strPath);
 	~CAnimatorComponent() {}
 
 	bool	Init(void) override;
@@ -68,7 +68,7 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	CMotionInfo*				m_apMotionData[MP_MAX];
-	vector<CGameObject*>		m_vecBorns;
+	vector<GameObject*>		m_vecBorns;
 	MOTION_PATTERN				m_motionNow;
 	MOTION_PATTERN				m_motionNext;
 	CMotionStatus*				m_pMotionStatus;

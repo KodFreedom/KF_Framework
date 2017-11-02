@@ -157,6 +157,12 @@
     <Filter Include="ソース ファイル\Base\Light">
       <UniqueIdentifier>{887ea52b-2460-4d6c-8883-f0338224c7ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Physics">
+      <UniqueIdentifier>{dc96726a-86c2-44bf-a293-73ea5034bd78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Physics">
+      <UniqueIdentifier>{ad354fd5-add1-4ac6-b9da-2e1d0c3e4d08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -194,12 +200,6 @@
     </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="colliderComponent.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldColliderComponent.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="3DRigidbodyComponent.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
@@ -246,9 +246,6 @@
     <ClCompile Include="playerUIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="KF_CollisionSystem.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="playerBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
@@ -263,15 +260,6 @@
     </ClCompile>
     <ClCompile Include="enemyAttackMode.cpp">
       <Filter>ソース ファイル\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="KF_PhysicsSystem.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="boxColliderComponent.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="KF_CollisionUtility.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
     <ClCompile Include="KF_Utility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
@@ -354,6 +342,27 @@
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
+    <ClCompile Include="collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="boxCollider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldCollider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="collisionSystem.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="AABBCollider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="collisionDetector.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="physicsSystem.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -397,15 +406,6 @@
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="colliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="sphereColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="3DRigidbodyComponent.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
@@ -464,9 +464,6 @@
     <ClInclude Include="playerUIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
-    <ClInclude Include="KF_CollisionSystem.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
     <ClInclude Include="AIMode.h">
       <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
@@ -476,18 +473,6 @@
     <ClInclude Include="enemyAttackMode.h">
       <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
-    <ClInclude Include="KF_PhysicsSystem.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="AABBColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="OBBColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="boxColliderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="actorBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
@@ -496,9 +481,6 @@
     </ClInclude>
     <ClInclude Include="playerBehaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="KF_CollisionUtility.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="KF_Utility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -586,6 +568,33 @@
     </ClInclude>
     <ClInclude Include="light.h">
       <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="AABBCollider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="boxCollider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldCollider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="OBBCollider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="sphereCollider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionSystem.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="collisionDetector.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsSystem.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

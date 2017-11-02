@@ -14,8 +14,8 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CCollisionInfo;
-class CColliderComponent;
+class CollisionInfo;
+class Collider;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -23,10 +23,10 @@ class CColliderComponent;
 //--------------------------------------------------------------------------------
 //  行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CBehaviorComponent : public CComponent
+class CBehaviorComponent : public Component
 {
 public:
-	CBehaviorComponent(CGameObject* const pGameObj) : CComponent(pGameObj) {}
+	CBehaviorComponent(GameObject* const pGameObj) : Component(pGameObj) {}
 	~CBehaviorComponent() {}
 
 	virtual bool Init(void) override = 0;
@@ -34,6 +34,6 @@ public:
 	virtual void Update(void) = 0;
 	virtual void LateUpdate(void) = 0;
 				 
-	virtual void OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) = 0;
-	virtual void OnCollision(CCollisionInfo& collisionInfo) = 0;
+	virtual void OnTrigger(Collider& colliderThis, Collider& collider) = 0;
+	virtual void OnCollision(CollisionInfo& collisionInfo) = 0;
 };

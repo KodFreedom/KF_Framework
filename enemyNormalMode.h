@@ -17,7 +17,7 @@
 class CEnemyNormalMode : public CAIMode
 {
 public:
-	CEnemyNormalMode() : CAIMode(AM_NORMAL) {}
+	CEnemyNormalMode() : CAIMode(ANormal) {}
 	~CEnemyNormalMode() override {}
 	void Update(CEnemyBehaviorComponent& enemy) override;
 };

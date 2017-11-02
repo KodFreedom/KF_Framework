@@ -28,7 +28,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CPlayerBehaviorComponent(CGameObject* const pGameObj, CActorBehaviorComponent& actor);
+	CPlayerBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor);
 	~CPlayerBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -36,8 +36,8 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 			
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override;
-	void	OnCollision(CCollisionInfo& collisionInfo) override;
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
+	void	OnCollision(CollisionInfo& collisionInfo) override;
 
 	//Get
 	const auto& GetActorBehavior(void) const { return m_actor; }

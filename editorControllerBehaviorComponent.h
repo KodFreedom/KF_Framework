@@ -26,7 +26,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CEditorControllerBehaviorComponent(CGameObject* const pGameObj);
+	CEditorControllerBehaviorComponent(GameObject* const pGameObj);
 	~CEditorControllerBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -34,10 +34,10 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
-	void	OnCollision(CCollisionInfo& collisionInfo) override {}
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
+	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
-	void	SetFieldEditor(CGameObject* pFieldEditor);
+	void	SetFieldEditor(GameObject* pFieldEditor);
 	void	SetModelEditor(CModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
 
 private:

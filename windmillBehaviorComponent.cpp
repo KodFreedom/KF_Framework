@@ -41,7 +41,7 @@ void CWindmillBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  XVˆ—
 //--------------------------------------------------------------------------------
-CGameObject* CWindmillBehaviorComponent::findFan(CGameObject* pParent)
+GameObject* CWindmillBehaviorComponent::findFan(GameObject* pParent)
 {
 	auto& listChild = pParent->GetTransformComponent()->GetChildren();
 	for (auto pTrans : listChild)

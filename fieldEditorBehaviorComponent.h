@@ -24,7 +24,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	CFieldEditorBehaviorComponent(CGameObject* const pGameObj);
+	CFieldEditorBehaviorComponent(GameObject* const pGameObj);
 	~CFieldEditorBehaviorComponent() {}
 
 	bool	Init(void) override;
@@ -32,8 +32,8 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
-	void	OnTrigger(CColliderComponent& colliderThis, CColliderComponent& collider) override {}
-	void	OnCollision(CCollisionInfo& collisionInfo) override {}
+	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
+	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
 	//Getä÷êî
 	void	AdjustPosInField(Vector3& Position, const bool& bAdjustHeight);
@@ -65,12 +65,12 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	int				m_nNumBlockX;
-	int				m_nNumBlockZ;
-	Vector2			m_vBlockSize;
-	vector<Vector3>	m_vectorVtx;
-	Vector3			m_PositionMin;
-	Vector3			m_PositionMax;
+	int				blockXNumber;
+	int				blockZNumber;
+	Vector2			blockSize;
+	vector<Vector3>	vertexes;
+	Vector3			PositionMin;
+	Vector3			PositionMax;
 	Vector3			m_vEditorPos;
 	float			m_fEditorRadius;
 	float			RaiseSpeed;

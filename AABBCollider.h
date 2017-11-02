@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	OBBColliderコンポネント
-//　OBBColliderComponent.h
+//	AABBColliderコンポネント
+//　AABBCollider.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
@@ -9,23 +9,19 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "boxColliderComponent.h"
+#include "boxCollider.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  OBBColliderポネントクラス
-//--------------------------------------------------------------------------------
-class COBBColliderComponent : public CBoxColliderComponent
+class AABBCollider : public BoxCollider
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	COBBColliderComponent(CGameObject* const pGameObj, const CS::COL_MODE& mode, const Vector3& vHalfSize)
-		: CBoxColliderComponent(pGameObj, CS::COL_OBB, mode, vHalfSize) {}
-	~COBBColliderComponent() {}
-
-private:
+	AABBCollider(GameObject* const owner, const ColliderMode& mode, const Vector3& halfSize)
+		: BoxCollider(owner, AABB, mode, halfSize) {}
+	~AABBCollider() {}
+	void Update(void) override;
 };

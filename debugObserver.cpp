@@ -13,7 +13,7 @@
 #include "debugObserver.h"
 #include "renderer.h"
 #include "ImGui\imgui.h"
-#include "KF_CollisionSystem.h"
+#include "collisionSystem.h"
 #include "textureManager.h"
 #include "meshManager.h"
 #include "mode.h"
@@ -234,7 +234,7 @@ void DebugObserver::showMainWindow(void)
 void DebugObserver::showCollisionSystemWindow(void)
 {
 	if (!enableCollisionSystemWindow) { return; }
-	auto pCS = Main::GetManager()->GetCollisionSystem();
+	auto pCS = CollisionSystem::Instance();
 	
 	// Begin
 	if (!ImGui::Begin("Collision System Debug Window", &enableCollisionSystemWindow))
@@ -249,15 +249,15 @@ void DebugObserver::showCollisionSystemWindow(void)
 	// Num Collider
 	if (ImGui::CollapsingHeader("Static"))
 	{
-		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_SPHERE].size());
-		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_AABB].size());
-		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CS::STATIC][CS::COL_OBB].size());
+		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[STATIC][Sphere].size());
+		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[STATIC][AABB].size());
+		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[STATIC][OBB].size());
 	}
 	if (ImGui::CollapsingHeader("Dynamic"))
 	{
-		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_SPHERE].size());
-		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_AABB].size());
-		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CS::DYNAMIC][CS::COL_OBB].size());
+		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[DYNAMIC][Sphere].size());
+		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[DYNAMIC][AABB].size());
+		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[DYNAMIC][OBB].size());
 	}
 
 	// End
@@ -283,10 +283,10 @@ void DebugObserver::showCameraWindow(void)
 	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
 
 	// PosEye
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_PositionEye.X, pCamera->m_PositionEye.Y, pCamera->m_PositionEye.Z);
+	ImGui::Text("PosEye : %f %f %f", pCamera->PositionEye.X, pCamera->PositionEye.Y, pCamera->PositionEye.Z);
 
 	// PosAt
-	ImGui::Text("PosEye : %f %f %f", pCamera->m_PositionAt.X, pCamera->m_PositionAt.Y, pCamera->m_PositionAt.Z);
+	ImGui::Text("PosEye : %f %f %f", pCamera->PositionAt.X, pCamera->PositionAt.Y, pCamera->PositionAt.Z);
 
 	// Forward
 	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.X, pCamera->m_vVecLook.Y, pCamera->m_vVecLook.Z);
@@ -317,7 +317,7 @@ void DebugObserver::showPlayerWindow(void)
 
 	// Trans
 	auto pTrans = player->GetTransformComponent();
-	ImGui::InputFloat3("Trans", &pTrans->m_PositionNext.X);
+	ImGui::InputFloat3("Trans", &pTrans->PositionNext.X);
 
 	// Actor Behavior
 	auto pActor = static_cast<CActorBehaviorComponent*>(player->GetBehaviorComponent().front());

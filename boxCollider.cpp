@@ -1,37 +1,32 @@
 //--------------------------------------------------------------------------------
-//	AIモード
-//　AIMode.h
+//	boxColliderコンポネント
+//　boxColliderComponent.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
-#pragma once
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "boxCollider.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
+//
+//  public
+//
 //--------------------------------------------------------------------------------
-class CEnemyBehaviorComponent;
-
 //--------------------------------------------------------------------------------
-//  クラス
+//	関数名：GetNextWorldVertexes
+//  関数説明：世界中の頂点位置を取得する
+//	引数：	なし
+//	戻り値：list<Vector3>
 //--------------------------------------------------------------------------------
-class CAIMode
+list<Vector3> BoxCollider::GetNextWorldVertexes(void) const
 {
-public:
-	enum AI_MODE
+	auto copy = localVertexes;
+	const auto& worldMatrix = GetNextWorldMatrix();
+	for (auto& vertex : copy)
 	{
-		ANormal,
-		AM_ATTACK
-	};
-
-	CAIMode(const AI_MODE& mode) : mode(mode) {}
-	virtual ~CAIMode() {}
-	virtual void Update(CEnemyBehaviorComponent& enemy) = 0;
-	AI_MODE	GetMode(void) const { return mode; }
-
-private:
-	AI_MODE mode;
-};
+		vertex = Vector3::TransformCoord(vertex, worldMatrix);
+	}
+	return copy;
+}
