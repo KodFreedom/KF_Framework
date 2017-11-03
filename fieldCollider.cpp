@@ -16,52 +16,54 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：DetectCollision
-//  関数説明：ポイントとフィールドの当たり判定
+//	関数名：GetPolygonAt
+//  関数説明：ポイント所属するポリゴンの情報を取得
 //	引数：	point：ポイント位置
-//	戻り値：FieldCollisionInfo*
+//	戻り値：PolygonInfo*
 //--------------------------------------------------------------------------------
-FieldCollisionInfo* FieldCollider::DetectCollision(const Vector3& point) const
-{ 
-	auto polygonInfo = getPolygonBy(point);
-	if (!polygonInfo) return nullptr;
-	auto result = new FieldCollisionInfo;
+PolygonInfo* FieldCollider::GetPolygonAt(const Vector3& point) const
+{
+	auto& center = Vector3(offset.Elements[3][0], offset.Elements[3][1], offset.Elements[3][2]);
+	auto& startPosition = center + Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
+	int leftUpX = (int)(((point.X - startPosition.X) / (blockSize.X * (float)blockXNumber)) * (float)blockXNumber);
+	int leftUpZ = -(int)(((point.Z - startPosition.Z) / (blockSize.Y * (float)blockZNumber)) * (float)blockZNumber);
 
-	// 地面法線の角度が60度以上なら地面法線を返す
-	// そうじゃないなら上方向を返す
-	float dot = Vector3::Up.Dot(polygonInfo->SurfaceNormal);
-	if (dot > 0.5f)
+	//フィールドの範囲外だったら処理終了
+	if (leftUpX < 0 || leftUpX >= blockXNumber || leftUpZ < 0 || leftUpZ >= blockZNumber)
 	{
-		float pointYOnField = polygonInfo->Side.Y - ((point.X - polygonInfo->Side.X) * polygonInfo->SurfaceNormal.X + (point.Z - polygonInfo->Side.Z) * polygonInfo->SurfaceNormal.Z) / polygonInfo->SurfaceNormal.Y;
-		result->Penetration = pointYOnField - point.Y;
-		result->SurfaceNormal = Vector3::Up;
-		delete polygonInfo;
-		return result;
+		return nullptr;
 	}
 
-	// 地面の投影位置の算出
-	auto& center = (polygonInfo->LeftUp + polygonInfo->RightDown) * 0.5f;
-	auto& right = (polygonInfo->RightDown - polygonInfo->LeftUp).Normalized();
-	auto& vForward = (right * polygonInfo->SurfaceNormal).Normalized();
-	Matrix44 transform;
-	transform.Elements[0][0] = right.X;
-	transform.Elements[0][1] = right.Y;
-	transform.Elements[0][2] = right.Z;
-	transform.Elements[1][0] = polygonInfo->SurfaceNormal.X;
-	transform.Elements[1][1] = polygonInfo->SurfaceNormal.Y;
-	transform.Elements[1][2] = polygonInfo->SurfaceNormal.Z;
-	transform.Elements[2][0] = vForward.X;
-	transform.Elements[2][1] = vForward.Y;
-	transform.Elements[2][2] = vForward.Z;
-	transform.Elements[3][0] = center.X;
-	transform.Elements[3][1] = center.Y;
-	transform.Elements[3][2] = center.Z;
-	auto& realPosition = Vector3::TransformInverse(point, transform);
+	auto result = new PolygonInfo;
+	int rightDownX = leftUpX + 1;
+	int rightDownZ = leftUpZ + 1;
 
-	// 登られないため法線を上方向と垂直方向にする
-	result->SurfaceNormal = (Vector3::Up * polygonInfo->SurfaceNormal *Vector3::Up).Normalized();
-	result->Penetration = -realPosition.Y;
-	delete polygonInfo;
+	auto& target = Vector3(point.X, 0.0f, point.Z);
+	result->LeftUp = vertexes[leftUpZ * (blockXNumber + 1) + leftUpX];
+	result->RightDown = vertexes[rightDownZ * (blockXNumber + 1) + rightDownX];
+
+	//Check Side
+	auto& leftUpToRightDown = result->RightDown - result->LeftUp;
+	auto& leftUpToTarget = target - result->LeftUp;
+	auto& cross = leftUpToTarget * leftUpToRightDown;
+	int sideX, sideZ;
+	int sign = 0;
+	if (cross.Y >= 0.0f)
+	{//LeftSide
+		sideX = leftUpX + 1;
+		sideZ = leftUpZ;
+		sign = -1;
+	}
+	else
+	{//RightSide
+		sideX = leftUpX;
+		sideZ = leftUpZ + 1;
+		sign = 1;
+	}
+	result->Side = vertexes[sideZ * (blockXNumber + 1) + sideX];
+	auto& sideToLeftUp = result->LeftUp - result->Side;
+	auto& sideToRightDown = result->RightDown - result->Side;
+	result->SurfaceNormal = ((sideToLeftUp * sideToRightDown) * (float)sign).Normalized();
 	return result;
 }
 
@@ -143,56 +145,4 @@ void FieldCollider::load(const string& fieldName)
 	fread(&vertexes[0], sizeof(Vector3), vertexNumber, filePointer);
 	fclose(filePointer);
 	return;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：getPolygonBy
-//  関数説明：ポイント所属するポリゴンの情報を取得
-//	引数：	point：ポイント位置
-//	戻り値：PolygonInfo*
-//--------------------------------------------------------------------------------
-FieldCollider::PolygonInfo* FieldCollider::getPolygonBy(const Vector3& point) const
-{
-	auto& center = Vector3(offset.Elements[3][0], offset.Elements[3][1], offset.Elements[3][2]);
-	auto& startPosition = center + Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
-	int leftUpX = (int)(((point.X - startPosition.X) / (blockSize.X * (float)blockXNumber)) * (float)blockXNumber);
-	int leftUpZ = -(int)(((point.Z - startPosition.Z) / (blockSize.Y * (float)blockZNumber)) * (float)blockZNumber);
-
-	//フィールドの範囲外だったら処理終了
-	if (leftUpX < 0 || leftUpX >= blockXNumber || leftUpZ < 0 || leftUpZ >= blockZNumber)
-	{
-		return nullptr;
-	}
-
-	auto result = new PolygonInfo;
-	int rightDownX = leftUpX + 1;
-	int rightDownZ = leftUpZ + 1;
-
-	auto& target = Vector3(point.X, 0.0f, point.Z);
-	result->LeftUp = vertexes[leftUpZ * (blockXNumber + 1) + leftUpX];
-	result->RightDown = vertexes[rightDownZ * (blockXNumber + 1) + rightDownX];
-
-	//Check Side
-	auto& leftUpToRightDown = result->RightDown - result->LeftUp;
-	auto& leftUpToTarget = target - result->LeftUp;
-	auto& cross = leftUpToTarget * leftUpToRightDown;
-	int sideX, sideZ;
-	int sign = 0;
-	if (cross.Y >= 0.0f)
-	{//LeftSide
-		sideX = leftUpX + 1;
-		sideZ = leftUpZ;
-		sign = -1;
-	}
-	else
-	{//RightSide
-		sideX = leftUpX;
-		sideZ = leftUpZ + 1;
-		sign = 1;
-	}
-	result->Side = vertexes[sideZ * (blockXNumber + 1) + sideX];
-	auto& sideToLeftUp = result->LeftUp - result->Side;
-	auto& sideToRightDown = result->RightDown - result->Side;
-	result->SurfaceNormal = ((sideToLeftUp * sideToRightDown) * (float)sign).Normalized();
-	return result;
 }

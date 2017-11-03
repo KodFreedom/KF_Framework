@@ -59,9 +59,9 @@ public:
 		Collisions.clear();
 	}
 
-	Collider*			This;
-	Collider*			Other;
-	list<Collision*>	Collisions;
+	Collider*		 This;
+	Collider*		 Other;
+	list<Collision*> Collisions;
 };
 
 //--------------------------------------------------------------------------------
@@ -78,10 +78,10 @@ public:
 	{}
 	~RayHitInfo() {}
 
-	Collider*		Collider;
-	float			Distance;
-	Vector3			Normal;
-	Vector3			Position;
+	Collider* Collider;
+	float	  Distance;
+	Vector3	  Normal;
+	Vector3	  Position;
 };
 
 //--------------------------------------------------------------------------------
@@ -105,18 +105,21 @@ public:
 	static RayHitInfo* Detect(const Ray& ray, const float& distance, FieldCollider& field);
 
 private:
+	//--------------------------------------------------------------------------------
+	//  ä÷êîíËã`
+	//--------------------------------------------------------------------------------
 	CollisionDetector() {}
 	~CollisionDetector() {}
 
-	//åvéZópä÷êî
-	static bool		checkPointWithAABB(Collision& collisionOut, const Vector3 vPoint, const AABBCollider& aabb);
-	static bool		checkPointWithBox(Collision& collisionOut, const Vector3 vPoint, const BoxCollider& box);
-	static bool		checkLineWithLine(const Vector2& vLA, const Vector2& vLB, const Vector2& vRA, const Vector2& vRB, Vector2& vOut);
-	static bool		checkLineWithLine(const Vector3& vLA, const Vector3& vLB, const Vector3& vRA, const Vector3& vRB, Vector3& vOut);
+	static Collision*	detect(const Vector3& point, const AABBCollider& aabb);
+	static Collision*	detect(const Vector3& point, const BoxCollider& box);
+	static Collision*	detect(const Vector3& point, const FieldCollider& field);
+	static Vector2*		detect(const Vector2& beginL, const Vector2& endL, const Vector2& beginR, const Vector2& endR);
+	static Vector3*		detect(const Vector3& beginL, const Vector3& endL, const Vector3& beginR, const Vector3& endR);
 
-	static float	transformBoxToAxis(const BoxCollider& box, const Vector3& vAxis);
-	static bool		checkOverlapOnAxis(const BoxCollider& boxL, const BoxCollider& boxR, const Vector3& vAxis);
-	static bool		checkOverlapOnAxis(const Vector2& vMinL, const Vector2& vMaxL, const Vector2& vMinR, const Vector2& vMaxR);
-	static bool		checkOverlapAABB(const AABBCollider& aabbL, const AABBCollider& aabbR);
-
+	static float		projectBoxToAxis(const BoxCollider& box, const Vector3& axis);
+	static bool			isOverlapOnAxis(const BoxCollider& boxL, const BoxCollider& boxR, const Vector3& axis);
+	static bool			isOverlap(const AABBCollider& aabbL, const AABBCollider& aabbR);
+	static bool			isOverlap(const Vector2& minL, const Vector2& maxL, const Vector2& minR, const Vector2& maxR);
+	static Collision*	maxPenetration(Collision* current, Collision* next);
 };

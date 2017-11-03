@@ -82,9 +82,9 @@ namespace KF
 		float			Magnitude(void) const;
 		float			SquareMagnitude(void) const;
 		void			Normalize(void);
-		Vector2&		Normalized(void) const;
+		Vector2			Normalized(void) const;
 		float			ToRadian(void) const;
-		Ray&			ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse);
+		Ray				ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse);
 
 		// 静的メソッド
 		static float	RadianBetween(const Vector2& valueL, const Vector2& valueR);
@@ -115,6 +115,9 @@ namespace KF
 		static const Vector3 Right;
 		static const Vector3 Forward;
 		static const Vector3 Back;
+		static const Vector3 AxisX;
+		static const Vector3 AxisY;
+		static const Vector3 AxisZ;
 
 		// キャスト
 		operator Vector2() const;
@@ -147,18 +150,18 @@ namespace KF
 		float			Magnitude(void) const;
 		float			SquareMagnitude(void) const;
 		void			Normalize(void);
-		Vector3&		Normalized(void) const;
-		Quaternion&		ToQuaternion(void) const;
+		Vector3			Normalized(void) const;
+		Quaternion		ToQuaternion(void) const;
 		
 		// 静的メソッド
 		static float	DistanceBetween(const Vector3& pointA, const Vector3& pointB);
 		static float	SquareDistanceBetween(const Vector3& pointA, const Vector3& pointB);
-		static Vector3&	TransformCoord(const Vector3& point, const Matrix44& transform);
-		static Vector3&	TransformNormal(const Vector3& normal, const Matrix44& transform);
-		static Vector3&	TransformInverse(const Vector3& point, const Matrix44& transform);
-		static Vector3&	Scale(const Vector3& value, const Vector3& scale);
-		static Vector3&	EulerBetween(const Vector3& directionA, const Vector3& directionB);
-		static Vector3&	ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal = Vector3::Up);
+		static Vector3	TransformCoord(const Vector3& point, const Matrix44& transform);
+		static Vector3	TransformNormal(const Vector3& normal, const Matrix44& transform);
+		static Vector3	TransformInverse(const Vector3& point, const Matrix44& transform);
+		static Vector3	Scale(const Vector3& value, const Vector3& scale);
+		static Vector3	EulerBetween(const Vector3& directionA, const Vector3& directionB);
+		static Vector3	ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal = Vector3::Up);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -224,17 +227,18 @@ namespace KF
 		void operator*=(const Matrix44& value);
 
 		// メソッド
-		Vector3&			ToEular(void) const;
-		Quaternion&			ToQuaternion(void) const;
-		Matrix44&			Transpose(void) const;
+		Vector3			ToEular(void) const;
+		Quaternion		ToQuaternion(void) const;
+		Matrix44		Transpose(void) const;
 
 		// 静的メソッド
-		static Matrix44&	RotationAxis(const Vector3& axis, const float& radian);
-		static Matrix44&	RotationYawPitchRoll(const Vector3& euler);
-		static Matrix44&	Translation(const Vector3& translation);
+		static Matrix44	RotationAxis(const Vector3& axis, const float& radian);
+		static Matrix44	RotationYawPitchRoll(const Vector3& euler);
+		static Matrix44	Translation(const Vector3& translation);
+		static Matrix44	Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation);
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-		static Matrix44&	ToMatrix44(const D3DXMATRIX& value);
+		static Matrix44	ToMatrix44(const D3DXMATRIX& value);
 #endif
 	};
 
@@ -276,14 +280,14 @@ namespace KF
 		void operator*=(const Quaternion& value);
 
 		// メソッド
-		float			Dot(const Quaternion& value) const;
-		float			SquareMagnitude(void) const;
-		float			Magnitude(void) const;
-		void			Normalize(void);
-		Quaternion&		Normalized(void) const;
-		Quaternion&		MultiplySeparately(const Quaternion& value) const;
-		Vector3&		ToEuler(void);
-		Matrix44&		ToMatrix(void);
+		float		Dot(const Quaternion& value) const;
+		float		SquareMagnitude(void) const;
+		float		Magnitude(void) const;
+		void		Normalize(void);
+		Quaternion	Normalized(void) const;
+		Quaternion	MultiplySeparately(const Quaternion& value) const;
+		Vector3		ToEuler(void);
+		Matrix44	ToMatrix(void);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -352,7 +356,7 @@ namespace KF
 		Vector3 Direction;
 
 		// メソッド
-		void		Transform(const Matrix44& transform);
+		void	Transform(const Matrix44& transform);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -363,7 +367,7 @@ namespace KF
 		void		Init(void);
 		int			Range(const int& min, const int& max);
 		float		Range(const float& min, const float& max);
-		Vector3&	Range(const Vector3& min, const Vector3& max);
+		Vector3		Range(const Vector3& min, const Vector3& max);
 	};
 
 	//--------------------------------------------------------------------------------

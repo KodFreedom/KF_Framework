@@ -13,16 +13,19 @@ using namespace KF;
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const Vector2		Vector2::Zero = Vector2(0.0f);					// Vector( 0, 0 )
-const Vector2		Vector2::One = Vector2(1.0f);					// Vector( 1, 1 )
-const Vector3		Vector3::Zero = Vector3(0.0f);					// Vector( 0, 0, 0 )
-const Vector3		Vector3::One = Vector3(1.0f);					// Vector( 1, 1, 1 )
-const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);		// Vector( 0, 1, 0 )
-const Vector3		Vector3::Down = Vector3(0.0f, -1.0f, 0.0f);		// Vector( 0,-1, 0 )
-const Vector3		Vector3::Left = Vector3(-1.0f, 0.0f, 0.0f);		// Vector(-1, 0, 0 )
-const Vector3		Vector3::Right = Vector3(1.0f, 0.0f, 0.0f);		// Vector( 1, 0, 0 )
-const Vector3		Vector3::Forward = Vector3(0.0f, 0.0f, 1.0f);	// Vector( 0, 0, 1 )
-const Vector3		Vector3::Back = Vector3(0.0f, 0.0f, -1.0f);		// Vector( 0, 0,-1 )
+const Vector2		Vector2::Zero = Vector2(0.0f);				
+const Vector2		Vector2::One = Vector2(1.0f);				
+const Vector3		Vector3::Zero = Vector3(0.0f);				
+const Vector3		Vector3::One = Vector3(1.0f);				
+const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);	
+const Vector3		Vector3::Down = Vector3(0.0f, -1.0f, 0.0f);	
+const Vector3		Vector3::Left = Vector3(-1.0f, 0.0f, 0.0f);	
+const Vector3		Vector3::Right = Vector3(1.0f, 0.0f, 0.0f);	
+const Vector3		Vector3::Forward = Vector3(0.0f, 0.0f, 1.0f);
+const Vector3		Vector3::Back = Vector3(0.0f, 0.0f, -1.0f);	
+const Vector3		Vector3::AxisX = Vector3::Right;
+const Vector3		Vector3::AxisY = Vector3::Up;
+const Vector3		Vector3::AxisZ = Vector3::Forward;
 const Matrix44		Matrix44::Identity = Matrix44();
 const Quaternion	Quaternion::Identity = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 const Color			Color::White = Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -207,7 +210,7 @@ void Vector2::Normalize(void)
 //	引数：	なし
 //	戻り値：Vector2
 //--------------------------------------------------------------------------------
-Vector2& Vector2::Normalized(void) const
+Vector2 Vector2::Normalized(void) const
 {
 	float magnitude = this->Magnitude();
 	if (magnitude <= 0.0f) return Vector2(0.0f);
@@ -234,7 +237,7 @@ float Vector2::ToRadian(void) const
 //			viewInverse：view行列の逆行列
 //	戻り値：Ray
 //--------------------------------------------------------------------------------
-Ray& Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
+Ray Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
 {
 	auto& position3D = Vector2(
 		(((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
@@ -504,7 +507,7 @@ void Vector3::Normalize(void)
 //	引数：	なし
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::Normalized(void) const
+Vector3 Vector3::Normalized(void) const
 {
 	float magnitude = this->Magnitude();
 	if (magnitude <= 0.0f) return Vector3(0.0f);
@@ -517,7 +520,7 @@ Vector3& Vector3::Normalized(void) const
 //	引数：	なし
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion&	Vector3::ToQuaternion(void) const
+Quaternion	Vector3::ToQuaternion(void) const
 {
 	// Todo : 計算式を調べる
 	Quaternion result;
@@ -561,7 +564,7 @@ float Vector3::SquareDistanceBetween(const Vector3& pointA, const Vector3& point
 //			rotation：回転行列
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::TransformCoord(const Vector3& point, const Matrix44& transform)
+Vector3 Vector3::TransformCoord(const Vector3& point, const Matrix44& transform)
 {
 	auto& work = Vector4(point, 1.0f);
 	work *= transform;
@@ -582,7 +585,7 @@ Vector3& Vector3::TransformCoord(const Vector3& point, const Matrix44& transform
 //			rotation：回転行列
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::TransformNormal(const Vector3& normal, const Matrix44& transform)
+Vector3 Vector3::TransformNormal(const Vector3& normal, const Matrix44& transform)
 {
 	auto& work = Vector4(normal, 0.0f);
 	work *= transform;
@@ -596,7 +599,7 @@ Vector3& Vector3::TransformNormal(const Vector3& normal, const Matrix44& transfo
 //			transform：変換行列
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::TransformInverse(const Vector3& point, const Matrix44& transform)
+Vector3 Vector3::TransformInverse(const Vector3& point, const Matrix44& transform)
 {
 	auto work = point;
 	work.X -= transform.Elements[3][0];
@@ -622,7 +625,7 @@ Vector3& Vector3::TransformInverse(const Vector3& point, const Matrix44& transfo
 //			scale：スケール値
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::Scale(const Vector3& value, const Vector3& scale)
+Vector3 Vector3::Scale(const Vector3& value, const Vector3& scale)
 {
 	return Vector3(value.X * scale.X, value.Y * scale.Y, value.Z * scale.Z);
 }
@@ -633,7 +636,7 @@ Vector3& Vector3::Scale(const Vector3& value, const Vector3& scale)
 //	引数：	directionA、directionB：ベクトル
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::EulerBetween(const Vector3& directionA, const Vector3& directionB)
+Vector3 Vector3::EulerBetween(const Vector3& directionA, const Vector3& directionB)
 {
 	Vector3 result;
 
@@ -657,7 +660,7 @@ Vector3& Vector3::EulerBetween(const Vector3& directionA, const Vector3& directi
 //			currentNormal：今の上方向
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal)
+Vector3 Vector3::ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal)
 {
 	return (currentNormal * direction) * planeNormal;
 }
@@ -851,7 +854,7 @@ void Matrix44::operator*=(const Matrix44 &value)
 //	引数：	なし
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Matrix44::ToEular(void) const
+Vector3 Matrix44::ToEular(void) const
 {
 	return this->ToQuaternion().ToEuler();
 }
@@ -862,7 +865,7 @@ Vector3& Matrix44::ToEular(void) const
 //	引数：	なし
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Matrix44::ToQuaternion(void) const
+Quaternion Matrix44::ToQuaternion(void) const
 {
 	Quaternion result;
 	if (Elements[2][2] <= 0.0f)  // x^2 + y^2 >= z^2 + w^2
@@ -920,7 +923,7 @@ Quaternion& Matrix44::ToQuaternion(void) const
 //	引数：	なし
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Matrix44::Transpose(void) const
+Matrix44 Matrix44::Transpose(void) const
 {
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
@@ -940,7 +943,7 @@ Matrix44& Matrix44::Transpose(void) const
 //			radian：角度
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Matrix44::RotationAxis(const Vector3& axis, const float& radian)
+Matrix44 Matrix44::RotationAxis(const Vector3& axis, const float& radian)
 {
 	Matrix44 result;
 	float x = axis.X;
@@ -966,7 +969,7 @@ Matrix44& Matrix44::RotationAxis(const Vector3& axis, const float& radian)
 //	引数：	euler：角度
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Matrix44::RotationYawPitchRoll(const Vector3& euler)
+Matrix44 Matrix44::RotationYawPitchRoll(const Vector3& euler)
 {
 	Matrix44 result;
 	float sinX = sinf(euler.X);
@@ -993,7 +996,7 @@ Matrix44& Matrix44::RotationYawPitchRoll(const Vector3& euler)
 //	引数：	translation：移動量
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Matrix44::Translation(const Vector3& translation)
+Matrix44 Matrix44::Translation(const Vector3& translation)
 {
 	Matrix44 result;
 	result.Elements[3][0] = translation.X;
@@ -1003,13 +1006,34 @@ Matrix44& Matrix44::Translation(const Vector3& translation)
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：Transform
+//  関数説明：与えられた回転と移動量で行列の作成
+//	引数：	right：右方向
+//			up：上方向
+//			forward：前方向
+//			translation：移動量
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation)
+{
+	return Matrix44
+	{
+		right.X, right.Y, right.Z, 0.0f,
+		up.X, up.Y, up.Z, 0.0f,
+		forward.X, forward.Y, forward.Z, 0.0f,
+		translation.X, translation.Y, translation.Z, 1.0f
+	};
+}
+
+
+//--------------------------------------------------------------------------------
 //	関数名：ToMatrix44
 //  関数説明：D3DXMATRIXをMatrix44に変換
 //	引数：	value：D3DXMATRIX
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-Matrix44& Matrix44::ToMatrix44(const D3DXMATRIX& value)
+Matrix44 Matrix44::ToMatrix44(const D3DXMATRIX& value)
 {
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
@@ -1224,7 +1248,7 @@ void Quaternion::Normalize(void)
 //	引数：	なし
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::Normalized(void) const
+Quaternion Quaternion::Normalized(void) const
 {
 	float magnitude = this->Magnitude();
 	if (magnitude <= 0.0f) return Quaternion();
@@ -1237,7 +1261,7 @@ Quaternion& Quaternion::Normalized(void) const
 //	引数：	value：相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::MultiplySeparately(const Quaternion& value) const
+Quaternion Quaternion::MultiplySeparately(const Quaternion& value) const
 {
 	return Quaternion(X * value.X, Y * value.Y, Z * value.Z, W * value.W);
 }
@@ -1248,7 +1272,7 @@ Quaternion& Quaternion::MultiplySeparately(const Quaternion& value) const
 //	引数：	なし
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Quaternion::ToEuler(void)
+Vector3 Quaternion::ToEuler(void)
 {
 	Vector3 result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -1270,7 +1294,7 @@ Vector3& Quaternion::ToEuler(void)
 //	引数：	なし
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Quaternion::ToMatrix(void)
+Matrix44 Quaternion::ToMatrix(void)
 {
 	Matrix44 result;
 	static const auto quaternion1110 = Quaternion(1.0f, 1.0f, 1.0f, 0.0f);
@@ -1502,7 +1526,7 @@ float Random::Range(const float& min, const float& max)
 //			max：最大値
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Random::Range(const Vector3& min, const Vector3& max)
+Vector3 Random::Range(const Vector3& min, const Vector3& max)
 {
 	return Vector3(Range(min.X, max.X), Range(min.Y, max.Y), Range(min.Z, max.Z));
 }

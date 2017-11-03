@@ -14,16 +14,11 @@
 //--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
-//struct INFO
-//{
-//	bool	bInTheField;
-//	float	fHeight;
-//	Vector3	SurfaceNormal;
-//};
-
-struct FieldCollisionInfo
+struct PolygonInfo
 {
-	float   Penetration;
+	Vector3 LeftUp;
+	Vector3 RightDown;
+	Vector3 Side;
 	Vector3 SurfaceNormal;
 };
 
@@ -60,26 +55,14 @@ public:
 		vertexes.clear();
 		Collider::Uninit();
 	}
-	FieldCollisionInfo*	DetectCollision(const Vector3& point) const;
+	PolygonInfo*		GetPolygonAt(const Vector3& point) const;
 	VertexesInRange*	GetVertexesInRange(const Vector3& begin, const Vector3& end);
 
 private:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
-	//--------------------------------------------------------------------------------
-	struct PolygonInfo
-	{
-		Vector3 LeftUp;
-		Vector3 RightDown;
-		Vector3 Side;
-		Vector3 SurfaceNormal;
-	};
-
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	void			load(const string& fieldName);
-	PolygonInfo*	getPolygonBy(const Vector3& point) const;
 	
 	//--------------------------------------------------------------------------------
 	//  変数定義
