@@ -18,7 +18,7 @@
 #include "modeDemo.h"
 #include "camera.h"
 #include "fade.h"
-#include "BGUIObject.h"
+#include "BackgroundUI.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -57,7 +57,7 @@ void CModeTitle::Init(void)
 	m_pCamera->Init();
 
 	//UI‚Ì‰Šú‰»
-	CBGUIObject::Create("title.jpg");
+	BackgroundUI::Create("title.jpg");
 }
 
 //--------------------------------------------------------------------------------

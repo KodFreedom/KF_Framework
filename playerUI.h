@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　PlayerUIObject.h
+//　playerUI.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "2DUIObject.h"
+#include "UIObject2D.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -19,38 +19,38 @@ class CPlayerBehaviorComponent;
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CPlayerUIObject : public C2DUIObject
+class PlayerUI : public UIObject2D
 {
 public:
-	CPlayerUIObject(CPlayerBehaviorComponent* const pPlayerBehavior)
-		: C2DUIObject(0)
-		, m_pPlayerBehavior(pPlayerBehavior)
-		, m_vFaceUVBegin(Vector2(0.0f)) {}
-	~CPlayerUIObject() {}
+	PlayerUI(CPlayerBehaviorComponent* const playerBehavior)
+		: UIObject2D(0)
+		, playerBehavior(playerBehavior)
+		, faceUVBegin(Vector2::Zero) {}
+	~PlayerUI() {}
 
 	bool Init(void) override;
 	void Update(void) override;
 
-	static CPlayerUIObject* Create(CPlayerBehaviorComponent* const pPlayerBehavior);
+	static PlayerUI* Create(CPlayerBehaviorComponent* const playerBehavior);
 	
 private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const float		sc_fScreenRate;
-	static const Vector2	sc_vLifeGaugeSize;
-	static const Vector2	sc_vLifeGaugePosLeftTop;
-	static const Color	sc_cLifeGaugeColorMax;
-	static const Color	sc_cLifeGaugeColorMin;
-	static const Vector2	sc_vCoverSize;
-	static const Vector2	sc_vCoverPosCenter;
-	static const Vector2	sc_vFaceSize;
-	static const Vector2	sc_vFacePosCenter;
-	static const Vector2	sc_vFaceUVSize;
+	static const float	 screenRate;
+	static const Vector2 lifeGaugeSize;
+	static const Vector2 lifeGaugePosLeftTop;
+	static const Color	 lifeGaugeColorMax;
+	static const Color	 lifeGaugeColorMin;
+	static const Vector2 coverSize;
+	static const Vector2 coverCenter;
+	static const Vector2 faceSize;
+	static const Vector2 faceCenter;
+	static const Vector2 faceUVSize;
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Vector2						m_vFaceUVBegin;
-	CPlayerBehaviorComponent*	m_pPlayerBehavior;
+	Vector2						faceUVBegin;
+	CPlayerBehaviorComponent*	playerBehavior;
 };

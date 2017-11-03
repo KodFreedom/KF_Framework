@@ -17,8 +17,8 @@
 //--------------------------------------------------------------------------------
 //struct SPRITE2D
 //{
-//	unsigned short			usNumPolygon;
-//	string					strTexName;
+//	unsigned short			polygonNumber;
+//	string					texture;
 //	LPDIRECT3DVERTEXBUFFER9 pVtxBuffer;
 //};
 
@@ -29,14 +29,14 @@
 //{
 //public:
 //	CSprite2D()
-//		: m_usNumPolygon(0), m_strTexName("polygon.jpg"), m_pVtxBuffer(nullptr) {}
+//		: m_polygonNumber(0), m_texture("polygon.jpg"), m_pVtxBuffer(nullptr) {}
 //	~CSprite2D()
 //	{
-//		m_strTexName.clear();
+//		m_texture.clear();
 //	}
 //
-//	unsigned short			m_usNumPolygon;
-//	string					m_strTexName;
+//	unsigned short			m_polygonNumber;
+//	string					m_texture;
 //	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;
 //};
 

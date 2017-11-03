@@ -18,7 +18,7 @@
 #include "camera.h"
 #include "fade.h"
 #include "modeTitle.h"
-#include "BGUIObject.h"
+#include "BackgroundUI.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -57,7 +57,7 @@ void CModeResult::Init(void)
 	m_pCamera->Init();
 
 	//UI‚Ì‰Šú‰»
-	CBGUIObject::Create("endingGood.jpg");
+	BackgroundUI::Create("endingGood.jpg");
 }
 
 //--------------------------------------------------------------------------------

@@ -93,7 +93,7 @@ bool RendererDirectX9::init(HWND hWnd, BOOL isWindowMode)
 	d3dpp.AutoDepthStencilFormat		= D3DFMT_D16;					// デプスバッファとして16bitを使う
 	d3dpp.Windowed						= isWindowMode;						// ウィンドウモード
 	d3dpp.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;		// リフレッシュレート
-	d3dpp.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;	// インターバル
+	d3dpp.PresentationInterval			= D3DPRESENT_INTERVADefault;	// インターバル
 	
 	// 抗劇歯
 	//d3dpp.MultiSampleType				= D3DMULTISAMPLE_8_SAMPLES;		// アンチエイジングの使用

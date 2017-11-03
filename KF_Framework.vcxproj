@@ -153,14 +153,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2DRenderComponent.cpp" />
-    <ClCompile Include="2DUIObject.cpp" />
+    <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="3DMeshRenderComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="actionGameCamera.cpp" />
     <ClCompile Include="actorBehaviorComponent.cpp" />
     <ClCompile Include="animatorComponent.cpp" />
-    <ClCompile Include="BGUIObject.cpp" />
+    <ClCompile Include="backgroundUI.cpp" />
     <ClCompile Include="boxCollider.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
@@ -206,7 +206,7 @@
     <ClCompile Include="modeTitle.cpp" />
     <ClCompile Include="motionStatus.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
-    <ClCompile Include="playerUIObject.cpp" />
+    <ClCompile Include="playerUI.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendererDirectX9.cpp" />
     <ClCompile Include="renderManager.cpp" />
@@ -221,7 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2DRenderComponent.h" />
-    <ClInclude Include="2DUIObject.h" />
+    <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="3DMeshRenderComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
     <ClInclude Include="AABBCollider.h" />
@@ -229,7 +229,7 @@
     <ClInclude Include="AIMode.h" />
     <ClInclude Include="animatorComponent.h" />
     <ClInclude Include="behaviorComponent.h" />
-    <ClInclude Include="BGUIObject.h" />
+    <ClInclude Include="backgroundUI.h" />
     <ClInclude Include="boxCollider.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="debugObserver.h" />
@@ -282,7 +282,7 @@
     <ClInclude Include="motionStatus.h" />
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
-    <ClInclude Include="playerUIObject.h" />
+    <ClInclude Include="playerUI.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rendererDirectX9.h" />
     <ClInclude Include="renderManager.h" />

@@ -12,17 +12,12 @@
 #include "main.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-#define GOM GameObjectManager	//GameObjectManagerの略称
-
-//--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-enum GOMLAYER
+enum Layer
 {
-	L_DEFAULT = 0,
-	L_MAX
+	Default = 0,
+	Max
 };
 
 //--------------------------------------------------------------------------------
@@ -39,34 +34,34 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	GameObjectManager();
-	~GameObjectManager() {}
-
-	static auto Create(void)
+	static auto	Create(void)
 	{
-		auto pGOM = new GameObjectManager;
-		return pGOM;
+		if (instance) return instance;
+		instance = new GameObjectManager;
+		return instance;
 	}
-	void		Release(void)
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
+	void ReleaseAll(void);
+	void Update(void);
+	void LateUpdate(void);
+	void Register(GameObject* gameObject, const Layer& layer = Default)
 	{
-		uninit();
-		delete this;
+		GameObjects[layer].push_back(gameObject);
 	}
-
-	void		ReleaseAll(void);
-	void		Update(void);
-	void		LateUpdate(void);
-
-	void		Register(GameObject* pGameObj, const GOMLAYER& layer = L_DEFAULT);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		uninit(void);
+	GameObjectManager() { for (auto& list : GameObjects) list.clear(); }
+	~GameObjectManager() {}
+	void uninit(void) { ReleaseAll(); }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<GameObject*>	m_aListGameObject[L_MAX];
+	list<GameObject*>			GameObjects[Layer::Max];
+	static GameObjectManager*	instance;
 };

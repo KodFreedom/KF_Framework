@@ -240,12 +240,6 @@
     <ClCompile Include="UIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="2DUIObject.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="playerUIObject.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
     <ClCompile Include="playerBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
@@ -275,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="stageSpawner.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="BGUIObject.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="motionStatus.cpp">
       <Filter>ソース ファイル\Motion</Filter>
@@ -362,6 +353,15 @@
     </ClCompile>
     <ClCompile Include="physicsSystem.cpp">
       <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject2D.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="backgroundUI.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="playerUI.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,12 +458,6 @@
     <ClInclude Include="UIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
-    <ClInclude Include="2DUIObject.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="playerUIObject.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
     <ClInclude Include="AIMode.h">
       <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
@@ -502,9 +496,6 @@
     </ClInclude>
     <ClInclude Include="stageSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="BGUIObject.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="motionStatus.h">
       <Filter>ヘッダー ファイル\Motion</Filter>
@@ -595,6 +586,15 @@
     </ClInclude>
     <ClInclude Include="physicsSystem.h">
       <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject2D.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="backgroundUI.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="playerUI.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

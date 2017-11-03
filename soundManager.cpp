@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-CSoundManager::SOUNDPARAM CSoundManager::m_aParam[CSoundManager::SL_MAX] =
+CSoundManager::SOUNDPARAM CSoundManager::m_aParam[CSoundManager::SMax] =
 {
 	{ "data/BGM/gameBGM.wav", -1 },	// BGM
 };
@@ -27,7 +27,7 @@ CSoundManager::CSoundManager()
 	: m_pXAudio2(NULL)
 	, m_pMasteringVoice(NULL)
 {
-	for (int count = 0; count < (int)SL_MAX; ++count)
+	for (int count = 0; count < (int)SMax; ++count)
 	{
 		m_apSourceVoice[count] = NULL;
 		m_apDataAudio[count] = NULL;
@@ -77,7 +77,7 @@ HRESULT	CSoundManager::LoadAll(void)
 	}
 
 	// サウンドデータの初期化
-	for (int countSound = 0; countSound < SL_MAX; countSound++)
+	for (int countSound = 0; countSound < SMax; countSound++)
 	{
 		HANDLE hFile;
 		DWORD dwChunkSize = 0;
@@ -178,7 +178,7 @@ HRESULT	CSoundManager::LoadAll(void)
 //--------------------------------------------------------------------------------
 void CSoundManager::UnloadAll(void)
 {
-	for (int countSound = 0; countSound < SL_MAX; countSound++)
+	for (int countSound = 0; countSound < SMax; countSound++)
 	{
 		if (m_apSourceVoice[countSound])
 		{
@@ -301,7 +301,7 @@ bool CSoundManager::IsPlaying(SOUND_LABEL label)
 //--------------------------------------------------------------------------------
 void CSoundManager::StopAll(void)
 {
-	for (int countSound = 0; countSound < SL_MAX; countSound++)
+	for (int countSound = 0; countSound < SMax; countSound++)
 	{
 		if (m_apSourceVoice[countSound])
 		{

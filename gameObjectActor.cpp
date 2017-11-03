@@ -15,7 +15,7 @@
 #include "3DRigidbodyComponent.h"
 #include "sphereCollider.h"
 #include "AABBCollider.h"
-#include "playerUIObject.h"
+#include "playerUI.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-GameObjectActor::GameObjectActor(const GOMLAYER& layer)
+GameObjectActor::GameObjectActor(const Layer& layer)
 	: GameObject(layer)
 	, m_pAnimator(nullptr)
 {
@@ -90,7 +90,7 @@ GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Ve
 	pObj->Init();
 
 	//UI
-	//CPlayerUIObject::Create(pPb);
+	//PlayerUI::Create(pPb);
 
 	return pObj;
 }

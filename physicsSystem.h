@@ -7,10 +7,6 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class Collision;
@@ -40,7 +36,7 @@ public:
 
 	void Update(void);
 	void Clear(void);
-	void Register(Collision* collision);
+	void Register(Collision* collision) { collisions.push_back(collision); }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -48,12 +44,12 @@ private:
 	//--------------------------------------------------------------------------------
 	PhysicsSystem() { collisions.clear(); }
 	~PhysicsSystem() {}
-	void	uninit(void);
+	void	uninit(void) { Clear(); }
 	void	resolve(Collision& collision);
 	void	resolveVelocity(Collision& collision);
 	void	resolveInterpenetration(Collision& collision);
 	float	calculateSeparatingVelocity(Collision& collision);
-	void	calculateCollisionBasis(Collision& collision);
+	//void	calculateCollisionBasis(Collision& collision);
 
 	//--------------------------------------------------------------------------------
 	//  変数宣言

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　BGUIObject.h
+//　BackgroundUI.h
 //	Author : Xu Wenjie
 //	Date   : 2017-08-28
 //--------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "2DUIObject.h"
+#include "UIObject2D.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -18,14 +18,14 @@
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CBGUIObject : public C2DUIObject
+class BackgroundUI : public UIObject2D
 {
 public:
-	CBGUIObject();
-	~CBGUIObject() {}
+	BackgroundUI() : UIObject2D(100) {}
+	~BackgroundUI() {}
 
-	bool Init(const string& strTexName);
+	bool Init(const string& texture);
 
-	static CBGUIObject* Create(const string& strTexName);
+	static BackgroundUI* Create(const string& texture);
 private:
 };

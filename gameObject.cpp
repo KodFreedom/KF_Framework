@@ -33,7 +33,7 @@ CNullRenderComponent	GameObject::s_nullRender;
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-GameObject::GameObject(const GOMLAYER& layer)
+GameObject::GameObject(const Layer& layer)
 	: m_layer(layer)
 	, m_bActive(true)
 	, m_bAlive(true)

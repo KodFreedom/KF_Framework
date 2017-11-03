@@ -25,7 +25,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
-	GameObjectActor(const GOMLAYER& layer = L_DEFAULT);
+	GameObjectActor(const Layer& layer = Default);
 	~GameObjectActor() {}
 
 	bool Init(void) override;

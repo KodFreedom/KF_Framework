@@ -42,10 +42,10 @@ bool CRenderComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CRenderComponent::Uninit(void)
 {
-	if (!m_strTexName.empty())
+	if (!m_texture.empty())
 	{
-		Main::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
-		m_strTexName.clear();
+		Main::GetManager()->GetTextureManager()->DisuseTexture(m_texture);
+		m_texture.clear();
 	}
 }
 
@@ -60,14 +60,14 @@ void CRenderComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  テクスチャ設定
 //--------------------------------------------------------------------------------
-void CRenderComponent::SetTexName(const string& strTexName)
+void CRenderComponent::SetTexName(const string& texture)
 {
-	if (!m_strTexName.empty())
+	if (!m_texture.empty())
 	{
-		Main::GetManager()->GetTextureManager()->DisuseTexture(m_strTexName);
-		m_strTexName.clear();
+		Main::GetManager()->GetTextureManager()->DisuseTexture(m_texture);
+		m_texture.clear();
 	}
 
-	m_strTexName = strTexName;
-	Main::GetManager()->GetTextureManager()->UseTexture(m_strTexName);
+	m_texture = texture;
+	Main::GetManager()->GetTextureManager()->UseTexture(m_texture);
 }

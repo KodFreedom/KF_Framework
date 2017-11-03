@@ -34,7 +34,7 @@ public:
 		, m_renderPriority(RP_3D)
 		, m_renderState(RS_LIGHTON_CULLFACEON_MUL)
 	{
-		m_strTexName.clear();
+		m_texture.clear();
 	}
 
 	~CRenderComponent() {}
@@ -45,7 +45,7 @@ public:
 	virtual void	Render(void) = 0;
 
 	//Set関数
-	void			SetTexName(const string& strTexName);
+	void			SetTexName(const string& texture);
 	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
 	void			SetRenderPriority(const RenderPriority& rp) { m_renderPriority = rp; }
 	void			SetRenderState(const RenderState& rs) { m_renderState = rs; }
@@ -63,7 +63,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string			m_strTexName;		//テクスチャ
+	string			m_texture;		//テクスチャ
 	unsigned short	m_usMatID;			//マテリアル
 	RenderPriority	m_renderPriority;
 	RenderState	m_renderState;

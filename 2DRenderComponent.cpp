@@ -39,7 +39,7 @@
 //	pDevice->SetFVF(FVF_VERTEX_2D);
 //
 //	// テクスチャの設定
-//	LPDIRECT3DTEXTURE9 texture = Main::GetManager()->GetTextureManager()->GetTexture(m_strTexName);
+//	LPDIRECT3DTEXTURE9 texture = Main::GetManager()->GetTextureManager()->GetTexture(m_texture);
 //	pDevice->SetTexture(0, texture);
 //
 //	// ポリゴンの描画

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
 //
-//　BGUIObject.cpp
+//　UIObject2D.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-08-28
+//	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
@@ -10,10 +10,10 @@
 #include "main.h"
 #include "manager.h"
 #include "textureManager.h"
-#include "BGUIObject.h"
+#include "UIObject2D.h"
 
 #ifdef USING_DIRECTX
-#include "KF_UtilityDX.h"
+#include "rendererDX.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -22,37 +22,55 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CBGUIObject::CBGUIObject()
-	: C2DUIObject(100)
+UIObject2D::UIObject2D(const unsigned short order)
+	: UIObject(order)
 {
+	sprites.clear();
 }
 
 //--------------------------------------------------------------------------------
-//  初期化
+//  終了処理
 //--------------------------------------------------------------------------------
-bool CBGUIObject::Init(const string& strTexName)
+void UIObject2D::Uninit(void)
 {
-	C2DUIObject::Init();
-	SPRITE sprite;
-	sprite.strTexName = strTexName;
-	auto pTexManager = Main::GetManager()->GetTextureManager();
-	pTexManager->UseTexture(sprite.strTexName);
-	sprite.usNumPolygon = 2;
-
+	for (auto itr = sprites.begin(); itr != sprites.end();)
+	{
+		TextureManager::Instance()->Disuse(itr->texture);
 #ifdef USING_DIRECTX
-	Vector2 vScreenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	UtilityDX::MakeVertex(sprite.pVtxBuffer, vScreenSize * 0.5f, vScreenSize);
+		SAFE_RELEASE(itr->pVtxBuffer);
 #endif
-	m_listSprite.push_back(sprite);
-	return true;
+		itr = sprites.erase(itr);
+	}
 }
 
 //--------------------------------------------------------------------------------
-//  作成
+//  描画処理
 //--------------------------------------------------------------------------------
-CBGUIObject* CBGUIObject::Create(const string& strTexName)
+void UIObject2D::Draw(void)
 {
-	auto pUI = new CBGUIObject;
-	pUI->Init(strTexName);
-	return pUI;
+	for (auto itr = sprites.begin(); itr != sprites.end(); ++itr)
+	{
+#ifdef USING_DIRECTX
+		LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+
+		// 頂点バッファをデータストリームに設定
+		pDevice->SetStreamSource(
+			0,							//ストリーム番号
+			itr->pVtxBuffer,			//頂点バッファ
+			0,							//オフセット
+			sizeof(VERTEX_2D));			//ストライド量
+
+		// 頂点フォーマットの設定
+		pDevice->SetFVF(FVF_VERTEX_2D);
+
+		// テクスチャの設定
+		auto texture = TextureManager::Instance()->GetTexture(itr->texture);
+		pDevice->SetTexture(0, texture);
+
+		// ポリゴンの描画
+		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
+			0,							//オフセット
+			itr->polygonNumber);			//ポリゴン数
+#endif
+	}
 }

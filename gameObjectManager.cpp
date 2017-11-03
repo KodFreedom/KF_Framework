@@ -12,27 +12,16 @@
 #include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-GameObjectManager::GameObjectManager()
-{
-	for (auto& list : m_aListGameObject){ list.clear(); }
-}
-
-//--------------------------------------------------------------------------------
 //  リリース処理
 //--------------------------------------------------------------------------------
 void GameObjectManager::ReleaseAll(void)
 {
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
 		{
@@ -47,10 +36,11 @@ void GameObjectManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 void GameObjectManager::Update(void)
 {
-	for (auto& list : m_aListGameObject)
+	// 生きてないオブジェクトを削除する
+	for (auto& list : GameObjects)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
-		{//生きてないオブジェクトを削除
+		{
 			if (!(*itr)->m_bAlive)
 			{
 				(*itr)->Release();
@@ -60,11 +50,11 @@ void GameObjectManager::Update(void)
 		}
 	}
 
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
-		for (auto pObj : list)
+		for (auto gameObject : list)
 		{
-			pObj->Update();
+			gameObject->Update();
 		}
 	}
 }
@@ -74,32 +64,11 @@ void GameObjectManager::Update(void)
 //--------------------------------------------------------------------------------
 void GameObjectManager::LateUpdate(void)
 {
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
-		for (auto pObj : list)
+		for (auto gameObject : list)
 		{
-			pObj->LateUpdate();
+			gameObject->LateUpdate();
 		}
 	}
-}
-
-//--------------------------------------------------------------------------------
-//  ゲームオブジェクトの確保
-//--------------------------------------------------------------------------------
-void GameObjectManager::Register(GameObject* pGameObj, const GOMLAYER& layer)
-{
-	m_aListGameObject[layer].push_back(pGameObj);
-}
-
-//--------------------------------------------------------------------------------
-//
-//  Private
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void GameObjectManager::uninit(void)
-{
-	ReleaseAll();
 }

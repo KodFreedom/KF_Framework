@@ -86,14 +86,9 @@ void Manager::Update(void)
 	//モード更新
 	m_pMode->Update();
 
-	//ゲームオブジェクトマネージャ更新
-	m_pGameObjectManager->Update();
-
-	//コリジョン更新
-	m_pCollisionSystem->Update();
-
-	//物理演算更新
-	m_pPhysicsSystem->Update();
+	GameObjectManager::Instance()->Update();
+	CollisionSystem::Instance()->Update();
+	PhysicsSystem::Instance()->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -104,11 +99,8 @@ void Manager::LateUpdate(void)
 	//モード更新
 	m_pMode->LateUpdate();
 
-	//ゲームオブジェクトマネージャ更新
-	m_pGameObjectManager->LateUpdate();
-
-	//コリジョン更新
-	m_pCollisionSystem->LateUpdate();
+	GameObjectManager::Instance()->LateUpdate();
+	CollisionSystem::Instance()->LateUpdate();
 
 	//UI更新
 	m_pUISystem->UpdateAll();
@@ -134,7 +126,7 @@ void Manager::Draw(void)
 		m_pMode->CameraSet();
 		m_pRenderManager->Render();
 #ifdef _DEBUG
-		m_pCollisionSystem->DrawCollider();
+		CollisionSystem::Instance()->DrawCollider();
 #endif
 		m_pUISystem->DrawAll();
 		m_pFade->Draw();
@@ -187,15 +179,9 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	LightManager::Create();
 	MaterialManager::Create();
 	CollisionSystem::Create();
-
-	//物理演算システム
-	m_pPhysicsSystem = PhysicsSystem::Create();
-
-	//ゲームオブジェクトマネージャの生成
-	m_pGameObjectManager = GameObjectManager::Create();
-
-	//UIシステムの生成
-	m_pUISystem = new CUISystem;
+	PhysicsSystem::Create();
+	GameObjectManager::Create();
+	UISystem::Create();
 
 	//サウンドマネージャの生成
 	m_pSoundManager = new CSoundManager;
@@ -229,22 +215,15 @@ void Manager::uninit(void)
 		m_pSoundManager = nullptr;
 	}
 
-	//ゲームオブジェクトマネージャの破棄
-	SAFE_RELEASE(m_pGameObjectManager);
-
-	//UIシステムの破棄
-	SAFE_RELEASE(m_pUISystem);
-
-	//物理演算システムの破棄
-	SAFE_RELEASE(m_pPhysicsSystem);
-
+	UISystem::Release();
+	GameObjectManager::Release();
+	PhysicsSystem::Release();
 	CollisionSystem::Release();
 	MaterialManager::Release();
 	LightManager::Release();
 	TextureManager::Release();
 	MeshManager::Release();
 	Input::Release();
-
 #ifdef _DEBUG
 	DebugObserver::Release();
 #endif

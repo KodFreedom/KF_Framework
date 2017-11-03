@@ -35,7 +35,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	GameObject(const GOMLAYER& layer = L_DEFAULT);
+	GameObject(const Layer& layer = Default);
 	~GameObject() {}
 	
 	virtual bool	Init(void) 
@@ -179,7 +179,7 @@ private:
 	bool				m_bAlive;		//生きるフラグ
 	string				m_strName;		//オブジェクトの名前
 	string				tag;		//オブジェクトのタグ
-	GOMLAYER			m_layer;		//レイヤ
+	Layer			m_layer;		//レイヤ
 
 	//--------------------------------------------------------------------------------
 	//  ヌルコンポネント定義

@@ -25,7 +25,7 @@ public:
 	enum SOUND_LABEL
 	{
 		BGM_GAME,
-		SL_MAX,
+		SMax,
 	};
 
 	CSoundManager();
@@ -57,9 +57,9 @@ private:
 
 	IXAudio2*				m_pXAudio2;							// XAudio2オブジェクトへのインターフェイス
 	IXAudio2MasteringVoice*	m_pMasteringVoice;					// マスターボイス
-	IXAudio2SourceVoice*	m_apSourceVoice[SL_MAX];	// ソースボイス
-	BYTE*					m_apDataAudio[SL_MAX];		// オーディオデータ
-	DWORD					m_aSizeAudio[SL_MAX];		// オーディオデータサイズ
+	IXAudio2SourceVoice*	m_apSourceVoice[SMax];	// ソースボイス
+	BYTE*					m_apDataAudio[SMax];		// オーディオデータ
+	DWORD					m_aSizeAudio[SMax];		// オーディオデータサイズ
 
-	static SOUNDPARAM 		m_aParam[SL_MAX];
+	static SOUNDPARAM 		m_aParam[SMax];
 };

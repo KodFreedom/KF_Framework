@@ -17,6 +17,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
+PhysicsSystem* PhysicsSystem::instance = nullptr;
 const Vector3 PhysicsSystem::Gravity = Vector3(0.0f, -9.8f, 0.0f);
 
 //--------------------------------------------------------------------------------
@@ -32,54 +33,34 @@ const Vector3 PhysicsSystem::Gravity = Vector3(0.0f, -9.8f, 0.0f);
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Update(void)
 {
-	for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
+	for (auto iterator = collisions.begin(); iterator != collisions.end();)
 	{
-		resolve(**itr);
-		delete *itr;
-		itr = m_listCollision.erase(itr);
+		resolve(**iterator);
+		delete *iterator;
+		iterator = collisions.erase(iterator);
 	}
 }
 
 //--------------------------------------------------------------------------------
-//  破棄処理
+//	関数名：Clear
+//  関数説明：衝突情報を全部破棄する
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Clear(void)
 {
-	for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
+	for (auto iterator = collisions.begin(); iterator != collisions.end();)
 	{
-		delete *itr;
-		itr = m_listCollision.erase(itr);
+		delete *iterator;
+		iterator = collisions.erase(iterator);
 	}
 }
 
 //--------------------------------------------------------------------------------
-//  衝突情報のレジストリ
-//--------------------------------------------------------------------------------
-void PhysicsSystem::RegisterCollision(Collision* pCollision)
-{
-	m_listCollision.push_back(pCollision);
-}
-
-//--------------------------------------------------------------------------------
 //
-//  Public
+//  Private
 //
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void PhysicsSystem::uninit(void)
-{
-	if (!m_listCollision.empty())
-	{
-		for (auto itr = m_listCollision.begin(); itr != m_listCollision.end();)
-		{
-			delete *itr;
-			itr = m_listCollision.erase(itr);
-		}
-	}
-}
-
 //--------------------------------------------------------------------------------
 //  衝突処理
 //--------------------------------------------------------------------------------
@@ -95,65 +76,62 @@ void PhysicsSystem::resolve(Collision& collision)
 void PhysicsSystem::resolveVelocity(Collision& collision)
 {
 	//分離速度計算
-	float fSeparatingVelocity = calculateSeparatingVelocity(collision);
+	float separatingVelocity = calculateSeparatingVelocity(collision);
 
 	//分離速度チェック
 	//衝突法線の逆方向になれば計算しない
-	if (fSeparatingVelocity > 0.0f) { return; }
+	if (separatingVelocity > 0.0f) return;
 
 	//跳ね返り係数の算出
-	float fBounciness = collision.RigidbodyOne->Bounciness;
+	float bounciness = collision.RigidbodyOne->Bounciness;
 	if (collision.RigidbodyTwo)
 	{
-		fBounciness += collision.RigidbodyTwo->Bounciness;
-		fBounciness *= 0.5f;
+		bounciness += collision.RigidbodyTwo->Bounciness;
+		bounciness *= 0.5f;
 	}
 
 	//跳ね返り速度の算出
-	float fNewSeparatingVelocity = -fSeparatingVelocity * fBounciness;
+	float bouncinessVelocity = -separatingVelocity * bounciness;
 
 	//衝突方向に作用力を計算する
-	auto vAccCausedVelocity = collision.RigidbodyOne->m_vAcceleration;
+	auto acceleration = collision.RigidbodyOne->m_vAcceleration;
 	if (collision.RigidbodyTwo)
 	{
-		vAccCausedVelocity -= collision.RigidbodyTwo->m_vAcceleration;
+		acceleration -= collision.RigidbodyTwo->m_vAcceleration;
 	}
-	float fAccCausedSeparatingVelocity = CKFMath::Vec3Dot(vAccCausedVelocity, collision.Normal);
+	float separatingAcceleration = acceleration.Dot(collision.Normal);
 
 	//衝突法線の逆方向になれば
-	if (fAccCausedSeparatingVelocity < 0.0f)
+	if (separatingAcceleration < 0.0f)
 	{
-		fNewSeparatingVelocity += fAccCausedSeparatingVelocity * fBounciness;
-		if (fNewSeparatingVelocity < 0.0f) { fNewSeparatingVelocity = 0.0f; }
+		bouncinessVelocity += separatingAcceleration * bounciness;
+		if (bouncinessVelocity < 0.0f) bouncinessVelocity = 0.0f;
 	}
 
 	//速度差分計算
-	float fDeltaVelocity = fNewSeparatingVelocity - fSeparatingVelocity;
+	float deltaVelocity = bouncinessVelocity - separatingVelocity;
 
 	//逆質量取得
-	float fTotalInverseMass = collision.RigidbodyOne->m_fInverseMass;
+	float totalInverseMass = collision.RigidbodyOne->m_fInverseMass;
 	if (collision.RigidbodyTwo)
 	{
-		fTotalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
+		totalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
 	}
 
 	//質量が無限大の場合計算しない
-	if (fTotalInverseMass <= 0.0f) { return; }
+	if (totalInverseMass <= 0.0f) return;
 
 	//衝突力計算
-	float fImpulse = fDeltaVelocity / fTotalInverseMass;
+	float impulse = deltaVelocity / totalInverseMass;
 
 	//単位逆質量の衝突力
-	auto vImpulsePerInverseMass = collision.Normal * fImpulse;
+	auto impulsePerInverseMass = collision.Normal * impulse;
 
 	//速度計算
-	auto vVelocity = vImpulsePerInverseMass * collision.RigidbodyOne->m_fInverseMass;
-	collision.RigidbodyOne->m_vVelocity += vVelocity;
-
+	collision.RigidbodyOne->m_vVelocity += impulsePerInverseMass * collision.RigidbodyOne->m_fInverseMass;;
 	if (collision.RigidbodyTwo)
 	{
-		vVelocity = vImpulsePerInverseMass * -1.0f * collision.RigidbodyTwo->m_fInverseMass;
-		collision.RigidbodyTwo->m_vVelocity += vVelocity;
+		collision.RigidbodyTwo->m_vVelocity += impulsePerInverseMass * -1.0f * collision.RigidbodyTwo->m_fInverseMass;;
 	}
 }
 
@@ -163,29 +141,29 @@ void PhysicsSystem::resolveVelocity(Collision& collision)
 void PhysicsSystem::resolveInterpenetration(Collision& collision)
 {
 	//衝突しない
-	if (collision.Penetration <= 0.0f) { return; }
+	if (collision.Penetration <= 0.0f) return;
 
 	//逆質量計算
-	float fTotalInverseMass = collision.RigidbodyOne->m_fInverseMass;
+	float totalInverseMass = collision.RigidbodyOne->m_fInverseMass;
 	if (collision.RigidbodyTwo)
 	{
-		fTotalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
+		totalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
 	}
 
 	//質量が無限大の場合計算しない
-	if (fTotalInverseMass <= 0.0f) { return; }
+	if (totalInverseMass <= 0.0f) return;
 
 	//質量単位戻り量計算
-	auto vMovePerInverseMass = collision.Normal * collision.Penetration / fTotalInverseMass;
+	auto movementPerInverseMass = collision.Normal * collision.Penetration / totalInverseMass;
 
-	//各粒子戻り位置計算
-	auto pTrans = collision.RigidbodyOne->m_pGameObj->GetTransformComponent();
-	collision.RigidbodyOne->m_vMovement += vMovePerInverseMass * collision.RigidbodyOne->m_fInverseMass;
+	//各Rigidbody戻り位置計算
+	auto transform = collision.RigidbodyOne->GetGameObject()->GetTransformComponent();
+	collision.RigidbodyOne->m_vMovement += movementPerInverseMass * collision.RigidbodyOne->m_fInverseMass;
 
 	if (collision.RigidbodyTwo)
 	{
-		pTrans = collision.RigidbodyTwo->m_pGameObj->GetTransformComponent();
-		collision.RigidbodyTwo->m_vMovement -= vMovePerInverseMass * collision.RigidbodyTwo->m_fInverseMass;
+		transform = collision.RigidbodyTwo->GetGameObject()->GetTransformComponent();
+		collision.RigidbodyTwo->m_vMovement -= movementPerInverseMass * collision.RigidbodyTwo->m_fInverseMass;
 	}
 }
 
@@ -194,12 +172,12 @@ void PhysicsSystem::resolveInterpenetration(Collision& collision)
 //--------------------------------------------------------------------------------
 float PhysicsSystem::calculateSeparatingVelocity(Collision& collision)
 {
-	auto vRelativeVelocity = collision.RigidbodyOne->m_vVelocity;
-	if (collision.RigidbodyTwo) { vRelativeVelocity -= collision.RigidbodyTwo->m_vVelocity; }
-	return CKFMath::Vec3Dot(vRelativeVelocity, collision.Normal);
+	auto relativeVelocity = collision.RigidbodyOne->m_vVelocity;
+	if (collision.RigidbodyTwo) relativeVelocity -= collision.RigidbodyTwo->m_vVelocity;
+	return relativeVelocity.Dot(collision.Normal);
 }
 
-//--------------------------------------------------------------------------------
+/*//--------------------------------------------------------------------------------
 //  衝突法線をX軸として、衝突座標係の算出
 //--------------------------------------------------------------------------------
 void PhysicsSystem::calculateCollisionBasis(Collision& collision)
@@ -245,4 +223,4 @@ void PhysicsSystem::calculateCollisionBasis(Collision& collision)
 	collision.m_mtxToWorld.Elements[2][0] = vAxisZ.X;
 	collision.m_mtxToWorld.Elements[2][1] = vAxisZ.Y;
 	collision.m_mtxToWorld.Elements[2][2] = vAxisZ.Z;
-}
+}*/

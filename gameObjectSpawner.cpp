@@ -287,9 +287,9 @@ GameObject* GameObjectSpawner::createChildNode(CTransformComponent* pParent, FIL
 	{
 		int nNameSize = 0;
 		fread_s(&nNameSize, sizeof(int), sizeof(int), 1, filePointer);
-		string strTexName;
-		strTexName.resize(nNameSize);
-		fread_s(&strTexName[0], nNameSize, sizeof(char), nNameSize, filePointer);
+		string texture;
+		texture.resize(nNameSize);
+		fread_s(&texture[0], nNameSize, sizeof(char), nNameSize, filePointer);
 		//Meshë§Ç≈ì«Ç›çûÇﬁÇÃÇ≈Ç±Ç±ÇÕï˙Ç¡ÇƒÇ®Ç≠
 	}
 

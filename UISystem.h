@@ -13,41 +13,44 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CUIObject;
+class UIObject;
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CUISystem
+class UISystem
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//-------------------------------------------------------------------------------
-	CUISystem() { m_listObj.clear(); }
-	~CUISystem() {}
-
-	void	Release(void) 
+	static auto	Create(void)
 	{
-		ReleaseAll(); 
-		delete this; 
+		if (instance) return instance;
+		instance = new UISystem;
+		return instance;
 	}
-	void	ReleaseAll(void);
-	void	UpdateAll(void);
-	void	DrawAll(void);
-
-	void	Register(CUIObject* pUIObj);
-	void	Deregister(CUIObject* pUIObj);
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+	
+	void ReleaseAll(void);
+	void Update(void);
+	void Draw(void);
+	void Register(UIObject* object);
+	void Deregister(UIObject* object);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	static bool	Compare(CUIObject* pUIObjA, CUIObject* pUIObjB);
-	
+	UISystem() { objects.clear(); }
+	~UISystem() {}
+	void		uninit(void) { ReleaseAll(); }
+	static bool	compare(UIObject* objectA, UIObject* objectB);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<CUIObject*> m_listObj;
+	list<UIObject*>  objects;
+	static UISystem* instance;
 };
