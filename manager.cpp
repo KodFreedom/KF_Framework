@@ -182,10 +182,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
 	UISystem::Create();
-
-	//サウンドマネージャの生成
-	m_pSoundManager = new CSoundManager;
-	m_pSoundManager->LoadAll();
+	SoundManager::Create();
 
 	//Fadeの生成
 	m_pFade = CFade::Create();
@@ -207,14 +204,7 @@ void Manager::uninit(void)
 	//Fadeの破棄
 	SAFE_RELEASE(m_pFade);
 
-	//サウンドマネージャの破棄
-	if (m_pSoundManager)
-	{
-		m_pSoundManager->UnloadAll();
-		delete m_pSoundManager;
-		m_pSoundManager = nullptr;
-	}
-
+	SoundManager::Release();
 	UISystem::Release();
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
