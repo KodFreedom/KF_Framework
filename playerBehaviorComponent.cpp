@@ -76,7 +76,7 @@ void CPlayerBehaviorComponent::LateUpdate(void)
 	if (m_actor.GetLifeNow() <= 0.0f)
 	{
 		auto pMode = Main::GetManager()->GetMode();
-		auto pModeDemo = dynamic_cast<CModeDemo*>(pMode);
+		auto pModeDemo = dynamic_cast<ModeDemo*>(pMode);
 		pModeDemo->EndMode(true);
 	}
 }
@@ -102,7 +102,7 @@ void CPlayerBehaviorComponent::OnTrigger(Collider& colliderThis, Collider& colli
 		if (colliderThis.GetTag()._Equal("body"))
 		{
 			auto pMode = Main::GetManager()->GetMode();
-			auto pModeDemo = dynamic_cast<CModeDemo*>(pMode);
+			auto pModeDemo = dynamic_cast<ModeDemo*>(pMode);
 			pModeDemo->EndMode(false);
 		}
 	}

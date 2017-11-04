@@ -49,5 +49,5 @@ Renderer* Renderer::Create(HWND hWnd, BOOL isWindowMode)
 //--------------------------------------------------------------------------------
 void Renderer::Release(void)
 {
-	SAFE_RELEASE(instance);
+	SAFE_UNINIT(instance);
 }

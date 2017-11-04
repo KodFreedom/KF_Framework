@@ -4,10 +4,11 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-08-23
 //--------------------------------------------------------------------------------
-#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "versionSetting.h"
+#if defined(_DEBUG) || defined(EDITOR)
 #include "main.h"
 #include "manager.h"
 #include "inputManager.h"
@@ -32,7 +33,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(GameObject* const pGameObj)
+ModelEditorBehaviorComponent::ModelEditorBehaviorComponent(GameObject* const pGameObj)
 	: CBehaviorComponent(pGameObj)
 	, modelType(MT_BOX)
 	, m_bActive(false)
@@ -45,7 +46,7 @@ CModelEditorBehaviorComponent::CModelEditorBehaviorComponent(GameObject* const p
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-bool CModelEditorBehaviorComponent::Init(void)
+bool ModelEditorBehaviorComponent::Init(void)
 {
 	m_aStrName[MT_BOX] = "cube";
 	m_aStrName[MT_TREE] = "tree_1";
@@ -79,7 +80,7 @@ bool CModelEditorBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::Uninit(void)
+void ModelEditorBehaviorComponent::Uninit(void)
 {
 	for (auto& str : m_aStrName) { str.clear(); }
 	for (auto& list : m_alistCreated) { list.clear(); }
@@ -88,7 +89,7 @@ void CModelEditorBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::Update(void)
+void ModelEditorBehaviorComponent::Update(void)
 {
 	if (!m_bActive)
 	{
@@ -103,7 +104,7 @@ void CModelEditorBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::LateUpdate(void)
+void ModelEditorBehaviorComponent::LateUpdate(void)
 {
 	if (!m_bActive)
 	{
@@ -114,7 +115,7 @@ void CModelEditorBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  SetPos
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::SetPos(const Vector3& Position)
+void ModelEditorBehaviorComponent::SetPos(const Vector3& Position)
 {
 	m_aObjInfoDemo[(int)modelType].pTransform->SetPosNext(Position);
 }
@@ -122,7 +123,7 @@ void CModelEditorBehaviorComponent::SetPos(const Vector3& Position)
 //--------------------------------------------------------------------------------
 //  SetPos
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
+void ModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 {
 	//フィールドの保存
 	string strName = "data/STAGE/" + strFileName + ".stage";
@@ -167,7 +168,7 @@ void CModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 //  create
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::create(void)
+void ModelEditorBehaviorComponent::create(void)
 {
 	auto pObj = GameObjectSpawner::CreateModel(m_aStrName[(int)modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
 	auto pTrans = pObj->GetTransformComponent();
@@ -185,7 +186,7 @@ void CModelEditorBehaviorComponent::create(void)
 //--------------------------------------------------------------------------------
 //  showMainWindow
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::showMainWindow(void)
+void ModelEditorBehaviorComponent::showMainWindow(void)
 {
 	// Begin
 	if (!ImGui::Begin("Model Editor Window"))
@@ -223,7 +224,7 @@ void CModelEditorBehaviorComponent::showMainWindow(void)
 //--------------------------------------------------------------------------------
 //  showTypeListBox
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::showTypeListBox(void)
+void ModelEditorBehaviorComponent::showTypeListBox(void)
 {
 	//new
 	char **arr = new char*[MT_MAX];
@@ -262,7 +263,7 @@ void CModelEditorBehaviorComponent::showTypeListBox(void)
 //--------------------------------------------------------------------------------
 //  showCreatedList
 //--------------------------------------------------------------------------------
-void CModelEditorBehaviorComponent::showCreatedList(void)
+void ModelEditorBehaviorComponent::showCreatedList(void)
 {
 	if (!m_bShowCreatedList) { return; }
 

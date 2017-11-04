@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	描画コンポネント
-//　renderComponent.h
+//	メッシュ描画コンポネント
+//　MeshRenderer.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
@@ -10,11 +10,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
-#include "renderManager.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
+#include "renderState.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -22,22 +18,27 @@
 //--------------------------------------------------------------------------------
 //  描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class CRenderComponent : public Component
+class MeshRenderer : public Component
 {
+	friend class RenderManager;
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRenderComponent(GameObject* const pGameObj)
-		: Component(pGameObj)
-		, m_usMatID(0)
-		, m_renderPriority(RP_3D)
-		, m_renderState(RS_LIGHTON_CULLFACEON_MUL)
+	MeshRenderer(GameObject* const owner)
+		: Component(owner)
+		, materialID(0)
+		, lighting(Lighting::On)
+		, cullMode(CullMode::CCW)
+		, synthesis(Synthesis::Multiplication)
+		, fillMode(FillMode::Solid)
+		, alpha(Alpha::None)
+		, fog(Fog::On)
 	{
-		m_texture.clear();
+		textureName.clear();
 	}
 
-	~CRenderComponent() {}
+	~MeshRenderer() {}
 
 	virtual bool	Init(void) override;
 	virtual void	Uninit(void) override;
@@ -45,38 +46,42 @@ public:
 	virtual void	Render(void) = 0;
 
 	//Set関数
-	void			SetTexName(const string& texture);
-	void			SetMatID(const unsigned short& usID) { m_usMatID = usID; }
-	void			SetRenderPriority(const RenderPriority& rp) { m_renderPriority = rp; }
-	void			SetRenderState(const RenderState& rs) { m_renderState = rs; }
-
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
+	void Set(const string& texture);
+	void Set(const unsigned short& usID) { materialID = usID; }
+	void Set(const Lighting& value) { lighting = value; }
+	void Set(const CullMode& value) { cullMode = value; }
+	void Set(const Synthesis& value) { synthesis = value; }
+	void Set(const FillMode& value) { fillMode = value; }
+	void Set(const Alpha& value) { alpha = value; }
+	void Set(const Fog& value) { fog = value; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRenderComponent() : Component() {}
+	MeshRenderer() : Component() {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string			m_texture;		//テクスチャ
-	unsigned short	m_usMatID;			//マテリアル
-	RenderPriority	m_renderPriority;
-	RenderState	m_renderState;
+	string			textureName;
+	unsigned short	materialID;
+	Lighting		lighting;
+	CullMode		cullMode;
+	Synthesis		synthesis;
+	FillMode		fillMode;
+	Alpha			alpha;
+	Fog				fog;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌル描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class CNullRenderComponent : public CRenderComponent
+class NullMeshRenderer : public MeshRenderer
 {
 public:
-	CNullRenderComponent() : CRenderComponent() {}
-	~CNullRenderComponent() {}
+	NullMeshRenderer() : MeshRenderer() {}
+	~NullMeshRenderer() {}
 
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}

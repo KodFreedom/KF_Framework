@@ -10,81 +10,61 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+#include "renderState.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CRenderComponent;
-class CRenderState;
-
-//--------------------------------------------------------------------------------
-//  列挙型定義
-//--------------------------------------------------------------------------------
-enum RenderPriority
-{//レンダー優先度
-	RP_3D = 0,
-	RP_3D_ALPHATEST,
-	RP_3D_ZSORT,
-	RP_MAX
-};
-
-enum RenderState
-{//レンダーステート
-	RS_LIGHTOFF_CULLFACEON_MUL = 0,	//ライトオフ、両面描画、乗算合成
-	RS_LIGHTOFF_CULLFACEOFF_MUL,	//ライトオフ、両面描画、乗算合成
-	RS_LIGHTON_CULLFACEON_MUL,		//ライトオン、片面描画、乗算合成
-	RS_LIGHTON_CULLFACEOFF_MUL,		//ライトオン、片面描画、乗算合成
-	RS_MAX
-};
+class MeshRenderer;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CRenderManager
+class RenderManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRenderManager();
-	~CRenderManager() {}
+	static auto	Create(void)
+	{
+		if (instance) return instance;
+		instance = new RenderManager;
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
 
-	static auto Create(void)
-	{
-		auto pRenderManager = new CRenderManager();
-		pRenderManager->init();
-		return pRenderManager;
-	}
-	void		Update(void);
-	void		Render(void);
-	void		Release(void)
-	{
-		uninit();
-		delete this;
-	}
-	void		Clear(void);
-	void		Register(CRenderComponent* pRender, const RenderPriority& rp, const RenderState& rs)
-	{
-		m_apRenderComponents[rp][rs].push_back(pRender);
-	}
+	void Update(void);
+	void Render(void);
+	void Clear(void);
+	void Register(MeshRenderer* renderer);
 
 private:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
+	//  列挙型定義
 	//--------------------------------------------------------------------------------
-	typedef list<CRenderComponent*> ListDraw;
+	enum ListNoBase
+	{
+		LightingBase = 1,
+		CullModeBase = Lighting::Max,
+		SynthesisBase = CullMode::Max * Lighting::Max,
+		FillModeBase = Synthesis::Max * CullMode::Max * Lighting::Max,
+		FogBase = FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max,
+		AlphaBase = Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max,
+	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		init(void);
-	void		uninit(void);
-	void		setRenderState(const RenderPriority& rp, const RenderState& rs);
-	void		resetRenderState(const RenderPriority& rp, const RenderState& rs);
+	RenderManager();
+	~RenderManager() {}
+	void uninit(void) { Clear(); }
+	int  calculateListNo(const int alpha, const int fog, const int fillMode, const int synthesis, const int cullMode, const int lighting);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	ListDraw		m_apRenderComponents[RP_MAX][RS_MAX];
-	CRenderState*	m_apRenderState[RS_MAX];
+	list<MeshRenderer*>		meshRenderers[Alpha::Max * Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max];
+	static RenderManager*	instance;
 };

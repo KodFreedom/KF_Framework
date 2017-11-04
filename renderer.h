@@ -7,6 +7,11 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
+//  インクルードファイル
+//--------------------------------------------------------------------------------
+#include "renderState.h"
+
+//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 class Renderer
@@ -21,20 +26,24 @@ public:
 
 	virtual bool BeginRender(void) = 0;
 	virtual void EndRender(void) = 0;
-
-	//Get関数
-	auto GetBackgroundColor(void) const { return backgroundColor; }
-	auto GetWireFrameFlag(void) const { return enableWireFrameMode; }
-
-	//Set関数
+				 
+	//Get関数	   
+	auto		 GetBackgroundColor(void) const { return backgroundColor; }
+				 
+	//Set関数	   
 	void		 SetBackgroundColor(const Color& color) { backgroundColor = color; }
-	virtual void SetWireFrameFlag(const bool& isEnable) { enableWireFrameMode = isEnable; }
+	virtual void SetRenderState(const Lighting& value) = 0;
+	virtual void SetRenderState(const CullMode& value) = 0;
+	virtual void SetRenderState(const Synthesis& value) = 0;
+	virtual void SetRenderState(const FillMode& value) = 0;
+	virtual void SetRenderState(const Alpha& value) = 0;
+	virtual void SetRenderState(const Fog& value) = 0;
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	Renderer() : backgroundColor(Color::Black), enableWireFrameMode(false) {}
+	Renderer() : backgroundColor(Color::Black) {}
 	~Renderer() {}
 	virtual bool init(HWND hWnd, BOOL isWindowMode) = 0;
 	virtual void uninit(void) = 0;
@@ -44,5 +53,4 @@ protected:
 	//--------------------------------------------------------------------------------
 	static Renderer* instance;
 	Color			 backgroundColor;
-	bool			 enableWireFrameMode;
 };

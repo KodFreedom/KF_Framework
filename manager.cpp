@@ -22,14 +22,11 @@
 #include "mode.h"
 #include "modeTitle.h"
 #include "modeDemo.h"
-#include "fade.h"
-#include "fog.h"
-
-//物理演算処理
+#include "fadeSystem.h"
 #include "collisionSystem.h"
 #include "physicsSystem.h"
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 #include "modeEditor.h"
 #include "debugObserver.h"
 #endif
@@ -76,16 +73,11 @@ void Manager::Release(void)
 //--------------------------------------------------------------------------------
 void Manager::Update(void)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Instance()->Update();
 #endif
-
-	//入力更新
 	Input::Instance()->Update();
-
-	//モード更新
-	m_pMode->Update();
-
+	currentMode->Update();
 	GameObjectManager::Instance()->Update();
 	CollisionSystem::Instance()->Update();
 	PhysicsSystem::Instance()->Update();
@@ -96,22 +88,13 @@ void Manager::Update(void)
 //--------------------------------------------------------------------------------
 void Manager::LateUpdate(void)
 {
-	//モード更新
-	m_pMode->LateUpdate();
-
+	currentMode->LateUpdate();
 	GameObjectManager::Instance()->LateUpdate();
 	CollisionSystem::Instance()->LateUpdate();
-
-	//UI更新
-	m_pUISystem->UpdateAll();
-
-	//Fade更新
-	m_pFade->Update();
-
-	//レンダーマネージャ更新
-	m_pRenderManager->Update();
-
-#ifdef _DEBUG
+	UISystem::Instance()->Update();
+	FadeSystem::Instance()->Update();
+	RenderManager::Instance()->Update();
+#if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Instance()->LateUpdate();
 #endif
 }
@@ -119,18 +102,18 @@ void Manager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void Manager::Draw(void)
+void Manager::Render(void)
 {
 	if (Renderer::Instance()->BeginRender())
 	{
-		m_pMode->CameraSet();
-		m_pRenderManager->Render();
+		currentMode->CameraSet();
+		RenderManager::Instance()->Render();
 #ifdef _DEBUG
 		CollisionSystem::Instance()->DrawCollider();
 #endif
-		m_pUISystem->DrawAll();
-		m_pFade->Draw();
-#ifdef _DEBUG
+		UISystem::Instance()->Draw();
+		FadeSystem::Instance()->Draw();
+#if defined(_DEBUG) || defined(EDITOR)
 		DebugObserver::Instance()->Draw();
 #endif
 		Renderer::Instance()->EndRender();
@@ -140,12 +123,11 @@ void Manager::Draw(void)
 //--------------------------------------------------------------------------------
 //  モード切り替え
 //--------------------------------------------------------------------------------
-void Manager::ChangeMode(CMode* nextMode)
+void Manager::Change(Mode* nextMode)
 {
-	if (!currentMode) { return; }
-	SAFE_RELEASE(m_pMode);
-	m_pMode = pMode;
-	m_pMode->Init();
+	SAFE_RELEASE(currentMode);
+	currentMode = nextMode;
+	currentMode->Init();
 }
 
 //--------------------------------------------------------------------------------
@@ -158,21 +140,12 @@ void Manager::ChangeMode(CMode* nextMode)
 //--------------------------------------------------------------------------------
 bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 {
-	HRESULT hr = E_FAIL;
 	Random::Init();
-
 	if (!Renderer::Create(hWnd, isWindowMode)) return false;
-
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hWnd);
 #endif
-
-	//レンダーマネージャの生成
-	m_pRenderManager = CRenderManager::Create();
-
-	//フォグの生成
-	m_pFog = CFog::Create();
-
+	RenderManager::Create();
 	Input::Create(hInstance, hWnd);
 	MeshManager::Create();
 	TextureManager::Create();
@@ -183,12 +156,10 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	GameObjectManager::Create();
 	UISystem::Create();
 	SoundManager::Create();
-
-	//Fadeの生成
-	m_pFade = CFade::Create();
+	FadeSystem::Create();
 
 	//初期モード設定
-	SetMode(new CModeEditor);
+	Change(new ModeEditor);
 
 	return true;
 }
@@ -198,12 +169,8 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 //--------------------------------------------------------------------------------
 void Manager::uninit(void)
 {
-	//モードの破棄
-	SAFE_RELEASE(m_pMode);
-
-	//Fadeの破棄
-	SAFE_RELEASE(m_pFade);
-
+	SAFE_RELEASE(currentMode);
+	FadeSystem::Release();
 	SoundManager::Release();
 	UISystem::Release();
 	GameObjectManager::Release();
@@ -214,15 +181,9 @@ void Manager::uninit(void)
 	TextureManager::Release();
 	MeshManager::Release();
 	Input::Release();
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Release();
 #endif
-
-	//フォグの破棄
-	SAFE_RELEASE(m_pFog);
-
-	//レンダーマネージャ
-	SAFE_RELEASE(m_pRenderManager);
-
+	RenderManager::Release();
 	Renderer::Release();
 }

@@ -23,9 +23,15 @@ public:
 	//--------------------------------------------------------------------------------
 	RendererDirectX9() : Renderer(), lpDirect3D9(nullptr), lpD3DDevice(nullptr) {}
 	~RendererDirectX9() {}
+
 	bool BeginRender(void) override;
 	void EndRender(void) override;
-	void SetWireFrameFlag(const bool& isEnable) override;
+	void SetRenderState(const Lighting& value) override;
+	void SetRenderState(const CullMode& value) override;
+	void SetRenderState(const Synthesis& value) override;
+	void SetRenderState(const FillMode& value) override;
+	void SetRenderState(const Alpha& value) override;
+	void SetRenderState(const Fog& value) override;
 
 private:
 	//--------------------------------------------------------------------------------
@@ -33,6 +39,10 @@ private:
 	//--------------------------------------------------------------------------------
 	bool init(HWND hWnd, BOOL isWindowMode) override;
 	void uninit(void) override;
+	bool createDevice(HWND hWnd, BOOL isWindowMode);
+	void initRenderSate(void);
+	void initSamplerState(void);
+	void initTextureStageStage(void);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`

@@ -12,7 +12,7 @@
 #include "gameObjectManager.h"
 #include "transformComponent.h"
 #include "behaviorComponent.h"
-#include "renderComponent.h"
+#include "meshRenderer.h"
 #include "rigidbodyComponent.h"
 #include "meshComponent.h"
 #include "collider.h"
@@ -97,7 +97,7 @@ public:
 		if (!mesh) { m_mesh = &s_nullMesh; }
 		else { m_mesh = mesh; }
 	}
-	void		SetRenderComponent(CRenderComponent* pRender) 
+	void		SetRenderComponent(MeshRenderer* pRender) 
 	{
 		//Release
 		if (m_pRender != &s_nullRender) { SAFE_RELEASE(m_pRender); }
@@ -164,7 +164,7 @@ protected:
 	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
 	list<Collider*>	m_listpCollider;//コリジョンパーツ
 	MeshComponent*				m_mesh;		//メッシュパーツ
-	CRenderComponent*			m_pRender;		//描画処理パーツ
+	MeshRenderer*			m_pRender;		//描画処理パーツ
 
 private:
 	//--------------------------------------------------------------------------------

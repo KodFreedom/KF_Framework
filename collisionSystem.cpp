@@ -21,7 +21,7 @@
 #include "behaviorComponent.h"
 #include "transformComponent.h"
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //#include "rendererDX.h"
 //#include "textureManager.h"
 #include "debugObserver.h"
@@ -118,7 +118,7 @@ void CollisionSystem::Update(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::LateUpdate(void)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	auto debugObserver = DebugObserver::Instance();
 	debugObserver->DisplayAlways("Collider情報 : \n");
 	for (int countMode = 0; countMode < ColliderMode::Max; ++countMode)
@@ -245,7 +245,7 @@ RayHitInfo* CollisionSystem::RayCast(const Ray& ray, const float& distance, cons
 	return realResult;
 }
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
 //  DrawCollider
 //--------------------------------------------------------------------------------
@@ -363,7 +363,7 @@ void CollisionSystem::DrawCollider(void)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CollisionSystem::CollisionSystem()
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //: m_meshSphere(nullptr)
 //, m_meshCube(nullptr)
 //, m_bDrawCollider(false)
@@ -385,7 +385,7 @@ CollisionSystem::CollisionSystem()
 //--------------------------------------------------------------------------------
 void CollisionSystem::init(void)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	//auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	//Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
 	//D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_meshSphere, nullptr);
@@ -409,7 +409,7 @@ void CollisionSystem::uninit(void)
 
 	fields.clear();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	//SAFE_RELEASE(m_meshSphere);
 	//SAFE_RELEASE(m_meshCube);
 	//Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
@@ -619,7 +619,7 @@ void CollisionSystem::checkWithField(BoxCollider& box)
 	}
 }
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
 //	関数名：modeToString
 //  関数説明：モードのenumをstringに変換

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　fade.h
+//　FadeSystem.h
 //	Author : Xu Wenjie
 //	Date   : 2017-06-09
 //--------------------------------------------------------------------------------
@@ -14,73 +14,67 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CMode;
+class Mode;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CFade
+class FadeSystem
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CFade()
-		: Ade(FADE_IN)
-		, m_pModeNext(NULL)
-		, m_cColor(Color(0.0f, 0.0f, 0.0f, 1.0f))
-		, m_count(0)
-#ifdef USING_DIRECTX
-		, m_pVtxBuffer(NULL)
-#endif
-	{}
+	static auto	Create(void)
+	{
+		if (instance) return instance;
+		instance = new FadeSystem;
+		instance->init();
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
 
-	~CFade() {}
-
-	void	Init(void);
-	void	Uninit(void);
 	void	Update(void);
 	void	Draw(void);
-	void	Release(void)
-	{
-		Uninit();
-		delete this;
-	}
+	void	FadeTo(Mode* nextMode, const float fadeTime = 1.0f);
 
-	void	FadeToMode(CMode* pModeNext);
-
-	static CFade *Create(void);
 private:
 	//--------------------------------------------------------------------------------
 	//  列挙型定義
 	//--------------------------------------------------------------------------------
-	enum FADE
-	{//フェイドの状態
-		FADE_NONE = 0,
-		FADE_IN,
-		FADE_OUT,
-		FADE_MAX
+	enum State
+	{
+		None = 0,
+		FadeIn,
+		FadeOut,
+		Max
 	};
 
 	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	static const float sc_fFadeRate;
-	
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void SetColorFade(const Color &cColor);
+	FadeSystem()
+		: currentState(FadeIn)
+		, nextMode(nullptr)
+		, color(Color::Black)
+		, fadeTime(0.0f)
+		, timeCounter(0.0f)
+	{}
+	~FadeSystem() {}
+	void init(void);
+	void uninit(void);
+	void fadeIn(void);
+	void fadeOut(void);
+	void setColor(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Color					m_cColor;
-	FADE						Ade;
-	CMode*						m_pModeNext;
-	int							m_count;
-
-#ifdef USING_DIRECTX
-	LPDIRECT3DVERTEXBUFFER9		m_pVtxBuffer;	//頂点バッファ管理インターフェースポインタ
-#endif
+	Color				color;
+	State				currentState;
+	Mode*				nextMode;
+	float				fadeTime;
+	float				timeCounter;
+	static FadeSystem*	instance;
 };

@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "renderComponent.h"
+#include "meshRenderer.h"
 #include "manager.h"
 #include "gameObject.h"
 #include "meshComponent.h"
@@ -25,7 +25,7 @@
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-bool CRenderComponent::Init(void)
+bool MeshRenderer::Init(void)
 {
 	auto mesh = m_pGameObj->GetMeshComponent();
 	auto meshManager = Main::GetManager()->GetMeshManager();
@@ -40,7 +40,7 @@ bool CRenderComponent::Init(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CRenderComponent::Uninit(void)
+void MeshRenderer::Uninit(void)
 {
 	if (!m_texture.empty())
 	{
@@ -52,7 +52,7 @@ void CRenderComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CRenderComponent::Update(void)
+void MeshRenderer::Update(void)
 {
 	Main::GetManager()->GetRenderManager()->Register(this, m_renderPriority, m_renderState);
 }
@@ -60,7 +60,7 @@ void CRenderComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  テクスチャ設定
 //--------------------------------------------------------------------------------
-void CRenderComponent::SetTexName(const string& texture)
+void MeshRenderer::SetTexName(const string& texture)
 {
 	if (!m_texture.empty())
 	{

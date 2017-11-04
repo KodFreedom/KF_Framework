@@ -4,14 +4,15 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-08-19
 //--------------------------------------------------------------------------------
-#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "versionSetting.h"
+#if defined(_DEBUG) || defined(EDITOR)
 #include "main.h"
 #include "manager.h"
 #include "lightManager.h"
-#include "inputManager.h"
+#include "input.h"
 #include "modeEditor.h"
 #include "editorCamera.h"
 
@@ -20,64 +21,34 @@
 #include "gameObjectActor.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CModeEditor::CModeEditor() : CMode()
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CModeEditor::~CModeEditor()
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CModeEditor::Init(void)
+void ModeEditor::Init(void)
 {
-	//ライトの初期化
-	Main::GetManager()->GetLightManager()->CreateDirectionalLight(Vector3(0.5f, -0.5f, 0.5f));
+	LightManager::Instance()->CreateLight(LightType::Directional, Vector3::Zero, Vector3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
 	m_pCamera = new CEditorCamera;
 	m_pCamera->Init();
 
-	Main::GetManager()->GetInputManager()->SetEditorMode(true);
+	Input::Instance()->SetEditorMode(true);
 
 	//ゲームオブジェクトの初期化
 	auto pEditorField = GameObjectSpawner::CreateEditorField();
 	GameObjectSpawner::CreateEditorController(pEditorField);
-
-	//GameObject3D::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void CModeEditor::Update(void)
-{
-	CMode::Update();
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void CModeEditor::LateUpdate(void)
+void ModeEditor::LateUpdate(void)
 {
-	CMode::LateUpdate();
+	Mode::LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
@@ -88,15 +59,10 @@ void CModeEditor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CModeEditor::uninit(void)
+void ModeEditor::uninit(void)
 {
-	//カメラとゲームオブジェクトの破棄
-	CMode::uninit();
-
-	//ライトの破棄
-	Main::GetManager()->GetLightManager()->ReleaseAll();
-
-	Main::GetManager()->GetInputManager()->SetEditorMode(false);
+	Mode::uninit();
+	Input::Instance()->SetEditorMode(false);
 }
 #endif // _DEBUG
 

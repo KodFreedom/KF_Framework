@@ -29,7 +29,7 @@ public:
 	static GameObject* CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
 	static GameObject* CreateGoal(const Vector3& Position);
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	static GameObject* CreateEditorController(GameObject* pFieldEditor);
 	static GameObject* CreateEditorField(void);
 #endif // _DEBUG	

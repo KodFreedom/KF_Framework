@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "renderComponent.h"
+#include "meshRenderer.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -22,11 +22,11 @@ class C3DMeshComponent;
 //--------------------------------------------------------------------------------
 //  3D描画コンポネントクラス
 //--------------------------------------------------------------------------------
-class C3DMeshRenderComponent : public CRenderComponent
+class C3DMeshRenderComponent : public MeshRenderer
 {
 public:
 	C3DMeshRenderComponent(GameObject* const pGameObj)
-		: CRenderComponent(pGameObj){}
+		: MeshRenderer(pGameObj){}
 	~C3DMeshRenderComponent() {}
 
 	void	Render(void) override;

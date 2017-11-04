@@ -16,7 +16,7 @@
 //--------------------------------------------------------------------------------
 class CTransformComponent : public Component
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	friend class DebugObserver;
 #endif // _DEBUG
 

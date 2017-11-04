@@ -8,79 +8,110 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "renderManager.h"
-#include "renderComponent.h"
-#include "renderState.h"
+#include "meshRenderer.h"
+#include "renderer.h"
 
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
-#endif // USING_DIRECTX
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CRenderManager::CRenderManager()
-{
-	for (auto& pRS : m_apRenderState) { pRS = nullptr; }
-	Clear();
-}
-
-//--------------------------------------------------------------------------------
 //  Update
 //--------------------------------------------------------------------------------
-void CRenderManager::Update(void)
+void RenderManager::Update(void)
 {
-	//To do : Z sort
+	//Todo : Z sort
 }
 
 //--------------------------------------------------------------------------------
 //  Render
 //--------------------------------------------------------------------------------
-void CRenderManager::Render(void)
+void RenderManager::Render(void)
 {
-	//Render
-	for (int countRP = 0; countRP < RP_MAX; ++countRP)
+	auto renderer = Renderer::Instance();
+	int previousAlpha = -1;
+	int previousFog = -1;
+	int previousFillMode = -1;
+	int previousSynthesis = -1;
+	int previousCullMode = -1;
+	int previousLighting = -1;
+	for (int countAlpha = 0; countAlpha < Alpha::Max; ++countAlpha)
 	{
-		for (int countRS = 0; countRS < RS_MAX; ++countRS)
+		for (int countFog = 0; countFog < Fog::Max; ++countFog)
 		{
-			if (m_apRenderComponents[countRP][countRS].empty()) { continue; }
-
-			setRenderState((RenderPriority)countRP, (RenderState)countRS);
-
-			for (auto pRender : m_apRenderComponents[countRP][countRS])
+			for (int countFillMode = 0; countFillMode < FillMode::Max; ++countFillMode)
 			{
-				pRender->Render();
+				for (int countSynthesis = 0; countSynthesis < Synthesis::Max; ++countSynthesis)
+				{
+					for (int countCullMode = 0; countCullMode < CullMode::Max; ++countCullMode)
+					{
+						for (int countLighting = 0; countLighting < Lighting::Max; ++countLighting)
+						{
+							int listNo = calculateListNo(countAlpha, countFog, countFillMode, countSynthesis, countCullMode, countLighting);
+							if (meshRenderers[listNo].empty()) continue;
+							if (previousAlpha != countAlpha)
+							{
+								previousAlpha = countAlpha;
+								renderer->SetRenderState((Alpha)countAlpha);
+							}
+							if (previousFog != countFog)
+							{
+								previousFog = countFog;
+								renderer->SetRenderState((Fog)countFog);
+							}
+							if (previousFillMode != countFillMode)
+							{
+								previousFillMode = countFillMode;
+								renderer->SetRenderState((FillMode)countFillMode);
+							}
+							if (previousSynthesis != countSynthesis)
+							{
+								previousSynthesis = countSynthesis;
+								renderer->SetRenderState((Synthesis)countSynthesis);
+							}
+							if (previousCullMode != countCullMode)
+							{
+								previousCullMode = countCullMode;
+								renderer->SetRenderState((CullMode)countCullMode);
+							}
+							if (previousLighting != countLighting)
+							{
+								previousLighting = countLighting;
+								renderer->SetRenderState((Lighting)countLighting);
+							}
+							for (auto iterator = meshRenderers[listNo].begin(); iterator != meshRenderers[listNo].end();)
+							{
+								(*iterator)->Render();
+								iterator = meshRenderers[listNo].erase(iterator);
+							}
+						}
+					}
+				}
 			}
-
-			resetRenderState((RenderPriority)countRP, (RenderState)countRS);
 		}
 	}
-
-	//Clear
-	Clear();
 }
 
 //--------------------------------------------------------------------------------
 //  配列クリア処理
 //--------------------------------------------------------------------------------
-void CRenderManager::Clear(void)
+void RenderManager::Clear(void)
 {
-	for (auto& aListRender : m_apRenderComponents)
+	for (auto& renderers : meshRenderers)
 	{
-		for (auto& listRender : aListRender)
-		{
-			listRender.clear();
-		}
+		renderers.clear();
 	}
+}
+
+//--------------------------------------------------------------------------------
+//  登録処理
+//--------------------------------------------------------------------------------
+void RenderManager::Register(MeshRenderer* renderer)
+{
+	int listNo = calculateListNo((int)renderer->alpha, (int)renderer->fog, (int)renderer->fillMode, (int)renderer->synthesis, (int)renderer->cullMode, (int)renderer->lighting);
+	meshRenderers[listNo].push_back(renderer);
 }
 
 //--------------------------------------------------------------------------------
@@ -89,81 +120,22 @@ void CRenderManager::Clear(void)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化
+//  コンストラクタ
 //--------------------------------------------------------------------------------
-void CRenderManager::init(void)
+RenderManager::RenderManager()
 {
-#ifdef USING_DIRECTX
-	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	
-	pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
-																		// サンプラーステートの設定
-	pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャＵ値の繰り返し設定
-	pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);	// テクスチャＶ値の繰り返し設定
-	pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);		// テクスチャ拡大時の補間設定
-	pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);		// テクスチャ縮小時の補間設定
-																		
-	pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);	// テクスチャステージステートの設定
-	pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-	pDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-
-	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// 最初のアルファ引数(初期値はD3DTA_TEXTURE、テクスチャがない場合はD3DTA_DIFFUSE)
-	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
-	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);	// ２番目のアルファ引数(初期値はD3DTA_CURRENT)
-#endif // USING_DIRECTX
-
-	//RenderState初期化
-	m_apRenderState[RS_LIGHTON_CULLFACEON_MUL] = new CLightOnCullFaceOnMulRenderState;
-	m_apRenderState[RS_LIGHTON_CULLFACEOFF_MUL] = new CLightOnCullFaceOffMulRenderState;
-	m_apRenderState[RS_LIGHTOFF_CULLFACEON_MUL] = new CLightOffCullFaceOnMulRenderState;
-	m_apRenderState[RS_LIGHTOFF_CULLFACEOFF_MUL] = new CLightOffCullFaceOffMulRenderState;
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CRenderManager::uninit(void)
-{
-	for (auto& pRS : m_apRenderState) { SAFE_DELETE(pRS); }
 	Clear();
 }
 
 //--------------------------------------------------------------------------------
-//  setRenderState
+//  リスト番号の算出
 //--------------------------------------------------------------------------------
-void CRenderManager::setRenderState(const RenderPriority& rp, const RenderState& rs)
+int RenderManager::calculateListNo(const int alpha, const int fog, const int fillMode, const int synthesis, const int cullMode, const int lighting)
 {
-#ifdef USING_DIRECTX
-	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-
-	if (rp == RP_3D_ALPHATEST)
-	{//Alpha Test
-
-		pDevice->SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);
-		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-		pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-	}
-	
-	m_apRenderState[rs]->SetRenderState(pDevice);
-#endif // USING_DIRECTX
-}
-
-//--------------------------------------------------------------------------------
-//  resetRenderState
-//--------------------------------------------------------------------------------
-void CRenderManager::resetRenderState(const RenderPriority& rp, const RenderState& rs)
-{
-#ifdef USING_DIRECTX
-	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-
-	if (rp == RP_3D_ALPHATEST)
-	{//ZTEST
-		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	}
-
-	m_apRenderState[rs]->ResetRenderState(pDevice);
-#endif // USING_DIRECTX
+	return ((int)AlphaBase * alpha +
+		(int)FogBase * fog +
+		(int)FillModeBase * fillMode +
+		(int)SynthesisBase * synthesis +
+		(int)CullModeBase * cullMode +
+		(int)LightingBase * lighting);
 }

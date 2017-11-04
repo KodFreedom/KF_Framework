@@ -9,7 +9,7 @@
 ////--------------------------------------------------------------------------------
 ////  インクルードファイル
 ////--------------------------------------------------------------------------------
-//#include "renderComponent.h"
+//#include "meshRenderer.h"
 //
 ////--------------------------------------------------------------------------------
 ////  前方宣言
@@ -22,11 +22,11 @@
 ////--------------------------------------------------------------------------------
 ////  描画コンポネントクラス
 ////--------------------------------------------------------------------------------
-//class C2DRenderComponent : public CRenderComponent
+//class C2DRenderComponent : public MeshRenderer
 //{
 //public:
 //	C2DRenderComponent(C2DMeshComponent* const mesh, GameObject* const pGameObj)
-//		: CRenderComponent(pGameObj), c_mesh(mesh) {}
+//		: MeshRenderer(pGameObj), c_mesh(mesh) {}
 //	~C2DRenderComponent() {}
 //
 //	void	Render(void) override;

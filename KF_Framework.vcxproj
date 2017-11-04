@@ -177,7 +177,7 @@
     <ClCompile Include="enemyAttackMode.cpp" />
     <ClCompile Include="enemyBehaviorComponent.cpp" />
     <ClCompile Include="enemyNormalMode.cpp" />
-    <ClCompile Include="fade.cpp" />
+    <ClCompile Include="fadeSystem.cpp" />
     <ClCompile Include="fieldCollider.cpp" />
     <ClCompile Include="fieldEditorBehaviorComponent.cpp" />
     <ClCompile Include="gameObject.cpp" />
@@ -210,7 +210,6 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendererDirectX9.cpp" />
     <ClCompile Include="renderManager.cpp" />
-    <ClCompile Include="renderState.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stageSpawner.cpp" />
     <ClCompile Include="textureManager.cpp" />
@@ -247,10 +246,10 @@
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
     <ClInclude Include="light.h" />
-    <ClInclude Include="renderComponent.h" />
+    <ClInclude Include="meshRenderer.h" />
     <ClInclude Include="editorCamera.h" />
     <ClInclude Include="enemyBehaviorComponent.h" />
-    <ClInclude Include="fade.h" />
+    <ClInclude Include="fadeSystem.h" />
     <ClInclude Include="fieldCollider.h" />
     <ClInclude Include="fieldEditorBehaviorComponent.h" />
     <ClInclude Include="gameObject.h" />
@@ -296,6 +295,7 @@
     <ClInclude Include="transformComponent.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
+    <ClInclude Include="versionSetting.h" />
     <ClInclude Include="windmillBehaviorComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

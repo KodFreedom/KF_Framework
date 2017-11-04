@@ -5,7 +5,7 @@
 //	Date   : 2017-08-23
 //--------------------------------------------------------------------------------
 #pragma once
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -18,14 +18,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CModelEditorBehaviorComponent : public CBehaviorComponent
+class ModelEditorBehaviorComponent : public CBehaviorComponent
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CModelEditorBehaviorComponent(GameObject* const pGameObj);
-	~CModelEditorBehaviorComponent() {}
+	ModelEditorBehaviorComponent(GameObject* const pGameObj);
+	~ModelEditorBehaviorComponent() {}
 
 	bool	Init(void) override;
 	void	Uninit(void) override;

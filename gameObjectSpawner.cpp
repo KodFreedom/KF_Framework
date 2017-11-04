@@ -21,7 +21,7 @@
 #include "fieldCollider.h"
 #include "3DRigidbodyComponent.h"
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 #include "fieldEditorBehaviorComponent.h"
 #include "modelEditorBehaviorComponent.h"
 #include "editorControllerBehaviorComponent.h"
@@ -365,7 +365,7 @@ GameObject* GameObjectSpawner::createChildMesh(CTransformComponent* pParent, con
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
 //--------------------------------------------------------------------------------
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 GameObject* GameObjectSpawner::CreateEditorController(GameObject* pFieldEditor)
 {
 	auto pObj = new GameObject;
@@ -376,7 +376,7 @@ GameObject* GameObjectSpawner::CreateEditorController(GameObject* pFieldEditor)
 	pObj->SetMeshComponent(mesh);
 	auto pRender = new C3DMeshRenderComponent(pObj);
 	pObj->SetRenderComponent(pRender);
-	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
+	auto pMEBehavior = new ModelEditorBehaviorComponent(pObj);
 	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
 	pBehavior->SetFieldEditor(pFieldEditor);
 	pBehavior->SetModelEditor(pMEBehavior);

@@ -5,7 +5,7 @@
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 #pragma once
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class CFieldEditorBehaviorComponent;
-class CModelEditorBehaviorComponent;
+class ModelEditorBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -38,7 +38,7 @@ public:
 	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
 	void	SetFieldEditor(GameObject* pFieldEditor);
-	void	SetModelEditor(CModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
+	void	SetModelEditor(ModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ private:
 	//--------------------------------------------------------------------------------
 	bool							m_bAutoHeight;
 	CFieldEditorBehaviorComponent*	m_pFieldEditor;
-	CModelEditorBehaviorComponent*	m_pModelEditor;
+	ModelEditorBehaviorComponent*	m_pModelEditor;
 	float							m_fMoveSpeed;
 };
 #endif // _DEBUG

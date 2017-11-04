@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------
-//	レンダーステートクラス
+//	レンダーステート
 //　renderState.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
@@ -11,80 +11,61 @@
 //--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  列挙型定義
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  スーパークラス
-//--------------------------------------------------------------------------------
-class CRenderState
+enum RenderState
 {
-public:
-	CRenderState() {}
-	~CRenderState() {}
-
-#ifdef USING_DIRECTX
-	virtual void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) = 0;
-	virtual void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) = 0;
-#endif // USING_DIRECTX
+	RS_Lighting = 0,
+	RS_CullMode,
+	RS_Synthesis,
+	RS_FillMode,
+	RS_Fog,
+	RS_Alpha,
+	RS_Max
 };
 
-//--------------------------------------------------------------------------------
-//  LIGHTON_CULLFACEON_MUL
-//--------------------------------------------------------------------------------
-class CLightOnCullFaceOnMulRenderState : public CRenderState
+enum Lighting
 {
-public:
-	CLightOnCullFaceOnMulRenderState() {}
-	~CLightOnCullFaceOnMulRenderState() {}
-
-#ifdef USING_DIRECTX
-	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-#endif // USING_DIRECTX
+	Off = 0,
+	On,
+	Max
 };
 
-//--------------------------------------------------------------------------------
-//  RS_LIGHTON_CULLFACEOFF_MUL
-//--------------------------------------------------------------------------------
-class CLightOnCullFaceOffMulRenderState : public CRenderState
+enum CullMode
 {
-public:
-	CLightOnCullFaceOffMulRenderState() {}
-	~CLightOnCullFaceOffMulRenderState() {}
-
-#ifdef USING_DIRECTX
-	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-#endif // USING_DIRECTX
+	None = 0,
+	CW,
+	CCW,
+	Max
 };
 
-//--------------------------------------------------------------------------------
-//  RS_LIGHTOFF_CULLFACEON_MUL
-//--------------------------------------------------------------------------------
-class CLightOffCullFaceOnMulRenderState : public CRenderState
+enum Synthesis
 {
-public:
-	CLightOffCullFaceOnMulRenderState() {}
-	~CLightOffCullFaceOnMulRenderState() {}
-
-#ifdef USING_DIRECTX
-	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-#endif // USING_DIRECTX
+	Multiplication = 0,
+	Additive,
+	Subtractive,
+	Max
 };
 
-//--------------------------------------------------------------------------------
-//  RS_LIGHTOFF_CULLFACEOFF_MUL
-//--------------------------------------------------------------------------------
-class CLightOffCullFaceOffMulRenderState : public CRenderState
+enum FillMode
 {
-public:
-	CLightOffCullFaceOffMulRenderState() {}
-	~CLightOffCullFaceOffMulRenderState() {}
-
-#ifdef USING_DIRECTX
-	void	SetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-	void	ResetRenderState(LPDIRECT3DDEVICE9 pDevice) override;
-#endif // USING_DIRECTX
+	Point = 0,
+	WireFrame,
+	Solid,
+	Max
 };
 
+enum Fog
+{
+	Off = 0,
+	On,
+	Max
+};
+
+enum Alpha
+{
+	None = 0,
+	AlphaTest,
+	ZSort,
+	Max
+};

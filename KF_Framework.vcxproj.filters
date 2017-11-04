@@ -195,17 +195,11 @@
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="renderState.cpp">
-      <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="3DRigidbodyComponent.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="fade.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
@@ -363,6 +357,9 @@
     <ClCompile Include="playerUI.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
+    <ClCompile Include="fadeSystem.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -412,9 +409,6 @@
     </ClInclude>
     <ClInclude Include="rigidbodyComponent.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="fade.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
@@ -502,9 +496,6 @@
     </ClInclude>
     <ClInclude Include="renderManager.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Render</Filter>
     </ClInclude>
     <ClInclude Include="3DMeshRenderComponent.h">
       <Filter>ヘッダー ファイル\Component\Render</Filter>
@@ -595,6 +586,15 @@
     </ClInclude>
     <ClInclude Include="playerUI.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="fadeSystem.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="versionSetting.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="meshRenderer.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
