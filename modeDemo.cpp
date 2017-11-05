@@ -17,7 +17,7 @@
 #include "mode.h"
 #include "modeDemo.h"
 #include "modeResult.h"
-#include "actionGameCamera.h"
+#include "thirdPersonCamera.h"
 #include "fadeSystem.h"
 
 //gameobject
@@ -58,8 +58,8 @@ void ModeDemo::Init(void)
 	LightManager::Instance()->CreateLight(LightType::Directional, Vector3::Zero, Vector3(0.5f, -0.5f, 0.5f));
 
 	//カメラの初期化
-	m_pCamera = new CActionGameCamera;
-	m_pCamera->Init();
+	auto camera = new ThirdPersionCamera;
+	camera->Init();
 
 	//ゲームオブジェクトの初期化
 	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
@@ -78,7 +78,7 @@ void ModeDemo::Init(void)
 	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(117.0f, 80.0f, 1.6f), Vector3(0.0f), Vector3(1.0f));
 	//pEnemy->SetName("Enemy02");
 	GameObjectSpawner::CreateGoal(Vector3(112.0f, 16.0f, 51.0f));
-	m_pCamera->SetTarget(pPlayer);
+	camera->SetFollowTarget(pPlayer);
 
 	//Main::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }

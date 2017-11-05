@@ -49,8 +49,9 @@ void RenderManager::Render(void)
 					{
 						for (int countLighting = 0; countLighting < Lighting::Max; ++countLighting)
 						{
-							int listNo = calculateListNo(countAlpha, countFog, countFillMode, countSynthesis, countCullMode, countLighting);
-							if (meshRenderers[listNo].empty()) continue;
+							auto& renderers = renderersArrays[countAlpha][countFog]
+								[countFillMode][countSynthesis][countCullMode][countLighting];
+							if (renderers.empty()) continue;
 							if (previousAlpha != countAlpha)
 							{
 								previousAlpha = countAlpha;
@@ -81,10 +82,10 @@ void RenderManager::Render(void)
 								previousLighting = countLighting;
 								renderer->SetRenderState((Lighting)countLighting);
 							}
-							for (auto iterator = meshRenderers[listNo].begin(); iterator != meshRenderers[listNo].end();)
+							for (auto iterator = renderers.begin(); iterator != renderers.end();)
 							{
 								(*iterator)->Render();
-								iterator = meshRenderers[listNo].erase(iterator);
+								iterator = renderers.erase(iterator);
 							}
 						}
 					}
@@ -99,7 +100,7 @@ void RenderManager::Render(void)
 //--------------------------------------------------------------------------------
 void RenderManager::Clear(void)
 {
-	for (auto& renderers : meshRenderers)
+	for (auto& renderers : renderersArray)
 	{
 		renderers.clear();
 	}
@@ -110,8 +111,8 @@ void RenderManager::Clear(void)
 //--------------------------------------------------------------------------------
 void RenderManager::Register(MeshRenderer* renderer)
 {
-	int listNo = calculateListNo((int)renderer->alpha, (int)renderer->fog, (int)renderer->fillMode, (int)renderer->synthesis, (int)renderer->cullMode, (int)renderer->lighting);
-	meshRenderers[listNo].push_back(renderer);
+	renderersArrays[renderer->alpha][renderer->fog][renderer->fillMode]
+		[renderer->synthesis][renderer->cullMode][renderer->lighting].push_back(renderer);
 }
 
 //--------------------------------------------------------------------------------
@@ -125,17 +126,4 @@ void RenderManager::Register(MeshRenderer* renderer)
 RenderManager::RenderManager()
 {
 	Clear();
-}
-
-//--------------------------------------------------------------------------------
-//  ÉäÉXÉgî‘çÜÇÃéZèo
-//--------------------------------------------------------------------------------
-int RenderManager::calculateListNo(const int alpha, const int fog, const int fillMode, const int synthesis, const int cullMode, const int lighting)
-{
-	return ((int)AlphaBase * alpha +
-		(int)FogBase * fog +
-		(int)FillModeBase * fillMode +
-		(int)SynthesisBase * synthesis +
-		(int)CullModeBase * cullMode +
-		(int)LightingBase * lighting);
 }

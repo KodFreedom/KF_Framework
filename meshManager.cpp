@@ -924,7 +924,7 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 
 	// 頂点バッファをロックして、仮想アドレスを取得する
 	info.CurrentMesh->m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	float length = (float)CCamera::DEFAULT_FAR * 0.5f;
+	float length = (float)Camera::DEFAULT_FAR * 0.5f;
 	unsigned long white = Color::White;
 	int countVertex = 0;
 	float uvTweens = 1.0f / 1024.0f;	//隙間を無くすためにUVを1px縮める

@@ -153,11 +153,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2DRenderComponent.cpp" />
+    <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="3DMeshRenderComponent.cpp" />
     <ClCompile Include="3DRigidbodyComponent.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
-    <ClCompile Include="actionGameCamera.cpp" />
+    <ClCompile Include="thirdPersonCamera.cpp" />
     <ClCompile Include="actorBehaviorComponent.cpp" />
     <ClCompile Include="animatorComponent.cpp" />
     <ClCompile Include="backgroundUI.cpp" />
@@ -220,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2DRenderComponent.h" />
+    <ClInclude Include="cameraManager.h" />
     <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="3DMeshRenderComponent.h" />
     <ClInclude Include="3DRigidbodyComponent.h" />
@@ -291,7 +293,7 @@
     <ClInclude Include="sphereCollider.h" />
     <ClInclude Include="stageSpawner.h" />
     <ClInclude Include="textureManager.h" />
-    <ClInclude Include="actionGameCamera.h" />
+    <ClInclude Include="thirdPersonCamera.h" />
     <ClInclude Include="transformComponent.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />

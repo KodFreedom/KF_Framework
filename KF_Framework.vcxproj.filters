@@ -204,9 +204,6 @@
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="actionGameCamera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="transformComponent.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
@@ -360,6 +357,12 @@
     <ClCompile Include="fadeSystem.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
+    <ClCompile Include="cameraManager.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdPersonCamera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -411,9 +414,6 @@
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="actionGameCamera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
     </ClInclude>
     <ClInclude Include="editorCamera.h">
@@ -595,6 +595,12 @@
     </ClInclude>
     <ClInclude Include="meshRenderer.h">
       <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraManager.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdPersonCamera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

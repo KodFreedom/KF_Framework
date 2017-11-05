@@ -1025,6 +1025,64 @@ Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vect
 	};
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：Transform
+//  関数説明：与えられた回転と移動量で行列の作成
+//	引数：	rotation：回転量
+//			translation：移動量
+//			scale：スケール量
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transform(const Vector3& rotation, const Vector3& translation, const Vector3& scale)
+{
+	auto& result = Matrix44(
+		scale.X, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.Y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	result *= RotationYawPitchRoll(rotation);
+	result *= Translation(translation);
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ProjectionLeftHand
+//  関数説明：射影行列の作成(左手座標系)
+//	引数：	fovAngleY：視野角度
+//			aspectRatio：アスペクト比
+//			nearZ：一番近い距離
+//			farZ：一番遠い距離
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::ProjectionLeftHand(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ)
+{
+	float cosFov = cosf(fovAngleY * 0.5f);
+	float sinFov = sqrt(1.0f - cosFov * cosFov);
+	if (fovAngleY * 0.5f > Pi) sinFov = -sinFov;
+
+	float height = cosFov / sinFov;
+	float width = height / aspectRatio;
+	float range = farZ / (farZ - nearZ);
+
+	Matrix44 result;
+	result.Elements[0][0] = width;
+	result.Elements[0][1] = 0.0f;
+	result.Elements[0][2] = 0.0f;
+	result.Elements[0][3] = 0.0f;
+	result.Elements[1][0] = 0.0f;
+	result.Elements[1][1] = height;
+	result.Elements[1][2] = 0.0f;
+	result.Elements[1][3] = 0.0f;
+	result.Elements[2][0] = 0.0f;
+	result.Elements[2][1] = 0.0f;
+	result.Elements[2][2] = range;
+	result.Elements[2][3] = 1.0f;
+	result.Elements[3][0] = 0.0f;
+	result.Elements[3][1] = 0.0f;
+	result.Elements[3][2] = -range * nearZ;
+	result.Elements[3][3] = 0.0f;
+	return result;
+}
 
 //--------------------------------------------------------------------------------
 //	関数名：ToMatrix44

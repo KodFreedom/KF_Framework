@@ -32,6 +32,7 @@ public:
 				 
 	//Setä÷êî	   
 	void		 SetBackgroundColor(const Color& color) { backgroundColor = color; }
+	virtual void SetPorjectionCamera(const Matrix44& view, const Matrix44& projection) = 0;
 	virtual void SetRenderState(const Lighting& value) = 0;
 	virtual void SetRenderState(const CullMode& value) = 0;
 	virtual void SetRenderState(const Synthesis& value) = 0;

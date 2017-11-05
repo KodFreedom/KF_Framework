@@ -4,31 +4,140 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "camera.h"
-#include "manager.h"
-#include "rendererDX.h"
-
-//--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-//#define CAMERA_MOVE_SPEED (1.0f)
-//#define RETURN_SPEED (0.95f)
-//#define FLOAT_MIN (0.001f)
-//#define WORLD_ROT_DEFAULT (Vector3(0.0f, 0.0f, 0.0f))
-//#define CAMERA_FOV_DEFAULT (75.0f * D3DX_PI / 180.0f)
-//#define CAMERA_FOV_MIN (0.1f)
-//#define CAMERA_FOV_MAX (D3DX_PI - 0.1f)
-//#define CAMERA_MOVE_RATE (0.1f)
+#include "renderer.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------------
+//
+//  Cameraクラス
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//
+//  public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  更新処理(描画直前)
+//--------------------------------------------------------------------------------
+void Camera::LateUpdate(void)
+{
+	//NormalizeCamera();
+	//PositionEye = PositionAt - forward * Distance;
+	updateParamater();
+}
+
+//--------------------------------------------------------------------------------
+//  セット処理(描画直前)
+//--------------------------------------------------------------------------------
+void Camera::Set(void)
+{
+	// View行列
+	auto& negativeEye = worldPositionEye * -1.0f;
+	viewTranspose = Matrix44(
+		worldRight.X, worldRight.Y, worldRight.Z, worldRight.Dot(negativeEye),
+		worldUp.X, worldUp.Y, worldUp.Z, worldUp.Dot(negativeEye),
+		worldForward.X, worldForward.Y, worldForward.Z, worldForward.Dot(negativeEye),
+		0.0f, 0.0f, 0.0f, 1.0f);
+	view = viewTranspose.Transpose();
+
+	// Projection行列
+	auto& projection = Matrix44::ProjectionLeftHand(fovY, (float)SCREEN_WIDTH / SCREEN_HEIGHT, nearZ, farZ);
+
+	Renderer::Instance()->SetPorjectionCamera(view, projection);
+}
+
+//--------------------------------------------------------------------------------
+//  移動処理
+//--------------------------------------------------------------------------------
+void Camera::Move(const Vector3& movement)
+{
+	rig.Position += movement;
+}
+
+//--------------------------------------------------------------------------------
+//
+//  protected
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  コンストラクタ
+//--------------------------------------------------------------------------------
+Camera::Camera()
+	: localPositionEye(Vector3::Zero)
+	, worldPositionEye(Vector3::Zero)
+	, worldPositionAt(Vector3::Zero)
+	, worldRight(Vector3::Zero)
+	, worldUp(Vector3::Zero)
+	, worldForward(Vector3::Zero)
+	, view(Matrix44::Identity)
+	, viewTranspose(Matrix44::Identity)
+	, distance(0.0f)
+	, fovY(75.0f / 180.0f * Pi)
+	, nearZ(0.1f)
+	, farZ(1000.0f)
+{
+	rig.Position = Vector3::Zero;
+	rig.Rotation = Vector3::Zero;
+	pivot.Position = Vector3::Zero;
+	pivot.Rotation = Vector3::Zero;
+}
+
+//--------------------------------------------------------------------------------
+//  カメラ前方と上と右を常に90度になってるを確保する
+//--------------------------------------------------------------------------------
+//void Camera::normalize(void)
+//{
+//	forward.Normalize();
+//	up = (forward * right).Normalized();
+//	right = (up * forward).Normalized();
+//}
+
+//--------------------------------------------------------------------------------
+//  X軸回転
+//--------------------------------------------------------------------------------
+void Camera::pitch(const float& radian)
+{
+	pivot.Rotation.X += radian;
+}
+
+//--------------------------------------------------------------------------------
+//  Y軸回転
+//--------------------------------------------------------------------------------
+void Camera::yaw(const float& radian)
+{
+	rig.Rotation.Y += radian;
+}
+
+//--------------------------------------------------------------------------------
+//  パラメーターの算出
+//--------------------------------------------------------------------------------
+void Camera::updateParamater(void)
+{
+	auto& worldRig = Matrix44::Transform(rig.Rotation, rig.Position);
+	auto& worldPivot = Matrix44::Transform(pivot.Rotation, pivot.Position);
+	worldPivot *= worldRig;
+	worldRight = Vector3::TransformNormal(Vector3::Right, worldPivot);
+	worldUp = Vector3::TransformNormal(Vector3::Up, worldPivot);
+	worldForward = Vector3::TransformNormal(Vector3::Forward, worldPivot);
+	worldPositionEye = Vector3::TransformCoord(localPositionEye, worldPivot);
+	worldPositionAt = worldPositionEye + worldForward * distance;
+}
+
+//--------------------------------------------------------------------------------
+//
+//  NormalCameraクラス
+//
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  public
@@ -37,284 +146,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CCamera::CCamera()
-	: m_vMovement(Vector3(0.0f))
-	, PositionAt(Vector3(0.0f))
-	, PositionEye(Vector3(0.0f, 5.0f, -5.0f))
-	, m_vVecLook(Vector3(0.0f))
-	, m_vVecUp(Vector3(0.0f, 1.0f, 0.0f))
-	, m_vVecRight(Vector3(1.0f, 0.0f, 0.0f))
-	, Distance(0.0f)
-	, m_fFovY((float)DEFAULT_FOV)
-	, m_fFar((float)DEFAULT_FAR)
+NormalCamera::NormalCamera() : Camera()
 {
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CCamera::~CCamera()
-{
-}
-
-//--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-void CCamera::Init(void)
-{
-	m_vVecLook = PositionAt - PositionEye;
-	CKFMath::VecNormalize(m_vVecLook);
-	Distance = CKFMath::VecMagnitude(PositionEye - PositionAt);
-	CCamera::NormalizeCamera();
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CCamera::Uninit(void)
-{
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void CCamera::Update(void)
-{
-//	MouseDX *pMouse = Main::GetManager()->GetMouse();
-//	JoystickDX* pJoystick = Main::GetManager()->GetJoystickDX();
-//	Vector3 vRot = Vector3(0.0f);
-//	float fZoomSpeed = 0.0f;
-//
-//	//注目点回転
-//	if (pMouse->GetMousePress(MouseDX::MouseRight) && pMouse->GetMouseAxisX() != 0)
-//	{
-//		vRot.Y = KF_PI * ((float)pMouse->GetMouseAxisX() / SCREEN_WIDTH);
-//	}
-//	if (pMouse->GetMousePress(MouseDX::MouseRight) && pMouse->GetMouseAxisY() != 0)
-//	{
-//		vRot.X = KF_PI * ((float)pMouse->GetMouseAxisY() / SCREEN_HEIGHT);
-//	}
-//
-//	//拡大縮小
-//	if (pMouse->GetMouseAxisZ() != 0 /*&& pMouse->GetMouseAxisZ() <= MOUSE_AXIS_MAX && pMouse->GetMouseAxisZ() >= -MOUSE_AXIS_MAX*/)
-//	{
-//		fZoomSpeed = -sc_fZoomSpeed * (float)pMouse->GetMouseAxisZ() / MOUSE_AXIS_MAX;
-//	}
-//
-//	if (pJoystick->GetAttached())
-//	{
-//		float fRAxisX = (float)pJoystick->GetRStickAxisX() / JoystickDX::sc_nStickAxisMax;
-//		float fRAxisY = (float)pJoystick->GetRStickAxisY() / JoystickDX::sc_nStickAxisMax;
-//		float fLTRT = (float)pJoystick->GetLTandRT() / JoystickDX::sc_nStickAxisMax;
-//
-//#ifdef _DEBUG
-//			//char aBuf[256] = {};
-//			//sprintf(aBuf, "AxisX : %f\tAxisY : %f\n", fRAxisX, fRAxisY);
-//			//OutputDebugString(aBuf);
-//#endif
-//		//注目点回転
-//		if (fabsf(fRAxisX) > sc_fStartRotMin)
-//		{//Y軸回転
-//			vRot.Y = sc_fRotSpeed * fRAxisX;
-//		}
-//		if (fabsf(fRAxisY) > sc_fStartRotMin)
-//		{//X軸回転
-//			vRot.X = sc_fRotSpeed * fRAxisY;
-//		}
-//
-//		//拡大縮小
-//		if (fabsf(fLTRT) > sc_fStartRotMin)
-//		{
-//			fZoomSpeed = sc_fZoomSpeed * fLTRT;
-//		}
-//	}
-//
-//	//注目点回転
-//	m_vRotSpeed = CKFMath::LerpVec3(m_vRotSpeed, vRot, sc_fRotLerpTime);
-//	Yaw(m_vRotSpeed.Y);
-//	Pitch(m_vRotSpeed.X);
-//
-//	//ズーム
-//	ZoomSpeed = CKFMath::LerpFloat(ZoomSpeed, fZoomSpeed, sc_fZoomLerpTime);
-//	Distance += ZoomSpeed;
-//	Distance = Distance < sc_fDistanceMin ? sc_fDistanceMin : Distance > sc_fDistanceMax ? sc_fDistanceMax : Distance;
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理(描画直前)
-//--------------------------------------------------------------------------------
-void CCamera::LateUpdate(void)
-{
-	NormalizeCamera();
-	PositionEye = PositionAt - m_vVecLook * Distance;
-}
-
-//--------------------------------------------------------------------------------
-//  セット処理(描画直前)
-//--------------------------------------------------------------------------------
-void CCamera::Set(void)
-{
-#ifdef USING_DIRECTX
-	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-
-	//View行列
-	D3DXMATRIX mtxView;
-	D3DXMatrixLookAtLH(&mtxView,& (D3DXVECTOR3)PositionEye,& (D3DXVECTOR3)PositionAt,& (D3DXVECTOR3)m_vVecUp);//左手座標系
-	pDevice->SetTransform(D3DTS_VIEW,&mtxView);
-
-	//プロジェクション行列
-	D3DXMATRIX mtxProjection;
-	D3DXMatrixPerspectiveFovLH(&mtxProjection,
-		m_fFovY * KF_PI / 180.0f,//視野角度(半分)
-		(float)SCREEN_WIDTH / SCREEN_HEIGHT,//アスペクト比
-		0.1f,//near 0.0fより大きい値
-		m_fFar);//far nearより大きい値
-	pDevice->SetTransform(D3DTS_PROJECTION, &mtxProjection);
-
-	//逆view
-	UpdateViewInverse(mtxView);
-#endif
-}
-
-//--------------------------------------------------------------------------------
-//  View行列の逆行列を計算する
-//--------------------------------------------------------------------------------
-void CCamera::UpdateViewInverse(const D3DXMATRIX& mtxView)
-{
-	D3DXMatrixInverse(&m_mtxViewInverse, NULL,& mtxView);
-
-	//移動量をカットする
-	//m_mtxViewInverse._41 = 0.0f;
-	//m_mtxViewInverse._42 = 0.0f;
-	//m_mtxViewInverse._43 = 0.0f;
-}
-
-//--------------------------------------------------------------------------------
-//  View行列の逆行列を取得する
-//--------------------------------------------------------------------------------
-D3DXMATRIX CCamera::GetMtxViewInverse(void)
-{
-	return m_mtxViewInverse;
-}
-
-//--------------------------------------------------------------------------------
-//  移動処理
-//--------------------------------------------------------------------------------
-void CCamera::MoveCamera(const Vector3& vMovement)
-{
-	PositionEye += vMovement;
-	PositionAt += vMovement;
-}
-
-//--------------------------------------------------------------------------------
-//  移動処理
-//--------------------------------------------------------------------------------
-void CCamera::LookAtHere(const Vector3& Position)
-{
-	m_vMovement = Position - PositionAt;
-}
-
-//--------------------------------------------------------------------------------
-//  前向き取得
-//--------------------------------------------------------------------------------
-Vector3 CCamera::GetVecLook(void)
-{
-	return m_vVecLook;
-}
-
-//--------------------------------------------------------------------------------
-//  前向き取得
-//--------------------------------------------------------------------------------
-Vector3 CCamera::GetVecUp(void)
-{
-	return m_vVecUp;
-}
-
-//--------------------------------------------------------------------------------
-//  前向き取得
-//--------------------------------------------------------------------------------
-Vector3 CCamera::GetVecRight(void)
-{
-	return m_vVecRight;
-}
-
-//--------------------------------------------------------------------------------
-//  前向き取得
-//--------------------------------------------------------------------------------
-Vector3 CCamera::GetPosAt(void)
-{
-	return PositionAt;
-}
-
-//--------------------------------------------------------------------------------
-//  前向き取得
-//--------------------------------------------------------------------------------
-Vector3 CCamera::GetPosEye(void)
-{
-	return PositionEye;
-}
-
-//--------------------------------------------------------------------------------
-//  カメラ設定
-//--------------------------------------------------------------------------------
-void CCamera::SetCamera(const Vector3& PositionAt, const Vector3& PositionEye, const Vector3& vUp, const Vector3& vRight)
-{
-	PositionAt = PositionAt;
-	PositionEye = PositionEye;
-	m_vVecUp = vUp;
-	m_vVecRight = vRight;
-	m_vVecLook = PositionAt - PositionEye;
-	Distance = CKFMath::VecMagnitude((PositionEye - PositionAt));
-	NormalizeCamera();
-}
-
-//--------------------------------------------------------------------------------
-//
-//  private
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  カメラ前方と上と右を常に90度になってるを確保する
-//--------------------------------------------------------------------------------
-void CCamera::NormalizeCamera(void)
-{
-	CKFMath::VecNormalize(m_vVecLook);
-	m_vVecUp = m_vVecLook * m_vVecRight;
-	CKFMath::VecNormalize(m_vVecUp);
-	m_vVecRight = m_vVecUp * m_vVecLook;
-	CKFMath::VecNormalize(m_vVecRight);
-}
-
-//--------------------------------------------------------------------------------
-//  X軸(vVecRight)回転
-//--------------------------------------------------------------------------------
-void CCamera::Pitch(const float& fAngle)
-{
-	Matrix44 mtxPitch;
-	CKFMath::MtxRotAxis(mtxPitch, m_vVecRight, fAngle);
-	m_vVecUp = CKFMath::Vec3TransformNormal(m_vVecUp, mtxPitch);
-	m_vVecLook = CKFMath::Vec3TransformNormal(m_vVecLook, mtxPitch);
-}
-
-//--------------------------------------------------------------------------------
-//  Y軸(vVecUp)回転
-//--------------------------------------------------------------------------------
-void CCamera::Yaw(const float& fAngle)
-{
-	Matrix44 mtxYaw;
-	Vector3 vAxisY = Vector3(0.0f, 1.0f, 0.0f);
-	CKFMath::MtxRotAxis(mtxYaw, vAxisY, fAngle);
-	m_vVecRight = CKFMath::Vec3TransformNormal(m_vVecRight, mtxYaw);
-	m_vVecLook = CKFMath::Vec3TransformNormal(m_vVecLook, mtxYaw);
-}
-
-//--------------------------------------------------------------------------------
-//  Z軸(vLook)回転
-//--------------------------------------------------------------------------------
-void CCamera::Roll(const float& fAngle)
-{
-	Matrix44 mtxRoll;
-	CKFMath::MtxRotAxis(mtxRoll, m_vVecLook, fAngle);
-	m_vVecUp = CKFMath::Vec3TransformNormal(m_vVecUp, mtxRoll);
-	m_vVecRight = CKFMath::Vec3TransformNormal(m_vVecRight, mtxRoll);
+	CameraManager::Instance()->RegisterAsMain(this);
 }

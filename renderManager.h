@@ -42,29 +42,19 @@ public:
 
 private:
 	//--------------------------------------------------------------------------------
-	//  óÒãìå^íËã`
-	//--------------------------------------------------------------------------------
-	enum ListNoBase
-	{
-		LightingBase = 1,
-		CullModeBase = Lighting::Max,
-		SynthesisBase = CullMode::Max * Lighting::Max,
-		FillModeBase = Synthesis::Max * CullMode::Max * Lighting::Max,
-		FogBase = FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max,
-		AlphaBase = Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max,
-	};
-
-	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	RenderManager();
 	~RenderManager() {}
 	void uninit(void) { Clear(); }
-	int  calculateListNo(const int alpha, const int fog, const int fillMode, const int synthesis, const int cullMode, const int lighting);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	list<MeshRenderer*>		meshRenderers[Alpha::Max * Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max];
+	union
+	{
+		list<MeshRenderer*> renderersArray[Alpha::Max * Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max];
+		list<MeshRenderer*> renderersArrays[Alpha::Max][Fog::Max][FillMode::Max][Synthesis::Max][CullMode::Max][Lighting::Max];
+	};
 	static RenderManager*	instance;
 };

@@ -29,8 +29,8 @@ void ModeResult::Init(void)
 	LightManager::Instance()->CreateLight(LightType::Directional);
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
-	m_pCamera = new CCamera;
-	m_pCamera->Init();
+	auto camera = new NormalCamera;
+	camera->Init();
 
 	//UI‚Ì‰Šú‰»
 	BackgroundUI::Create("endingGood.jpg");

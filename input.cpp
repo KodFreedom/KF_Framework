@@ -174,30 +174,6 @@ void Input::updateInputInfo(void)
 	triggerFlags[(int)Key::Start] = keyboard->GetTrigger(DIK_RETURN) | joystick->GetButtonTrigger(XboxButton::Menu);
 	releaseFlags[(int)Key::Start] = keyboard->GetRelease(DIK_RETURN) | joystick->GetButtonRelease(XboxButton::Menu);
 
-	// RotX
-	pressFlags[(int)Key::RotationXMinus] = keyboard->GetPress(DIK_T);
-	triggerFlags[(int)Key::RotationXMinus] = keyboard->GetTrigger(DIK_T);
-	releaseFlags[(int)Key::RotationXMinus] = keyboard->GetRelease(DIK_T);
-	pressFlags[(int)Key::RotationXPlus] = keyboard->GetPress(DIK_Y);
-	triggerFlags[(int)Key::RotationXPlus] = keyboard->GetTrigger(DIK_Y);
-	releaseFlags[(int)Key::RotationXPlus] = keyboard->GetRelease(DIK_Y);
-
-	// RotY
-	pressFlags[(int)Key::RotationYMinus] = keyboard->GetPress(DIK_G);
-	triggerFlags[(int)Key::RotationYMinus] = keyboard->GetTrigger(DIK_G);
-	releaseFlags[(int)Key::RotationYMinus] = keyboard->GetRelease(DIK_G);
-	pressFlags[(int)Key::RotationYPlus] = keyboard->GetPress(DIK_H);
-	triggerFlags[(int)Key::RotationYPlus] = keyboard->GetTrigger(DIK_H);
-	releaseFlags[(int)Key::RotationYPlus] = keyboard->GetRelease(DIK_H);
-
-	// RotZ
-	pressFlags[(int)Key::RotationZMinus] = keyboard->GetPress(DIK_B);
-	triggerFlags[(int)Key::RotationZMinus] = keyboard->GetTrigger(DIK_B);
-	releaseFlags[(int)Key::RotationZMinus] = keyboard->GetRelease(DIK_B);
-	pressFlags[(int)Key::RotationZPlus] = keyboard->GetPress(DIK_N);
-	triggerFlags[(int)Key::RotationZPlus] = keyboard->GetTrigger(DIK_N);
-	releaseFlags[(int)Key::RotationZPlus] = keyboard->GetRelease(DIK_N);
-
 	// Up
 	pressFlags[(int)Key::Up] = keyboard->GetPress(DIK_UP);
 	triggerFlags[(int)Key::Up] = keyboard->GetTrigger(DIK_UP);
@@ -218,20 +194,15 @@ void Input::updateInputInfo(void)
 	triggerFlags[(int)Key::Right] = keyboard->GetTrigger(DIK_RIGHT);
 	releaseFlags[(int)Key::Right] = keyboard->GetRelease(DIK_RIGHT);
 
-	//LeftBracket
-	pressFlags[(int)Key::LeftBracket] = keyboard->GetPress(DIK_LBRACKET);
-	triggerFlags[(int)Key::LeftBracket] = keyboard->GetTrigger(DIK_LBRACKET);
-	releaseFlags[(int)Key::LeftBracket] = keyboard->GetRelease(DIK_LBRACKET);
-
-	//RightBracket
-	pressFlags[(int)Key::RightBracket] = keyboard->GetPress(DIK_RBRACKET);
-	triggerFlags[(int)Key::RightBracket] = keyboard->GetTrigger(DIK_RBRACKET);
-	releaseFlags[(int)Key::RightBracket] = keyboard->GetRelease(DIK_RBRACKET);
-
-	//Reset
+	// Reset
 	pressFlags[(int)Key::Reset] = keyboard->GetPress(DIK_R);
 	triggerFlags[(int)Key::Reset] = keyboard->GetTrigger(DIK_R);
 	releaseFlags[(int)Key::Reset] = keyboard->GetRelease(DIK_R);
+
+	// Lock
+	pressFlags[(int)Key::Lock] = mouse->GetPress(MouseButton::Right);
+	triggerFlags[(int)Key::Lock] = mouse->GetTrigger(MouseButton::Right);
+	releaseFlags[(int)Key::Lock] = mouse->GetRelease(MouseButton::Right);
 
 	pressInfos = 0;
 	triggerInfos = 0;
@@ -248,10 +219,10 @@ void Input::updateInputInfo(void)
 	(LONG)bSubmitPress << Submit
 	| (bCancelPress << Cancel)
 	| (bStartPress << Start)
-	| (bRotXMinusPress << RotationXMinus)
-	| (bRotXPlusPress << RotationXPlus)
-	| (bRotYMinusPress << RotationYMinus)
-	| (bRotYPlusPress << RotationYPlus)
+	| (bRotXMinusPress << Extend)
+	| (bRotXPlusPress << Shrink)
+	| (bRotYMinusPress << Raise)
+	| (bRotYPlusPress << Reduce)
 	| (bRotZMinusPress << RotationZMinus)
 	| (bRotZPlusPress << RotationZPlus)
 	| (bUpPress << Up)
@@ -266,10 +237,10 @@ void Input::updateInputInfo(void)
 	(LONG)bSubmitTrigger << Submit
 	| (bCancelTrigger << Cancel)
 	| (bStartTrigger << Start)
-	| (bRotXMinusTrigger << RotationXMinus)
-	| (bRotXPlusTrigger << RotationXPlus)
-	| (bRotYMinusTrigger << RotationYMinus)
-	| (bRotYPlusTrigger << RotationYPlus)
+	| (bRotXMinusTrigger << Extend)
+	| (bRotXPlusTrigger << Shrink)
+	| (bRotYMinusTrigger << Raise)
+	| (bRotYPlusTrigger << Reduce)
 	| (bRotZMinusTrigger << RotationZMinus)
 	| (bRotZPlusTrigger << RotationZPlus)
 	| (bUpTrigger << Up)
@@ -284,10 +255,10 @@ void Input::updateInputInfo(void)
 	(LONG)bSubmitRelease << Submit
 	| (bCancelRelease << Cancel)
 	| (bStartRelease << Start)
-	| (bRotXMinusRelease << RotationXMinus)
-	| (bRotXPlusRelease << RotationXPlus)
-	| (bRotYMinusRelease << RotationYMinus)
-	| (bRotYPlusRelease << RotationYPlus)
+	| (bRotXMinusRelease << Extend)
+	| (bRotXPlusRelease << Shrink)
+	| (bRotYMinusRelease << Raise)
+	| (bRotYPlusRelease << Reduce)
 	| (bRotZMinusRelease << RotationZMinus)
 	| (bRotZPlusRelease << RotationZPlus)
 	| (bUpRelease << Up)

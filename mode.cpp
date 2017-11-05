@@ -14,6 +14,7 @@
 #include "renderManager.h"
 #include "lightManager.h"
 #include "soundManager.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -34,4 +35,5 @@ void Mode::uninit(void)
 	RenderManager::Instance()->Clear();
 	LightManager::Instance()->ReleaseAll();
 	SoundManager::Instance()->StopAll();
+	CameraManager::Instance()->ReleaseAll();
 }

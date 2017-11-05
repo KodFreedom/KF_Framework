@@ -1,47 +1,52 @@
 //--------------------------------------------------------------------------------
-//	エディタ用カメラクラス
-//　actionGameCamera.h
+//  カメラマネージャ
+//　cameraManager.h
 //	Author : Xu Wenjie
-//	Date   : 2016-06-20
+//	Date   : 2017-11-05
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
+//  前方宣言
 //--------------------------------------------------------------------------------
-#include "camera.h"
-#if defined(_DEBUG) || defined(EDITOR)
+class Camera;
+
 //--------------------------------------------------------------------------------
-//  クラス
+//  クラス宣言
 //--------------------------------------------------------------------------------
-class EditorCamera : public Camera
+class CameraManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	EditorCamera();
-	~EditorCamera() {}
+	static auto	Create(void)
+	{
+		if (instance) return instance;
+		instance = new CameraManager;
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
 
-	void Init(void) override;
-	void Update(void) override;
+	void Update(void);
+	void LateUpdate(void);
+	void ReleaseAll(void);
+	void Register(Camera* camera) { cameras.push_back(camera); }
+	void RegisterAsMain(Camera* camera) { cameras.push_front(camera); }
+	auto GetMainCamera(void) const { return cameras.front(); }
 
 private:
 	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	static const float rotationSpeed;		//カメラ回転速度
-	static const float startRotationMin;	//カメラ回転開始のスティック最小値
-	static const float zoomSpeed;			//ズーム速度
-	static const float distanceMin;			//注視点と注目点の最小距離
-	static const float distanceMax;			//注視点と注目点の最大距離	
-	
-	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
+	CameraManager() {}
+	~CameraManager() {}
+	void uninit(void) { ReleaseAll(); }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
-	//--------------------------------------------------------------------------------	
+	//--------------------------------------------------------------------------------
+	list<Camera*>			cameras;
+	static CameraManager*	instance;
 };
-#endif

@@ -227,7 +227,8 @@ namespace KF
 		static Matrix44	RotationYawPitchRoll(const Vector3& euler);
 		static Matrix44	Translation(const Vector3& translation);
 		static Matrix44	Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation);
-
+		static Matrix44 Transform(const Vector3& rotation, const Vector3& translation, const Vector3& scale = Vector3::One);
+		static Matrix44 ProjectionLeftHand(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		static Matrix44	ToMatrix44(const D3DXMATRIX& value);
 #endif

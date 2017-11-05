@@ -1,22 +1,15 @@
 //--------------------------------------------------------------------------------
-//
-//　modeDemo.cpp
+//  カメラマネージャ
+//　cameraManager.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-05
+//	Date   : 2017-11-05
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "lightManager.h"
-#include "input.h"
-#include "mode.h"
-#include "modeTitle.h"
-#include "modeDemo.h"
+#include "cameraManager.h"
 #include "camera.h"
-#include "fadeSystem.h"
-#include "BackgroundUI.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -24,29 +17,29 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化処理
+//  更新処理
 //--------------------------------------------------------------------------------
-void ModeTitle::Init(void)
+void CameraManager::Update(void)
 {
-	LightManager::Instance()->CreateLight(LightType::Directional);
-
-	//カメラの初期化
-	auto camera = new NormalCamera;
-	camera->Init();
-
-	//UIの初期化
-	BackgroundUI::Create("title.jpg");
+	for (auto camera : cameras) camera->Update();
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void ModeTitle::Update(void)
+void CameraManager::LateUpdate(void)
 {
-	Mode::Update();
+	for (auto camera : cameras) camera->LateUpdate();
+}
 
-	if (Input::Instance()->GetKeyTrigger(Key::Submit))
+//--------------------------------------------------------------------------------
+//  リリース処理
+//--------------------------------------------------------------------------------
+void CameraManager::ReleaseAll(void)
+{
+	for (auto iterator = cameras.begin(); iterator != cameras.end();)
 	{
-		FadeSystem::Instance()->FadeTo(new ModeDemo);
+		(*iterator)->Release();
+		iterator = cameras.erase(iterator);
 	}
 }

@@ -44,6 +44,19 @@ void RendererDirectX9::EndRender(void)
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：SetPorjectionCamera
+//  関数説明：projectionカメラの設定
+//	引数：	view：view行列
+//			projection：射影行列
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void RendererDirectX9::SetPorjectionCamera(const Matrix44& view, const Matrix44& projection)
+{
+	lpD3DDevice->SetTransform(D3DTS_VIEW, &(D3DXMATRIX)view);
+	lpD3DDevice->SetTransform(D3DTS_PROJECTION, &(D3DXMATRIX)projection);
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：SetRenderState
 //  関数説明：ライティングの設定
 //	引数：	value：ライティングの設定値

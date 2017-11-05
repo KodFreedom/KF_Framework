@@ -33,8 +33,8 @@ void ModeEditor::Init(void)
 	LightManager::Instance()->CreateLight(LightType::Directional, Vector3::Zero, Vector3(0.5f, -0.5f, 0.5f));
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
-	m_pCamera = new CEditorCamera;
-	m_pCamera->Init();
+	auto camera = new EditorCamera;
+	camera->Init();
 
 	Input::Instance()->SetEditorMode(true);
 

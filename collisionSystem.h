@@ -74,13 +74,14 @@ public:
 
 	void		Update(void);
 	void		LateUpdate(void);
+	void		Clear(void);
 
 #ifdef _DEBUG
 	void		DrawCollider(void);
 #endif
 
 	void		Register(Collider* collider);
-	void		Deregister(Collider* collider);
+	//void		Deregister(Collider* collider);
 	RayHitInfo*	RayCast(const Ray& ray, const float& distance, const GameObject* const rayOwner = nullptr);
 
 private:
@@ -131,7 +132,11 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	list<Collider*>			colliders[ColliderMode::Max][ColliderType::Max];
+	union
+	{
+		list<Collider*> collidersArray[ColliderMode::Max * ColliderType::Max];
+		list<Collider*> collidersArrays[ColliderMode::Max][ColliderType::Max];
+	};
 	list<Collider*>			fields;
 	static CollisionSystem*	instance;
 

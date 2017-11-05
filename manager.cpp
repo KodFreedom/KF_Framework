@@ -25,6 +25,8 @@
 #include "fadeSystem.h"
 #include "collisionSystem.h"
 #include "physicsSystem.h"
+#include "cameraManager.h"
+#include "camera.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #include "modeEditor.h"
@@ -81,6 +83,7 @@ void Manager::Update(void)
 	GameObjectManager::Instance()->Update();
 	CollisionSystem::Instance()->Update();
 	PhysicsSystem::Instance()->Update();
+	CameraManager::Instance()->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -90,6 +93,7 @@ void Manager::LateUpdate(void)
 {
 	currentMode->LateUpdate();
 	GameObjectManager::Instance()->LateUpdate();
+	CameraManager::Instance()->LateUpdate();
 	CollisionSystem::Instance()->LateUpdate();
 	UISystem::Instance()->Update();
 	FadeSystem::Instance()->Update();
@@ -106,7 +110,7 @@ void Manager::Render(void)
 {
 	if (Renderer::Instance()->BeginRender())
 	{
-		currentMode->CameraSet();
+		CameraManager::Instance()->GetMainCamera()->Set();
 		RenderManager::Instance()->Render();
 #ifdef _DEBUG
 		CollisionSystem::Instance()->DrawCollider();
@@ -157,6 +161,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	UISystem::Create();
 	SoundManager::Create();
 	FadeSystem::Create();
+	CameraManager::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 	Change(new ModeEditor);
@@ -170,6 +175,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 void Manager::uninit(void)
 {
 	SAFE_RELEASE(currentMode);
+	CameraManager::Release();
 	FadeSystem::Release();
 	SoundManager::Release();
 	UISystem::Release();

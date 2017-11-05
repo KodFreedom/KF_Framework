@@ -26,6 +26,7 @@ public:
 
 	bool BeginRender(void) override;
 	void EndRender(void) override;
+	void SetPorjectionCamera(const Matrix44& view, const Matrix44& projection) override;
 	void SetRenderState(const Lighting& value) override;
 	void SetRenderState(const CullMode& value) override;
 	void SetRenderState(const Synthesis& value) override;
