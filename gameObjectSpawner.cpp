@@ -227,7 +227,7 @@ GameObject* GameObjectSpawner::CreateModel(const string& filePath, const Vector3
 //			filePointer
 //	戻り値：GameObject*
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::createChildNode(CTransformComponent* pParent, FILE* filePointer)
+GameObject* GameObjectSpawner::createChildNode(Transform* pParent, FILE* filePointer)
 {
 	auto pObj = new GameObject;
 
@@ -338,7 +338,7 @@ GameObject* GameObjectSpawner::createChildNode(CTransformComponent* pParent, FIL
 //			strMeshName
 //	戻り値：GameObject*
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::createChildMesh(CTransformComponent* pParent, const string& strMeshName)
+GameObject* GameObjectSpawner::createChildMesh(Transform* pParent, const string& strMeshName)
 {
 	auto pObj = new GameObject;
 

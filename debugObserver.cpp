@@ -20,7 +20,7 @@
 #include "mode.h"
 #include "camera.h"
 #include "gameObjectActor.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "actorBehaviorComponent.h"
 #include "fog.h"
 

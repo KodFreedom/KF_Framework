@@ -41,7 +41,7 @@ GameObject::GameObject(const Layer& layer)
 	tag.clear();
 	m_listpBehavior.clear();
 	m_listpCollider.clear();
-	m_pTransform = new CTransformComponent(this);
+	m_pTransform = new Transform(this);
 	Main::GetManager()->GetGameObjectManager()->Register(this, m_layer);
 }
 

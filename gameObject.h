@@ -10,7 +10,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "gameObjectManager.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "behaviorComponent.h"
 #include "meshRenderer.h"
 #include "rigidbodyComponent.h"
@@ -159,7 +159,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  コンポネント
 	//--------------------------------------------------------------------------------
-	CTransformComponent*		m_pTransform;	//位置関係パーツ
+	Transform*		m_pTransform;	//位置関係パーツ
 	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
 	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
 	list<Collider*>	m_listpCollider;//コリジョンパーツ

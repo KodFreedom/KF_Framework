@@ -214,7 +214,7 @@
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stageSpawner.cpp" />
     <ClCompile Include="textureManager.cpp" />
-    <ClCompile Include="transformComponent.cpp" />
+    <ClCompile Include="transform.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="UISystem.cpp" />
     <ClCompile Include="windmillBehaviorComponent.cpp" />
@@ -294,7 +294,7 @@
     <ClInclude Include="stageSpawner.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="thirdPersonCamera.h" />
-    <ClInclude Include="transformComponent.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
     <ClInclude Include="versionSetting.h" />

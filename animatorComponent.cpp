@@ -11,7 +11,7 @@
 #include "animatorComponent.h"
 #include "gameObject.h"
 #include "gameObjectSpawner.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "motionInfo.h"
 #include "collisionSystem.h"
 #include "sphereCollider.h"

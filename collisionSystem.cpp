@@ -19,7 +19,7 @@
 #include "OBBCollider.h"
 #include "3DRigidbodyComponent.h"
 #include "behaviorComponent.h"
-#include "transformComponent.h"
+#include "transform.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 //#include "rendererDX.h"

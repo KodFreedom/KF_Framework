@@ -204,9 +204,6 @@
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="transformComponent.cpp">
-      <Filter>ソース ファイル\Component\Transform</Filter>
-    </ClCompile>
     <ClCompile Include="modeTitle.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
@@ -363,6 +360,9 @@
     <ClCompile Include="thirdPersonCamera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>ソース ファイル\Component\Transform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -418,9 +418,6 @@
     </ClInclude>
     <ClInclude Include="editorCamera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="transformComponent.h">
-      <Filter>ヘッダー ファイル\Component\Transform</Filter>
     </ClInclude>
     <ClInclude Include="modeTitle.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -601,6 +598,9 @@
     </ClInclude>
     <ClInclude Include="thirdPersonCamera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>ヘッダー ファイル\Component\Transform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------
 #include "windmillBehaviorComponent.h"
 #include "gameObject.h"
-#include "transformComponent.h"
+#include "transform.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX

@@ -14,7 +14,7 @@
 #include "actorBehaviorComponent.h"
 #include "3DRigidbodyComponent.h"
 #include "gameObject.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "animatorComponent.h"
 
 //--------------------------------------------------------------------------------

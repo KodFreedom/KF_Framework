@@ -18,7 +18,7 @@
 #include "editorControllerBehaviorComponent.h"
 #include "fieldEditorBehaviorComponent.h"
 #include "modelEditorBehaviorComponent.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "ImGui\imgui.h"
 
 //--------------------------------------------------------------------------------

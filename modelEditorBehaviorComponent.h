@@ -78,7 +78,7 @@ private:
 	struct INFO
 	{
 		INFO() : pTransform(nullptr), vRot(CKFMath::sc_vZero) {}
-		CTransformComponent*	pTransform;
+		Transform*	pTransform;
 		Vector3					vRot;
 	};
 

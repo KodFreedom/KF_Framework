@@ -14,7 +14,7 @@
 //  ‘O•ûéŒ¾
 //--------------------------------------------------------------------------------
 class GameObject;
-class CTransformComponent;
+class Transform;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
@@ -38,6 +38,6 @@ private:
 	GameObjectSpawner() {}
 	~GameObjectSpawner() {}
 
-	static GameObject* createChildNode(CTransformComponent* pParent, FILE* filePointer);
-	static GameObject* createChildMesh(CTransformComponent* pParent, const string& strMeshName);
+	static GameObject* createChildNode(Transform* pParent, FILE* filePointer);
+	static GameObject* createChildMesh(Transform* pParent, const string& strMeshName);
 };

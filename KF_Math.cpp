@@ -520,7 +520,7 @@ Vector3 Vector3::Normalized(void) const
 //	引数：	なし
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion	Vector3::ToQuaternion(void) const
+Quaternion Vector3::ToQuaternion(void) const
 {
 	// Todo : 計算式を調べる
 	Quaternion result;
@@ -782,7 +782,7 @@ Matrix44::operator D3DXMATRIX() const
 	D3DXMATRIX result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; countX)
+		for (int countX = 0; countX < 4; ++countX)
 		{
 			result(countY, countX) = Elements[countY][countX];
 		}
@@ -814,7 +814,7 @@ Matrix44& Matrix44::operator*(const Matrix44 &value) const
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; countX)
+		for (int countX = 0; countX < 4; ++countX)
 		{
 			result.Elements[countY][countX] =
 				Elements[countY][0] * value.Elements[0][countX] + 
@@ -837,7 +837,7 @@ void Matrix44::operator*=(const Matrix44 &value)
 	Matrix44 copy = *this;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; countX)
+		for (int countX = 0; countX < 4; ++countX)
 		{
 			Elements[countY][countX] =
 				copy.Elements[countY][0] * value.Elements[0][countX] +
@@ -928,12 +928,44 @@ Matrix44 Matrix44::Transpose(void) const
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; countX)
+		for (int countX = 0; countX < 4; ++countX)
 		{
 			result.Elements[countY][countX] = Elements[countX][countY];
 		}
 	}
 	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Scale
+//  関数説明：与えられた値でスケール行列の作成
+//	引数：	scale：スケール値
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Scale(const Vector3& scale)
+{
+	return Matrix44(
+		scale.X, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.Y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Rotation
+//  関数説明：与えられた回転で行列の作成
+//	引数：	right：右方向
+//			up：上方向
+//			forward：前方向
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Rotation(const Vector3& right, const Vector3& up, const Vector3& forward)
+{
+	return Matrix44(
+		right.X, right.Y, right.Z, 0.0f,
+		up.X, up.Y, up.Z, 0.0f,
+		forward.X, forward.Y, forward.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -1012,17 +1044,16 @@ Matrix44 Matrix44::Translation(const Vector3& translation)
 //			up：上方向
 //			forward：前方向
 //			translation：移動量
+//			scale：スケール量
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation)
+Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation, const Vector3& scale)
 {
-	return Matrix44
-	{
-		right.X, right.Y, right.Z, 0.0f,
-		up.X, up.Y, up.Z, 0.0f,
-		forward.X, forward.Y, forward.Z, 0.0f,
-		translation.X, translation.Y, translation.Z, 1.0f
-	};
+	return Matrix44(
+		right.X * scale.X, right.Y * scale.X, right.Z * scale.X, 0.0f,
+		up.X * scale.Y, up.Y * scale.Y, up.Z * scale.Y, 0.0f,
+		forward.X * scale.Z, forward.Y * scale.Z, forward.Z * scale.Z, 0.0f,
+		translation.X, translation.Y, translation.Z, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -1096,7 +1127,7 @@ Matrix44 Matrix44::ToMatrix44(const D3DXMATRIX& value)
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int countX = 0; countX < 4; countX)
+		for (int countX = 0; countX < 4; ++countX)
 		{
 			result.Elements[countY][countX] = value(countY, countX);
 		}
@@ -1330,7 +1361,7 @@ Quaternion Quaternion::MultiplySeparately(const Quaternion& value) const
 //	引数：	なし
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3 Quaternion::ToEuler(void)
+Vector3 Quaternion::ToEuler(void) const
 {
 	Vector3 result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -1352,7 +1383,7 @@ Vector3 Quaternion::ToEuler(void)
 //	引数：	なし
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44 Quaternion::ToMatrix(void)
+Matrix44 Quaternion::ToMatrix(void) const
 {
 	Matrix44 result;
 	static const auto quaternion1110 = Quaternion(1.0f, 1.0f, 1.0f, 0.0f);

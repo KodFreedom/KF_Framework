@@ -20,7 +20,7 @@
 #include "gameObject.h"
 #include "3DRigidbodyComponent.h"
 #include "behaviorComponent.h"
-#include "transformComponent.h"
+#include "transform.h"
 
 #ifdef _DEBUG
 #include "debugObserver.h"

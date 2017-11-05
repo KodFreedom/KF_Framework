@@ -223,10 +223,12 @@ namespace KF
 		Matrix44		Transpose(void) const;
 
 		// 静的メソッド
+		static Matrix44 Scale(const Vector3& scale);
+		static Matrix44 Rotation(const Vector3& right, const Vector3& up, const Vector3& forward);
 		static Matrix44	RotationAxis(const Vector3& axis, const float& radian);
 		static Matrix44	RotationYawPitchRoll(const Vector3& euler);
 		static Matrix44	Translation(const Vector3& translation);
-		static Matrix44	Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation);
+		static Matrix44	Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation, const Vector3& scale = Vector3::One);
 		static Matrix44 Transform(const Vector3& rotation, const Vector3& translation, const Vector3& scale = Vector3::One);
 		static Matrix44 ProjectionLeftHand(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -278,8 +280,8 @@ namespace KF
 		void		Normalize(void);
 		Quaternion	Normalized(void) const;
 		Quaternion	MultiplySeparately(const Quaternion& value) const;
-		Vector3		ToEuler(void);
-		Matrix44	ToMatrix(void);
+		Vector3		ToEuler(void) const;
+		Matrix44	ToMatrix(void) const;
 	};
 
 	//--------------------------------------------------------------------------------

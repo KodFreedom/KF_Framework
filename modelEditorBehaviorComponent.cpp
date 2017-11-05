@@ -14,7 +14,7 @@
 #include "inputManager.h"
 #include "gameObject.h"
 #include "gameObjectSpawner.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "modelEditorBehaviorComponent.h"
 #include "ImGui\imgui.h"
 

@@ -11,7 +11,7 @@
 #include "physicsSystem.h"
 #include "collisionDetector.h"
 #include "gameObject.h"
-#include "transformComponent.h"
+#include "transform.h"
 #include "3DRigidbodyComponent.h"
 
 //--------------------------------------------------------------------------------
