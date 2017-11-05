@@ -8,8 +8,11 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include "textureManager.h"
+#include "materialManager.h"
+#include "meshManager.h"
+#include "meshInfo.h"
 #include "rendererDirectX9.h"
 //--------------------------------------------------------------------------------
 //
@@ -41,6 +44,30 @@ void RendererDirectX9::EndRender(void)
 
 	// バックバッファとフロントバッファの入れ替え
 	lpD3DDevice->Present(NULL, NULL, NULL, NULL);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Render
+//  関数説明：描画処理
+//	引数：	meshName：メッシュ名前
+//			textureName：テクスチャ名前
+//			materialID：マテリアルID
+//			worldMatrix：世界行列
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void RendererDirectX9::Render(const string& meshName, const string& textureName, const unsigned short materialID, const Matrix44& worldMatrix)
+{
+	auto mesh = MeshManager::Instance()->GetMeshBy(meshName);
+	auto texture = TextureManager::Instance()->GetTexture(textureName);
+	auto material = MaterialManager::Instance()->GetMaterial(materialID);
+	lpD3DDevice->SetTransform(D3DTS_WORLD, &(D3DXMATRIX)worldMatrix);
+	lpD3DDevice->SetStreamSource(0, mesh->VertexBuffer, 0, sizeof(VERTEX_3D));
+	lpD3DDevice->SetIndices(mesh->IndexBuffer);
+	lpD3DDevice->SetFVF(FVF_VERTEX_3D);
+	lpD3DDevice->SetTexture(0, texture);
+	lpD3DDevice->SetMaterial(&(D3DMATERIAL9)material);
+	lpD3DDevice->DrawIndexedPrimitive((_D3DPRIMITIVETYPE)mesh->CurrentType,
+		0, 0, mesh->VertexNumber, 0, mesh->PolygonNumber);
 }
 
 //--------------------------------------------------------------------------------

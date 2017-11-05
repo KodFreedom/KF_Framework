@@ -26,6 +26,7 @@ public:
 
 	bool BeginRender(void) override;
 	void EndRender(void) override;
+	void Render(const string& meshName, const string& textureName, const unsigned short materialID, const Matrix44& worldMatrix) override;
 	void SetPorjectionCamera(const Matrix44& view, const Matrix44& projection) override;
 	void SetRenderState(const Lighting& value) override;
 	void SetRenderState(const CullMode& value) override;

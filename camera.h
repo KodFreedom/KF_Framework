@@ -33,6 +33,7 @@ public:
 	}
 
 	void		 Set(void);
+	bool		 IsInRange(const Vector3& position);
 	void		 Move(const Vector3& movement);
 	auto		 GetRight(void) const { return worldRight; }
 	auto		 GetUp(void) const { return worldUp; }
@@ -40,6 +41,7 @@ public:
 	auto		 GetPositionEye(void) const { return worldPositionEye; }
 	auto		 GetPositionAt(void) const { return worldPositionAt; }
 	auto		 GetViewTranspose(void) const { return viewTranspose; }
+	auto		 GetFar(void) const { return farZ; }
 	virtual void SetDistance(const float& value)
 	{
 		distance = value;

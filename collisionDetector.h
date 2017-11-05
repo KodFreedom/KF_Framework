@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class C3DRigidbodyComponent;
+class Rigidbody3D;
 class Collider;
 class BoxCollider;
 class SphereCollider;
@@ -35,8 +35,8 @@ public:
 	{}
 	~Collision() {}
 
-	C3DRigidbodyComponent*	RigidbodyOne;
-	C3DRigidbodyComponent*	RigidbodyTwo;
+	Rigidbody3D*	RigidbodyOne;
+	Rigidbody3D*	RigidbodyTwo;
 	Vector3					Normal;
 	Vector3					Point;
 	float					Penetration;

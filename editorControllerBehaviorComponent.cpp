@@ -131,7 +131,7 @@ void CEditorControllerBehaviorComponent::showPosWindow(void)
 {
 	//•W“I‘€ì
 	auto pInput = Main::GetManager()->GetInputManager();
-	auto pTrans = m_pGameObj->GetTransformComponent();
+	auto pTrans = m_pGameObj->GetTransform();
 	auto Position = pTrans->GetPos();
 	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
 	auto pCamera = Main::GetManager()->GetMode()->GetCamera();

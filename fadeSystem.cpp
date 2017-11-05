@@ -46,7 +46,7 @@ void FadeSystem::Draw(void)
 	//	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	//
 	//	// 頂点バッファをデータストリームに設定
-	//	pDevice->SetStreamSource(0, m_pVtxBuffer, 0, sizeof(VERTEX_2D));
+	//	pDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX_2D));
 	//
 	//	// 頂点フォーマットの設定
 	//	pDevice->SetFVF(FVF_VERTEX_2D);
@@ -102,7 +102,7 @@ void FadeSystem::init(void)
 //		D3DUSAGE_WRITEONLY,					//頂点バッファの使用方法
 //		FVF_VERTEX_2D,						//書かなくても大丈夫
 //		D3DPOOL_MANAGED,					//メモリ管理方法(managed：デバイスにお任せ)
-//		&m_pVtxBuffer,						//頂点バッファのアドレス
+//		&vertexBuffer,						//頂点バッファのアドレス
 //		NULL);
 //
 //	if (FAILED(hr))
@@ -115,7 +115,7 @@ void FadeSystem::init(void)
 //	VERTEX_2D *pVtx;
 //
 //	//頂点バッファをロックして、仮想アドレスを取得する
-//	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+//	vertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
 //
 //	//頂点位置設定
 //	//頂点座標の設定（2D座標、右回り）
@@ -143,7 +143,7 @@ void FadeSystem::init(void)
 //	pVtx[3].Rhw = 1.0f;
 //
 //	//仮想アドレス解放
-//	m_pVtxBuffer->Unlock();
+//	vertexBuffer->Unlock();
 //#endif
 }
 
@@ -154,7 +154,7 @@ void FadeSystem::uninit(void)
 {
 //#ifdef USING_DIRECTX
 //	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
-//	SAFE_RELEASE(m_pVtxBuffer);
+//	SAFE_RELEASE(vertexBuffer);
 //#endif
 }
 
@@ -200,7 +200,7 @@ void FadeSystem::setColor(void)
 //	VERTEX_2D *pVtx = NULL;
 //
 //	//頂点バッファをロックして、仮想アドレスを取得する
-//	m_pVtxBuffer->Lock(0, 0, (void**)&pVtx, 0);
+//	vertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
 //
 //	//頂点カラーの設定(0～255の整数値)
 //	pVtx[0].Color = cColor;
@@ -209,6 +209,6 @@ void FadeSystem::setColor(void)
 //	pVtx[3].Color = cColor;
 //
 //	//仮想アドレス解放
-//	m_pVtxBuffer->Unlock();
+//	vertexBuffer->Unlock();
 //#endif
 }

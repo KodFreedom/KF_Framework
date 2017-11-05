@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class C3DRigidbodyComponent;
+class Rigidbody3D;
 class CAnimatorComponent;
 
 //--------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CActorBehaviorComponent(GameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator);
+	CActorBehaviorComponent(GameObject* const pGameObj, Rigidbody3D& rigidbody, CAnimatorComponent* const pAnimator);
 	~CActorBehaviorComponent();
 
 	virtual bool	Init(void) override;
@@ -74,7 +74,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	C3DRigidbodyComponent&	m_rigidbody;	//リジッドボディ
+	Rigidbody3D&	m_rigidbody;	//リジッドボディ
 	CAnimatorComponent*		m_pAnimator;
 
 	//パラメーター

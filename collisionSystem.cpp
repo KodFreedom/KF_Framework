@@ -17,7 +17,7 @@
 #include "fieldCollider.h"
 #include "AABBCollider.h"
 #include "OBBCollider.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 #include "behaviorComponent.h"
 #include "transform.h"
 
@@ -343,7 +343,7 @@ void CollisionSystem::DrawCollider(void)
 	//	D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 	//	D3DXMATRIX mtxOff = pCol->GetOffset();
 	//	mtx *= mtxOff;
-	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
+	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
 	//	mtx *= mtxObj;
 	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
 	//	m_meshCube->DrawSubset(0);
@@ -357,7 +357,7 @@ void CollisionSystem::DrawCollider(void)
 	//	D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
 	//	D3DXMATRIX mtxOff = pCol->GetOffset();
 	//	mtx *= mtxOff;
-	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransformComponent()->GetMatrix();
+	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
 	//	mtx *= mtxObj;
 	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
 	//	m_meshCube->DrawSubset(0);

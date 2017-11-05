@@ -9,27 +9,17 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "rigidbodyComponent.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class PhysicsSystem;
-class Collider;
+#include "rigidbody.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  3D物理コンポネントクラス
-//--------------------------------------------------------------------------------
-class C3DRigidbodyComponent : public CRigidbodyComponent
+class Rigidbody3D : public Rigidbody
 {
-	friend PhysicsSystem;
-
+	friend class PhysicsSystem;
 public:
-	C3DRigidbodyComponent(GameObject* const pGameObj);
-	~C3DRigidbodyComponent() {}
+	Rigidbody3D(GameObject* const owner);
+	~Rigidbody3D() {}
 
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}
@@ -37,27 +27,27 @@ public:
 	void	LateUpdate(void) override;
 
 	//Get関数
-	Vector3	GetVelocity(void) const { return m_vVelocity; }
+	auto	GetVelocity(void) const { return velocity; }
 
 	//Set関数
-	void	SetDrag(const float& fDrag) { m_fDrag = fDrag; }
-	void	MovePos(const Vector3& vMovement) { m_vMovement += vMovement; }
-	void	SetMass(const float& fMass);
-	void	SetVelocity(const Vector3& vVelocity) { m_vVelocity = vVelocity; }
-	void	AddForce(const Vector3& vForce) { m_vForceAccum += vForce; }
+	void	SetDrag(const float& value) { drag = value; }
+	void	SetMass(const float& value);
+	void	SetVelocity(const Vector3& value) { velocity = value; }
+	void	AddForce(const Vector3& force) { forceAccum += force; }
+	void	Move(const Vector3& value) { movement += value; }
 	//void	SetInertiaTensor(Collider* pCollider);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	enum AXIS
-	{
-		X = 0x01,
-		Y = 0x02,
-		Z = 0x04,
-		XYZ = 0x07
-	};
+	//enum AXIS
+	//{
+	//	X = 0x01,
+	//	Y = 0x02,
+	//	Z = 0x04,
+	//	XYZ = 0x07
+	//};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
@@ -67,19 +57,19 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	float		m_fMass;					//質量
-	float		m_fInverseMass;				//質量の逆数
-	float		m_fDrag;					//抵抗係数(空気抵抗)
+	float		mass;					//質量
+	float		inverseMass;				//質量の逆数
+	float		drag;					//抵抗係数(空気抵抗)
 	//float		AngularDrag;				//回転抵抗係数
-	float		m_fFriction;				//摩擦係数
-	float		Bounciness;				//跳ね返り係数
-	float		GravityCoefficient;		//重力係数
-	Vector3		m_vMovement;				//移動量
-	Vector3		m_vVelocity;				//速度
-	Vector3		m_vAcceleration;			//加速度
-	//Vector3		m_vAngularVelocity;			//回転速度
-	Vector3		m_vForceAccum;				//合わせた作用力
-	//Vector3		m_vTorqueAccum;				//回転力
+	float		friction;				//摩擦係数
+	float		bounciness;				//跳ね返り係数
+	float		gravityCoefficient;		//重力係数
+	Vector3		movement;				//移動量
+	Vector3		velocity;				//速度
+	Vector3		acceleration;			//加速度
+	//Vector3	m_vAngularVelocity;			//回転速度
+	Vector3		forceAccum;				//合わせた作用力
+	//Vector3	m_vTorqueAccum;				//回転力
 	//Matrix44	m_mtxInertisTensor;			//慣性テンソルの行列
 	//BYTE		m_bRotLock;					//回転制限のフラグ
 };

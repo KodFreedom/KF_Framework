@@ -198,9 +198,6 @@
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="3DRigidbodyComponent.cpp">
-      <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
@@ -263,15 +260,6 @@
     </ClCompile>
     <ClCompile Include="renderManager.cpp">
       <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderComponent.cpp">
-      <Filter>ソース ファイル\Component\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="3DMeshRenderComponent.cpp">
-      <Filter>ソース ファイル\Component\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="2DRenderComponent.cpp">
-      <Filter>ソース ファイル\Component\Render</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
@@ -363,6 +351,15 @@
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
+    <ClCompile Include="meshRenderer.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="meshRenderer3D.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="rigidbody3D.cpp">
+      <Filter>ソース ファイル\Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -407,12 +404,6 @@
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="3DRigidbodyComponent.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="rigidbodyComponent.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
     </ClInclude>
@@ -433,9 +424,6 @@
     </ClInclude>
     <ClInclude Include="meshManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>ヘッダー ファイル\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="behaviorComponent.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
@@ -493,12 +481,6 @@
     </ClInclude>
     <ClInclude Include="renderManager.h">
       <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="3DMeshRenderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="2DRenderComponent.h">
-      <Filter>ヘッダー ファイル\Component\Render</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
@@ -601,6 +583,18 @@
     </ClInclude>
     <ClInclude Include="transform.h">
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="meshRenderer3D.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbody.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbody3D.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="meshInfo.h">
+      <Filter>ヘッダー ファイル\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

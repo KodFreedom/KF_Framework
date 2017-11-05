@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	描画コンポネント
-//　renderComponent.cpp
+//　MeshRenderer.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
@@ -8,12 +8,13 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "meshRenderer.h"
-#include "manager.h"
 #include "gameObject.h"
 #include "meshComponent.h"
 #include "meshManager.h"
 #include "textureManager.h"
 #include "materialManager.h"
+#include "camera.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
@@ -27,13 +28,15 @@
 //--------------------------------------------------------------------------------
 bool MeshRenderer::Init(void)
 {
-	auto mesh = m_pGameObj->GetMeshComponent();
-	auto meshManager = Main::GetManager()->GetMeshManager();
-	auto renderInfo = meshManager->GetRenderInfo(mesh->GetMeshName());
-	
-	if (!renderInfo.strTex.empty()) { SetTexName(renderInfo.strTex); }
-	m_renderPriority = renderInfo.renderPriority;
-	m_renderState = renderInfo.renderState;
+	auto mesh = owner->GetMesh();
+	auto& renderInfo = MeshManager::Instance()->GetRenderInfoBy(mesh->GetMeshName());
+	if (!renderInfo.TextureName.empty()) Set(renderInfo.TextureName);
+	lighting = renderInfo.CurrentLighting;
+	cullMode = renderInfo.CurrentCullMode;
+	synthesis = renderInfo.CurrentSynthesis;
+	fillMode = renderInfo.CurrentFillMode;
+	alpha = renderInfo.CurrentAlpha;
+	fog = renderInfo.CurrentFog;
 	return true;
 }
 
@@ -42,10 +45,10 @@ bool MeshRenderer::Init(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Uninit(void)
 {
-	if (!m_texture.empty())
+	if (!textureName.empty())
 	{
-		Main::GetManager()->GetTextureManager()->DisuseTexture(m_texture);
-		m_texture.clear();
+		TextureManager::Instance()->Disuse(textureName);
+		textureName.clear();
 	}
 }
 
@@ -54,20 +57,23 @@ void MeshRenderer::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Update(void)
 {
-	Main::GetManager()->GetRenderManager()->Register(this, m_renderPriority, m_renderState);
+	if (CameraManager::Instance()->GetMainCamera()->
+		IsInRange(owner->GetTransform()->GetCurrentPosition()))
+	{
+		RenderManager::Instance()->Register(this);
+	}
 }
 
 //--------------------------------------------------------------------------------
 //  テクスチャ設定
 //--------------------------------------------------------------------------------
-void MeshRenderer::SetTexName(const string& texture)
+void MeshRenderer::Set(const string& texture)
 {
-	if (!m_texture.empty())
+	if (!textureName.empty())
 	{
-		Main::GetManager()->GetTextureManager()->DisuseTexture(m_texture);
-		m_texture.clear();
+		TextureManager::Instance()->Disuse(textureName);
+		textureName.clear();
 	}
-
-	m_texture = texture;
-	Main::GetManager()->GetTextureManager()->UseTexture(m_texture);
+	textureName = texture;
+	TextureManager::Instance()->Use(textureName);
 }

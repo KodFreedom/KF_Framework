@@ -317,7 +317,7 @@ void DebugObserver::showPlayerWindow(void)
 	}
 
 	// Trans
-	auto pTrans = player->GetTransformComponent();
+	auto pTrans = player->GetTransform();
 	ImGui::InputFloat3("Trans", &pTrans->PositionNext.X);
 
 	// Actor Behavior

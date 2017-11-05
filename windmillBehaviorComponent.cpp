@@ -35,7 +35,7 @@ bool CWindmillBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 void CWindmillBehaviorComponent::Update(void)
 {
-	m_pFan->GetTransformComponent()->RotByRoll(RotSpeed);
+	m_pFan->GetTransform()->RotByRoll(RotSpeed);
 }
 
 //--------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ void CWindmillBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 GameObject* CWindmillBehaviorComponent::findFan(GameObject* pParent)
 {
-	auto& listChild = pParent->GetTransformComponent()->GetChildren();
+	auto& listChild = pParent->GetTransform()->GetChildren();
 	for (auto pTrans : listChild)
 	{
 		auto pObj = pTrans->GetGameObject();

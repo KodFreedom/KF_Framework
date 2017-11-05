@@ -72,9 +72,9 @@ public:
 	}
 
 	//Get関数
-	auto		GetTransformComponent(void) const { return m_pTransform; }
+	auto		GetTransform(void) const { return m_pTransform; }
 	auto&		GetBehaviorComponent(void) { return m_listpBehavior; }
-	auto		GetMeshComponent(void) const { return m_mesh; }
+	auto		GetMesh(void) const { return m_mesh; }
 	auto		GetRigidbodyComponent(void) const { return m_pRigidbody; }
 	auto&		GetColliderComponent(void) const { return m_listpCollider; }
 	const auto&	GetName(void) const { return m_strName; }
@@ -106,7 +106,7 @@ public:
 		if (!pRender) { m_pRender = &s_nullRender; }
 		else { m_pRender = pRender; }
 	}
-	void		SetRigidbodyComponent(CRigidbodyComponent* pRb) 
+	void		SetRigidbodyComponent(Rigidbody* pRb) 
 	{
 		//Release
 		if (m_pRigidbody != &s_nullRigidbody) { SAFE_RELEASE(m_pRigidbody); }
@@ -161,7 +161,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	Transform*		m_pTransform;	//位置関係パーツ
 	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
-	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
+	Rigidbody*		m_pRigidbody;	//物理処理パーツ
 	list<Collider*>	m_listpCollider;//コリジョンパーツ
 	MeshComponent*				m_mesh;		//メッシュパーツ
 	MeshRenderer*			m_pRender;		//描画処理パーツ
@@ -184,7 +184,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ヌルコンポネント定義
 	//--------------------------------------------------------------------------------
-	static CNullRigidbodyComponent	s_nullRigidbody;
+	static NullRigidbody	s_nullRigidbody;
 	static CNullMeshComponent		s_nullMesh;
 	static CNullRenderComponent		s_nullRender;
 };

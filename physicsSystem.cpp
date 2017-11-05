@@ -12,7 +12,7 @@
 #include "collisionDetector.h"
 #include "gameObject.h"
 #include "transform.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”
@@ -94,10 +94,10 @@ void PhysicsSystem::resolveVelocity(Collision& collision)
 	float bouncinessVelocity = -separatingVelocity * bounciness;
 
 	//Õ“Ë•ûŒü‚Éì—p—Í‚ðŒvŽZ‚·‚é
-	auto acceleration = collision.RigidbodyOne->m_vAcceleration;
+	auto acceleration = collision.RigidbodyOne->acceleration;
 	if (collision.RigidbodyTwo)
 	{
-		acceleration -= collision.RigidbodyTwo->m_vAcceleration;
+		acceleration -= collision.RigidbodyTwo->acceleration;
 	}
 	float separatingAcceleration = acceleration.Dot(collision.Normal);
 
@@ -112,10 +112,10 @@ void PhysicsSystem::resolveVelocity(Collision& collision)
 	float deltaVelocity = bouncinessVelocity - separatingVelocity;
 
 	//‹tŽ¿—ÊŽæ“¾
-	float totalInverseMass = collision.RigidbodyOne->m_fInverseMass;
+	float totalInverseMass = collision.RigidbodyOne->inverseMass;
 	if (collision.RigidbodyTwo)
 	{
-		totalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
+		totalInverseMass += collision.RigidbodyTwo->inverseMass;
 	}
 
 	//Ž¿—Ê‚ª–³ŒÀ‘å‚Ìê‡ŒvŽZ‚µ‚È‚¢
@@ -128,10 +128,10 @@ void PhysicsSystem::resolveVelocity(Collision& collision)
 	auto impulsePerInverseMass = collision.Normal * impulse;
 
 	//‘¬“xŒvŽZ
-	collision.RigidbodyOne->m_vVelocity += impulsePerInverseMass * collision.RigidbodyOne->m_fInverseMass;;
+	collision.RigidbodyOne->velocity += impulsePerInverseMass * collision.RigidbodyOne->inverseMass;;
 	if (collision.RigidbodyTwo)
 	{
-		collision.RigidbodyTwo->m_vVelocity += impulsePerInverseMass * -1.0f * collision.RigidbodyTwo->m_fInverseMass;;
+		collision.RigidbodyTwo->velocity += impulsePerInverseMass * -1.0f * collision.RigidbodyTwo->inverseMass;;
 	}
 }
 
@@ -144,10 +144,10 @@ void PhysicsSystem::resolveInterpenetration(Collision& collision)
 	if (collision.Penetration <= 0.0f) return;
 
 	//‹tŽ¿—ÊŒvŽZ
-	float totalInverseMass = collision.RigidbodyOne->m_fInverseMass;
+	float totalInverseMass = collision.RigidbodyOne->inverseMass;
 	if (collision.RigidbodyTwo)
 	{
-		totalInverseMass += collision.RigidbodyTwo->m_fInverseMass;
+		totalInverseMass += collision.RigidbodyTwo->inverseMass;
 	}
 
 	//Ž¿—Ê‚ª–³ŒÀ‘å‚Ìê‡ŒvŽZ‚µ‚È‚¢
@@ -157,13 +157,13 @@ void PhysicsSystem::resolveInterpenetration(Collision& collision)
 	auto movementPerInverseMass = collision.Normal * collision.Penetration / totalInverseMass;
 
 	//ŠeRigidbody–ß‚èˆÊ’uŒvŽZ
-	auto transform = collision.RigidbodyOne->GetGameObject()->GetTransformComponent();
-	collision.RigidbodyOne->m_vMovement += movementPerInverseMass * collision.RigidbodyOne->m_fInverseMass;
+	auto transform = collision.RigidbodyOne->GetGameObject()->GetTransform();
+	collision.RigidbodyOne->movement += movementPerInverseMass * collision.RigidbodyOne->inverseMass;
 
 	if (collision.RigidbodyTwo)
 	{
-		transform = collision.RigidbodyTwo->GetGameObject()->GetTransformComponent();
-		collision.RigidbodyTwo->m_vMovement -= movementPerInverseMass * collision.RigidbodyTwo->m_fInverseMass;
+		transform = collision.RigidbodyTwo->GetGameObject()->GetTransform();
+		collision.RigidbodyTwo->movement -= movementPerInverseMass * collision.RigidbodyTwo->inverseMass;
 	}
 }
 
@@ -172,8 +172,8 @@ void PhysicsSystem::resolveInterpenetration(Collision& collision)
 //--------------------------------------------------------------------------------
 float PhysicsSystem::calculateSeparatingVelocity(Collision& collision)
 {
-	auto relativeVelocity = collision.RigidbodyOne->m_vVelocity;
-	if (collision.RigidbodyTwo) relativeVelocity -= collision.RigidbodyTwo->m_vVelocity;
+	auto relativeVelocity = collision.RigidbodyOne->velocity;
+	if (collision.RigidbodyTwo) relativeVelocity -= collision.RigidbodyTwo->velocity;
 	return relativeVelocity.Dot(collision.Normal);
 }
 

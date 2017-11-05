@@ -91,7 +91,7 @@ void ThirdPersionCamera::LateUpdate(void)
 {
 	if (followTarget)
 	{
-		rig.Position = Math::Lerp(rig.Position, followTarget->GetTransformComponent()->GetPos(), moveLerpTime);
+		rig.Position = Math::Lerp(rig.Position, followTarget->GetTransform()->GetPos(), moveLerpTime);
 	}
 
 	Camera::LateUpdate();

@@ -14,16 +14,20 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class Mesh;
+class MeshInfo;
 
 //--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
 struct RenderInfo
 {
-	string			TextureName;
-	RenderPriority	CurrentPriority;
-	RenderState		CurrentState;
+	string		TextureName;
+	Lighting	CurrentLighting;
+	CullMode	CurrentCullMode;
+	Synthesis	CurrentSynthesis;
+	FillMode	CurrentFillMode;
+	Alpha		CurrentAlpha;
+	Fog			CurrentFog;
 };
 
 //--------------------------------------------------------------------------------
@@ -65,18 +69,22 @@ private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct MeshInfo
+	struct MeshStruct
 	{
-		MeshInfo()
+		MeshStruct()
 			: UserNumber(1)
 			, CurrentMesh(nullptr)
 		{
 			CurrentRenderInfo.TextureName.clear();
-			CurrentRenderInfo.CurrentPriority = RP_3D;
-			CurrentRenderInfo.CurrentState = RS_LIGHTON_CULLFACEON_MUL;
+			CurrentRenderInfo.CurrentLighting = Lighting::On;
+			CurrentRenderInfo.CurrentCullMode = CullMode::CCW;
+			CurrentRenderInfo.CurrentSynthesis = Synthesis::Multiplication;
+			CurrentRenderInfo.CurrentFillMode = FillMode::Solid;
+			CurrentRenderInfo.CurrentAlpha = Alpha::None;
+			CurrentRenderInfo.CurrentFog = Fog::On;
 		}
 		unsigned short	UserNumber;
-		Mesh*			CurrentMesh;
+		MeshInfo*		CurrentMesh;
 		RenderInfo		CurrentRenderInfo;
 	};
 
@@ -87,16 +95,16 @@ private:
 	~MeshManager() {}
 	void		init(void) {};
 	void		uninit(void);
-	MeshInfo	loadFromMesh(const string& filePath);
-	MeshInfo	loadFromXFile(const string& filePath);
-	MeshInfo	createCube(void);
-	MeshInfo	createSphere(void);
-	MeshInfo	createSkyBox(void);
-	bool		createBuffer(Mesh* mesh);
+	MeshStruct	loadFromMesh(const string& filePath);
+	MeshStruct	loadFromXFile(const string& filePath);
+	MeshStruct	createCube(void);
+	MeshStruct	createSphere(void);
+	MeshStruct	createSkyBox(void);
+	bool		createBuffer(MeshInfo* mesh);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, MeshInfo> meshes;
+	unordered_map<string, MeshStruct> meshes;
 	static MeshManager*			instance;
 };

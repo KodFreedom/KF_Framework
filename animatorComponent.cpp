@@ -423,7 +423,7 @@ void CAnimatorComponent::analyzeFile(const string& strPath)
 		GameObject* pParent = nullptr;
 		if (nParent < 0) { pParent = m_pGameObj; }
 		else { pParent = m_vecBorns[nParent]; }
-		m_vecBorns[countPart]->GetTransformComponent()->RegisterParent(pParent->GetTransformComponent(), vOffsetPos, vOffsetRot);
+		m_vecBorns[countPart]->GetTransform()->RegisterParent(pParent->GetTransform(), vOffsetPos, vOffsetRot);
 	}
 
 	//motionÇÃì«Ç›çûÇ›

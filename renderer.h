@@ -26,6 +26,7 @@ public:
 
 	virtual bool BeginRender(void) = 0;
 	virtual void EndRender(void) = 0;
+	virtual void Render(const string& meshName, const string& textureName, const unsigned short materialID, const Matrix44& worldMatrix) = 0;
 				 
 	//Getä÷êî	   
 	auto		 GetBackgroundColor(void) const { return backgroundColor; }

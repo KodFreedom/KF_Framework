@@ -12,7 +12,7 @@
 #include "actorBehaviorComponent.h"
 #include "playerBehaviorComponent.h"
 #include "enemyBehaviorComponent.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 #include "sphereCollider.h"
 #include "AABBCollider.h"
 #include "playerUI.h"
@@ -65,7 +65,7 @@ GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Ve
 	pObj->SetTag("Player");
 
 	//コンポネント
-	auto pRb = new C3DRigidbodyComponent(pObj);
+	auto pRb = new Rigidbody3D(pObj);
 	pObj->m_pRigidbody = pRb;
 	pObj->m_pAnimator = new CAnimatorComponent(pObj, modelPath);
 	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);
@@ -79,7 +79,7 @@ GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Ve
 	pObj->AddCollider(pCollider);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
@@ -106,7 +106,7 @@ GameObjectActor* GameObjectActor::CreateEnemy(const string &modelPath, const Vec
 	pObj->SetTag("Enemy");
 
 	//コンポネント
-	auto pRb = new C3DRigidbodyComponent(pObj);
+	auto pRb = new Rigidbody3D(pObj);
 	pObj->m_pRigidbody = pRb;
 	pObj->m_pAnimator = new CAnimatorComponent(pObj, modelPath);
 	
@@ -127,7 +127,7 @@ GameObjectActor* GameObjectActor::CreateEnemy(const string &modelPath, const Vec
 	pObj->AddCollider(pDetector);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);

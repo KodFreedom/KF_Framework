@@ -12,7 +12,7 @@
 #include "collisionSystem.h"
 #include "collisionDetector.h"
 #include "actorBehaviorComponent.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 #include "gameObject.h"
 #include "transform.h"
 #include "animatorComponent.h"
@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CActorBehaviorComponent::CActorBehaviorComponent(GameObject* const pGameObj, C3DRigidbodyComponent& rigidbody, CAnimatorComponent* const pAnimator)
+CActorBehaviorComponent::CActorBehaviorComponent(GameObject* const pGameObj, Rigidbody3D& rigidbody, CAnimatorComponent* const pAnimator)
 	: CBehaviorComponent(pGameObj)
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)
@@ -109,7 +109,7 @@ void CActorBehaviorComponent::Act(Vector3& vMovement, const bool& bJump, const b
 	}
 
 	//相対回転方向を算出する
-	auto vTurnDir = m_pGameObj->GetTransformComponent()->TransformDirectionToLocal(vMovement);
+	auto vTurnDir = m_pGameObj->GetTransform()->TransformDirectionToLocal(vMovement);
 
 	//地面の表面法線を取得
 	auto vGroundNormal = checkGroundStatus();
@@ -191,7 +191,7 @@ void CActorBehaviorComponent::jump(const bool& bJump)
 void CActorBehaviorComponent::turn(const float& fTurnAngle, const float& fMoveRate)
 {
 	auto fTurnSpeed = CKFMath::LerpFloat(m_fTurnSpeedMin, m_fTurnSpeedMax, fMoveRate);
-	m_pGameObj->GetTransformComponent()->RotByYaw(fTurnAngle * fTurnSpeed);
+	m_pGameObj->GetTransform()->RotByYaw(fTurnAngle * fTurnSpeed);
 }
 
 //--------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ void CActorBehaviorComponent::updateAnimation(const float& fMovement, const bool
 Vector3 CActorBehaviorComponent::checkGroundStatus(void)
 {
 	RayHitInfo rayHit;
-	auto Position = m_pGameObj->GetTransformComponent()->GetPos();
+	auto Position = m_pGameObj->GetTransform()->GetPos();
 	auto pCollisionSystem = CollisionSystem::Instance();
 	if (pCollisionSystem->RayCast(Position, CKFMath::sc_vDown, GroundCheckDistance, rayHit, m_pGameObj))
 	{

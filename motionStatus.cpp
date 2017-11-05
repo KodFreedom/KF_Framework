@@ -33,7 +33,7 @@ void CNormalMotionStatus::Update(CAnimatorComponent& animator)
 
 	for (auto pObj : animator.m_vecBorns)
 	{//Node‚²‚ÆˆÊ’u‰ñ“]XV
-		auto pTrans = pObj->GetTransformComponent();
+		auto pTrans = pObj->GetTransform();
 		auto& PositionNew = CKFMath::LerpVec3(itrNodeKey->c_Position, itrNodeKeyNext->c_Position, fRate);
 		auto& qRotNew = CKFMath::SlerpQuaternion(itrNodeKey->c_qRot, itrNodeKeyNext->c_qRot, fRate);
 		pTrans->SetPosNext(PositionNew);
@@ -182,7 +182,7 @@ void CBlendMotionStatus::Update(CAnimatorComponent& animator)
 		auto vTruePos = PositionNew * (1.0f - fMotionBlendRate) + vBlendPosNew * fMotionBlendRate;
 		auto qTrueRot = qRotNew * (1.0f - fMotionBlendRate) + qBlendRotNew * fMotionBlendRate;
 		
-		auto pTrans = pObj->GetTransformComponent();
+		auto pTrans = pObj->GetTransform();
 		pTrans->SetPosNext(vTruePos);
 		pTrans->SetRotNext(qTrueRot);
 		++itrNodeKey;

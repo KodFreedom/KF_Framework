@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	メッシュ
-//　mesh.h
+//　meshInfo.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-15
 //--------------------------------------------------------------------------------
@@ -39,27 +39,29 @@ enum DrawType
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class Mesh
+class MeshInfo
 {
 public:
-	Mesh()
+	MeshInfo()
 		: CurrentType(TriangleStrip)
 		, VertexNumber(0)
 		, IndexNumber(0)
 		, PolygonNumber(0) {}
-	~Mesh() 
+	~MeshInfo()
 	{
-		SAFE_RELEASE(m_pVtxBuffer);
-		SAFE_RELEASE(m_pIdxBuffer);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		SAFE_RELEASE(VertexBuffer);
+		SAFE_RELEASE(IndexBuffer);
+#endif
 	}
 
-	DrawType		CurrentType;
-	int				VertexNumber;
-	int				IndexNumber;
-	int				PolygonNumber;
+	DrawType CurrentType;
+	int		 VertexNumber;
+	int		 IndexNumber;
+	int		 PolygonNumber;
 
-#ifdef USING_DIRECTX
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;	// 頂点バッファへのポインタ
-	LPDIRECT3DINDEXBUFFER9	m_pIdxBuffer;	// インデックスへのポインタ
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DVERTEXBUFFER9 VertexBuffer;
+	LPDIRECT3DINDEXBUFFER9	IndexBuffer;
 #endif
 };

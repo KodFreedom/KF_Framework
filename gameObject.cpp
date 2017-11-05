@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”
 //--------------------------------------------------------------------------------
-CNullRigidbodyComponent	GameObject::s_nullRigidbody;
+NullRigidbody	GameObject::s_nullRigidbody;
 CNullMeshComponent		GameObject::s_nullMesh;
 CNullRenderComponent	GameObject::s_nullRender;
 

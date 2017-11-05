@@ -43,7 +43,7 @@ void Collider::Uninit(void)
 //--------------------------------------------------------------------------------
 void Collider::Update(void)
 {
-	nextWorldMatrix = offset * owner->GetTransformComponent()->GetNextWorldMatrix();
+	nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
 }
 
 //--------------------------------------------------------------------------------

@@ -152,11 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2DRenderComponent.cpp" />
     <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
-    <ClCompile Include="3DMeshRenderComponent.cpp" />
-    <ClCompile Include="3DRigidbodyComponent.cpp" />
+    <ClCompile Include="meshRenderer3D.cpp" />
+    <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="thirdPersonCamera.cpp" />
     <ClCompile Include="actorBehaviorComponent.cpp" />
@@ -172,7 +171,7 @@
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="light.cpp" />
-    <ClCompile Include="renderComponent.cpp" />
+    <ClCompile Include="meshRenderer.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
     <ClCompile Include="editorCamera.cpp" />
     <ClCompile Include="enemyAttackMode.cpp" />
@@ -220,11 +219,10 @@
     <ClCompile Include="windmillBehaviorComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="2DRenderComponent.h" />
     <ClInclude Include="cameraManager.h" />
     <ClInclude Include="UIObject2D.h" />
-    <ClInclude Include="3DMeshRenderComponent.h" />
-    <ClInclude Include="3DRigidbodyComponent.h" />
+    <ClInclude Include="meshRenderer3D.h" />
+    <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="actorBehaviorComponent.h" />
     <ClInclude Include="AIMode.h" />
@@ -272,7 +270,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="materialManager.h" />
-    <ClInclude Include="mesh.h" />
+    <ClInclude Include="meshInfo.h" />
     <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
@@ -288,7 +286,7 @@
     <ClInclude Include="rendererDirectX9.h" />
     <ClInclude Include="renderManager.h" />
     <ClInclude Include="renderState.h" />
-    <ClInclude Include="rigidbodyComponent.h" />
+    <ClInclude Include="rigidbody.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereCollider.h" />
     <ClInclude Include="stageSpawner.h" />

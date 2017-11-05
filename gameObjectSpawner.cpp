@@ -14,12 +14,12 @@
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
 #include "MeshComponent.h"
-#include "3DMeshRenderComponent.h"
+#include "meshRenderer3D.h"
 #include "sphereCollider.h"
 #include "OBBCollider.h"
 #include "AABBCollider.h"
 #include "fieldCollider.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #include "fieldEditorBehaviorComponent.h"
@@ -41,13 +41,13 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& Position, const Vecto
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName("skyBox");
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pRender->SetRenderState(RS_LIGHTOFF_CULLFACEON_MUL);
 	pRender->SetTexName("skybox000.jpg");
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
@@ -71,7 +71,7 @@ GameObject* GameObjectSpawner::CreateField(const string& strStageName)
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName(strFieldName + ".mesh");
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pRender->SetTexName("demoField.jpg");
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new FieldCollider(pObj, strFieldName);
@@ -93,18 +93,18 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& Position, const Vector3
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName("cube");
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pRender->SetTexName("nomal_cube.jpg");
 	pObj->SetRenderComponent(pRender);
 	auto pCollider = new AABBCollider(pObj, DYNAMIC, vScale * 0.5f);
 	//OBBCollider* pCollider = new OBBCollider(pObj, DYNAMIC, vScale * 0.5f);
 	//SphereCollider* pCollider = new SphereCollider(pObj, DYNAMIC, vScale.X * 0.5f);
 	pObj->AddCollider(pCollider);
-	auto pRb = new C3DRigidbodyComponent(pObj);
+	auto pRb = new Rigidbody3D(pObj);
 	pObj->SetRigidbodyComponent(pRb);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
@@ -131,11 +131,11 @@ GameObject* GameObjectSpawner::CreateXModel(const string& strPath, const Vector3
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName(strPath);
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
@@ -165,7 +165,7 @@ GameObject* GameObjectSpawner::CreateGoal(const Vector3& Position)
 	pObj->AddCollider(pCollider);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 
@@ -200,7 +200,7 @@ GameObject* GameObjectSpawner::CreateModel(const string& filePath, const Vector3
 	pObj->SetName(strName);
 
 	//Trans
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Position);
 	pTrans->SetPosNext(Position);
 	pTrans->SetScale(vScale);
@@ -244,7 +244,7 @@ GameObject* GameObjectSpawner::createChildNode(Transform* pParent, FILE* filePoi
 	fread_s(&Position, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
 	fread_s(&vRot, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
 	fread_s(&vScale, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	if (pParent) { pTrans->RegisterParent(pParent, Position, vRot); }
 
 	//Collider
@@ -350,11 +350,11 @@ GameObject* GameObjectSpawner::createChildMesh(Transform* pParent, const string&
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName(strMeshName);
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->RegisterParent(pParent);
 
 	//初期化
@@ -374,7 +374,7 @@ GameObject* GameObjectSpawner::CreateEditorController(GameObject* pFieldEditor)
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName("data/MODEL/target.x");
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pObj->SetRenderComponent(pRender);
 	auto pMEBehavior = new ModelEditorBehaviorComponent(pObj);
 	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
@@ -401,12 +401,12 @@ GameObject* GameObjectSpawner::CreateEditorField(void)
 	auto mesh = new MeshComponent(pObj);
 	mesh->SetMeshName("field");
 	pObj->SetMeshComponent(mesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
+	auto pRender = new MeshRenderer3D(pObj);
 	pRender->SetTexName("editorField.jpg");
 	pObj->SetRenderComponent(pRender);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
+	auto pTrans = pObj->GetTransform();
 	pTrans->SetPos(Vector3(0.0f));
 	pTrans->SetPosNext(Vector3(0.0f));
 	pTrans->SetScale(Vector3(1.0f));

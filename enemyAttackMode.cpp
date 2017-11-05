@@ -29,8 +29,8 @@ void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
 		return;
 	}
 
-	auto pTransform = enemy.GetGameObject()->GetTransformComponent();
-	auto PositionTarget = enemy.m_pTarget->GetTransformComponent()->GetPosNext();
+	auto pTransform = enemy.GetGameObject()->GetTransform();
+	auto PositionTarget = enemy.m_pTarget->GetTransform()->GetPosNext();
 	auto PositionThis = pTransform->GetPosNext();
 	auto vForward = pTransform->GetForwardNext();
 	auto vDiff = PositionTarget - PositionThis;

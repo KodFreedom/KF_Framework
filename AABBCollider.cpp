@@ -24,7 +24,7 @@ void AABBCollider::Update(void)
 	BoxCollider::Update();
 
 	//‰ñ“]‚ð‰Šú‰»‚·‚é
-	auto& scale = owner->GetTransformComponent()->GetScaleNext();
+	auto& scale = owner->GetTransform()->GetScaleNext();
 	nextWorldMatrix.Elements[0][0] = scale.X;
 	nextWorldMatrix.Elements[0][1] = 0.0f;
 	nextWorldMatrix.Elements[0][2] = 0.0f;

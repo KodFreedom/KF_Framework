@@ -29,7 +29,7 @@
 //{
 //public:
 //	CSprite2D()
-//		: m_polygonNumber(0), m_texture("polygon.jpg"), m_pVtxBuffer(nullptr) {}
+//		: m_polygonNumber(0), m_texture("polygon.jpg"), vertexBuffer(nullptr) {}
 //	~CSprite2D()
 //	{
 //		m_texture.clear();
@@ -37,7 +37,7 @@
 //
 //	unsigned short			m_polygonNumber;
 //	string					m_texture;
-//	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuffer;
+//	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 //};
 
 class UtilityDX

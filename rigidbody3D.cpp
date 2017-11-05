@@ -9,15 +9,12 @@
 //--------------------------------------------------------------------------------
 #include "gameObject.h"
 #include "physicsSystem.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 #include "collider.h"
 #include "sphereCollider.h"
 #include "AABBCollider.h"
 #include "OBBCollider.h"
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -26,45 +23,33 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-C3DRigidbodyComponent::C3DRigidbodyComponent(GameObject* const pGameObj)
-	: CRigidbodyComponent(pGameObj, RB_3D)
-	, m_fMass(1.0f)
-	, m_fInverseMass(1.0f)
-	, m_fDrag(1.0f)
-	//, AngularDrag(0.95f)
-	, m_fFriction(1.0f)
-	, Bounciness(0.0f)
-	, GravityCoefficient(5.0f)
-	, m_vMovement(CKFMath::sc_vZero)
-	, m_vVelocity(CKFMath::sc_vZero)
-	, m_vAcceleration(CKFMath::sc_vZero)
-	, m_vForceAccum(CKFMath::sc_vZero)
-	//, m_bRotLock(0)
+Rigidbody3D::Rigidbody3D(GameObject* const owner)
+	: Rigidbody(owner, Type::Rigidbody3D)
+	, mass(1.0f)
+	, inverseMass(1.0f)
+	, drag(1.0f)
+	, friction(1.0f)
+	, bounciness(0.0f)
+	, gravityCoefficient(5.0f)
+	, movement(Vector3::Zero)
+	, velocity(Vector3::Zero)
+	, acceleration(Vector3::Zero)
+	, forceAccum(Vector3::Zero)
 {
-}
-
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-void C3DRigidbodyComponent::SetMass(const float& fMass)
-{
-	if (fMass <= 0.0f) { return; }
-	m_fMass = fMass;
-	m_fInverseMass = 1.0f / fMass;
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void C3DRigidbodyComponent::Update(void)
+void Rigidbody3D::Update(void)
 {
-	auto pTrans = m_pGameObj->GetTransformComponent();
+	auto transform = owner->GetTransform();
 
 	//重力加速度
-	m_vAcceleration += PhysicsSystem::Gravity * GravityCoefficient;
+	acceleration += PhysicsSystem::Gravity * gravityCoefficient;
 
 	//力から加速度を計算する
-	m_vAcceleration += m_vForceAccum * m_fInverseMass;
+	acceleration += forceAccum * inverseMass;
 	
 	//回転力から回転加速度を計算する
 	//Matrix44 mtxIitWorld;
@@ -72,42 +57,48 @@ void C3DRigidbodyComponent::Update(void)
 	//Vector3 vAngularAcceleration = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
 
 	//速度
-	float fD = DELTA_TIME;
-	m_vVelocity += m_vAcceleration * DELTA_TIME;
+	velocity += acceleration * DELTA_TIME;
 	//m_vAngularVelocity   += vAngularAcceleration;
 
 	//位置更新
-	pTrans->MovePosNext(m_vVelocity * DELTA_TIME);
-	pTrans->MovePosNext(m_vMovement);
+	transform->SetNextPosition(transform->GetNextPosition() + velocity * DELTA_TIME + movement);
 
 	//回転更新
 	//pTrans->RotByEuler(m_vAngularVelocity);
 
 	//処理完了
-	m_vForceAccum = CKFMath::sc_vZero;
-	m_vAcceleration = CKFMath::sc_vZero;
+	forceAccum = Vector3::Zero;
+	acceleration = Vector3::Zero;
 	//m_vTorqueAccum = Vector3(0.0f);
-	m_vVelocity *= m_fDrag;
+	velocity *= drag;
 	//m_vAngularVelocity *= AngularDrag;
-	m_vMovement = CKFMath::sc_vZero;
+	movement = Vector3::Zero;
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void C3DRigidbodyComponent::LateUpdate(void)
+void Rigidbody3D::LateUpdate(void)
 {
-	//位置更新
-	m_pGameObj->GetTransformComponent()->MovePosNext(m_vMovement);
+	auto transform = owner->GetTransform();
+	transform->SetNextPosition(transform->GetNextPosition() + movement);
+	movement = Vector3::Zero;
+}
 
-	//処理完了
-	m_vMovement = CKFMath::sc_vZero;
+//--------------------------------------------------------------------------------
+//  質量の設定
+//--------------------------------------------------------------------------------
+void Rigidbody3D::SetMass(const float& value)
+{
+	assert(0.0f == value);
+	mass = value;
+	inverseMass = 1.0f / value;
 }
 
 //--------------------------------------------------------------------------------
 //  慣性テンソルの算出
 //--------------------------------------------------------------------------------
-//void C3DRigidbodyComponent::SetInertiaTensor(Collider* pCollider)
+//void Rigidbody3D::SetInertiaTensor(Collider* pCollider)
 //{
 //	float fV00 = 1.0f;
 //	float fV11 = 1.0f;
@@ -119,12 +110,12 @@ void C3DRigidbodyComponent::LateUpdate(void)
 //		fV00 
 //			= fV11
 //			= fV22
-//			= 0.4f * m_fMass * fRadius * fRadius;
+//			= 0.4f * mass * fRadius * fRadius;
 //	}
 //	else if (type == AABB)
 //	{
 //		Vector3 vSize = dynamic_cast<AABBCollider*>(pCollider)->GetHalfSize() * 2.0f;
-//		float fWork = m_fMass / 12.0f;
+//		float fWork = mass / 12.0f;
 //		fV00 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV11 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV22 = fWork * (vSize.Y * vSize.Y + vSize.Y * vSize.Y);
@@ -132,7 +123,7 @@ void C3DRigidbodyComponent::LateUpdate(void)
 //	else if (type == OBB)
 //	{
 //		Vector3 vSize = dynamic_cast<OBBCollider*>(pCollider)->GetHalfSize() * 2.0f;
-//		float fWork = m_fMass / 12.0f;
+//		float fWork = mass / 12.0f;
 //		fV00 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV11 = fWork * (vSize.Y * vSize.Y + vSize.Z * vSize.Z);
 //		fV22 = fWork * (vSize.Y * vSize.Y + vSize.Y * vSize.Y);
@@ -153,7 +144,7 @@ void C3DRigidbodyComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  ワールド慣性テンソルの算出
 //--------------------------------------------------------------------------------
-//void C3DRigidbodyComponent::calculateInertiaTensorWorld(Matrix44& mtxIitWorld)
+//void Rigidbody3D::calculateInertiaTensorWorld(Matrix44& mtxIitWorld)
 //{
 //	auto listCollider = m_pGameObj->GetColliderComponent();
 //	if (!listCollider.empty())

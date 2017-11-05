@@ -18,7 +18,7 @@
 #include "AABBCollider.h"
 #include "OBBCollider.h"
 #include "gameObject.h"
-#include "3DRigidbodyComponent.h"
+#include "rigidbody3D.h"
 #include "behaviorComponent.h"
 #include "transform.h"
 
@@ -75,19 +75,19 @@ void CollisionDetector::Detect(SphereCollider& sphereL, SphereCollider& sphereR)
 	//リジッドボディの取得
 	auto leftRigidbody = sphereL.GetGameObject()->GetRigidbodyComponent();
 	auto rightRigidbody = sphereR.GetGameObject()->GetRigidbodyComponent();
-	if (leftRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+	if (leftRigidbody->GetType() == Rigidbody::RB_3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(leftRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
 
-		if (rightRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (rightRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
 		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 	}
 
 	//物理演算システムにレジストリ
@@ -171,7 +171,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, AABBCollider& aabb)
 	collision->Normal = spherePosition - closestPosition;
 	if (collision->Normal.SquareMagnitude() == 0.0f)
 	{//中心がaabbの中にある
-		auto transform = sphere.GetGameObject()->GetTransformComponent();
+		auto transform = sphere.GetGameObject()->GetTransform();
 		auto& currentPosition = transform->GetPos();
 		auto& nextPosition = transform->GetPosNext();
 		collision->Normal = currentPosition - nextPosition;
@@ -183,19 +183,19 @@ void CollisionDetector::Detect(SphereCollider& sphere, AABBCollider& aabb)
 	//リジッドボディの取得
 	auto sphereRigidbody = sphere.GetGameObject()->GetRigidbodyComponent();
 	auto aabbRigidbody = aabb.GetGameObject()->GetRigidbodyComponent();
-	if (sphereRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+	if (sphereRigidbody->GetType() == Rigidbody::RB_3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(sphereRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphereRigidbody);
 
-		if (aabbRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (aabbRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(aabbRigidbody);
+			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(aabbRigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
 		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(aabbRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(aabbRigidbody);
 	}
 
 	//物理演算システムにレジストリ
@@ -279,7 +279,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, OBBCollider& obb)
 	collision->Normal = spherePosition - closestPosition;
 	if (collision->Normal.SquareMagnitude() == 0.0f)
 	{//中心がobbの中にある
-		auto transform = sphere.GetGameObject()->GetTransformComponent();
+		auto transform = sphere.GetGameObject()->GetTransform();
 		auto currentPosition = transform->GetPos();
 		auto nextPosition = transform->GetPosNext();
 		collision->Normal = currentPosition - nextPosition;
@@ -291,19 +291,19 @@ void CollisionDetector::Detect(SphereCollider& sphere, OBBCollider& obb)
 	//リジッドボディの取得
 	auto sphereRigidbody = sphere.GetGameObject()->GetRigidbodyComponent();
 	auto obbRigidbody = obb.GetGameObject()->GetRigidbodyComponent();
-	if (sphereRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+	if (sphereRigidbody->GetType() == Rigidbody::RB_3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(sphereRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphereRigidbody);
 
-		if (obbRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (obbRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(obbRigidbody);
+			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(obbRigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
 		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(obbRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(obbRigidbody);
 	}
 
 	//物理演算システムにレジストリ
@@ -382,19 +382,19 @@ void CollisionDetector::Detect(AABBCollider& aabbL, AABBCollider& aabbR)
 	auto leftRigidbody = aabbL.GetGameObject()->GetRigidbodyComponent();
 	auto rightRigidbody = aabbR.GetGameObject()->GetRigidbodyComponent();
 
-	if (leftRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+	if (leftRigidbody->GetType() == Rigidbody::RB_3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(leftRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
 
-		if (rightRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (rightRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
 		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 	}
 
 	//物理演算システムにレジストリ
@@ -472,19 +472,19 @@ void CollisionDetector::Detect(BoxCollider& boxL, BoxCollider& boxR)
 
 	if (boxLMaxPenetrationCollision)
 	{
-		if (leftRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (leftRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(leftRigidbody);
+			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
 
-			if (rightRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+			if (rightRigidbody->GetType() == Rigidbody::RB_3D)
 			{
-				boxLMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+				boxLMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 			}
 		}
 		else
 		{//一番が持ってないなら衝突法線を反転する
 			boxLMaxPenetrationCollision->Normal *= -1.0f;
-			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 		}
 
 		//物理演算システムにレジストリ
@@ -494,19 +494,19 @@ void CollisionDetector::Detect(BoxCollider& boxL, BoxCollider& boxR)
 
 	if (boxRMaxPenetrationCollision)
 	{
-		if (rightRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+		if (rightRigidbody->GetType() == Rigidbody::RB_3D)
 		{
-			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(rightRigidbody);
+			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
 
-			if (leftRigidbody->GetType() == CRigidbodyComponent::RB_3D)
+			if (leftRigidbody->GetType() == Rigidbody::RB_3D)
 			{
-				boxRMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<C3DRigidbodyComponent*>(leftRigidbody);
+				boxRMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(leftRigidbody);
 			}
 		}
 		else
 		{//一番が持ってないなら衝突法線を反転する
 			boxRMaxPenetrationCollision->Normal *= -1.0f;
-			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(leftRigidbody);
+			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
 		}
 
 		//物理演算システムにレジストリ
@@ -565,7 +565,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 
 	collision->Point = spherePosition + collision->Normal * penetration;
 	collision->Penetration = penetration;
-	collision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(sphere.GetGameObject()->GetRigidbodyComponent());
+	collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphere.GetGameObject()->GetRigidbodyComponent());
 	collision->RigidbodyTwo = nullptr;
 
 	//物理演算システムにレジストリ
@@ -617,7 +617,7 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 	}
 
 	//リジッドボディの取得
-	maxPenetrationCollision->RigidbodyOne = dynamic_cast<C3DRigidbodyComponent*>(box.GetGameObject()->GetRigidbodyComponent());
+	maxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(box.GetGameObject()->GetRigidbodyComponent());
 	maxPenetrationCollision->RigidbodyTwo = nullptr;
 
 	//物理演算システムにレジストリ

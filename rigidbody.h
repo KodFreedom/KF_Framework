@@ -12,32 +12,28 @@
 #include "component.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  リジッドボディコンポネントクラス
 //--------------------------------------------------------------------------------
-class CRigidbodyComponent : public Component
+class Rigidbody : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	enum RB_TYPE
+	enum Type
 	{
-		RB_NULL = 0,
-		RB_3D
+		NullRigidbody = 0,
+		Rigidbody3D
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRigidbodyComponent(GameObject* const pGameObj, const RB_TYPE& type) : Component(pGameObj), type(type) {}
-	~CRigidbodyComponent() {}
+	Rigidbody(GameObject* const owner, const Type& type) : Component(owner), currentType(type) {}
+	~Rigidbody() {}
 
 	virtual bool	Init(void) override = 0;
 	virtual void	Uninit(void) override = 0;
@@ -45,28 +41,28 @@ public:
 	virtual void	LateUpdate(void) = 0;
 
 	//Get関数
-	const RB_TYPE	GetType(void) const { return type; }
+	const auto		GetType(void) const { return currentType; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CRigidbodyComponent() : Component(), type(RB_NULL) {}
+	Rigidbody() : Component(), currentType(Type::NullRigidbody) {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	RB_TYPE type;
+	Type currentType;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌルリジッドボディコンポネント
 //--------------------------------------------------------------------------------
-class CNullRigidbodyComponent : public CRigidbodyComponent
+class NullRigidbody : public Rigidbody
 {
 public:
-	CNullRigidbodyComponent() : CRigidbodyComponent() {}
-	~CNullRigidbodyComponent() {}
+	NullRigidbody() : Rigidbody() {}
+	~NullRigidbody() {}
 
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}
