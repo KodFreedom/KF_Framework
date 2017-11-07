@@ -13,7 +13,7 @@
 #include "stageSpawner.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
-#include "windmillBehaviorComponent.h"
+#include "windmillController.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒX
@@ -65,7 +65,7 @@ void CStageSpawner::LoadStage(const string& strStageName)
 			auto pObj = GameObjectSpawner::CreateModel(strModelName, Position, qRot, Vector3(1.0f));
 			if (strModelName == "Medieval_Windmill.model")
 			{
-				auto pBehavior = new CWindmillBehaviorComponent(pObj);
+				auto pBehavior = new WindmillController(pObj);
 				pBehavior->Init();
 				pObj->AddBehavior(pBehavior);
 			}

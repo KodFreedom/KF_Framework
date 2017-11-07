@@ -19,7 +19,7 @@
 #include "OBBCollider.h"
 #include "gameObject.h"
 #include "rigidbody3D.h"
-#include "behaviorComponent.h"
+#include "behavior.h"
 #include "transform.h"
 
 #ifdef _DEBUG

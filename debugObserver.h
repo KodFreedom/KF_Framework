@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
+class ActorController;
 
 //--------------------------------------------------------------------------------
 //  クラス定義
@@ -33,7 +33,7 @@ public:
 	void DisplayAlways(const string& strInfo);
 	void DisplayAlways(const char& cInfo);
 	void DisplayScroll(const string& strInfo);
-	void SetPlayer(CActorBehaviorComponent* actor) { player = actor; }
+	void SetPlayer(ActorController* actor) { player = actor; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ private:
 	bool						enableCameraWindow;
 	bool						enablePlayerWindow;
 	bool						enableFogWindow;
-	CActorBehaviorComponent*	player;
+	ActorController*	player;
 	static DebugObserver*		instance;
 };
 #endif//_DEBUG

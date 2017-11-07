@@ -321,7 +321,7 @@ void DebugObserver::showPlayerWindow(void)
 	ImGui::InputFloat3("Trans", &pTrans->PositionNext.X);
 
 	// Actor Behavior
-	auto pActor = static_cast<CActorBehaviorComponent*>(player->GetBehaviorComponent().front());
+	auto pActor = static_cast<ActorController*>(player->GetBehaviorComponent().front());
 	ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
 	ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
 	ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);

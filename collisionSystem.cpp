@@ -18,7 +18,7 @@
 #include "AABBCollider.h"
 #include "OBBCollider.h"
 #include "rigidbody3D.h"
-#include "behaviorComponent.h"
+#include "behavior.h"
 #include "transform.h"
 
 #if defined(_DEBUG) || defined(EDITOR)

@@ -21,7 +21,7 @@
 //--------------------------------------------------------------------------------
 //  UŒ‚ó‘Ô
 //--------------------------------------------------------------------------------
-void CEnemyAttackMode::Update(CEnemyBehaviorComponent& enemy)
+void CEnemyAttackMode::Update(EnemyController& enemy)
 {
 	if (!enemy.m_pTarget)
 	{//‘Šè‚ª‚¢‚È‚¢‚È‚ç•’Ê‚Èó‘Ô‚É–ß‚é

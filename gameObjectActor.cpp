@@ -68,8 +68,8 @@ GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Ve
 	auto pRb = new Rigidbody3D(pObj);
 	pObj->m_pRigidbody = pRb;
 	pObj->m_pAnimator = new Animator(pObj, modelPath);
-	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);
-	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
+	auto pAb = new ActorController(pObj, *pRb, pObj->m_pAnimator);
+	auto pPb = new PlayerController(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pPb);
 	//auto pCollider = new AABBCollider(pObj, DYNAMIC, Vector3(0.3f * vScale.X, 0.6f * vScale.Y, 0.3f * vScale.Z));
@@ -111,8 +111,8 @@ GameObjectActor* GameObjectActor::CreateEnemy(const string &modelPath, const Vec
 	pObj->m_pAnimator = new Animator(pObj, modelPath);
 	
 	//ビヘイビア
-	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);
-	auto pEb = new CEnemyBehaviorComponent(pObj, *pAb);
+	auto pAb = new ActorController(pObj, *pRb, pObj->m_pAnimator);
+	auto pEb = new EnemyController(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
 	pObj->m_listpBehavior.push_back(pEb);
 	

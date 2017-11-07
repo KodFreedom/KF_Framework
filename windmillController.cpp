@@ -4,13 +4,13 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "windmillBehaviorComponent.h"
+#include "windmillController.h"
 #include "gameObject.h"
 #include "transform.h"
+#include "KF_Utility.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -18,11 +18,11 @@
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-bool CWindmillBehaviorComponent::Init(void)
+bool WindmillController::Init(void)
 {
-	m_pFan = findFan(m_pGameObj);
+	fan = Utility::FindChildBy("Fan", owner);
 
-	if(!m_pFan)
+	if(!fan)
 	{
 		assert("No Fan!!");
 		return false;
@@ -33,27 +33,7 @@ bool CWindmillBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CWindmillBehaviorComponent::Update(void)
+void WindmillController::Update(void)
 {
-	m_pFan->GetTransform()->RotByRoll(RotSpeed);
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-GameObject* CWindmillBehaviorComponent::findFan(GameObject* pParent)
-{
-	auto& listChild = pParent->GetTransform()->GetChildren();
-	for (auto pTrans : listChild)
-	{
-		auto pObj = pTrans->GetGameObject();
-		if (pObj->GetName() == "Fan") { return pObj; }
-		else
-		{
-			auto pFan = findFan(pObj);
-			if (pFan) { return pFan; }
-		}
-	}
-
-	return nullptr;
+	fan->GetTransform()->RotateByRoll(rotateSpeed * DELTA_TIME);
 }

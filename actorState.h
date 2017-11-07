@@ -1,53 +1,55 @@
 //--------------------------------------------------------------------------------
-//	アクター
-//　gameObjectActor.h
+//	生き物ステートマシン
+//　ActorState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "gameObject.h"
-
-//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class ActorController;
 class Animator;
+class Transform;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class GameObjectActor : public GameObject
+class ActorState
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	GameObjectActor(const Layer& layer = Default);
-	~GameObjectActor() {}
+	ActorState()
+		: movementMultiplyer(1.0f)
+		, groundCheckDistance(0.1f) {}
+	~ActorState() {}
 
-	bool Init(void) override;
-	void LateUpdate(void) override;
+	virtual void Act(ActorController& actor);
 
-	//Get関数
-	auto GetAnimator(void) const { return m_pAnimator; }
-	
-	//Set関数
-
-	//生成関数
-	static GameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-	static GameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-
-private:
+protected:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  構造体定義
 	//--------------------------------------------------------------------------------
-	void uninit(void) override;
+	struct GroundInfo
+	{
+		Vector3 Normal;
+		bool	IsGrounded;
+	};
 
 	//--------------------------------------------------------------------------------
-	//  変数宣言
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	Animator* m_pAnimator;
+	virtual void move(ActorController& actor);
+	virtual void jump(ActorController& actor);
+	virtual void update(Animator& animator);
+	GroundInfo	 checkGrounded(const Transform& transform);
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	float movementMultiplyer;
+	float groundCheckDistance;
 };

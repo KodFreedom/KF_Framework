@@ -1,53 +1,48 @@
 //--------------------------------------------------------------------------------
-//	風車ビヘイビアコンポネント
-//　windmillBehaviorComponent.h
+//	ビヘイビアコンポネント
+//　behaviorComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-09-12
+//	Date   : 2017-07-16
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "behaviorComponent.h"
+#include "component.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class CollisionInfo;
+class Collider;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CWindmillBehaviorComponent : public CBehaviorComponent
+class Behavior : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CWindmillBehaviorComponent(GameObject* const pGameObj)
-		: CBehaviorComponent(pGameObj)
-		, RotSpeed(0.01f)
-		, m_pFan(nullptr)
-	{}
-	~CWindmillBehaviorComponent() {}
+	Behavior(GameObject* const owner, const string& name)
+		: Component(owner), name(name) {}
+	~Behavior() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override {}
-	void	Update(void) override;
-	void	LateUpdate(void) override {}
+	virtual bool Init(void) override = 0;
+	virtual void Uninit(void) override = 0;
+	virtual void Update(void) = 0;
+	virtual void LateUpdate(void) = 0;
+				 
+	virtual void OnTrigger(Collider& colliderThis, Collider& collider) = 0;
+	virtual void OnCollision(CollisionInfo& collisionInfo) = 0;
 
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
-	void	OnCollision(CollisionInfo& collisionInfo) override {}
+	const auto	 GetName(void) const { return name; }
 
-private:
+protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	GameObject*	findFan(GameObject* pParent);
-
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	float			RotSpeed;
-	GameObject*	m_pFan;
+	const string name;
 };

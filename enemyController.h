@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	プレイヤービヘイビアコンポネント
-//　playerBehaviorComponent.h
+//	エネミービヘイビアコンポネント
+//　enemyBehaviorComponent.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -9,12 +9,15 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "behaviorComponent.h"
+#include "behavior.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CActorBehaviorComponent;
+class ActorController;
+class CAIMode;
+class CEnemyNormalMode;
+class CEnemyAttackMode;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -22,29 +25,32 @@ class CActorBehaviorComponent;
 //--------------------------------------------------------------------------------
 //  プレイヤー行動コンポネントクラス
 //--------------------------------------------------------------------------------
-class CPlayerBehaviorComponent : public CBehaviorComponent
+class EnemyController : public Behavior
 {
+	friend CEnemyNormalMode;
+	friend CEnemyAttackMode;
+
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CPlayerBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor);
-	~CPlayerBehaviorComponent() {}
+	EnemyController(GameObject* const pGameObj, ActorController& actor);
+	~EnemyController() {}
 
 	bool	Init(void) override;
 	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
-			
+
 	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
 	void	OnCollision(CollisionInfo& collisionInfo) override;
 
-	//Get
-	const auto& GetActorBehavior(void) const { return m_actor; }
-
+	void	ChangeMode(CAIMode* pAIMode);
 private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CActorBehaviorComponent& m_actor;
+	GameObject*				m_pTarget;
+	CAIMode*					m_pMode;
+	ActorController&	m_actor;
 };

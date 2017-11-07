@@ -1,59 +1,44 @@
 //--------------------------------------------------------------------------------
-//	エディタビヘイビアコンポネント
-//　editorControllerBehaviorComponent.h
+//	風車ビヘイビアコンポネント
+//　WindmillController.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
 #pragma once
-#if defined(_DEBUG) || defined(EDITOR)
+
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "behavior.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class CFieldEditorBehaviorComponent;
-class ModelEditorBehaviorComponent;
-
-//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CEditorControllerBehaviorComponent : public Behavior
+class WindmillController : public Behavior
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CEditorControllerBehaviorComponent(GameObject* const pGameObj);
-	~CEditorControllerBehaviorComponent() {}
+	WindmillController(GameObject* const owner)
+		: Behavior(owner, "WindmillController")
+		, rotateSpeed(0.01f)
+		, fan(nullptr)
+	{}
+	~WindmillController() {}
 
 	bool	Init(void) override;
-	void	Uninit(void) override;
+	void	Uninit(void) override {}
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
 	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
 	void	OnCollision(CollisionInfo& collisionInfo) override {}
 
-	void	SetFieldEditor(GameObject* pFieldEditor);
-	void	SetModelEditor(ModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
-
 private:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	void	save(void);
-	void	showMainWindow(void);
-	void	showPosWindow(void);
-
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	bool							m_bAutoHeight;
-	CFieldEditorBehaviorComponent*	m_pFieldEditor;
-	ModelEditorBehaviorComponent*	m_pModelEditor;
-	float							m_fMoveSpeed;
+	float		rotateSpeed;
+	GameObject*	fan;
 };
-#endif // _DEBUG

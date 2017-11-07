@@ -18,7 +18,7 @@
 //--------------------------------------------------------------------------------
 //  ïÅí èÛë‘
 //--------------------------------------------------------------------------------
-void CEnemyNormalMode::Update(CEnemyBehaviorComponent& enemy)
+void CEnemyNormalMode::Update(EnemyController& enemy)
 {
 	enemy.m_actor.Act(Vector3(0.0f), false, false);
 }

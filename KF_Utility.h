@@ -13,6 +13,11 @@
 #define SAFE_UNINIT(p)		if(p){ p->uninit(); delete p; p = nullptr; }
 #define SAFE_DELETE(p)		if(p){ delete p; p = nullptr; }
 
+//--------------------------------------------------------------------------------
+//  ëOï˚êÈåæ
+//--------------------------------------------------------------------------------
+class GameObject;
+
 namespace KF
 {
 	namespace Utility
@@ -34,5 +39,6 @@ namespace KF
 		int			GetStringCount(FILE* filePointer, const string& token, const string& compareString);
 		int			GetStringCount(string& file, const string& token, const string& compareString);
 		FileInfo	AnalyzeFilePath(const string& filePath);
+		GameObject* FindChildBy(const string& name, GameObject* const parent);
 	}
 }

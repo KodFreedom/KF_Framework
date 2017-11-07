@@ -26,8 +26,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEnemyBehaviorComponent::CEnemyBehaviorComponent(GameObject* const pGameObj, CActorBehaviorComponent& actor)
-	: CBehaviorComponent(pGameObj)
+EnemyController::EnemyController(GameObject* const pGameObj, ActorController& actor)
+	: Behavior(pGameObj)
 	, m_actor(actor)
 	, m_pTarget(nullptr)
 	, m_pMode(nullptr)
@@ -36,7 +36,7 @@ CEnemyBehaviorComponent::CEnemyBehaviorComponent(GameObject* const pGameObj, CAc
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-bool CEnemyBehaviorComponent::Init(void)
+bool EnemyController::Init(void)
 {
 	m_pMode = new CEnemyNormalMode;
 	m_actor.SetLifeMax(100.0f);
@@ -51,7 +51,7 @@ bool CEnemyBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::Uninit(void)
+void EnemyController::Uninit(void)
 {
 	if (!m_pMode) { return; }
 	delete m_pMode;
@@ -61,7 +61,7 @@ void CEnemyBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::Update(void)
+void EnemyController::Update(void)
 {
 	m_pMode->Update(*this);
 }
@@ -69,7 +69,7 @@ void CEnemyBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::LateUpdate(void)
+void EnemyController::LateUpdate(void)
 {
 	if (m_actor.GetLifeNow() <= 0.0f)
 	{
@@ -83,7 +83,7 @@ void CEnemyBehaviorComponent::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  OnTrigger
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnTrigger(Collider& colliderThis, Collider& collider)
+void EnemyController::OnTrigger(Collider& colliderThis, Collider& collider)
 {
 	if (collider.GetGameObject()->GetTag()._Equal("Player"))
 	{//プレイヤー
@@ -110,7 +110,7 @@ void CEnemyBehaviorComponent::OnTrigger(Collider& colliderThis, Collider& collid
 //--------------------------------------------------------------------------------
 //  OnCollision
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::OnCollision(CollisionInfo& collisionInfo)
+void EnemyController::OnCollision(CollisionInfo& collisionInfo)
 {
 
 }
@@ -118,7 +118,7 @@ void CEnemyBehaviorComponent::OnCollision(CollisionInfo& collisionInfo)
 //--------------------------------------------------------------------------------
 //  ChangeState
 //--------------------------------------------------------------------------------
-void CEnemyBehaviorComponent::ChangeMode(CAIMode* pAIMode)
+void EnemyController::ChangeMode(CAIMode* pAIMode)
 {
 	if (!pAIMode) { return; }
 	delete m_pMode;

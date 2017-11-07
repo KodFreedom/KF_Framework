@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actorState.cpp" />
     <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="motionManager.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
@@ -159,7 +160,7 @@
     <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="thirdPersonCamera.cpp" />
-    <ClCompile Include="actorBehaviorComponent.cpp" />
+    <ClCompile Include="actorController.cpp" />
     <ClCompile Include="animator.cpp" />
     <ClCompile Include="backgroundUI.cpp" />
     <ClCompile Include="boxCollider.cpp" />
@@ -206,7 +207,7 @@
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
     <ClCompile Include="motionState.cpp" />
-    <ClCompile Include="playerBehaviorComponent.cpp" />
+    <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerUI.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="rendererDirectX9.cpp" />
@@ -217,19 +218,21 @@
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="UISystem.cpp" />
-    <ClCompile Include="windmillBehaviorComponent.cpp" />
+    <ClCompile Include="windmillController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="actorState.h" />
     <ClInclude Include="cameraManager.h" />
     <ClInclude Include="motionManager.h" />
+    <ClInclude Include="actorParamater.h" />
     <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="meshRenderer3D.h" />
     <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
-    <ClInclude Include="actorBehaviorComponent.h" />
+    <ClInclude Include="actorController.h" />
     <ClInclude Include="AIMode.h" />
     <ClInclude Include="animator.h" />
-    <ClInclude Include="behaviorComponent.h" />
+    <ClInclude Include="behavior.h" />
     <ClInclude Include="backgroundUI.h" />
     <ClInclude Include="boxCollider.h" />
     <ClInclude Include="camera.h" />
@@ -250,7 +253,7 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="meshRenderer.h" />
     <ClInclude Include="editorCamera.h" />
-    <ClInclude Include="enemyBehaviorComponent.h" />
+    <ClInclude Include="enemyController.h" />
     <ClInclude Include="fadeSystem.h" />
     <ClInclude Include="fieldCollider.h" />
     <ClInclude Include="fieldEditorBehaviorComponent.h" />
@@ -282,7 +285,7 @@
     <ClInclude Include="motionInfo.h" />
     <ClInclude Include="motionState.h" />
     <ClInclude Include="OBBCollider.h" />
-    <ClInclude Include="playerBehaviorComponent.h" />
+    <ClInclude Include="playerController.h" />
     <ClInclude Include="playerUI.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="rendererDirectX9.h" />
@@ -298,7 +301,7 @@
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
     <ClInclude Include="versionSetting.h" />
-    <ClInclude Include="windmillBehaviorComponent.h" />
+    <ClInclude Include="windmillController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -172,6 +172,18 @@
     <Filter Include="ソース ファイル\Base\Motion">
       <UniqueIdentifier>{cb274add-2675-4099-97a6-dc2c9e1bb78c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Actor">
+      <UniqueIdentifier>{cb2fb40f-e818-4231-85d2-14bd1ae340db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State">
+      <UniqueIdentifier>{86c9c7ef-9fea-43ec-8d32-f5d6621b5dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor">
+      <UniqueIdentifier>{f7b9e1ea-602e-482b-a7b4-64cc3b34ab40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State">
+      <UniqueIdentifier>{b05ec256-cc82-4958-89f2-f3a05ad71e78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -228,13 +240,7 @@
     <ClCompile Include="UIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="playerBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="enemyBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="actorBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="enemyNormalMode.cpp">
@@ -281,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="modelEditorBehaviorComponent.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="windmillBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="fog.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -372,6 +375,18 @@
     <ClCompile Include="motionManager.cpp">
       <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
+    <ClCompile Include="playerController.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="windmillController.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="actorController.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="actorState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -431,9 +446,6 @@
     <ClInclude Include="meshManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="behaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="soundManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
@@ -451,15 +463,6 @@
     </ClInclude>
     <ClInclude Include="enemyAttackMode.h">
       <Filter>ヘッダー ファイル\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="actorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="playerBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="KF_Utility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -505,9 +508,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="windmillBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="fog.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
@@ -610,6 +610,27 @@
     </ClInclude>
     <ClInclude Include="motionState.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
+    </ClInclude>
+    <ClInclude Include="behavior.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="playerController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="windmillController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="actorController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="actorState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="actorParamater.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

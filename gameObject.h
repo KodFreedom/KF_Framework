@@ -11,9 +11,9 @@
 //--------------------------------------------------------------------------------
 #include "gameObjectManager.h"
 #include "transform.h"
-#include "behaviorComponent.h"
+#include "behavior.h"
 #include "meshRenderer.h"
-#include "rigidbodyComponent.h"
+#include "rigidbody.h"
 #include "mesh.h"
 #include "collider.h"
 
@@ -120,7 +120,7 @@ public:
 	void		SetName(const string& strName) { m_strName = strName; }
 	void		SetTag(const string& strTag) { tag = strTag; }
 
-	void		AddBehavior(CBehaviorComponent* pBehavior)
+	void		AddBehavior(Behavior* pBehavior)
 	{
 		m_listpBehavior.push_back(pBehavior);
 	}
@@ -160,7 +160,7 @@ protected:
 	//  コンポネント
 	//--------------------------------------------------------------------------------
 	Transform*		m_pTransform;	//位置関係パーツ
-	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
+	list<Behavior*>	m_listpBehavior;//行動コンポネント
 	Rigidbody*		m_pRigidbody;	//物理処理パーツ
 	list<Collider*>	m_listpCollider;//コリジョンパーツ
 	MeshComponent*				m_mesh;		//メッシュパーツ

@@ -119,7 +119,7 @@ void PlayerUI::Update(void)
 //--------------------------------------------------------------------------------
 //  ì¬
 //--------------------------------------------------------------------------------
-PlayerUI* PlayerUI::Create(CPlayerBehaviorComponent* const playerBehavior)
+PlayerUI* PlayerUI::Create(PlayerController* const playerBehavior)
 {
 	PlayerUI* ui = new PlayerUI(playerBehavior);
 	ui->Init();

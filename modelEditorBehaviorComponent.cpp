@@ -34,7 +34,7 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ModelEditorBehaviorComponent::ModelEditorBehaviorComponent(GameObject* const pGameObj)
-	: CBehaviorComponent(pGameObj)
+	: Behavior(pGameObj)
 	, modelType(MT_BOX)
 	, m_bActive(false)
 	, m_bShowCreatedList(false)

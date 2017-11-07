@@ -22,7 +22,7 @@
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
 CFieldEditorBehaviorComponent::CFieldEditorBehaviorComponent(GameObject* const pGameObj)
-	: CBehaviorComponent(pGameObj)
+	: Behavior(pGameObj)
 	, blockXNumber(100)
 	, blockZNumber(100)
 	, blockSize(Vector2(3.0f))

@@ -33,7 +33,7 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(GameObject* const pGameObj)
-	: CBehaviorComponent(pGameObj)
+	: Behavior(pGameObj)
 	, m_pFieldEditor(nullptr)
 	, m_pModelEditor(nullptr)
 	, m_bAutoHeight(true)

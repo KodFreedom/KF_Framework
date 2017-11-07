@@ -19,7 +19,7 @@ class CEnemyAttackMode : public CAIMode
 public:
 	CEnemyAttackMode() : CAIMode(AM_ATTACK), m_countWait(0) {}
 	~CEnemyAttackMode() override {}
-	void Update(CEnemyBehaviorComponent& enemy) override;
+	void Update(EnemyController& enemy) override;
 
 private:
 	int m_countWait;

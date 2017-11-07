@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CPlayerBehaviorComponent;
+class PlayerController;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -22,7 +22,7 @@ class CPlayerBehaviorComponent;
 class PlayerUI : public UIObject2D
 {
 public:
-	PlayerUI(CPlayerBehaviorComponent* const playerBehavior)
+	PlayerUI(PlayerController* const playerBehavior)
 		: UIObject2D(0)
 		, playerBehavior(playerBehavior)
 		, faceUVBegin(Vector2::Zero) {}
@@ -31,7 +31,7 @@ public:
 	bool Init(void) override;
 	void Update(void) override;
 
-	static PlayerUI* Create(CPlayerBehaviorComponent* const playerBehavior);
+	static PlayerUI* Create(PlayerController* const playerBehavior);
 	
 private:
 	//--------------------------------------------------------------------------------
@@ -52,5 +52,5 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	Vector2						faceUVBegin;
-	CPlayerBehaviorComponent*	playerBehavior;
+	PlayerController*	playerBehavior;
 };

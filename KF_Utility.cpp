@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "KF_Utility.h"
+#include "gameObject.h"
 
 //--------------------------------------------------------------------------------
 //	関数名：GetStringUntilToken
@@ -134,4 +135,28 @@ Utility::FileInfo Utility::AnalyzeFilePath(const string& filePath)
 	GetStringUntilToken(copy, "\\/", info.Name);
 	reverse(info.Name.begin(), info.Name.end());
 	return info;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：FindChildBy
+//  関数説明：子供から名前対応のオブジェクトを探し出す
+//	引数：	name：探したいオブジェクトの名前
+//			parent：親のオブジェクト
+//	戻り値：FileInfo
+//--------------------------------------------------------------------------------
+GameObject* Utility::FindChildBy(const string& name, GameObject* const parent)
+{
+	assert(!name.empty());
+	auto& children = parent->GetTransform()->GetChildren();
+	for (auto child : children)
+	{
+		auto childObject = child->GetGameObject();
+		if (childObject->GetName() == name) { return childObject; }
+		else
+		{
+			auto result = FindChildBy(name, childObject);
+			if (result) return result;
+		}
+	}
+	return nullptr;
 }

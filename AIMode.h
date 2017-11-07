@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class CEnemyBehaviorComponent;
+class EnemyController;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉX
@@ -29,7 +29,7 @@ public:
 
 	CAIMode(const AI_MODE& mode) : mode(mode) {}
 	virtual ~CAIMode() {}
-	virtual void Update(CEnemyBehaviorComponent& enemy) = 0;
+	virtual void Update(EnemyController& enemy) = 0;
 	AI_MODE	GetMode(void) const { return mode; }
 
 private:
