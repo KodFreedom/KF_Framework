@@ -27,6 +27,7 @@
 #include "physicsSystem.h"
 #include "cameraManager.h"
 #include "camera.h"
+#include "motionManager.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #include "modeEditor.h"
@@ -162,6 +163,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	SoundManager::Create();
 	FadeSystem::Create();
 	CameraManager::Create();
+	MotionManager::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 	Change(new ModeEditor);
@@ -175,6 +177,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 void Manager::uninit(void)
 {
 	SAFE_RELEASE(currentMode);
+	MotionManager::Release();
 	CameraManager::Release();
 	FadeSystem::Release();
 	SoundManager::Release();

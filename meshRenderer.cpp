@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "meshRenderer.h"
 #include "gameObject.h"
-#include "meshComponent.h"
+#include "mesh.h"
 #include "meshManager.h"
 #include "textureManager.h"
 #include "materialManager.h"

@@ -10,67 +10,55 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
-#include "motionStatus.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CMotion;
-class CMotionInfo;
-class CMotionKey;
-class Collider;
+class MotionState;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  アニメーターコンポネントクラス
-//--------------------------------------------------------------------------------
-class CAnimatorComponent : public Component
+class Animator : public Component
 {
 	//--------------------------------------------------------------------------------
 	//  フレンドクラス
 	//--------------------------------------------------------------------------------
-	friend class CNormalMotionStatus;
-	friend class CAwaitMotionStatus;
-	friend class CBlendMotionStatus;
+	friend class NormalMotionState;
+	friend class BlendMotionState;
 
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CAnimatorComponent(GameObject* const pGameObj, const string& strPath);
-	~CAnimatorComponent() {}
+	Animator(GameObject* const owner, const string& filePath);
+	~Animator() {}
 
 	bool	Init(void) override;
 	void	Uninit(void) override;
 	void	Update(void);
 
 	//Set関数
-	void	SetAttack(const bool& bAttack);
-	void	SetGrounded(const bool& bGrounded);
-	void	SetJump(const bool& bJump);
-	void	SetMove(const float& fMovement);
-
-	//Get関数
-	bool	CanAct(void);
+	void	SetAttack(const bool& value) { isAttack = value; }
+	void	SetGrounded(const bool& value) { isGrounded = value; }
+	void	SetJump(const bool& value) { isJump = value; }
+	void	SetMovement(const float& value) { movement = value; }
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void			analyzeFile(const string& strPath);
+	void			analyzeFile(const string& filePath);
 	//void			updateAttack(void);
-	void			changeMotionStatus(CMotionStatus* pMotionStatus);
-	MOTION_PATTERN	getMotionNext(const MOTION_PATTERN& motion);
+	void			changeMotionStatus(MotionState* motionStatus);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CMotionInfo*				m_apMotionData[MP_MAX];
-	vector<GameObject*>		m_vecBorns;
-	MOTION_PATTERN				m_motionNow;
-	MOTION_PATTERN				m_motionNext;
-	CMotionStatus*				m_pMotionStatus;
-	bool						m_bIsGrounded;
+	vector<GameObject*>		bones;
+	MotionState*			curentMotionState;
+	bool					isGrounded;
+	bool					isAttack;
+	bool					isJump;
+	float					movement;
 };

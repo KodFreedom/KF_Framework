@@ -1,42 +1,43 @@
 //--------------------------------------------------------------------------------
 //	メッシュコンポネント
-//　meshComponent.cpp
+//　mesh.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-07-16
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "meshComponent.h"
-#include "manager.h"
+#include "mesh.h"
 #include "meshManager.h"
 
 //--------------------------------------------------------------------------------
-//	クラス
+//
+//	Public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void MeshComponent::Uninit(void)
+void Mesh::Uninit(void)
 {
-	if (!m_strMeshName.empty())
+	if (!meshName.empty())
 	{
-		Main::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
-		m_strMeshName.clear();
+		MeshManager::Instance()->Disuse(meshName);
+		meshName.clear();
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void MeshComponent::SetMeshName(const string& strMeshName)
+void Mesh::SetMeshName(const string& name)
 {
-	if (!m_strMeshName.empty())
+	if (!meshName.empty())
 	{
-		Main::GetManager()->GetMeshManager()->DisuseMesh(m_strMeshName);
-		m_strMeshName.clear();
+		MeshManager::Instance()->Disuse(meshName);
+		meshName.clear();
 	}
 
-	m_strMeshName = strMeshName;
-	Main::GetManager()->GetMeshManager()->UseMesh(m_strMeshName);
+	meshName = name;
+	MeshManager::Instance()->Use(meshName);
 }

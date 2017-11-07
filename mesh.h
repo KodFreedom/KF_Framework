@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	メッシュコンポネント
-//　meshComponent.h
+//　mesh.h
 //	Author : Xu Wenjie
 //	Date   : 2017-05-21
 //--------------------------------------------------------------------------------
@@ -12,61 +12,54 @@
 #include "component.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  メッシュコンポネントクラス
-//--------------------------------------------------------------------------------
-class MeshComponent : public Component
+class Mesh : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	MeshComponent(GameObject* const pGameObj)
-		: Component(pGameObj) 
+	Mesh(GameObject* const owner)
+		: Component(owner)
 	{
-		m_strMeshName.clear();
+		meshName.clear();
 	}
-	~MeshComponent() {}
+	~Mesh() {}
 
 	virtual bool	Init(void) override { return true; }
 	virtual void	Uninit(void) override;
 	virtual void	Update(void) {}
 
 	//Set関数
-	void			SetMeshName(const string& strMeshName);
+	void			SetMeshName(const string& name);
 
 	//Get関数
-	const string&	GetMeshName(void) const { return m_strMeshName; }
+	const string&	GetMeshName(void) const { return meshName; }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	MeshComponent() : Component() {}
+	Mesh() : Component() {}
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string	m_strMeshName;	//メッシュの名前
+	string meshName;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌルメッシュコンポネントクラス
 //--------------------------------------------------------------------------------
-class CNullMeshComponent : public MeshComponent
+class NullMesh : public Mesh
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CNullMeshComponent() : MeshComponent() {}
-	~CNullMeshComponent() {}
+	NullMesh() : Mesh() {}
+	~NullMesh() {}
 
 	bool	Init(void) override { return true; }
 	void	Uninit(void) override {}

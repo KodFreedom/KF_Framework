@@ -153,13 +153,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cameraManager.cpp" />
+    <ClCompile Include="motionManager.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="meshRenderer3D.cpp" />
     <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="thirdPersonCamera.cpp" />
     <ClCompile Include="actorBehaviorComponent.cpp" />
-    <ClCompile Include="animatorComponent.cpp" />
+    <ClCompile Include="animator.cpp" />
     <ClCompile Include="backgroundUI.cpp" />
     <ClCompile Include="boxCollider.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -196,7 +197,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="materialManager.cpp" />
-    <ClCompile Include="meshComponent.cpp" />
+    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="meshManager.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="modeDemo.cpp" />
@@ -204,7 +205,7 @@
     <ClCompile Include="modelEditorBehaviorComponent.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
-    <ClCompile Include="motionStatus.cpp" />
+    <ClCompile Include="motionState.cpp" />
     <ClCompile Include="playerBehaviorComponent.cpp" />
     <ClCompile Include="playerUI.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -220,13 +221,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraManager.h" />
+    <ClInclude Include="motionManager.h" />
     <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="meshRenderer3D.h" />
     <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="actorBehaviorComponent.h" />
     <ClInclude Include="AIMode.h" />
-    <ClInclude Include="animatorComponent.h" />
+    <ClInclude Include="animator.h" />
     <ClInclude Include="behaviorComponent.h" />
     <ClInclude Include="backgroundUI.h" />
     <ClInclude Include="boxCollider.h" />
@@ -274,11 +276,11 @@
     <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
-    <ClInclude Include="meshComponent.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motionInfo.h" />
-    <ClInclude Include="motionStatus.h" />
+    <ClInclude Include="motionState.h" />
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerBehaviorComponent.h" />
     <ClInclude Include="playerUI.h" />

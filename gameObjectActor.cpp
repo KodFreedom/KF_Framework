@@ -67,7 +67,7 @@ GameObjectActor* GameObjectActor::CreatePlayer(const string &modelPath, const Ve
 	//コンポネント
 	auto pRb = new Rigidbody3D(pObj);
 	pObj->m_pRigidbody = pRb;
-	pObj->m_pAnimator = new CAnimatorComponent(pObj, modelPath);
+	pObj->m_pAnimator = new Animator(pObj, modelPath);
 	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);
 	auto pPb = new CPlayerBehaviorComponent(pObj, *pAb);
 	pObj->m_listpBehavior.push_back(pAb);
@@ -108,7 +108,7 @@ GameObjectActor* GameObjectActor::CreateEnemy(const string &modelPath, const Vec
 	//コンポネント
 	auto pRb = new Rigidbody3D(pObj);
 	pObj->m_pRigidbody = pRb;
-	pObj->m_pAnimator = new CAnimatorComponent(pObj, modelPath);
+	pObj->m_pAnimator = new Animator(pObj, modelPath);
 	
 	//ビヘイビア
 	auto pAb = new CActorBehaviorComponent(pObj, *pRb, pObj->m_pAnimator);

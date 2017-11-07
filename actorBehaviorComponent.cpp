@@ -28,7 +28,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CActorBehaviorComponent::CActorBehaviorComponent(GameObject* const pGameObj, Rigidbody3D& rigidbody, CAnimatorComponent* const pAnimator)
+CActorBehaviorComponent::CActorBehaviorComponent(GameObject* const pGameObj, Rigidbody3D& rigidbody, Animator* const pAnimator)
 	: CBehaviorComponent(pGameObj)
 	, m_rigidbody(rigidbody)
 	, m_pAnimator(pAnimator)

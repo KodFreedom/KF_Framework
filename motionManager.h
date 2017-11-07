@@ -1,53 +1,64 @@
 //--------------------------------------------------------------------------------
-//	アクター
-//　gameObjectActor.h
+//
+//　motionManager.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
+//	Date   : 2017-11-06
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "gameObject.h"
-
-//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class Animator;
+class MotionInfo;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class GameObjectActor : public GameObject
+class MotionManager
 {
+#ifdef _DEBUG
+	friend class DebugObserver;
+#endif // _DEBUG
+
 public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	GameObjectActor(const Layer& layer = Default);
-	~GameObjectActor() {}
+	static auto	Create(void)
+	{
+		if (instance) return instance;
+		instance = new MotionManager;
+		instance->init();
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
 
-	bool Init(void) override;
-	void LateUpdate(void) override;
-
-	//Get関数
-	auto GetAnimatorComponent(void) const { return m_pAnimator; }
-	
-	//Set関数
-
-	//生成関数
-	static GameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-	static GameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
+	void		Use(const string& motionName);
+	void		Disuse(const string& motionName);
+	auto		GetMotionInfoBy(const string& motionName) { return motions.at(motionName).Info; }
 
 private:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  構造体定義
 	//--------------------------------------------------------------------------------
-	void uninit(void) override;
+	struct MotionStruct
+	{
+		unsigned short		UserNumber;
+		MotionInfo*			Info;
+	};
 
 	//--------------------------------------------------------------------------------
-	//  変数宣言
+	//  関数宣言
 	//--------------------------------------------------------------------------------
-	Animator* m_pAnimator;
+	MotionManager() { motions.clear(); }
+	~MotionManager() {}
+	void init(void) {};
+	void uninit(void);
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	unordered_map<string, MotionStruct>	motions;
+	static MotionManager*				instance;
 };

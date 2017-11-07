@@ -70,7 +70,7 @@ bool ModelEditorBehaviorComponent::Init(void)
 	//Demo Object�̍쐬
 	for (int count = 0; count < (int)MT_MAX; ++count)
 	{
-		auto pObj = GameObjectSpawner::CreateModel(m_aStrName[count] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);
+		auto pObj = GameObjectSpawner::CreateModel(m_aStrName[count] + ".model", CKFMath::sc_vZero, CKFMath::sRotationZero, CKFMath::sc_vOne);
 		pObj->SetActive(false);
 		m_aObjInfoDemo[count].pTransform = pObj->GetTransform();
 	}
@@ -170,7 +170,7 @@ void ModelEditorBehaviorComponent::SaveAs(const string& strFileName)
 //--------------------------------------------------------------------------------
 void ModelEditorBehaviorComponent::create(void)
 {
-	auto pObj = GameObjectSpawner::CreateModel(m_aStrName[(int)modelType] + ".model", CKFMath::sc_vZero, CKFMath::sc_qRotZero, CKFMath::sc_vOne);;
+	auto pObj = GameObjectSpawner::CreateModel(m_aStrName[(int)modelType] + ".model", CKFMath::sc_vZero, CKFMath::sRotationZero, CKFMath::sc_vOne);;
 	auto pTrans = pObj->GetTransform();
 	auto infoNow = m_aObjInfoDemo[(int)modelType];
 	auto& Position = infoNow.pTransform->GetPos();

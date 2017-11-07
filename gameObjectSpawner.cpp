@@ -13,7 +13,7 @@
 #include "renderManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
-#include "MeshComponent.h"
+#include "mesh.h"
 #include "meshRenderer3D.h"
 #include "sphereCollider.h"
 #include "OBBCollider.h"

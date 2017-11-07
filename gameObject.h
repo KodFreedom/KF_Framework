@@ -14,7 +14,7 @@
 #include "behaviorComponent.h"
 #include "meshRenderer.h"
 #include "rigidbodyComponent.h"
-#include "meshComponent.h"
+#include "mesh.h"
 #include "collider.h"
 
 //--------------------------------------------------------------------------------
@@ -185,6 +185,6 @@ private:
 	//  ヌルコンポネント定義
 	//--------------------------------------------------------------------------------
 	static NullRigidbody	s_nullRigidbody;
-	static CNullMeshComponent		s_nullMesh;
+	static NullMesh		s_nullMesh;
 	static CNullRenderComponent		s_nullRender;
 };

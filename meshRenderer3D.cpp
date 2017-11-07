@@ -8,7 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "meshRenderer3D.h"
-#include "meshComponent.h"
+#include "mesh.h"
 #include "gameObject.h"
 #include "renderer.h"
 

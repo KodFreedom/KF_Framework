@@ -12,10 +12,11 @@
 
 //--------------------------------------------------------------------------------
 //	関数名：GetStringUntilToken
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：符号まで文字列を取る
+//	引数：	filePointer：ファイルポインタ
+//			token：符号
+//			buffer：文字列保存用ところ
+//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 //--------------------------------------------------------------------------------
 int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string& buffer)
 {
@@ -37,10 +38,11 @@ int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string&
 
 //--------------------------------------------------------------------------------
 //	関数名：GetStringUntilToken
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：符号まで文字列を取る
+//	引数：	file：ファイルの文字列
+//			token：符号
+//			buffer：文字列保存用ところ
+//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 //--------------------------------------------------------------------------------
 int Utility::GetStringUntilToken(string& file, const string& token, string& buffer)
 {
@@ -64,10 +66,11 @@ int Utility::GetStringUntilToken(string& file, const string& token, string& buff
 
 //--------------------------------------------------------------------------------
 //	関数名：GetStringCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：文字列をカウントする
+//	引数：	filePointer：ファイルポインタ
+//			token：符号
+//			compareString：
+//	戻り値：カウント数
 //--------------------------------------------------------------------------------
 int Utility::GetStringCount(FILE* filePointer, const string& token, const string& compareString)
 {
@@ -89,10 +92,11 @@ int Utility::GetStringCount(FILE* filePointer, const string& token, const string
 
 //--------------------------------------------------------------------------------
 //	関数名：GetStringCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//  関数説明：文字列をカウントする
+//	引数：	file：ファイルの文字列
+//			token：符号
+//			compareString：
+//	戻り値：カウント数
 //--------------------------------------------------------------------------------
 int Utility::GetStringCount(string& file, const string& token, const string& compareString)
 {
