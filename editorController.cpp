@@ -10,20 +10,17 @@
 #include "versionSetting.h"
 #if defined(_DEBUG) || defined(EDITOR)
 #include "main.h"
-#include "manager.h"
-#include "inputManager.h"
+#include "input.h"
 #include "mode.h"
 #include "camera.h"
+#include "cameraManager.h"
 #include "gameObject.h"
-#include "editorControllerBehaviorComponent.h"
-#include "fieldEditorBehaviorComponent.h"
-#include "modelEditorBehaviorComponent.h"
+#include "editorController.h"
+#include "fieldEditor.h"
+#include "ModelEditor.h"
 #include "transform.h"
 #include "ImGui\imgui.h"
 
-//--------------------------------------------------------------------------------
-//  クラス宣言
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //	Public
@@ -32,12 +29,12 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(GameObject* const pGameObj)
-	: Behavior(pGameObj)
-	, m_pFieldEditor(nullptr)
-	, m_pModelEditor(nullptr)
-	, m_bAutoHeight(true)
-	, m_fMoveSpeed(1.0f)
+EditorController::EditorController(GameObject* const owner)
+	: Behavior(owner, "EditorController")
+	, fieldEditor(nullptr)
+	, modelEditor(nullptr)
+	, isAutoHeight(true)
+	, moveSpeed(1.0f)
 {
 
 }
@@ -45,7 +42,7 @@ CEditorControllerBehaviorComponent::CEditorControllerBehaviorComponent(GameObjec
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-bool CEditorControllerBehaviorComponent::Init(void)
+bool EditorController::Init(void)
 {
 	return true;
 }
@@ -53,7 +50,7 @@ bool CEditorControllerBehaviorComponent::Init(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::Uninit(void)
+void EditorController::Uninit(void)
 {
 
 }
@@ -61,7 +58,7 @@ void CEditorControllerBehaviorComponent::Uninit(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::Update(void)
+void EditorController::Update(void)
 {
 	showMainWindow();
 }
@@ -69,12 +66,17 @@ void CEditorControllerBehaviorComponent::Update(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::SetFieldEditor(GameObject* pFieldEditor)
+void EditorController::SetFieldEditor(GameObject* fieldEditorObject)
 {
-	auto listBehavior = pFieldEditor->GetBehaviorComponent();
-	if (listBehavior.empty()) { return; }
-	auto pBehavior = listBehavior.front();
-	m_pFieldEditor = static_cast<CFieldEditorBehaviorComponent*>(pBehavior);
+	auto& behaviors = fieldEditorObject->GetBehaviors();
+	for (auto behavior : behaviors)
+	{
+		if (behavior->GetName()._Equal("FieldEditor"))
+		{
+			fieldEditor = static_cast<FieldEditor*>(behavior);
+			break;
+		}
+	}	
 }
 
 //--------------------------------------------------------------------------------
@@ -83,18 +85,18 @@ void CEditorControllerBehaviorComponent::SetFieldEditor(GameObject* pFieldEditor
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//  save
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::save(void)
+void EditorController::save(void)
 {
-	m_pFieldEditor->SaveAs("demoField");
-	m_pModelEditor->SaveAs("demoStage");
+	fieldEditor->SaveAs("demoField");
+	modelEditor->SaveAs("demoStage");
 }
 
 //--------------------------------------------------------------------------------
 //  showMainWindow
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::showMainWindow(void)
+void EditorController::showMainWindow(void)
 {
 	// Begin
 	if (!ImGui::Begin("Editor Window"))
@@ -104,18 +106,18 @@ void CEditorControllerBehaviorComponent::showMainWindow(void)
 	}
 
 	// Pos
-	showPosWindow();
+	showPositonWindow();
 
 	// Auto Height
-	ImGui::Checkbox("Auto Height", &m_bAutoHeight);
+	ImGui::Checkbox("Auto Height", &isAutoHeight);
 
 	// Mode
-	bool bModelEditor = m_pModelEditor->GetActive();
-	bool bFieldEditor = m_pFieldEditor->GetActive();
-	if (ImGui::Button("Model Editor")) { bModelEditor ^= 1; }
-	if (ImGui::Button("Field Editor")) { bFieldEditor ^= 1; }
-	m_pModelEditor->SetActive(bModelEditor);
-	m_pFieldEditor->SetActive(bFieldEditor);
+	bool isModelEditor = modelEditor->GetActive();
+	bool isFieldEditor = fieldEditor->GetActive();
+	if (ImGui::Button("Model Editor")) { isModelEditor ^= 1; }
+	if (ImGui::Button("Field Editor")) { isFieldEditor ^= 1; }
+	modelEditor->SetActive(isModelEditor);
+	fieldEditor->SetActive(isFieldEditor);
 
 	// Save
 	if (ImGui::Button("Save")) { save(); }
@@ -125,44 +127,43 @@ void CEditorControllerBehaviorComponent::showMainWindow(void)
 }
 
 //--------------------------------------------------------------------------------
-//  showPosWindow
+//  showPositonWindow
 //--------------------------------------------------------------------------------
-void CEditorControllerBehaviorComponent::showPosWindow(void)
+void EditorController::showPositonWindow(void)
 {
 	//標的操作
-	auto pInput = Main::GetManager()->GetInputManager();
-	auto pTrans = m_pGameObj->GetTransform();
-	auto Position = pTrans->GetPos();
-	auto vAxis = Vector2(pInput->GetMoveHorizontal(), pInput->GetMoveVertical());
-	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
-	auto vCamForward = CKFMath::Vec3Scale(pCamera->GetVecLook(), CKFMath::VecNormalize(Vector3(1.0f, 0.0f, 1.0f)));
-	auto vMove = pCamera->GetVecRight() * vAxis.X * m_fMoveSpeed + vCamForward * vAxis.Y * m_fMoveSpeed;
-	auto fHeight = (float)(pInput->GetKeyPress(Input::Left) - pInput->GetKeyPress(Input::Right));
-	Position += vMove;
-	Position.Y += fHeight * m_fMoveSpeed;;
+	auto input = Input::Instance();
+	auto transform = owner->GetTransform();
+	auto& position = transform->GetCurrentPosition();
+	auto& axis = Vector2(input->MoveHorizontal(), input->MoveVertical());
+	auto camera = CameraManager::Instance()->GetMainCamera();
+	auto& cameraForward = Vector3::Scale(camera->GetForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
+	auto& movement = camera->GetRight() * axis.X * moveSpeed + cameraForward * axis.Y * moveSpeed;
+	auto height = (float)(input->GetKeyPress(Key::Left) - input->GetKeyPress(Key::Right));
+	position += movement;
+	position.Y += height * moveSpeed;;
 
 	//Adjust Pos
-	m_pFieldEditor->AdjustPosInField(Position, m_bAutoHeight);
+	position = fieldEditor->AdjustPosInField(position, isAutoHeight);
 
 	//ImGui
 	ImGui::Text("Move : W A S D");
 	ImGui::Text("Raise / Reduce : <- / ->");
 	ImGui::Text("CameraRot : RightClick + MouseMove");
 	ImGui::Text("CameraZoom : RightClick + MouseWheel");
-	ImGui::InputFloat("Move / Raise Speed", &m_fMoveSpeed);
-	ImGui::InputFloat3("Pos", &Position.X);
+	ImGui::InputFloat("Move / Raise Speed", &moveSpeed);
+	ImGui::InputFloat3("Pos", &position.X);
 
 	//操作位置の更新
-	m_pFieldEditor->SetPos(Position);
-	m_pModelEditor->SetPos(Position);
+	fieldEditor->SetPosition(position);
+	modelEditor->SetPosition(position);
 
 	//カメラの移動
-	auto vMovement = Position - pTrans->GetPos();
-	pCamera->MoveCamera(vMovement);
+	movement = position - transform->GetCurrentPosition();
+	camera->Move(movement);
 
 	//Pos設定
-	pTrans->SetPos(Position);
-	pTrans->SetPosNext(Position);
+	transform->SetNextPosition(position);
 }
 
 #endif // _DEBUG

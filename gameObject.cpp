@@ -8,19 +8,14 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "gameObject.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-NullRigidbody	GameObject::s_nullRigidbody;
-NullMesh		GameObject::s_nullMesh;
-CNullRenderComponent	GameObject::s_nullRender;
+NullRigidbody	GameObject::nullRigidbody;
+NullMesh		GameObject::nullMesh;
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -30,48 +25,44 @@ CNullRenderComponent	GameObject::s_nullRender;
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 GameObject::GameObject(const Layer& layer)
-	: m_layer(layer)
-	, m_bActive(true)
-	, m_bAlive(true)
-	, m_pRigidbody(&s_nullRigidbody)
-	, m_mesh(&s_nullMesh)
-	, m_pRender(&s_nullRender)
+	: layer(layer)
+	, isActive(true)
+	, isAlive(true)
+	, rigidbody(&nullRigidbody)
+	, mesh(&nullMesh)
 {
-	m_strName.clear();
+	name.clear();
 	tag.clear();
-	m_listpBehavior.clear();
-	m_listpCollider.clear();
-	m_pTransform = new Transform(this);
-	Main::GetManager()->GetGameObjectManager()->Register(this, m_layer);
+	behaviors.clear();
+	colliders.clear();
+	renderers.clear();
+	transform = new Transform(this);
+	GameObjectManager::Instance()->Register(this, layer);
 }
 
 //--------------------------------------------------------------------------------
 //  SetActive
 //--------------------------------------------------------------------------------
-void GameObject::SetActive(const bool& bActive)
+void GameObject::SetActive(const bool& value)
 {
-	m_bActive = bActive;
-
-	//Children
-	auto& listChildren = m_pTransform->GetChildren();
-	for (auto pChild : listChildren)
+	isActive = value;
+	auto& children = transform->GetChildren();
+	for (auto child : children)
 	{
-		pChild->GetGameObject()->SetActive(bActive);
+		child->GetGameObject()->SetActive(value);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  SetAlive
 //--------------------------------------------------------------------------------
-void GameObject::SetAlive(const bool& bAlive)
+void GameObject::SetAlive(const bool& value)
 {
-	m_bAlive = bAlive;
-
-	//Children
-	auto& listChildren = m_pTransform->GetChildren();
-	for (auto pChild : listChildren)
+	isAlive = value;
+	auto& children = transform->GetChildren();
+	for (auto child : children)
 	{
-		pChild->GetGameObject()->SetAlive(bAlive);
+		child->GetGameObject()->SetAlive(value);
 	}
 }
 
@@ -83,7 +74,7 @@ void GameObject::SetAlive(const bool& bAlive)
 //--------------------------------------------------------------------------------
 //  パラメーター交換処理
 //--------------------------------------------------------------------------------
-void GameObject::swapParam(void)
+void GameObject::swapParamater(void)
 {
-	m_pTransform->SwapParam();
+	transform->SwapParamater();
 }

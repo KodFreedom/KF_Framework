@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	エディタビヘイビアコンポネント
-//　editorControllerBehaviorComponent.h
+//	プレイヤービヘイビアコンポネント
+//　FieldEditor.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -14,46 +14,56 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CFieldEditorBehaviorComponent;
-class ModelEditorBehaviorComponent;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CEditorControllerBehaviorComponent : public Behavior
+class FieldEditor : public Behavior
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CEditorControllerBehaviorComponent(GameObject* const pGameObj);
-	~CEditorControllerBehaviorComponent() {}
+	FieldEditor(GameObject* const owner);
+	~FieldEditor() {}
 
 	bool	Init(void) override;
 	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
-	void	OnCollision(CollisionInfo& collisionInfo) override {}
+	//Get関数
+	Vector3	AdjustPosInField(const Vector3& position, const bool& isAdjustHeight);
+	bool	GetActive(void) const { return isActive; }
 
-	void	SetFieldEditor(GameObject* pFieldEditor);
-	void	SetModelEditor(ModelEditorBehaviorComponent* pModelEditor) { m_pModelEditor = pModelEditor; }
+	//Set関数
+	void	SetActive(const bool& value);
+	void	SetPosition(const Vector3& value) { editorPosition = value; }
+
+	//Save
+	void	SaveAs(const string& fileName);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void	save(void);
-	void	showMainWindow(void);
-	void	showPosWindow(void);
+	float			getHeight(const Vector3& position);
+	list<int>		getChoosenIndexes(void);
+	void			showMainWindow(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	bool							m_bAutoHeight;
-	CFieldEditorBehaviorComponent*	m_pFieldEditor;
-	ModelEditorBehaviorComponent*	m_pModelEditor;
-	float							m_fMoveSpeed;
+	int				blockXNumber;
+	int				blockZNumber;
+	Vector2			blockSize;
+	vector<Vector3>	vertexes;
+	Vector3			minPosition;
+	Vector3			maxPosition;
+	Vector3			editorPosition;
+	float			editorRadius;
+	float			raiseSpeed;
+	float			extendSpeed;
+	bool			isActive;
 };
 #endif // _DEBUG

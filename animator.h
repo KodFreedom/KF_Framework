@@ -50,14 +50,13 @@ private:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	void			analyzeFile(const string& filePath);
-	//void			updateAttack(void);
 	void			changeMotionStatus(MotionState* motionStatus);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	vector<GameObject*>		bones;
-	MotionState*			curentMotionState;
+	MotionState*			currentMotionState;
 	bool					isGrounded;
 	bool					isAttack;
 	bool					isJump;

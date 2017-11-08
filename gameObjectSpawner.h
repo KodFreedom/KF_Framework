@@ -7,13 +7,10 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class GameObject;
+class GameObjectActor;
 class Transform;
 
 //--------------------------------------------------------------------------------
@@ -22,22 +19,24 @@ class Transform;
 class GameObjectSpawner
 {
 public:
-	static GameObject* CreateSkyBox(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static GameObject* CreateField(const string& strStageName);
-	static GameObject* CreateCube(const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static GameObject* CreateXModel(const string& strPath, const Vector3& Position, const Vector3& vRot, const Vector3& vScale);
-	static GameObject* CreateModel(const string& filePath, const Vector3& Position, const Quaternion& qRot, const Vector3& vScale);
-	static GameObject* CreateGoal(const Vector3& Position);
+	static GameObject* CreateSkyBox(const Vector3& position, const Vector3& rotation, const Vector3& scale);
+	static GameObject* CreateField(const string& stageName);
+	static GameObject* CreateCube(const Vector3& position, const Vector3& rotation, const Vector3& scale);
+	static GameObject* CreateXModel(const string& modelName, const Vector3& position, const Vector3& rotation, const Vector3& scale);
+	static GameObject* CreateModel(const string& modelName, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	static GameObject* CreateGoal(const Vector3& position);
+	static GameObjectActor* CreatePlayer(const string &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
+	static GameObjectActor* CreateEnemy(const string &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 
 #if defined(_DEBUG) || defined(EDITOR)
-	static GameObject* CreateEditorController(GameObject* pFieldEditor);
-	static GameObject* CreateEditorField(void);
+	static GameObject* CreateStageEditor(GameObject* fieldEditor);
+	static GameObject* CreateFieldEditor(void);
 #endif // _DEBUG	
 
 private:
 	GameObjectSpawner() {}
 	~GameObjectSpawner() {}
 
-	static GameObject* createChildNode(Transform* pParent, FILE* filePointer);
-	static GameObject* createChildMesh(Transform* pParent, const string& strMeshName);
+	static GameObject* createChildNode(Transform* parent, FILE* filePointer);
+	static GameObject* createChildMesh(Transform* parent, const string& meshName);
 };

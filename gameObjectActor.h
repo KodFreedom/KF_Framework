@@ -30,15 +30,8 @@ public:
 
 	bool Init(void) override;
 	void LateUpdate(void) override;
-
-	//Getä÷êî
-	auto GetAnimator(void) const { return m_pAnimator; }
-	
-	//Setä÷êî
-
-	//ê∂ê¨ä÷êî
-	static GameObjectActor* CreatePlayer(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
-	static GameObjectActor* CreateEnemy(const string &modelPath, const Vector3 &Position, const Vector3 &vRot, const Vector3 &vScale);
+	auto GetAnimator(void) const { return animator; }
+	void SetAnimator(Animator* const value) { animator = value; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -49,5 +42,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîêÈåæ
 	//--------------------------------------------------------------------------------
-	Animator* m_pAnimator;
+	Animator* animator;
 };

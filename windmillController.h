@@ -32,9 +32,6 @@ public:
 	void	Update(void) override;
 	void	LateUpdate(void) override {}
 
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
-	void	OnCollision(CollisionInfo& collisionInfo) override {}
-
 private:
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

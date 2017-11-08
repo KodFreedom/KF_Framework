@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	モデルエディタビヘイビアコンポネント
-//　modelEditorBehaviorComponent.h
+//　ModelEditor.h
 //	Author : Xu Wenjie
 //	Date   : 2017-08-23
 //--------------------------------------------------------------------------------
@@ -14,94 +14,88 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
+class Transform;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class ModelEditorBehaviorComponent : public Behavior
+class ModelEditor : public Behavior
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	ModelEditorBehaviorComponent(GameObject* const pGameObj);
-	~ModelEditorBehaviorComponent() {}
+	ModelEditor(GameObject* const owner);
+	~ModelEditor() {}
 
 	bool	Init(void) override;
 	void	Uninit(void) override;
 	void	Update(void) override;
 	void	LateUpdate(void) override;
 
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override {}
-	void	OnCollision(CollisionInfo& collisionInfo) override {}
-
 	//Get関数
-	bool	GetActive(void) const { return m_bActive; }
+	bool	GetActive(void) const { return isActive; }
 
 	//Set関数
-	void	SetActive(const bool& bActive) { m_bActive = bActive; }
-	void	SetPos(const Vector3& Position);
+	void	SetActive(const bool& value) { isActive = value; }
+	void	SetPosition(const Vector3& position);
 
 	//Save
-	void	SaveAs(const string& strFileName);
+	void	SaveAs(const string& fileName);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  列挙型定義
 	//--------------------------------------------------------------------------------
-	enum MODEL_TYPE
+	enum ModelType
 	{
-		MT_BOX,
-		MT_TREE,
-		MT_PINE_TREE,
-		MT_WINDMILL,
-		MT_ROCK_1,
-		MT_ROCK_2,
-		MT_ROCK_3,
-		MT_BAKER_HOUSE,
-		MT_BARREL,
-		MT_BRIDGE,
-		MT_FENCE,
-		MT_FANCY_TAVERN,
-		MT_MED_HOUSE,
-		MT_MED_HOUSE_1,
-		MT_MED_HOUSE_FANTASY,
-		MT_HOUSE,
-		MT_WELL,
-		MT_MED_BRIDGE,
-		MT_MAX
+		Box,
+		Tree,
+		PineTree,
+		Windmill,
+		Rock1,
+		Rock2,
+		Rock3,
+		BakerHouse,
+		Barrel,
+		Bridge,
+		Fence,
+		FancyTavern,
+		MedHouse1,
+		MedHouse2,
+		MedHouseFantasy,
+		House,
+		Well,
+		MedBridge,
+		Max
 	};
 
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct INFO
+	struct Info
 	{
-		INFO() : pTransform(nullptr), vRot(CKFMath::sc_vZero) {}
-		Transform*	pTransform;
-		Vector3					vRot;
+		Info() : MyTransform(nullptr), Rotation(Vector3::Zero) {}
+		Transform* MyTransform;
+		Vector3	   Rotation;
 	};
-
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void	create(void);
-	void	showMainWindow(void);
-	void	showTypeListBox(void);
-	void	showCreatedList(void);
+	void create(void);
+	void showMainWindow(void);
+	void showTypeListBox(void);
+	void showCreatedList(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	string			m_aStrName[MT_MAX];
-	INFO			m_aObjInfoDemo[MT_MAX];
-	list<INFO>		m_alistCreated[MT_MAX];
-	MODEL_TYPE		modelType;
-	bool			m_bActive;
-	bool			m_bShowCreatedList;
+	string			modelNames[ModelType::Max];
+	Info			demoModelInfos[ModelType::Max];
+	list<Info>		createdModelInfos[ModelType::Max];
+	ModelType		currentModelType;
+	bool			isActive;
+	bool			isShowCreatedList;
 };
 #endif // _DEBUG

@@ -35,8 +35,8 @@ public:
 	virtual void Update(void) = 0;
 	virtual void LateUpdate(void) = 0;
 				 
-	virtual void OnTrigger(Collider& colliderThis, Collider& collider) = 0;
-	virtual void OnCollision(CollisionInfo& collisionInfo) = 0;
+	virtual void OnTrigger(Collider& colliderThis, Collider& collider) {};
+	virtual void OnCollision(CollisionInfo& collisionInfo) {};
 
 	const auto	 GetName(void) const { return name; }
 

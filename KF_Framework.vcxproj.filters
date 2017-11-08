@@ -184,6 +184,12 @@
     <Filter Include="ヘッダー ファイル\Actor\AI">
       <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor">
+      <UniqueIdentifier>{b3f9ec24-664a-4da9-b7b9-08f6d9947ff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor">
+      <UniqueIdentifier>{a586df49-f1c4-4f34-a9d4-ac1a669403bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -269,15 +275,6 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="editorControllerBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldEditorBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="modelEditorBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
     <ClCompile Include="fog.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -366,13 +363,7 @@
     <ClCompile Include="motionManager.cpp">
       <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
-    <ClCompile Include="playerController.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="windmillController.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="actorController.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="actorState.cpp">
@@ -393,14 +384,29 @@
     <ClCompile Include="damagedState.cpp">
       <Filter>ソース ファイル\Actor\State</Filter>
     </ClCompile>
-    <ClCompile Include="enemyController.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="normalModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
     <ClCompile Include="attackModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="editorController.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="fieldEditor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="modelEditor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="actorController.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyController.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="playerController.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,15 +484,6 @@
     </ClInclude>
     <ClInclude Include="gameObjectSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="editorControllerBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldEditorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="modelEditorBehaviorComponent.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
     <ClInclude Include="stageSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
@@ -620,16 +617,7 @@
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="playerController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="windmillController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="actorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="actorState.h">
@@ -661,6 +649,24 @@
     </ClInclude>
     <ClInclude Include="attackModeAI.h">
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="actorController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="playerController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="modelEditor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="fieldEditor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="editorController.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

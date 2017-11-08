@@ -17,6 +17,9 @@
 class NormalModeAI : public AI
 {
 public:
+	//--------------------------------------------------------------------------------
+	//  ä÷êîíËã`
+	//--------------------------------------------------------------------------------
 	NormalModeAI() : AI("NormalMode") {}
 	~NormalModeAI() override {}
 	void Update(EnemyController& enemy) override;

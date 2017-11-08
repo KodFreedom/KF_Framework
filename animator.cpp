@@ -27,7 +27,7 @@
 //--------------------------------------------------------------------------------
 Animator::Animator(GameObject* const owner, const string& filePath)
 	: Component(owner)
-	, curentMotionState(nullptr)
+	, currentMotionState(nullptr)
 	, isGrounded(false)
 	, isAttack(false)
 	, isJump(false)
@@ -53,7 +53,7 @@ bool Animator::Init(void)
 void Animator::Uninit(void)
 {
 	bones.clear();
-	SAFE_DELETE(curentMotionState);
+	SAFE_DELETE(currentMotionState);
 }
 
 //--------------------------------------------------------------------------------
@@ -61,10 +61,27 @@ void Animator::Uninit(void)
 //--------------------------------------------------------------------------------
 void Animator::Update(void)
 {
-	if (!curentMotionState) return;
-	curentMotionState->Update(*this);
+	if (!currentMotionState) return;
+	currentMotionState->Update(*this);
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：GetCurrentAnimationName
+//  関数説明：今のアニメーション名を返す
+//	引数：	なし
+//	戻り値：const string& 
+//--------------------------------------------------------------------------------
+const string& Animator::GetCurrentAnimationName(void)
+{
+	if (!currentMotionState) return "null";
+	return currentMotionState->GetMotionName();
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //	関数名：changeMotionStatus
 //  関数説明：モーションステータスの切り替え
@@ -73,8 +90,8 @@ void Animator::Update(void)
 //--------------------------------------------------------------------------------
 void Animator::changeMotionStatus(MotionState* motionStatus)
 {
-	SAFE_DELETE(curentMotionState);
-	curentMotionState = motionStatus;
+	SAFE_DELETE(currentMotionState);
+	currentMotionState = motionStatus;
 }
 
 //--------------------------------------------------------------------------------

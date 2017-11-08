@@ -73,19 +73,3 @@ protected:
 	Alpha			alpha;
 	Fog				fog;
 };
-
-//--------------------------------------------------------------------------------
-//  ヌル描画コンポネントクラス
-//--------------------------------------------------------------------------------
-class NullMeshRenderer : public MeshRenderer
-{
-public:
-	NullMeshRenderer() : MeshRenderer() {}
-	~NullMeshRenderer() {}
-
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override {}
-	void	Release(void) override {}
-	void	Update(void) override {}
-	void	Render(void) override {}
-};

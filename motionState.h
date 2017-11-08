@@ -32,6 +32,7 @@ public:
 	~MotionState() {};
 
 	virtual void Update(Animator& animator) = 0;
+	const auto&  GetMotionName(void) { return currentMotionName; }
 
 protected:
 	//--------------------------------------------------------------------------------
