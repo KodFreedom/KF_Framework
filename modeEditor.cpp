@@ -39,8 +39,8 @@ void ModeEditor::Init(void)
 	Input::Instance()->SetEditorMode(true);
 
 	//ゲームオブジェクトの初期化
-	auto pEditorField = GameObjectSpawner::CreateEditorField();
-	GameObjectSpawner::CreateEditorController(pEditorField);
+	auto fieldEditor = GameObjectSpawner::CreateFieldEditor();
+	GameObjectSpawner::CreateStageEditor(fieldEditor);
 }
 
 //--------------------------------------------------------------------------------

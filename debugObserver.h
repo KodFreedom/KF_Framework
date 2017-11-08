@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class ActorController;
+class GameObjectActor;
 
 //--------------------------------------------------------------------------------
 //  クラス定義
@@ -33,7 +33,7 @@ public:
 	void DisplayAlways(const string& strInfo);
 	void DisplayAlways(const char& cInfo);
 	void DisplayScroll(const string& strInfo);
-	void SetPlayer(ActorController* actor) { player = actor; }
+	void SetPlayer(GameObjectActor* value) { player = value; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -61,12 +61,12 @@ private:
 	//--------------------------------------------------------------------------------
 	string						debugInfo;
 	list<string>				debugLog;
-	unsigned short				crollCounter;
+	unsigned short				scrollCounter;
 	bool						enableCollisionSystemWindow;
 	bool						enableCameraWindow;
 	bool						enablePlayerWindow;
 	bool						enableFogWindow;
-	ActorController*	player;
+	GameObjectActor*			player;
 	static DebugObserver*		instance;
 };
-#endif//_DEBUG
+#endif

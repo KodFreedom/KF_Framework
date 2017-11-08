@@ -21,7 +21,7 @@
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-void CStageSpawner::LoadStage(const string& strStageName)
+void StageSpawner::LoadStage(const string& strStageName)
 {
 	GameObjectSpawner::CreateField(strStageName);
 
@@ -34,7 +34,7 @@ void CStageSpawner::LoadStage(const string& strStageName)
 
 	if (!filePointer)
 	{
-		MessageBox(NULL, "CStageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, "StageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
 		return;
 	}
 

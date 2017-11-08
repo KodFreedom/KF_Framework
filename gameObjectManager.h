@@ -16,8 +16,8 @@
 //--------------------------------------------------------------------------------
 enum Layer
 {
-	Default = 0,
-	Max
+	L_Default = 0,
+	L_Max
 };
 
 //--------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ public:
 	void ReleaseAll(void);
 	void Update(void);
 	void LateUpdate(void);
-	void Register(GameObject* gameObject, const Layer& layer = Default)
+	void Register(GameObject* gameObject, const Layer& layer = L_Default)
 	{
 		GameObjects[layer].push_back(gameObject);
 	}
@@ -62,6 +62,6 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	list<GameObject*>			GameObjects[Layer::Max];
+	list<GameObject*>			GameObjects[L_Max];
 	static GameObjectManager*	instance;
 };

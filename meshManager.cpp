@@ -279,27 +279,27 @@ void MeshManager::SaveEditorFieldAs(const string& fileName)
 	fwrite(&nTexSize, sizeof(int), 1, filePointer);
 
 	//Lighting
-	auto lighting = Lighting::On;
+	auto lighting = Lighting_On;
 	fwrite(&lighting, sizeof(lighting), 1, filePointer);
 
 	//CullMode
-	auto cullMode = CullMode::CCW;
+	auto cullMode = Cull_CCW;
 	fwrite(&cullMode, sizeof(cullMode), 1, filePointer);
 
 	//Synthesis
-	auto synthesis = Synthesis::Multiplication;
+	auto synthesis = S_Multiplication;
 	fwrite(&synthesis, sizeof(synthesis), 1, filePointer);
 
 	//FillMode
-	auto fillMode = FillMode::Solid;
+	auto fillMode = Fill_Solid;
 	fwrite(&fillMode, sizeof(fillMode), 1, filePointer);
 
 	//Alpha
-	auto alpha = Alpha::None;
+	auto alpha = A_None;
 	fwrite(&alpha, sizeof(alpha), 1, filePointer);
 
 	//Fog
-	auto fog = Fog::On;
+	auto fog = Fog_On;
 	fwrite(&fog, sizeof(fog), 1, filePointer);
 
 	fclose(filePointer);
@@ -327,12 +327,12 @@ void MeshManager::uninit(void)
 //--------------------------------------------------------------------------------
 //	関数名：loadFromMesh
 //  関数説明：メッシュファイルからデータの読込
-//	引数：	filePath：ファイルの名前 
+//	引数：	fileName：ファイルの名前 
 //	戻り値：MESH
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::loadFromMesh(const string& filePath)
+MeshManager::MeshStruct MeshManager::loadFromMesh(const string& fileName)
 {
-	string filePath = "data/MESH/" + filePath;
+	string filePath = "data/MESH/" + fileName;
 	MeshStruct info;
 	FILE *filePointer;
 
@@ -911,27 +911,27 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 	fwrite(&textureName[0], sizeof(char), stringSize, filePointer);
 
 	//Lighting
-	auto lighting = Lighting::On;
+	auto lighting = Lighting_On;
 	fwrite(&lighting, sizeof(lighting), 1, filePointer);
 
 	//CullMode
-	auto cullMode = CullMode::CCW;
+	auto cullMode = Cull_CCW;
 	fwrite(&cullMode, sizeof(cullMode), 1, filePointer);
 
 	//Synthesis
-	auto synthesis = Synthesis::Multiplication;
+	auto synthesis = S_Multiplication;
 	fwrite(&synthesis, sizeof(synthesis), 1, filePointer);
 
 	//FillMode
-	auto fillMode = FillMode::Solid;
+	auto fillMode = Fill_Solid;
 	fwrite(&fillMode, sizeof(fillMode), 1, filePointer);
 
 	//Alpha
-	auto alpha = Alpha::None;
+	auto alpha = A_None;
 	fwrite(&alpha, sizeof(alpha), 1, filePointer);
 
 	//Fog
-	auto fog = Fog::On;
+	auto fog = Fog_On;
 	fwrite(&fog, sizeof(fog), 1, filePointer);
 
 	fclose(filePointer);
@@ -1086,12 +1086,12 @@ MeshManager::MeshStruct MeshManager::createSkyBox(void)
 #endif
 	
 	//Render State
-	info.CurrentRenderInfo.CurrentLighting = Lighting::Off;
-	info.CurrentRenderInfo.CurrentCullMode = CullMode::CCW;
-	info.CurrentRenderInfo.CurrentSynthesis = Synthesis::Multiplication;
-	info.CurrentRenderInfo.CurrentFillMode = FillMode::Solid;
-	info.CurrentRenderInfo.CurrentAlpha = Alpha::None;
-	info.CurrentRenderInfo.CurrentFog = Fog::Off;
+	info.CurrentRenderInfo.CurrentLighting = Lighting_Off;
+	info.CurrentRenderInfo.CurrentCullMode = Cull_CCW;
+	info.CurrentRenderInfo.CurrentSynthesis = S_Multiplication;
+	info.CurrentRenderInfo.CurrentFillMode = Fill_Solid;
+	info.CurrentRenderInfo.CurrentAlpha = A_None;
+	info.CurrentRenderInfo.CurrentFog = Fog_Off;
 
 	return info;
 }

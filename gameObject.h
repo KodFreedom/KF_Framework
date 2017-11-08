@@ -26,7 +26,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
-	GameObject(const Layer& layer = Layer::Default);
+	GameObject(const Layer& layer = L_Default);
 	~GameObject() {}
 	
 	virtual bool	Init(void) 
@@ -42,7 +42,7 @@ public:
 	virtual void	Update(void)
 	{
 		if (!isActive) return;
-		swapParam();
+		swapParamater();
 		for (auto behavior : behaviors) { behavior->Update(); }
 		rigidbody->Update();
 		for (auto collider : colliders) { collider->Update(); }

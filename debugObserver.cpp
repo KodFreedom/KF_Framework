@@ -19,9 +19,10 @@
 #include "meshManager.h"
 #include "mode.h"
 #include "camera.h"
+#include "cameraManager.h"
 #include "gameObjectActor.h"
 #include "transform.h"
-#include "actorBehaviorComponent.h"
+#include "playerController.h"
 #include "fog.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -83,10 +84,10 @@ void DebugObserver::LateUpdate(void)
 
 	if (!debugLog.empty())
 	{
-		++crollcounter;
-		if (crollcounter >= scrollTime)
+		++scrollCounter;
+		if (scrollCounter >= scrollTime)
 		{//一番目のstringを削除する
-			crollcounter = 0;
+			scrollCounter = 0;
 			debugLog.erase(debugLog.begin());
 		}
 
@@ -152,7 +153,7 @@ void DebugObserver::DisplayScroll(const string& strInfo)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 DebugObserver::DebugObserver()
-	: crollcounter(0)
+	: scrollCounter(0)
 	, enableCollisionSystemWindow(false)
 	, enableCameraWindow(false)
 	, enablePlayerWindow(false)
@@ -192,7 +193,6 @@ void DebugObserver::showMainWindow(void)
 {
 	auto renderer = Renderer::Instance();
 	auto backgroundColor = renderer->GetBackgroundColor();
-	auto enableWireFrame = renderer->GetWireFrameFlag();
 
 	// Begin
 	if (!ImGui::Begin("Main Debug Window"))
@@ -210,9 +210,6 @@ void DebugObserver::showMainWindow(void)
 		renderer->SetBackgroundColor(backgroundColor);
 	}
 
-	// WireFrame
-	if (ImGui::Checkbox("WireFrame", &enableWireFrame)) { renderer->SetWireFrameFlag(enableWireFrame); }
-	
 	// Collision System
 	if (ImGui::Button("Collision System")) { enableCollisionSystemWindow ^= 1; }
 
@@ -235,31 +232,31 @@ void DebugObserver::showMainWindow(void)
 void DebugObserver::showCollisionSystemWindow(void)
 {
 	if (!enableCollisionSystemWindow) { return; }
-	auto pCS = CollisionSystem::Instance();
-	
-	// Begin
-	if (!ImGui::Begin("Collision System Debug Window", &enableCollisionSystemWindow))
-	{
-		ImGui::End();
-		return;
-	}
+	//auto colliderSystem = CollisionSystem::Instance();
+	//
+	//// Begin
+	//if (!ImGui::Begin("Collision System Debug Window", &enableCollisionSystemWindow))
+	//{
+	//	ImGui::End();
+	//	return;
+	//}
 
-	// Draw Collider
-	ImGui::Checkbox("Show Collider", &pCS->m_bDrawCollider);
+	//// Draw Collider
+	//ImGui::Checkbox("Show Collider", &pCS->m_bDrawCollider);
 
-	// Num Collider
-	if (ImGui::CollapsingHeader("Static"))
-	{
-		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[STATIC][Sphere].size());
-		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[STATIC][AABB].size());
-		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[STATIC][OBB].size());
-	}
-	if (ImGui::CollapsingHeader("Dynamic"))
-	{
-		ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[DYNAMIC][Sphere].size());
-		ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[DYNAMIC][AABB].size());
-		ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[DYNAMIC][OBB].size());
-	}
+	//// Num Collider
+	//if (ImGui::CollapsingHeader("Static"))
+	//{
+	//	ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[STATIC][Sphere].size());
+	//	ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[STATIC][AABB].size());
+	//	ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[STATIC][OBB].size());
+	//}
+	//if (ImGui::CollapsingHeader("CM_Dynamic"))
+	//{
+	//	ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CM_Dynamic][Sphere].size());
+	//	ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CM_Dynamic][AABB].size());
+	//	ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CM_Dynamic][OBB].size());
+	//}
 
 	// End
 	ImGui::End();
@@ -271,7 +268,7 @@ void DebugObserver::showCollisionSystemWindow(void)
 void DebugObserver::showCameraWindow(void)
 {
 	if (!enableCameraWindow) { return; }
-	auto pCamera = Main::GetManager()->GetMode()->GetCamera();
+	auto camera = CameraManager::Instance()->GetMainCamera();
 
 	// Begin
 	if (!ImGui::Begin("Camera Window", &enableCameraWindow))
@@ -281,22 +278,7 @@ void DebugObserver::showCameraWindow(void)
 	}
 
 	// Fov
-	ImGui::InputFloat("Fov", &pCamera->m_fFovY);
-
-	// PosEye
-	ImGui::Text("PosEye : %f %f %f", pCamera->PositionEye.X, pCamera->PositionEye.Y, pCamera->PositionEye.Z);
-
-	// PosAt
-	ImGui::Text("PosEye : %f %f %f", pCamera->PositionAt.X, pCamera->PositionAt.Y, pCamera->PositionAt.Z);
-
-	// Forward
-	ImGui::Text("Forward : %f %f %f", pCamera->m_vVecLook.X, pCamera->m_vVecLook.Y, pCamera->m_vVecLook.Z);
-
-	// Up
-	ImGui::Text("Up : %f %f %f", pCamera->m_vVecUp.X, pCamera->m_vVecUp.Y, pCamera->m_vVecUp.Z);
-
-	// Right
-	ImGui::Text("Right : %f %f %f", pCamera->m_vVecRight.X, pCamera->m_vVecRight.Y, pCamera->m_vVecRight.Z);
+	ImGui::InputFloat("Fov", &camera->fovY);
 
 	// End
 	ImGui::End();
@@ -317,14 +299,14 @@ void DebugObserver::showPlayerWindow(void)
 	}
 
 	// Trans
-	auto pTrans = player->GetTransform();
-	ImGui::InputFloat3("Trans", &pTrans->PositionNext.X);
+	auto transform = player->GetTransform();
+	ImGui::InputFloat3("Trans", &transform->nextPosition.X);
 
 	// Actor Behavior
-	auto pActor = static_cast<ActorController*>(player->GetBehaviors().front());
-	ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
-	ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
-	ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
+	//auto pActor = static_cast<PlayerController*>(player->GetBehaviors().front());
+	//ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
+	//ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
+	//ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
 
 	// End
 	ImGui::End();
@@ -336,56 +318,56 @@ void DebugObserver::showPlayerWindow(void)
 void DebugObserver::showFogWindow(void)
 {
 	if (!enableFogWindow) { return; }
-	auto pFog = Main::GetManager()->GetFog();
+	//auto pFog = Main::GetManager()->GetFog();
 
-	// Begin
-	if (!ImGui::Begin("Fog Window", &enableFogWindow))
-	{
-		ImGui::End();
-		return;
-	}
+	//// Begin
+	//if (!ImGui::Begin("Fog Window", &enableFogWindow))
+	//{
+	//	ImGui::End();
+	//	return;
+	//}
 
-	// Enable
-	auto bEnable = pFog->GetEnable();
-	if (ImGui::Checkbox("Enable", &bEnable))
-	{
-		pFog->SetEnable(bEnable);
-	}
+	//// Enable
+	//auto bEnable = pFog->GetEnable();
+	//if (ImGui::Checkbox("Enable", &bEnable))
+	//{
+	//	pFog->SetEnable(bEnable);
+	//}
 
-	// Enable RangeFog
-	auto bRangeFog = pFog->GetEnableRangeFog();
-	if (ImGui::Checkbox("RangeFog", &bRangeFog))
-	{
-		pFog->SetEnableRangeFog(bRangeFog);
-	}
+	//// Enable RangeFog
+	//auto bRangeFog = pFog->GetEnableRangeFog();
+	//if (ImGui::Checkbox("RangeFog", &bRangeFog))
+	//{
+	//	pFog->SetEnableRangeFog(bRangeFog);
+	//}
 
-	// Start
-	auto fStart = pFog->GetStart();
-	if (ImGui::InputFloat("Start", &fStart))
-	{
-		pFog->SetStart(fStart);
-	}
+	//// Start
+	//auto fStart = pFog->GetStart();
+	//if (ImGui::InputFloat("Start", &fStart))
+	//{
+	//	pFog->SetStart(fStart);
+	//}
 
-	// End
-	auto fEnd = pFog->GetEnd();
-	if (ImGui::InputFloat("End", &fEnd))
-	{
-		pFog->SetEnd(fEnd);
-	}
+	//// End
+	//auto fEnd = pFog->GetEnd();
+	//if (ImGui::InputFloat("End", &fEnd))
+	//{
+	//	pFog->SetEnd(fEnd);
+	//}
 
-	// Density
-	auto fDensity = pFog->GetDensity();
-	if (ImGui::InputFloat("Density", &fDensity))
-	{
-		pFog->SetDensity(fDensity);
-	}
+	//// Density
+	//auto fDensity = pFog->GetDensity();
+	//if (ImGui::InputFloat("Density", &fDensity))
+	//{
+	//	pFog->SetDensity(fDensity);
+	//}
 
-	// Color
-	auto cColor = pFog->GetColor();
-	if (ImGui::ColorEdit4("Color", (float*)&cColor))
-	{
-		pFog->SetColor(cColor);
-	}
+	//// Color
+	//auto cColor = pFog->GetColor();
+	//if (ImGui::ColorEdit4("Color", (float*)&cColor))
+	//{
+	//	pFog->SetColor(cColor);
+	//}
 
 	// End
 	ImGui::End();

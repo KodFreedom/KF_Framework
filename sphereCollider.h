@@ -24,7 +24,7 @@ public:
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
 	SphereCollider(GameObject* const owner, const ColliderMode& mode, const float& radius)
-		: Collider(owner, Sphere, mode)
+		: Collider(owner, CT_Sphere, mode)
 		, radius(radius) {}
 	~SphereCollider() {}
 

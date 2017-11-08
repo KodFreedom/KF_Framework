@@ -37,17 +37,17 @@ void RenderManager::Render(void)
 	int previousSynthesis = -1;
 	int previousCullMode = -1;
 	int previousLighting = -1;
-	for (int countAlpha = 0; countAlpha < Alpha::Max; ++countAlpha)
+	for (int countAlpha = 0; countAlpha < A_Max; ++countAlpha)
 	{
-		for (int countFog = 0; countFog < Fog::Max; ++countFog)
+		for (int countFog = 0; countFog < Fog_Max; ++countFog)
 		{
-			for (int countFillMode = 0; countFillMode < FillMode::Max; ++countFillMode)
+			for (int countFillMode = 0; countFillMode < Fill_Max; ++countFillMode)
 			{
-				for (int countSynthesis = 0; countSynthesis < Synthesis::Max; ++countSynthesis)
+				for (int countSynthesis = 0; countSynthesis < S_Max; ++countSynthesis)
 				{
-					for (int countCullMode = 0; countCullMode < CullMode::Max; ++countCullMode)
+					for (int countCullMode = 0; countCullMode < Cull_Max; ++countCullMode)
 					{
-						for (int countLighting = 0; countLighting < Lighting::Max; ++countLighting)
+						for (int countLighting = 0; countLighting < Lighting_Max; ++countLighting)
 						{
 							auto& renderers = renderersArrays[countAlpha][countFog]
 								[countFillMode][countSynthesis][countCullMode][countLighting];

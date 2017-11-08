@@ -121,9 +121,9 @@ bool Input::init(HINSTANCE hInst, HWND hWnd)
 //--------------------------------------------------------------------------------
 void Input::updateInputInfo(void)
 {
-	bool pressFlags[(int)Key::Max] = { 0 };
-	bool triggerFlags[(int)Key::Max] = { 0 };
-	bool releaseFlags[(int)Key::Max] = { 0 };
+	bool pressFlags[(int)Key_Max] = { 0 };
+	bool triggerFlags[(int)Key_Max] = { 0 };
+	bool releaseFlags[(int)Key_Max] = { 0 };
 
 	// Move
 	float keyboardAxisX = -(float)keyboard->GetPress(DIK_A) + (float)keyboard->GetPress(DIK_D);
@@ -200,14 +200,14 @@ void Input::updateInputInfo(void)
 	releaseFlags[(int)Key::Reset] = keyboard->GetRelease(DIK_R);
 
 	// Lock
-	pressFlags[(int)Key::Lock] = mouse->GetPress(MouseButton::Right);
-	triggerFlags[(int)Key::Lock] = mouse->GetTrigger(MouseButton::Right);
-	releaseFlags[(int)Key::Lock] = mouse->GetRelease(MouseButton::Right);
+	pressFlags[(int)Key::Lock] = mouse->GetPress(MouseButton::M_Right);
+	triggerFlags[(int)Key::Lock] = mouse->GetTrigger(MouseButton::M_Right);
+	releaseFlags[(int)Key::Lock] = mouse->GetRelease(MouseButton::M_Right);
 
 	pressInfos = 0;
 	triggerInfos = 0;
 	releaseInfos = 0;
-	for (int count = 0; count < (int)Key::Max; ++count)
+	for (int count = 0; count < (int)Key_Max; ++count)
 	{
 		pressInfos |= pressFlags[count] << count;
 		triggerInfos |= triggerFlags[count] << count;

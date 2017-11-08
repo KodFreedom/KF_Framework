@@ -24,20 +24,20 @@ class GameObject;
 //--------------------------------------------------------------------------------
 enum ColliderMode
 {
-	Static = 0,
-	Dynamic,
-	Max
+	CM_Static = 0,
+	CM_Dynamic,
+	CM_Max
 };
 
 enum ColliderType
 {
-	Sphere = 0,
-	AABB,
-	OBB,
-	Plane,
-	Cylinder,
-	Max,		//ˆÈ‰º‚Í“Á•Ê‚ÈCollider(Static–”‚ÍDynamic‚Ì‚ÝŽg‚¤)
-	Field
+	CT_Sphere = 0,
+	CT_AABB,
+	CT_OBB,
+	CT_Plane,
+	CT_Cylinder,
+	CT_Max,		//ˆÈ‰º‚Í“Á•Ê‚ÈCollider(Static–”‚ÍDynamic‚Ì‚ÝŽg‚¤)
+	CT_Field
 };
 
 //--------------------------------------------------------------------------------
@@ -134,8 +134,8 @@ private:
 	//--------------------------------------------------------------------------------
 	union
 	{
-		list<Collider*> collidersArray[ColliderMode::Max * ColliderType::Max];
-		list<Collider*> collidersArrays[ColliderMode::Max][ColliderType::Max];
+		list<Collider*> collidersArray[CM_Max * CT_Max];
+		list<Collider*> collidersArrays[CM_Max][CT_Max];
 	};
 	list<Collider*>			fields;
 	static CollisionSystem*	instance;

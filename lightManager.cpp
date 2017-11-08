@@ -22,11 +22,11 @@ LightManager* LightManager::instance = nullptr;
 //  ÉâÉCÉgÇÃê∂ê¨èàóù
 //--------------------------------------------------------------------------------
 int	LightManager::CreateLight(const LightType& type,
-	const Vector3& position = Vector3::Zero, const Vector3& direction = Vector3::Forward,
-	const Color& diffuse = Color::White, const Color& ambient = Color::Gray)
+	const Vector3& position, const Vector3& direction,
+	const Color& diffuse, const Color& ambient)
 {
 	int id = lights.size();
-	auto light = new Light(type, position, direction, diffuse, ambient);
+	auto light = new Light(id, type, position, direction, diffuse, ambient);
 	lights.emplace(id, light);
 	return id;
 }

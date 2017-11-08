@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-SoundManager::Paramater SoundManager::paramaters[SoundLabel::Max] =
+SoundManager::Paramater SoundManager::paramaters[SL_Max] =
 {
 	{ "data/BGM/gameBGM.wav", -1 },	// BGM
 };
@@ -27,7 +27,7 @@ SoundManager::SoundManager()
 	: instanceXAudio2(nullptr)
 	, masteringVoice(nullptr)
 {
-	for (int count = 0; count < (int)SoundLabel::Max; ++count)
+	for (int count = 0; count < (int)SL_Max; ++count)
 	{
 		sourceVoices[count] = nullptr;
 		audioDatas[count] = nullptr;
@@ -75,7 +75,7 @@ HRESULT	SoundManager::LoadAll(void)
 	}
 
 	// サウンドデータの初期化
-	for (int count = 0; count < SoundLabel::Max; ++count)
+	for (int count = 0; count < SL_Max; ++count)
 	{
 		HANDLE file;
 		DWORD chunkSize = 0;
@@ -176,7 +176,7 @@ HRESULT	SoundManager::LoadAll(void)
 //--------------------------------------------------------------------------------
 void SoundManager::UnloadAll(void)
 {
-	for (int count = 0; count < SoundLabel::Max; ++count)
+	for (int count = 0; count < SL_Max; ++count)
 	{
 		if (sourceVoices[count])
 		{
@@ -295,7 +295,7 @@ bool SoundManager::IsPlaying(const SoundLabel label)
 //--------------------------------------------------------------------------------
 void SoundManager::StopAll(void)
 {
-	for (int count = 0; count < SoundLabel::Max; count++)
+	for (int count = 0; count < SL_Max; count++)
 	{
 		if (sourceVoices[count])
 		{

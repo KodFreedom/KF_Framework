@@ -76,12 +76,12 @@ private:
 			, CurrentMesh(nullptr)
 		{
 			CurrentRenderInfo.TextureName.clear();
-			CurrentRenderInfo.CurrentLighting = Lighting::On;
-			CurrentRenderInfo.CurrentCullMode = CullMode::CCW;
-			CurrentRenderInfo.CurrentSynthesis = Synthesis::Multiplication;
-			CurrentRenderInfo.CurrentFillMode = FillMode::Solid;
-			CurrentRenderInfo.CurrentAlpha = Alpha::None;
-			CurrentRenderInfo.CurrentFog = Fog::On;
+			CurrentRenderInfo.CurrentLighting = Lighting_On;
+			CurrentRenderInfo.CurrentCullMode = Cull_CCW;
+			CurrentRenderInfo.CurrentSynthesis = S_Multiplication;
+			CurrentRenderInfo.CurrentFillMode = Fill_Solid;
+			CurrentRenderInfo.CurrentAlpha = A_None;
+			CurrentRenderInfo.CurrentFog = Fog_On;
 		}
 		unsigned short	UserNumber;
 		MeshInfo*		CurrentMesh;

@@ -135,7 +135,7 @@ void RendererDirectX9::SetRenderState(const FillMode& value)
 //--------------------------------------------------------------------------------
 void RendererDirectX9::SetRenderState(const Alpha& value)
 {
-	lpD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, value == Alpha::AlphaTest ? TRUE : FALSE);
+	lpD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, value == A_AlphaTest ? TRUE : FALSE);
 }
 
 //--------------------------------------------------------------------------------

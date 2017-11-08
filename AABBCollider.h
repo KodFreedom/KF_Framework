@@ -21,7 +21,7 @@ public:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	AABBCollider(GameObject* const owner, const ColliderMode& mode, const Vector3& halfSize)
-		: BoxCollider(owner, AABB, mode, halfSize) {}
+		: BoxCollider(owner, CT_AABB, mode, halfSize) {}
 	~AABBCollider() {}
 	void Update(void) override;
 };

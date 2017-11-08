@@ -10,8 +10,8 @@
 #include "main.h"
 #include "textureManager.h"
 #include "playerUI.h"
-#include "playerBehaviorComponent.h"
-#include "actorBehaviorComponent.h"
+#include "playerController.h"
+#include "actorParamater.h"
 
 #ifdef USING_DIRECTX
 #include "KF_UtilityDX.h"
@@ -85,11 +85,11 @@ bool PlayerUI::Init(void)
 void PlayerUI::Update(void)
 {
 	auto iterator = sprites.begin();
-	auto& actorBehavior = playerBehavior->GetActorBehavior();
+	auto& paramater = playerBehavior->GetParamater();
 
 	//To do
 	//HPゲージ更新
-	float lifeRate = actorBehavior.GetLifeNow() / actorBehavior.GetLifeMax();
+	float lifeRate = paramater.GetCurrentLife() / paramater.GetMaxLife();
 	Color color = Math::Lerp(lifeGaugeColorMin, lifeGaugeColorMax, lifeRate);
 #ifdef USING_DIRECTX
 	UtilityDX::UpdateVertexGauge(iterator->pVtxBuffer, lifeGaugePosLeftTop, lifeGaugeSize, lifeRate, color);

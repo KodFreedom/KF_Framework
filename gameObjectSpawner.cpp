@@ -47,7 +47,7 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	mesh->SetMeshName("skyBox");
 	result->SetMesh(mesh);
 	auto renderer = new MeshRenderer3D(result);
-	renderer->Set(Lighting::Off);
+	renderer->Set(Lighting_Off);
 	renderer->Set("skybox000.jpg");
 	result->AddRenderer(renderer);
 
@@ -98,7 +98,7 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	auto renderer = new MeshRenderer3D(result);
 	renderer->Set("nomal_cube.jpg");
 	result->AddRenderer(renderer);
-	result->AddCollider(new OBBCollider(result, Dynamic, scale * 0.5f));
+	result->AddCollider(new OBBCollider(result, CM_Dynamic, scale * 0.5f));
 	result->SetRigidbody(new Rigidbody3D(result));
 
 	//パラメーター
@@ -151,7 +151,7 @@ GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 	result->SetTag("Goal");
 
 	//コライダー
-	auto collider = new SphereCollider(result, Static, 2.0f);
+	auto collider = new SphereCollider(result, CM_Static, 2.0f);
 	collider->SetTrigger(true);
 	collider->SetTag("Goal");
 	result->AddCollider(collider);
@@ -218,7 +218,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const string &actorPath, const 
 	result->SetRigidbody(rigidbody);
 	result->SetAnimator(new Animator(result, actorPath));
 	result->AddBehavior(new PlayerController(result, *rigidbody));
-	auto collider = new SphereCollider(result, Dynamic, 0.6f);
+	auto collider = new SphereCollider(result, CM_Dynamic, 0.6f);
 	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	collider->SetTag("body");
 	result->AddCollider(collider);
@@ -255,11 +255,11 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const string &actorPath, const V
 	result->AddBehavior(new EnemyController(result, *rigidbody));
 
 	//コライダー
-	auto collider = new SphereCollider(result, Dynamic, 0.6f);
+	auto collider = new SphereCollider(result, CM_Dynamic, 0.6f);
 	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	collider->SetTag("body");
 	result->AddCollider(collider);
-	auto detector = new SphereCollider(result, Dynamic, 6.0f);
+	auto detector = new SphereCollider(result, CM_Dynamic, 6.0f);
 	detector->SetTrigger(true);
 	detector->SetTag("detector");
 	result->AddCollider(detector);
@@ -370,14 +370,14 @@ GameObject* GameObjectSpawner::createChildNode(Transform* parent, FILE* filePoin
 		Collider* collider = nullptr;
 		switch ((ColliderType)colliderType)
 		{
-		case Sphere:
-			collider = new SphereCollider(result, Static, colliderScale.X);
+		case CT_Sphere:
+			collider = new SphereCollider(result, CM_Static, colliderScale.X);
 			break;
-		case AABB:
-			collider = new AABBCollider(result, Static, colliderScale * 0.5f);
+		case CT_AABB:
+			collider = new AABBCollider(result, CM_Static, colliderScale * 0.5f);
 			break;
-		case OBB:
-			collider = new OBBCollider(result, Static, colliderScale * 0.5f);
+		case CT_OBB:
+			collider = new OBBCollider(result, CM_Static, colliderScale * 0.5f);
 			break;
 		default:
 			break;

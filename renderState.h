@@ -26,46 +26,46 @@
 
 enum Lighting
 {
-	Off = 0,
-	On,
-	Max
+	Lighting_Off = 0,
+	Lighting_On,
+	Lighting_Max
 };
 
 enum CullMode
 {
-	None = 0,
-	CW,
-	CCW,
-	Max
+	Cull_None = 0,
+	Cull_CW,
+	Cull_CCW,
+	Cull_Max
 };
 
 enum Synthesis
 {
-	Multiplication = 0,
-	Additive,
-	Subtractive,
-	Max
+	S_Multiplication = 0,
+	S_Additive,
+	S_Subtractive,
+	S_Max
 };
 
 enum FillMode
 {
-	Point = 0,
-	WireFrame,
-	Solid,
-	Max
+	Fill_Point = 0,
+	Fill_WireFrame,
+	Fill_Solid,
+	Fill_Max
 };
 
 enum Fog
 {
-	Off = 0,
-	On,
-	Max
+	Fog_Off = 0,
+	Fog_On,
+	Fog_Max
 };
 
 enum Alpha
 {
-	None = 0,
-	AlphaTest,
-	ZSort,
-	Max
+	A_None = 0,
+	A_AlphaTest,
+	A_ZSort,
+	A_Max
 };

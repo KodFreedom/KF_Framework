@@ -53,8 +53,8 @@ private:
 	//--------------------------------------------------------------------------------
 	union
 	{
-		list<MeshRenderer*> renderersArray[Alpha::Max * Fog::Max * FillMode::Max * Synthesis::Max * CullMode::Max * Lighting::Max];
-		list<MeshRenderer*> renderersArrays[Alpha::Max][Fog::Max][FillMode::Max][Synthesis::Max][CullMode::Max][Lighting::Max];
+		list<MeshRenderer*> renderersArray[A_Max * Fog_Max * Fill_Max * S_Max * Cull_Max * Lighting_Max];
+		list<MeshRenderer*> renderersArrays[A_Max][Fog_Max][Fill_Max][S_Max][Cull_Max][Lighting_Max];
 	};
 	static RenderManager*	instance;
 };

@@ -59,7 +59,7 @@ void PlayerController::Update(void)
 	auto& axis = Vector2(input->MoveHorizontal(), input->MoveVertical());
 	auto camera = CameraManager::Instance()->GetMainCamera();
 	auto& cameraForward = Vector3::Scale(camera->GetForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-	movement = (camera->GetRight() * axis.X + cameraForward * axis.Y).Normalized;
+	movement = (camera->GetRight() * axis.X + cameraForward * axis.Y).Normalized();
 	isJump = input->GetKeyTrigger(Key::Jump);
 	isAttack = input->GetKeyTrigger(Key::Attack);
 	currentState->Act(*this);

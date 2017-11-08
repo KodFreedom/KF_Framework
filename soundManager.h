@@ -16,8 +16,8 @@
 //--------------------------------------------------------------------------------
 enum SoundLabel
 {
-	GameBGM,
-	Max,
+	SL_GameBGM,
+	SL_Max,
 };
 
 //--------------------------------------------------------------------------------
@@ -68,9 +68,9 @@ private:
 	//--------------------------------------------------------------------------------
 	IXAudio2*				instanceXAudio2;
 	IXAudio2MasteringVoice*	masteringVoice;
-	IXAudio2SourceVoice*	sourceVoices[SoundLabel::Max];
-	BYTE*					audioDatas[SoundLabel::Max];
-	DWORD					audioSizes[SoundLabel::Max];
-	static Paramater 		paramaters[SoundLabel::Max];
+	IXAudio2SourceVoice*	sourceVoices[SL_Max];
+	BYTE*					audioDatas[SL_Max];
+	DWORD					audioSizes[SL_Max];
+	static Paramater 		paramaters[SL_Max];
 	static SoundManager*	instance;
 };

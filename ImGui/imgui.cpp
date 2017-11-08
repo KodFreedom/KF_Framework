@@ -323,7 +323,7 @@
  - 2014/10/02 (1.14) - renamed IMGUI_INCLUDE_IMGUI_USER_CPP to IMGUI_INCLUDE_IMGUI_USER_INL and imgui_user.cpp to imgui_user.inl (more IDE friendly)
  - 2014/09/25 (1.13) - removed 'text_end' parameter from IO.SetClipboardTextFn (the string is now always zero-terminated for simplicity)
  - 2014/09/24 (1.12) - renamed SetFontScale() to SetWindowFontScale()
- - 2014/09/24 (1.12) - moved IM_MALLOC/IM_REALLOC/IREE preprocessor defines to IO.MemAllocFn/IO.MemReallocFn/IO.MemFreeFn
+ - 2014/09/24 (1.12) - moved IM_MALLOC/IM_REALLOC/IM_FREE preprocessor defines to IO.MemAllocFn/IO.MemReallocFn/IO.MemFreeFn
  - 2014/08/30 (1.09) - removed IO.FontHeight (now computed automatically)
  - 2014/08/30 (1.09) - moved IMGUI_FONT_TEX_UV_FOR_WHITE preprocessor define to IO.FontTexUvForWhite
  - 2014/08/28 (1.09) - changed the behavior of IO.PixelCenterOffset following various rendering fixes

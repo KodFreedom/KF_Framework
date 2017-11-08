@@ -28,12 +28,12 @@ public:
 	MeshRenderer(GameObject* const owner)
 		: Component(owner)
 		, materialID(0)
-		, lighting(Lighting::On)
-		, cullMode(CullMode::CCW)
-		, synthesis(Synthesis::Multiplication)
-		, fillMode(FillMode::Solid)
-		, alpha(Alpha::None)
-		, fog(Fog::On)
+		, lighting(Lighting_On)
+		, cullMode(Cull_CCW)
+		, synthesis(S_Multiplication)
+		, fillMode(Fill_Solid)
+		, alpha(A_None)
+		, fog(Fog_On)
 	{
 		textureName.clear();
 	}

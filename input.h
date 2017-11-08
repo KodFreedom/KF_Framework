@@ -27,7 +27,7 @@ enum Key
 	Right,
 	Reset,
 	Lock,
-	Max,
+	Key_Max,
 
 	//d‚Ë‚éƒL[
 	Jump = Submit,

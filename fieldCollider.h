@@ -39,7 +39,7 @@ public:
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
 	FieldCollider(GameObject* const owner, const string& fieldName)
-		: Collider(owner, Field, Static)
+		: Collider(owner, CT_Field, CM_Static)
 		, blockXNumber(0)
 		, blockZNumber(0)
 		, blockSize(Vector2::Zero)

@@ -21,6 +21,6 @@ public:
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
 	OBBCollider(GameObject* const owner, const ColliderMode& mode, const Vector3& halfSize)
-		: BoxCollider(owner, OBB, mode, halfSize) {}
+		: BoxCollider(owner, CT_OBB, mode, halfSize) {}
 	~OBBCollider() {}
 };

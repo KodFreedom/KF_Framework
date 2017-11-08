@@ -11,10 +11,10 @@
 //--------------------------------------------------------------------------------
 enum MouseButton
 {
-	Left = 0,
-	Right,
-	Middle,
-	ButtonMax
+	M_Left = 0,
+	M_Right,
+	M_Middle,
+	M_ButtonMax
 };
 
 enum XboxButton
@@ -33,18 +33,18 @@ enum XboxButton
 
 enum XboxCrossKey
 {
-	Up = 0,
-	Down = 18000,
-	Left = 27000,
-	Right = 9000
+	XCK_Up = 0,
+	XCK_Down = 18000,
+	XCK_Left = 27000,
+	XCK_Right = 9000
 };
 
 enum XboxStick
 {
-	Up = -1000,
-	Down = 1000,
-	Left = -1000,
-	Right = 1000
+	XS_Up = -1000,
+	XS_Down = 1000,
+	XS_Left = -1000,
+	XS_Right = 1000
 };
 
 //--------------------------------------------------------------------------------

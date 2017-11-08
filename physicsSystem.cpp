@@ -83,10 +83,10 @@ void PhysicsSystem::resolveVelocity(Collision& collision)
 	if (separatingVelocity > 0.0f) return;
 
 	//’µ‚Ë•Ô‚èŒW”‚ÌZo
-	float bounciness = collision.RigidbodyOne->Bounciness;
+	float bounciness = collision.RigidbodyOne->bounciness;
 	if (collision.RigidbodyTwo)
 	{
-		bounciness += collision.RigidbodyTwo->Bounciness;
+		bounciness += collision.RigidbodyTwo->bounciness;
 		bounciness *= 0.5f;
 	}
 
