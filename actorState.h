@@ -24,10 +24,14 @@ public:
 	//--------------------------------------------------------------------------------
 	ActorState()
 		: movementMultiplyer(1.0f)
-		, groundCheckDistance(0.1f) {}
+		, groundCheckDistance(0.1f) 
+	{
+		currentGroundState.Normal = Vector3::Up;
+		currentGroundState.IsGrounded = false;
+	}
 	~ActorState() {}
 
-	virtual void Act(ActorController& actor);
+	virtual void Act(ActorController& actor) = 0;
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -44,12 +48,13 @@ protected:
 	//--------------------------------------------------------------------------------
 	virtual void move(ActorController& actor);
 	virtual void jump(ActorController& actor);
-	virtual void update(Animator& animator);
-	GroundInfo	 checkGrounded(const Transform& transform);
+	virtual void update(Animator& animator) = 0;
+	void checkGrounded(const ActorController& actor);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	float movementMultiplyer;
-	float groundCheckDistance;
+	float		movementMultiplyer;
+	float		groundCheckDistance;
+	GroundInfo	currentGroundState;
 };

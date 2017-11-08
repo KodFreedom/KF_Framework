@@ -41,6 +41,7 @@ public:
 	auto GetMaxLife(void) const { return maxLife; }
 	auto GetCurrentLife(void) const { return currentLife; }
 	auto GetMoveSpeed(void) const { return moveSpeed; }
+	auto GetJumpSpeed(void) const { return jumpSpeed; }
 	auto GetMinTurnSpeed(void) const { return minTurnSpeed; }
 	auto GetMaxTurnSpeed(void) const { return maxTurnSpeed; }
 
