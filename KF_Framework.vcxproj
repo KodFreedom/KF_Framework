@@ -154,7 +154,11 @@
   <ItemGroup>
     <ClCompile Include="actorState.cpp" />
     <ClCompile Include="cameraManager.cpp" />
+    <ClCompile Include="damagedState.cpp" />
+    <ClCompile Include="jumpState.cpp" />
+    <ClCompile Include="landState.cpp" />
     <ClCompile Include="motionManager.cpp" />
+    <ClCompile Include="neutralState.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="meshRenderer3D.cpp" />
     <ClCompile Include="rigidbody3D.cpp" />
@@ -176,9 +180,9 @@
     <ClCompile Include="meshRenderer.cpp" />
     <ClCompile Include="editorControllerBehaviorComponent.cpp" />
     <ClCompile Include="editorCamera.cpp" />
-    <ClCompile Include="enemyAttackMode.cpp" />
-    <ClCompile Include="enemyBehaviorComponent.cpp" />
-    <ClCompile Include="enemyNormalMode.cpp" />
+    <ClCompile Include="attackModeAI.cpp" />
+    <ClCompile Include="enemyController.cpp" />
+    <ClCompile Include="normalModeAI.cpp" />
     <ClCompile Include="fadeSystem.cpp" />
     <ClCompile Include="fieldCollider.cpp" />
     <ClCompile Include="fieldEditorBehaviorComponent.cpp" />
@@ -218,19 +222,24 @@
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="UISystem.cpp" />
+    <ClCompile Include="walkState.cpp" />
     <ClCompile Include="windmillController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actorState.h" />
     <ClInclude Include="cameraManager.h" />
+    <ClInclude Include="damagedState.h" />
+    <ClInclude Include="jumpState.h" />
+    <ClInclude Include="landState.h" />
     <ClInclude Include="motionManager.h" />
     <ClInclude Include="actorParamater.h" />
+    <ClInclude Include="neutralState.h" />
     <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="meshRenderer3D.h" />
     <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="actorController.h" />
-    <ClInclude Include="AIMode.h" />
+    <ClInclude Include="AI.h" />
     <ClInclude Include="animator.h" />
     <ClInclude Include="behavior.h" />
     <ClInclude Include="backgroundUI.h" />
@@ -238,8 +247,8 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="debugObserver.h" />
     <ClInclude Include="editorControllerBehaviorComponent.h" />
-    <ClInclude Include="enemyAttackMode.h" />
-    <ClInclude Include="enemyNormalMode.h" />
+    <ClInclude Include="attackModeAI.h" />
+    <ClInclude Include="normalModeAI.h" />
     <ClInclude Include="collider.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="fog.h" />
@@ -301,6 +310,7 @@
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
     <ClInclude Include="versionSetting.h" />
+    <ClInclude Include="walkState.h" />
     <ClInclude Include="windmillController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

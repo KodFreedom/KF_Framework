@@ -1,17 +1,17 @@
 //--------------------------------------------------------------------------------
-//	生き物コントローラ
-//　ActorController.cpp
+//	エネミービヘイビアコンポネント
+//　NormalModeAI.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
+//	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "actorController.h"
+#include "normalModeAI.h"
+#include "attackModeAI.h"
+#include "enemyController.h"
 #include "gameObjectActor.h"
 #include "actorState.h"
-#include "animator.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -19,23 +19,15 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//  普通状態
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObjectActor* const owner, const string& name, Rigidbody3D& rigidbody)
-	: Behavior(owner, name), currentState(nullptr), rigidbody(rigidbody)
+void NormalModeAI::Update(EnemyController& enemy)
 {
-	animator = owner->GetAnimator();
-}
+	enemy.SetMovement(Vector3::Zero);
+	enemy.SetAttack(false);
 
-//--------------------------------------------------------------------------------
-//	関数名：Change
-//  関数説明：ステートの切り替え
-//	引数：	state：最新のステート
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void ActorController::Change(ActorState* state)
-{
-	SAFE_DELETE(currentState);
-	currentState = state;
-	currentState->Init(*this);
+	if (enemy.GetTarget())
+	{
+		enemy.Change(new AttackModeAI());
+	}
 }

@@ -1,32 +1,28 @@
 //--------------------------------------------------------------------------------
-//	プレイヤービヘイビアコンポネント
-//　playerBehaviorComponent.h
+//	待機ステート
+//　NeutralState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "actorController.h"
+#include "actorState.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class PlayerController : public ActorController
+class NeutralState : public ActorState
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	PlayerController(GameObjectActor* const owner, Rigidbody3D& rigidbody);
-	~PlayerController() {}
+	NeutralState();
+	~NeutralState() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
-	void	OnCollision(CollisionInfo& collisionInfo) override;
+	void Init(ActorController& actor) override;
+	void Act(ActorController& actor) override;
 };

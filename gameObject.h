@@ -76,7 +76,7 @@ public:
 	auto&		GetBehaviorComponent(void) { return m_listpBehavior; }
 	auto		GetMesh(void) const { return m_mesh; }
 	auto		GetRigidbodyComponent(void) const { return m_pRigidbody; }
-	auto&		GetColliderComponent(void) const { return m_listpCollider; }
+	auto&		GetColliders(void) const { return m_listpCollider; }
 	const auto&	GetName(void) const { return m_strName; }
 	const auto&	GetParentName(void) const
 	{

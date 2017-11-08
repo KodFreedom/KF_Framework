@@ -1,32 +1,34 @@
 //--------------------------------------------------------------------------------
-//	プレイヤービヘイビアコンポネント
-//　playerBehaviorComponent.h
+//	跳ぶステート
+//　JumpState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "actorController.h"
+#include "actorState.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class PlayerController : public ActorController
+class JumpState : public ActorState
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	PlayerController(GameObjectActor* const owner, Rigidbody3D& rigidbody);
-	~PlayerController() {}
+	JumpState();
+	~JumpState() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
-	void	OnCollision(CollisionInfo& collisionInfo) override;
+	void Init(ActorController& actor) override;
+	void Act(ActorController& actor) override;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	static const float airborneGroundCheckDistance;
 };

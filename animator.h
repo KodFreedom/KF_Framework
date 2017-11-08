@@ -38,11 +38,12 @@ public:
 	void	Uninit(void) override;
 	void	Update(void);
 
-	//Setä÷êî
-	void	SetAttack(const bool& value) { isAttack = value; }
-	void	SetGrounded(const bool& value) { isGrounded = value; }
-	void	SetJump(const bool& value) { isJump = value; }
-	void	SetMovement(const float& value) { movement = value; }
+	const string&	GetCurrentAnimationName(void);
+	void			SetAttack(const bool& value) { isAttack = value; }
+	void			SetGrounded(const bool& value) { isGrounded = value; }
+	void			SetJump(const bool& value) { isJump = value; }
+	void			SetDamaged(const bool& value) { isDamaged = value; }
+	void			SetMovement(const float& value) { movement = value; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -60,5 +61,6 @@ private:
 	bool					isGrounded;
 	bool					isAttack;
 	bool					isJump;
+	bool					isDamaged;
 	float					movement;
 };

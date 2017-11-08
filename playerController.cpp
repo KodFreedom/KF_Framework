@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	プレイヤービヘイビアコンポネント
-//　playerBehaviorComponent.cpp
+//　playerController.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -8,14 +8,11 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "playerController.h"
-#include "actorController.h"
 #include "input.h"
-#include "modeDemo.h"
 #include "camera.h"
 #include "cameraManager.h"
 #include "gameObjectActor.h"
-#include "collider.h"
-#include "manager.h"
+#include "neutralState.h"
 
 #ifdef _DEBUG
 #include "debugObserver.h"
@@ -27,9 +24,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-PlayerController::PlayerController(GameObject* const pGameObj, ActorController& actor)
-	: Behavior(pGameObj)
-	, actor(actor)
+PlayerController::PlayerController(GameObjectActor* const owner, Rigidbody3D& rigidbody)
+	: ActorController(owner, "PlayerController", rigidbody)
 {}
 
 //--------------------------------------------------------------------------------
@@ -37,12 +33,13 @@ PlayerController::PlayerController(GameObject* const pGameObj, ActorController& 
 //--------------------------------------------------------------------------------
 bool PlayerController::Init(void)
 {
-	actor.SetLifeMax(100.0f);
-	actor.SetLifeNow(100.0f);
-	actor.SetJumpSpeed(20.0f);
-	actor.SetTurnSpeedMin(2.0f * Pi * DELTA_TIME);
-	actor.SetTurnSpeedMax(4.0f * Pi * DELTA_TIME);
-	actor.SetMoveSpeed(10.0f);
+	Change(new NeutralState);
+	paramater.SetMaxLife(100.0f);
+	paramater.SetCurrentLife(100.0f);
+	paramater.SetJumpSpeed(20.0f);
+	paramater.SetMinTurnSpeed(2.0f * Pi);
+	paramater.SetMaxTurnSpeed(4.0f * Pi);
+	paramater.SetMoveSpeed(100.0f);
 	return true;
 }
 
@@ -62,10 +59,10 @@ void PlayerController::Update(void)
 	auto& axis = Vector2(input->MoveHorizontal(), input->MoveVertical());
 	auto camera = CameraManager::Instance()->GetMainCamera();
 	auto& cameraForward = Vector3::Scale(camera->GetForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-	auto& movement = (camera->GetRight() * axis.X + cameraForward * axis.Y).Normalized;
-	auto isJump = input->GetKeyTrigger(Key::Jump);
-	auto isAttack = input->GetKeyTrigger(Key::Attack);
-	actor.Act(movement, isJump, isAttack);;
+	movement = (camera->GetRight() * axis.X + cameraForward * axis.Y).Normalized;
+	isJump = input->GetKeyTrigger(Key::Jump);
+	isAttack = input->GetKeyTrigger(Key::Attack);
+	currentState->Act(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -73,9 +70,6 @@ void PlayerController::Update(void)
 //--------------------------------------------------------------------------------
 void PlayerController::LateUpdate(void)
 {
-	if (actor.GetLifeNow() <= 0.0f)
-	{
-	}
 }
 
 //--------------------------------------------------------------------------------
@@ -90,7 +84,7 @@ void PlayerController::OnTrigger(Collider& colliderThis, Collider& collider)
 #ifdef _DEBUG
 			DebugObserver::Instance()->DisplayScroll(owner->GetName() + " is hurted by" + collider.GetGameObject()->GetParentName() + "!");
 #endif
-			actor.Hit(5.0f);
+			currentState->OnDamaged(*this, 5.0f);
 		}
 	}
 

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //	エネミービヘイビアコンポネント
-//　enemyBehaviorComponent.h
+//　EnemyController.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -9,48 +9,43 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "behavior.h"
+#include "actorController.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class ActorController;
-class CAIMode;
-class CEnemyNormalMode;
-class CEnemyAttackMode;
+class AI;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  プレイヤー行動コンポネントクラス
-//--------------------------------------------------------------------------------
-class EnemyController : public Behavior
+class EnemyController : public ActorController
 {
-	friend CEnemyNormalMode;
-	friend CEnemyAttackMode;
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	EnemyController(GameObject* const pGameObj, ActorController& actor);
+	EnemyController(GameObjectActor* const owner, Rigidbody3D& rigidbody);
 	~EnemyController() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
+	bool Init(void) override;
+	void Uninit(void) override;
+	void Update(void) override;
+	void LateUpdate(void) override;
+		 
+	void OnTrigger(Collider& colliderThis, Collider& collider) override;
+	void OnCollision(CollisionInfo& collisionInfo) override;
+		 
+	void Change(AI* mode);
+	auto GetTarget(void) { return target; }
+	void SetTarget(GameObject* value) { target = value; }
+	void SetAttack(const bool value) { isAttack = value; }
+	void SetMovement(const Vector3& value) { movement = value; }
 
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
-	void	OnCollision(CollisionInfo& collisionInfo) override;
-
-	void	ChangeMode(CAIMode* pAIMode);
 private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	GameObject*				m_pTarget;
-	CAIMode*					m_pMode;
-	ActorController&	m_actor;
+	GameObject*	target;
+	AI*			currentMode;
 };

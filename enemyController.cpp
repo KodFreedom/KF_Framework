@@ -1,36 +1,34 @@
 //--------------------------------------------------------------------------------
 //	エネミービヘイビアコンポネント
-//　enemyBehaviorComponent.cpp
+//　EnemyController.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "enemyBehaviorComponent.h"
-#include "actorBehaviorComponent.h"
-#include "manager.h"
-#include "mode.h"
+#include "enemyController.h"
 #include "gameObjectActor.h"
 #include "collider.h"
-#include "enemyNormalMode.h"
-#include "enemyAttackMode.h"
+#include "normalModeAI.h"
+#include "neutralState.h"
 
 #ifdef _DEBUG
-#include "debugManager.h"
+#include "debugObserver.h"
 #endif
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//  public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-EnemyController::EnemyController(GameObject* const pGameObj, ActorController& actor)
-	: Behavior(pGameObj)
-	, m_actor(actor)
-	, m_pTarget(nullptr)
-	, m_pMode(nullptr)
+EnemyController::EnemyController(GameObjectActor* const owner, Rigidbody3D& rigidbody)
+	: ActorController(owner, "EnemyController", rigidbody)
+	, target(nullptr)
+	, currentMode(nullptr)
 {}
 
 //--------------------------------------------------------------------------------
@@ -38,13 +36,14 @@ EnemyController::EnemyController(GameObject* const pGameObj, ActorController& ac
 //--------------------------------------------------------------------------------
 bool EnemyController::Init(void)
 {
-	m_pMode = new CEnemyNormalMode;
-	m_actor.SetLifeMax(100.0f);
-	m_actor.SetLifeNow(100.0f);
-	m_actor.SetJumpSpeed(0.0f);
-	m_actor.SetTurnSpeedMin(2.0f * KF_PI * DELTA_TIME);
-	m_actor.SetTurnSpeedMax(4.0f * KF_PI * DELTA_TIME);
-	m_actor.SetMoveSpeed(5.0f);
+	ActorController::Change(new NeutralState);
+	currentMode = new NormalModeAI;
+	paramater.SetMaxLife(100.0f);
+	paramater.SetCurrentLife(100.0f);
+	paramater.SetJumpSpeed(0.0f);
+	paramater.SetMinTurnSpeed(2.0f * Pi);
+	paramater.SetMaxTurnSpeed(4.0f * Pi);
+	paramater.SetMoveSpeed(5.0f);
 	return true;
 }
 
@@ -53,9 +52,7 @@ bool EnemyController::Init(void)
 //--------------------------------------------------------------------------------
 void EnemyController::Uninit(void)
 {
-	if (!m_pMode) { return; }
-	delete m_pMode;
-	m_pMode = nullptr;
+	SAFE_DELETE(currentMode);
 }
 
 //--------------------------------------------------------------------------------
@@ -63,7 +60,8 @@ void EnemyController::Uninit(void)
 //--------------------------------------------------------------------------------
 void EnemyController::Update(void)
 {
-	m_pMode->Update(*this);
+	currentMode->Update(*this);
+	currentState->Act(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -71,12 +69,12 @@ void EnemyController::Update(void)
 //--------------------------------------------------------------------------------
 void EnemyController::LateUpdate(void)
 {
-	if (m_actor.GetLifeNow() <= 0.0f)
+	if (paramater.GetCurrentLife() <= 0.0f)
 	{
 #ifdef _DEBUG
-		Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is dead!\n");
+		DebugObserver::Instance()->DisplayScroll(owner->GetName() + " is dead!\n");
 #endif
-		m_pGameObj->SetAlive(false);
+		owner->SetAlive(false);
 	}
 }
 
@@ -87,22 +85,21 @@ void EnemyController::OnTrigger(Collider& colliderThis, Collider& collider)
 {
 	if (collider.GetGameObject()->GetTag()._Equal("Player"))
 	{//プレイヤー
-		if (colliderThis.GetTag()._Equal("detector") && !m_pTarget)
+		if (colliderThis.GetTag()._Equal("detector") && !target)
 		{//敵検知範囲
 #ifdef _DEBUG
-			Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " find " + collider.GetGameObject()->GetName() + "!\n");
+			DebugObserver::Instance()->DisplayScroll(owner->GetName() + " find " + collider.GetGameObject()->GetName() + "!\n");
 #endif
-			m_pTarget = collider.GetGameObject();
-			ChangeMode(new CEnemyAttackMode);
+			target = collider.GetGameObject();
 		}
 
 		if (collider.GetTag()._Equal("weapon") && colliderThis.GetTag()._Equal("body"))
 		{
 #ifdef _DEBUG
-			Main::GetManager()->GetDebugManager()->DisplayScroll(GetGameObject()->GetName() + " is hurted!\n");
+			DebugObserver::Instance()->DisplayScroll(owner->GetName() + " is hurted!\n");
 #endif
 
-			m_actor.Hit(25.0f);
+			currentState->OnDamaged(*this, 25.0f);
 		}
 	}
 }
@@ -116,11 +113,10 @@ void EnemyController::OnCollision(CollisionInfo& collisionInfo)
 }
 
 //--------------------------------------------------------------------------------
-//  ChangeState
+//  ChangeMode
 //--------------------------------------------------------------------------------
-void EnemyController::ChangeMode(CAIMode* pAIMode)
+void EnemyController::Change(AI* mode)
 {
-	if (!pAIMode) { return; }
-	delete m_pMode;
-	m_pMode = pAIMode;
+	SAFE_DELETE(currentMode);
+	currentMode = mode;
 }

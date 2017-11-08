@@ -109,12 +109,6 @@
     <Filter Include="ソース ファイル\Component\Behavior">
       <UniqueIdentifier>{d980ca8c-896c-4789-9255-ed456b26394a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\AI">
-      <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\AI">
-      <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
     </Filter>
@@ -184,6 +178,12 @@
     <Filter Include="ソース ファイル\Actor\State">
       <UniqueIdentifier>{b05ec256-cc82-4958-89f2-f3a05ad71e78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Actor\AI">
+      <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\AI">
+      <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -239,15 +239,6 @@
     </ClCompile>
     <ClCompile Include="UIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyBehaviorComponent.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyNormalMode.cpp">
-      <Filter>ソース ファイル\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyAttackMode.cpp">
-      <Filter>ソース ファイル\AI</Filter>
     </ClCompile>
     <ClCompile Include="KF_Utility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
@@ -387,6 +378,30 @@
     <ClCompile Include="actorState.cpp">
       <Filter>ソース ファイル\Actor\State</Filter>
     </ClCompile>
+    <ClCompile Include="neutralState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="walkState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="jumpState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="landState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="damagedState.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyController.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="normalModeAI.cpp">
+      <Filter>ソース ファイル\Actor\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="attackModeAI.cpp">
+      <Filter>ソース ファイル\Actor\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -454,15 +469,6 @@
     </ClInclude>
     <ClInclude Include="UIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="AIMode.h">
-      <Filter>ヘッダー ファイル\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyNormalMode.h">
-      <Filter>ヘッダー ファイル\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyAttackMode.h">
-      <Filter>ヘッダー ファイル\AI</Filter>
     </ClInclude>
     <ClInclude Include="KF_Utility.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -631,6 +637,30 @@
     </ClInclude>
     <ClInclude Include="actorParamater.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="neutralState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="walkState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="jumpState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="damagedState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="landState.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>ヘッダー ファイル\Actor\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="normalModeAI.h">
+      <Filter>ヘッダー ファイル\Actor\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="attackModeAI.h">
+      <Filter>ヘッダー ファイル\Actor\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

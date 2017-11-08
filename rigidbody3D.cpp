@@ -146,7 +146,7 @@ void Rigidbody3D::SetMass(const float& value)
 //--------------------------------------------------------------------------------
 //void Rigidbody3D::calculateInertiaTensorWorld(Matrix44& mtxIitWorld)
 //{
-//	auto listCollider = m_pGameObj->GetColliderComponent();
+//	auto listCollider = m_pGameObj->GetColliders();
 //	if (!listCollider.empty())
 //	{
 //		//ワールドマトリクスの取得
@@ -165,7 +165,7 @@ void Rigidbody3D::SetMass(const float& value)
 //		mtxIitWorld = CKFMath::MtxTranspose(mtxIitWorld);
 //	}
 //
-//	/*auto listCollider = m_pGameObj->GetColliderComponent();
+//	/*auto listCollider = m_pGameObj->GetColliders();
 //	if (!listCollider.empty())
 //	{
 //		auto itrBegin = listCollider.begin();

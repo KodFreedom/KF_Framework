@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//	プレイヤービヘイビアコンポネント
-//　playerBehaviorComponent.h
+//	エネミー攻撃モード
+//　AttackModeAI.h
 //	Author : Xu Wenjie
 //	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
@@ -9,24 +9,31 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "actorController.h"
+#include "AI.h"
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  クラス
 //--------------------------------------------------------------------------------
-class PlayerController : public ActorController
+class AttackModeAI : public AI
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	PlayerController(GameObjectActor* const owner, Rigidbody3D& rigidbody);
-	~PlayerController() {}
+	AttackModeAI();
+	~AttackModeAI() override {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
-	void	OnTrigger(Collider& colliderThis, Collider& collider) override;
-	void	OnCollision(CollisionInfo& collisionInfo) override;
+	void Update(EnemyController& enemy) override;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  静的メンバ変数
+	//--------------------------------------------------------------------------------
+	static const float coolDownTime;
+	static const float attackRange;
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	float coolDown;
 };

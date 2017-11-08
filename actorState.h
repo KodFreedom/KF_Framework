@@ -22,8 +22,9 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	ActorState()
-		: movementMultiplyer(1.0f)
+	ActorState(const string& name, const float& movementMultiplyer = 1.0f)
+		: name(name)
+		, movementMultiplyer(movementMultiplyer)
 		, groundCheckDistance(0.1f) 
 	{
 		currentGroundState.Normal = Vector3::Up;
@@ -31,7 +32,9 @@ public:
 	}
 	~ActorState() {}
 
+	virtual void Init(ActorController& actor) = 0;
 	virtual void Act(ActorController& actor) = 0;
+	virtual void OnDamaged(ActorController& actor, const float& damage);
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -48,13 +51,13 @@ protected:
 	//--------------------------------------------------------------------------------
 	virtual void move(ActorController& actor);
 	virtual void jump(ActorController& actor);
-	virtual void update(Animator& animator) = 0;
 	void checkGrounded(const ActorController& actor);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	float		movementMultiplyer;
-	float		groundCheckDistance;
-	GroundInfo	currentGroundState;
+	const string	name;
+	float			movementMultiplyer;
+	float			groundCheckDistance;
+	GroundInfo		currentGroundState;
 };

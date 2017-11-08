@@ -1,23 +1,29 @@
 //--------------------------------------------------------------------------------
-//	エネミーノーマルモード
-//　enemyNormalMode.h
+//	ダメージ受けたステート
+//　DamagedState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "AIMode.h"
+#include "actorState.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  クラス宣言
 //--------------------------------------------------------------------------------
-class CEnemyNormalMode : public CAIMode
+class DamagedState : public ActorState
 {
 public:
-	CEnemyNormalMode() : CAIMode(ANormal) {}
-	~CEnemyNormalMode() override {}
-	void Update(EnemyController& enemy) override;
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	DamagedState();
+	~DamagedState() {}
+
+	void Init(ActorController& actor) override;
+	void Act(ActorController& actor) override;
+	void OnDamaged(ActorController& actor, const float& damage) override {}
 };

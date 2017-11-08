@@ -1,41 +1,62 @@
 //--------------------------------------------------------------------------------
-//	生き物コントローラ
-//　ActorController.cpp
+//	待機ステート
+//　NeutralState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+#include "neutralState.h"
+#include "walkState.h"
+#include "jumpState.h"
 #include "actorController.h"
-#include "gameObjectActor.h"
-#include "actorState.h"
 #include "animator.h"
 
 //--------------------------------------------------------------------------------
 //
-//  Public
+//	public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObjectActor* const owner, const string& name, Rigidbody3D& rigidbody)
-	: Behavior(owner, name), currentState(nullptr), rigidbody(rigidbody)
+NeutralState::NeutralState()
+	: ActorState("Neutral") {}
+
+//--------------------------------------------------------------------------------
+//	関数名：Init
+//  関数説明：初期化関数
+//	引数：	actor：アクターコントローラ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void NeutralState::Init(ActorController& actor)
 {
-	animator = owner->GetAnimator();
+	auto animator = actor.GetAnimator();
+	animator->SetAttack(false);
+	animator->SetDamaged(false);
+	animator->SetMovement(0.0f);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Change
-//  関数説明：ステートの切り替え
-//	引数：	state：最新のステート
+//	関数名：Act
+//  関数説明：行動関数
+//	引数：	actor：アクターコントローラ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void ActorController::Change(ActorState* state)
+void NeutralState::Act(ActorController& actor)
 {
-	SAFE_DELETE(currentState);
-	currentState = state;
-	currentState->Init(*this);
+	if (actor.GetMovement().SquareMagnitude() > 0.0f)
+	{
+		actor.Change(new WalkState);
+		return;
+	}
+
+	if (actor.GetIsJump())
+	{
+		jump(actor);
+		actor.Change(new JumpState);
+		return;
+	}
 }

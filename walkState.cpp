@@ -1,41 +1,62 @@
 //--------------------------------------------------------------------------------
-//	生き物コントローラ
-//　ActorController.cpp
+//	歩くステート
+//　walkState.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
+//	Date   : 2017-11-07
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
+#include "walkState.h"
+#include "neutralState.h"
+#include "jumpState.h"
 #include "actorController.h"
-#include "gameObjectActor.h"
-#include "actorState.h"
 #include "animator.h"
 
 //--------------------------------------------------------------------------------
 //
-//  Public
+//	public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObjectActor* const owner, const string& name, Rigidbody3D& rigidbody)
-	: Behavior(owner, name), currentState(nullptr), rigidbody(rigidbody)
+WalkState::WalkState()
+	: ActorState("Walk") {}
+
+//--------------------------------------------------------------------------------
+//	関数名：Init
+//  関数説明：初期化関数
+//	引数：	actor：アクターコントローラ
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void WalkState::Init(ActorController& actor)
 {
-	animator = owner->GetAnimator();
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Change
-//  関数説明：ステートの切り替え
-//	引数：	state：最新のステート
+//	関数名：Act
+//  関数説明：行動関数
+//	引数：	actor：アクターコントローラ
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void ActorController::Change(ActorState* state)
+void WalkState::Act(ActorController& actor)
 {
-	SAFE_DELETE(currentState);
-	currentState = state;
-	currentState->Init(*this);
+	if (actor.GetMovement().SquareMagnitude() <= 0.0f)
+	{
+		actor.Change(new NeutralState);
+		return;
+	}
+
+	checkGrounded(actor);
+	move(actor);
+	actor.GetAnimator()->SetMovement(actor.GetMovement().Magnitude());
+
+	if (actor.GetIsJump())
+	{
+		jump(actor);
+		actor.Change(new JumpState);
+		return;
+	}
 }

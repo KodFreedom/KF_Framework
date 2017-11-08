@@ -15,6 +15,27 @@
 #include "rigidbody3D.h"
 #include "collisionSystem.h"
 #include "collisionDetector.h"
+#include "damagedState.h"
+
+//--------------------------------------------------------------------------------
+//
+//	public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：OnDamaged
+//  関数説明：ダメージ受けた関数
+//	引数：	damage：ダメージ量
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void ActorState::OnDamaged(ActorController& actor, const float& damage)
+{
+	auto& paramater = actor.GetParamater();
+	auto currentLife = paramater.GetCurrentLife();
+	currentLife = Math::Clamp(currentLife - damage, 0.0f, paramater.GetMaxLife());
+	paramater.SetCurrentLife(currentLife);
+	actor.Change(new DamagedState);
+}
 
 //--------------------------------------------------------------------------------
 //
@@ -39,12 +60,13 @@ void ActorState::move(ActorController& actor)
 		// 回転
 		auto& direction = transform->TransformDirectionToLocal(movement / moveAmount);
 		direction = Vector3::ProjectOnPlane(direction, currentGroundState.Normal);
+		moveAmount *= movementMultiplyer;
 		auto rotationY = atan2f(direction.X, direction.Z);
 		auto turnSpeed = Math::Lerp(paramater.GetMaxTurnSpeed(), paramater.GetMaxTurnSpeed(), moveAmount);
-		transform->RotateByYaw(rotationY * turnSpeed);
+		transform->RotateByYaw(rotationY * turnSpeed * DELTA_TIME);
 
 		//移動
-		transform->SetNextPosition(transform->GetNextPosition() + movement * paramater.GetMoveSpeed());
+		transform->SetNextPosition(transform->GetNextPosition() + movement * paramater.GetMoveSpeed() * DELTA_TIME);
 	}
 }
 
@@ -74,21 +96,15 @@ void ActorState::jump(ActorController& actor)
 void ActorState::checkGrounded(const ActorController& actor)
 {
 	auto& position = actor.GetGameObject()->GetTransform()->GetNextPosition();
-	auto rayHitInfo = CollisionSystem::Instance()->RayCast(Ray(position, Vector3::Down), groundCheckDistance, transform->GetGameObject());
+	auto rayHitInfo = CollisionSystem::Instance()->RayCast(Ray(position, Vector3::Down), groundCheckDistance, actor.GetGameObject());
 	
 	if (rayHitInfo)
 	{
-		//To do : Jump Damage
-		if (!m_bIsGrounded)
-		{
-			float fFallDis = m_fMaxPosY - Position.Y;
-		}
-		m_fMaxPosY = Position.Y;
-		m_bIsGrounded = true;
-		return rayHit.Normal;
+		currentGroundState.IsGrounded = true;
+		currentGroundState.Normal = rayHitInfo->Normal;
+		return;
 	}
 
-	m_fMaxPosY = m_fMaxPosY < Position.Y ? Position.Y : m_fMaxPosY;
-	m_bIsGrounded = false;
-	return CKFMath::sc_vUp;
+	currentGroundState.IsGrounded = false;
+	currentGroundState.Normal = Vector3::Up;
 }

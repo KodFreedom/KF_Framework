@@ -25,10 +25,6 @@ class Rigidbody3D;
 //--------------------------------------------------------------------------------
 class ActorController : public Behavior
 {
-#ifdef _DEBUG
-	friend class DebugObserver;
-#endif // _DEBUG
-
 public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
