@@ -7,10 +7,12 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
+//  インクルードファイル
+//--------------------------------------------------------------------------------
+#include "main.h"
+
+//--------------------------------------------------------------------------------
 //  クラス定義
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	マテリアル
 //--------------------------------------------------------------------------------
 class Material
 {
@@ -34,9 +36,6 @@ public:
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	operator D3DMATERIAL9 () const;
 #endif
-
-	//operator
-	bool operator==(const Material& material) const;
 };
 
 //--------------------------------------------------------------------------------
@@ -58,10 +57,29 @@ public:
 	static void Release(void) { SAFE_UNINIT(instance); }
 	static auto Instance(void) { return instance; }
 
-	const unsigned short	SaveMaterial(const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power);
-	const Material&			GetMaterial(const unsigned short& usID);
+	void		Use(const string& materialName);
+	void		Use(const string& materialName, const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power);
+	void		Disuse(const string& materialName);
+	Material*	GetMaterial(const string& materialName)
+	{
+		auto iterator = materials.find(materialName);
+		if (materials.end() == iterator) return nullptr;
+		return iterator->second.Pointer;
+	}
 
 private:
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct MaterialInfo
+	{
+		MaterialInfo()
+			: UserNumber(1)
+			, Pointer(nullptr) {}
+		int			UserNumber;
+		Material*	Pointer;
+	};
+
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
@@ -73,6 +91,6 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<unsigned short, Material> materials;
+	unordered_map<string, MaterialInfo>		materials;
 	static MaterialManager*					instance;
 };

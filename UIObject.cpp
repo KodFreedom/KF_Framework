@@ -16,7 +16,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-UIObject::UIObject(const unsigned short order)
+UIObject::UIObject(const us order)
 	: order(order)
 {
 	UISystem::Instance()->Register(this);

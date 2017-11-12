@@ -28,8 +28,10 @@
 #endif
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
+CollisionSystem* CollisionSystem::instance = nullptr;
+
 //--------------------------------------------------------------------------------
 //
 //  public
@@ -135,8 +137,6 @@ void CollisionSystem::LateUpdate(void)
 		debugObserver->DisplayAlways('\n');
 	}
 #endif
-
-	Clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -175,31 +175,31 @@ void CollisionSystem::Register(Collider* collider)
 	}
 }
 
-////--------------------------------------------------------------------------------
-////	関数名：Deregister
-////  関数説明：コライダーを削除する
-////	引数：	collider
-////	戻り値：なし
-////--------------------------------------------------------------------------------
-//void CollisionSystem::Deregister(Collider* collider)
-//{
-//	if (collider->GetType() < CT_Max)
-//	{
-//		colliders[collider->GetMode()][collider->GetType()].remove(collider);
-//		return;
-//	}
-//	switch (collider->GetType())
-//	{
-//	case ColliderType::Field:
-//	{
-//		fields.remove(collider);
-//		break;
-//	}
-//	default:
-//		assert("error type!!!");
-//		break;
-//	}
-//}
+//--------------------------------------------------------------------------------
+//	関数名：Deregister
+//  関数説明：コライダーを削除する
+//	引数：	collider
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void CollisionSystem::Deregister(Collider* collider)
+{
+	if (collider->GetType() < CT_Max)
+	{
+		collidersArrays[collider->GetMode()][collider->GetType()].remove(collider);
+		return;
+	}
+	switch (collider->GetType())
+	{
+	case CT_Field:
+	{
+		fields.remove(collider);
+		break;
+	}
+	default:
+		assert("error type!!!");
+		break;
+	}
+}
 
 //--------------------------------------------------------------------------------
 //	関数名：RayCast

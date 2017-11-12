@@ -58,13 +58,13 @@ namespace KF
 		Vector2& operator=(const Vector2& value);
 		bool operator==(const Vector2& value) const;
 
-		Vector2& operator+(const Vector2& value) const;
+		Vector2 operator+(const Vector2& value) const;
 		void operator+=(const Vector2& value);
 
-		Vector2& operator-(const Vector2& value) const;
+		Vector2 operator-(const Vector2& value) const;
 		void operator-=(const Vector2& value);
 
-		Vector2& operator*(const float& value) const;
+		Vector2 operator*(const float& value) const;
 		void operator*=(const float& value);
 		float operator*(const Vector2& value) const;
 
@@ -121,19 +121,19 @@ namespace KF
 		bool operator==(const Vector3& value) const;
 		bool operator!=(const Vector3& value) const;
 
-		Vector3& operator+(const Vector3& value) const;
+		Vector3 operator+(const Vector3& value) const;
 		void operator+=(const Vector3& value);
 
-		Vector3& operator-(const Vector3& value) const;
+		Vector3 operator-(const Vector3& value) const;
 		void operator-=(const Vector3& value);
 
-		Vector3& operator*(const float& value) const;
+		Vector3 operator*(const float& value) const;
 		void operator*=(const float& value);
 
-		Vector3& operator*(const Vector3& value) const;
+		Vector3 operator*(const Vector3& value) const;
 		void operator*=(const Vector3& value);
 
-		Vector3& operator/(const float& value) const;
+		Vector3 operator/(const float& value) const;
 		void operator/=(const float& value);
 
 		// ÉÅÉ\ÉbÉh
@@ -214,7 +214,7 @@ namespace KF
 
 		// éZèpââéZéq
 		Matrix44& operator=(const Matrix44& value);
-		Matrix44& operator*(const Matrix44& value) const;
+		Matrix44 operator*(const Matrix44& value) const;
 		void operator*=(const Matrix44& value);
 
 		// ÉÅÉ\ÉbÉh
@@ -262,15 +262,15 @@ namespace KF
 #endif
 
 		// éZèpââéZéq
-		Quaternion& operator+(const Quaternion& value) const;
+		Quaternion operator+(const Quaternion& value) const;
 		void operator+=(const Quaternion& value);
-		Quaternion& operator-(const Quaternion& value) const;
+		Quaternion operator-(const Quaternion& value) const;
 		void operator-=(const Quaternion& value);
-		Quaternion& operator*(const float& value) const;
+		Quaternion operator*(const float& value) const;
 		void operator*=(const float& value);
-		Quaternion& operator/(const float& value) const;
+		Quaternion operator/(const float& value) const;
 		void operator/=(const float& value);
-		Quaternion& operator*(const Quaternion& value) const;
+		Quaternion operator*(const Quaternion& value) const;
 		void operator*=(const Quaternion& value);
 
 		// ÉÅÉ\ÉbÉh
@@ -319,13 +319,13 @@ namespace KF
 		Color& operator=(const Color& value);
 		bool operator==(const Color& value);
 
-		Color& operator+(const Color& value) const;
+		Color operator+(const Color& value) const;
 		void operator+=(const Color& value);
 
-		Color& operator-(const Color& value) const;
+		Color operator-(const Color& value) const;
 		void operator-=(const Color& value);
 
-		Color& operator*(const float& value) const;
+		Color operator*(const float& value) const;
 		void operator*=(const float& value);
 	};
 

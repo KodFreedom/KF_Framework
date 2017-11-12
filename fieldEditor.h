@@ -47,23 +47,25 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	float			getHeight(const Vector3& position);
-	list<int>		getChoosenIndexes(void);
-	void			showMainWindow(void);
+	float		getHeight(const Vector3& position);
+	list<int>	getChoosenIndexes(void);
+	void		showMainWindow(void);
+	void		updateVertexesBy(const list<int>& choosenIndexes);
 
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
-	int				blockXNumber;
-	int				blockZNumber;
-	Vector2			blockSize;
-	vector<Vector3>	vertexes;
-	Vector3			minPosition;
-	Vector3			maxPosition;
-	Vector3			editorPosition;
-	float			editorRadius;
-	float			raiseSpeed;
-	float			extendSpeed;
-	bool			isActive;
+	int					blockXNumber;
+	int					blockZNumber;
+	Vector2				blockSize;
+	Vector3				minPosition;
+	Vector3				maxPosition;
+	Vector3				editorPosition;
+	float				editorRadius;
+	float				raiseSpeed;
+	float				extendSpeed;
+	bool				isActive;
+	vector<VERTEX_3D>	vertexes;
+	list<int>			previousChoosenIndexes;
 };
 #endif // _DEBUG

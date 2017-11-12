@@ -8,7 +8,6 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "textureManager.h"
 
 //--------------------------------------------------------------------------------
@@ -32,25 +31,22 @@ void TextureManager::Use(const string& textureName)
 	auto iterator = textures.find(textureName);
 	if (iterator != textures.end())
 	{
-		++iterator->second.userNumber;
+		++iterator->second.UserNumber;
 		return;
 	}
 
 	//テクスチャの読み込み
-#ifdef USING_DIRECTX
 	TextureInfo info;
-	info.userNumber = 1;
-	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 	string filePath = "data/TEXTURE/" + textureName;
-	HRESULT hr = D3DXCreateTextureFromFile(pDevice, filePath.c_str(), &info.texturePointer);
-	if (FAILED(hr))
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	if (FAILED(D3DXCreateTextureFromFile(device, filePath.c_str(), &info.Pointer)))
 	{
-		string str = filePath + "が見つからない！！！";
-		MessageBox(NULL, str.c_str(), "エラー", MB_OK | MB_ICONWARNING);
-		info.texturePointer = nullptr;
+		string buffer = filePath + "が見つからない！！！";
+		MessageBox(NULL, buffer.c_str(), "エラー", MB_OK | MB_ICONWARNING);
+		info.Pointer = nullptr;
 	}
-	textures.emplace(textureName, info);
 #endif
+	textures.emplace(textureName, info);
 }
 
 //--------------------------------------------------------------------------------
@@ -59,17 +55,19 @@ void TextureManager::Use(const string& textureName)
 void TextureManager::Disuse(const string& textureName)
 {
 	if (textureName.empty()) return;
+
 	auto iterator = textures.find(textureName);
-	if (iterator == textures.end()) return;
-	--iterator->second.userNumber;
-	if (iterator->second.userNumber == 0)
+	if (textures.end() == iterator) return;
+
+	if (--iterator->second.UserNumber <= 0)
 	{// 誰も使ってないので破棄する
-#ifdef USING_DIRECTX
-		SAFE_RELEASE(iterator->second.texturePointer);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		SAFE_RELEASE(iterator->second.Pointer);
 #endif
 		textures.erase(iterator);
 	}
 }
+
 //--------------------------------------------------------------------------------
 //	
 //  Private
@@ -82,8 +80,8 @@ void TextureManager::uninit(void)
 {
 	for (auto iterator = textures.begin(); iterator != textures.end();)
 	{
-#ifdef USING_DIRECTX
-		SAFE_RELEASE(iterator->second.texturePointer);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		SAFE_RELEASE(iterator->second.Pointer);
 #endif
 		iterator = textures.erase(iterator);
 	}

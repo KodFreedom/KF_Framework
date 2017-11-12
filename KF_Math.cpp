@@ -86,7 +86,7 @@ bool Vector2::operator==(const Vector2& value) const
 //	引数：	value : 相手
 //	戻り値：Vector2
 //--------------------------------------------------------------------------------
-Vector2& Vector2::operator+(const Vector2& value) const
+Vector2 Vector2::operator+(const Vector2& value) const
 {
 	return Vector2(X + value.X, Y + value.Y);
 }
@@ -109,7 +109,7 @@ void Vector2::operator+=(const Vector2& value)
 //	引数：	value : 相手
 //	戻り値：Vector2
 //--------------------------------------------------------------------------------
-Vector2& Vector2::operator-(const Vector2& value) const
+Vector2 Vector2::operator-(const Vector2& value) const
 {
 	return Vector2(X - value.X, Y - value.Y);
 }
@@ -143,7 +143,7 @@ float Vector2::operator*(const Vector2& value) const
 //	引数：	value : スケール値
 //	戻り値：Vector2
 //--------------------------------------------------------------------------------
-Vector2& Vector2::operator*(const float& value) const
+Vector2 Vector2::operator*(const float& value) const
 {
 	return Vector2(X * value, Y * value);
 }
@@ -345,7 +345,7 @@ bool Vector3::operator!=(const Vector3& value) const
 //	引数：	value : 相手
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::operator+(const Vector3& value) const
+Vector3 Vector3::operator+(const Vector3& value) const
 {
 	return Vector3(X + value.X, Y + value.Y, Z + value.Z);
 }
@@ -369,7 +369,7 @@ void Vector3::operator+=(const Vector3& value)
 //	引数：	value : 相手
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::operator-(const Vector3& value) const
+Vector3 Vector3::operator-(const Vector3& value) const
 {
 	return Vector3(X - value.X, Y - value.Y, Z - value.Z);
 }
@@ -393,7 +393,7 @@ void Vector3::operator-=(const Vector3& value)
 //	引数：	value : スケール値
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::operator*(const float& value) const
+Vector3 Vector3::operator*(const float& value) const
 {
 	return Vector3(X * value, Y * value, Z * value);
 }
@@ -417,7 +417,7 @@ void Vector3::operator*=(const float& value)
 //	引数：	value : 相手
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::operator*(const Vector3& value) const
+Vector3 Vector3::operator*(const Vector3& value) const
 {
 	return Vector3(Y * value.Z - value.Y * Z, Z * value.X - value.Z * X, X * value.Y - value.X * Y);
 }
@@ -439,7 +439,7 @@ void Vector3::operator*=(const Vector3& value)
 //	引数：	value : スケール値
 //	戻り値：Vector3
 //--------------------------------------------------------------------------------
-Vector3& Vector3::operator/(const float& value) const
+Vector3 Vector3::operator/(const float& value) const
 {
 	return Vector3(X / value, Y / value, Z / value);
 }
@@ -809,7 +809,7 @@ Matrix44& Matrix44::operator=(const Matrix44 &value)
 //	引数：	value : 相手
 //	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-Matrix44& Matrix44::operator*(const Matrix44 &value) const
+Matrix44 Matrix44::operator*(const Matrix44 &value) const
 {
 	Matrix44 result;
 	for (int countY = 0; countY < 4; ++countY)
@@ -1088,7 +1088,7 @@ Matrix44 Matrix44::Transform(const Vector3& rotation, const Vector3& translation
 Matrix44 Matrix44::ProjectionLeftHand(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ)
 {
 	float cosFov = cosf(fovAngleY * 0.5f);
-	float sinFov = sqrt(1.0f - cosFov * cosFov);
+	float sinFov = sqrtf(1.0f - cosFov * cosFov);
 	if (fovAngleY * 0.5f > Pi) sinFov = -sinFov;
 
 	float height = cosFov / sinFov;
@@ -1163,7 +1163,7 @@ Quaternion::operator D3DXQUATERNION() const
 //	引数：	value : 相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::operator+(const Quaternion& value) const
+Quaternion Quaternion::operator+(const Quaternion& value) const
 {
 	return Quaternion(X + value.X, Y + value.Y, Z + value.Z, W + value.W);
 }
@@ -1188,7 +1188,7 @@ void Quaternion::operator+=(const Quaternion& value)
 //	引数：	value : 相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::operator-(const Quaternion& value) const
+Quaternion Quaternion::operator-(const Quaternion& value) const
 {
 	return Quaternion(X - value.X, Y - value.Y, Z - value.Z, W - value.W);
 }
@@ -1213,7 +1213,7 @@ void Quaternion::operator-=(const Quaternion& value)
 //	引数：	value : 相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::operator*(const float& value) const
+Quaternion Quaternion::operator*(const float& value) const
 {
 	return Quaternion(X * value, Y * value, Z * value, W * value);
 }
@@ -1238,7 +1238,7 @@ void Quaternion::operator*=(const float& value)
 //	引数：	value : 相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::operator/(const float& value) const
+Quaternion Quaternion::operator/(const float& value) const
 {
 	return Quaternion(X / value, Y / value, Z / value, W / value);
 }
@@ -1263,7 +1263,7 @@ void Quaternion::operator/=(const float& value)
 //	引数：	value : 相手
 //	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-Quaternion& Quaternion::operator*(const Quaternion& value) const
+Quaternion Quaternion::operator*(const Quaternion& value) const
 {
 	return Quaternion(
 		(value.W * this->X) + (value.X * this->W) + (value.Y * this->Z) - (value.Z * this->Y),
@@ -1448,7 +1448,7 @@ bool Color::operator==(const Color& value)
 //	引数：	value : 値
 //	戻り値：Color
 //--------------------------------------------------------------------------------
-Color& Color::operator+(const Color& value) const
+Color Color::operator+(const Color& value) const
 {
 	return Color(R + value.R, G + value.G, B + value.B, A + value.A);
 }
@@ -1473,7 +1473,7 @@ void Color::operator+=(const Color& value)
 //	引数：	value : 値
 //	戻り値：Color
 //--------------------------------------------------------------------------------
-Color& Color::operator-(const Color& value) const
+Color Color::operator-(const Color& value) const
 {
 	return Color(R - value.R, G - value.G, B - value.B, A - value.A);
 }
@@ -1498,7 +1498,7 @@ void Color::operator-=(const Color& value)
 //	引数：	value : 値
 //	戻り値：Color
 //--------------------------------------------------------------------------------
-Color& Color::operator*(const float& value) const
+Color Color::operator*(const float& value) const
 {
 	return Color(R * value, G * value, B * value, A * value);
 }

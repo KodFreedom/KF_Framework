@@ -1,103 +1,99 @@
 //--------------------------------------------------------------------------------
-//	マテリアルマネージャ
-//　materialManager.h
+//	レンダーステート
+//　renderState.cpp
 //	Author : Xu Wenjie
-//	Date   : 2016-07-24
+//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "materialManager.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-MaterialManager* MaterialManager::instance = nullptr;
+#include "renderState.h"
+#include "renderSystem.h"
 
 //--------------------------------------------------------------------------------
 //
-//	Material
+//  DefaultRenderState
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//
-//  public
-//
+//  Set
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  キャスト(D3DMATERIAL9)
-//	DXの環境のため(マテリアル)オーバーロードする
-//--------------------------------------------------------------------------------
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-Material::operator D3DMATERIAL9() const
+void DefaultRenderState::Set(void)
 {
-	D3DMATERIAL9 result;
-	result.Ambient = ambient;
-	result.Diffuse = diffuse;
-	result.Emissive = emissive;
-	result.Specular = specular;
-	result.Power = power;
-	return result;
-}
-#endif
-
-//--------------------------------------------------------------------------------
-//
-//	MaterialManager
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//
-//  public
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	関数名：Use
-//  関数説明：メッシュの追加
-//	引数：	meshName：メッシュの名前
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MaterialManager::Use(const string& materialName, const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power)
-{
-	auto iterator = materials.find(materialName);
-	if (iterator != materials.end())
-	{// すでに存在してる
-		++iterator->second.UserNumber;
-		return;
-	}
-	MaterialInfo newMaterial;
-	newMaterial.Pointer = new Material(ambient, diffuse, specular, emissive, power);
-	materials.emplace(materialName, newMaterial);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Disuse
-//  関数説明：マテリアルの破棄
-//	引数：	materialName：マテリアルの名前
-//	戻り値：なし
+//  Reset
 //--------------------------------------------------------------------------------
-void MaterialManager::Disuse(const string& materialName)
+void DefaultRenderState::Reset(void)
 {
-	auto iterator = materials.find(materialName);
-	if (materials.end() == iterator) return;
-	if (--iterator->second.UserNumber <= 0)
-	{// 誰も使ってないので破棄する
-		delete iterator->second.Pointer;
-		materials.erase(iterator);
-	}
 }
 
 //--------------------------------------------------------------------------------
 //
-//  private
+//  NoLightNoFog
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	コンストラクタ
+//  Set
 //--------------------------------------------------------------------------------
-MaterialManager::MaterialManager()
+void NoLightNoFog::Set(void)
 {
-	materials.clear();
+	RenderSystem::Instance()->SetRenderState(Lighting_Off);
+	RenderSystem::Instance()->SetRenderState(Fog_Off);
+}
+
+//--------------------------------------------------------------------------------
+//  Reset
+//--------------------------------------------------------------------------------
+void NoLightNoFog::Reset(void)
+{
+	RenderSystem::Instance()->SetRenderState(Lighting_On);
+	RenderSystem::Instance()->SetRenderState(Fog_On);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  NoCullMode
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  Set
+//--------------------------------------------------------------------------------
+void NoCullMode::Set(void)
+{
+	RenderSystem::Instance()->SetRenderState(Cull_None);
+}
+
+//--------------------------------------------------------------------------------
+//  Reset
+//--------------------------------------------------------------------------------
+void NoCullMode::Reset(void)
+{
+	RenderSystem::Instance()->SetRenderState(Cull_CCW);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  NoLightNoFogNoCullMode
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  Set
+//--------------------------------------------------------------------------------
+void NoLightNoFogNoCullMode::Set(void)
+{
+	RenderSystem::Instance()->SetRenderState(Cull_None);
+	RenderSystem::Instance()->SetRenderState(Lighting_Off);
+	RenderSystem::Instance()->SetRenderState(Fog_Off);
+}
+
+//--------------------------------------------------------------------------------
+//  Reset
+//--------------------------------------------------------------------------------
+void NoLightNoFogNoCullMode::Reset(void)
+{
+	RenderSystem::Instance()->SetRenderState(Cull_CCW);
+	RenderSystem::Instance()->SetRenderState(Lighting_On);
+	RenderSystem::Instance()->SetRenderState(Fog_On);
 }

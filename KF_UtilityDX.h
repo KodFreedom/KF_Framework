@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 //struct SPRITE2D
 //{
-//	unsigned short			polygonNumber;
+//	us			polygonNumber;
 //	string					texture;
 //	LPDIRECT3DVERTEXBUFFER9 pVtxBuffer;
 //};
@@ -35,7 +35,7 @@
 //		m_texture.clear();
 //	}
 //
-//	unsigned short			m_polygonNumber;
+//	us			m_polygonNumber;
 //	string					m_texture;
 //	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 //};

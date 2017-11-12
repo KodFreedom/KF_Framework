@@ -38,7 +38,7 @@ public:
 	void	Uninit(void) override;
 	void	Update(void);
 
-	const string&	GetCurrentAnimationName(void);
+	const string	GetCurrentAnimationName(void);
 	void			SetAttack(const bool& value) { isAttack = value; }
 	void			SetGrounded(const bool& value) { isGrounded = value; }
 	void			SetJump(const bool& value) { isJump = value; }

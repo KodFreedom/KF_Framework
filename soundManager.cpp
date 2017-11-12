@@ -12,6 +12,7 @@
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”
 //--------------------------------------------------------------------------------
+SoundManager* SoundManager::instance = nullptr;
 SoundManager::Paramater SoundManager::paramaters[SL_Max] =
 {
 	{ "data/BGM/gameBGM.wav", -1 },	// BGM

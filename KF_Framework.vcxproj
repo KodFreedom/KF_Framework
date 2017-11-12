@@ -159,8 +159,8 @@
     <ClCompile Include="landState.cpp" />
     <ClCompile Include="motionManager.cpp" />
     <ClCompile Include="neutralState.cpp" />
+    <ClCompile Include="renderState.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
-    <ClCompile Include="meshRenderer3D.cpp" />
     <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="thirdPersonCamera.cpp" />
@@ -176,7 +176,6 @@
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="light.cpp" />
     <ClCompile Include="meshRenderer.cpp" />
     <ClCompile Include="editorController.cpp" />
     <ClCompile Include="editorCamera.cpp" />
@@ -202,7 +201,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="materialManager.cpp" />
-    <ClCompile Include="mesh.cpp" />
     <ClCompile Include="meshManager.cpp" />
     <ClCompile Include="mode.cpp" />
     <ClCompile Include="modeDemo.cpp" />
@@ -213,9 +211,9 @@
     <ClCompile Include="motionState.cpp" />
     <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerUI.cpp" />
-    <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="rendererDirectX9.cpp" />
-    <ClCompile Include="renderManager.cpp" />
+    <ClCompile Include="renderSystem.cpp" />
+    <ClCompile Include="renderSystemDirectX9.cpp" />
+    <ClCompile Include="rendererManager.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stageSpawner.cpp" />
     <ClCompile Include="textureManager.cpp" />
@@ -235,7 +233,6 @@
     <ClInclude Include="actorParamater.h" />
     <ClInclude Include="neutralState.h" />
     <ClInclude Include="UIObject2D.h" />
-    <ClInclude Include="meshRenderer3D.h" />
     <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="actorController.h" />
@@ -259,7 +256,6 @@
     <ClInclude Include="ImGui\stb_rect_pack.h" />
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
-    <ClInclude Include="light.h" />
     <ClInclude Include="meshRenderer.h" />
     <ClInclude Include="editorCamera.h" />
     <ClInclude Include="enemyController.h" />
@@ -284,11 +280,9 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="materialManager.h" />
-    <ClInclude Include="meshInfo.h" />
     <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
     <ClInclude Include="modeDemo.h" />
-    <ClInclude Include="mesh.h" />
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motionInfo.h" />
@@ -296,9 +290,9 @@
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="playerUI.h" />
-    <ClInclude Include="renderer.h" />
-    <ClInclude Include="rendererDirectX9.h" />
-    <ClInclude Include="renderManager.h" />
+    <ClInclude Include="renderSystem.h" />
+    <ClInclude Include="renderSystemDirectX9.h" />
+    <ClInclude Include="rendererManager.h" />
     <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbody.h" />
     <ClInclude Include="soundManager.h" />

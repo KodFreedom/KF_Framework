@@ -36,6 +36,8 @@ public:
 		delete this;
 	}
 	//virtual void	ReceiveMsg(const MESSAGE &msg) {}
+	virtual void	Sleep(void) {}
+	virtual void	Awake(void) {}
 	const auto		GetGameObject(void) const { return owner; }
 
 protected:

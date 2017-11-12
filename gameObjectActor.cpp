@@ -39,6 +39,7 @@ bool GameObjectActor::Init(void)
 //--------------------------------------------------------------------------------
 void GameObjectActor::LateUpdate(void)
 {
+	if (!isActive) return;
 	GameObject::LateUpdate();
 	if (animator) animator->Update();
 }

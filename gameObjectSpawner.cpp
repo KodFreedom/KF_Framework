@@ -9,12 +9,11 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "meshManager.h"
-#include "renderManager.h"
+#include "rendererManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
 #include "gameObjectActor.h"
-#include "mesh.h"
-#include "meshRenderer3D.h"
+#include "meshRenderer.h"
 #include "sphereCollider.h"
 #include "OBBCollider.h"
 #include "AABBCollider.h"
@@ -43,12 +42,10 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	auto result = new GameObject;
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName("skyBox");
-	result->SetMesh(mesh);
-	auto renderer = new MeshRenderer3D(result);
-	renderer->Set(Lighting_Off);
-	renderer->Set("skybox000.jpg");
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("skyBox");
+	renderer->SetRenderState(RenderStateType::RS_NoLight_NoFog);
+	renderer->SetTextureName("skybox000.jpg");
 	result->AddRenderer(renderer);
 
 	//パラメーター
@@ -71,11 +68,9 @@ GameObject* GameObjectSpawner::CreateField(const string& stageName)
 	string fieldName = stageName + "Field";
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName(fieldName + ".mesh");
-	result->SetMesh(mesh);
-	auto renderer = new MeshRenderer3D(result);
-	renderer->Set("demoField.jpg");
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(fieldName + ".mesh");
+	renderer->SetTextureName("demoField.jpg");
 	result->AddRenderer(renderer);
 	result->AddCollider(new FieldCollider(result, fieldName));
 
@@ -92,11 +87,9 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	auto result = new GameObject;
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName("cube");
-	result->SetMesh(mesh);
-	auto renderer = new MeshRenderer3D(result);
-	renderer->Set("nomal_cube.jpg");
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("cube");
+	renderer->SetTextureName("nomal_cube.jpg");
 	result->AddRenderer(renderer);
 	result->AddCollider(new OBBCollider(result, CM_Dynamic, scale * 0.5f));
 	result->SetRigidbody(new Rigidbody3D(result));
@@ -124,10 +117,9 @@ GameObject* GameObjectSpawner::CreateXModel(const string& modelName, const Vecto
 	result->SetName(fileInfo.Name);
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName(modelName);
-	result->SetMesh(mesh);
-	result->AddRenderer(new MeshRenderer3D(result));
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(modelName);
+	result->AddRenderer(renderer);
 
 	//パラメーター
 	auto transform = result->GetTransform();
@@ -284,10 +276,9 @@ GameObject* GameObjectSpawner::CreateStageEditor(GameObject* fieldEditor)
 	auto result = new GameObject;
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName("data/MODEL/target.x");
-	result->SetMesh(mesh);
-	result->AddRenderer(new MeshRenderer3D(result));
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("data/MODEL/target.x");
+	result->AddRenderer(renderer);
 	auto modelEditor = new ModelEditor(result);
 	auto editorController = new EditorController(result);
 	editorController->SetFieldEditor(fieldEditor);
@@ -310,11 +301,9 @@ GameObject* GameObjectSpawner::CreateFieldEditor(void)
 	//コンポネント
 	auto pBehavior = new FieldEditor(result);
 	result->AddBehavior(pBehavior);
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName("field");
-	result->SetMesh(mesh);
-	auto renderer = new MeshRenderer3D(result);
-	renderer->Set("editorField.jpg");
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("field");
+	renderer->SetTextureName("editorField.jpg");
 	result->AddRenderer(renderer);
 
 	//初期化
@@ -454,10 +443,9 @@ GameObject* GameObjectSpawner::createChildMesh(Transform* parent, const string& 
 	result->SetName(fileInfo.Name);
 
 	//コンポネント
-	auto mesh = new Mesh(result);
-	mesh->SetMeshName(meshName);
-	result->SetMesh(mesh);
-	result->AddRenderer(new MeshRenderer3D(result));
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(meshName);
+	result->AddRenderer(renderer);
 
 	//パラメーター
 	result->GetTransform()->RegisterParent(parent);

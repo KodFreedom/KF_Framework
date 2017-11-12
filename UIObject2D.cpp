@@ -18,7 +18,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-UIObject2D::UIObject2D(const unsigned short order)
+UIObject2D::UIObject2D(const us order)
 	: UIObject(order)
 {
 	sprites.clear();
@@ -46,7 +46,7 @@ void UIObject2D::Draw(void)
 {
 	for (auto itr = sprites.begin(); itr != sprites.end(); ++itr)
 	{
-#ifdef USING_DIRECTX
+		/*
 		LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
 
 		// 頂点バッファをデータストリームに設定
@@ -67,6 +67,6 @@ void UIObject2D::Draw(void)
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
 			0,							//オフセット
 			itr->polygonNumber);			//ポリゴン数
-#endif
+		*/
 	}
 }

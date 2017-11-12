@@ -46,20 +46,8 @@
     <Filter Include="ヘッダー ファイル\Component\Physics">
       <UniqueIdentifier>{4dfeab76-87b5-4f7f-9bdb-4dcd6105f1c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Renderer">
-      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Mesh">
-      <UniqueIdentifier>{1de6bf1c-e0b1-4d43-a5f7-4daca6978706}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component">
       <UniqueIdentifier>{db3c6369-d237-4a86-b146-db91a518b1b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Mesh">
-      <UniqueIdentifier>{bda8fd06-b5f6-4d17-9e81-62ead9c4f049}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Renderer">
-      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Component\Physics">
       <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
@@ -112,12 +100,6 @@
     <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Render">
-      <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Render">
-      <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\ImGui">
       <UniqueIdentifier>{93f7d4c3-a8e7-476c-848e-4cd79575de54}</UniqueIdentifier>
     </Filter>
@@ -133,12 +115,6 @@
     <Filter Include="ソース ファイル\Base\Input">
       <UniqueIdentifier>{ed1fdc03-55fa-436b-a8b2-86689938f012}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Light">
-      <UniqueIdentifier>{595f0086-f2fb-4877-98af-42862f1eb68a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Light">
-      <UniqueIdentifier>{887ea52b-2460-4d6c-8883-f0338224c7ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Base\Physics">
       <UniqueIdentifier>{dc96726a-86c2-44bf-a293-73ea5034bd78}</UniqueIdentifier>
     </Filter>
@@ -147,9 +123,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Mode">
       <UniqueIdentifier>{1cfef04b-6b22-4cc5-bb53-1947b9c22e4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\MeshInfo">
-      <UniqueIdentifier>{3a61b526-0856-4ed6-a19b-481febd5fb6d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Base\Motion">
       <UniqueIdentifier>{dea147e3-4109-4939-8ad4-ddf15a8bf6a0}</UniqueIdentifier>
@@ -190,6 +163,18 @@
     <Filter Include="ソース ファイル\Component\Behavior\Actor">
       <UniqueIdentifier>{a586df49-f1c4-4f34-a9d4-ac1a669403bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\RenderSystem">
+      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\RenderSystem">
+      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Renderer">
+      <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Renderer">
+      <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -206,9 +191,6 @@
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="textureManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="manager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -261,9 +243,6 @@
     <ClCompile Include="stageSpawner.cpp">
       <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="renderManager.cpp">
-      <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
     </ClCompile>
@@ -279,12 +258,6 @@
     <ClCompile Include="fog.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="rendererDirectX9.cpp">
-      <Filter>ソース ファイル\Base\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="debugObserver.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
@@ -293,12 +266,6 @@
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="lightManager.cpp">
-      <Filter>ソース ファイル\Base\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
     <ClCompile Include="collider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
@@ -343,16 +310,10 @@
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
     <ClCompile Include="meshRenderer.cpp">
-      <Filter>ソース ファイル\Component\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="meshRenderer3D.cpp">
-      <Filter>ソース ファイル\Component\Render</Filter>
+      <Filter>ソース ファイル\Component\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="rigidbody3D.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>ソース ファイル\Component\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
@@ -408,6 +369,24 @@
     <ClCompile Include="playerController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="renderSystem.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="renderSystemDirectX9.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="textureManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="lightManager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="rendererManager.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="renderState.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -431,9 +410,6 @@
     <ClInclude Include="manager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="textureManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="materialManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
@@ -442,9 +418,6 @@
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="renderState.h">
-      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
@@ -488,9 +461,6 @@
     <ClInclude Include="stageSpawner.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="renderManager.h">
-      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
@@ -515,12 +485,6 @@
     <ClInclude Include="fog.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="rendererDirectX9.h">
-      <Filter>ヘッダー ファイル\Base\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="debugObserver.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
@@ -529,12 +493,6 @@
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="lightManager.h">
-      <Filter>ヘッダー ファイル\Base\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>ヘッダー ファイル\Base\Light</Filter>
     </ClInclude>
     <ClInclude Include="collider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
@@ -579,7 +537,7 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="meshRenderer.h">
-      <Filter>ヘッダー ファイル\Component\Render</Filter>
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="cameraManager.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
@@ -590,20 +548,11 @@
     <ClInclude Include="transform.h">
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="meshRenderer3D.h">
-      <Filter>ヘッダー ファイル\Component\Render</Filter>
-    </ClInclude>
     <ClInclude Include="rigidbody.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="rigidbody3D.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="meshInfo.h">
-      <Filter>ヘッダー ファイル\MeshInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>ヘッダー ファイル\Component\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="animator.h">
       <Filter>ヘッダー ファイル\Component\Animator</Filter>
@@ -667,6 +616,24 @@
     </ClInclude>
     <ClInclude Include="editorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="renderSystem.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="renderSystemDirectX9.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="textureManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="lightManager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="rendererManager.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="renderState.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -41,41 +41,41 @@ const Vector2	PlayerUI::faceUVSize = Vector2(0.25f, 1.0f);
 //--------------------------------------------------------------------------------
 bool PlayerUI::Init(void)
 {
-	//HPGauge
-	SPRITE lifeSprite;
-	lifeSprite.polygonNumber = 2;
-	lifeSprite.texture = "playerUILifeGauge.png";
-	TextureManager::Instance()->Use(lifeSprite.texture);
-#ifdef USING_DIRECTX
-	UtilityDX::MakeVertexGauge(lifeSprite.pVtxBuffer, lifeGaugePosLeftTop, lifeGaugeSize, lifeGaugeColorMax);
-#endif
-	sprites.push_back(lifeSprite);
-
-	//EPGauge
-
-	//Skill Icon
-
-	//UltraGauge
-
-	//Covor
-	SPRITE coverSprite;
-	coverSprite.polygonNumber = 2;
-	coverSprite.texture = "playerUICover.png";
-	TextureManager::Instance()->Use(coverSprite.texture);
-#ifdef USING_DIRECTX
-	UtilityDX::MakeVertex(coverSprite.pVtxBuffer, coverCenter, coverSize);
-#endif
-	sprites.push_back(coverSprite);
-
-	//Face顔
-	SPRITE faceSprite;
-	faceSprite.polygonNumber = 2;
-	faceSprite.texture = "playerUIFace.png";
-	TextureManager::Instance()->Use(faceSprite.texture);
-#ifdef USING_DIRECTX
-	UtilityDX::MakeVertex(faceSprite.pVtxBuffer, faceCenter, faceSize, faceUVBegin, faceUVSize);
-#endif
-	sprites.push_back(faceSprite);
+//	//HPGauge
+//	SPRITE lifeSprite;
+//	lifeSprite.polygonNumber = 2;
+//	lifeSprite.texture = "playerUILifeGauge.png";
+//	TextureManager::Instance()->Use(lifeSprite.texture);
+//#ifdef USING_DIRECTX
+//	UtilityDX::MakeVertexGauge(lifeSprite.pVtxBuffer, lifeGaugePosLeftTop, lifeGaugeSize, lifeGaugeColorMax);
+//#endif
+//	sprites.push_back(lifeSprite);
+//
+//	//EPGauge
+//
+//	//Skill Icon
+//
+//	//UltraGauge
+//
+//	//Covor
+//	SPRITE coverSprite;
+//	coverSprite.polygonNumber = 2;
+//	coverSprite.texture = "playerUICover.png";
+//	TextureManager::Instance()->Use(coverSprite.texture);
+//#ifdef USING_DIRECTX
+//	UtilityDX::MakeVertex(coverSprite.pVtxBuffer, coverCenter, coverSize);
+//#endif
+//	sprites.push_back(coverSprite);
+//
+//	//Face顔
+//	SPRITE faceSprite;
+//	faceSprite.polygonNumber = 2;
+//	faceSprite.texture = "playerUIFace.png";
+//	TextureManager::Instance()->Use(faceSprite.texture);
+//#ifdef USING_DIRECTX
+//	UtilityDX::MakeVertex(faceSprite.pVtxBuffer, faceCenter, faceSize, faceUVBegin, faceUVSize);
+//#endif
+//	sprites.push_back(faceSprite);
 	return true;
 }
 
@@ -84,36 +84,36 @@ bool PlayerUI::Init(void)
 //--------------------------------------------------------------------------------
 void PlayerUI::Update(void)
 {
-	auto iterator = sprites.begin();
-	auto& paramater = playerBehavior->GetParamater();
-
-	//To do
-	//HPゲージ更新
-	float lifeRate = paramater.GetCurrentLife() / paramater.GetMaxLife();
-	Color color = Math::Lerp(lifeGaugeColorMin, lifeGaugeColorMax, lifeRate);
-#ifdef USING_DIRECTX
-	UtilityDX::UpdateVertexGauge(iterator->pVtxBuffer, lifeGaugePosLeftTop, lifeGaugeSize, lifeRate, color);
-#endif
-	++iterator;
-
-	//EPゲージ更新
-	//++iterator;
-
-	//ウルトラゲージ更新
-	//++iterator;
-
-	//スキルIcon更新
-	//++iterator;
-
-	//スタイルによってCoverのいろを変える
-	++iterator;
-
-	//HPによって表情を変える
-	float faceU = 0.25f * (int)((0.75f - lifeRate) * 4.0f);
-	faceU = faceU < 0.0f ? 0.0f : faceU;
-#ifdef USING_DIRECTX
-	UtilityDX::UpdateUV(iterator->pVtxBuffer, Vector2(faceU, 0.0f), faceUVSize);
-#endif
+//	auto iterator = sprites.begin();
+//	auto& paramater = playerBehavior->GetParamater();
+//
+//	//To do
+//	//HPゲージ更新
+//	float lifeRate = paramater.GetCurrentLife() / paramater.GetMaxLife();
+//	Color color = Math::Lerp(lifeGaugeColorMin, lifeGaugeColorMax, lifeRate);
+//#ifdef USING_DIRECTX
+//	UtilityDX::UpdateVertexGauge(iterator->pVtxBuffer, lifeGaugePosLeftTop, lifeGaugeSize, lifeRate, color);
+//#endif
+//	++iterator;
+//
+//	//EPゲージ更新
+//	//++iterator;
+//
+//	//ウルトラゲージ更新
+//	//++iterator;
+//
+//	//スキルIcon更新
+//	//++iterator;
+//
+//	//スタイルによってCoverのいろを変える
+//	++iterator;
+//
+//	//HPによって表情を変える
+//	float faceU = 0.25f * (int)((0.75f - lifeRate) * 4.0f);
+//	faceU = faceU < 0.0f ? 0.0f : faceU;
+//#ifdef USING_DIRECTX
+//	UtilityDX::UpdateUV(iterator->pVtxBuffer, Vector2(faceU, 0.0f), faceUVSize);
+//#endif
 }
 
 //--------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ ModeDemo::~ModeDemo()
 //--------------------------------------------------------------------------------
 void ModeDemo::Init(void)
 {	
-	LightManager::Instance()->CreateLight(LightType::Directional, Vector3::Zero, Vector3(0.5f, -0.5f, 0.5f));
+	LightManager::Instance()->CreateLight(LightType::LT_Directional);
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = new ThirdPersionCamera;

@@ -10,32 +10,25 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "component.h"
-#include "renderState.h"
+#include "rendererManager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  描画コンポネントクラス
-//--------------------------------------------------------------------------------
 class MeshRenderer : public Component
 {
-	friend class RenderManager;
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	MeshRenderer(GameObject* const owner)
 		: Component(owner)
-		, materialID(0)
-		, lighting(Lighting_On)
-		, cullMode(Cull_CCW)
-		, synthesis(S_Multiplication)
-		, fillMode(Fill_Solid)
-		, alpha(A_None)
-		, fog(Fog_On)
+		, currentPriority(RP_Default)
+		, currentState(RS_Default)
 	{
+		meshName.clear();
 		textureName.clear();
+		materialName.clear();
 	}
 
 	~MeshRenderer() {}
@@ -43,17 +36,20 @@ public:
 	virtual bool	Init(void) override;
 	virtual void	Uninit(void) override;
 	virtual void	Update(void);
-	virtual void	Render(void) = 0;
 
 	//Set関数
-	void Set(const string& texture);
-	void Set(const unsigned short& usID) { materialID = usID; }
-	void Set(const Lighting& value) { lighting = value; }
-	void Set(const CullMode& value) { cullMode = value; }
-	void Set(const Synthesis& value) { synthesis = value; }
-	void Set(const FillMode& value) { fillMode = value; }
-	void Set(const Alpha& value) { alpha = value; }
-	void Set(const Fog& value) { fog = value; }
+	void SetMeshName(const string& name);
+	void SetTextureName(const string& name);
+	void SetMaterialName(const string& name);
+	void SetRenderPriority(const RenderPriority& value) { currentPriority = value; }
+	void SetRenderState(const RenderStateType& value) { currentState = value; }
+
+	//Get関数
+	const auto& GetMeshName(void) const { return meshName; }
+	const auto& GetTextureName(void) const { return textureName; }
+	const auto& GetMaterialName(void) const { return materialName; }
+	const auto& GetRenderPriority(void) const { return currentPriority; }
+	const auto& GetRenderState(void) const { return currentState; }
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -64,12 +60,9 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
+	string			meshName;
 	string			textureName;
-	unsigned short	materialID;
-	Lighting		lighting;
-	CullMode		cullMode;
-	Synthesis		synthesis;
-	FillMode		fillMode;
-	Alpha			alpha;
-	Fog				fog;
+	string			materialName;
+	RenderPriority	currentPriority;
+	RenderStateType	currentState;
 };

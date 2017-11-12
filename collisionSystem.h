@@ -81,7 +81,7 @@ public:
 #endif
 
 	void		Register(Collider* collider);
-	//void		Deregister(Collider* collider);
+	void		Deregister(Collider* collider);
 	RayHitInfo*	RayCast(const Ray& ray, const float& distance, const GameObject* const rayOwner = nullptr);
 
 private:

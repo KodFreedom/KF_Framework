@@ -9,12 +9,16 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "meshManager.h"
-#include "meshInfo.h"
 #include "KF_Utility.h"
-#include "renderManager.h"
-#include "renderer.h"
+#include "rendererManager.h"
+#include "renderSystem.h"
 #include "camera.h"
 #include "cameraManager.h"
+
+//--------------------------------------------------------------------------------
+//  静的メンバー変数宣言
+//--------------------------------------------------------------------------------
+MeshManager* MeshManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -29,26 +33,46 @@
 //--------------------------------------------------------------------------------
 void MeshManager::Use(const string& meshName)
 {
-	auto itr = meshes.find(meshName);
-	if (itr != meshes.end()) 
+	auto iterator = meshes.find(meshName);
+	if (iterator != meshes.end()) 
 	{// すでに存在してる
-		++itr->second.UserNumber;
+		++iterator->second.UserNumber;
 		return;
 	}
 
 	// メッシュの作成
-	MeshStruct meshStruct;
-	if (meshName.find(".mesh") != string::npos) meshStruct = loadFromMesh(meshName);
-	else if (meshName.find(".x") != string::npos) meshStruct = loadFromXFile(meshName);
-	else if (meshName._Equal("cube")) meshStruct = createCube();
-	else if (meshName._Equal("sphere")) meshStruct = createSphere();
-	else if (meshName._Equal("skyBox")) meshStruct = createSkyBox();
+	MeshInfo newMesh;
+	if (meshName.find(".mesh") != string::npos) newMesh = loadFromMesh(meshName);
+	else if (meshName.find(".x") != string::npos) newMesh = loadFromXFile(meshName);
+	else if (meshName._Equal("cube")) newMesh = createCube();
+	else if (meshName._Equal("sphere")) newMesh = createSphere();
+	else if (meshName._Equal("skyBox")) newMesh = createSkyBox();
 	else
 	{
 		assert("wrong type!!");
 		return;
 	}
-	meshes.emplace(meshName, meshStruct);
+	meshes.emplace(meshName, newMesh);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Use
+//  関数説明：メッシュの追加
+//	引数：	meshName：メッシュの名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MeshManager::Use(const string& meshName, const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes)
+{
+	auto iterator = meshes.find(meshName);
+	if (iterator != meshes.end())
+	{// すでに存在してる
+		++iterator->second.UserNumber;
+		return;
+	}
+
+	// メッシュの作成
+	MeshInfo newMesh = createMesh(type, vertexes, indexes);
+	meshes.emplace(meshName, newMesh);
 }
 
 //--------------------------------------------------------------------------------
@@ -59,252 +83,97 @@ void MeshManager::Use(const string& meshName)
 //--------------------------------------------------------------------------------
 void MeshManager::Disuse(const string& meshName)
 {
-	auto itr = meshes.find(meshName);
-	--itr->second.UserNumber;
-	if (itr->second.UserNumber == 0)
+	auto iterator = meshes.find(meshName);
+	if (meshes.end() == iterator) return;
+	if (--iterator->second.UserNumber <= 0)
 	{// 誰も使ってないので破棄する
-		delete itr->second.CurrentMesh;
-		meshes.erase(itr);
+		delete iterator->second.Pointer;
+		meshes.erase(iterator);
 	}
 }
 
-//--------------------------------------------------------------------------------
-//	関数名：CreateEditorField
-//  関数説明：エディタ用フィールドの作成
-//	引数：	blockXNumber：X方向のブロック数
-//			blockZNumber：Z方向のブロック数
-//			blockSize：ブロックのサイズ
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MeshManager::CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize)
-{
-	auto itr = meshes.find("field");
-	if (itr != meshes.end())
-	{ //すでに存在してる
-		return;
-	}
-
-	auto mesh = new MeshInfo;
-	mesh->VertexNumber = (blockXNumber + 1) * (blockZNumber + 1);
-	mesh->IndexNumber = ((blockXNumber + 1) * 2 + 2) * blockZNumber - 1;
-	mesh->PolygonNumber = (blockXNumber + 2) * 2 * blockZNumber - 4;
-	if (!createBuffer(mesh)) return;
-
-#ifdef USING_DIRECTX
-	//仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
-
-	//頂点バッファをロックして、仮想アドレスを取得する
-	mesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	auto& startPosition = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
-	for (int countZ = 0; countZ < blockZNumber + 1; ++countZ)
-	{
-		for (int countX = 0; countX < blockXNumber + 1; ++countX)
-		{
-			pVtx[countZ * (blockXNumber + 1) + countX].Position = startPosition
-				+ Vector3(countX * blockSize.X, 0.0f, -countZ * blockSize.Y);
-			pVtx[countZ * (blockXNumber + 1) + countX].UV = Vector2(countX * 1.0f / (float)blockXNumber, countZ * 1.0f / (float)blockXNumber);
-			pVtx[countZ * (blockXNumber + 1) + countX].Color = Color(1.0f, 1.0f, 1.0f, 1.0f);
-			pVtx[countZ * (blockXNumber + 1) + countX].Normal = Vector3(0.0f, 1.0f, 0.0f);
-		}
-	}
-
-	//仮想アドレス解放
-	mesh->VertexBuffer->Unlock();
-
-	//インデックス
-	WORD *pIdx;
-	mesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-
-	for (int countZ = 0; countZ < blockZNumber; ++countZ)
-	{
-		for (int countX = 0; countX < (blockXNumber + 1) * 2 + 2; ++countX)
-		{
-			if (countX < (blockXNumber + 1) * 2)
-			{
-				pIdx[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = countX / 2 + (countX + 1) % 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
-			}
-			else if (countZ * ((blockXNumber + 1) * 2 + 2) + countX < (((blockXNumber + 1) * 2 + 2) * blockZNumber - 1))//縮退ポリゴン
-			{
-				pIdx[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = (countX - 1) / 2 % (blockXNumber + 1) + countX % 2 * 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
-			}
-		}
-	}
-
-	mesh->IndexBuffer->Unlock();
-#endif
-
-	//メッシュの作成
-	MeshStruct info;
-	info.CurrentMesh = mesh;
-
-	//保存
-	meshes.emplace("field", info);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：UpdateEditorField
-//  関数説明：エディタ用フィールドデータの更新
-//	引数：	vertexes：頂点データ
-//			choosenIndexes：選択された頂点のインデックス
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MeshManager::UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes)
-{
-#ifdef USING_DIRECTX
-
-	//仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
-
-	//頂点バッファをロックして、仮想アドレスを取得する
-	auto mesh = GetMeshBy("field");
-	mesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	auto color = Color(1.0f);
-	for (int count = 0; count < (int)vertexes.size(); ++count)
-	{
-		pVtx[count].Position = vertexes[count];
-		pVtx[count].Color = color;
-	}
-
-	//Choosen Color
-	int blockXNumber = 100;
-	int blockZNumber = 100;
-	for (auto index : choosenIndexes)
-	{
-		pVtx[index].Color = Color::Red;
-
-		//法線計算
-		int countZ = index / (blockZNumber + 1);
-		int countX = index - countZ * (blockZNumber + 1);
-		Vector3 normal;
-		Vector3 positionThis = pVtx[index].Position;
-		Vector3 positionLeft;
-		Vector3 positionRight;
-		Vector3 positionTop;
-		Vector3 positionBottom;
-
-		if (countX == 0)
-		{
-			positionLeft = positionThis;
-			positionRight = pVtx[countZ * (blockXNumber + 1) + countX + 1].Position;
-		}
-		else if (countX < blockXNumber)
-		{
-			positionLeft = pVtx[countZ * (blockXNumber + 1) + countX - 1].Position;
-			positionRight = pVtx[countZ * (blockXNumber + 1) + countX + 1].Position;
-		}
-		else
-		{
-			positionLeft = pVtx[countZ * (blockXNumber + 1) + countX - 1].Position;
-			positionRight = positionThis;
-		}
-
-		if (countZ == 0)
-		{
-			positionTop = positionThis;
-			positionBottom = pVtx[(countZ + 1) * (blockXNumber + 1) + countX].Position;
-		}
-		else if (countZ < blockZNumber)
-		{
-			positionTop = pVtx[(countZ - 1) * (blockXNumber + 1) + countX].Position;
-			positionBottom = pVtx[(countZ + 1) * (blockXNumber + 1) + countX].Position;
-		}
-		else
-		{
-			positionTop = pVtx[(countZ - 1) * (blockXNumber + 1) + countX].Position;
-			positionBottom = positionThis;
-		}
-		normal = (positionRight - positionLeft) * (positionBottom - positionTop);
-		pVtx[index].Normal = normal.Normalized();
-	}
-
-	//仮想アドレス解放
-	mesh->VertexBuffer->Unlock();
-#endif
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：SaveEditorFieldAs
-//  関数説明：エディタ用フィールドデータの保存
-//	引数：	fileName：ファイル名
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MeshManager::SaveEditorFieldAs(const string& fileName)
-{
-#ifdef USING_DIRECTX
-	auto mesh = GetMeshBy("field");
-
-	//file open
-	string filePath = "data/MESH/" + fileName + ".mesh";
-	FILE *filePointer;
-	fopen_s(&filePointer, filePath.c_str(), "wb");
-
-	//DrawType
-	int drawType = (int)TriangleStrip;
-	fwrite(&drawType, sizeof(int), 1, filePointer);
-
-	//NumVtx
-	fwrite(&mesh->VertexNumber, sizeof(int), 1, filePointer);
-
-	//NumIdx
-	fwrite(&mesh->IndexNumber, sizeof(int), 1, filePointer);
-
-	//NumPolygon
-	fwrite(&mesh->PolygonNumber, sizeof(int), 1, filePointer);
-
-	//Vtx&Idx
-	//頂点データ
-	VERTEX_3D* pVtx;
-	mesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-
-	//色を白に戻す
-	unsigned long white = Color::White;
-	for (int count = 0; count < mesh->VertexNumber; ++count)
-	{
-		pVtx[count].Color = white;
-	}
-
-	//保存
-	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, filePointer);
-	mesh->VertexBuffer->Unlock();
-	
-	//インデックス
-	WORD* pIdx;
-	mesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, filePointer);
-	mesh->IndexBuffer->Unlock();
-	
-	//Texture
-	int nTexSize = 0;
-	fwrite(&nTexSize, sizeof(int), 1, filePointer);
-
-	//Lighting
-	auto lighting = Lighting_On;
-	fwrite(&lighting, sizeof(lighting), 1, filePointer);
-
-	//CullMode
-	auto cullMode = Cull_CCW;
-	fwrite(&cullMode, sizeof(cullMode), 1, filePointer);
-
-	//Synthesis
-	auto synthesis = S_Multiplication;
-	fwrite(&synthesis, sizeof(synthesis), 1, filePointer);
-
-	//FillMode
-	auto fillMode = Fill_Solid;
-	fwrite(&fillMode, sizeof(fillMode), 1, filePointer);
-
-	//Alpha
-	auto alpha = A_None;
-	fwrite(&alpha, sizeof(alpha), 1, filePointer);
-
-	//Fog
-	auto fog = Fog_On;
-	fwrite(&fog, sizeof(fog), 1, filePointer);
-
-	fclose(filePointer);
-#endif
-}
+////--------------------------------------------------------------------------------
+////	関数名：SaveEditorFieldAs
+////  関数説明：エディタ用フィールドデータの保存
+////	引数：	fileName：ファイル名
+////	戻り値：なし
+////--------------------------------------------------------------------------------
+//void MeshManager::SaveEditorFieldAs(const string& fileName)
+//{
+//#ifdef USING_DIRECTX
+//	auto mesh = GetMeshBy("field");
+//
+//	//file open
+//	string filePath = "data/MESH/" + fileName + ".mesh";
+//	FILE *filePointer;
+//	fopen_s(&filePointer, filePath.c_str(), "wb");
+//
+//	//DrawType
+//	int drawType = (int)TriangleStrip;
+//	fwrite(&drawType, sizeof(int), 1, filePointer);
+//
+//	//NumVtx
+//	fwrite(&mesh->VertexNumber, sizeof(int), 1, filePointer);
+//
+//	//NumIdx
+//	fwrite(&mesh->IndexNumber, sizeof(int), 1, filePointer);
+//
+//	//NumPolygon
+//	fwrite(&mesh->PolygonNumber, sizeof(int), 1, filePointer);
+//
+//	//Vtx&Idx
+//	//頂点データ
+//	VERTEX_3D* pVtx;
+//	mesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+//
+//	//色を白に戻す
+//	unsigned long white = Color::White;
+//	for (int count = 0; count < mesh->VertexNumber; ++count)
+//	{
+//		pVtx[count].Color = white;
+//	}
+//
+//	//保存
+//	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, filePointer);
+//	mesh->VertexBuffer->Unlock();
+//	
+//	//インデックス
+//	WORD* pIdx;
+//	mesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+//	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, filePointer);
+//	mesh->IndexBuffer->Unlock();
+//	
+//	//Texture
+//	int nTexSize = 0;
+//	fwrite(&nTexSize, sizeof(int), 1, filePointer);
+//
+//	//Lighting
+//	auto lighting = Lighting_On;
+//	fwrite(&lighting, sizeof(lighting), 1, filePointer);
+//
+//	//CullMode
+//	auto cullMode = Cull_CCW;
+//	fwrite(&cullMode, sizeof(cullMode), 1, filePointer);
+//
+//	//Synthesis
+//	auto synthesis = S_Multiplication;
+//	fwrite(&synthesis, sizeof(synthesis), 1, filePointer);
+//
+//	//FillMode
+//	auto fillMode = Fill_Solid;
+//	fwrite(&fillMode, sizeof(fillMode), 1, filePointer);
+//
+//	//Alpha
+//	auto alpha = A_None;
+//	fwrite(&alpha, sizeof(alpha), 1, filePointer);
+//
+//	//Fog
+//	auto fog = Fog_On;
+//	fwrite(&fog, sizeof(fog), 1, filePointer);
+//
+//	fclose(filePointer);
+//#endif
+//}
 
 //--------------------------------------------------------------------------------
 //
@@ -316,11 +185,10 @@ void MeshManager::SaveEditorFieldAs(const string& fileName)
 //--------------------------------------------------------------------------------
 void MeshManager::uninit(void)
 {
-	for (auto itr = meshes.begin(); itr != meshes.end();)
+	for (auto iterator = meshes.begin(); iterator != meshes.end();)
 	{
-		SAFE_RELEASE(itr->second.CurrentMesh->VertexBuffer);
-		SAFE_RELEASE(itr->second.CurrentMesh->IndexBuffer);
-		itr = meshes.erase(itr);
+		delete iterator->second.Pointer;
+		iterator = meshes.erase(iterator);
 	}
 }
 
@@ -330,10 +198,10 @@ void MeshManager::uninit(void)
 //	引数：	fileName：ファイルの名前 
 //	戻り値：MESH
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::loadFromMesh(const string& fileName)
+MeshManager::MeshInfo MeshManager::loadFromMesh(const string& fileName)
 {
 	string filePath = "data/MESH/" + fileName;
-	MeshStruct info;
+	MeshInfo info;
 	FILE *filePointer;
 
 	//file open
@@ -345,22 +213,22 @@ MeshManager::MeshStruct MeshManager::loadFromMesh(const string& fileName)
 		return info;
 	}
 	
-	info.CurrentMesh = new MeshInfo;
+	info.Pointer = new Mesh;
 
 	//DrawType
-	fread_s(&info.CurrentMesh->CurrentType, sizeof(int), sizeof(int), 1, filePointer);
+	fread_s(&info.Pointer->CurrentType, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumVtx
-	fread_s(&info.CurrentMesh->VertexNumber, sizeof(int), sizeof(int), 1, filePointer);
+	fread_s(&info.Pointer->VertexNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumIdx
-	fread_s(&info.CurrentMesh->IndexNumber, sizeof(int), sizeof(int), 1, filePointer);
+	fread_s(&info.Pointer->IndexNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 	//NumPolygon
-	fread_s(&info.CurrentMesh->PolygonNumber, sizeof(int), sizeof(int), 1, filePointer);
+	fread_s(&info.Pointer->PolygonNumber, sizeof(int), sizeof(int), 1, filePointer);
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(info.CurrentMesh))
+	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
 		return info;
@@ -368,46 +236,46 @@ MeshManager::MeshStruct MeshManager::loadFromMesh(const string& fileName)
 
 	//頂点データ
 	VERTEX_3D* pVtx;
-	info.CurrentMesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fread_s(pVtx, sizeof(VERTEX_3D) * info.CurrentMesh->VertexNumber, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, filePointer);
-	info.CurrentMesh->VertexBuffer->Unlock();
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fread_s(pVtx, sizeof(VERTEX_3D) * info.Pointer->VertexNumber, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
+	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	info.CurrentMesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fread_s(pIdx, sizeof(WORD) * info.CurrentMesh->IndexNumber, sizeof(WORD), info.CurrentMesh->IndexNumber, filePointer);
-	info.CurrentMesh->IndexBuffer->Unlock();
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fread_s(pIdx, sizeof(WORD) * info.Pointer->IndexNumber, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
+	info.Pointer->IndexBuffer->Unlock();
 #endif
 
-	//Texture
-	int stringSize;
-	fread_s(&stringSize, sizeof(int), sizeof(int), 1, filePointer);
-	info.CurrentRenderInfo.TextureName.resize(stringSize);
-	fread_s(&info.CurrentRenderInfo.TextureName[0], stringSize, sizeof(char), stringSize, filePointer);
+	////Texture
+	//int stringSize;
+	//fread_s(&stringSize, sizeof(int), sizeof(int), 1, filePointer);
+	//info.CurrentRenderInfo.TextureName.resize(stringSize);
+	//fread_s(&info.CurrentRenderInfo.TextureName[0], stringSize, sizeof(char), stringSize, filePointer);
 
-	//Render Priority
-	//fread_s(&info.CurrentRenderInfo.CurrentPriority, sizeof(RenderPriority), sizeof(RenderPriority), 1, filePointer);
+	////Render Priority
+	////fread_s(&info.CurrentRenderInfo.CurrentPriority, sizeof(RenderPriority), sizeof(RenderPriority), 1, filePointer);
 
-	//Render State
-	//fread_s(&info.CurrentRenderInfo.CurrentState, sizeof(RenderState), sizeof(RenderState), 1, filePointer);
+	////Render State
+	////fread_s(&info.CurrentRenderInfo.CurrentState, sizeof(RenderState), sizeof(RenderState), 1, filePointer);
 
-	//Lighting
-	fread_s(&info.CurrentRenderInfo.CurrentLighting, sizeof(Lighting), sizeof(Lighting), 1, filePointer);
+	////Lighting
+	//fread_s(&info.CurrentRenderInfo.CurrentLighting, sizeof(Lighting), sizeof(Lighting), 1, filePointer);
 
-	//CullMode
-	fread_s(&info.CurrentRenderInfo.CurrentCullMode, sizeof(CullMode), sizeof(CullMode), 1, filePointer);
+	////CullMode
+	//fread_s(&info.CurrentRenderInfo.CurrentCullMode, sizeof(CullMode), sizeof(CullMode), 1, filePointer);
 
-	//Synthesis
-	fread_s(&info.CurrentRenderInfo.CurrentSynthesis, sizeof(Synthesis), sizeof(Synthesis), 1, filePointer);
+	////Synthesis
+	//fread_s(&info.CurrentRenderInfo.CurrentSynthesis, sizeof(Synthesis), sizeof(Synthesis), 1, filePointer);
 
-	//FillMode
-	fread_s(&info.CurrentRenderInfo.CurrentFillMode, sizeof(FillMode), sizeof(FillMode), 1, filePointer);
+	////FillMode
+	//fread_s(&info.CurrentRenderInfo.CurrentFillMode, sizeof(FillMode), sizeof(FillMode), 1, filePointer);
 
-	//Alpha
-	fread_s(&info.CurrentRenderInfo.CurrentAlpha, sizeof(Alpha), sizeof(Alpha), 1, filePointer);
+	////Alpha
+	//fread_s(&info.CurrentRenderInfo.CurrentAlpha, sizeof(Alpha), sizeof(Alpha), 1, filePointer);
 
-	//Fog
-	fread_s(&info.CurrentRenderInfo.CurrentFog, sizeof(Fog), sizeof(Fog), 1, filePointer);
+	////Fog
+	//fread_s(&info.CurrentRenderInfo.CurrentFog, sizeof(Fog), sizeof(Fog), 1, filePointer);
 
 	fclose(filePointer);
 
@@ -420,9 +288,9 @@ MeshManager::MeshStruct MeshManager::loadFromMesh(const string& fileName)
 //	引数：	filePath：ファイルのパス
 //	戻り値：MESH
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
+MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 {
-	MeshStruct info;
+	MeshInfo info;
 	FILE* filePointer;
 
 	//file open
@@ -434,8 +302,8 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 		return info;
 	}
 
-	info.CurrentMesh = new MeshInfo;
-	info.CurrentMesh->CurrentType = DrawType::TriangleList;
+	info.Pointer = new Mesh;
+	info.Pointer->CurrentType = DrawType::TriangleList;
 	vector<Vector3>	vertexes;
 	vector<Vector3>	normals;
 	vector<Vector2>	uvs;
@@ -479,13 +347,13 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 			Utility::GetStringUntilToken(filePointer, ";", buffer);
 			ss.clear();
 			ss << buffer;
-			ss >> info.CurrentMesh->PolygonNumber;
+			ss >> info.Pointer->PolygonNumber;
 
 			//インデックスの読込
-			info.CurrentMesh->VertexNumber =
-				info.CurrentMesh->IndexNumber = info.CurrentMesh->PolygonNumber * 3;
-			vertexIndexes.resize(info.CurrentMesh->IndexNumber);
-			for (int count = 0; count < info.CurrentMesh->PolygonNumber; ++count)
+			info.Pointer->VertexNumber =
+				info.Pointer->IndexNumber = info.Pointer->PolygonNumber * 3;
+			vertexIndexes.resize(info.Pointer->IndexNumber);
+			for (int count = 0; count < info.Pointer->PolygonNumber; ++count)
 			{
 				//3;を飛ばす
 				Utility::GetStringUntilToken(filePointer, ";", buffer);
@@ -606,14 +474,14 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 			int normalIndexNumber;
 			ss << buffer;
 			ss >> normalIndexNumber;
-			if (normalIndexNumber != info.CurrentMesh->PolygonNumber)
+			if (normalIndexNumber != info.Pointer->PolygonNumber)
 			{//エラー
 				MessageBox(NULL,"MeshManager:法線数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
 			}
 
 			//法線インデックスの読込
 			normalIndexes.resize(normalIndexNumber * 3);
-			for (int count = 0; count < info.CurrentMesh->PolygonNumber; ++count)
+			for (int count = 0; count < info.Pointer->PolygonNumber; ++count)
 			{
 				//3;を飛ばす
 				Utility::GetStringUntilToken(filePointer, ";", buffer);
@@ -666,7 +534,7 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 	fclose(filePointer);
 	
 #ifdef USING_DIRECTX
-	if (!createBuffer(info.CurrentMesh))
+	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
 		return info;
@@ -676,9 +544,9 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 	VERTEX_3D *pVtx;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	info.CurrentMesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
 
-	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
+	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
 		pVtx[count].Position = vertexes[vertexIndexes[count]];
 		pVtx[count].Normal = normals[normalIndexes[count]];
@@ -687,18 +555,18 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 	}
 
 	//仮想アドレス解放
-	info.CurrentMesh->VertexBuffer->Unlock();
+	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	info.CurrentMesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
+	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
 		pIdx[count] = count;
 	}
 
-	info.CurrentMesh->IndexBuffer->Unlock();
+	info.Pointer->IndexBuffer->Unlock();
 #endif
 
 	return info;
@@ -707,16 +575,16 @@ MeshManager::MeshStruct MeshManager::loadFromXFile(const string& filePath)
 //--------------------------------------------------------------------------------
 //  Cubeの作成
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::createCube(void)
+MeshManager::MeshInfo MeshManager::createCube(void)
 {
-	MeshStruct info;
-	info.CurrentMesh = new MeshInfo;
-	info.CurrentMesh->VertexNumber = 6 * 4;
-	info.CurrentMesh->IndexNumber = 6 * 4 + 5 * 2;
-	info.CurrentMesh->PolygonNumber = 6 * 2 + 5 * 4;
+	MeshInfo info;
+	info.Pointer = new Mesh;
+	info.Pointer->VertexNumber = 6 * 4;
+	info.Pointer->IndexNumber = 6 * 4 + 5 * 2;
+	info.Pointer->PolygonNumber = 6 * 2 + 5 * 4;
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(info.CurrentMesh))
+	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
 		return info;
@@ -726,7 +594,7 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 	VERTEX_3D *pVtx;
 
 	// 頂点バッファをロックして、仮想アドレスを取得する
-	info.CurrentMesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	auto& halfSize = Vector3::One * 0.5f;
 	unsigned long white = Color::White;
 	int countVertex = 0;
@@ -811,13 +679,13 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 	}
 
 	// 仮想アドレス解放
-	info.CurrentMesh->VertexBuffer->Unlock();
+	info.Pointer->VertexBuffer->Unlock();
 
 	// インデックス
 	WORD *pIdx;
-	info.CurrentMesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
-	for (int count = 0; count < info.CurrentMesh->IndexNumber; ++count)
+	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
 		if (count % 6 < 4)
 		{
@@ -829,7 +697,7 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 		}
 	}
 
-	info.CurrentMesh->IndexBuffer->Unlock();
+	info.Pointer->IndexBuffer->Unlock();
 
 	// Modelファイルの保存
 	string fileName = "data/MODEL/cube.model";
@@ -884,25 +752,25 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 	fopen_s(&filePointer, fileName.c_str(), "wb");
 
 	// DrawType
-	int drawType = (int)info.CurrentMesh->CurrentType;
+	int drawType = (int)info.Pointer->CurrentType;
 	fwrite(&drawType, sizeof(int), 1, filePointer);
 
 	// NumVtx
-	fwrite(&info.CurrentMesh->VertexNumber, sizeof(int), 1, filePointer);
+	fwrite(&info.Pointer->VertexNumber, sizeof(int), 1, filePointer);
 
 	// NumIdx
-	fwrite(&info.CurrentMesh->IndexNumber, sizeof(int), 1, filePointer);
+	fwrite(&info.Pointer->IndexNumber, sizeof(int), 1, filePointer);
 
 	// NumPolygon
-	fwrite(&info.CurrentMesh->PolygonNumber, sizeof(int), 1, filePointer);
+	fwrite(&info.Pointer->PolygonNumber, sizeof(int), 1, filePointer);
 
 	// Vtx&Idx
-	info.CurrentMesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fwrite(pVtx, sizeof(VERTEX_3D), info.CurrentMesh->VertexNumber, filePointer);
-	info.CurrentMesh->VertexBuffer->Unlock();
-	info.CurrentMesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), info.CurrentMesh->IndexNumber, filePointer);
-	info.CurrentMesh->IndexBuffer->Unlock();
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	fwrite(pVtx, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
+	info.Pointer->VertexBuffer->Unlock();
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	fwrite(pIdx, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
+	info.Pointer->IndexBuffer->Unlock();
 
 	// Texture
 	textureName = "nomal_cube.jpg";
@@ -943,9 +811,9 @@ MeshManager::MeshStruct MeshManager::createCube(void)
 //--------------------------------------------------------------------------------
 //  Sphereの作成
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::createSphere(void)
+MeshManager::MeshInfo MeshManager::createSphere(void)
 {
-	MeshStruct info;
+	MeshInfo info;
 	assert("未実装!!");
 	return info;
 }
@@ -953,16 +821,16 @@ MeshManager::MeshStruct MeshManager::createSphere(void)
 //--------------------------------------------------------------------------------
 //  SkyBoxの作成
 //--------------------------------------------------------------------------------
-MeshManager::MeshStruct MeshManager::createSkyBox(void)
+MeshManager::MeshInfo MeshManager::createSkyBox(void)
 {
-	MeshStruct info;
-	info.CurrentMesh = new MeshInfo;
-	info.CurrentMesh->VertexNumber = 6 * 4;
-	info.CurrentMesh->IndexNumber = 6 * 4 + 5 * 2;
-	info.CurrentMesh->PolygonNumber = 6 * 2 + 5 * 4;
+	MeshInfo info;
+	info.Pointer = new Mesh;
+	info.Pointer->VertexNumber = 6 * 4;
+	info.Pointer->IndexNumber = 6 * 4 + 5 * 2;
+	info.Pointer->PolygonNumber = 6 * 2 + 5 * 4;
 
 #ifdef USING_DIRECTX
-	if (!createBuffer(info.CurrentMesh))
+	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
 		return info;
@@ -972,7 +840,7 @@ MeshManager::MeshStruct MeshManager::createSkyBox(void)
 	VERTEX_3D *pVtx;
 
 	// 頂点バッファをロックして、仮想アドレスを取得する
-	info.CurrentMesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
 	auto camera = CameraManager::Instance()->GetMainCamera();
 	float length = camera ? (float)camera->GetFar() * 0.5f : 500.0f;
 	unsigned long white = Color::White;
@@ -1064,11 +932,11 @@ MeshManager::MeshStruct MeshManager::createSkyBox(void)
 	}
 
 	//仮想アドレス解放
-	info.CurrentMesh->VertexBuffer->Unlock();
+	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
 	WORD *pIdx;
-	info.CurrentMesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
 
 	for (int count = 0; count < 6 * 4 + 5 * 2; ++count)
 	{
@@ -1082,16 +950,16 @@ MeshManager::MeshStruct MeshManager::createSkyBox(void)
 		}
 	}
 
-	info.CurrentMesh->IndexBuffer->Unlock();
+	info.Pointer->IndexBuffer->Unlock();
 #endif
 	
 	//Render State
-	info.CurrentRenderInfo.CurrentLighting = Lighting_Off;
-	info.CurrentRenderInfo.CurrentCullMode = Cull_CCW;
-	info.CurrentRenderInfo.CurrentSynthesis = S_Multiplication;
-	info.CurrentRenderInfo.CurrentFillMode = Fill_Solid;
-	info.CurrentRenderInfo.CurrentAlpha = A_None;
-	info.CurrentRenderInfo.CurrentFog = Fog_Off;
+	//info.CurrentRenderInfo.CurrentLighting = Lighting_Off;
+	//info.CurrentRenderInfo.CurrentCullMode = Cull_CCW;
+	//info.CurrentRenderInfo.CurrentSynthesis = S_Multiplication;
+	//info.CurrentRenderInfo.CurrentFillMode = Fill_Solid;
+	//info.CurrentRenderInfo.CurrentAlpha = A_None;
+	//info.CurrentRenderInfo.CurrentFog = Fog_Off;
 
 	return info;
 }
@@ -1099,14 +967,11 @@ MeshManager::MeshStruct MeshManager::createSkyBox(void)
 //--------------------------------------------------------------------------------
 //  バッファの作成
 //--------------------------------------------------------------------------------
-bool MeshManager::createBuffer(MeshInfo* mesh)
+bool MeshManager::createBuffer(Mesh* mesh)
 {
 #ifdef USING_DIRECTX
-	auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	HRESULT hr;
-
 	//頂点バッファ
-	hr = pDevice->CreateVertexBuffer(
+	HRESULT hr = device->CreateVertexBuffer(
 		sizeof(VERTEX_3D) * mesh->VertexNumber,	//作成したい頂点バッファのサイズ
 		D3DUSAGE_WRITEONLY,						//頂点バッファの使用方法
 		FVF_VERTEX_3D,							//書かなくても大丈夫
@@ -1121,7 +986,7 @@ bool MeshManager::createBuffer(MeshInfo* mesh)
 	}
 
 	//インデックスバッファの作成
-	hr = pDevice->CreateIndexBuffer(
+	hr = device->CreateIndexBuffer(
 		sizeof(WORD) * mesh->IndexNumber,
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,

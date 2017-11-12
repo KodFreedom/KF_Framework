@@ -7,48 +7,57 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
+//  インクルードファイル
+//--------------------------------------------------------------------------------
+#include "main.h"
+
+//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 class TextureManager
 {
-#ifdef _DEBUG
-	friend class DebugObserver;
-#endif // _DEBUG
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	static auto	Create(void)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	static void	Create(const LPDIRECT3DDEVICE9 device)
 	{
-		if (instance) return instance;
+		if (instance) return;
 		instance = new TextureManager;
-		instance->init();
-		return instance;
+		instance->device = device;
 	}
-	static void Release(void) { SAFE_UNINIT(instance); }
+#endif
 	static auto Instance(void) { return instance; }
+	static void Release(void) { SAFE_UNINIT(instance); }
 
-	void		Use(const string& textureName);
-	void		Disuse(const string& textureName);
+	void Use(const string& textureName);
+	void Disuse(const string& textureName);
 
-#ifdef USING_DIRECTX
-	LPDIRECT3DTEXTURE9	GetTexture(const string& textureName)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DTEXTURE9 GetTexture(const string& textureName)
 	{
-		if (textureName.empty()) return nullptr;
-		return textures.at(textureName).texturePointer;
+		auto iterator = textures.find(textureName);
+		if (textures.end() == iterator) return nullptr;
+		return iterator->second.Pointer;
 	}
 #endif
 
-private:
+protected:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
 	struct TextureInfo
 	{
-		unsigned short		userNumber;
-#ifdef USING_DIRECTX
-		LPDIRECT3DTEXTURE9	texturePointer;
+		TextureInfo()
+			: UserNumber(1)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+			, Pointer(nullptr)
+#endif
+		{}
+		int					UserNumber;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		LPDIRECT3DTEXTURE9	Pointer;
 #endif
 	};
 
@@ -57,12 +66,14 @@ private:
 	//--------------------------------------------------------------------------------
 	TextureManager() { textures.clear(); }
 	~TextureManager() {}
-	void init(void) {};
 	void uninit(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, TextureInfo>	textures;
-	static TextureManager*				instance;
+	static TextureManager* instance;
+	unordered_map<string, TextureInfo> textures;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DDEVICE9 device;
+#endif
 };

@@ -10,17 +10,37 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "renderState.h"
+
+//--------------------------------------------------------------------------------
+//  列挙型定義
+//--------------------------------------------------------------------------------
+enum RenderPriority
+{
+	RP_Default = 0,
+	RP_AlphaTest,
+	RP_ZSort,
+	RP_Max
+};
+
+enum RenderStateType
+{
+	RS_Default = 0,					// LightOn_CCW_Multi_Solid_FogOn
+	RS_NoLight_NoFog,				// LightOff_CCW_Multi_Solid_FogOff
+	RS_NoCullMode,					// LightOn_None_Multi_Solid_FogOn
+	RS_NoLight_NoFog_NoCullMode,	// LightOff_None_Multi_Solid_FogOff
+	RS_Max
+};
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class MeshRenderer;
+class RenderState;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class RenderManager
+class RendererManager
 {
 public:
 	//--------------------------------------------------------------------------------
@@ -29,7 +49,8 @@ public:
 	static auto	Create(void)
 	{
 		if (instance) return instance;
-		instance = new RenderManager;
+		instance = new RendererManager;
+		instance->init();
 		return instance;
 	}
 	static void Release(void) { SAFE_UNINIT(instance); }
@@ -44,17 +65,19 @@ private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	RenderManager();
-	~RenderManager() {}
-	void uninit(void) { Clear(); }
+	RendererManager();
+	~RendererManager() {}
+	void init(void);
+	void uninit(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	union
 	{
-		list<MeshRenderer*> renderersArray[A_Max * Fog_Max * Fill_Max * S_Max * Cull_Max * Lighting_Max];
-		list<MeshRenderer*> renderersArrays[A_Max][Fog_Max][Fill_Max][S_Max][Cull_Max][Lighting_Max];
+		list<MeshRenderer*> renderersArray[RP_Max * RS_Max];
+		list<MeshRenderer*> renderersArrays[RP_Max][RS_Max];
 	};
-	static RenderManager*	instance;
+	RenderState*			renderStates[RS_Max];
+	static RendererManager*	instance;
 };

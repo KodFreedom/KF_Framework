@@ -27,6 +27,8 @@ public:
 	virtual bool	Init(void) override { return true; }
 	virtual void	Uninit(void) override;
 	virtual void	Update(void);
+	void			Sleep(void) override;
+	void			Awake(void) override;
 	
 	// Set関数
 	void			SetTrigger(const bool& value) { isTrigger = value; }
@@ -43,10 +45,6 @@ public:
 	const bool		IsTrigger(void) const { return isTrigger; }
 	const string&	GetTag(void) const { return tag; }
 
-	// 他
-	void			Sleep(void);
-	void			Awake(void);
-
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
@@ -59,6 +57,7 @@ protected:
 	ColliderType	type;
 	ColliderMode	mode;
 	bool			isTrigger;
+	bool			isRegistered;
 	Matrix44		offset;
 	Matrix44		nextWorldMatrix;	// ワールド行列(処理速度向上のため)
 	string			tag;

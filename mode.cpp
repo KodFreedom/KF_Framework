@@ -11,7 +11,7 @@
 #include "gameObjectManager.h"
 #include "physicsSystem.h"
 #include "UISystem.h"
-#include "renderManager.h"
+#include "rendererManager.h"
 #include "lightManager.h"
 #include "soundManager.h"
 #include "cameraManager.h"
@@ -32,7 +32,7 @@ void Mode::uninit(void)
 	PhysicsSystem::Instance()->Clear();
 	GameObjectManager::Instance()->ReleaseAll();
 	UISystem::Instance()->ReleaseAll();
-	RenderManager::Instance()->Clear();
+	RendererManager::Instance()->Clear();
 	LightManager::Instance()->ReleaseAll();
 	SoundManager::Instance()->StopAll();
 	CameraManager::Instance()->ReleaseAll();

@@ -9,25 +9,65 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "renderManager.h"
+#include "main.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
+//  列挙型定義
 //--------------------------------------------------------------------------------
-class MeshInfo;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+enum DrawType
+{
+	PointList = 1,
+	LineList = 2,
+	LineStrip = 3,
+	TriangleList = 4,
+	TriangleStrip = 5,
+	TriangleFan = 6,
+};
+#else
+enum DrawType
+{
+	PointList = 0,
+	LineList = 1,
+	LineStrip = 3,
+	TriangleList = 4,
+	TriangleStrip = 5,
+	TriangleFan = 6,
+};
+#endif
 
 //--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
-struct RenderInfo
+struct Mesh
 {
-	string		TextureName;
-	Lighting	CurrentLighting;
-	CullMode	CurrentCullMode;
-	Synthesis	CurrentSynthesis;
-	FillMode	CurrentFillMode;
-	Alpha		CurrentAlpha;
-	Fog			CurrentFog;
+	Mesh()
+		: CurrentType(TriangleStrip)
+		, VertexNumber(0)
+		, IndexNumber(0)
+		, PolygonNumber(0)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		, VertexBuffer(nullptr)
+		, IndexBuffer(nullptr)
+#endif
+	{}
+	~Mesh()
+	{
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+		SAFE_RELEASE(VertexBuffer);
+		SAFE_RELEASE(IndexBuffer);
+#endif
+	}
+
+	DrawType CurrentType;
+	int		 VertexNumber;
+	int		 IndexNumber;
+	int		 PolygonNumber;
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DVERTEXBUFFER9 VertexBuffer;
+	LPDIRECT3DINDEXBUFFER9	IndexBuffer;
+#endif
 };
 
 //--------------------------------------------------------------------------------
@@ -35,57 +75,43 @@ struct RenderInfo
 //--------------------------------------------------------------------------------
 class MeshManager
 {
-#ifdef _DEBUG
-	friend class DebugObserver;
-#endif // _DEBUG
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数宣言
 	//--------------------------------------------------------------------------------
-	static auto Create(void)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	static void	Create(const LPDIRECT3DDEVICE9 device)
 	{
-		if (instance) return instance;
+		if (instance) return;
 		instance = new MeshManager;
-		instance->init();
-		return instance;
+		instance->device = device;
 	}
+#endif
 	static void	Release(void) { SAFE_UNINIT(instance); }
 	static auto	Instance(void) { return instance; }
 	
-	void		Use(const string& meshName);
-	void		Disuse(const string& meshName);
-	
-	//Editor用
-	void		CreateEditorField(const int blockXNumber, const int blockZNumber, const Vector2& blockSize);
-	void		UpdateEditorField(const vector<Vector3>& vertexes, const list<int>& choosenIndexes);
-	void		SaveEditorFieldAs(const string& fileName);
-
-	//Get関数
-	auto		GetRenderInfoBy(const string& meshName) const { return meshes.at(meshName).CurrentRenderInfo; }
-	auto		GetMeshBy(const string& meshName) { return meshes.at(meshName).CurrentMesh; }
+	void	Use(const string& meshName);
+	void	Use(const string& meshName, const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes);
+	void	Disuse(const string& meshName);
+	void	Update(const string& meshName, const vector<VERTEX_3D>& vertexes, const list<int>& indexesToUpdate);
+	void	SaveMesh(const string& meshName, const string& fileName);
+	Mesh*	GetMesh(const string& meshName)
+	{
+		auto iterator = meshes.find(meshName);
+		if (meshes.end() == iterator) return nullptr;
+		return iterator->second.Pointer;
+	}
 
 private:
 	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
-	struct MeshStruct
+	struct MeshInfo
 	{
-		MeshStruct()
-			: UserNumber(1)
-			, CurrentMesh(nullptr)
-		{
-			CurrentRenderInfo.TextureName.clear();
-			CurrentRenderInfo.CurrentLighting = Lighting_On;
-			CurrentRenderInfo.CurrentCullMode = Cull_CCW;
-			CurrentRenderInfo.CurrentSynthesis = S_Multiplication;
-			CurrentRenderInfo.CurrentFillMode = Fill_Solid;
-			CurrentRenderInfo.CurrentAlpha = A_None;
-			CurrentRenderInfo.CurrentFog = Fog_On;
-		}
-		unsigned short	UserNumber;
-		MeshInfo*		CurrentMesh;
-		RenderInfo		CurrentRenderInfo;
+		MeshInfo() : UserNumber(1) , Pointer(nullptr) {}
+		~MeshInfo() {}
+		int		UserNumber;
+		Mesh*	Pointer;
 	};
 
 	//--------------------------------------------------------------------------------
@@ -93,18 +119,21 @@ private:
 	//--------------------------------------------------------------------------------
 	MeshManager() { meshes.clear(); }
 	~MeshManager() {}
-	void		init(void) {};
 	void		uninit(void);
-	MeshStruct	loadFromMesh(const string& filePath);
-	MeshStruct	loadFromXFile(const string& filePath);
-	MeshStruct	createCube(void);
-	MeshStruct	createSphere(void);
-	MeshStruct	createSkyBox(void);
-	bool		createBuffer(MeshInfo* mesh);
+	MeshInfo	loadFromMesh(const string& filePath);
+	MeshInfo	loadFromXFile(const string& filePath);
+	MeshInfo	createCube(void);
+	MeshInfo	createSphere(void);
+	MeshInfo	createSkyBox(void);
+	MeshInfo	createMesh(const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes);
+	bool		createBuffer(Mesh* mesh);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, MeshStruct> meshes;
-	static MeshManager*			instance;
+	static MeshManager*	instance;
+	unordered_map<string, MeshInfo> meshes;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	LPDIRECT3DDEVICE9 device;
+#endif
 };

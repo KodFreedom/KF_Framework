@@ -7,23 +7,8 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-/*enum RenderState
-{
-	RS_Lighting = 0,
-	RS_CullMode,
-	RS_Synthesis,
-	RS_FillMode,
-	RS_Fog,
-	RS_Alpha,
-	RS_Max
-};*/
-
 enum Lighting
 {
 	Lighting_Off = 0,
@@ -68,4 +53,52 @@ enum Alpha
 	A_AlphaTest,
 	A_ZSort,
 	A_Max
+};
+
+//--------------------------------------------------------------------------------
+//  クラス
+//--------------------------------------------------------------------------------
+class RenderState
+{
+public:
+	RenderState() {}
+	~RenderState() {}
+	virtual void Set(void) = 0;
+	virtual void Reset(void) = 0;
+};
+
+class DefaultRenderState : public RenderState
+{
+public:
+	DefaultRenderState() : RenderState() {}
+	~DefaultRenderState() {}
+	void Set(void) override;
+	void Reset(void) override;
+};
+
+class NoLightNoFog : public RenderState
+{
+public:
+	NoLightNoFog() : RenderState() {}
+	~NoLightNoFog() {}
+	void Set(void) override;
+	void Reset(void) override;
+};
+
+class NoCullMode : public RenderState
+{
+public:
+	NoCullMode() : RenderState() {}
+	~NoCullMode() {}
+	void Set(void) override;
+	void Reset(void) override;
+};
+
+class NoLightNoFogNoCullMode : public RenderState
+{
+public:
+	NoLightNoFogNoCullMode() : RenderState() {}
+	~NoLightNoFogNoCullMode() {}
+	void Set(void) override;
+	void Reset(void) override;
 };

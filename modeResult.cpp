@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 void ModeResult::Init(void)
 {
-	LightManager::Instance()->CreateLight(LightType::Directional);
+	LightManager::Instance()->CreateLight(LightType::LT_Directional);
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = new NormalCamera;

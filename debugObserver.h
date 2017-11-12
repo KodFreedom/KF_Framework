@@ -39,7 +39,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ’è”’è‹`
 	//--------------------------------------------------------------------------------
-	static const unsigned short scrollTime = 1 * 30;
+	static const us scrollTime = 1 * 30;
 
 	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`
@@ -61,7 +61,7 @@ private:
 	//--------------------------------------------------------------------------------
 	string						debugInfo;
 	list<string>				debugLog;
-	unsigned short				scrollCounter;
+	us				scrollCounter;
 	bool						enableCollisionSystemWindow;
 	bool						enableCameraWindow;
 	bool						enablePlayerWindow;

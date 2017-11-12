@@ -36,7 +36,7 @@ public:
 
 	void		Use(const string& motionName);
 	void		Disuse(const string& motionName);
-	auto		GetMotionInfoBy(const string& motionName) { return motions.at(motionName).Info; }
+	auto		GetMotionInfoBy(const string& motionName) { return motions.at(motionName).Pointer; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -44,8 +44,8 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MotionStruct
 	{
-		unsigned short		UserNumber;
-		MotionInfo*			Info;
+		us			UserNumber;
+		MotionInfo*	Pointer;
 	};
 
 	//--------------------------------------------------------------------------------

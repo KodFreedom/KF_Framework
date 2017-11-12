@@ -13,7 +13,6 @@
 #include "behavior.h"
 #include "meshRenderer.h"
 #include "rigidbody.h"
-#include "mesh.h"
 #include "collider.h"
 #include "gameObjectManager.h"
 
@@ -35,25 +34,16 @@ public:
 		for (auto behavior : behaviors) { if (!behavior->Init()) { assert("init behavior error!!"); return false; } }
 		if (!rigidbody->Init()) { assert("init rigidbody error!!");  return false; }
 		for (auto collider : colliders) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
-		if (!mesh->Init()) { assert("init mesh error!!");  return false; }
 		for (auto renderer : renderers) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
 		return true;
 	}
-	virtual void	Update(void)
-	{
-		if (!isActive) return;
-		swapParamater();
-		for (auto behavior : behaviors) { behavior->Update(); }
-		rigidbody->Update();
-		for (auto collider : colliders) { collider->Update(); }
-	}
+	virtual void	Update(void);
 	virtual void	LateUpdate(void)
 	{
 		if (!isActive) return;
 		rigidbody->LateUpdate();
 		for (auto behavior : behaviors) { behavior->LateUpdate(); }
 		transform->UpdateMatrix();
-		mesh->Update();
 		for (auto renderer : renderers) { renderer->Update(); }
 	}
 	void			Release(void)
@@ -65,7 +55,6 @@ public:
 	//Get関数
 	auto	GetTransform(void) const { return transform; }
 	auto&	GetBehaviors(void) const { return behaviors; }
-	auto	GetMesh(void) const { return mesh; }
 	auto	GetRigidbody(void) const { return rigidbody; }
 	auto&	GetColliders(void) const { return colliders; }
 	auto&	GetName(void) const { return name; }
@@ -80,15 +69,6 @@ public:
 	bool	IsActive(void) const { return isActive; }
 
 	//Set関数
-	void	SetMesh(Mesh* const value)
-	{
-		//Release
-		if (mesh != &nullMesh) { SAFE_RELEASE(mesh); }
-
-		//Set
-		if (!value) { mesh = &nullMesh; }
-		else { mesh = value; }
-	}
 	void	SetRigidbody(Rigidbody* const value)
 	{
 		//Release
@@ -115,7 +95,6 @@ protected:
 	{
 		transform->Release();
 		rigidbody->Release();
-		mesh->Release();
 		for (auto itr = behaviors.begin(); itr != behaviors.end();)
 		{
 			(*itr)->Release();
@@ -140,15 +119,8 @@ protected:
 	list<Behavior*>		behaviors;
 	Rigidbody*			rigidbody;
 	list<Collider*>		colliders;
-	Mesh*				mesh;
 	list<MeshRenderer*> renderers;
 
-private:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	GameObject(GameObject&) {}
-	
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
@@ -162,5 +134,10 @@ private:
 	//  ヌルコンポネント定義
 	//--------------------------------------------------------------------------------
 	static NullRigidbody	nullRigidbody;
-	static NullMesh			nullMesh;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	GameObject(GameObject&) {}
 };

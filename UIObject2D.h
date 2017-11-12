@@ -17,7 +17,7 @@
 class UIObject2D : public UIObject
 {
 public:
-	UIObject2D(const unsigned short order = 0);
+	UIObject2D(const us order = 0);
 	~UIObject2D() {}
 
 	virtual bool Init(void) override { return true; }
@@ -30,7 +30,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	struct SPRITE
 	{
-		unsigned short			polygonNumber;
+		us			polygonNumber;
 		string					texture;
 #ifdef USING_DIRECTX
 		LPDIRECT3DVERTEXBUFFER9 pVtxBuffer;

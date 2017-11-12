@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　renderer.cpp
+//　renderSystem.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-11-01
 //--------------------------------------------------------------------------------
@@ -8,15 +8,15 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "renderer.h"
+#include "renderSystem.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include "rendererDirectX9.h"
+#include "renderSystemDirectX9.h"
 #endif
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
 //--------------------------------------------------------------------------------
-Renderer* Renderer::instance = nullptr;
+RenderSystem* RenderSystem::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -31,11 +31,11 @@ Renderer* Renderer::instance = nullptr;
 //			isWindowMode：
 //	戻り値：Manager*
 //--------------------------------------------------------------------------------
-Renderer* Renderer::Create(HWND hWnd, BOOL isWindowMode)
+RenderSystem* RenderSystem::Create(HWND hWnd, BOOL isWindowMode)
 {
 	if (instance) return instance;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	instance = new RendererDirectX9;
+	instance = new RenderSystemDirectX9;
 #endif
 	instance->init(hWnd, isWindowMode);
 	return instance;
@@ -47,7 +47,7 @@ Renderer* Renderer::Create(HWND hWnd, BOOL isWindowMode)
 //	引数：	なし
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void Renderer::Release(void)
+void RenderSystem::Release(void)
 {
 	SAFE_UNINIT(instance);
 }

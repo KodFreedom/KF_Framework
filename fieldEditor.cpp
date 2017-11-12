@@ -34,7 +34,6 @@ FieldEditor::FieldEditor(GameObject* const owner)
 	, isActive(true)
 {
 	vertexes.clear();
-	MeshManager::Instance()->CreateEditorField(blockXNumber, blockZNumber, blockSize);
 }
 
 //--------------------------------------------------------------------------------
@@ -42,18 +41,21 @@ FieldEditor::FieldEditor(GameObject* const owner)
 //--------------------------------------------------------------------------------
 bool FieldEditor::Init(void)
 {
+	// Vertex
+	ul white = Color::White;
 	auto& startPosition = Vector3(-blockXNumber * 0.5f * blockSize.X, 0.0f, blockZNumber * 0.5f * blockSize.Y);
 	vertexes.resize((blockXNumber + 1) * (blockZNumber + 1));
-	int countVtx = 0;
-
 	for (int countZ = 0; countZ < blockZNumber + 1; countZ++)
 	{
 		for (int countX = 0; countX < blockXNumber + 1; countX++)
 		{
+			int index = countZ * (blockXNumber + 1) + countX;
 			auto& position = startPosition
 				+ Vector3(countX * blockSize.X, 0.0f, -countZ * blockSize.Y);
-			vertexes[countVtx] = position;
-			++countVtx;
+			vertexes[index].Position = position;
+			vertexes[index].UV = Vector2(countX * 1.0f / (float)blockXNumber, countZ * 1.0f / (float)blockXNumber);
+			vertexes[index].Color = white;
+			vertexes[index].Normal = Vector3::Up;
 		}
 	}
 
@@ -61,9 +63,26 @@ bool FieldEditor::Init(void)
 	minPosition = halfSize * -1.0f;
 	maxPosition = halfSize;
 	
-	auto& indexes = getChoosenIndexes();
-	MeshManager::Instance()->UpdateEditorField(vertexes, indexes);
+	// Index
+	vector<int> indexes;
+	int indexNumber = ((blockXNumber + 1) * 2 + 2) * blockZNumber - 1;
+	indexes.resize(indexNumber);
+	for (int countZ = 0; countZ < blockZNumber; ++countZ)
+	{
+		for (int countX = 0; countX < (blockXNumber + 1) * 2 + 2; ++countX)
+		{
+			if (countX < (blockXNumber + 1) * 2)
+			{
+				indexes[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = countX / 2 + (countX + 1) % 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
+			}
+			else if (countZ * ((blockXNumber + 1) * 2 + 2) + countX < (((blockXNumber + 1) * 2 + 2) * blockZNumber - 1))//縮退ポリゴン
+			{
+				indexes[countZ * ((blockXNumber + 1) * 2 + 2) + countX] = (countX - 1) / 2 % (blockXNumber + 1) + countX % 2 * 2 * (blockXNumber + 1) + countZ * (blockXNumber + 1);
+			}
+		}
+	}
 
+	MeshManager::Instance()->Use("field", DrawType::TriangleList, vertexes, indexes);
 	return true;
 }
 
@@ -98,10 +117,12 @@ void FieldEditor::Update(void)
 		- (float)input->GetKeyPress(Key::Reduce);
 	for (auto index : indexes)
 	{
-		vertexes[index].Y += fValue * raiseSpeed;
+		vertexes[index].Position.Y += fValue * raiseSpeed;
 	}
 
-	MeshManager::Instance()->UpdateEditorField(vertexes, indexes);
+	auto& choosenIndexes = getChoosenIndexes();
+	updateVertexesBy(choosenIndexes);
+	MeshManager::Instance()->Update("field", vertexes, choosenIndexes);
 }
 
 //--------------------------------------------------------------------------------
@@ -135,8 +156,8 @@ void FieldEditor::SetActive(const bool& value)
 	isActive = value;
 	if (!isActive)
 	{//Field Reset
-		list<int> indexes;
-		MeshManager::Instance()->UpdateEditorField(vertexes, indexes);
+		list<int> choosenIndexes;
+		MeshManager::Instance()->Update("field", vertexes, choosenIndexes);
 	}
 }
 
@@ -149,7 +170,7 @@ void FieldEditor::SetActive(const bool& value)
 void FieldEditor::SaveAs(const string& fileName)
 {
 	//フィールドメッシュの保存
-	MeshManager::Instance()->SaveEditorFieldAs(fileName);
+	MeshManager::Instance()->SaveMesh("field", fileName);
 
 	//フィールドの保存
 	string filePath = "data/FIELD/" + fileName + ".field";
@@ -194,8 +215,8 @@ float FieldEditor::getHeight(const Vector3& position)
 	int rightDownZ = leftUpZ + 1;
 
 	auto& targetPosition = Vector3(position.X, 0.0f, position.Z);
-	auto& leftUpPosition = vertexes[leftUpZ * (blockXNumber + 1) + leftUpX];
-	auto& rightDownPosition = vertexes[rightDownZ * (blockXNumber + 1) + rightDownX];
+	auto& leftUpPosition = vertexes[leftUpZ * (blockXNumber + 1) + leftUpX].Position;
+	auto& rightDownPosition = vertexes[rightDownZ * (blockXNumber + 1) + rightDownX].Position;
 
 	//Check Side
 	auto& midLine = rightDownPosition - leftUpPosition;
@@ -215,7 +236,7 @@ float FieldEditor::getHeight(const Vector3& position)
 		sideZ = leftUpZ + 1;
 		sign = 1;
 	}
-	auto& sidePosition = vertexes[sideZ * (blockXNumber + 1) + sideX];
+	auto& sidePosition = vertexes[sideZ * (blockXNumber + 1) + sideX].Position;
 	auto& sideToLeftUp = leftUpPosition - sidePosition;
 	auto& sideToRightDown = rightDownPosition - sidePosition;
 	auto& normal = ((sideToLeftUp * sideToRightDown) * (float)sign).Normalized();
@@ -223,7 +244,7 @@ float FieldEditor::getHeight(const Vector3& position)
 }
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  getChoosenIndexes
 //--------------------------------------------------------------------------------
 list<int> FieldEditor::getChoosenIndexes(void)
 {
@@ -251,7 +272,7 @@ list<int> FieldEditor::getChoosenIndexes(void)
 		for (int countX = minX; countX <= maxX; countX)
 		{
 			auto index = countZ * (blockZNumber + 1) + countX;
-			auto position = vertexes[index];
+			auto position = vertexes[index].Position;
 			position.Y = 0.0f;
 			if (Vector3::SquareDistanceBetween(position, editorPositionCopy) <= editorRadius * editorRadius)
 			{
@@ -263,7 +284,7 @@ list<int> FieldEditor::getChoosenIndexes(void)
 }
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  showMainWindow
 //--------------------------------------------------------------------------------
 void FieldEditor::showMainWindow(void)
 {
@@ -289,5 +310,70 @@ void FieldEditor::showMainWindow(void)
 
 	// End
 	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  updateVertexesBy
+//--------------------------------------------------------------------------------
+void FieldEditor::updateVertexesBy(const list<int>& choosenIndexes)
+{
+	ul white = Color::White;
+	for (int index : previousChoosenIndexes)
+	{
+		vertexes[index].Color = white;
+	}
+	
+	ul red = Color::Red;
+	for (int index : choosenIndexes)
+	{
+		//Choosen Color
+		vertexes[index].Color = red;
+	
+		//法線計算
+		int countZ = index / (blockZNumber + 1);
+		int countX = index - countZ * (blockZNumber + 1);
+		Vector3 normal;
+		Vector3 positionThis = vertexes[index].Position;
+		Vector3 positionLeft;
+		Vector3 positionRight;
+		Vector3 positionTop;
+		Vector3 positionBottom;
+	
+		if (countX == 0)
+		{
+			positionLeft = positionThis;
+			positionRight = vertexes[countZ * (blockXNumber + 1) + countX + 1].Position;
+		}
+		else if (countX < blockXNumber)
+		{
+			positionLeft = vertexes[countZ * (blockXNumber + 1) + countX - 1].Position;
+			positionRight = vertexes[countZ * (blockXNumber + 1) + countX + 1].Position;
+		}
+		else
+		{
+			positionLeft = vertexes[countZ * (blockXNumber + 1) + countX - 1].Position;
+			positionRight = positionThis;
+		}
+	
+		if (countZ == 0)
+		{
+			positionTop = positionThis;
+			positionBottom = vertexes[(countZ + 1) * (blockXNumber + 1) + countX].Position;
+		}
+		else if (countZ < blockZNumber)
+		{
+			positionTop = vertexes[(countZ - 1) * (blockXNumber + 1) + countX].Position;
+			positionBottom = vertexes[(countZ + 1) * (blockXNumber + 1) + countX].Position;
+		}
+		else
+		{
+			positionTop = vertexes[(countZ - 1) * (blockXNumber + 1) + countX].Position;
+			positionBottom = positionThis;
+		}
+		normal = (positionRight - positionLeft) * (positionBottom - positionTop);
+		vertexes[index].Normal = normal.Normalized();
+	}
+
+	previousChoosenIndexes = choosenIndexes;
 }
 #endif // _DEBUG

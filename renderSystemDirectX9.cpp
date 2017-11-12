@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //
-//　rendererDirectX9.cpp
+//　RenderSystemDirectX9.cpp
 //	Author : Xu Wenjie
 //	Date   : 2016-05-31
 //--------------------------------------------------------------------------------
@@ -12,8 +12,11 @@
 #include "textureManager.h"
 #include "materialManager.h"
 #include "meshManager.h"
-#include "meshInfo.h"
-#include "rendererDirectX9.h"
+#include "renderSystemDirectX9.h"
+#include "lightManager.h"
+#if defined(_DEBUG) || defined(EDITOR)
+#include "ImGui\imgui_impl_dx9.h"
+#endif
 //--------------------------------------------------------------------------------
 //
 //  public
@@ -25,7 +28,7 @@
 //	引数：	なし
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-bool RendererDirectX9::BeginRender(void)
+bool RenderSystemDirectX9::BeginRender(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
 	lpD3DDevice->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), backgroundColor, 1.0f, 0);
@@ -38,7 +41,7 @@ bool RendererDirectX9::BeginRender(void)
 //	引数：	なし
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::EndRender(void)
+void RenderSystemDirectX9::EndRender(void)
 {
 	lpD3DDevice->EndScene();
 
@@ -51,21 +54,21 @@ void RendererDirectX9::EndRender(void)
 //  関数説明：描画処理
 //	引数：	meshName：メッシュ名前
 //			textureName：テクスチャ名前
-//			materialID：マテリアルID
+//			materialName：マテリアル名前
 //			worldMatrix：世界行列
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::Render(const string& meshName, const string& textureName, const unsigned short materialID, const Matrix44& worldMatrix)
+void RenderSystemDirectX9::Render(const string& meshName, const string& textureName, const string& materialName, const Matrix44& worldMatrix)
 {
-	auto mesh = MeshManager::Instance()->GetMeshBy(meshName);
+	auto mesh = MeshManager::Instance()->GetMesh(meshName);
 	auto texture = TextureManager::Instance()->GetTexture(textureName);
-	auto material = MaterialManager::Instance()->GetMaterial(materialID);
+	auto material = MaterialManager::Instance()->GetMaterial(materialName);
 	lpD3DDevice->SetTransform(D3DTS_WORLD, &(D3DXMATRIX)worldMatrix);
 	lpD3DDevice->SetStreamSource(0, mesh->VertexBuffer, 0, sizeof(VERTEX_3D));
 	lpD3DDevice->SetIndices(mesh->IndexBuffer);
 	lpD3DDevice->SetFVF(FVF_VERTEX_3D);
 	lpD3DDevice->SetTexture(0, texture);
-	lpD3DDevice->SetMaterial(&(D3DMATERIAL9)material);
+	lpD3DDevice->SetMaterial(&(D3DMATERIAL9)*material);
 	lpD3DDevice->DrawIndexedPrimitive((_D3DPRIMITIVETYPE)mesh->CurrentType,
 		0, 0, mesh->VertexNumber, 0, mesh->PolygonNumber);
 }
@@ -77,7 +80,7 @@ void RendererDirectX9::Render(const string& meshName, const string& textureName,
 //			projection：射影行列
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetPorjectionCamera(const Matrix44& view, const Matrix44& projection)
+void RenderSystemDirectX9::SetPorjectionCamera(const Matrix44& view, const Matrix44& projection)
 {
 	lpD3DDevice->SetTransform(D3DTS_VIEW, &(D3DXMATRIX)view);
 	lpD3DDevice->SetTransform(D3DTS_PROJECTION, &(D3DXMATRIX)projection);
@@ -89,7 +92,7 @@ void RendererDirectX9::SetPorjectionCamera(const Matrix44& view, const Matrix44&
 //	引数：	value：ライティングの設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const Lighting& value)
+void RenderSystemDirectX9::SetRenderState(const Lighting& value)
 {
 	lpD3DDevice->SetRenderState(D3DRS_LIGHTING, (DWORD)value);
 }
@@ -100,7 +103,7 @@ void RendererDirectX9::SetRenderState(const Lighting& value)
 //	引数：	value：ライティングの設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const CullMode& value)
+void RenderSystemDirectX9::SetRenderState(const CullMode& value)
 {
 	lpD3DDevice->SetRenderState(D3DRS_CULLMODE, (_D3DCULL)(value + 1));
 }
@@ -111,7 +114,7 @@ void RendererDirectX9::SetRenderState(const CullMode& value)
 //	引数：	value：合成方法の設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const Synthesis& value)
+void RenderSystemDirectX9::SetRenderState(const Synthesis& value)
 {
 
 }
@@ -122,7 +125,7 @@ void RendererDirectX9::SetRenderState(const Synthesis& value)
 //	引数：	value：ライティングの設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const FillMode& value)
+void RenderSystemDirectX9::SetRenderState(const FillMode& value)
 {
 	lpD3DDevice->SetRenderState(D3DRS_FILLMODE, (_D3DFILLMODE)(value + 1));
 }
@@ -133,7 +136,7 @@ void RendererDirectX9::SetRenderState(const FillMode& value)
 //	引数：	value：アルファテストの設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const Alpha& value)
+void RenderSystemDirectX9::SetRenderState(const Alpha& value)
 {
 	lpD3DDevice->SetRenderState(D3DRS_ALPHATESTENABLE, value == A_AlphaTest ? TRUE : FALSE);
 }
@@ -144,7 +147,7 @@ void RendererDirectX9::SetRenderState(const Alpha& value)
 //	引数：	value：フォグの設定値
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RendererDirectX9::SetRenderState(const Fog& value)
+void RenderSystemDirectX9::SetRenderState(const Fog& value)
 {
 	lpD3DDevice->SetRenderState(D3DRS_FOGENABLE, (DWORD)value);
 	lpD3DDevice->SetRenderState(D3DRS_RANGEFOGENABLE, (DWORD)value);
@@ -158,24 +161,30 @@ void RendererDirectX9::SetRenderState(const Fog& value)
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-bool RendererDirectX9::init(HWND hWnd, BOOL isWindowMode)
+bool RenderSystemDirectX9::init(HWND hWnd, BOOL isWindowMode)
 {
-	if (!createDevice(hWnd, isWindowMode))
-	{
-		return false;
-	}
-
+	if (!createDevice(hWnd, isWindowMode)) return false;
 	initRenderSate();
 	initSamplerState();
-	initTextureStageStage();
+	initTextureStageState();
+	TextureManager::Create(lpD3DDevice);
+	LightManager::Create(lpD3DDevice);
+#if defined(_DEBUG) || defined(EDITOR)
+	ImGui_ImplDX9_Init(hWnd, lpD3DDevice);
+#endif
 	return true;
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void RendererDirectX9::uninit(void)
+void RenderSystemDirectX9::uninit(void)
 {
+#if defined(_DEBUG) || defined(EDITOR)
+	ImGui_ImplDX9_Shutdown();
+#endif
+	TextureManager::Release();
+	LightManager::Release();
 	SAFE_RELEASE(lpD3DDevice);
 	SAFE_RELEASE(lpDirect3D9);
 }
@@ -183,7 +192,7 @@ void RendererDirectX9::uninit(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-bool RendererDirectX9::createDevice(HWND hWnd, BOOL isWindowMode)
+bool RenderSystemDirectX9::createDevice(HWND hWnd, BOOL isWindowMode)
 {
 	D3DPRESENT_PARAMETERS d3dpp;
 	D3DDISPLAYMODE d3ddm;
@@ -251,12 +260,14 @@ bool RendererDirectX9::createDevice(HWND hWnd, BOOL isWindowMode)
 	//{
 	//	//
 	//}
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------
 //  レンダーステートの初期化
 //--------------------------------------------------------------------------------
-void RendererDirectX9::initRenderSate(void)
+void RenderSystemDirectX9::initRenderSate(void)
 {
 	lpD3DDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	lpD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
@@ -269,7 +280,7 @@ void RendererDirectX9::initRenderSate(void)
 //--------------------------------------------------------------------------------
 //  サンプラーステートの初期化
 //--------------------------------------------------------------------------------
-void RendererDirectX9::initSamplerState(void)
+void RenderSystemDirectX9::initSamplerState(void)
 {
 	lpD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャＵ値の繰り返し設定
 	lpD3DDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);	// テクスチャＶ値の繰り返し設定
@@ -280,7 +291,7 @@ void RendererDirectX9::initSamplerState(void)
 //--------------------------------------------------------------------------------
 //  テクスチャステージステートの初期化
 //--------------------------------------------------------------------------------
-void RendererDirectX9::initTextureStageStage(void)
+void RenderSystemDirectX9::initTextureStageState(void)
 {
 	lpD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	lpD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);

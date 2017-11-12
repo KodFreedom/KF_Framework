@@ -9,34 +9,21 @@
 //--------------------------------------------------------------------------------
 #include "meshRenderer.h"
 #include "gameObject.h"
-#include "mesh.h"
 #include "meshManager.h"
 #include "textureManager.h"
 #include "materialManager.h"
-#include "camera.h"
-#include "cameraManager.h"
+#include "rendererManager.h"
 
 //--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//	クラス
+//
+//	Public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
 bool MeshRenderer::Init(void)
 {
-	auto mesh = owner->GetMesh();
-	auto& renderInfo = MeshManager::Instance()->GetRenderInfoBy(mesh->GetMeshName());
-	if (!renderInfo.TextureName.empty()) Set(renderInfo.TextureName);
-	lighting = renderInfo.CurrentLighting;
-	cullMode = renderInfo.CurrentCullMode;
-	synthesis = renderInfo.CurrentSynthesis;
-	fillMode = renderInfo.CurrentFillMode;
-	alpha = renderInfo.CurrentAlpha;
-	fog = renderInfo.CurrentFog;
 	return true;
 }
 
@@ -45,10 +32,22 @@ bool MeshRenderer::Init(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Uninit(void)
 {
+	if (!meshName.empty())
+	{
+		MeshManager::Instance()->Disuse(meshName);
+		meshName.clear();
+	}
+
 	if (!textureName.empty())
 	{
 		TextureManager::Instance()->Disuse(textureName);
 		textureName.clear();
+	}
+
+	if (!materialName.empty())
+	{
+		MaterialManager::Instance()->Disuse(meshName);
+		materialName.clear();
 	}
 }
 
@@ -57,23 +56,50 @@ void MeshRenderer::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Update(void)
 {
-	if (CameraManager::Instance()->GetMainCamera()->
-		IsInRange(owner->GetTransform()->GetCurrentPosition()))
-	{
-		RenderManager::Instance()->Register(this);
-	}
+	RendererManager::Instance()->Register(this);
 }
 
 //--------------------------------------------------------------------------------
-//  テクスチャ設定
+//  メッシュの設定
 //--------------------------------------------------------------------------------
-void MeshRenderer::Set(const string& texture)
+void MeshRenderer::SetMeshName(const string& name)
+{
+	if (!meshName.empty())
+	{
+		MeshManager::Instance()->Disuse(meshName);
+		meshName.clear();
+	}
+
+	meshName = name;
+	MeshManager::Instance()->Use(name);
+}
+
+//--------------------------------------------------------------------------------
+//  テクスチャの設定
+//--------------------------------------------------------------------------------
+void MeshRenderer::SetTextureName(const string& name)
 {
 	if (!textureName.empty())
 	{
 		TextureManager::Instance()->Disuse(textureName);
 		textureName.clear();
 	}
-	textureName = texture;
-	TextureManager::Instance()->Use(textureName);
+
+	textureName = name;
+	TextureManager::Instance()->Use(name);
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアルの設定
+//--------------------------------------------------------------------------------
+void MeshRenderer::SetMaterialName(const string& name)
+{
+	if (!materialName.empty())
+	{
+		MaterialManager::Instance()->Disuse(materialName);
+		materialName.clear();
+	}
+
+	materialName = name;
+	MaterialManager::Instance()->Use(name);
 }

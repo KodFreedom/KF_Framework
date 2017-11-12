@@ -9,12 +9,9 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "renderer.h"
-#include "renderManager.h"
+#include "renderSystem.h"
+#include "rendererManager.h"
 #include "input.h"
-#include "meshManager.h"
-#include "textureManager.h"
-#include "lightManager.h"
 #include "materialManager.h"
 #include "gameObjectManager.h"
 #include "soundManager.h"
@@ -98,7 +95,7 @@ void Manager::LateUpdate(void)
 	CollisionSystem::Instance()->LateUpdate();
 	UISystem::Instance()->Update();
 	FadeSystem::Instance()->Update();
-	RenderManager::Instance()->Update();
+	RendererManager::Instance()->Update();
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Instance()->LateUpdate();
 #endif
@@ -109,10 +106,10 @@ void Manager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void Manager::Render(void)
 {
-	if (Renderer::Instance()->BeginRender())
+	if (RenderSystem::Instance()->BeginRender())
 	{
 		CameraManager::Instance()->GetMainCamera()->Set();
-		RenderManager::Instance()->Render();
+		RendererManager::Instance()->Render();
 #ifdef _DEBUG
 		CollisionSystem::Instance()->DrawCollider();
 #endif
@@ -121,7 +118,7 @@ void Manager::Render(void)
 #if defined(_DEBUG) || defined(EDITOR)
 		DebugObserver::Instance()->Draw();
 #endif
-		Renderer::Instance()->EndRender();
+		RenderSystem::Instance()->EndRender();
 	}
 }
 
@@ -146,15 +143,12 @@ void Manager::Change(Mode* nextMode)
 bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 {
 	Random::Init();
-	if (!Renderer::Create(hWnd, isWindowMode)) return false;
+	if (!RenderSystem::Create(hWnd, isWindowMode)) return false;
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hWnd);
 #endif
-	RenderManager::Create();
+	RendererManager::Create();
 	Input::Create(hInstance, hWnd);
-	MeshManager::Create();
-	TextureManager::Create();
-	LightManager::Create();
 	MaterialManager::Create();
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
@@ -186,13 +180,10 @@ void Manager::uninit(void)
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
 	MaterialManager::Release();
-	LightManager::Release();
-	TextureManager::Release();
-	MeshManager::Release();
 	Input::Release();
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Release();
 #endif
-	RenderManager::Release();
-	Renderer::Release();
+	RendererManager::Release();
+	RenderSystem::Release();
 }

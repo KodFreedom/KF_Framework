@@ -24,18 +24,20 @@ Collider::Collider(GameObject* const owner, const ColliderType& type, const Coll
 	, type(type)
 	, mode(mode)
 	, isTrigger(false)
+	, isRegistered(false)
 	, nextWorldMatrix(Matrix44::Identity)
 	, offset(Matrix44::Identity)
-{
-	CollisionSystem::Instance()->Register(this);
-}
+{}
 
 //--------------------------------------------------------------------------------
 //  I—¹ˆ—
 //--------------------------------------------------------------------------------
 void Collider::Uninit(void)
 {
-	CollisionSystem::Instance()->Deregister(this);
+	if (isRegistered)
+	{
+		CollisionSystem::Instance()->Deregister(this);
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -69,6 +71,8 @@ void Collider::SetOffset(const Vector3& position, const Vector3& rotation)
 //--------------------------------------------------------------------------------
 void Collider::Sleep(void)
 {
+	if (!isRegistered) return;
+	isRegistered = false;
 	CollisionSystem::Instance()->Deregister(this);
 }
 
@@ -80,5 +84,6 @@ void Collider::Sleep(void)
 //--------------------------------------------------------------------------------
 void Collider::Awake(void)
 {
+	isRegistered = true;
 	CollisionSystem::Instance()->Register(this);
 }

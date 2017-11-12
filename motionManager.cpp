@@ -9,6 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "motionManager.h"
+#include "motionInfo.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
@@ -53,8 +54,7 @@ void MotionManager::Disuse(const string& motionName)
 	--iterator->second.UserNumber;
 	if (iterator->second.UserNumber == 0)
 	{// 誰も使ってないので破棄する
-		
-		SAFE_DELETE(iterator->second.Info);
+		SAFE_DELETE(iterator->second.Pointer);
 		motions.erase(iterator);
 	}
 }
@@ -70,7 +70,7 @@ void MotionManager::uninit(void)
 {
 	for (auto iterator = motions.begin(); iterator != motions.end();)
 	{
-		SAFE_DELETE(iterator->second.Info);
+		SAFE_DELETE(iterator->second.Pointer);
 		iterator = motions.erase(iterator);
 	}
 }

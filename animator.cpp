@@ -71,7 +71,7 @@ void Animator::Update(void)
 //	ˆø”F	‚È‚µ
 //	–ß‚è’lFconst string& 
 //--------------------------------------------------------------------------------
-const string& Animator::GetCurrentAnimationName(void)
+const string Animator::GetCurrentAnimationName(void)
 {
 	if (!currentMotionState) return "null";
 	return currentMotionState->GetMotionName();

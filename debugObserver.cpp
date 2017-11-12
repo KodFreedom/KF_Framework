@@ -12,7 +12,7 @@
 #include "main.h"
 #include "manager.h"
 #include "debugObserver.h"
-#include "renderer.h"
+#include "renderSystem.h"
 #include "ImGui\imgui.h"
 #include "collisionSystem.h"
 #include "textureManager.h"
@@ -24,10 +24,14 @@
 #include "transform.h"
 #include "playerController.h"
 #include "fog.h"
-
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
 #endif
+
+//--------------------------------------------------------------------------------
+//  Ã“Iƒƒ“ƒo•Ï”
+//--------------------------------------------------------------------------------
+DebugObserver* DebugObserver::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -169,9 +173,6 @@ DebugObserver::DebugObserver()
 //--------------------------------------------------------------------------------
 void DebugObserver::init(HWND hWnd)
 {
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ImGui_ImplDX9_Init(hWnd, Main::GetManager()->GetRenderer()->GetDevice());
-#endif // USING_DIRECTX
 }
 
 //--------------------------------------------------------------------------------
@@ -179,10 +180,6 @@ void DebugObserver::init(HWND hWnd)
 //--------------------------------------------------------------------------------
 void DebugObserver::uninit(void)
 {
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ImGui_ImplDX9_Shutdown();
-#endif // USING_DIRECTX
-
 	debugInfo.clear();
 }
 
@@ -191,7 +188,7 @@ void DebugObserver::uninit(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::showMainWindow(void)
 {
-	auto renderer = Renderer::Instance();
+	auto renderer = RenderSystem::Instance();
 	auto backgroundColor = renderer->GetBackgroundColor();
 
 	// Begin

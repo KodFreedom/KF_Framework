@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "camera.h"
-#include "renderer.h"
+#include "renderSystem.h"
 #include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ void Camera::Set(void)
 	// Projections—ñ
 	auto& projection = Matrix44::ProjectionLeftHand(fovY, (float)SCREEN_WIDTH / SCREEN_HEIGHT, nearZ, farZ);
 
-	Renderer::Instance()->SetPorjectionCamera(view, projection);
+	RenderSystem::Instance()->SetPorjectionCamera(view, projection);
 }
 
 //--------------------------------------------------------------------------------

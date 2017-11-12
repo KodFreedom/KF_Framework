@@ -29,10 +29,10 @@ bool BackgroundUI::Init(const string& texture)
 	TextureManager::Instance()->Use(sprite.texture);
 	sprite.polygonNumber = 2;
 
-#ifdef USING_DIRECTX
-	auto& screenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
-	UtilityDX::MakeVertex(sprite.pVtxBuffer, screenSize * 0.5f, screenSize);
-#endif
+//#ifdef USING_DIRECTX
+//	auto& screenSize = Vector2((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+//	UtilityDX::MakeVertex(sprite.pVtxBuffer, screenSize * 0.5f, screenSize);
+//#endif
 	sprites.push_back(sprite);
 	return true;
 }
