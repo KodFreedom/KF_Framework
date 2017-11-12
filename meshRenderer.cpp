@@ -13,6 +13,8 @@
 #include "textureManager.h"
 #include "materialManager.h"
 #include "rendererManager.h"
+#include "camera.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -56,7 +58,11 @@ void MeshRenderer::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Update(void)
 {
-	RendererManager::Instance()->Register(this);
+	if (CameraManager::Instance()->GetMainCamera()->IsInRange(
+		owner->GetTransform()->GetCurrentPosition()))
+	{
+		RendererManager::Instance()->Register(this);
+	}
 }
 
 //--------------------------------------------------------------------------------

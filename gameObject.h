@@ -37,7 +37,14 @@ public:
 		for (auto renderer : renderers) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
 		return true;
 	}
-	virtual void	Update(void);
+	virtual void	Update(void)
+	{
+		if (!isActive) return;
+		swapParamater();
+		for (auto behavior : behaviors) behavior->Update();
+		rigidbody->Update();
+		for (auto collider : colliders) collider->Update();
+	}
 	virtual void	LateUpdate(void)
 	{
 		if (!isActive) return;

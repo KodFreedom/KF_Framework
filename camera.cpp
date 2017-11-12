@@ -15,6 +15,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
+const float Camera::defaultFarZ = 1000.0f;
 
 //--------------------------------------------------------------------------------
 //
@@ -59,9 +60,9 @@ void Camera::Set(void)
 //--------------------------------------------------------------------------------
 //  カメラの描画範囲内に入ってるかどうか
 //--------------------------------------------------------------------------------
-bool Camera::IsInRange(const Vector3& position)
+bool Camera::IsInRange(const Vector3& position, const float& radius)
 { // Todo : カメラ前後判定、物体の範囲も判定、視野角の判定...
-	return Vector3::SquareDistanceBetween(rig.Position, position) > farZ * farZ;
+	return Vector3::SquareDistanceBetween(rig.Position, position) > radius * radius;
 }
 
 //--------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ Camera::Camera()
 	, distance(0.0f)
 	, fovY(75.0f / 180.0f * Pi)
 	, nearZ(0.1f)
-	, farZ(1000.0f)
+	, farZ(defaultFarZ)
 {
 	rig.Position = Vector3::Zero;
 	rig.Rotation = Vector3::Zero;

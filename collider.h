@@ -24,7 +24,7 @@ public:
 	Collider(GameObject* const owner, const ColliderType& type, const ColliderMode& mode);
 	~Collider() {}
 
-	virtual bool	Init(void) override { return true; }
+	virtual bool	Init(void) override;
 	virtual void	Uninit(void) override;
 	virtual void	Update(void);
 	void			Sleep(void) override;

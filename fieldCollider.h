@@ -49,12 +49,12 @@ public:
 	}
 	~FieldCollider() {}
 
-	bool				Init(void) override { return true; }
 	void				Uninit(void) override
 	{
 		vertexes.clear();
 		Collider::Uninit();
 	}
+	void				Update(void) override { Awake(); }
 	PolygonInfo*		GetPolygonAt(const Vector3& point) const;
 	VertexesInRange*	GetVertexesInRange(const Vector3& begin, const Vector3& end);
 

@@ -10,6 +10,8 @@
 #include "collider.h"
 #include "manager.h"
 #include "gameObject.h"
+#include "camera.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -30,6 +32,15 @@ Collider::Collider(GameObject* const owner, const ColliderType& type, const Coll
 {}
 
 //--------------------------------------------------------------------------------
+//  ‰Šú‰»ˆ—
+//--------------------------------------------------------------------------------
+bool Collider::Init(void)
+{
+	nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
+	return true;
+}
+
+//--------------------------------------------------------------------------------
 //  I—¹ˆ—
 //--------------------------------------------------------------------------------
 void Collider::Uninit(void)
@@ -45,7 +56,21 @@ void Collider::Uninit(void)
 //--------------------------------------------------------------------------------
 void Collider::Update(void)
 {
-	nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
+	if (CameraManager::Instance()->GetMainCamera()->IsInRange(
+		owner->GetTransform()->GetCurrentPosition(), CollisionSystem::maxCollisionRange))
+	{
+		Awake();
+	}
+	else
+	{
+		Sleep();
+		return;
+	}
+
+	if (mode == CM_Dynamic)
+	{
+		nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
+	}
 }
 
 //--------------------------------------------------------------------------------
@@ -84,6 +109,7 @@ void Collider::Sleep(void)
 //--------------------------------------------------------------------------------
 void Collider::Awake(void)
 {
+	if (isRegistered) return;
 	isRegistered = true;
 	CollisionSystem::Instance()->Register(this);
 }

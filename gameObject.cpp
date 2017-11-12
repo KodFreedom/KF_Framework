@@ -9,13 +9,11 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "gameObject.h"
-#include "camera.h"
-#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-NullRigidbody	GameObject::nullRigidbody;
+NullRigidbody GameObject::nullRigidbody;
 
 //--------------------------------------------------------------------------------
 //
@@ -38,20 +36,6 @@ GameObject::GameObject(const Layer& layer)
 	renderers.clear();
 	transform = new Transform(this);
 	GameObjectManager::Instance()->Register(this, layer);
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void GameObject::Update(void)
-{
-	swapParamater();
-	SetActive(CameraManager::Instance()->GetMainCamera()->
-		IsInRange(transform->GetCurrentPosition()));
-	if (!isActive) return;
-	for (auto behavior : behaviors) behavior->Update();
-	rigidbody->Update();
-	for (auto collider : colliders) collider->Update();
 }
 
 //--------------------------------------------------------------------------------

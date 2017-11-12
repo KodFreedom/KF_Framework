@@ -21,6 +21,11 @@ class Camera
 	friend class CameraManager;
 public:
 	//--------------------------------------------------------------------------------
+	//  Ã“Iƒƒ“ƒo•Ï”
+	//--------------------------------------------------------------------------------
+	static const float defaultFarZ;
+
+	//--------------------------------------------------------------------------------
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
 	virtual void Init(void) {}
@@ -33,7 +38,7 @@ public:
 	}
 
 	void		 Set(void);
-	bool		 IsInRange(const Vector3& position);
+	bool		 IsInRange(const Vector3& position, const float& radius = defaultFarZ);
 	void		 Move(const Vector3& movement);
 	auto		 GetRight(void) const { return worldRight; }
 	auto		 GetUp(void) const { return worldUp; }
