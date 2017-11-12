@@ -92,88 +92,77 @@ void MeshManager::Disuse(const string& meshName)
 	}
 }
 
-////--------------------------------------------------------------------------------
-////	関数名：SaveEditorFieldAs
-////  関数説明：エディタ用フィールドデータの保存
-////	引数：	fileName：ファイル名
-////	戻り値：なし
-////--------------------------------------------------------------------------------
-//void MeshManager::SaveEditorFieldAs(const string& fileName)
-//{
-//#ifdef USING_DIRECTX
-//	auto mesh = GetMeshBy("field");
-//
-//	//file open
-//	string filePath = "data/MESH/" + fileName + ".mesh";
-//	FILE *filePointer;
-//	fopen_s(&filePointer, filePath.c_str(), "wb");
-//
-//	//DrawType
-//	int drawType = (int)TriangleStrip;
-//	fwrite(&drawType, sizeof(int), 1, filePointer);
-//
-//	//NumVtx
-//	fwrite(&mesh->VertexNumber, sizeof(int), 1, filePointer);
-//
-//	//NumIdx
-//	fwrite(&mesh->IndexNumber, sizeof(int), 1, filePointer);
-//
-//	//NumPolygon
-//	fwrite(&mesh->PolygonNumber, sizeof(int), 1, filePointer);
-//
-//	//Vtx&Idx
-//	//頂点データ
-//	VERTEX_3D* pVtx;
-//	mesh->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-//
-//	//色を白に戻す
-//	unsigned long white = Color::White;
-//	for (int count = 0; count < mesh->VertexNumber; ++count)
-//	{
-//		pVtx[count].Color = white;
-//	}
-//
-//	//保存
-//	fwrite(pVtx, sizeof(VERTEX_3D), mesh->VertexNumber, filePointer);
-//	mesh->VertexBuffer->Unlock();
-//	
-//	//インデックス
-//	WORD* pIdx;
-//	mesh->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-//	fwrite(pIdx, sizeof(WORD), mesh->IndexNumber, filePointer);
-//	mesh->IndexBuffer->Unlock();
-//	
-//	//Texture
-//	int nTexSize = 0;
-//	fwrite(&nTexSize, sizeof(int), 1, filePointer);
-//
-//	//Lighting
-//	auto lighting = Lighting_On;
-//	fwrite(&lighting, sizeof(lighting), 1, filePointer);
-//
-//	//CullMode
-//	auto cullMode = Cull_CCW;
-//	fwrite(&cullMode, sizeof(cullMode), 1, filePointer);
-//
-//	//Synthesis
-//	auto synthesis = S_Multiplication;
-//	fwrite(&synthesis, sizeof(synthesis), 1, filePointer);
-//
-//	//FillMode
-//	auto fillMode = Fill_Solid;
-//	fwrite(&fillMode, sizeof(fillMode), 1, filePointer);
-//
-//	//Alpha
-//	auto alpha = A_None;
-//	fwrite(&alpha, sizeof(alpha), 1, filePointer);
-//
-//	//Fog
-//	auto fog = Fog_On;
-//	fwrite(&fog, sizeof(fog), 1, filePointer);
-//
-//	fclose(filePointer);
-//#endif
-//}
+//--------------------------------------------------------------------------------
+//	関数名：Update
+//  関数説明：メッシュの更新処理
+//	引数：	meshName：メッシュの名前
+//			vertexes
+//			indexesToUpdate
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MeshManager::Update(const string& meshName, const vector<VERTEX_3D>& vertexes, const list<int>& indexesToUpdate)
+{
+	auto iterator = meshes.find(meshName);
+	if (meshes.end() == iterator) return;
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	VERTEX_3D* vertexPointer;
+	iterator->second.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
+	for (auto index : indexesToUpdate)
+	{
+		vertexPointer[index] = vertexes[index];
+	}
+	iterator->second.Pointer->VertexBuffer->Unlock();
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SaveMesh
+//  関数説明：メッシュの保存
+//	引数：	meshName：メッシュの名前
+//			fileName：ファイル名
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MeshManager::SaveMesh(const string& meshName, const string& fileName)
+{
+	auto iterator = meshes.find(meshName);
+	if (meshes.end() == iterator) return;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	auto pointer = iterator->second.Pointer;
+
+	//file open
+	string filePath = "data/MESH/" + fileName + ".mesh";
+	FILE *filePointer;
+	fopen_s(&filePointer, filePath.c_str(), "wb");
+	
+	//DrawType
+	fwrite(&pointer->CurrentType, sizeof(DrawType), 1, filePointer);
+	
+	//NumVtx
+	fwrite(&pointer->VertexNumber, sizeof(int), 1, filePointer);
+	
+	//NumIdx
+	fwrite(&pointer->IndexNumber, sizeof(int), 1, filePointer);
+	
+	//NumPolygon
+	fwrite(&pointer->PolygonNumber, sizeof(int), 1, filePointer);
+	
+	//Vtx&Idx
+	//頂点データ
+	VERTEX_3D* vertexPointer;
+	pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
+	fwrite(vertexPointer, sizeof(VERTEX_3D), pointer->VertexNumber, filePointer);
+	pointer->VertexBuffer->Unlock();
+	
+	//インデックス
+	WORD* indexPointer;
+	pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
+	fwrite(indexPointer, sizeof(WORD), pointer->IndexNumber, filePointer);
+	pointer->IndexBuffer->Unlock();
+
+	fclose(filePointer);
+#endif
+}
 
 //--------------------------------------------------------------------------------
 //
@@ -227,7 +216,7 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& fileName)
 	//NumPolygon
 	fread_s(&info.Pointer->PolygonNumber, sizeof(int), sizeof(int), 1, filePointer);
 
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
@@ -235,15 +224,15 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& fileName)
 	}
 
 	//頂点データ
-	VERTEX_3D* pVtx;
-	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fread_s(pVtx, sizeof(VERTEX_3D) * info.Pointer->VertexNumber, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
+	VERTEX_3D* vertexPointer;
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
+	fread_s(vertexPointer, sizeof(VERTEX_3D) * info.Pointer->VertexNumber, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
 	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
-	WORD *pIdx;
-	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fread_s(pIdx, sizeof(WORD) * info.Pointer->IndexNumber, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
+	WORD *indexPointer;
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
+	fread_s(indexPointer, sizeof(WORD) * info.Pointer->IndexNumber, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
 	info.Pointer->IndexBuffer->Unlock();
 #endif
 
@@ -533,7 +522,7 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 
 	fclose(filePointer);
 	
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
@@ -541,29 +530,29 @@ MeshManager::MeshInfo MeshManager::loadFromXFile(const string& filePath)
 	}
 
 	//仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
+	VERTEX_3D *vertexPointer;
 
 	//頂点バッファをロックして、仮想アドレスを取得する
-	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
 
 	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
-		pVtx[count].Position = vertexes[vertexIndexes[count]];
-		pVtx[count].Normal = normals[normalIndexes[count]];
-		pVtx[count].UV = uvs[vertexIndexes[count]];
-		pVtx[count].Color = colors[colorIndexes[count]];
+		vertexPointer[count].Position = vertexes[vertexIndexes[count]];
+		vertexPointer[count].Normal = normals[normalIndexes[count]];
+		vertexPointer[count].UV = uvs[vertexIndexes[count]];
+		vertexPointer[count].Color = colors[colorIndexes[count]];
 	}
 
 	//仮想アドレス解放
 	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
-	WORD *pIdx;
-	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	WORD *indexPointer;
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
 
 	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
-		pIdx[count] = count;
+		indexPointer[count] = count;
 	}
 
 	info.Pointer->IndexBuffer->Unlock();
@@ -583,7 +572,7 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	info.Pointer->IndexNumber = 6 * 4 + 5 * 2;
 	info.Pointer->PolygonNumber = 6 * 2 + 5 * 4;
 
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
@@ -591,10 +580,10 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	}
 
 	// 仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
+	VERTEX_3D *vertexPointer;
 
 	// 頂点バッファをロックして、仮想アドレスを取得する
-	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
 	auto& halfSize = Vector3::One * 0.5f;
 	unsigned long white = Color::White;
 	int countVertex = 0;
@@ -602,39 +591,39 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	// 後ろ
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
 			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			-halfSize.Z);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Back;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Back;
 		++countVertex;
 	}
 
 	// 上
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
 			halfSize.Y,
 			halfSize.Z - (count / 2) * halfSize.Z * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Up;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Up;
 		++countVertex;
 	}
 
 	// 左
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-halfSize.X,
 			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			halfSize.Z - (count % 2) * halfSize.Z * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Left;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Left;
 
 		++countVertex;
 	}
@@ -642,39 +631,39 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	// 下
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-halfSize.X + (count % 2) * halfSize.X * 2.0f,
 			-halfSize.Y,
 			-halfSize.Z + (count / 2) * halfSize.Z * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Down;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Down;
 		++countVertex;
 	}
 
 	// 右
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			halfSize.X,
 			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			-halfSize.Z + (count % 2) * halfSize.Z * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Right;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Right;
 		++countVertex;
 	}
 
 	// 正面
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			halfSize.X - (count % 2) * halfSize.X * 2.0f,
 			halfSize.Y - (count / 2) * halfSize.Y * 2.0f,
 			halfSize.Z);
-		pVtx[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Forward;
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Forward;
 		++countVertex;
 	}
 
@@ -682,18 +671,18 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	info.Pointer->VertexBuffer->Unlock();
 
 	// インデックス
-	WORD *pIdx;
-	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	WORD *indexPointer;
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
 
 	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
 	{
 		if (count % 6 < 4)
 		{
-			pIdx[count] = (WORD)((count / 6) * 4 + (count % 6) % 4);
+			indexPointer[count] = (WORD)((count / 6) * 4 + (count % 6) % 4);
 		}
 		else
 		{// 縮退
-			pIdx[count] = (WORD)((count / 6) * 4 + (count % 2) + 3);
+			indexPointer[count] = (WORD)((count / 6) * 4 + (count % 2) + 3);
 		}
 	}
 
@@ -765,11 +754,11 @@ MeshManager::MeshInfo MeshManager::createCube(void)
 	fwrite(&info.Pointer->PolygonNumber, sizeof(int), 1, filePointer);
 
 	// Vtx&Idx
-	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-	fwrite(pVtx, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
+	fwrite(vertexPointer, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
 	info.Pointer->VertexBuffer->Unlock();
-	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
-	fwrite(pIdx, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
+	fwrite(indexPointer, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
 	info.Pointer->IndexBuffer->Unlock();
 
 	// Texture
@@ -829,18 +818,18 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 	info.Pointer->IndexNumber = 6 * 4 + 5 * 2;
 	info.Pointer->PolygonNumber = 6 * 2 + 5 * 4;
 
-#ifdef USING_DIRECTX
 	if (!createBuffer(info.Pointer))
 	{
 		assert("failed to create buffer!!");
 		return info;
 	}
 
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	// 仮想アドレスを取得するためのポインタ
-	VERTEX_3D *pVtx;
+	VERTEX_3D *vertexPointer;
 
 	// 頂点バッファをロックして、仮想アドレスを取得する
-	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
 	auto camera = CameraManager::Instance()->GetMainCamera();
 	float length = camera ? (float)camera->GetFar() * 0.5f : 500.0f;
 	unsigned long white = Color::White;
@@ -850,84 +839,84 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 	// 後ろ
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			length - (count / 2) * length * 2.0f,
 			-length);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Forward;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Forward;
 		++countVertex;
 	}
 
 	// 上
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			length,
 			length - (count / 2) * length * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Down;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Down;
 		++countVertex;
 	}
 
 	// 左
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-length,
 			length - (count / 2) * length * 2.0f,
 			-length + (count % 2) * length * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.5f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + 0.5f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Right;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Right;
 		++countVertex;
 	}
 
 	// 下
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			-length,
 			-length + (count / 2) * length * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 2.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Up;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Up;
 		++countVertex;
 	}
 
 	// 右
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			length,
 			length - (count / 2) * length * 2.0f,
 			length - (count % 2) * length * 2.0f);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Left;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Left;
 		++countVertex;
 	}
 
 	// 正面
 	for (int count = 0; count < 4; ++count)
 	{
-		pVtx[countVertex].Position = Vector3(
+		vertexPointer[countVertex].Position = Vector3(
 			-length + (count % 2) * length * 2.0f,
 			length - (count / 2) * length * 2.0f,
 			length);
-		pVtx[countVertex].UV = Vector2((count % 2) * 0.25f + 0.75f + uvTweens - (count % 2) * uvTweens * 2.0f,
+		vertexPointer[countVertex].UV = Vector2((count % 2) * 0.25f + 0.75f + uvTweens - (count % 2) * uvTweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uvTweens - (count / 2) * uvTweens * 2.0f);
-		pVtx[countVertex].Color = white;
-		pVtx[countVertex].Normal = Vector3::Back;
+		vertexPointer[countVertex].Color = white;
+		vertexPointer[countVertex].Normal = Vector3::Back;
 		++countVertex;
 	}
 
@@ -935,18 +924,18 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
-	WORD *pIdx;
-	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&pIdx, 0);
+	WORD *indexPointer;
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
 
 	for (int count = 0; count < 6 * 4 + 5 * 2; ++count)
 	{
 		if (count % 6 < 4)
 		{
-			pIdx[count] = (count / 6) * 4 + (count % 6) % 4;
+			indexPointer[count] = (count / 6) * 4 + (count % 6) % 4;
 		}
 		else
 		{//縮退
-			pIdx[count] = (count / 6) * 4 + (count % 2) + 3;
+			indexPointer[count] = (count / 6) * 4 + (count % 2) + 3;
 		}
 	}
 
@@ -965,11 +954,51 @@ MeshManager::MeshInfo MeshManager::createSkyBox(void)
 }
 
 //--------------------------------------------------------------------------------
+//  Meshの作成
+//--------------------------------------------------------------------------------
+MeshManager::MeshInfo MeshManager::createMesh(const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes)
+{
+	MeshInfo info;
+	info.Pointer = new Mesh;
+	info.Pointer->VertexNumber = (int)vertexes.size();
+	info.Pointer->IndexNumber = (int)indexes.size();
+	info.Pointer->PolygonNumber = info.Pointer->IndexNumber / getVertexNumberPerPolygon(type);
+
+	if (!createBuffer(info.Pointer))
+	{
+		assert("failed to create buffer!!");
+		return info;
+	}
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	//Vertex
+	VERTEX_3D* vertexPointer;
+	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
+	for (int count = 0; count < info.Pointer->VertexNumber; ++count)
+	{
+		vertexPointer[count] = vertexes[count];
+	}
+	info.Pointer->VertexBuffer->Unlock();
+
+	//インデックス
+	WORD* indexPointer;
+	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
+	for (int count = 0; count < info.Pointer->IndexNumber; ++count)
+	{
+		indexPointer[count] = indexes[count];
+	}
+	info.Pointer->IndexBuffer->Unlock();
+#endif
+
+	return info;
+}
+
+//--------------------------------------------------------------------------------
 //  バッファの作成
 //--------------------------------------------------------------------------------
 bool MeshManager::createBuffer(Mesh* mesh)
 {
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//頂点バッファ
 	HRESULT hr = device->CreateVertexBuffer(
 		sizeof(VERTEX_3D) * mesh->VertexNumber,	//作成したい頂点バッファのサイズ
@@ -1001,4 +1030,28 @@ bool MeshManager::createBuffer(Mesh* mesh)
 	}
 #endif
 	return true;
+}
+
+//--------------------------------------------------------------------------------
+//  ドロータイプからポリゴンを構成する頂点数を取得する
+//--------------------------------------------------------------------------------
+int MeshManager::getVertexNumberPerPolygon(const DrawType& type)
+{
+	switch (type)
+	{
+	case DrawType::PointList:
+		return 1;
+	case DrawType::LineList:
+		return 2;
+	case DrawType::LineStrip:
+		return 2;
+	case DrawType::TriangleList:
+		return 3;
+	case DrawType::TriangleStrip:
+		return 3;
+	case DrawType::TriangleFan:
+		return 3;
+	default:
+		return 0;
+	}
 }

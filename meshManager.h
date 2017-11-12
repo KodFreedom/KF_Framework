@@ -127,6 +127,7 @@ private:
 	MeshInfo	createSkyBox(void);
 	MeshInfo	createMesh(const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes);
 	bool		createBuffer(Mesh* mesh);
+	int			getVertexNumberPerPolygon(const DrawType& type);
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`

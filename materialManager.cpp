@@ -34,11 +34,11 @@ MaterialManager* MaterialManager::instance = nullptr;
 Material::operator D3DMATERIAL9() const
 {
 	D3DMATERIAL9 result;
-	result.Ambient = ambient;
-	result.Diffuse = diffuse;
-	result.Emissive = emissive;
-	result.Specular = specular;
-	result.Power = power;
+	result.Ambient = Ambient;
+	result.Diffuse = Diffuse;
+	result.Emissive = Emissive;
+	result.Specular = Specular;
+	result.Power = Power;
 	return result;
 }
 #endif
@@ -55,11 +55,11 @@ Material::operator D3DMATERIAL9() const
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //	関数名：Use
-//  関数説明：メッシュの追加
-//	引数：	meshName：メッシュの名前
+//  関数説明：マテリアルの追加
+//	引数：	materialName：マテリアルのの名前
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void MaterialManager::Use(const string& materialName, const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power)
+void MaterialManager::Use(const string& materialName)
 {
 	auto iterator = materials.find(materialName);
 	if (iterator != materials.end())
@@ -68,7 +68,29 @@ void MaterialManager::Use(const string& materialName, const Color &ambient, cons
 		return;
 	}
 	MaterialInfo newMaterial;
-	newMaterial.Pointer = new Material(ambient, diffuse, specular, emissive, power);
+	newMaterial.Pointer = loadFrom(materialName);
+	if (!newMaterial.Pointer) return;
+	materials.emplace(materialName, newMaterial);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Use
+//  関数説明：マテリアルの追加
+//	引数：	materialName：マテリアルの名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MaterialManager::Use(const string& materialName, Material* material)
+{
+	assert(material);
+	auto iterator = materials.find(materialName);
+	if (iterator != materials.end())
+	{// すでに存在してる
+		++iterator->second.UserNumber;
+		delete material;
+		return;
+	}
+	MaterialInfo newMaterial;
+	newMaterial.Pointer = material;
 	materials.emplace(materialName, newMaterial);
 }
 
@@ -100,4 +122,32 @@ void MaterialManager::Disuse(const string& materialName)
 MaterialManager::MaterialManager()
 {
 	materials.clear();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：loadFrom
+//  関数説明：マテリアルの読み込み
+//	引数：	materialName：マテリアルの名前
+//	戻り値：Material*
+//--------------------------------------------------------------------------------
+Material* MaterialManager::loadFrom(const string& materialName)
+{
+	string filePath = "data/MATERIAL/" + materialName + ".material";
+	FILE *filePointer = nullptr;
+
+	//file open
+	fopen_s(&filePointer, filePath.c_str(), "rb");
+
+	if (!filePointer)
+	{
+		assert("failed to open file!!");
+		return nullptr;
+	}
+
+	auto result = new Material;
+
+	// Todo : read from file
+
+	fclose(filePointer);
+	return result;
 }

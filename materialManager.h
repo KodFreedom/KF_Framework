@@ -17,20 +17,23 @@
 class Material
 {
 public:
-	Material(const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, const float& power)
-		: ambient(ambient)
-		, diffuse(diffuse)
-		, specular(specular)
-		, emissive(emissive)
-		, power(power)
-	{}
+	Material()
+		: Ambient(Color::White)
+		, Diffuse(Color::White)
+		, Specular(Color::White)
+		, Emissive(Color::White)
+		, Power(0.0f)
+	{
+		MainTexture.clear();
+	}
 	~Material() {}
 
-	Color	ambient;	// 環境光の反射率
-	Color	diffuse;	// 漫射光の反射率
-	Color	specular;	// 鏡面光の反射率
-	Color	emissive;	// 自発光
-	float	power;		// ハイライトのシャープネス
+	string	MainTexture;// テクスチャ
+	Color	Ambient;	// 環境光の反射率
+	Color	Diffuse;	// 漫射光の反射率
+	Color	Specular;	// 鏡面光の反射率
+	Color	Emissive;	// 自発光
+	float	Power;		// ハイライトのシャープネス
 
 	//キャスト
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -58,7 +61,7 @@ public:
 	static auto Instance(void) { return instance; }
 
 	void		Use(const string& materialName);
-	void		Use(const string& materialName, const Color &ambient, const Color &diffuse, const Color &specular, const Color &emissive, const float &power);
+	void		Use(const string& materialName, Material* material);
 	void		Disuse(const string& materialName);
 	Material*	GetMaterial(const string& materialName)
 	{
@@ -73,9 +76,7 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MaterialInfo
 	{
-		MaterialInfo()
-			: UserNumber(1)
-			, Pointer(nullptr) {}
+		MaterialInfo() : UserNumber(1), Pointer(nullptr) {}
 		int			UserNumber;
 		Material*	Pointer;
 	};
@@ -85,8 +86,9 @@ private:
 	//--------------------------------------------------------------------------------
 	MaterialManager();
 	~MaterialManager() {}
-	void init(void) {}
-	void uninit(void) { materials.clear(); }
+	void		init(void) {}
+	void		uninit(void) { materials.clear(); }
+	Material*	loadFrom(const string& materialName);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
