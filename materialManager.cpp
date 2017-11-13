@@ -70,6 +70,7 @@ void MaterialManager::Use(const string& materialName)
 	MaterialInfo newMaterial;
 	newMaterial.Pointer = loadFrom(materialName);
 	if (!newMaterial.Pointer) return;
+	TextureManager::Instance()->Use(newMaterial.Pointer->MainTexture);
 	materials.emplace(materialName, newMaterial);
 }
 
@@ -97,7 +98,7 @@ void MaterialManager::Disuse(const string& materialName)
 //	引数：	materialName：マテリアルの名前
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void MaterialManager::CreateMaterialFile(const string& materialName, const string& mainTextureName,
+void MaterialManager::CreateMaterialFileBy(const string& materialName, const string& mainTextureName,
 	const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, const float& power)
 {
 	string filePath = "data/MATERIAL/" + materialName + ".material";

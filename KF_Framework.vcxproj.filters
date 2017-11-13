@@ -25,9 +25,6 @@
     <Filter Include="ソース ファイル\Base">
       <UniqueIdentifier>{cf4c7665-b793-4e59-a24f-e354e36825a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\GameObject">
-      <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Mode">
       <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
     </Filter>
@@ -174,6 +171,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Base\GameObject">
       <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\GameObject">
+      <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -393,7 +393,7 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="gameObject.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="modeDemo.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -410,14 +410,11 @@
     <ClInclude Include="materialManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="gameObjectManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectActor.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
@@ -453,10 +450,10 @@
       <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectSpawner.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="stageSpawner.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
@@ -628,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="renderState.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectManager.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

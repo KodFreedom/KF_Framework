@@ -62,7 +62,7 @@ void Camera::Set(void)
 //--------------------------------------------------------------------------------
 bool Camera::IsInRange(const Vector3& position, const float& radius)
 { // Todo : カメラ前後判定、物体の範囲も判定、視野角の判定...
-	return Vector3::SquareDistanceBetween(rig.Position, position) > radius * radius;
+	return Vector3::SquareDistanceBetween(rig.Position, position) <= radius * radius;
 }
 
 //--------------------------------------------------------------------------------

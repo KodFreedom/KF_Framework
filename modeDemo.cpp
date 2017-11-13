@@ -10,7 +10,6 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "textureManager.h"
 #include "lightManager.h"
 #include "input.h"
 #include "soundManager.h"
@@ -20,6 +19,7 @@
 #include "thirdPersonCamera.h"
 #include "fadeSystem.h"
 #include "motionManager.h"
+#include "materialManager.h"
 
 //gameobject
 #include "stageSpawner.h"
@@ -62,10 +62,13 @@ void ModeDemo::Init(void)
 	auto camera = new ThirdPersionCamera;
 	camera->Init();
 
-	MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
-
+	//MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
+	//MaterialManager::Instance()->CreateMaterialFileBy("sky", "skybox000.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("field", "demoField.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("cube", "nomal_cube.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
 //	//ゲームオブジェクトの初期化
-//	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 //	StageSpawner::LoadStage("demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 //	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));

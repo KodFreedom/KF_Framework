@@ -51,7 +51,7 @@ void RendererManager::Render(void)
 			auto& renderers = renderersArrays[countPriority][countState];
 			if (renderers.empty()) continue;
 
-			renderStates[RS_Max]->Set();
+			renderStates[countState]->Set();
 			for (auto iterator = renderers.begin(); iterator != renderers.end();)
 			{
 				renderSystem->Render(
@@ -60,7 +60,7 @@ void RendererManager::Render(void)
 					(*iterator)->GetGameObject()->GetTransform()->GetCurrentWorldMatrix());
 				iterator = renderers.erase(iterator);
 			}
-			renderStates[RS_Max]->Reset();
+			renderStates[countState]->Reset();
 		}
 
 		if (countPriority == RP_AlphaTest)

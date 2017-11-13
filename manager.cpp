@@ -120,6 +120,10 @@ void Manager::Render(void)
 #endif
 		RenderSystem::Instance()->EndRender();
 	}
+	else
+	{
+		RendererManager::Instance()->Clear();
+	}
 }
 
 //--------------------------------------------------------------------------------

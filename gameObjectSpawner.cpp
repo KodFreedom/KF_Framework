@@ -46,9 +46,6 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("skyBox");
 	renderer->SetRenderState(RenderStateType::RS_NoLight_NoFog);
-#ifdef _DEBUG
-	MaterialManager::Instance()->CreateMaterialFile("sky", "skybox000.jpg");
-#endif // DEBUG
 	renderer->SetMaterialName("sky");
 	result->AddRenderer(renderer);
 
@@ -74,9 +71,6 @@ GameObject* GameObjectSpawner::CreateField(const string& stageName)
 	//コンポネント
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName(fieldName + ".mesh");
-#ifdef _DEBUG
-	MaterialManager::Instance()->CreateMaterialFile("field", "demoField.jpg");
-#endif // DEBUG
 	renderer->SetMaterialName("field");
 	result->AddRenderer(renderer);
 	result->AddCollider(new FieldCollider(result, fieldName));
@@ -96,9 +90,6 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	//コンポネント
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("cube");
-#ifdef _DEBUG
-	MaterialManager::Instance()->CreateMaterialFile("cube", "nomal_cube.jpg");
-#endif // DEBUG
 	renderer->SetMaterialName("cube");
 	result->AddRenderer(renderer);
 	result->AddCollider(new OBBCollider(result, CM_Dynamic, scale * 0.5f));
@@ -313,9 +304,6 @@ GameObject* GameObjectSpawner::CreateFieldEditor(void)
 	result->AddBehavior(pBehavior);
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("field");
-#ifdef _DEBUG
-	MaterialManager::Instance()->CreateMaterialFile("editorField", "editorField.jpg");
-#endif // DEBUG
 	renderer->SetMaterialName("editorField");
 	result->AddRenderer(renderer);
 

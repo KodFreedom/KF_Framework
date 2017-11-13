@@ -170,6 +170,7 @@ bool RenderSystemDirectX9::init(HWND hWnd, BOOL isWindowMode)
 	initFog();
 	TextureManager::Create(lpD3DDevice);
 	LightManager::Create(lpD3DDevice);
+	MeshManager::Create(lpD3DDevice);
 #if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_Init(hWnd, lpD3DDevice);
 #endif
@@ -186,6 +187,7 @@ void RenderSystemDirectX9::uninit(void)
 #endif
 	TextureManager::Release();
 	LightManager::Release();
+	MeshManager::Release();
 	SAFE_RELEASE(lpD3DDevice);
 	SAFE_RELEASE(lpDirect3D9);
 }
