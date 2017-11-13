@@ -28,9 +28,6 @@
     <Filter Include="ヘッダー ファイル\GameObject">
       <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\GameObject">
-      <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Mode">
       <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
     </Filter>
@@ -103,9 +100,6 @@
     <Filter Include="ヘッダー ファイル\ImGui">
       <UniqueIdentifier>{93f7d4c3-a8e7-476c-848e-4cd79575de54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ImGui">
-      <UniqueIdentifier>{88e67559-49a6-4540-b010-3b1b95d8b6a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{06ee83df-d177-4aae-bcba-0f0d5327dbc0}</UniqueIdentifier>
     </Filter>
@@ -175,6 +169,12 @@
     <Filter Include="ソース ファイル\Component\Renderer">
       <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\ImGui">
+      <UniqueIdentifier>{88e67559-49a6-4540-b010-3b1b95d8b6a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\GameObject">
+      <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KF_Math.cpp">
@@ -184,7 +184,7 @@
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="gameObject.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
+      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="modeDemo.cpp">
       <Filter>ソース ファイル\Mode</Filter>
@@ -201,11 +201,8 @@
     <ClCompile Include="materialManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="gameObjectManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
+      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
@@ -238,25 +235,22 @@
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
     <ClCompile Include="gameObjectSpawner.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
+      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="stageSpawner.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
+      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ソース ファイル\ImGui</Filter>
+      <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>ソース ファイル\ImGui</Filter>
+      <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ソース ファイル\ImGui</Filter>
+      <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
-      <Filter>ソース ファイル\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="fog.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="debugObserver.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -387,6 +381,9 @@
     <ClCompile Include="renderState.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
+    <ClCompile Include="gameObjectManager.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KF_Math.h">
@@ -481,9 +478,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="fog.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="debugObserver.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>

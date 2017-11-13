@@ -73,11 +73,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`
 	//--------------------------------------------------------------------------------
-	union
-	{
-		list<MeshRenderer*> renderersArray[RP_Max * RS_Max];
-		list<MeshRenderer*> renderersArrays[RP_Max][RS_Max];
-	};
+	list<MeshRenderer*>		renderersArrays[RP_Max][RS_Max];
 	RenderState*			renderStates[RS_Max];
 	static RendererManager*	instance;
 };

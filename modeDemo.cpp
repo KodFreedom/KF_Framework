@@ -19,6 +19,7 @@
 #include "modeResult.h"
 #include "thirdPersonCamera.h"
 #include "fadeSystem.h"
+#include "motionManager.h"
 
 //gameobject
 #include "stageSpawner.h"
@@ -61,26 +62,28 @@ void ModeDemo::Init(void)
 	auto camera = new ThirdPersionCamera;
 	camera->Init();
 
-	//ゲームオブジェクトの初期化
-	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	StageSpawner::LoadStage("demo");
-	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
-	player->SetName("Player");
+	MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
 
-#ifdef _DEBUG
-	DebugObserver::Instance()->SetPlayer(player);
-#endif // _DEBUG
-	//auto pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-50.0, 30.0f, -7.0f), Vector3(0.0f), Vector3(1.0f));
-	//pEnemy->SetName("Enemy00");
-	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-12.0, 45.0f, -46.0f), Vector3(0.0f), Vector3(1.0f));
-	//pEnemy->SetName("Enemy01");
-	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(117.0f, 80.0f, 1.6f), Vector3(0.0f), Vector3(1.0f));
-	//pEnemy->SetName("Enemy02");
-	GameObjectSpawner::CreateGoal(Vector3(112.0f, 16.0f, 51.0f));
-	camera->SetFollowTarget(player);
-
-	//Main::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
+//	//ゲームオブジェクトの初期化
+//	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+//	StageSpawner::LoadStage("demo");
+//	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+//	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
+//	player->SetName("Player");
+//
+//#ifdef _DEBUG
+//	DebugObserver::Instance()->SetPlayer(player);
+//#endif // _DEBUG
+//	//auto pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-50.0, 30.0f, -7.0f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy00");
+//	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-12.0, 45.0f, -46.0f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy01");
+//	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(117.0f, 80.0f, 1.6f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy02");
+//	GameObjectSpawner::CreateGoal(Vector3(112.0f, 16.0f, 51.0f));
+//	camera->SetFollowTarget(player);
+//
+//	//Main::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------

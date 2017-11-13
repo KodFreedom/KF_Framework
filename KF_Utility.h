@@ -42,6 +42,7 @@ namespace KF
 		//--------------------------------------------------------------------------------
 		int			GetStringUntilToken(FILE* filePointer, const string& token, string& buffer);
 		int			GetStringUntilToken(string& file, const string& token, string& buffer);
+		int			GetStringUntilString(FILE* filePointer, const string& compare, string& buffer);
 		int			GetStringCount(FILE* filePointer, const string& token, const string& compareString);
 		int			GetStringCount(string& file, const string& token, const string& compareString);
 		FileInfo	AnalyzeFilePath(const string& filePath);

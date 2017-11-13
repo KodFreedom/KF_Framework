@@ -23,7 +23,6 @@
 #include "gameObjectActor.h"
 #include "transform.h"
 #include "playerController.h"
-#include "fog.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
 #endif

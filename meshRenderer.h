@@ -27,26 +27,23 @@ public:
 		, currentState(RS_Default)
 	{
 		meshName.clear();
-		textureName.clear();
 		materialName.clear();
 	}
 
 	~MeshRenderer() {}
 
-	virtual bool	Init(void) override;
-	virtual void	Uninit(void) override;
-	virtual void	Update(void);
+	virtual bool Init(void) override;
+	virtual void Uninit(void) override;
+	virtual void Update(void);
 
 	//Setä÷êî
 	void SetMeshName(const string& name);
-	void SetTextureName(const string& name);
 	void SetMaterialName(const string& name);
 	void SetRenderPriority(const RenderPriority& value) { currentPriority = value; }
 	void SetRenderState(const RenderStateType& value) { currentState = value; }
 
 	//Getä÷êî
 	const auto& GetMeshName(void) const { return meshName; }
-	const auto& GetTextureName(void) const { return textureName; }
 	const auto& GetMaterialName(void) const { return materialName; }
 	const auto& GetRenderPriority(void) const { return currentPriority; }
 	const auto& GetRenderState(void) const { return currentState; }
@@ -61,7 +58,6 @@ protected:
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
 	string			meshName;
-	string			textureName;
 	string			materialName;
 	RenderPriority	currentPriority;
 	RenderStateType	currentState;

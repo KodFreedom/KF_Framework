@@ -32,13 +32,15 @@ public:
 
 	virtual bool BeginRender(void) = 0;
 	virtual void EndRender(void) = 0;
-	virtual void Render(const string& meshName, const string& textureName, const string& materialName, const Matrix44& worldMatrix) = 0;
+	virtual void Render(const string& meshName, const string& materialName, const Matrix44& worldMatrix) = 0;
 				 
 	//Getä÷êî	   
 	auto		 GetBackgroundColor(void) const { return backgroundColor; }
+	auto		 GetFogColor(void) const { return fogColor; }
 
 	//Setä÷êî	   
 	void		 SetBackgroundColor(const Color& color) { backgroundColor = color; }
+	void		 SetFogColor(const Color& color) { fogColor = color; }
 	virtual void SetPorjectionCamera(const Matrix44& view, const Matrix44& projection) = 0;
 	virtual void SetRenderState(const Lighting& value) = 0;
 	virtual void SetRenderState(const CullMode& value) = 0;
@@ -51,7 +53,9 @@ protected:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîíËã`
 	//--------------------------------------------------------------------------------
-	RenderSystem() : backgroundColor(Color::Black) {}
+	RenderSystem()
+		: backgroundColor(Color::Black), fogColor(Color::White)
+		, fogStartZ(0.0f), fogEndZ(1000.0f), fogDensity(1.0f) {}
 	~RenderSystem() {}
 	virtual bool init(HWND hWnd, BOOL isWindowMode) = 0;
 	virtual void uninit(void) = 0;
@@ -61,4 +65,8 @@ protected:
 	//--------------------------------------------------------------------------------
 	static RenderSystem*	instance;
 	Color					backgroundColor;
+	Color					fogColor;
+	float					fogStartZ;
+	float					fogEndZ;
+	float					fogDensity;
 };

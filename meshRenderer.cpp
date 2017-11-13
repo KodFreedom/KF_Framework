@@ -10,7 +10,6 @@
 #include "meshRenderer.h"
 #include "gameObject.h"
 #include "meshManager.h"
-#include "textureManager.h"
 #include "materialManager.h"
 #include "rendererManager.h"
 #include "camera.h"
@@ -38,12 +37,6 @@ void MeshRenderer::Uninit(void)
 	{
 		MeshManager::Instance()->Disuse(meshName);
 		meshName.clear();
-	}
-
-	if (!textureName.empty())
-	{
-		TextureManager::Instance()->Disuse(textureName);
-		textureName.clear();
 	}
 
 	if (!materialName.empty())
@@ -78,21 +71,6 @@ void MeshRenderer::SetMeshName(const string& name)
 
 	meshName = name;
 	MeshManager::Instance()->Use(name);
-}
-
-//--------------------------------------------------------------------------------
-//  テクスチャの設定
-//--------------------------------------------------------------------------------
-void MeshRenderer::SetTextureName(const string& name)
-{
-	if (!textureName.empty())
-	{
-		TextureManager::Instance()->Disuse(textureName);
-		textureName.clear();
-	}
-
-	textureName = name;
-	TextureManager::Instance()->Use(name);
 }
 
 //--------------------------------------------------------------------------------

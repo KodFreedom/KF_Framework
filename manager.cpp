@@ -160,7 +160,7 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 	MotionManager::Create();
 
 	//‰Šúƒ‚[ƒhİ’è
-	Change(new ModeEditor);
+	Change(new ModeDemo);
 
 	return true;
 }

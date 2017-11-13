@@ -16,10 +16,6 @@ class MotionInfo;
 //--------------------------------------------------------------------------------
 class MotionManager
 {
-#ifdef _DEBUG
-	friend class DebugObserver;
-#endif // _DEBUG
-
 public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
@@ -37,6 +33,7 @@ public:
 	void		Use(const string& motionName);
 	void		Disuse(const string& motionName);
 	auto		GetMotionInfoBy(const string& motionName) { return motions.at(motionName).Pointer; }
+	void		CreateMotionFileBy(const string& txtFilePath);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -44,7 +41,7 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MotionStruct
 	{
-		us			UserNumber;
+		int			UserNumber;
 		MotionInfo*	Pointer;
 	};
 

@@ -137,11 +137,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  •Ï”’è‹`
 	//--------------------------------------------------------------------------------
-	union
-	{
-		list<Collider*> collidersArray[CM_Max * CT_Max];
-		list<Collider*> collidersArrays[CM_Max][CT_Max];
-	};
+	list<Collider*>			collidersArrays[CM_Max][CT_Max];
 	list<Collider*>			fields;
 	static CollisionSystem*	instance;
 

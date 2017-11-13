@@ -20,16 +20,16 @@
 //  Public
 //
 //--------------------------------------------------------------------------------
-void StageSpawner::LoadStage(const string& strStageName)
+void StageSpawner::LoadStage(const string& stageName)
 {
-	GameObjectSpawner::CreateField(strStageName);
+	GameObjectSpawner::CreateField(stageName);
 
 	//フィールドの保存
-	string strName = "data/STAGE/" + strStageName + "Stage" + ".stage";
+	string filePath = "data/STAGE/" + stageName + "Stage" + ".stage";
 	FILE *filePointer;
 
 	//file open
-	fopen_s(&filePointer, strName.c_str(), "rb");
+	fopen_s(&filePointer, filePath.c_str(), "rb");
 
 	if (!filePointer)
 	{
@@ -37,18 +37,18 @@ void StageSpawner::LoadStage(const string& strStageName)
 		return;
 	}
 
-	int nNumModelType = 0;
-	fread(&nNumModelType, sizeof(int), 1, filePointer);
+	int modelTypeNumber = 0;
+	fread(&modelTypeNumber, sizeof(int), 1, filePointer);
 
-	for (int count = 0; count < nNumModelType; ++count)
+	for (int count = 0; count < modelTypeNumber; ++count)
 	{
 		//ファイル名読込
 		int size = 0;
 		fread(&size, sizeof(int), 1, filePointer);
-		string strModelName;
-		strModelName.resize(size);
-		fread(&strModelName[0], sizeof(char), size, filePointer);
-		strModelName += ".model";
+		string modelName;
+		modelName.resize(size);
+		fread(&modelName[0], sizeof(char), size, filePointer);
+		modelName += ".model";
 		
 		//モデル数の読込
 		int number = 0;
@@ -61,8 +61,8 @@ void StageSpawner::LoadStage(const string& strStageName)
 			fread(&position, sizeof(Vector3), 1, filePointer);
 			Quaternion rotation;
 			fread(&rotation, sizeof(Quaternion), 1, filePointer);
-			auto gameObject = GameObjectSpawner::CreateModel(strModelName, position, rotation, Vector3(1.0f));
-			if (strModelName == "Medieval_Windmill.model")
+			auto gameObject = GameObjectSpawner::CreateModel(modelName, position, rotation, Vector3::One);
+			if (modelName == "Medieval_Windmill.model")
 			{
 				auto behavior = new WindmillController(gameObject);
 				behavior->Init();

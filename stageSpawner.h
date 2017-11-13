@@ -20,5 +20,5 @@
 class StageSpawner
 {
 public:
-	static void LoadStage(const string& strStageName);
+	static void LoadStage(const string& stageName);
 };

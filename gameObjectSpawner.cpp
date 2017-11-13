@@ -22,6 +22,7 @@
 #include "animator.h"
 #include "playerController.h"
 #include "enemyController.h"
+#include "materialManager.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #include "fieldEditor.h"
@@ -45,7 +46,10 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("skyBox");
 	renderer->SetRenderState(RenderStateType::RS_NoLight_NoFog);
-	renderer->SetTextureName("skybox000.jpg");
+#ifdef _DEBUG
+	MaterialManager::Instance()->CreateMaterialFile("sky", "skybox000.jpg");
+#endif // DEBUG
+	renderer->SetMaterialName("sky");
 	result->AddRenderer(renderer);
 
 	//パラメーター
@@ -70,7 +74,10 @@ GameObject* GameObjectSpawner::CreateField(const string& stageName)
 	//コンポネント
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName(fieldName + ".mesh");
-	renderer->SetTextureName("demoField.jpg");
+#ifdef _DEBUG
+	MaterialManager::Instance()->CreateMaterialFile("field", "demoField.jpg");
+#endif // DEBUG
+	renderer->SetMaterialName("field");
 	result->AddRenderer(renderer);
 	result->AddCollider(new FieldCollider(result, fieldName));
 
@@ -89,7 +96,10 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	//コンポネント
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("cube");
-	renderer->SetTextureName("nomal_cube.jpg");
+#ifdef _DEBUG
+	MaterialManager::Instance()->CreateMaterialFile("cube", "nomal_cube.jpg");
+#endif // DEBUG
+	renderer->SetMaterialName("cube");
 	result->AddRenderer(renderer);
 	result->AddCollider(new OBBCollider(result, CM_Dynamic, scale * 0.5f));
 	result->SetRigidbody(new Rigidbody3D(result));
@@ -303,7 +313,10 @@ GameObject* GameObjectSpawner::CreateFieldEditor(void)
 	result->AddBehavior(pBehavior);
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName("field");
-	renderer->SetTextureName("editorField.jpg");
+#ifdef _DEBUG
+	MaterialManager::Instance()->CreateMaterialFile("editorField", "editorField.jpg");
+#endif // DEBUG
+	renderer->SetMaterialName("editorField");
 	result->AddRenderer(renderer);
 
 	//初期化
@@ -377,18 +390,12 @@ GameObject* GameObjectSpawner::createChildNode(Transform* parent, FILE* filePoin
 		result->AddCollider(collider);
 	}
 
-	//Texture
-	int textureNumber = 0;
-	fread_s(&textureNumber, sizeof(int), sizeof(int), 1, filePointer);
-	for (int count = 0; count < textureNumber; ++count)
-	{
-		int textureNameSize = 0;
-		fread_s(&textureNameSize, sizeof(int), sizeof(int), 1, filePointer);
-		string texture;
-		texture.resize(textureNameSize);
-		fread_s(&texture[0], textureNameSize, sizeof(char), textureNameSize, filePointer);
-		//Mesh側で読み込むのでここは放っておく
-	}
+	//Material
+	int materialNameSize = 0;
+	fread_s(&materialNameSize, sizeof(int), sizeof(int), 1, filePointer);
+	string materialName;
+	materialName.resize(materialNameSize);
+	fread_s(&materialName[0], materialNameSize, sizeof(char), materialNameSize, filePointer);
 
 	//Mesh
 	int meshNumber = 0;

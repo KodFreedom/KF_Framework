@@ -56,7 +56,6 @@ void RendererManager::Render(void)
 			{
 				renderSystem->Render(
 					(*iterator)->GetMeshName(),
-					(*iterator)->GetTextureName(),
 					(*iterator)->GetMaterialName(),
 					(*iterator)->GetGameObject()->GetTransform()->GetCurrentWorldMatrix());
 				iterator = renderers.erase(iterator);
@@ -76,9 +75,12 @@ void RendererManager::Render(void)
 //--------------------------------------------------------------------------------
 void RendererManager::Clear(void)
 {
-	for (auto& renderers : renderersArray)
+	for (auto& renderersArray : renderersArrays)
 	{
-		renderers.clear();
+		for (auto& renderers : renderersArray)
+		{
+			renderers.clear();
+		}
 	}
 }
 
@@ -100,7 +102,7 @@ void RendererManager::Register(MeshRenderer* renderer)
 //--------------------------------------------------------------------------------
 RendererManager::RendererManager()
 {
-	for (auto renderState : renderStates)
+	for (auto& renderState : renderStates)
 	{
 		renderState = nullptr;
 	}
@@ -123,7 +125,7 @@ void RendererManager::init(void)
 //--------------------------------------------------------------------------------
 void RendererManager::uninit(void)
 {
-	for (auto renderState : renderStates)
+	for (auto& renderState : renderStates)
 	{
 		SAFE_DELETE(renderState);
 	}

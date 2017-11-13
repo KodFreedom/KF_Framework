@@ -58,11 +58,11 @@ void RenderSystemDirectX9::EndRender(void)
 //			worldMatrix：世界行列
 //	戻り値：なし
 //--------------------------------------------------------------------------------
-void RenderSystemDirectX9::Render(const string& meshName, const string& textureName, const string& materialName, const Matrix44& worldMatrix)
+void RenderSystemDirectX9::Render(const string& meshName, const string& materialName, const Matrix44& worldMatrix)
 {
 	auto mesh = MeshManager::Instance()->GetMesh(meshName);
-	auto texture = TextureManager::Instance()->GetTexture(textureName);
 	auto material = MaterialManager::Instance()->GetMaterial(materialName);
+	auto texture = TextureManager::Instance()->GetTexture(material->MainTexture);
 	lpD3DDevice->SetTransform(D3DTS_WORLD, &(D3DXMATRIX)worldMatrix);
 	lpD3DDevice->SetStreamSource(0, mesh->VertexBuffer, 0, sizeof(VERTEX_3D));
 	lpD3DDevice->SetIndices(mesh->IndexBuffer);
@@ -167,6 +167,7 @@ bool RenderSystemDirectX9::init(HWND hWnd, BOOL isWindowMode)
 	initRenderSate();
 	initSamplerState();
 	initTextureStageState();
+	initFog();
 	TextureManager::Create(lpD3DDevice);
 	LightManager::Create(lpD3DDevice);
 #if defined(_DEBUG) || defined(EDITOR)
@@ -299,5 +300,33 @@ void RenderSystemDirectX9::initTextureStageState(void)
 	lpD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);	// 最初のアルファ引数(初期値はD3DTA_TEXTURE、テクスチャがない場合はD3DTA_DIFFUSE)
 	lpD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);	// アルファブレンディング処理(初期値はD3DTOP_SELECTARG1)
 	lpD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);	// ２番目のアルファ引数(初期値はD3DTA_CURRENT)
+}
+
+//--------------------------------------------------------------------------------
+//  Fogの初期化
+//--------------------------------------------------------------------------------
+void RenderSystemDirectX9::initFog(void)
+{
+	// フォグを有効にする
+	lpD3DDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	
+	// フォグカラー設定
+	lpD3DDevice->SetRenderState(D3DRS_FOGCOLOR, fogColor);
+	
+	// バーテックスフォグ(線形公式)を使用
+	lpD3DDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
+	
+	// フォグ範囲設定
+	lpD3DDevice->SetRenderState(D3DRS_FOGSTART, *((LPDWORD)(&fogStartZ)));
+	lpD3DDevice->SetRenderState(D3DRS_FOGEND, *((LPDWORD)(&fogEndZ)));
+	
+	// ピクセルフォグ(指数の２ )を使用
+	lpD3DDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP2);
+	
+	// フォグ密度設定
+	lpD3DDevice->SetRenderState(D3DRS_FOGDENSITY, *((LPDWORD)(&fogDensity)));
+	
+	// 範囲ベースのフォグを使用
+	lpD3DDevice->SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
 }
 #endif

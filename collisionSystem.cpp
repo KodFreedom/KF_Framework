@@ -145,9 +145,12 @@ void CollisionSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::Clear(void)
 {
-	for (auto colliders : collidersArray)
+	for (auto& collidersArray : collidersArrays)
 	{
-		colliders.clear();
+		for (auto& colliders : collidersArray)
+		{
+			colliders.clear();
+		}
 	}
 	fields.clear();
 }

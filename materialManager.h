@@ -61,7 +61,6 @@ public:
 	static auto Instance(void) { return instance; }
 
 	void		Use(const string& materialName);
-	void		Use(const string& materialName, Material* material);
 	void		Disuse(const string& materialName);
 	Material*	GetMaterial(const string& materialName)
 	{
@@ -69,6 +68,7 @@ public:
 		if (materials.end() == iterator) return nullptr;
 		return iterator->second.Pointer;
 	}
+	void		CreateMaterialFile(const string& materialName, const string& mainTextureName, const Color& ambient = Color::White, const Color& diffuse = Color::Gray, const Color& specular = Color::White, const Color& emissive = Color::White, const float& power = 0.0f);
 
 private:
 	//--------------------------------------------------------------------------------

@@ -821,8 +821,8 @@ Matrix44 Matrix44::operator*(const Matrix44 &value) const
 				Elements[countY][1] * value.Elements[1][countX] + 
 				Elements[countY][2] * value.Elements[2][countX] + 
 				Elements[countY][3] * value.Elements[3][countX];
-		}								    
-	}									   								   
+		}
+	}
 	return result;
 }
 
