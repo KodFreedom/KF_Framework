@@ -278,6 +278,12 @@ void RenderSystemDirectX9::initRenderSate(void)
 	lpD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 	lpD3DDevice->SetRenderState(D3DRS_ALPHAREF, (DWORD)0x00000001);			// αテストに関する設定
 	lpD3DDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);		// αテストに関する設定
+	SetRenderState(Lighting::Lighting_On);
+	SetRenderState(CullMode::Cull_CCW);
+	SetRenderState(Synthesis::S_Multiplication);
+	SetRenderState(FillMode::Fill_Solid);
+	SetRenderState(Fog::Fog_On);
+	SetRenderState(Alpha::A_None);
 }
 
 //--------------------------------------------------------------------------------

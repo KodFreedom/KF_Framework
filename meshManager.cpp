@@ -224,12 +224,20 @@ MeshManager::MeshInfo MeshManager::loadFromMesh(const string& fileName)
 	}
 
 	//頂点データ
+	//vector<VERTEX_3D> testV;
+	//testV.resize(info.Pointer->VertexNumber);
+	//fread_s(&testV[0], sizeof(VERTEX_3D) * info.Pointer->VertexNumber, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
+
 	VERTEX_3D* vertexPointer;
 	info.Pointer->VertexBuffer->Lock(0, 0, (void**)&vertexPointer, 0);
 	fread_s(vertexPointer, sizeof(VERTEX_3D) * info.Pointer->VertexNumber, sizeof(VERTEX_3D), info.Pointer->VertexNumber, filePointer);
 	info.Pointer->VertexBuffer->Unlock();
 
 	//インデックス
+	//vector<WORD> testI;
+	//testI.resize(info.Pointer->IndexNumber);
+	//fread_s(&testI[0], sizeof(WORD) * info.Pointer->IndexNumber, sizeof(WORD), info.Pointer->IndexNumber, filePointer);
+
 	WORD *indexPointer;
 	info.Pointer->IndexBuffer->Lock(0, 0, (void**)&indexPointer, 0);
 	fread_s(indexPointer, sizeof(WORD) * info.Pointer->IndexNumber, sizeof(WORD), info.Pointer->IndexNumber, filePointer);

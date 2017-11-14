@@ -71,7 +71,7 @@ GameObject* GameObjectSpawner::CreateField(const string& stageName)
 	//コンポネント
 	auto renderer = new MeshRenderer(result);
 	renderer->SetMeshName(fieldName + ".mesh");
-	renderer->SetMaterialName("field");
+	renderer->SetMaterialName(fieldName);
 	result->AddRenderer(renderer);
 	result->AddCollider(new FieldCollider(result, fieldName));
 
