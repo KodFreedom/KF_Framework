@@ -12,66 +12,77 @@
 #include "UIObject.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
+UISystem* UISystem::instance = nullptr;
 
-
+//--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  更新
 //--------------------------------------------------------------------------------
-void CUISystem::UpdateAll(void)
+void UISystem::Update(void)
 {
-	for (auto itr = m_listObj.begin(); itr != m_listObj.end(); ++itr)
+	for (auto object : objects)
 	{
-		(*itr)->Update();
+		object->Update();
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  描画
 //--------------------------------------------------------------------------------
-void CUISystem::DrawAll(void)
+void UISystem::Draw(void)
 {
-	for (auto itr = m_listObj.begin(); itr != m_listObj.end(); ++itr)
+	for (auto object : objects)
 	{
-		(*itr)->Draw();
+		object->Draw();
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  追加
 //--------------------------------------------------------------------------------
-void CUISystem::Register(CUIObject* pUIObj)
+void UISystem::Register(UIObject* object)
 {
-	m_listObj.push_back(pUIObj);
-	m_listObj.sort(CUISystem::Compare);		//描画順番をソートする
+	objects.push_back(object);
+	objects.sort(UISystem::compare);
 }
 
 //--------------------------------------------------------------------------------
 //  削除
 //--------------------------------------------------------------------------------
-void CUISystem::Deregister(CUIObject* pUIObj)
+void UISystem::Deregister(UIObject* object)
 {
-	m_listObj.remove(pUIObj);
-}
-
-//--------------------------------------------------------------------------------
-//  比較関数
-//--------------------------------------------------------------------------------
-bool CUISystem::Compare(CUIObject* pUIObjA, CUIObject* pUIObjB)
-{
-	return pUIObjA->m_usOrder < pUIObjB->m_usOrder;
+	objects.remove(object);
 }
 
 //--------------------------------------------------------------------------------
 //  リリース
 //--------------------------------------------------------------------------------
-void CUISystem::ReleaseAll(void)
+void UISystem::ReleaseAll(void)
 {
-	for (auto itr = m_listObj.begin(); itr != m_listObj.end();)
+	for (auto itr = objects.begin(); itr != objects.end();)
 	{
 		(*itr)->Uninit();
 		delete (*itr);
-		itr = m_listObj.erase(itr);
+		itr = objects.erase(itr);
 	}
 }
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  比較関数
+//--------------------------------------------------------------------------------
+bool UISystem::compare(UIObject* objectA, UIObject* objectB)
+{
+	return objectA->order < objectB->order;
+}
+

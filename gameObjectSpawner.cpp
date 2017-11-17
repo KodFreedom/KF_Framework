@@ -8,212 +8,310 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "meshManager.h"
-#include "renderManager.h"
+#include "rendererManager.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
-#include "MeshComponent.h"
-#include "3DMeshRenderComponent.h"
-#include "sphereColliderComponent.h"
-#include "OBBColliderComponent.h"
-#include "AABBColliderComponent.h"
-#include "fieldColliderComponent.h"
-#include "3DRigidbodyComponent.h"
+#include "gameObjectActor.h"
+#include "meshRenderer.h"
+#include "sphereCollider.h"
+#include "OBBCollider.h"
+#include "AABBCollider.h"
+#include "fieldCollider.h"
+#include "rigidbody3D.h"
+#include "animator.h"
+#include "playerController.h"
+#include "enemyController.h"
+#include "materialManager.h"
 
-#ifdef _DEBUG
-#include "fieldEditorBehaviorComponent.h"
-#include "modelEditorBehaviorComponent.h"
-#include "editorControllerBehaviorComponent.h"
+#if defined(_DEBUG) || defined(EDITOR)
+#include "fieldEditor.h"
+#include "modelEditor.h"
+#include "editorController.h"
 #endif // _DEBUG
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//  public
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  SkyBox生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateSkyBox(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("skyBox");
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetRenderState(RS_LIGHTOFF_CULLFACEON_MUL);
-	pRender->SetTexName("skybox000.jpg");
-	pObj->SetRenderComponent(pRender);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("skyBox");
+	renderer->SetRenderState(RenderStateType::RS_NoLight_NoFog);
+	renderer->SetMaterialName("sky");
+	result->AddRenderer(renderer);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
+	auto transform = result->GetTransform();;
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //  MeshField生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateField(const string& strStageName)
+GameObject* GameObjectSpawner::CreateField(const string& stageName)
 {
-	auto pObj = new CGameObject;
-	string strFieldName = strStageName + "Field";
+	auto result = new GameObject;
+	string fieldName = stageName + "Field";
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strFieldName + ".mesh");
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetTexName("demoField.jpg");
-	pObj->SetRenderComponent(pRender);
-	auto pCollider = new CFieldColliderComponent(pObj, strFieldName);
-	pObj->AddCollider(pCollider);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(fieldName + ".mesh");
+	renderer->SetMaterialName(fieldName);
+	result->AddRenderer(renderer);
+	result->AddCollider(new FieldCollider(result, fieldName));
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateCube(const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("cube");
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetTexName("nomal_cube.jpg");
-	pObj->SetRenderComponent(pRender);
-	auto pCollider = new CAABBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
-	//COBBColliderComponent* pCollider = new COBBColliderComponent(pObj, CS::DYNAMIC, vScale * 0.5f);
-	//CSphereColliderComponent* pCollider = new CSphereColliderComponent(pObj, CS::DYNAMIC, vScale.m_fX * 0.5f);
-	pObj->AddCollider(pCollider);
-	auto pRb = new C3DRigidbodyComponent(pObj);
-	pObj->SetRigidbodyComponent(pRb);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("cube");
+	renderer->SetMaterialName("cube");
+	result->AddRenderer(renderer);
+	result->AddCollider(new OBBCollider(result, CM_Dynamic, scale * 0.5f));
+	result->SetRigidbody(new Rigidbody3D(result));
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateXModel(const string& strPath, const CKFVec3& vPos, const CKFVec3& vRot, const CKFVec3& vScale)
+GameObject* GameObjectSpawner::CreateXModel(const string& modelName, const Vector3& position, const Vector3& rotation, const Vector3& scale)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//Name
-	auto& strName = CKFUtility::GetFileName(strPath);
-	pObj->SetName(strName);
+	auto& fileInfo = Utility::AnalyzeFilePath(modelName);
+	result->SetName(fileInfo.Name);
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strPath);
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pObj->SetRenderComponent(pRender);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(modelName);
+	result->AddRenderer(renderer);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->RotByEuler(vRot);
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //  Cube生成処理
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateGoal(const CKFVec3& vPos)
+GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//Tag
-	pObj->SetTag("Goal");
+	result->SetTag("Goal");
 
 	//コライダー
-	auto pCollider = new CSphereColliderComponent(pObj, CS::STATIC, 2.0f);
-	//pCollider->SetOffset(CKFVec3(0.0f));
-	pCollider->SetTrigger(true);
-	pCollider->SetTag("Goal");
-	pObj->AddCollider(pCollider);
+	auto collider = new SphereCollider(result, CM_Static, 2.0f);
+	collider->SetTrigger(true);
+	collider->SetTag("Goal");
+	result->AddCollider(collider);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：CreateModel
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	strFilePath：ファイルの名前 
-//			vPos
-//			qRot
-//			vScale
-//	戻り値：CGameObject*
+//	引数：	filePath：ファイルの名前 
+//			Position
+//			rotation
+//			scale
+//	戻り値：GameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CKFVec3& vPos, const CKFQuaternion& qRot, const CKFVec3& vScale)
+GameObject* GameObjectSpawner::CreateModel(const string& modelName, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
 {
-	string strName, strType;
-	CKFUtility::AnalyzeFilePath(strFilePath, strName, strType);
-	if (!strType._Equal("model")) { return nullptr; }
+	auto& fileInfo = Utility::AnalyzeFilePath(modelName);
+	if (!fileInfo.Type._Equal("model")) return nullptr;
 	
 	//Modelファイルの開く
-	string strPath = "data/MODEL/" + strFilePath;
-	FILE *pFile;
-	fopen_s(&pFile, strPath.c_str(), "rb");
+	string strPath = "data/MODEL/" + modelName;
+	FILE *filePointer;
+	fopen_s(&filePointer, strPath.c_str(), "rb");
 
-	auto pObj = createChildNode(nullptr, pFile);
+	auto result = createChildNode(nullptr, filePointer);
 
 	//Name
-	pObj->SetName(strName);
+	result->SetName(fileInfo.Name);
 
 	//Trans
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(vPos);
-	pTrans->SetPosNext(vPos);
-	pTrans->SetScale(vScale);
-	pTrans->SetScaleNext(vScale);
-	pTrans->SetRot(qRot);
-	pTrans->SetRotNext(qRot);
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
 
-	fclose(pFile);
+	fclose(filePointer);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
+
+
+//--------------------------------------------------------------------------------
+//  生成処理
+//--------------------------------------------------------------------------------
+GameObjectActor* GameObjectSpawner::CreatePlayer(const string &actorPath, const Vector3& position, const Vector3& rotation, const Vector3& scale)
+{
+	auto result = new GameObjectActor;
+
+	//Tag
+	result->SetTag("Player");
+
+	//コンポネント
+	auto rigidbody = new Rigidbody3D(result);
+	result->SetRigidbody(rigidbody);
+	result->SetAnimator(new Animator(result, actorPath));
+	result->AddBehavior(new PlayerController(result, *rigidbody));
+	auto collider = new SphereCollider(result, CM_Dynamic, 0.6f);
+	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
+	collider->SetTag("body");
+	result->AddCollider(collider);
+
+	//パラメーター
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
+
+	//初期化
+	result->Init();
+
+	//UI
+	//PlayerUI::Create(pPb);
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//  生成処理
+//--------------------------------------------------------------------------------
+GameObjectActor* GameObjectSpawner::CreateEnemy(const string &actorPath, const Vector3& position, const Vector3& rotation, const Vector3& scale)
+{
+	auto result = new GameObjectActor;
+
+	//Tag
+	result->SetTag("Enemy");
+
+	//コンポネント
+	auto rigidbody = new Rigidbody3D(result);
+	result->SetRigidbody(rigidbody);
+	result->SetAnimator(new Animator(result, actorPath));
+	result->AddBehavior(new EnemyController(result, *rigidbody));
+
+	//コライダー
+	auto collider = new SphereCollider(result, CM_Dynamic, 0.6f);
+	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
+	collider->SetTag("body");
+	result->AddCollider(collider);
+	auto detector = new SphereCollider(result, CM_Dynamic, 6.0f);
+	detector->SetTrigger(true);
+	detector->SetTag("detector");
+	result->AddCollider(detector);
+
+	//パラメーター
+	auto transform = result->GetTransform();
+	transform->SetNextPosition(position);
+	transform->SetNextScale(scale);
+	transform->SetNextRotation(rotation);
+
+	//初期化
+	result->Init();
+	return result;
+}
+
+#if defined(_DEBUG) || defined(EDITOR)
+//--------------------------------------------------------------------------------
+//  CreateStageEditor
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateStageEditor(GameObject* fieldEditor)
+{
+	auto result = new GameObject;
+
+	//コンポネント
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("data/MODEL/target.x");
+	result->AddRenderer(renderer);
+	auto modelEditor = new ModelEditor(result);
+	auto editorController = new EditorController(result);
+	editorController->SetFieldEditor(fieldEditor);
+	editorController->SetModelEditor(modelEditor);
+	result->AddBehavior(editorController);
+	result->AddBehavior(modelEditor);
+
+	//初期化
+	result->Init();
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//  クラス
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateFieldEditor(void)
+{
+	auto result = new GameObject;
+
+	//コンポネント
+	auto pBehavior = new FieldEditor(result);
+	result->AddBehavior(pBehavior);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName("field");
+	renderer->SetMaterialName("editorField");
+	result->AddRenderer(renderer);
+
+	//初期化
+	result->Init();
+	return result;
+}
+#endif // _DEBUG
 
 //--------------------------------------------------------------------------------
 //
@@ -223,198 +321,131 @@ CGameObject* CGameObjectSpawner::CreateModel(const string& strFilePath, const CK
 //--------------------------------------------------------------------------------
 //	関数名：createChildNode
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	pParent：ファイルの名前 
-//			pFile
-//	戻り値：CGameObject*
+//	引数：	parent：ファイルの名前 
+//			filePointer
+//	戻り値：GameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::createChildNode(CTransformComponent* pParent, FILE* pFile)
+GameObject* GameObjectSpawner::createChildNode(Transform* parent, FILE* filePointer)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//Node名
-	int nNodeNameSize;
-	fread_s(&nNodeNameSize, sizeof(int), sizeof(int), 1, pFile);
-	string strNodeName;
-	strNodeName.resize(nNodeNameSize);
-	fread_s(&strNodeName[0], nNodeNameSize, sizeof(char), nNodeNameSize, pFile);
-	pObj->SetName(strNodeName);
+	int nodeNameSize;
+	fread_s(&nodeNameSize, sizeof(int), sizeof(int), 1, filePointer);
+	string nodeName;
+	nodeName.resize(nodeNameSize);
+	fread_s(&nodeName[0], nodeNameSize, sizeof(char), nodeNameSize, filePointer);
+	result->SetName(nodeName);
 
 	//Offset
-	CKFVec3 vPos, vRot, vScale;
-	fread_s(&vPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-	fread_s(&vRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-	fread_s(&vScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-	auto pTrans = pObj->GetTransformComponent();
-	if (pParent) { pTrans->RegisterParent(pParent, vPos, vRot); }
+	Vector3 position, rotation, scale;
+	fread_s(&position, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
+	fread_s(&rotation, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
+	fread_s(&scale, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
+	auto transform = result->GetTransform();
+	if (parent) transform->RegisterParent(parent, position, rotation);
 
 	//Collider
-	int nNumCollider = 0;
-	fread_s(&nNumCollider, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumCollider; ++nCnt)
+	int colliderNumber = 0;
+	fread_s(&colliderNumber, sizeof(int), sizeof(int), 1, filePointer);
+	for (int count = 0; count < colliderNumber; ++count)
 	{
-		int nColType = 0;
-		CKFVec3 vColPos, vColRot, vColScale;
-		fread_s(&nColType, sizeof(int), sizeof(int), 1, pFile);
-		fread_s(&vColPos, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-		fread_s(&vColRot, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
-		fread_s(&vColScale, sizeof(CKFVec3), sizeof(CKFVec3), 1, pFile);
+		int colliderType = 0;
+		Vector3 colliderPositon, colliderRotation, colliderScale;
+		fread_s(&colliderType, sizeof(int), sizeof(int), 1, filePointer);
+		fread_s(&colliderPositon, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
+		fread_s(&colliderRotation, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
+		fread_s(&colliderScale, sizeof(Vector3), sizeof(Vector3), 1, filePointer);
 
-		CColliderComponent* pCollider = nullptr;
-		switch ((CS::COL_TYPE)nColType)
+		Collider* collider = nullptr;
+		switch ((ColliderType)colliderType)
 		{
-		case CS::COL_SPHERE:
-			pCollider = new CSphereColliderComponent(pObj, CS::STATIC, vColScale.m_fX);
+		case CT_Sphere:
+			collider = new SphereCollider(result, CM_Static, colliderScale.X);
 			break;
-		case CS::COL_AABB:
-			pCollider = new CAABBColliderComponent(pObj, CS::STATIC, vColScale * 0.5f);
+		case CT_AABB:
+			collider = new AABBCollider(result, CM_Static, colliderScale * 0.5f);
 			break;
-		case CS::COL_OBB:
-			pCollider = new COBBColliderComponent(pObj, CS::STATIC, vColScale * 0.5f);
+		case CT_OBB:
+			collider = new OBBCollider(result, CM_Static, colliderScale * 0.5f);
 			break;
 		default:
 			break;
 		}
 
-		if (!pCollider) { continue; }
-		pCollider->SetOffset(vColPos, vColRot);
-		pObj->AddCollider(pCollider);
+		if (!collider) continue;
+		collider->SetOffset(colliderPositon, colliderRotation);
+		result->AddCollider(collider);
 	}
 
-	//Texture
-	int nNumTexture = 0;
-	fread_s(&nNumTexture, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumTexture; ++nCnt)
-	{
-		int nNameSize = 0;
-		fread_s(&nNameSize, sizeof(int), sizeof(int), 1, pFile);
-		string strTexName;
-		strTexName.resize(nNameSize);
-		fread_s(&strTexName[0], nNameSize, sizeof(char), nNameSize, pFile);
-		//Mesh側で読み込むのでここは放っておく
-	}
+	//Material
+	int materialNameSize = 0;
+	fread_s(&materialNameSize, sizeof(int), sizeof(int), 1, filePointer);
+	string materialName;
+	materialName.resize(materialNameSize);
+	fread_s(&materialName[0], materialNameSize, sizeof(char), materialNameSize, filePointer);
 
 	//Mesh
-	int nNumMesh = 0;
-	fread_s(&nNumMesh, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumMesh; ++nCnt)
+	int meshNumber = 0;
+	fread_s(&meshNumber, sizeof(int), sizeof(int), 1, filePointer);
+	for (int count = 0; count < meshNumber; ++count)
 	{
 		//Mesh Name
-		int nMeshNameSize = 0;
-		fread_s(&nMeshNameSize, sizeof(int), sizeof(int), 1, pFile);
-		string strMeshName;
-		strMeshName.resize(nMeshNameSize);
-		fread_s(&strMeshName[0], nMeshNameSize, sizeof(char), nMeshNameSize, pFile);
+		int meshNameSize = 0;
+		fread_s(&meshNameSize, sizeof(int), sizeof(int), 1, filePointer);
+		string meshName;
+		meshName.resize(meshNameSize);
+		fread_s(&meshName[0], meshNameSize, sizeof(char), meshNameSize, filePointer);
 
 		//Check Type
-		string strName, strType;
-		CKFUtility::AnalyzeFilePath(strMeshName, strName, strType);
-		if (strType._Equal("mesh"))
+		auto& fileInfo = Utility::AnalyzeFilePath(meshName);
+		if (fileInfo.Type._Equal("mesh") || fileInfo.Type._Equal("x"))
 		{//骨なし
-			auto pChildMesh = createChildMesh(pTrans, strMeshName);
+			auto childMesh = createChildMesh(transform, meshName);
 		}
-		else if (strType._Equal("oneSkinMesh"))
+		else if (fileInfo.Type._Equal("oneSkinMesh"))
 		{//ワンスキーンメッシュ
-			MessageBox(NULL, "oneSkinMesh未対応", "CGameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+			MessageBox(NULL, "oneSkinMesh未対応", "GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
 		}
 	}
 
 	//Child
-	int nNumChild = 0;
-	fread_s(&nNumChild, sizeof(int), sizeof(int), 1, pFile);
-	for (int nCnt = 0; nCnt < nNumChild; ++nCnt)
+	int childNumber = 0;
+	fread_s(&childNumber, sizeof(int), sizeof(int), 1, filePointer);
+	for (int count = 0; count < childNumber; ++count)
 	{
-		auto pChild = createChildNode(pTrans, pFile);
+		auto child = createChildNode(transform, filePointer);
 	}
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：createChildMesh
 //  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	pParent：ファイルの名前 
-//			strMeshName
-//	戻り値：CGameObject*
+//	引数：	parent：ファイルの名前 
+//			meshName
+//	戻り値：GameObject*
 //--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::createChildMesh(CTransformComponent* pParent, const string& strMeshName)
+GameObject* GameObjectSpawner::createChildMesh(Transform* parent, const string& meshName)
 {
-	auto pObj = new CGameObject;
+	auto result = new GameObject;
 
 	//Name
-	auto& strName = CKFUtility::GetFileName(strMeshName);
-	pObj->SetName(strName);
+	auto& fileInfo = Utility::AnalyzeFilePath(meshName);
+	result->SetName(fileInfo.Name);
 
 	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName(strMeshName);
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pObj->SetRenderComponent(pRender);
+	auto renderer = new MeshRenderer(result);
+	renderer->SetMeshName(meshName);
+	result->AddRenderer(renderer);
 
 	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->RegisterParent(pParent);
+	result->GetTransform()->RegisterParent(parent);
 
 	//初期化
-	pObj->Init();
-	return pObj;
+	result->Init();
+	return result;
 }
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-#ifdef _DEBUG
-CGameObject* CGameObjectSpawner::CreateEditorController(CGameObject* pFieldEditor)
-{
-	auto pObj = new CGameObject;
-
-	//コンポネント
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("data/MODEL/target.x");
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pObj->SetRenderComponent(pRender);
-	auto pMEBehavior = new CModelEditorBehaviorComponent(pObj);
-	auto pBehavior = new CEditorControllerBehaviorComponent(pObj);
-	pBehavior->SetFieldEditor(pFieldEditor);
-	pBehavior->SetModelEditor(pMEBehavior);
-	pObj->AddBehavior(pBehavior);
-	pObj->AddBehavior(pMEBehavior);
-
-	//初期化
-	pObj->Init();
-	return pObj;
-}
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-CGameObject* CGameObjectSpawner::CreateEditorField(void)
-{
-	auto pObj = new CGameObject;
-
-	//コンポネント
-	auto pBehavior = new CFieldEditorBehaviorComponent(pObj);
-	pObj->AddBehavior(pBehavior);
-	auto pMesh = new CMeshComponent(pObj);
-	pMesh->SetMeshName("field");
-	pObj->SetMeshComponent(pMesh);
-	auto pRender = new C3DMeshRenderComponent(pObj);
-	pRender->SetTexName("editorField.jpg");
-	pObj->SetRenderComponent(pRender);
-
-	//パラメーター
-	auto pTrans = pObj->GetTransformComponent();
-	pTrans->SetPos(CKFVec3(0.0f));
-	pTrans->SetPosNext(CKFVec3(0.0f));
-	pTrans->SetScale(CKFVec3(1.0f));
-	pTrans->SetScaleNext(CKFVec3(1.0f));
-	pTrans->RotByEuler(CKFVec3(0.0f));
-
-	//初期化
-	pObj->Init();
-	return pObj;
-}
-#endif // _DEBUG

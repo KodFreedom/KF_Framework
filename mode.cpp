@@ -7,58 +7,18 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "mode.h"
-#include "camera.h"
-#include "manager.h"
 #include "gameObjectManager.h"
-#include "KF_PhysicsSystem.h"
+#include "physicsSystem.h"
 #include "UISystem.h"
-#include "renderManager.h"
+#include "rendererManager.h"
+#include "lightManager.h"
+#include "soundManager.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//
-//  Pubic
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CMode::CMode()
-{
-	static CNullCamera nullCamera;
-	m_pCamera = &nullCamera;
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void CMode::Update(void)
-{
-	//カメラの更新
-	m_pCamera->Update();
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理(描画直前)
-//--------------------------------------------------------------------------------
-void CMode::LateUpdate(void)
-{
-	//カメラの更新
-	m_pCamera->LateUpdate();
-}
-
-//--------------------------------------------------------------------------------
-//  カメラの設定
-//--------------------------------------------------------------------------------
-void CMode::CameraSet(void)
-{
-	m_pCamera->Set();
-}
-
 //--------------------------------------------------------------------------------
 //
 //  Private
@@ -67,14 +27,13 @@ void CMode::CameraSet(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CMode::uninit(void)
+void Mode::uninit(void)
 {
-	//カメラの破棄
-	SAFE_RELEASE(m_pCamera);
-
-	auto pManager = CMain::GetManager();
-	pManager->GetPhysicsSystem()->Clear();
-	pManager->GetGameObjectManager()->ReleaseAll();
-	pManager->GetUISystem()->ReleaseAll();
-	pManager->GetRenderManager()->Clear();
+	PhysicsSystem::Instance()->Clear();
+	GameObjectManager::Instance()->ReleaseAll();
+	UISystem::Instance()->ReleaseAll();
+	RendererManager::Instance()->Clear();
+	LightManager::Instance()->ReleaseAll();
+	SoundManager::Instance()->StopAll();
+	CameraManager::Instance()->ReleaseAll();
 }

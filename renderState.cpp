@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------
-//	レンダーステートクラス
+//	レンダーステート
 //　renderState.cpp
 //	Author : Xu Wenjie
 //	Date   : 2017-05-22
@@ -7,94 +7,93 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "renderState.h"
-#include "manager.h"
-#include "fog.h"
-
-#ifdef USING_DIRECTX
-#include "rendererDX.h"
+#include "renderSystem.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//  DefaultRenderState
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  LIGHTON_CULLFACEON_MUL
+//  Set
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  レンダーステート設定
-//--------------------------------------------------------------------------------
-void CLightOnCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+void DefaultRenderState::Set(void)
 {
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 //--------------------------------------------------------------------------------
-//  レンダーステートリセット
+//  Reset
 //--------------------------------------------------------------------------------
-void CLightOnCullFaceOnMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
-{}
-
-//--------------------------------------------------------------------------------
-//  RS_LIGHTON_CULLFACEOFF_MUL
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  レンダーステート設定
-//--------------------------------------------------------------------------------
-void CLightOnCullFaceOffMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+void DefaultRenderState::Reset(void)
 {
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 }
 
 //--------------------------------------------------------------------------------
-//  レンダーステートリセット
+//
+//  NoLightNoFog
+//
 //--------------------------------------------------------------------------------
-void CLightOnCullFaceOffMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+//--------------------------------------------------------------------------------
+//  Set
+//--------------------------------------------------------------------------------
+void NoLightNoFog::Set(void)
 {
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	RenderSystem::Instance()->SetRenderState(Lighting_Off);
+	RenderSystem::Instance()->SetRenderState(Fog_Off);
 }
 
 //--------------------------------------------------------------------------------
-//  RS_LIGHTOFF_CULLFACEON_MUL
+//  Reset
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  レンダーステート設定
-//--------------------------------------------------------------------------------
-void CLightOffCullFaceOnMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+void NoLightNoFog::Reset(void)
 {
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	RenderSystem::Instance()->SetRenderState(Lighting_On);
+	RenderSystem::Instance()->SetRenderState(Fog_On);
 }
 
 //--------------------------------------------------------------------------------
-//  レンダーステートリセット
+//
+//  NoCullMode
+//
 //--------------------------------------------------------------------------------
-void CLightOffCullFaceOnMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+//--------------------------------------------------------------------------------
+//  Set
+//--------------------------------------------------------------------------------
+void NoCullMode::Set(void)
 {
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	pDevice->SetRenderState(D3DRS_FOGENABLE, CMain::GetManager()->GetFog()->GetEnable());
+	RenderSystem::Instance()->SetRenderState(Cull_None);
 }
 
 //--------------------------------------------------------------------------------
-//  RS_LIGHTOFF_CULLFACEOFF_MUL
+//  Reset
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  レンダーステート設定
-//--------------------------------------------------------------------------------
-void CLightOffCullFaceOffMulRenderState::SetRenderState(LPDIRECT3DDEVICE9 pDevice)
+void NoCullMode::Reset(void)
 {
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	RenderSystem::Instance()->SetRenderState(Cull_CCW);
 }
 
 //--------------------------------------------------------------------------------
-//  レンダーステートリセット
+//
+//  NoLightNoFogNoCullMode
+//
 //--------------------------------------------------------------------------------
-void CLightOffCullFaceOffMulRenderState::ResetRenderState(LPDIRECT3DDEVICE9 pDevice)
+//--------------------------------------------------------------------------------
+//  Set
+//--------------------------------------------------------------------------------
+void NoLightNoFogNoCullMode::Set(void)
 {
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	RenderSystem::Instance()->SetRenderState(Cull_None);
+	RenderSystem::Instance()->SetRenderState(Lighting_Off);
+	RenderSystem::Instance()->SetRenderState(Fog_Off);
 }
 
-#endif
+//--------------------------------------------------------------------------------
+//  Reset
+//--------------------------------------------------------------------------------
+void NoLightNoFogNoCullMode::Reset(void)
+{
+	RenderSystem::Instance()->SetRenderState(Cull_CCW);
+	RenderSystem::Instance()->SetRenderState(Lighting_On);
+	RenderSystem::Instance()->SetRenderState(Fog_On);
+}

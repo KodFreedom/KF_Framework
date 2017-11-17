@@ -4,106 +4,161 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "materialManager.h"
+#include "textureManager.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
+MaterialManager* MaterialManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//	Material
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	CKFMaterial
+//
+//  public
+//
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CKFMaterial::CKFMaterial()
-	: m_cAmbient(CKFMath::sc_cWhite)
-	, m_cDiffuse(CKFMath::sc_cWhite)
-	, m_cEmissive(CKFMath::sc_cWhite)
-	, m_cSpecular(CKFMath::sc_cWhite)
-	, m_fPower(1.0f)
-{}
-
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
 //  キャスト(D3DMATERIAL9)
 //	DXの環境のため(マテリアル)オーバーロードする
 //--------------------------------------------------------------------------------
-CKFMaterial::operator D3DMATERIAL9() const
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Material::operator D3DMATERIAL9() const
 {
-	D3DMATERIAL9 vAnswer;
-	vAnswer.Ambient = m_cAmbient;
-	vAnswer.Diffuse = m_cDiffuse;
-	vAnswer.Emissive = m_cEmissive;
-	vAnswer.Specular = m_cSpecular;
-	vAnswer.Power = m_fPower;
-	return vAnswer;
+	D3DMATERIAL9 result;
+	result.Ambient = Ambient;
+	result.Diffuse = Diffuse;
+	result.Emissive = Emissive;
+	result.Specular = Specular;
+	result.Power = Power;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//	operator==
+//
+//	MaterialManager
+//
 //--------------------------------------------------------------------------------
-bool CKFMaterial::operator==(const CKFMaterial& mat) const
+//--------------------------------------------------------------------------------
+//
+//  public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：Use
+//  関数説明：マテリアルの追加
+//	引数：	materialName：マテリアルのの名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MaterialManager::Use(const string& materialName)
 {
-	if (this->m_cAmbient == mat.m_cAmbient
-		&& this->m_cDiffuse == mat.m_cDiffuse
-		&& this->m_cEmissive == mat.m_cEmissive
-		&& this->m_cSpecular == mat.m_cSpecular
-		&& this->m_fPower == mat.m_fPower)
-	{ return true; }
-	return false;
+	auto iterator = materials.find(materialName);
+	if (iterator != materials.end())
+	{// すでに存在してる
+		++iterator->second.UserNumber;
+		return;
+	}
+	MaterialInfo newMaterial;
+	newMaterial.Pointer = loadFrom(materialName);
+	if (!newMaterial.Pointer) return;
+	TextureManager::Instance()->Use(newMaterial.Pointer->MainTexture);
+	materials.emplace(materialName, newMaterial);
 }
 
 //--------------------------------------------------------------------------------
-//	CMaterialManager
+//	関数名：Disuse
+//  関数説明：マテリアルの破棄
+//	引数：	materialName：マテリアルの名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MaterialManager::Disuse(const string& materialName)
+{
+	auto iterator = materials.find(materialName);
+	if (materials.end() == iterator) return;
+	if (--iterator->second.UserNumber <= 0)
+	{// 誰も使ってないので破棄する
+		TextureManager::Instance()->Disuse(iterator->second.Pointer->MainTexture);
+		delete iterator->second.Pointer;
+		materials.erase(iterator);
+	}
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：CreateMaterial
+//  関数説明：マテリアルの作成
+//	引数：	materialName：マテリアルの名前
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void MaterialManager::CreateMaterialFileBy(const string& materialName, const string& mainTextureName,
+	const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, const float& power)
+{
+	string filePath = "data/MATERIAL/" + materialName + ".material";
+	FILE *filePointer = nullptr;
+	fopen_s(&filePointer, filePath.c_str(), "wb");
+	if (!filePointer)
+	{
+		assert("failed to open file!!");
+		return;
+	}
+	fwrite(&ambient, sizeof(Color), 1, filePointer);
+	fwrite(&diffuse, sizeof(Color), 1, filePointer);
+	fwrite(&specular, sizeof(Color), 1, filePointer);
+	fwrite(&emissive, sizeof(Color), 1, filePointer);
+	fwrite(&power, sizeof(float), 1, filePointer);
+	int number = mainTextureName.size();
+	fwrite(&number, sizeof(int), 1, filePointer);
+	fwrite(&mainTextureName[0], sizeof(char), number, filePointer);
+	fclose(filePointer);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  private
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //	コンストラクタ
 //--------------------------------------------------------------------------------
-CMaterialManager::CMaterialManager()
+MaterialManager::MaterialManager()
 {
-	m_umMaterial.clear();
-
-	//Normal
-	SaveMaterial(CKFMath::sc_cWhite, CKFMath::sc_cWhite, CKFMath::sc_cBlack, CKFMath::sc_cBlack, 1.0f);
+	materials.clear();
 }
 
 //--------------------------------------------------------------------------------
-//  SaveMaterial
+//	関数名：loadFrom
+//  関数説明：マテリアルの読み込み
+//	引数：	materialName：マテリアルの名前
+//	戻り値：Material*
 //--------------------------------------------------------------------------------
-const unsigned short CMaterialManager::SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower)
+Material* MaterialManager::loadFrom(const string& materialName)
 {
-	auto& mat = CKFMaterial(cAmbient, cDiffuse, cSpecular, cEmissive, fPower);
-
-	//今までのマテリアルと比較する
-	for (auto& mMat : m_umMaterial)
+	string filePath = "data/MATERIAL/" + materialName + ".material";
+	FILE *filePointer = nullptr;
+	fopen_s(&filePointer, filePath.c_str(), "rb");
+	if (!filePointer)
 	{
-		if (mMat.second == mat)
-		{//すでにあるならIDを返す
-			return mMat.first;
-		}
+		assert("failed to open file!!");
+		return nullptr;
 	}
-
-	//Mapに追加する
-	auto usID = (unsigned short)m_umMaterial.size();
-	m_umMaterial.emplace(usID, mat);
-
-	return usID;
-}
-
-//--------------------------------------------------------------------------------
-//  GetMaterial
-//--------------------------------------------------------------------------------
-const CKFMaterial& CMaterialManager::GetMaterial(const unsigned short& usID)
-{
-	return m_umMaterial.at(usID);
+	auto result = new Material;
+	fread_s(&result->Ambient, sizeof(Color), sizeof(Color), 1, filePointer);
+	fread_s(&result->Diffuse, sizeof(Color), sizeof(Color), 1, filePointer);
+	fread_s(&result->Specular, sizeof(Color), sizeof(Color), 1, filePointer);
+	fread_s(&result->Emissive, sizeof(Color), sizeof(Color), 1, filePointer);
+	fread_s(&result->Power, sizeof(float), sizeof(float), 1, filePointer);
+	int number = 0;
+	fread_s(&number, sizeof(int), sizeof(int), 1, filePointer);
+	result->MainTexture.resize(number);
+	fread_s(&result->MainTexture[0], number, sizeof(char), number, filePointer);
+	fclose(filePointer);
+	return result;
 }

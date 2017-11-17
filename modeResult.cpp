@@ -4,96 +4,47 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-07-05
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "textureManager.h"
 #include "lightManager.h"
-#include "inputManager.h"
-#include "mode.h"
+#include "input.h"
 #include "modeResult.h"
 #include "camera.h"
-#include "fade.h"
+#include "fadeSystem.h"
 #include "modeTitle.h"
-#include "BGUIObject.h"
+#include "BackgroundUI.h"
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CModeResult::CModeResult() : CMode()
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CModeResult::~CModeResult()
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CModeResult::Init(void)
+void ModeResult::Init(void)
 {
-	//ライトの初期化
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	LightManager::Instance()->CreateLight(LightType::LT_Directional);
 
 	//カメラの初期化
-	m_pCamera = new CCamera;
-	m_pCamera->Init();
+	auto camera = new NormalCamera;
+	camera->Init();
 
 	//UIの初期化
-	CBGUIObject::Create("endingGood.jpg");
+	BackgroundUI::Create("endingGood.jpg");
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CModeResult::Update(void)
+void ModeResult::Update(void)
 {
-	CMode::Update();
+	Mode::Update();
 
-	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_SUBMIT))
+	if (Input::Instance()->GetKeyTrigger(Key::Submit))
 	{
-		CMain::GetManager()->GetFade()->FadeToMode(new CModeTitle);
+		FadeSystem::Instance()->FadeTo(new ModeTitle);
 	}
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理(描画直前)
-//--------------------------------------------------------------------------------
-void CModeResult::LateUpdate(void)
-{
-	CMode::LateUpdate();
-}
-
-//--------------------------------------------------------------------------------
-//
-//  Public
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CModeResult::uninit(void)
-{
-	//カメラとゲームオブジェクトの破棄
-	CMode::uninit();
-
-	//ライトの破棄
-	CMain::GetManager()->GetLightManager()->ReleaseAll();
 }

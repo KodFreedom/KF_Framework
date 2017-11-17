@@ -14,31 +14,24 @@
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
 //--------------------------------------------------------------------------------
-class CAnimatorComponent;
+class Animator;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
 //--------------------------------------------------------------------------------
-class CGameObjectActor : public CGameObject
+class GameObjectActor : public GameObject
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  ä÷êîêÈåæ
 	//--------------------------------------------------------------------------------
-	CGameObjectActor(const GOMLAYER& layer = L_DEFAULT);
-	~CGameObjectActor() {}
+	GameObjectActor(const Layer& layer = L_Default);
+	~GameObjectActor() {}
 
 	bool Init(void) override;
 	void LateUpdate(void) override;
-
-	//Getä÷êî
-	auto GetAnimatorComponent(void) const { return m_pAnimator; }
-	
-	//Setä÷êî
-
-	//ê∂ê¨ä÷êî
-	static CGameObjectActor* CreatePlayer(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
-	static CGameObjectActor* CreateEnemy(const string &modelPath, const CKFVec3 &vPos, const CKFVec3 &vRot, const CKFVec3 &vScale);
+	auto GetAnimator(void) const { return animator; }
+	void SetAnimator(Animator* const value) { animator = value; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -49,5 +42,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  ïœêîêÈåæ
 	//--------------------------------------------------------------------------------
-	CAnimatorComponent* m_pAnimator;
+	Animator* animator;
 };

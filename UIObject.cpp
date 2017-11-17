@@ -7,8 +7,6 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
 #include "UISystem.h"
 #include "UIObject.h"
 
@@ -18,18 +16,18 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CUIObject::CUIObject(const unsigned short& usOrder)
-	: m_usOrder(usOrder)
+UIObject::UIObject(const us order)
+	: order(order)
 {
-	CMain::GetManager()->GetUISystem()->Register(this);
+	UISystem::Instance()->Register(this);
 }
 
 //--------------------------------------------------------------------------------
 //  リリース
 //--------------------------------------------------------------------------------
-void CUIObject::Release(void)
+void UIObject::Release(void)
 {
-	CMain::GetManager()->GetUISystem()->Deregister(this);
+	UISystem::Instance()->Deregister(this);
 	Uninit();
 	delete this;
 }

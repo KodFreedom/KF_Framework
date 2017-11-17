@@ -7,95 +7,40 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CRendererDX;
-class CRenderManager;
-class CInputManager;
-class CMeshManager;
-class CTextureManager;
-class CLightManager;
-class CMaterialManager;
-class CGameObjectManager;
-class CSoundManager;
-class CUISystem;
-class CMode;
-class CFade;
-class CKFCollisionSystem;
-class CKFPhysicsSystem;
-class CFog;
-
-#ifdef _DEBUG
-class CDebugManager;
-#endif
+class Mode;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CManager
+class Manager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CManager();
-	~CManager() {}
+	static Manager* Create(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode);
+	static void		Release(void);
+	static auto		Instance(void) { return instance; }
 
-	bool Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);
-	void Uninit(void);
 	void Update(void);
 	void LateUpdate(void);
-	void Draw(void);
-
-	//Set関数
-	void SetMode(CMode* pMode);
-
-	//Get関数
-	auto GetRenderer(void) { return m_pRenderer; }
-	auto GetRenderManager(void) { return m_pRenderManager; }
-	auto GetInputManager(void) { return m_pInputManager; }
-	auto GetMeshManager(void) { return m_pMeshManager; }
-	auto GetTextureManager(void) { return m_pTextureManager; }
-	auto GetLightManager(void) { return m_pLightManager; }
-	auto GetMaterialManager(void) { return m_pMaterialManager; }
-	auto GetGameObjectManager(void) { return m_pGameObjectManager; }
-	auto GetSoundManager(void) { return m_pSoundManager; }
-	auto GetUISystem(void) { return m_pUISystem; }
-	auto GetMode(void) { return m_pMode; }
-	auto GetFade(void) { return m_pFade; }
-	auto GetCollisionSystem(void) { return m_pCollisionSystem; }
-	auto GetPhysicsSystem(void) { return m_pPhysicsSystem; }
-	auto GetFog(void) { return m_pFog; }
-
-#ifdef _DEBUG
-	auto GetDebugManager(void) { return m_pDebugManager; }
-#endif
+	void Render(void);
+	void Change(Mode* nextMode);
 
 private:
 	//--------------------------------------------------------------------------------
+	//  関数定義
+	//--------------------------------------------------------------------------------
+	Manager() : currentMode(nullptr) {}
+	~Manager() {}
+	bool init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode);
+	void uninit(void);
+
+	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CRendererDX*		m_pRenderer;
-	CRenderManager*		m_pRenderManager;
-	CInputManager*		m_pInputManager;
-	CMeshManager*		m_pMeshManager;
-	CTextureManager*	m_pTextureManager;
-	CLightManager*		m_pLightManager;
-	CMaterialManager*	m_pMaterialManager;
-	CGameObjectManager*	m_pGameObjectManager;
-	CSoundManager*		m_pSoundManager;
-	CUISystem*			m_pUISystem;
-	CMode*				m_pMode;
-	CFade*				m_pFade;
-	CKFCollisionSystem*	m_pCollisionSystem;
-	CKFPhysicsSystem*	m_pPhysicsSystem;
-	CFog*				m_pFog;
-
-#ifdef _DEBUG
-	CDebugManager*		m_pDebugManager;
-#endif
+	Mode*				currentMode;
+	static Manager*		instance;
 };

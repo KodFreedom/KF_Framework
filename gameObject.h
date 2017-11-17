@@ -9,61 +9,49 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "transform.h"
+#include "behavior.h"
+#include "meshRenderer.h"
+#include "rigidbody.h"
+#include "collider.h"
 #include "gameObjectManager.h"
-#include "transformComponent.h"
-#include "behaviorComponent.h"
-#include "renderComponent.h"
-#include "rigidbodyComponent.h"
-#include "meshComponent.h"
-#include "colliderComponent.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  ゲームオブジェクトクラス
-//--------------------------------------------------------------------------------
-class CGameObject
+class GameObject
 {
-	friend class CGameObjectManager;
-
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(const GOMLAYER& layer = L_DEFAULT);
-	~CGameObject() {}
+	GameObject(const Layer& layer = L_Default);
+	~GameObject() {}
 	
 	virtual bool	Init(void) 
 	{ 
-		if (!m_pTransform->Init()) { assert("init transform error!!"); return false; }
-		for (auto pBehavior : m_listpBehavior) { if (!pBehavior->Init()) { assert("init behavior error!!"); return false; } }
-		if (!m_pRigidbody->Init()) { assert("init rigidbody error!!");  return false; }
-		for (auto pCollider : m_listpCollider) { if (!pCollider->Init()) { assert("init collider error!!");  return false; } }
-		if (!m_pMesh->Init()) { assert("init mesh error!!");  return false; }
-		if (!m_pRender->Init()) { assert("init render error!!");  return false; }
+		if (!transform->Init()) { assert("init transform error!!"); return false; }
+		for (auto behavior : behaviors) { if (!behavior->Init()) { assert("init behavior error!!"); return false; } }
+		if (!rigidbody->Init()) { assert("init rigidbody error!!");  return false; }
+		for (auto collider : colliders) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
+		for (auto renderer : renderers) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
 		return true;
 	}
 	virtual void	Update(void)
 	{
-		if (!m_bActive) { return; }
-		swapParam();
-		for (auto pBehavior : m_listpBehavior) { pBehavior->Update(); }
-		m_pRigidbody->Update();
-		for (auto pCollider : m_listpCollider) { pCollider->Update(); }
+		if (!isActive) return;
+		swapParamater();
+		for (auto behavior : behaviors) behavior->Update();
+		rigidbody->Update();
+		for (auto collider : colliders) collider->Update();
 	}
 	virtual void	LateUpdate(void)
 	{
-		if (!m_bActive) { return; }
-		m_pRigidbody->LateUpdate();
-		for (auto pBehavior : m_listpBehavior) { pBehavior->LateUpdate(); }
-		m_pMesh->Update();
-		m_pTransform->UpdateMatrix();
-		m_pRender->Update();
+		if (!isActive) return;
+		rigidbody->LateUpdate();
+		for (auto behavior : behaviors) { behavior->LateUpdate(); }
+		transform->UpdateMatrix();
+		for (auto renderer : renderers) { renderer->Update(); }
 	}
 	void			Release(void)
 	{
@@ -72,119 +60,91 @@ public:
 	}
 
 	//Get関数
-	auto		GetTransformComponent(void) const { return m_pTransform; }
-	auto&		GetBehaviorComponent(void) { return m_listpBehavior; }
-	auto		GetMeshComponent(void) const { return m_pMesh; }
-	auto		GetRigidbodyComponent(void) const { return m_pRigidbody; }
-	auto&		GetColliderComponent(void) const { return m_listpCollider; }
-	const auto&	GetName(void) const { return m_strName; }
-	const auto&	GetParentName(void) const
+	auto	GetTransform(void) const { return transform; }
+	auto&	GetBehaviors(void) const { return behaviors; }
+	auto	GetRigidbody(void) const { return rigidbody; }
+	auto&	GetColliders(void) const { return colliders; }
+	auto&	GetName(void) const { return name; }
+	auto&	GetParentName(void) const
 	{
-		auto pParent = m_pTransform;
-		while (pParent->GetParent()) { pParent = pParent->GetParent(); }
-		return pParent->GetGameObject()->GetName();
+		auto parent = transform->GetParent();
+		if (!parent) return name;
+		return parent->GetGameObject()->GetParentName();
 	}
-	const auto&	GetTag(void) const { return m_strTag; }
-	bool		IsActive(void) const { return m_bActive; }
+	auto&	GetTag(void) const { return tag; }
+	bool	IsAlive(void) const { return isAlive; }
+	bool	IsActive(void) const { return isActive; }
 
 	//Set関数
-	void		SetMeshComponent(CMeshComponent* pMesh) 
+	void	SetRigidbody(Rigidbody* const value)
 	{
 		//Release
-		if (m_pMesh != &s_nullMesh) { SAFE_RELEASE(m_pMesh); }
+		if (rigidbody->GetType() != Rigidbody::Type::NullRigidbody) { SAFE_RELEASE(rigidbody); }
 
 		//Set
-		if (!pMesh) { m_pMesh = &s_nullMesh; }
-		else { m_pMesh = pMesh; }
+		if (!value) { rigidbody = &nullRigidbody; }
+		else { rigidbody = value; }
 	}
-	void		SetRenderComponent(CRenderComponent* pRender) 
-	{
-		//Release
-		if (m_pRender != &s_nullRender) { SAFE_RELEASE(m_pRender); }
-
-		//Set
-		if (!pRender) { m_pRender = &s_nullRender; }
-		else { m_pRender = pRender; }
-	}
-	void		SetRigidbodyComponent(CRigidbodyComponent* pRb) 
-	{
-		//Release
-		if (m_pRigidbody != &s_nullRigidbody) { SAFE_RELEASE(m_pRigidbody); }
-
-		//Set
-		if (!pRb) { m_pRender = &s_nullRender; }
-		else { m_pRigidbody = pRb; }
-	}
-	void		SetActive(const bool& bActive);
-	void		SetAlive(const bool& bAlive);
-	void		SetName(const string& strName) { m_strName = strName; }
-	void		SetTag(const string& strTag) { m_strTag = strTag; }
-
-	void		AddBehavior(CBehaviorComponent* pBehavior)
-	{
-		m_listpBehavior.push_back(pBehavior);
-	}
-	void		AddCollider(CColliderComponent* pCollider)
-	{
-		m_listpCollider.push_back(pCollider);
-	}
-	void		DeleteCollider(CColliderComponent* pCollider)
-	{
-		m_listpCollider.remove(pCollider);
-	}
+	void	SetActive(const bool& value);
+	void	SetAlive(const bool& value);
+	void	SetName(const string& value) { name = value; }
+	void	SetTag(const string& value) { tag = value; }
+	void	AddBehavior(Behavior* const behavior) { behaviors.push_back(behavior); }
+	void	AddCollider(Collider* const collider) { colliders.push_back(collider); }
+	void	AddRenderer(MeshRenderer* const renderer) { renderers.push_back(renderer); }
 
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	virtual void				swapParam(void);
+	virtual void				swapParamater(void);
 	virtual void				uninit(void)
 	{
-		m_pTransform->Release();
-		for (auto itr = m_listpBehavior.begin(); itr != m_listpBehavior.end();)
+		transform->Release();
+		rigidbody->Release();
+		for (auto itr = behaviors.begin(); itr != behaviors.end();)
 		{
 			(*itr)->Release();
-			itr = m_listpBehavior.erase(itr);
+			itr = behaviors.erase(itr);
 		}
-		m_pRigidbody->Release();
-		for (auto itr = m_listpCollider.begin(); itr != m_listpCollider.end();)
+		for (auto itr = colliders.begin(); itr != colliders.end();)
 		{
 			(*itr)->Release();
-			itr = m_listpCollider.erase(itr);
+			itr = colliders.erase(itr);
 		}
-		m_pMesh->Release();
-		m_pRender->Release();
+		for (auto itr = renderers.begin(); itr != renderers.end();)
+		{
+			(*itr)->Release();
+			itr = renderers.erase(itr);
+		}
 	}
 
 	//--------------------------------------------------------------------------------
 	//  コンポネント
 	//--------------------------------------------------------------------------------
-	CTransformComponent*		m_pTransform;	//位置関係パーツ
-	list<CBehaviorComponent*>	m_listpBehavior;//行動コンポネント
-	CRigidbodyComponent*		m_pRigidbody;	//物理処理パーツ
-	list<CColliderComponent*>	m_listpCollider;//コリジョンパーツ
-	CMeshComponent*				m_pMesh;		//メッシュパーツ
-	CRenderComponent*			m_pRender;		//描画処理パーツ
+	Transform*			transform;
+	list<Behavior*>		behaviors;
+	Rigidbody*			rigidbody;
+	list<Collider*>		colliders;
+	list<MeshRenderer*> renderers;
+
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	bool	isActive;
+	bool	isAlive;
+	string	name;
+	string	tag;
+	Layer	layer;
+
+	//--------------------------------------------------------------------------------
+	//  ヌルコンポネント定義
+	//--------------------------------------------------------------------------------
+	static NullRigidbody	nullRigidbody;
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObject(CGameObject&) {}
-	
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	bool				m_bActive;		//活動フラグ
-	bool				m_bAlive;		//生きるフラグ
-	string				m_strName;		//オブジェクトの名前
-	string				m_strTag;		//オブジェクトのタグ
-	GOMLAYER			m_layer;		//レイヤ
-
-	//--------------------------------------------------------------------------------
-	//  ヌルコンポネント定義
-	//--------------------------------------------------------------------------------
-	static CNullRigidbodyComponent	s_nullRigidbody;
-	static CNullMeshComponent		s_nullMesh;
-	static CNullRenderComponent		s_nullRender;
+	GameObject(GameObject&) {}
 };

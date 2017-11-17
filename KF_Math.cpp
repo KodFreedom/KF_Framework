@@ -4,1559 +4,1750 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-07-24
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "KF_Math.h"
+using namespace KF;
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const CKFVec3		CKFMath::sc_vZero = CKFVec3(0.0f);
-const CKFVec3		CKFMath::sc_vOne = CKFVec3(1.0f);
-const CKFVec3		CKFMath::sc_vUp = CKFVec3(0.0f, 1.0f, 0.0f);
-const CKFVec3		CKFMath::sc_vDown = CKFVec3(0.0f, -1.0f, 0.0f);
-const CKFVec3		CKFMath::sc_vLeft = CKFVec3(-1.0f, 0.0f, 0.0f);
-const CKFVec3		CKFMath::sc_vRight = CKFVec3(1.0f, 0.0f, 0.0f);
-const CKFVec3		CKFMath::sc_vForward = CKFVec3(0.0f, 0.0f, 1.0f);
-const CKFVec3		CKFMath::sc_vBack = CKFVec3(0.0f, 0.0f, -1.0f);
-const CKFColor		CKFMath::sc_cWhite = CKFColor(1.0f, 1.0f, 1.0f, 1.0f);
-const CKFColor		CKFMath::sc_cBlack = CKFColor(0.0f, 0.0f, 0.0f, 1.0f);
-const CKFColor		CKFMath::sc_cRed = CKFColor(1.0f, 0.0f, 0.0f, 1.0f);
-const CKFColor		CKFMath::sc_cBlue = CKFColor(0.0f, 0.0f, 1.0f, 1.0f);
-const CKFColor		CKFMath::sc_cGreen = CKFColor(0.0f, 1.0f, 0.0f, 1.0f);
-const CKFQuaternion	CKFMath::sc_qRotZero = CKFQuaternion(0.0f, 0.0f, 0.0f, 1.0f);
+const Vector2		Vector2::Zero = Vector2(0.0f);				
+const Vector2		Vector2::One = Vector2(1.0f);				
+const Vector3		Vector3::Zero = Vector3(0.0f);				
+const Vector3		Vector3::One = Vector3(1.0f);				
+const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);	
+const Vector3		Vector3::Down = Vector3(0.0f, -1.0f, 0.0f);	
+const Vector3		Vector3::Left = Vector3(-1.0f, 0.0f, 0.0f);	
+const Vector3		Vector3::Right = Vector3(1.0f, 0.0f, 0.0f);	
+const Vector3		Vector3::Forward = Vector3(0.0f, 0.0f, 1.0f);
+const Vector3		Vector3::Back = Vector3(0.0f, 0.0f, -1.0f);	
+const Vector3		Vector3::AxisX = Vector3::Right;
+const Vector3		Vector3::AxisY = Vector3::Up;
+const Vector3		Vector3::AxisZ = Vector3::Forward;
+const Matrix44		Matrix44::Identity = Matrix44();
+const Quaternion	Quaternion::Identity = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+const Color			Color::White = Color(1.0f, 1.0f, 1.0f, 1.0f);
+const Color			Color::Black = Color(0.0f, 0.0f, 0.0f, 1.0f);
+const Color			Color::Gray = Color(0.2f, 0.2f, 0.2f, 1.0f);
+const Color			Color::Red = Color(1.0f, 0.0f, 0.0f, 1.0f);
+const Color			Color::Blue = Color(0.0f, 0.0f, 1.0f, 1.0f);
+const Color			Color::Green = Color(0.0f, 1.0f, 0.0f, 1.0f);
 
 //--------------------------------------------------------------------------------
-//  CKFVec2
+//
+//  Vector2
+//
 //--------------------------------------------------------------------------------
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
-//  キャスト(D3DXVECTOR2)
-//	DXの環境のためオーバーロードする
+//	関数名：operator D3DXVECTOR2()
+//  関数説明：キャスト(D3DXVECTOR2)
+//	引数：	なし
+//	戻り値：D3DXVECTOR2
 //--------------------------------------------------------------------------------
-CKFVec2::operator D3DXVECTOR2() const
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Vector2::operator D3DXVECTOR2() const
 {
-	D3DXVECTOR2 vValue;
-	vValue.x = m_fX;
-	vValue.y = m_fY;
-	return vValue;
+	D3DXVECTOR2 result;
+	result.x = X;
+	result.y = Y;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//  operator=
+//	関数名：operator=
+//  関数説明：値の代入処理
+//	引数：	value : 値
+//	戻り値：Vector2
 //--------------------------------------------------------------------------------
-CKFVec2 &CKFVec2::operator=(const CKFVec2 &vValue)
+Vector2& Vector2::operator=(const Vector2& value)
 {
-	m_fX = vValue.m_fX;
-	m_fY = vValue.m_fY;
+	X = value.X;
+	Y = value.Y;
 	return *this;
 }
 
 //--------------------------------------------------------------------------------
-//  operator==
+//	関数名：operator==
+//  関数説明：同値判定処理
+//	引数：	value : 相手
+//	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CKFVec2::operator==(const CKFVec2 &vValue) const
+bool Vector2::operator==(const Vector2& value) const
 {
-	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY) { return true; }
-	return false;
+	return (X == value.X && Y == value.Y);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+
+//	関数名：operator+
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：Vector2
 //--------------------------------------------------------------------------------
-CKFVec2 CKFVec2::operator+(const CKFVec2 &vValue) const
+Vector2 Vector2::operator+(const Vector2& value) const
 {
-	CKFVec2 vAnswer;
-	vAnswer.m_fX = m_fX + vValue.m_fX;
-	vAnswer.m_fY = m_fY + vValue.m_fY;
-	return vAnswer;
+	return Vector2(X + value.X, Y + value.Y);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+=
+//	関数名：operator+=
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec2::operator+=(const CKFVec2 &vValue)
+void Vector2::operator+=(const Vector2& value)
 {
-	m_fX += vValue.m_fX;
-	m_fY += vValue.m_fY;
+	X += value.X;
+	Y += value.Y;
 }
 
 //--------------------------------------------------------------------------------
-//  operator-
+//	関数名：operator-
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：Vector2
 //--------------------------------------------------------------------------------
-CKFVec2 CKFVec2::operator-(const CKFVec2 &vValue) const
+Vector2 Vector2::operator-(const Vector2& value) const
 {
-	CKFVec2 vAnswer;
-	vAnswer.m_fX = m_fX - vValue.m_fX;
-	vAnswer.m_fY = m_fY - vValue.m_fY;
-	return vAnswer;
+	return Vector2(X - value.X, Y - value.Y);
 }
 
 //--------------------------------------------------------------------------------
-//  operator-=
+//	関数名：operator-=
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec2::operator-=(const CKFVec2 &vValue)
+void Vector2::operator-=(const Vector2& value)
 {
-	m_fX -= vValue.m_fX;
-	m_fY -= vValue.m_fY;
+	X -= value.X;
+	Y -= value.Y;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(外積)
+//	関数名：operator*
+//  関数説明：外積
+//	引数：	value : 相手
+//	戻り値：float
 //--------------------------------------------------------------------------------
-float CKFVec2::operator*(const CKFVec2& vValue) const
+float Vector2::operator*(const Vector2& value) const
 {
-	float fAnswer = m_fX * vValue.m_fY - m_fY * vValue.m_fX;
-	return fAnswer;
+	return (X * value.Y - Y * value.X);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(float)
+//	関数名：operator*
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：Vector2
 //--------------------------------------------------------------------------------
-CKFVec2 CKFVec2::operator*(const float &fValue) const
+Vector2 Vector2::operator*(const float& value) const
 {
-	CKFVec2 vAnswer;
-	vAnswer.m_fX = m_fX * fValue;
-	vAnswer.m_fY = m_fY * fValue;
-	return vAnswer;
+	return Vector2(X * value, Y * value);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(float)
+//	関数名：operator*=
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec2::operator*=(const float &fValue)
+void Vector2::operator*=(const float& value)
 {
-	m_fX *= fValue;
-	m_fY *= fValue;
+	X *= value;
+	Y *= value;
 }
 
 //--------------------------------------------------------------------------------
-//  CKFVec3
+//	関数名：Dot
+//  関数説明：Vector2の内積計算
+//	引数：	value：内積計算の右手側
+//	戻り値：float
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  キャスト(CKFVec2)
-//--------------------------------------------------------------------------------
-CKFVec3::operator CKFVec2() const
+float Vector2::Dot(const Vector2& value) const
 {
-	CKFVec2 vValue;
-	vValue.m_fX = m_fX;
-	vValue.m_fY = m_fY;
-	return vValue;
+	return (X * value.X + Y * value.Y);
 }
 
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
-//  キャスト(D3DXVECTOR3)
-//	DXの環境のためオーバーロードする
+//	関数名：Magnitude
+//  関数説明：長さ計算
+//	引数：	なし
+//	戻り値：float
 //--------------------------------------------------------------------------------
-CKFVec3::operator D3DXVECTOR3() const
+float Vector2::Magnitude(void) const
 {
-	D3DXVECTOR3 vValue;
-	vValue.x = m_fX;
-	vValue.y = m_fY;
-	vValue.z = m_fZ;
-	return vValue;
+	return sqrtf(X * X + Y * Y);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SquareMagnitude
+//  関数説明：長さの平方の計算
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector2::SquareMagnitude(void) const
+{
+	return (X * X + Y * Y);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalize
+//  関数説明：正規化
+//	引数：	なし
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Vector2::Normalize(void)
+{
+	*this = this->Normalized();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalized
+//  関数説明：正規化したの値を返す
+//	引数：	なし
+//	戻り値：Vector2
+//--------------------------------------------------------------------------------
+Vector2 Vector2::Normalized(void) const
+{
+	float magnitude = this->Magnitude();
+	if (magnitude <= 0.0f) return Vector2(0.0f);
+	return Vector2(X / magnitude, Y / magnitude);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToRadian
+//  関数説明：角度の算出
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector2::ToRadian(void) const
+{
+	return atan2f(Y, X);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToPickingRay
+//  関数説明：スクリーン座標からレイの算出
+//	引数：	viewportSize：viewportの副幅
+//			projectMatrix00：射影行列の00番
+//			projectMatrix11：射影行列の11番
+//			viewInverse：view行列の逆行列
+//	戻り値：Ray
+//--------------------------------------------------------------------------------
+Ray Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
+{
+	auto& position3D = Vector2(
+		(((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
+		(((-2.0f * Y) / viewportSize.Y) + 1.0f) / projectMatrix11);
+	Ray result;
+	result.Origin = Vector3::Zero;
+	result.Direction = Vector3(position3D.X, position3D.Y, 1.0f);
+	result.Transform(viewInverse);
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：RadianBetween
+//  関数説明：Vector2間の角度の算出
+//	引数：	valueL：左手側
+//			valueR：右手側
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector2::RadianBetween(const Vector2& valueL, const Vector2& valueR)
+{
+	if (valueL == valueR) return 0.0f;
+
+	float squareMagnitudeL = valueL.SquareMagnitude();
+	float squareMagnitudeR = valueR.SquareMagnitude();
+	if (squareMagnitudeL <= 0.0f || squareMagnitudeR <= 0.0f) return 0.0f;
+	
+	float dot = valueL.Dot(valueR);
+	float cross = valueL * valueR;
+	float sign = cross >= 0.0f ? 1.0f : -1.0f;
+	return acosf(dot / (sqrtf(squareMagnitudeL) * sqrtf(squareMagnitudeR)) * sign);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Vector3
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：operator Vector2()
+//  関数説明：キャスト(Vector2)
+//	引数：	なし
+//	戻り値：Vector2
+//--------------------------------------------------------------------------------
+Vector3::operator Vector2() const
+{
+	return Vector2(X, Y);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator D3DXVECTOR3()
+//  関数説明：キャスト(D3DXVECTOR3)
+//	引数：	なし
+//	戻り値：D3DXVECTOR3
+//--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Vector3::operator D3DXVECTOR3() const
+{
+	D3DXVECTOR3 result;
+	result.x = X;
+	result.y = Y;
+	result.z = Z;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//  operator=
+//	関数名：operator=
+//  関数説明：値の代入処理
+//	引数：	value : 値
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 &CKFVec3::operator=(const CKFVec3 &vValue)
+Vector3& Vector3::operator=(const Vector3& value)
 {
-	m_fX = vValue.m_fX;
-	m_fY = vValue.m_fY;
-	m_fZ = vValue.m_fZ;
+	X = value.X;
+	Y = value.Y;
+	Z = value.Z;
 	return *this;
 }
 
 //--------------------------------------------------------------------------------
-//  operator==
+//	関数名：operator==
+//  関数説明：同値判定処理
+//	引数：	value : 相手
+//	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CKFVec3::operator==(const CKFVec3 &vValue) const
+bool Vector3::operator==(const Vector3& value) const
 {
-	if (m_fX == vValue.m_fX && m_fY == vValue.m_fY && m_fZ == vValue.m_fZ) { return true; }
-	return false;
+	return (X == value.X && Y == value.Y && Z == value.Z);
 }
 
 //--------------------------------------------------------------------------------
-//  operator!=
+//	関数名：operator!=
+//  関数説明：異値判定処理
+//	引数：	value : 相手
+//	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CKFVec3::operator!=(const CKFVec3 &vValue) const
+bool Vector3::operator!=(const Vector3& value) const
 {
-	if (m_fX != vValue.m_fX || m_fY != vValue.m_fY || m_fZ != vValue.m_fZ) { return true; }
-	return false;
+	return (X != value.X || Y != value.Y || Z != value.Z);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+
+//	関数名：operator+
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFVec3::operator+(const CKFVec3 &vValue) const
+Vector3 Vector3::operator+(const Vector3& value) const
 {
-	CKFVec3 vAnswer;
-	vAnswer.m_fX = m_fX + vValue.m_fX;
-	vAnswer.m_fY = m_fY + vValue.m_fY;
-	vAnswer.m_fZ = m_fZ + vValue.m_fZ;
-	return vAnswer;
+	return Vector3(X + value.X, Y + value.Y, Z + value.Z);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+=
+//	関数名：operator+=
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec3::operator+=(const CKFVec3 &vValue)
+void Vector3::operator+=(const Vector3& value)
 {
-	m_fX += vValue.m_fX;
-	m_fY += vValue.m_fY;
-	m_fZ += vValue.m_fZ;
+	X += value.X;
+	Y += value.Y;
+	Z += value.Z;
 }
 
 //--------------------------------------------------------------------------------
-//  operator-
+//	関数名：operator-
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFVec3::operator-(const CKFVec3 &vValue) const
+Vector3 Vector3::operator-(const Vector3& value) const
 {
-	CKFVec3 vAnswer;
-	vAnswer.m_fX = m_fX - vValue.m_fX;
-	vAnswer.m_fY = m_fY - vValue.m_fY;
-	vAnswer.m_fZ = m_fZ - vValue.m_fZ;
-	return vAnswer;
+	return Vector3(X - value.X, Y - value.Y, Z - value.Z);
 }
 
 //--------------------------------------------------------------------------------
-//  operator-=
+//	関数名：operator-=
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec3::operator-=(const CKFVec3 &vValue)
+void Vector3::operator-=(const Vector3& value)
 {
-	m_fX -= vValue.m_fX;
-	m_fY -= vValue.m_fY;
-	m_fZ -= vValue.m_fZ;
+	X -= value.X;
+	Y -= value.Y;
+	Z -= value.Z;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(float)
+//	関数名：operator*
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFVec3::operator*(const float &fValue) const
+Vector3 Vector3::operator*(const float& value) const
 {
-	CKFVec3 vAnswer;
-	vAnswer.m_fX = m_fX * fValue;
-	vAnswer.m_fY = m_fY * fValue;
-	vAnswer.m_fZ = m_fZ * fValue;
-	return vAnswer;
+	return Vector3(X * value, Y * value, Z * value);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(float)
+//	関数名：operator*=
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec3::operator*=(const float &fValue)
+void Vector3::operator*=(const float& value)
 {
-	m_fX *= fValue;
-	m_fY *= fValue;
-	m_fZ *= fValue;
+	X *= value;
+	Y *= value;
+	Z *= value;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(Vec3 外積(Cross))
+//	関数名：operator*
+//  関数説明：外積
+//	引数：	value : 相手
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFVec3::operator*(const CKFVec3 &vValue) const
+Vector3 Vector3::operator*(const Vector3& value) const
 {
-	CKFVec3 vAnswer;
-	vAnswer.m_fX = m_fY * vValue.m_fZ - vValue.m_fY * m_fZ;
-	vAnswer.m_fY = m_fZ * vValue.m_fX - vValue.m_fZ * m_fX;
-	vAnswer.m_fZ = m_fX * vValue.m_fY - vValue.m_fX * m_fY;
-	return vAnswer;
+	return Vector3(Y * value.Z - value.Y * Z, Z * value.X - value.Z * X, X * value.Y - value.X * Y);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(Vec3 外積(Cross))
+//	関数名：operator*=
+//  関数説明：外積
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFVec3::operator*=(const CKFVec3 &vValue)
+void Vector3::operator*=(const Vector3& value)
 {
-	CKFVec3 vThis = *this;
-	m_fX = vThis.m_fY * vValue.m_fZ - vValue.m_fY * vThis.m_fZ;
-	m_fY = vThis.m_fZ * vValue.m_fX - vValue.m_fZ * vThis.m_fX;
-	m_fZ = vThis.m_fX * vValue.m_fY - vValue.m_fX * vThis.m_fY;
+	*this = *this * value;
 }
 
 //--------------------------------------------------------------------------------
-//  operator/(float)
+//	関数名：operator/
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFVec3::operator/(const float &fValue) const
+Vector3 Vector3::operator/(const float& value) const
 {
-	CKFVec3 vAnswer = CKFVec3(0.0f);
-	if (fValue != 0.0f)
+	return Vector3(X / value, Y / value, Z / value);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator/=
+//  関数説明：スケール
+//	引数：	value : スケール値
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Vector3::operator/=(const float& value)
+{
+	X /= value;
+	Y /= value;
+	Z /= value;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Dot
+//  関数説明：内積
+//	引数：	value : 相手
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector3::Dot(const Vector3& value) const
+{
+	return (X * value.X + Y * value.Y + Z * value.Z);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Magnitude
+//  関数説明：長さ計算
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector3::Magnitude(void) const
+{
+	return sqrtf(X * X + Y * Y + Z * Z);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SquareMagnitude
+//  関数説明：長さの平方の計算
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector3::SquareMagnitude(void) const
+{
+	return (X * X + Y * Y + Z * Z);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalize
+//  関数説明：正規化
+//	引数：	なし
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Vector3::Normalize(void)
+{
+	*this = this->Normalized();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalized
+//  関数説明：正規化したの値を返す
+//	引数：	なし
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::Normalized(void) const
+{
+	float magnitude = this->Magnitude();
+	if (magnitude <= 0.0f) return Vector3(0.0f);
+	return *this / magnitude;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToQuaternion
+//  関数説明：Euler角をQuaternionに変換
+//	引数：	なし
+//	戻り値：Quaternion
+//--------------------------------------------------------------------------------
+Quaternion Vector3::ToQuaternion(void) const
+{
+	// Todo : 計算式を調べる
+	Quaternion result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	D3DXQUATERNION resultDX;
+	D3DXQuaternionRotationYawPitchRoll(&resultDX, Y, X, Z);
+	result.X = resultDX.x;
+	result.Y = resultDX.y;
+	result.Z = resultDX.z;
+	result.W = resultDX.w;
+#endif
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：DistanceBetween
+//  関数説明：両点の間の距離の算出
+//	引数：	pointA、pointB：計算相手
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Vector3::DistanceBetween(const Vector3& pointA, const Vector3& pointB)
+{
+	return (pointA - pointB).Magnitude();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SquareDistanceBetween
+//  関数説明：両点の間の距離の平方の算出
+//	引数：	pointA、pointB：計算相手
+//	戻り値：Quaternion
+//--------------------------------------------------------------------------------
+float Vector3::SquareDistanceBetween(const Vector3& pointA, const Vector3& pointB)
+{
+	return (pointA - pointB).SquareMagnitude();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：TransformCoord
+//  関数説明：ポイントを回転する
+//	引数：	point：回転相手
+//			rotation：回転行列
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::TransformCoord(const Vector3& point, const Matrix44& transform)
+{
+	auto& work = Vector4(point, 1.0f);
+	work *= transform;
+	auto result = Vector3::Zero;
+	if (work.W != 0.0f)
 	{
-		vAnswer.m_fX = m_fX / fValue;
-		vAnswer.m_fY = m_fY / fValue;
-		vAnswer.m_fZ = m_fZ / fValue;
+		result.X = work.X / work.W;
+		result.Y = work.Y / work.W;
+		result.Z = work.Z / work.W;
 	}
-	return vAnswer;
+	return result;
 }
 
 //--------------------------------------------------------------------------------
-//  operator/=(float)
+//	関数名：TransformNormal
+//  関数説明：ベクトルを回転する
+//	引数：	normal：回転相手
+//			rotation：回転行列
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-void CKFVec3::operator/=(const float &fValue)
+Vector3 Vector3::TransformNormal(const Vector3& normal, const Matrix44& transform)
 {
-	CKFVec3 vAnswer = CKFVec3(0.0f);
-	if (fValue != 0.0f)
-	{
-		vAnswer.m_fX = m_fX / fValue;
-		vAnswer.m_fY = m_fY / fValue;
-		vAnswer.m_fZ = m_fZ / fValue;
-	}
-	*this = vAnswer;
+	auto& work = Vector4(normal, 0.0f);
+	work *= transform;
+	return Vector3(work.X, work.Y, work.Z);
 }
 
 //--------------------------------------------------------------------------------
-//  CKFMtx44
+//	関数名：TransformInverse
+//  関数説明：ポイントを逆行列により変換する
+//	引数：	point：変換相手
+//			transform：変換行列
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::TransformInverse(const Vector3& point, const Matrix44& transform)
+{
+	auto work = point;
+	work.X -= transform.Elements[3][0];
+	work.Y -= transform.Elements[3][1];
+	work.Z -= transform.Elements[3][2];
+	Vector3 result;
+	result.X = work.X * transform.Elements[0][0] +
+		work.Y * transform.Elements[0][1] +
+		work.Z * transform.Elements[0][2];
+	result.Y = work.X * transform.Elements[1][0] +
+		work.Y * transform.Elements[1][1] +
+		work.Z * transform.Elements[1][2];
+	result.Z = work.X * transform.Elements[2][0] +
+		work.Y * transform.Elements[2][1] +
+		work.Z * transform.Elements[2][2];
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Scale
+//  関数説明：XYZ別々でスケールする
+//	引数：	value：スケールしたい値
+//			scale：スケール値
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::Scale(const Vector3& value, const Vector3& scale)
+{
+	return Vector3(value.X * scale.X, value.Y * scale.Y, value.Z * scale.Z);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：EulerBetween
+//  関数説明：ベクトル間のeuler角の算出
+//	引数：	directionA、directionB：ベクトル
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::EulerBetween(const Vector3& directionA, const Vector3& directionB)
+{
+	Vector3 result;
+
+	//X軸回転
+	result.X = Vector2::RadianBetween(Vector2(directionA.Y, directionA.Z), Vector2(directionB.Y, directionB.Z));
+
+	//Y軸回転
+	result.Y = Vector2::RadianBetween(Vector2(directionA.Z, directionA.X), Vector2(directionB.Z, directionB.X));
+
+	//Z軸回転
+	result.Z = Vector2::RadianBetween(Vector2(directionA.X, directionA.Y), Vector2(directionB.X, directionB.Y));
+
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ProjectOnPlane
+//  関数説明：方向を平面と平行の方向に回転する
+//	引数：	direction：回転したい方向
+//			planeNormal：平面の上方向
+//			currentNormal：今の上方向
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Vector3::ProjectOnPlane(const Vector3& direction, const Vector3& planeNormal, const Vector3& currentNormal)
+{
+	return (currentNormal * direction) * planeNormal;
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Vector4
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：operator*
+//  関数説明：マトリクスとの乗算
+//	引数：	matrix : 乗算相手
+//	戻り値：Vector4
+//--------------------------------------------------------------------------------
+Vector4 Vector4::operator*(const Matrix44 &matrix) const
+{
+	Vector4 result;
+	result.X =	X * matrix.Elements[0][0] +
+				Y * matrix.Elements[1][0] +
+				Z * matrix.Elements[2][0] +
+				W * matrix.Elements[3][0];
+	result.Y =	X * matrix.Elements[0][1] +
+				Y * matrix.Elements[1][1] +
+				Z * matrix.Elements[2][1] +
+				W * matrix.Elements[3][1];
+	result.Z =	X * matrix.Elements[0][2] +
+				Y * matrix.Elements[1][2] +
+				Z * matrix.Elements[2][2] +
+				W * matrix.Elements[3][2];
+	result.W =	X * matrix.Elements[0][3] +
+				Y * matrix.Elements[1][3] +
+				Z * matrix.Elements[2][3] +
+				W * matrix.Elements[3][3];
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator*=
+//  関数説明：マトリクスとの乗算
+//	引数：	matrix : 乗算相手
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Vector4::operator*=(const Matrix44 &matrix)
+{
+	Vector4 copy = *this;
+	X = copy.X * matrix.Elements[0][0] +
+		copy.Y * matrix.Elements[1][0] +
+		copy.Z * matrix.Elements[2][0] +
+		copy.W * matrix.Elements[3][0];
+	Y = copy.X * matrix.Elements[0][1] +
+		copy.Y * matrix.Elements[1][1] +
+		copy.Z * matrix.Elements[2][1] +
+		copy.W * matrix.Elements[3][1];
+	Z = copy.X * matrix.Elements[0][2] +
+		copy.Y * matrix.Elements[1][2] +
+		copy.Z * matrix.Elements[2][2] +
+		copy.W * matrix.Elements[3][2];
+	W = copy.X * matrix.Elements[0][3] +
+		copy.Y * matrix.Elements[1][3] +
+		copy.Z * matrix.Elements[2][3] +
+		copy.W * matrix.Elements[3][3];
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Matrix44
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CKFMtx44::CKFMtx44()
+Matrix44::Matrix44()
 {
-	float afMtx[4][4] = {
+	float elements[4][4] = {
 		{ 1.0f, 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 1.0f, 0.0f, 0.0f },
 		{ 0.0f, 0.0f, 1.0f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f, 1.0f } };
-	memcpy(m_af, afMtx, sizeof(m_af));
+	memcpy(Elements, elements, sizeof(Elements));
 }
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CKFMtx44::CKFMtx44(
-	const float &f11, const float &f12, const float &f13, const float &f14,
-	const float &f21, const float &f22, const float &f23, const float &f24,
-	const float &f31, const float &f32, const float &f33, const float &f34,
-	const float &f41, const float &f42, const float &f43, const float &f44)
+Matrix44::Matrix44(
+	const float& element11, const float& element12, const float& element13, const float& element14,
+	const float& element21, const float& element22, const float& element23, const float& element24,
+	const float& element31, const float& element32, const float& element33, const float& element34,
+	const float& element41, const float& element42, const float& element43, const float& element44)
 {
-	m_af[0][0] = f11;
-	m_af[0][1] = f12;
-	m_af[0][2] = f13;
-	m_af[0][3] = f14;
-	m_af[1][0] = f21;
-	m_af[1][1] = f22;
-	m_af[1][2] = f23;
-	m_af[1][3] = f24;
-	m_af[2][0] = f31;
-	m_af[2][1] = f32;
-	m_af[2][2] = f33;
-	m_af[2][3] = f34;
-	m_af[3][0] = f41;
-	m_af[3][1] = f42;
-	m_af[3][2] = f43;
-	m_af[3][3] = f44;
+	Element11 = element11;
+	Element12 = element12;
+	Element13 = element13;
+	Element14 = element14;
+	Element21 = element21;
+	Element22 = element22;
+	Element23 = element23;
+	Element24 = element24;
+	Element31 = element31;
+	Element32 = element32;
+	Element33 = element33;
+	Element34 = element34;
+	Element41 = element41;
+	Element42 = element42;
+	Element43 = element43;
+	Element44 = element44;
 }
 
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
-//  キャスト(D3DXVECTOR3)
-//	DXの環境のためオーバーロードする
+//	関数名：operator D3DXMATRIX()
+//  関数説明：キャスト(D3DXMATRIX)
+//	引数：	なし
+//	戻り値：D3DXMATRIX
 //--------------------------------------------------------------------------------
-CKFMtx44::operator D3DXMATRIX() const
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Matrix44::operator D3DXMATRIX() const
 {
-	D3DXMATRIX mtxValue;
-	
-	for (int nCntY = 0; nCntY < 4; nCntY++)
+	D3DXMATRIX result;
+	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
+		for (int countX = 0; countX < 4; ++countX)
 		{
-			mtxValue(nCntY, nCntX) = m_af[nCntY][nCntX];
+			result(countY, countX) = Elements[countY][countX];
 		}
 	}
-
-	return mtxValue;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//  operator*
+//	関数名：operator=
+//  関数説明：値の代入処理
+//	引数：	value : 値
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-CKFMtx44 &CKFMtx44::operator=(const CKFMtx44 &mtxValue)
+Matrix44& Matrix44::operator=(const Matrix44 &value)
 {
-	for (int nCntY = 0; nCntY < 4; nCntY++)
-	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
-		{
-			m_af[nCntY][nCntX] = mtxValue.m_af[nCntY][nCntX];
-		}
-	}
-
+	memcpy(Elements, value.Elements, sizeof(Elements));
 	return *this;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*
+//	関数名：operator*
+//  関数説明：floatと乗算処理
+//	引数：	value : 相手
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-CKFMtx44 CKFMtx44::operator*(const CKFMtx44 &mtxValue) const
+Matrix44 Matrix44::operator*(const float& value) const
 {
-	CKFMtx44 mtxAnswer;
-
-	for (int nCntY = 0; nCntY < 4; nCntY++)
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
+		for (int countX = 0; countX < 4; ++countX)
 		{
-			mtxAnswer.m_af[nCntY][nCntX] = 
-				m_af[nCntY][0] * mtxValue.m_af[0][nCntX] + 
-				m_af[nCntY][1] * mtxValue.m_af[1][nCntX] + 
-				m_af[nCntY][2] * mtxValue.m_af[2][nCntX] + 
-				m_af[nCntY][3] * mtxValue.m_af[3][nCntX];
-		}								    
-	}									   
-										   
-	return mtxAnswer;
+			result.Elements[countY][countX] = Elements[countY][countX] * value;
+		}
+	}
+	return result;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=
+//	関数名：operator+
+//  関数説明：加算処理
+//	引数：	value : 相手
+//	戻り値：Matrix44
 //--------------------------------------------------------------------------------
-void CKFMtx44::operator*=(const CKFMtx44 &mtxValue)
+Matrix44 Matrix44::operator+(const Matrix44 &value) const
 {
-	CKFMtx44 mtxCpy = *this;
-
-	for (int nCntY = 0; nCntY < 4; nCntY++)
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
 	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
+		for (int countX = 0; countX < 4; ++countX)
 		{
-			m_af[nCntY][nCntX] =
-				mtxCpy.m_af[nCntY][0] * mtxValue.m_af[0][nCntX] +
-				mtxCpy.m_af[nCntY][1] * mtxValue.m_af[1][nCntX] +
-				mtxCpy.m_af[nCntY][2] * mtxValue.m_af[2][nCntX] +
-				mtxCpy.m_af[nCntY][3] * mtxValue.m_af[3][nCntX];
+			result.Elements[countY][countX] = Elements[countY][countX] + value.Elements[countY][countX];
+		}
+	}
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator*
+//  関数説明：乗算処理
+//	引数：	value : 相手
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::operator*(const Matrix44 &value) const
+{
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			result.Elements[countY][countX] =
+				Elements[countY][0] * value.Elements[0][countX] + 
+				Elements[countY][1] * value.Elements[1][countX] + 
+				Elements[countY][2] * value.Elements[2][countX] + 
+				Elements[countY][3] * value.Elements[3][countX];
+		}
+	}
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator*
+//  関数説明：乗算処理
+//	引数：	value : 相手
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Matrix44::operator*=(const Matrix44 &value)
+{
+	Matrix44 copy = *this;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			Elements[countY][countX] =
+				copy.Elements[countY][0] * value.Elements[0][countX] +
+				copy.Elements[countY][1] * value.Elements[1][countX] +
+				copy.Elements[countY][2] * value.Elements[2][countX] +
+				copy.Elements[countY][3] * value.Elements[3][countX];
 		}
 	}
 }
 
 //--------------------------------------------------------------------------------
-//  CKFVec4
+//	関数名：ToEular
+//  関数説明：Eularに変換
+//	引数：	なし
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  operator*(Matrix44)
-//--------------------------------------------------------------------------------
-CKFVec4 CKFVec4::operator*(const CKFMtx44 &mtxValue) const
+Vector3 Matrix44::ToEular(void) const
 {
-	CKFVec4 vAnswer;
-
-	vAnswer.m_fX =
-		m_fX * mtxValue.m_af[0][0] +
-		m_fY * mtxValue.m_af[1][0] +
-		m_fZ * mtxValue.m_af[2][0] +
-		m_fW * mtxValue.m_af[3][0];
-	vAnswer.m_fY =
-		m_fX * mtxValue.m_af[0][1] +
-		m_fY * mtxValue.m_af[1][1] +
-		m_fZ * mtxValue.m_af[2][1] +
-		m_fW * mtxValue.m_af[3][1];
-	vAnswer.m_fZ =
-		m_fX * mtxValue.m_af[0][2] +
-		m_fY * mtxValue.m_af[1][2] +
-		m_fZ * mtxValue.m_af[2][2] +
-		m_fW * mtxValue.m_af[3][2];
-	vAnswer.m_fW =
-		m_fX * mtxValue.m_af[0][3] +
-		m_fY * mtxValue.m_af[1][3] +
-		m_fZ * mtxValue.m_af[2][3] +
-		m_fW * mtxValue.m_af[3][3];
-
-	return vAnswer;
+	return this->ToQuaternion().ToEuler();
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(Matrix44)
+//	関数名：ToQuaternion
+//  関数説明：Quaternionに変換
+//	引数：	なし
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-void CKFVec4::operator*=(const CKFMtx44 &mtxValue)
+Quaternion Matrix44::ToQuaternion(void) const
 {
-	CKFVec4 vThis = *this;
-
-	m_fX =
-		vThis.m_fX * mtxValue.m_af[0][0] +
-		vThis.m_fY * mtxValue.m_af[1][0] +
-		vThis.m_fZ * mtxValue.m_af[2][0] +
-		vThis.m_fW * mtxValue.m_af[3][0];
-	m_fY =
-		vThis.m_fX * mtxValue.m_af[0][1] +
-		vThis.m_fY * mtxValue.m_af[1][1] +
-		vThis.m_fZ * mtxValue.m_af[2][1] +
-		vThis.m_fW * mtxValue.m_af[3][1];
-	m_fZ =
-		vThis.m_fX * mtxValue.m_af[0][2] +
-		vThis.m_fY * mtxValue.m_af[1][2] +
-		vThis.m_fZ * mtxValue.m_af[2][2] +
-		vThis.m_fW * mtxValue.m_af[3][2];
-	m_fW =
-		vThis.m_fX * mtxValue.m_af[0][3] +
-		vThis.m_fY * mtxValue.m_af[1][3] +
-		vThis.m_fZ * mtxValue.m_af[2][3] +
-		vThis.m_fW * mtxValue.m_af[3][3];
+	Quaternion result;
+	if (Elements[2][2] <= 0.0f)  // x^2 + y^2 >= z^2 + w^2
+	{
+		float difference1100 = Elements[1][1] - Elements[0][0];
+		float oneMinus22 = 1.0f - Elements[2][2];
+		if (difference1100 <= 0.0f)  // x^2 >= y^2
+		{
+			float square4X = oneMinus22 - difference1100;
+			float inverse4X = 0.5f / sqrtf(square4X);
+			result.X = square4X * inverse4X;
+			result.Y = (Elements[0][1] + Elements[1][0]) * inverse4X;
+			result.Z = (Elements[0][2] + Elements[2][0]) * inverse4X;
+			result.W = (Elements[1][2] - Elements[2][1]) * inverse4X;
+		}
+		else  // y^2 >= x^2
+		{
+			float square4Y = oneMinus22 + difference1100;
+			float inverse4Y = 0.5f / sqrtf(square4Y);
+			result.X = (Elements[0][1] + Elements[1][0]) * inverse4Y;
+			result.Y = square4Y * inverse4Y;
+			result.Z = (Elements[1][2] + Elements[2][1]) * inverse4Y;
+			result.W = (Elements[2][0] - Elements[0][2]) * inverse4Y;
+		}
+	}
+	else  // z^2 + w^2 >= x^2 + y^2
+	{
+		float sum1100 = Elements[1][1] + Elements[0][0];
+		float onePlus22 = 1.0f + Elements[2][2];
+		if (sum1100 <= 0.0f)  // z^2 >= w^2
+		{
+			float square4Z = onePlus22 - sum1100;
+			float inverse4Z = 0.5f / sqrtf(square4Z);
+			result.X = (Elements[0][2] + Elements[2][0]) * inverse4Z;
+			result.Y = (Elements[1][2] + Elements[2][1]) * inverse4Z;
+			result.Z = square4Z * inverse4Z;
+			result.W = (Elements[0][1] - Elements[1][0]) * inverse4Z;
+		}
+		else  // w^2 >= z^2
+		{
+			float square4W = onePlus22 + sum1100;
+			float inverse4W = 0.5f / sqrtf(square4W);
+			result.X = (Elements[1][2] - Elements[2][1]) * inverse4W;
+			result.Y = (Elements[2][0] - Elements[0][2]) * inverse4W;
+			result.Z = (Elements[0][1] - Elements[1][0]) * inverse4W;
+			result.W = square4W * inverse4W;
+		}
+	}
+	return result;
 }
+
+//--------------------------------------------------------------------------------
+//	関数名：Transpose
+//  関数説明：Transpose行列に変換
+//	引数：	なし
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transpose(void) const
+{
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			result.Elements[countY][countX] = Elements[countX][countY];
+		}
+	}
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Scale
+//  関数説明：与えられた値でスケール行列の作成
+//	引数：	scale：スケール値
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Scale(const Vector3& scale)
+{
+	return Matrix44(
+		scale.X, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.Y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Rotation
+//  関数説明：与えられた回転で行列の作成
+//	引数：	right：右方向
+//			up：上方向
+//			forward：前方向
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Rotation(const Vector3& right, const Vector3& up, const Vector3& forward)
+{
+	return Matrix44(
+		right.X, right.Y, right.Z, 0.0f,
+		up.X, up.Y, up.Z, 0.0f,
+		forward.X, forward.Y, forward.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：RotationAxis
+//  関数説明：与えられた軸と角で回転行列の作成
+//	引数：	axis：軸
+//			radian：角度
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::RotationAxis(const Vector3& axis, const float& radian)
+{
+	Matrix44 result;
+	float x = axis.X;
+	float y = axis.Y;
+	float z = axis.Z;
+	float sin = sinf(radian);
+	float cos = cosf(radian);
+	result.Elements[0][0] = cos + x * x * (1.0f - cos);
+	result.Elements[0][1] = x * y * (1.0f - cos) + z * sin;
+	result.Elements[0][2] = x * z * (1.0f - cos) - y * sin;
+	result.Elements[1][0] = x * y * (1.0f - cos) - z * sin;
+	result.Elements[1][1] = cos + y * y * (1.0f - cos);
+	result.Elements[1][2] = z * y * (1.0f - cos) + x * sin;
+	result.Elements[2][0] = x * z * (1.0f - cos) + y * sin;
+	result.Elements[2][1] = y * z * (1.0f - cos) - x * sin;
+	result.Elements[2][2] = cos + z * z * (1.0f - cos);
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：RotationYawPitchRoll
+//  関数説明：与えられたeuler角で回転行列の作成
+//	引数：	euler：角度
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::RotationYawPitchRoll(const Vector3& euler)
+{
+	Matrix44 result;
+	float sinX = sinf(euler.X);
+	float cosX = cosf(euler.X);
+	float sinY = sinf(euler.Y);
+	float cosY = cosf(euler.Y);
+	float sinZ = sinf(euler.Z);
+	float cosZ = cosf(euler.Z);
+	result.Elements[0][0] = cosY * cosZ + sinX * sinY * sinZ;
+	result.Elements[0][1] = cosX * sinZ;
+	result.Elements[0][2] = -sinY * cosZ + sinX * cosY * sinZ;
+	result.Elements[1][0] = -cosY * sinZ + sinX * sinY * cosZ;
+	result.Elements[1][1] = cosX * cosZ;
+	result.Elements[1][2] = sinY * sinZ + sinX * cosY * cosZ;
+	result.Elements[2][0] = cosX * sinY;
+	result.Elements[2][1] = -sinX;
+	result.Elements[2][2] = cosX * cosY;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Translation
+//  関数説明：与えられた移動量で平行移動行列の作成
+//	引数：	translation：移動量
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Translation(const Vector3& translation)
+{
+	Matrix44 result;
+	result.Elements[3][0] = translation.X;
+	result.Elements[3][1] = translation.Y;
+	result.Elements[3][2] = translation.Z;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Transform
+//  関数説明：与えられた回転と移動量で行列の作成
+//	引数：	right：右方向
+//			up：上方向
+//			forward：前方向
+//			translation：移動量
+//			scale：スケール量
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vector3& forward, const Vector3& translation, const Vector3& scale)
+{
+	return Matrix44(
+		right.X * scale.X, right.Y * scale.X, right.Z * scale.X, 0.0f,
+		up.X * scale.Y, up.Y * scale.Y, up.Z * scale.Y, 0.0f,
+		forward.X * scale.Z, forward.Y * scale.Z, forward.Z * scale.Z, 0.0f,
+		translation.X, translation.Y, translation.Z, 1.0f);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Transform
+//  関数説明：与えられた回転と移動量で行列の作成
+//	引数：	rotation：回転量
+//			translation：移動量
+//			scale：スケール量
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transform(const Vector3& rotation, const Vector3& translation, const Vector3& scale)
+{
+	auto& result = Matrix44(
+		scale.X, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.Y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.Z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
+	result *= RotationYawPitchRoll(rotation);
+	result *= Translation(translation);
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ProjectionLeftHand
+//  関数説明：射影行列の作成(左手座標系)
+//	引数：	fovAngleY：視野角度
+//			aspectRatio：アスペクト比
+//			nearZ：一番近い距離
+//			farZ：一番遠い距離
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::ProjectionLeftHand(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ)
+{
+	float cosFov = cosf(fovAngleY * 0.5f);
+	float sinFov = sqrtf(1.0f - cosFov * cosFov);
+	if (fovAngleY * 0.5f > Pi) sinFov = -sinFov;
+
+	float height = cosFov / sinFov;
+	float width = height / aspectRatio;
+	float range = farZ / (farZ - nearZ);
+
+	Matrix44 result;
+	result.Elements[0][0] = width;
+	result.Elements[0][1] = 0.0f;
+	result.Elements[0][2] = 0.0f;
+	result.Elements[0][3] = 0.0f;
+	result.Elements[1][0] = 0.0f;
+	result.Elements[1][1] = height;
+	result.Elements[1][2] = 0.0f;
+	result.Elements[1][3] = 0.0f;
+	result.Elements[2][0] = 0.0f;
+	result.Elements[2][1] = 0.0f;
+	result.Elements[2][2] = range;
+	result.Elements[2][3] = 1.0f;
+	result.Elements[3][0] = 0.0f;
+	result.Elements[3][1] = 0.0f;
+	result.Elements[3][2] = -range * nearZ;
+	result.Elements[3][3] = 0.0f;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToMatrix44
+//  関数説明：D3DXMATRIXをMatrix44に変換
+//	引数：	value：D3DXMATRIX
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Matrix44 Matrix44::ToMatrix44(const D3DXMATRIX& value)
+{
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			result.Elements[countY][countX] = value(countY, countX);
+		}
+	}
+	return result;
+}
+#endif
 
 //--------------------------------------------------------------------------------
 //  Quaternion
 //--------------------------------------------------------------------------------
-#ifdef USING_DIRECTX
 //--------------------------------------------------------------------------------
-//  キャスト(D3DXQUATERNION)
-//	DXの環境のためオーバーロードする
+//	関数名：operator D3DXQUATERNION()
+//  関数説明：キャスト(D3DXQUATERNION)
+//	引数：	なし
+//	戻り値：D3DXQUATERNION
 //--------------------------------------------------------------------------------
-CKFQuaternion::operator D3DXQUATERNION () const
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+Quaternion::operator D3DXQUATERNION() const
 {
-	D3DXQUATERNION qDx;
-	qDx.x = m_fX;
-	qDx.y = m_fY;
-	qDx.z = m_fZ;
-	qDx.w = m_fW;
-	return qDx;
+	D3DXQUATERNION result;
+	result.x = X;
+	result.y = Y;
+	result.z = Z;
+	result.w = W;
+	return result;
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//  operator+(CKFQuaternion)
-//	quaternionの加算
+//	関数名：operator+
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-CKFQuaternion CKFQuaternion::operator+(const CKFQuaternion& qValue) const
+Quaternion Quaternion::operator+(const Quaternion& value) const
 {
-	CKFQuaternion qAnswer;
-	qAnswer.m_fX = m_fX + qValue.m_fX;
-	qAnswer.m_fY = m_fY + qValue.m_fY;
-	qAnswer.m_fZ = m_fZ + qValue.m_fZ;
-	qAnswer.m_fW = m_fW + qValue.m_fW;
-	return qAnswer;
+	return Quaternion(X + value.X, Y + value.Y, Z + value.Z, W + value.W);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+=(CKFQuaternion)
-//	quaternionの加算
+//	関数名：operator+=
+//  関数説明：足し算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFQuaternion::operator+=(const CKFQuaternion& qValue)
+void Quaternion::operator+=(const Quaternion& value)
 {
-	m_fX += qValue.m_fX;
-	m_fY += qValue.m_fY;
-	m_fZ += qValue.m_fZ;
-	m_fW += qValue.m_fW;
+	X += value.X;
+	Y += value.Y;
+	Z += value.Z;
+	W += value.W;
 }
 
 //--------------------------------------------------------------------------------
-//  operator-(CKFQuaternion)
-//	quaternionの減算
+//	関数名：operator-
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-CKFQuaternion CKFQuaternion::operator-(const CKFQuaternion& qValue) const
+Quaternion Quaternion::operator-(const Quaternion& value) const
 {
-	CKFQuaternion qAnswer;
-	qAnswer.m_fX = m_fX - qValue.m_fX;
-	qAnswer.m_fY = m_fY - qValue.m_fY;
-	qAnswer.m_fZ = m_fZ - qValue.m_fZ;
-	qAnswer.m_fW = m_fW - qValue.m_fW;
-	return qAnswer;
+	return Quaternion(X - value.X, Y - value.Y, Z - value.Z, W - value.W);
 }
 
 //--------------------------------------------------------------------------------
-//  operator-=(CKFQuaternion)
-//	quaternionの減算
+//	関数名：operator-=
+//  関数説明：引き算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFQuaternion::operator-=(const CKFQuaternion& qValue)
+void Quaternion::operator-=(const Quaternion& value)
 {
-	m_fX -= qValue.m_fX;
-	m_fY -= qValue.m_fY;
-	m_fZ -= qValue.m_fZ;
-	m_fW -= qValue.m_fW;
+	X -= value.X;
+	Y -= value.Y;
+	Z -= value.Z;
+	W -= value.W;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(float)
-//	quaternionの乗算
+//	関数名：operator*
+//  関数説明：乗算(float)
+//	引数：	value : 相手
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-CKFQuaternion CKFQuaternion::operator*(const float& fValue) const
+Quaternion Quaternion::operator*(const float& value) const
 {
-	CKFQuaternion qAnswer;
-	qAnswer.m_fX = m_fX * fValue;
-	qAnswer.m_fY = m_fY * fValue;
-	qAnswer.m_fZ = m_fZ * fValue;
-	qAnswer.m_fW = m_fW * fValue;
-	return qAnswer;
+	return Quaternion(X * value, Y * value, Z * value, W * value);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(float)
-//	quaternionの乗算
+//	関数名：operator*=
+//  関数説明：乗算(float)
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFQuaternion::operator*=(const float& fValue)
+void Quaternion::operator*=(const float& value)
 {
-	m_fX *= fValue;
-	m_fY *= fValue;
-	m_fZ *= fValue;
-	m_fW *= fValue;
+	X *= value;
+	Y *= value;
+	Z *= value;
+	W *= value;
 }
 
 //--------------------------------------------------------------------------------
-//  operator/=
+//	関数名：operator/
+//  関数説明：除算(float)
+//	引数：	value : 相手
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-void CKFQuaternion::operator/=(const float& fValue)
+Quaternion Quaternion::operator/(const float& value) const
 {
-	m_fX /= fValue;
-	m_fY /= fValue;
-	m_fZ /= fValue;
-	m_fW /= fValue;
+	return Quaternion(X / value, Y / value, Z / value, W / value);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*
+//	関数名：operator/=
+//  関数説明：除算(float)
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-CKFQuaternion CKFQuaternion::operator*(const CKFQuaternion& qValue) const
+void Quaternion::operator/=(const float& value)
 {
-	CKFQuaternion qAnswer;
-	qAnswer.m_fX = (qValue.m_fW * this->m_fX) + (qValue.m_fX * this->m_fW) + (qValue.m_fY * this->m_fZ) - (qValue.m_fZ * this->m_fY);
-	qAnswer.m_fY = (qValue.m_fW * this->m_fY) - (qValue.m_fX * this->m_fZ) + (qValue.m_fY * this->m_fW) + (qValue.m_fZ * this->m_fX);
-	qAnswer.m_fZ = (qValue.m_fW * this->m_fZ) + (qValue.m_fX * this->m_fY) - (qValue.m_fY * this->m_fX) + (qValue.m_fZ * this->m_fW);
-	qAnswer.m_fW = (qValue.m_fW * this->m_fW) - (qValue.m_fX * this->m_fX) - (qValue.m_fY * this->m_fY) - (qValue.m_fZ * this->m_fZ);
-	return qAnswer;
+	X /= value;
+	Y /= value;
+	Z /= value;
+	W /= value;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=
+//	関数名：operator*
+//  関数説明：乗算
+//	引数：	value : 相手
+//	戻り値：Quaternion
 //--------------------------------------------------------------------------------
-void CKFQuaternion::operator*=(const CKFQuaternion& qValue)
+Quaternion Quaternion::operator*(const Quaternion& value) const
 {
-	auto qCopy = *this;
-	this->m_fX = (qValue.m_fW * qCopy.m_fX) + (qValue.m_fX * qCopy.m_fW) + (qValue.m_fY * qCopy.m_fZ) - (qValue.m_fZ * qCopy.m_fY);
-	this->m_fY = (qValue.m_fW * qCopy.m_fY) - (qValue.m_fX * qCopy.m_fZ) + (qValue.m_fY * qCopy.m_fW) + (qValue.m_fZ * qCopy.m_fX);
-	this->m_fZ = (qValue.m_fW * qCopy.m_fZ) + (qValue.m_fX * qCopy.m_fY) - (qValue.m_fY * qCopy.m_fX) + (qValue.m_fZ * qCopy.m_fW);
-	this->m_fW = (qValue.m_fW * qCopy.m_fW) - (qValue.m_fX * qCopy.m_fX) - (qValue.m_fY * qCopy.m_fY) - (qValue.m_fZ * qCopy.m_fZ);
+	return Quaternion(
+		(value.W * this->X) + (value.X * this->W) + (value.Y * this->Z) - (value.Z * this->Y),
+		(value.W * this->Y) - (value.X * this->Z) + (value.Y * this->W) + (value.Z * this->X),
+		(value.W * this->Z) + (value.X * this->Y) - (value.Y * this->X) + (value.Z * this->W),
+		(value.W * this->W) - (value.X * this->X) - (value.Y * this->Y) - (value.Z * this->Z));
 }
 
 //--------------------------------------------------------------------------------
-//  CKFColor
+//	関数名：operator*=
+//  関数説明：乗算
+//	引数：	value : 相手
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  operator=
-//--------------------------------------------------------------------------------
-CKFColor &CKFColor::operator=(const CKFColor &cValue)
+void Quaternion::operator*=(const Quaternion& value)
 {
-	m_fR = cValue.m_fR;
-	m_fG = cValue.m_fG;
-	m_fB = cValue.m_fB;
-	m_fA = cValue.m_fA;
+	auto copy = *this;
+	this->X = (value.W * copy.X) + (value.X * copy.W) + (value.Y * copy.Z) - (value.Z * copy.Y);
+	this->Y = (value.W * copy.Y) - (value.X * copy.Z) + (value.Y * copy.W) + (value.Z * copy.X);
+	this->Z = (value.W * copy.Z) + (value.X * copy.Y) - (value.Y * copy.X) + (value.Z * copy.W);
+	this->W = (value.W * copy.W) - (value.X * copy.X) - (value.Y * copy.Y) - (value.Z * copy.Z);
+}
 
+//--------------------------------------------------------------------------------
+//	関数名：Dot
+//  関数説明：乗算
+//	引数：	value : 相手
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Quaternion::Dot(const Quaternion& value) const
+{
+	return (X * value.X + Y * value.Y + Z * value.Z + W * value.W);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：SquareMagnitude
+//  関数説明：長さの平方の算出
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Quaternion::SquareMagnitude(void) const
+{
+	return this->Dot(*this);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Magnitude
+//  関数説明：長さの算出
+//	引数：	なし
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Quaternion::Magnitude(void) const
+{
+	return sqrtf(this->SquareMagnitude());
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalize
+//  関数説明：正規化
+//	引数：	なし
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Quaternion::Normalize(void)
+{
+	*this = this->Normalized();
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：Normalize
+//  関数説明：正規化したの値を返す
+//	引数：	なし
+//	戻り値：Quaternion
+//--------------------------------------------------------------------------------
+Quaternion Quaternion::Normalized(void) const
+{
+	float magnitude = this->Magnitude();
+	if (magnitude <= 0.0f) return Quaternion();
+	return *this / magnitude;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：MultiplySeparately
+//  関数説明：別々で乗算
+//	引数：	value：相手
+//	戻り値：Quaternion
+//--------------------------------------------------------------------------------
+Quaternion Quaternion::MultiplySeparately(const Quaternion& value) const
+{
+	return Quaternion(X * value.X, Y * value.Y, Z * value.Z, W * value.W);
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToEuler
+//  関数説明：euler角に変換
+//	引数：	なし
+//	戻り値：Vector3
+//--------------------------------------------------------------------------------
+Vector3 Quaternion::ToEuler(void) const
+{
+	Vector3 result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	D3DXQUATERNION quaternion = *this;
+	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(1.0f, 0.0f, 0.0f), &result.X);
+	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &result.Y);
+	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(0.0f, 0.0f, 1.0f), &result.Z);
+#else
+	result.X = atan2f(2.0f * (W * Z + X * Y), 1.0f - 2.0f * (Z * Z + X * X));
+	result.Y = asinf(2.0f * (W * X - Y * Z));
+	result.Z = atan2f(2.0f * (W * Y + Z * X), 1.0f - 2.0f * (X * X + Y * Y));
+#endif
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：ToMatrix
+//  関数説明：行列に変換
+//	引数：	なし
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Quaternion::ToMatrix(void) const
+{
+	Matrix44 result;
+	static const auto quaternion1110 = Quaternion(1.0f, 1.0f, 1.0f, 0.0f);
+	auto& this_x2 = *this + *this;
+	auto& this_x_this_x2 = this->MultiplySeparately(this_x2);
+	auto& work0 = quaternion1110
+		- Quaternion(this_x_this_x2.Y, this_x_this_x2.X, this_x_this_x2.X, quaternion1110.W)
+		- Quaternion(this_x_this_x2.Z, this_x_this_x2.Z, this_x_this_x2.Y, quaternion1110.W);
+	auto& work1 = Quaternion(X, X, Y, W).MultiplySeparately(Quaternion(this_x2.Z, this_x2.Y, this_x2.Z, this_x2.W));
+	auto& work2 = Quaternion(W, W, W, W).MultiplySeparately(Quaternion(this_x2.Y, this_x2.Z, this_x2.X, this_x2.W));
+	auto& OnePlusTwo = work1 + work2;
+	auto& OneMinusTwo = work1 - work2;
+	result.Elements[0][0] = work0.X;
+	result.Elements[0][1] = OnePlusTwo.Y;
+	result.Elements[0][2] = OneMinusTwo.X;
+	result.Elements[0][3] = work0.W;
+	result.Elements[1][0] = OneMinusTwo.Y;
+	result.Elements[1][1] = work0.Y;
+	result.Elements[1][2] = OnePlusTwo.Z;
+	result.Elements[1][3] = work0.W;
+	result.Elements[2][0] = OnePlusTwo.X;
+	result.Elements[2][1] = OneMinusTwo.Z;
+	result.Elements[2][2] = work0.Z;
+	result.Elements[2][3] = work0.W;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Color
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//	関数名：operator=
+//  関数説明：値の代入処理
+//	引数：	value : 値
+//	戻り値：Color
+//--------------------------------------------------------------------------------
+Color& Color::operator=(const Color& value)
+{
+	R = value.R;
+	G = value.G;
+	B = value.B;
+	A = value.A;
 	return *this;
 }
 
 //--------------------------------------------------------------------------------
-//  operator==
+//	関数名：operator==
+//  関数説明：同値判定処理
+//	引数：	value : 相手
+//	戻り値：bool
 //--------------------------------------------------------------------------------
-bool CKFColor::operator==(const CKFColor &cValue)
+bool Color::operator==(const Color& value)
 {
-	if (m_fR == cValue.m_fR && m_fG == cValue.m_fG && m_fB == cValue.m_fB && m_fA == cValue.m_fA) { return true; }
-	return false;
+	return (R == value.R && G == value.G && B == value.B && A == value.A);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+
+//	関数名：operator+
+//  関数説明：足し算処理
+//	引数：	value : 値
+//	戻り値：Color
 //--------------------------------------------------------------------------------
-CKFColor CKFColor::operator+(const CKFColor &cValue) const
+Color Color::operator+(const Color& value) const
 {
-	CKFColor cAnswer;
-	cAnswer.m_fR = m_fR + cValue.m_fR;
-	cAnswer.m_fG = m_fG + cValue.m_fG;
-	cAnswer.m_fB = m_fB + cValue.m_fB;
-	cAnswer.m_fA = m_fA + cValue.m_fA;
-	return cAnswer;
+	return Color(R + value.R, G + value.G, B + value.B, A + value.A);
 }
 
 //--------------------------------------------------------------------------------
-//  operator+=
+//	関数名：operator+=
+//  関数説明：足し算処理
+//	引数：	value : 値
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFColor::operator+=(const CKFColor &cValue)
+void Color::operator+=(const Color& value)
 {
-	m_fR += cValue.m_fR;
-	m_fG += cValue.m_fG;
-	m_fB += cValue.m_fB;
-	m_fA += cValue.m_fA;
+	R += value.R;
+	G += value.G;
+	B += value.B;
+	A += value.A;
 }
 
 //--------------------------------------------------------------------------------
-//  operator-
+//	関数名：operator-
+//  関数説明：引き算処理
+//	引数：	value : 値
+//	戻り値：Color
 //--------------------------------------------------------------------------------
-CKFColor CKFColor::operator-(const CKFColor &cValue) const
+Color Color::operator-(const Color& value) const
 {
-	CKFColor cAnswer;
-	cAnswer.m_fR = m_fR - cValue.m_fR;
-	cAnswer.m_fG = m_fG - cValue.m_fG;
-	cAnswer.m_fB = m_fB - cValue.m_fB;
-	cAnswer.m_fA = m_fA - cValue.m_fA;
-	return cAnswer;
+	return Color(R - value.R, G - value.G, B - value.B, A - value.A);
 }
 
 //--------------------------------------------------------------------------------
-//  operator-=
+//	関数名：operator-=
+//  関数説明：引き算処理
+//	引数：	value : 値
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFColor::operator-=(const CKFColor &cValue)
+void Color::operator-=(const Color& value)
 {
-	m_fR -= cValue.m_fR;
-	m_fG -= cValue.m_fG;
-	m_fB -= cValue.m_fB;
-	m_fA -= cValue.m_fA;
+	R -= value.R;
+	G -= value.G;
+	B -= value.B;
+	A -= value.A;
 }
 
 //--------------------------------------------------------------------------------
-//  operator*(float)
+//	関数名：operator*
+//  関数説明：掛け算(float)
+//	引数：	value : 値
+//	戻り値：Color
 //--------------------------------------------------------------------------------
-CKFColor CKFColor::operator*(const float &fValue) const
+Color Color::operator*(const float& value) const
 {
-	CKFColor cAnswer;
-	cAnswer.m_fR = m_fR * fValue;
-	cAnswer.m_fG = m_fG * fValue;
-	cAnswer.m_fB = m_fB * fValue;
-	cAnswer.m_fA = m_fA * fValue;
-	return cAnswer;
+	return Color(R * value, G * value, B * value, A * value);
 }
 
 //--------------------------------------------------------------------------------
-//  operator*=(float)
+//	関数名：operator*=
+//  関数説明：掛け算(float)
+//	引数：	value : 値
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFColor::operator*=(const float &fValue)
+void Color::operator*=(const float& value)
 {
-	m_fR *= fValue;
-	m_fG *= fValue;
-	m_fB *= fValue;
-	m_fA *= fValue;
+	R *= value;
+	G *= value;
+	B *= value;
+	A *= value;
 }
 
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
-//  キャスト(D3DCOLORVALUE)
-//	DXの環境のため(Light)オーバーロードする
+//	関数名：operator D3DCOLORVALUE()
+//  関数説明：キャスト(D3DCOLORVALUE)
+//	引数：	なし
+//	戻り値：D3DCOLORVALUE
 //--------------------------------------------------------------------------------
-CKFColor::operator D3DCOLORVALUE() const
+Color::operator D3DCOLORVALUE() const
 {
-	D3DCOLORVALUE vAnswer;
-	vAnswer.r = m_fR;
-	vAnswer.g = m_fG;
-	vAnswer.b = m_fB;
-	vAnswer.a = m_fA;
-	return vAnswer;
+	D3DCOLORVALUE result;
+	result.r = R;
+	result.g = G;
+	result.b = B;
+	result.a = A;
+	return result;
 }
 
 //--------------------------------------------------------------------------------
-//  キャスト(unsigned long)
-//	DXの環境で頂点情報のカラーはDWORD(unsigned long)のためオーバーロードする
+//	関数名：operator unsigned long()
+//  関数説明：キャスト(unsigned long)
+//	引数：	なし
+//	戻り値：unsigned long
 //--------------------------------------------------------------------------------
-CKFColor::operator unsigned long() const
+Color::operator unsigned long() const
 {
-	return (unsigned long)((((unsigned long)(m_fA * 255.0f) & 0xff) << 24) 
-		| (((unsigned long)(m_fR * 255.0f) & 0xff) << 16) 
-		| (((unsigned long)(m_fG * 255.0f) & 0xff) << 8) 
-		| ((unsigned long)(m_fB * 255.0f) & 0xff));
+	return (unsigned long)((((unsigned long)(A * 255.0f) & 0xff) << 24) 
+		| (((unsigned long)(R * 255.0f) & 0xff) << 16) 
+		| (((unsigned long)(G * 255.0f) & 0xff) << 8) 
+		| ((unsigned long)(B * 255.0f) & 0xff));
 }
 #endif
 
 //--------------------------------------------------------------------------------
-//  CKFMath
+//
+//  Ray
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//	関数名：Transform
+//  関数説明：レイの変換
+//	引数：	transform : 変換行列
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Ray::Transform(const Matrix44& transform)
+{
+	Origin = Vector3::TransformCoord(Origin, transform);
+	Direction = Vector3::TransformNormal(Direction, transform);
+}
+
+//--------------------------------------------------------------------------------
+//
 //  Random
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  ランダムシステム初期化
+//	関数名：Init
+//  関数説明：ランダムシステム初期化
+//	引数：	なし
+//	戻り値：なし
 //--------------------------------------------------------------------------------
-void CKFMath::InitRandom(void)
+void Random::Init(void)
 {
 	srand((unsigned)time(NULL));
 }
 
 //--------------------------------------------------------------------------------
-//  GetRandomInt
+//	関数名：Range
+//  関数説明：ランダムのInt値を取得
+//	引数：	min：最小値
+//			max：最大値
+//	戻り値：int
 //--------------------------------------------------------------------------------
-int	CKFMath::GetRandomInt(const int &nMin, const int &nMax)
+int	Random::Range(const int& min, const int& max)
 {
-	if (nMin >= nMax) { return nMin; }
-	int nWork = rand() % (nMax - nMin);
-	nWork = nWork + nMin;
-	return nWork;
+	if (min >= max) return min;
+	return rand() % (max - min) + min;
 }
 
 //--------------------------------------------------------------------------------
-//  GetRandomFloat
+//	関数名：Range
+//  関数説明：ランダムのfloat値を取得
+//	引数：	min：最小値
+//			max：最大値
+//	戻り値：float
 //--------------------------------------------------------------------------------
-float CKFMath::GetRandomFloat(const float &fMin, const float &fMax)
+float Random::Range(const float& min, const float& max)
 {
-	if (fMin >= fMax) { return fMin; }
-	float fWork = (rand() % 10000) * 0.0001f;
-	fWork = fWork * (fMax - fMin) + fMin;
-	return fWork;
+	if (min >= max) { return min; }
+	return (rand() % 10000) * 0.0001f * (max - min) + min;
 }
 
 //--------------------------------------------------------------------------------
-//  GetRandomVec3
+//	関数名：Range
+//  関数説明：ランダムのVector3値を取得
+//	引数：	min：最小値
+//			max：最大値
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-CKFVec3 CKFMath::GetRandomVec3(const CKFVec3 &vMin, const CKFVec3 &vMax)
+Vector3 Random::Range(const Vector3& min, const Vector3& max)
 {
-	CKFVec3 vWork;
-	vWork.m_fX = GetRandomFloat(vMin.m_fX, vMax.m_fX);
-	vWork.m_fY = GetRandomFloat(vMin.m_fY, vMax.m_fY);
-	vWork.m_fZ = GetRandomFloat(vMin.m_fZ, vMax.m_fZ);
-	return vWork;
+	return Vector3(Range(min.X, max.X), Range(min.Y, max.Y), Range(min.Z, max.Z));
 }
 
 //--------------------------------------------------------------------------------
-//  Vector
+//
+//  Math
+//
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  Magnitude(Vector2)
+//	関数名：Lerp
+//  関数説明：Vector3を線形補間方式で補間する
+//	引数：	from：始点
+//			to：終点
+//			time：時間(0 - 1)
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-float CKFMath::VecMagnitude(const CKFVec2 &vValue)
+Vector3 Math::Lerp(const Vector3& from, const Vector3& to, const float& time)
 {
-	float fMagnitude = sqrtf(vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY);
-	return fMagnitude;
+	if (time <= 0.0f) return from;
+	if (time >= 1.0f) return to;
+	return (from + (to - from) * time);
 }
 
 //--------------------------------------------------------------------------------
-//  Magnitude(Vector3)
+//	関数名：Lerp
+//  関数説明：floatを線形補間方式で補間する
+//	引数：	from：始点
+//			to：終点
+//			time：時間(0 - 1)
+//	戻り値：float
 //--------------------------------------------------------------------------------
-float CKFMath::VecMagnitude(const CKFVec3 &vValue)
+float Math::Lerp(const float& from, const float& to, const float& time)
 {
-	float fMagnitude = sqrtf(vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY + vValue.m_fZ * vValue.m_fZ);
-	return fMagnitude;
+	if (time <= 0.0f) return from;
+	if (time >= 1.0f) return to;
+	return (from + (to - from) * time);
 }
 
 //--------------------------------------------------------------------------------
-//  MagnitudeSquare(Vector2)
+//	関数名：Lerp
+//  関数説明：Colorを線形補間方式で補間する
+//	引数：	from：始点
+//			to：終点
+//			time：時間(0 - 1)
+//	戻り値：Color
 //--------------------------------------------------------------------------------
-float CKFMath::VecMagnitudeSquare(const CKFVec2 &vValue)
+Color Math::Lerp(const Color& from, const Color& to, const float& time)
 {
-	float fMagnitudeSquare = vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY;
-	return fMagnitudeSquare;
+	if (time <= 0.0f) return from;
+	if (time >= 1.0f) return to;
+	return (from + (to - from) * time);
 }
 
 //--------------------------------------------------------------------------------
-//  MagnitudeSquare(Vector3)
+//	関数名：Slerp
+//  関数説明：Vector3を球形補間方式で補間する
+//	引数：	from：始点
+//			to：終点
+//			time：時間(0 - 1)
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-float CKFMath::VecMagnitudeSquare(const CKFVec3 &vValue)
+Vector3 Math::Slerp(const Vector3& from, const Vector3& to, const float& time)
 {
-	float fMagnitudeSquare = vValue.m_fX * vValue.m_fX + vValue.m_fY * vValue.m_fY + vValue.m_fZ * vValue.m_fZ;
-	return fMagnitudeSquare;
+	if (time <= 0.0f) return from;
+	if (time >= 1.0f) return to;
+	return (from + (to - from) * time).Normalized();
 }
 
 //--------------------------------------------------------------------------------
-//  Normalize(Vector2)
+//	関数名：Slerp
+//  関数説明：Quaternionを球形補間方式で補間する
+//	引数：	from：始点
+//			to：終点
+//			time：時間(0 - 1)
+//	戻り値：Vector3
 //--------------------------------------------------------------------------------
-void CKFMath::VecNormalize(CKFVec2& vVec)
+Quaternion Math::Slerp(const Quaternion& from, const Quaternion& to, const float& time)
 {
-	float fMagnitude = VecMagnitude(vVec);
-	if (fMagnitude == 0.0f) { return; }
-	vVec.m_fX /= fMagnitude;
-	vVec.m_fY /= fMagnitude;
-}
-
-//--------------------------------------------------------------------------------
-//  Normalize(Vector3)
-//--------------------------------------------------------------------------------
-void CKFMath::VecNormalize(CKFVec3& vVec)
-{
-	float fMagnitude = VecMagnitude(vVec);
-	if (fMagnitude == 0.0f) { return; }
-	vVec /= fMagnitude;
-}
-
-//--------------------------------------------------------------------------------
-//  Normalize(Vector3)
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::VecNormalize(const CKFVec3& vVec)
-{
-	float fMagnitude = VecMagnitude(vVec);
-	if (fMagnitude == 0.0f) { return CKFVec3(0.0f); }
-	auto vAnswer = vVec;
-	vAnswer /= fMagnitude;
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  乗算(Dot)(Vector2)
-//--------------------------------------------------------------------------------
-float CKFMath::Vec2Dot(const CKFVec2& vVecL, const CKFVec2& vVecR)
-{
-	float fDot = vVecL.m_fX * vVecR.m_fX + vVecL.m_fY * vVecR.m_fY;
-	return fDot;
-}
-
-//--------------------------------------------------------------------------------
-//  乗算(Dot)(Vector3)
-//--------------------------------------------------------------------------------
-float CKFMath::Vec3Dot(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
-{
-	float fDot = vVecL.m_fX * vVecR.m_fX
-		+ vVecL.m_fY * vVecR.m_fY
-		+ vVecL.m_fZ * vVecR.m_fZ;
-	return fDot;
-}
-
-//--------------------------------------------------------------------------------
-//  VecDistance(Vector3)
-//--------------------------------------------------------------------------------
-float CKFMath::VecDistance(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
-{
-	CKFVec3 vDis = vVecL - vVecR;
-	float fDis = VecMagnitude(vDis);
-	return fDis;
-}
-
-//--------------------------------------------------------------------------------
-//  VecDistanceSquare(Vector3)
-//--------------------------------------------------------------------------------
-float CKFMath::VecDistanceSquare(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
-{
-	CKFVec3 vDis = vVecL - vVecR;
-	float fDisSquare = VecMagnitudeSquare(vDis);
-	return fDisSquare;
-}
-
-//--------------------------------------------------------------------------------
-//  Vec3TransformCoord
-//	回転行列にとってVec3を回転する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::Vec3TransformCoord(const CKFVec3& vVec, const CKFMtx44 &mtxRot)
-{
-	CKFVec4 vVec4 = CKFVec4(vVec, 1.0f);
-	CKFVec3 vAnswer;
-	vVec4 *= mtxRot;
-
-	if (vVec4.m_fW != 0.0f)
-	{
-		vAnswer.m_fX = vVec4.m_fX / vVec4.m_fW;
-		vAnswer.m_fY = vVec4.m_fY / vVec4.m_fW;
-		vAnswer.m_fZ = vVec4.m_fZ / vVec4.m_fW;
-	}
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  Vec3TransformNormal
-//	回転行列にとってVec3(ベクトル)を回転する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::Vec3TransformNormal(const CKFVec3& vVec, const CKFMtx44 &mtxRot)
-{
-	CKFVec4 vVec4 = CKFVec4(vVec, 0.0f);
-	CKFVec3 vAnswer;
-	vVec4 *= mtxRot;
-	vAnswer.m_fX = vVec4.m_fX;
-	vAnswer.m_fY = vVec4.m_fY;
-	vAnswer.m_fZ = vVec4.m_fZ;
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  Vec3TransformNormal
-//	回転行列にとってVec3(ベクトル)を回転する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::Vec3Scale(const CKFVec3& vValue, const CKFVec3& vScale)
-{
-	auto vAnswer = CKFVec3(vValue.m_fX * vScale.m_fX, vValue.m_fY * vScale.m_fY, vValue.m_fZ * vScale.m_fZ);
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  Vector2の値から角度を計算する
-//--------------------------------------------------------------------------------
-float CKFMath::Vec2Radian(const CKFVec2& vValue)
-{
-	float fValue = atan2f(vValue.m_fY, vValue.m_fX);
-	return fValue;
-}
-
-//--------------------------------------------------------------------------------
-//  RadianBetweenVec
-//	Vec2(ベクトル)間の角度の算出
-//--------------------------------------------------------------------------------
-float CKFMath::RadianBetweenVec(const CKFVec2& vVecL, const CKFVec2& vVecR)
-{
-	float fLengthL = VecMagnitude(vVecL);
-	float fLengthR = VecMagnitude(vVecR);
-	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
-	float fDot = Vec2Dot(vVecL, vVecR);
-	float fCross = vVecL * vVecR;
-	float fSign = fCross >= 0.0f ? 1.0f : -1.0f;
-	float fRot = acosf(fDot / (fLengthL * fLengthR)) * fSign;
-	return fRot;
-}
-
-//--------------------------------------------------------------------------------
-//  RadianBetweenVec3
-//	回転行列にとってVec3(ベクトル)を回転する
-//--------------------------------------------------------------------------------
-float CKFMath::RadianBetweenVec(const CKFVec3 &vVecL, const CKFVec3 &vVecR)
-{
-	float fLengthL = VecMagnitude(vVecL);
-	float fLengthR = VecMagnitude(vVecR);
-	if (vVecL == vVecR || fLengthL == 0.0f || fLengthR == 0.0f) { return 0.0f; }
-
-	float fRot = 0.0f;
-	float fWork;
-
-	//左右判断
-	fWork = vVecR.m_fZ * vVecL.m_fX - vVecR.m_fX * vVecL.m_fZ;
-	if (fWork >= 0.0f)
-	{
-		fWork = 1.0f;
-	}
-	else
-	{
-		fWork = -1.0f;
-	}
-
-	//ベクトルの成す角度の算出
-	fRot = acosf(Vec3Dot(vVecL, vVecR) / (fLengthL * fLengthR));
-	fRot *= fWork;
-
-	//-nan(ind)防止
-	if (abs(fRot) >= 0.0f)
-	{
-		fRot = fRot;
-	}
-	else
-	{
-		fRot = 0.0f;
-	}
-
-	return fRot;
-}
-
-//--------------------------------------------------------------------------------
-//  EulerBetweenVec3
-//	Vector3間の角度をx,y,z回転式で算出
-//--------------------------------------------------------------------------------
-CKFVec3	CKFMath::EulerBetweenVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo)
-{
-	CKFVec3 vRot;
-
-	//X軸回転
-	vRot.m_fX = RadianBetweenVec(CKFVec2(vVecFrom.m_fY, vVecFrom.m_fZ), CKFVec2(vVecTo.m_fY, vVecTo.m_fZ));
-
-	//Y軸回転
-	vRot.m_fY = RadianBetweenVec(CKFVec2(vVecFrom.m_fZ, vVecFrom.m_fX), CKFVec2(vVecTo.m_fZ, vVecTo.m_fX));
-
-	//Z軸回転
-	vRot.m_fZ = RadianBetweenVec(CKFVec2(vVecFrom.m_fX, vVecFrom.m_fY), CKFVec2(vVecTo.m_fX, vVecTo.m_fY));
-
-	return vRot;
-}
-
-//--------------------------------------------------------------------------------
-//  EulerBetweenVec3
-//	Vector3間の角度をx,y,z回転式で算出
-//--------------------------------------------------------------------------------
-CKFVec3	CKFMath::ProjectOnPlane(const CKFVec3& vVec, const CKFVec3& vUpPlane, const CKFVec3& vUpNow)
-{
-	auto vAnswer = vVec;
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  TransformInverse
-//	Vector3間の角度をx,y,z回転式で算出
-//--------------------------------------------------------------------------------
-CKFVec3	CKFMath::TransformInverse(const CKFMtx44& mtx, const CKFVec3& vVec)
-{
-	CKFVec3 vWork = vVec;
-	vWork.m_fX -= mtx.m_af[3][0];
-	vWork.m_fY -= mtx.m_af[3][1];
-	vWork.m_fZ -= mtx.m_af[3][2];
-	CKFVec3 vAnswer;
-	vAnswer.m_fX = vWork.m_fX * mtx.m_af[0][0] +
-		vWork.m_fY * mtx.m_af[0][1] +
-		vWork.m_fZ * mtx.m_af[0][2];
-	vAnswer.m_fY = vWork.m_fX * mtx.m_af[1][0] +
-		vWork.m_fY * mtx.m_af[1][1] +
-		vWork.m_fZ * mtx.m_af[1][2];
-	vAnswer.m_fZ = vWork.m_fX * mtx.m_af[2][0] +
-		vWork.m_fY * mtx.m_af[2][1] +
-		vWork.m_fZ * mtx.m_af[2][2];
-
-	//D3DXVECTOR3 vTest = vVec;
-	//D3DXMATRIX mtxTest = mtx;
-	//D3DXMatrixInverse(&mtxTest, nullptr, &mtxTest);
-	//D3DXVec3TransformCoord(&vTest, &vTest, &mtxTest);
-
-	return vAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  Matrix
-//--------------------------------------------------------------------------------
-#ifdef USING_DIRECTX
-//--------------------------------------------------------------------------------
-//  ChangeDXMtxToMtx44
-//--------------------------------------------------------------------------------
-CKFMtx44 CKFMath::ChangeDXMtxToMtx44(const D3DXMATRIX &mtx)
-{
-	CKFMtx44 mtxOut;
-	for (int nCntY = 0; nCntY < 4; nCntY++)
-	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
-		{
-			mtxOut.m_af[nCntY][nCntX] = mtx(nCntY, nCntX);
-		}
-	}
-
-	return mtxOut;
-}
-#endif
-
-//--------------------------------------------------------------------------------
-//  MtxIdentity
-//	単位行列の作成
-//--------------------------------------------------------------------------------
-void CKFMath::MtxIdentity(CKFMtx44& mtx)
-{
-	mtx.m_af[0][0] = 1.0f;
-	mtx.m_af[0][1] = 0.0f;
-	mtx.m_af[0][2] = 0.0f;
-	mtx.m_af[0][3] = 0.0f;
-	mtx.m_af[1][0] = 0.0f;
-	mtx.m_af[1][1] = 1.0f;
-	mtx.m_af[1][2] = 0.0f;
-	mtx.m_af[1][3] = 0.0f;
-	mtx.m_af[2][0] = 0.0f;
-	mtx.m_af[2][1] = 0.0f;
-	mtx.m_af[2][2] = 1.0f;
-	mtx.m_af[2][3] = 0.0f;
-	mtx.m_af[3][0] = 0.0f;
-	mtx.m_af[3][1] = 0.0f;
-	mtx.m_af[3][2] = 0.0f;
-	mtx.m_af[3][3] = 1.0f;
-}
-
-//--------------------------------------------------------------------------------
-//  MtxRotAxis
-//	回転行列の作成
-//--------------------------------------------------------------------------------
-void CKFMath::MtxRotAxis(CKFMtx44& mtxRot, const CKFVec3 &vAxis, const float &fAngle)
-{
-	//軸をノーマライズする
-	CKFVec3 vAxisCpy = vAxis;
-	VecNormalize(vAxisCpy);
-
-	//計算用変数
-	float fX = vAxisCpy.m_fX;
-	float fY = vAxisCpy.m_fY;
-	float fZ = vAxisCpy.m_fZ;
-	float fSin = sinf(fAngle);
-	float fCos = cosf(fAngle);
-
-	mtxRot.m_af[0][0] = fCos + fX * fX * (1 - fCos);
-	mtxRot.m_af[0][1] = fX * fY * (1 - fCos) + fZ * fSin;
-	mtxRot.m_af[0][2] = fX * fZ * (1 - fCos) - fY * fSin;
-	mtxRot.m_af[0][3] = 0.0f;
-	mtxRot.m_af[1][0] = fX * fY * (1 - fCos) - fZ * fSin;
-	mtxRot.m_af[1][1] = fCos + fY * fY * (1 - fCos);
-	mtxRot.m_af[1][2] = fZ * fY * (1 - fCos) + fX * fSin;
-	mtxRot.m_af[1][3] = 0.0f;
-	mtxRot.m_af[2][0] = fX * fZ * (1 - fCos) + fY * fSin;
-	mtxRot.m_af[2][1] = fY * fZ * (1 - fCos) - fX * fSin;
-	mtxRot.m_af[2][2] = fCos + fZ * fZ * (1 - fCos);
-	mtxRot.m_af[2][3] = 0.0f;
-	mtxRot.m_af[3][0] = 0.0f;
-	mtxRot.m_af[3][1] = 0.0f;
-	mtxRot.m_af[3][2] = 0.0f;
-	mtxRot.m_af[3][3] = 1.0f;
-}
-
-//--------------------------------------------------------------------------------
-//  MtxRotationYawPitchRoll
-//	回転行列の作成(mtxY*mtxX*mtxZ)
-//--------------------------------------------------------------------------------
-void CKFMath::MtxRotationYawPitchRoll(CKFMtx44& mtxRot, const CKFVec3 &vRot)
-{
-	float fSinX = sinf(vRot.m_fX); 
-	float fCosX = cosf(vRot.m_fX); 
-	float fSinY = sinf(vRot.m_fY);
-	float fCosY = cosf(vRot.m_fY);
-	float fSinZ = sinf(vRot.m_fZ);
-	float fCosZ = cosf(vRot.m_fZ);
-
-	mtxRot.m_af[0][0] = fCosY * fCosZ + fSinX * fSinY * fSinZ;
-	mtxRot.m_af[0][1] = fCosX * fSinZ;
-	mtxRot.m_af[0][2] = -fSinY * fCosZ + fSinX * fCosY * fSinZ;
-	mtxRot.m_af[0][3] = 0.0f;
-	mtxRot.m_af[1][0] = -fCosY * fSinZ + fSinX * fSinY * fCosZ;
-	mtxRot.m_af[1][1] = fCosX * fCosZ;
-	mtxRot.m_af[1][2] = fSinY * fSinZ + fSinX * fCosY * fCosZ;
-	mtxRot.m_af[1][3] = 0.0f;
-	mtxRot.m_af[2][0] = fCosX * fSinY;
-	mtxRot.m_af[2][1] = -fSinX;
-	mtxRot.m_af[2][2] = fCosX * fCosY;
-	mtxRot.m_af[2][3] = 0.0f;
-	mtxRot.m_af[3][0] = 0.0f;
-	mtxRot.m_af[3][1] = 0.0f;
-	mtxRot.m_af[3][2] = 0.0f;
-	mtxRot.m_af[3][3] = 1.0f;
-}
-
-//--------------------------------------------------------------------------------
-//	MtxTranslation
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-void CKFMath::MtxTranslation(CKFMtx44& mtxTrans, const CKFVec3 &vPos)
-{
-	MtxIdentity(mtxTrans);
-	mtxTrans.m_af[3][0] = vPos.m_fX;
-	mtxTrans.m_af[3][1] = vPos.m_fY;
-	mtxTrans.m_af[3][2] = vPos.m_fZ;
-}
-
-//--------------------------------------------------------------------------------
-//	MtxTranspose
-//	行列のトランスポース
-//--------------------------------------------------------------------------------
-CKFMtx44 CKFMath::MtxTranspose(const CKFMtx44& mtx)
-{
-	CKFMtx44 mtxOut;
-	for (int nCntY = 0; nCntY < 4; nCntY++)
-	{
-		for (int nCntX = 0; nCntX < 4; nCntX++)
-		{
-			mtxOut.m_af[nCntY][nCntX] = mtx.m_af[nCntX][nCntY];
-		}
-	}
-	return mtxOut;
-}
-
-//--------------------------------------------------------------------------------
-//	MtxTranspose
-//	行列のトランスポース
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::MtxToEular(const CKFMtx44& mtx)
-{
-	return QuaternionToEuler(MtxToQuaternion(mtx));
-}
-
-//--------------------------------------------------------------------------------
-//  Quaternion
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	QuaternionIdentity
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-void CKFMath::QuaternionIdentity(CKFQuaternion& qValue)
-{
-	qValue.m_fX = qValue.m_fY = qValue.m_fZ = 0.0f;
-	qValue.m_fW = 1.0f;
-}
-
-//--------------------------------------------------------------------------------
-//	QuaternionMagnitudeSquare
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-float CKFMath::QuaternionMagnitudeSquare(const CKFQuaternion& qValue)
-{
-	float fSquare = QuaternionDot(qValue, qValue);
-	return fSquare;
-}
-
-//--------------------------------------------------------------------------------
-//	QuaternionMagnitude
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-float CKFMath::QuaternionMagnitude(const CKFQuaternion& qValue)
-{
-	float fValue = QuaternionMagnitudeSquare(qValue);
-	fValue = sqrtf(fValue);
-	return fValue;
-}
-
-//--------------------------------------------------------------------------------
-//	QuaternionNormalize
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-void CKFMath::QuaternionNormalize(CKFQuaternion& qValue)
-{
-	float fMag = QuaternionMagnitude(qValue);
-	if (fMag == 0.0f)
-	{
-		QuaternionIdentity(qValue);
-		return;
-	}
-	qValue /= fMag;
-}
-
-//--------------------------------------------------------------------------------
-//	QuaternionDot
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-float CKFMath::QuaternionDot(const CKFQuaternion& qL, const CKFQuaternion& qR)
-{
-	float fValue = qL.m_fX * qR.m_fX + qL.m_fY * qR.m_fY + qL.m_fZ * qR.m_fZ + qL.m_fW * qR.m_fW;
-	return fValue;
-}
-
-//--------------------------------------------------------------------------------
-//	QuaternionMultiplyXYZW
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-CKFQuaternion CKFMath::QuaternionMultiplyXYZW(const CKFQuaternion& qL, const CKFQuaternion& qR)
-{
-	return CKFQuaternion(
-		qL.m_fX * qR.m_fX,
-		qL.m_fY * qR.m_fY,
-		qL.m_fZ * qR.m_fZ,
-		qL.m_fW * qR.m_fW);
-}
-
-//--------------------------------------------------------------------------------
-//	MtxToQuaternion
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-CKFQuaternion CKFMath::EulerToQuaternion(const CKFVec3& vVec)
-{
-	CKFQuaternion qValue;
-#ifdef USING_DIRECTX
-	D3DXQUATERNION qDx;
-	D3DXQuaternionRotationYawPitchRoll(&qDx, vVec.m_fY, vVec.m_fX, vVec.m_fZ);
-	qValue.m_fX = qDx.x;
-	qValue.m_fY = qDx.y;
-	qValue.m_fZ = qDx.z;
-	qValue.m_fW = qDx.w;
-#endif // USING_DIRECTX
-	return qValue;
-}
-
-//--------------------------------------------------------------------------------
-//	MtxToQuaternion
-//	平行移動行列の作成
-//--------------------------------------------------------------------------------
-CKFQuaternion CKFMath::MtxToQuaternion(const CKFMtx44& mtxRot)
-{
-	CKFQuaternion qValue;
-	float fR22 = mtxRot.m_af[2][2];
-	if (fR22 <= 0.0f)  // x^2 + y^2 >= z^2 + w^2
-	{
-		float fDiff10 = mtxRot.m_af[1][1] - mtxRot.m_af[0][0];
-		float fOmr22 = 1.0f - fR22;
-		if (fDiff10 <= 0.0f)  // x^2 >= y^2
-		{
-			float f4XSqr = fOmr22 - fDiff10;
-			float fInv4X = 0.5f / sqrtf(f4XSqr);
-			qValue.m_fX = f4XSqr * fInv4X;
-			qValue.m_fY = (mtxRot.m_af[0][1] + mtxRot.m_af[1][0]) * fInv4X;
-			qValue.m_fZ = (mtxRot.m_af[0][2] + mtxRot.m_af[2][0]) * fInv4X;
-			qValue.m_fW = (mtxRot.m_af[1][2] - mtxRot.m_af[2][1]) * fInv4X;
-		}
-		else  // y^2 >= x^2
-		{
-			float f4YSqr = fOmr22 + fDiff10;
-			float fInv4Y = 0.5f / sqrtf(f4YSqr);
-			qValue.m_fX = (mtxRot.m_af[0][1] + mtxRot.m_af[1][0]) * fInv4Y;
-			qValue.m_fY = f4YSqr * fInv4Y;
-			qValue.m_fZ = (mtxRot.m_af[1][2] + mtxRot.m_af[2][1]) * fInv4Y;
-			qValue.m_fW = (mtxRot.m_af[2][0] - mtxRot.m_af[0][2]) * fInv4Y;
-		}
-	}
-	else  // z^2 + w^2 >= x^2 + y^2
-	{
-		float fSum10 = mtxRot.m_af[1][1] + mtxRot.m_af[0][0];
-		float fOpr22 = 1.0f + fR22;
-		if (fSum10 <= 0.0f)  // z^2 >= w^2
-		{
-			float f4ZSqr = fOpr22 - fSum10;
-			float fInv4Z = 0.5f / sqrtf(f4ZSqr);
-			qValue.m_fX = (mtxRot.m_af[0][2] + mtxRot.m_af[2][0]) * fInv4Z;
-			qValue.m_fY = (mtxRot.m_af[1][2] + mtxRot.m_af[2][1]) * fInv4Z;
-			qValue.m_fZ = f4ZSqr * fInv4Z;
-			qValue.m_fW = (mtxRot.m_af[0][1] - mtxRot.m_af[1][0]) * fInv4Z;
-		}
-		else  // w^2 >= z^2
-		{
-			float f4WSqr = fOpr22 + fSum10;
-			float fInv4W = 0.5f / sqrtf(f4WSqr);
-			qValue.m_fX = (mtxRot.m_af[1][2] - mtxRot.m_af[2][1]) * fInv4W;
-			qValue.m_fY = (mtxRot.m_af[2][0] - mtxRot.m_af[0][2]) * fInv4W;
-			qValue.m_fZ = (mtxRot.m_af[0][1] - mtxRot.m_af[1][0]) * fInv4W;
-			qValue.m_fW = f4WSqr * fInv4W;
-		}
-	}
-	return qValue;
-}
-
-//--------------------------------------------------------------------------------
-//  QuaternionToMtx
-//	
-//--------------------------------------------------------------------------------
-CKFMtx44 CKFMath::QuaternionToMtx(const CKFQuaternion& qValue)
-{
-	CKFMtx44 mtx;
-
-	static const auto qAnt1110 = CKFQuaternion(1.0f, 1.0f, 1.0f, 0.0f);
-	auto q0 = qValue + qValue;
-	auto q1 = QuaternionMultiplyXYZW(qValue, q0);
-	auto q3 = CKFQuaternion(q1.m_fY, q1.m_fX, q1.m_fX, qAnt1110.m_fW);
-	auto q4 = CKFQuaternion(q1.m_fZ, q1.m_fZ, q1.m_fY, qAnt1110.m_fW);
-	auto qR0 = qAnt1110 - q3;
-	qR0 -= q4;
-	q3 = CKFQuaternion(qValue.m_fX, qValue.m_fX, qValue.m_fY, qValue.m_fW);
-	q4 = CKFQuaternion(q0.m_fZ, q0.m_fY, q0.m_fZ, q0.m_fW);
-	q3 = QuaternionMultiplyXYZW(q3, q4);
-	q4 = CKFQuaternion(qValue.m_fW, qValue.m_fW, qValue.m_fW, qValue.m_fW);
-	auto q5 = CKFQuaternion(q0.m_fY, q0.m_fZ, q0.m_fX, q0.m_fW);
-	q4 = QuaternionMultiplyXYZW(q4, q5);
-	auto qR1 = q3 + q4;
-	auto qR2 = q3 - q4;
-	q3 = CKFQuaternion(qR1.m_fY, qR2.m_fX, qR2.m_fY, qR1.m_fZ);
-	q4 = CKFQuaternion(qR1.m_fX, qR2.m_fZ, qR1.m_fX, qR2.m_fZ);
-
-	mtx.m_af[0][0] = qR0.m_fX;
-	mtx.m_af[0][1] = q3.m_fX;
-	mtx.m_af[0][2] = q3.m_fY;
-	mtx.m_af[0][3] = qR0.m_fW;
-	mtx.m_af[1][0] = q3.m_fZ;
-	mtx.m_af[1][1] = qR0.m_fY;
-	mtx.m_af[1][2] = q3.m_fW;
-	mtx.m_af[1][3] = qR0.m_fW;
-	mtx.m_af[2][0] = q4.m_fX;
-	mtx.m_af[2][1] = q4.m_fY;
-	mtx.m_af[2][2] = qR0.m_fZ;
-	mtx.m_af[2][3] = qR0.m_fW;
-	mtx.m_af[3][0] = 0.0f;
-	mtx.m_af[3][1] = 0.0f;
-	mtx.m_af[3][2] = 0.0f;
-	mtx.m_af[3][3] = 1.0f;
-	
-	return mtx;
-}
-
-//--------------------------------------------------------------------------------
-//  QuaternionToEuler
-//	スクリーン上のポインタから3D空間の射線を求める関数
-//--------------------------------------------------------------------------------
-CKFVec3	CKFMath::QuaternionToEuler(const CKFQuaternion& quaternion)
-{
-	CKFVec3 vRot;
-#ifdef USING_DIRECTX
-	D3DXQUATERNION q = quaternion;
-	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(1.0f, 0.0f, 0.0f), &vRot.m_fX);
-	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &vRot.m_fY);
-	D3DXQuaternionToAxisAngle(&q, &D3DXVECTOR3(0.0f, 0.0f, 1.0f), &vRot.m_fZ);
+	if (time <= 0.0f) { return from; }
+	if (time >= 1.0f) { return to; }
+	Quaternion result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	D3DXQUATERNION fromDX = from;
+	D3DXQUATERNION toDX = to;
+	D3DXQUATERNION resultDX;
+	D3DXQuaternionSlerp(&resultDX, &fromDX, &toDX, time);
+	result.X = resultDX.x;
+	result.Y = resultDX.y;
+	result.Z = resultDX.z;
+	result.W = resultDX.w;
 #else
-	float fX = quaternion.m_fX;
-	float fY = quaternion.m_fY;
-	float fZ = quaternion.m_fZ;
-	float fW = quaternion.m_fW;
-	vRot.m_fX = atan2f(2.0f * (fW * fZ + fX * fY), 1.0f - 2.0f * (fZ * fZ + fX * fX));
-	vRot.m_fY = asinf(2.0f * (fW * fX - fY * fZ));
-	vRot.m_fZ = atan2f(2.0f * (fW * fY + fZ * fX), 1.0f - 2.0f * (fX * fX + fY * fY));
-#endif // USING_DIRECTX
-	return vRot;
-}
-
-//--------------------------------------------------------------------------------
-//  Ray
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  CalculatePickingRay
-//	スクリーン上のポインタから3D空間の射線を求める関数
-//--------------------------------------------------------------------------------
-CKFRay CKFMath::CalculatePickingRay(const CKFVec2 &vScreenPos, const float &fViewportWidth, const float &fViewportHeight, const float &fProjMtx00, const float &fProjMtx11, const CKFMtx44 &mtxViewInverse)
-{
-	CKFRay ray = ChangePosToRay(vScreenPos, fViewportWidth, fViewportHeight, fProjMtx00, fProjMtx11);
-	TransformRay(ray, mtxViewInverse);
-	return ray;
-}
-
-//--------------------------------------------------------------------------------
-//  ChangePosToRay
-//	スクリーン上のポインタから3D空間の射線を求める関数
-//--------------------------------------------------------------------------------
-CKFRay CKFMath::ChangePosToRay(const CKFVec2& vScreenPos, const float& fViewportWidth, const float &fViewportHeight, const float &fProjMtx00, const float &fProjMtx11)
-{
-	CKFVec2 vPos3D;
-
-	vPos3D.m_fX = (((2.0f * vScreenPos.m_fX) / fViewportWidth) - 1.0f) / fProjMtx00;
-	vPos3D.m_fY = (((-2.0f * vScreenPos.m_fY) / fViewportHeight) + 1.0f) / fProjMtx11;
-
-	CKFRay ray;
-	ray.m_vOrigin = CKFVec3(0.0f);
-	ray.m_vDirection = CKFVec3(vPos3D.m_fX, vPos3D.m_fY, 1.0f);
-
-	return ray;
-}
-
-//--------------------------------------------------------------------------------
-//  TransformRay
-//	レイをカメラ向きに変換関数
-//--------------------------------------------------------------------------------
-void CKFMath::TransformRay(CKFRay& ray, const CKFMtx44& mtxTrans)
-{
-	ray.m_vOrigin = Vec3TransformCoord(ray.m_vOrigin, mtxTrans);
-	ray.m_vDirection = Vec3TransformNormal(ray.m_vDirection, mtxTrans);
-	VecNormalize(ray.m_vDirection);
-}
-
-//--------------------------------------------------------------------------------
-//  Lerp
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  LerpVec3
-//	Vector3を線形補間方式で移動する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::LerpVec3(const CKFVec3& vVecFrom, const CKFVec3& vVecTo, const float& fTime)
-{
-	float fPersent = fTime;
-	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
-	CKFVec3 vDelta = vVecTo - vVecFrom;
-	CKFVec3 vVec3 = vVecFrom + vDelta * fPersent;
-	return vVec3;
-}
-
-//--------------------------------------------------------------------------------
-//  LerpNormal
-//	法線を線形補間方式で回転する
-//--------------------------------------------------------------------------------
-CKFVec3 CKFMath::LerpNormal(const CKFVec3& vNormalFrom, const CKFVec3& vNormalTo, const float& fTime)
-{
-	CKFVec3 vNormal = LerpVec3(vNormalFrom, vNormalTo, fTime);
-	VecNormalize(vNormal);
-	return vNormal;
-}
-
-//--------------------------------------------------------------------------------
-//  LerpFloat
-//	Floatを線形補間方式で回転する
-//--------------------------------------------------------------------------------
-float CKFMath::LerpFloat(const float& fFrom, const float& fTo, const float& fTime)
-{
-	float fPersent = fTime;
-	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
-	float fDelta = fTo - fFrom;
-	float fAnswer = fFrom + fDelta * fPersent;
-	return fAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  LerpColor
-//	CKFColorを線形補間方式で回転する
-//--------------------------------------------------------------------------------
-CKFColor CKFMath::LerpColor(const CKFColor& cFrom, const CKFColor& cTo, const float& fTime)
-{
-	float fPersent = fTime;
-	fPersent = fPersent < 0.0f ? 0.0f : fPersent > 1.0f ? 1.0f : fPersent;
-	CKFColor cDelta = cTo - cFrom;
-	CKFColor cAnswer = cFrom + cDelta * fPersent;
-	return cAnswer;
-}
-
-//--------------------------------------------------------------------------------
-//  SlerpQuaternion
-//	Quaternionを球形補間方式で回転する
-//--------------------------------------------------------------------------------
-CKFQuaternion CKFMath::SlerpQuaternion(const CKFQuaternion& qFrom, const CKFQuaternion& qTo, const float& fTime)
-{
-	//if (fTime <= 0.0f) { return qFrom; }
-	//if (fTime >= 1.0f) { return qTo; }
-
-	//CKFQuaternion qFromCpy = qFrom;
-	//CKFQuaternion qToCpy = qTo;
+	//Quaternion qFromCpy = qFrom;
+	//Quaternion qToCpy = qTo;
 
 	//// Only unit quaternions are valid rotations.
 	//// Normalize to avoid undefined behavior.
@@ -1568,7 +1759,7 @@ CKFQuaternion CKFMath::SlerpQuaternion(const CKFQuaternion& qFrom, const CKFQuat
 	//{
 	//	// If the inputs are too close for comfort, linearly interpolate
 	//	// and normalize the result.
-	//	CKFQuaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
+	//	Quaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
 	//	QuaternionNormalize(qResult);
 	//	return qResult;
 	//}
@@ -1585,50 +1776,41 @@ CKFQuaternion CKFMath::SlerpQuaternion(const CKFQuaternion& qFrom, const CKFQuat
 	//ClampFloat(fDot, -1.0f, 1.0f);		// Robustness: Stay within domain of acos()
 	//float fTheta = acosf(fDot) * fTime;	// theta = angle between v0 and result 
 
-	//CKFQuaternion qWork = qToCpy - qFromCpy * fDot;
+	//Quaternion qWork = qToCpy - qFromCpy * fDot;
 	//QuaternionNormalize(qWork);			// { v0, v2 } is now an orthonormal basis
-	//CKFQuaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
-	
-	D3DXQUATERNION qFromDX = qFrom;
-	D3DXQUATERNION qToDX = qTo;
-	D3DXQUATERNION qOut;
-	D3DXQuaternionSlerp(&qOut, &qFromDX, &qToDX, fTime);
-	CKFQuaternion qResult;
-	qResult.m_fX = qOut.x;
-	qResult.m_fY = qOut.y;
-	qResult.m_fZ = qOut.z;
-	qResult.m_fW = qOut.w;
-	return qResult;
+	//Quaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
+#endif
+	return result;
 }
 
+//--------------------------------------------------------------------------------
+//	関数名：Clamp
+//  関数説明：floatをminとmaxの間にする
+//	引数：	value：現在値
+//			min：最小値
+//			max：最大値
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Math::Clamp(const float& value, const float& min, const float& max)
+{
+	return value < min ? min : value > max ? max : value;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：AbsMax
+//  関数説明：絶対値が大きい方を返す
+//	引数：	valueA、valueB：比較値
+//	戻り値：float
+//--------------------------------------------------------------------------------
+float Math::AbsMax(const float& valueA, const float& valueB)
+{
+	return fabsf(valueA) >= fabsf(valueB) ? valueA : valueB;
+}
+
+/*
 //--------------------------------------------------------------------------------
 //  Others
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  NormalizeRotInTwoPi(float)
-//	回転を-2Piから2Piの間にする
-//--------------------------------------------------------------------------------
-void CKFMath::ClampFloat(float& fValue, const float& fMin, const float& fMax)
-{
-	if (fValue < fMin) { fValue = fMin; }
-	else if (fValue > fMax) { fValue = fMax; }
-}
-
-//--------------------------------------------------------------------------------
-//  Others
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  NormalizeColor
-//	色を0.0fから1.0fの間にする
-//--------------------------------------------------------------------------------
-void CKFMath::NormalizeColor(CKFColor& cColor)
-{
-	cColor.m_fR = cColor.m_fR < 0.0f ? 0.0f : cColor.m_fR > 1.0f ? 1.0f : cColor.m_fR;
-	cColor.m_fG = cColor.m_fG < 0.0f ? 0.0f : cColor.m_fG > 1.0f ? 1.0f : cColor.m_fG;
-	cColor.m_fB = cColor.m_fB < 0.0f ? 0.0f : cColor.m_fB > 1.0f ? 1.0f : cColor.m_fB;
-	cColor.m_fA = cColor.m_fA < 0.0f ? 0.0f : cColor.m_fA > 1.0f ? 1.0f : cColor.m_fA;
-}
-
 //--------------------------------------------------------------------------------
 //  NormalizeRotInTwoPi(float)
 //	回転を-2Piから2Piの間にする
@@ -1650,11 +1832,11 @@ void CKFMath::NormalizeRotInTwoPi(float& fRot)
 //  NormalizeRotInTwoPi(Vec3)
 //	回転を-2Piから2Piの間にする
 //--------------------------------------------------------------------------------
-void CKFMath::NormalizeRotInTwoPi(CKFVec3& vRot)
+void CKFMath::NormalizeRotInTwoPi(Vector3& vRot)
 {
-	NormalizeRotInTwoPi(vRot.m_fX);
-	NormalizeRotInTwoPi(vRot.m_fY);
-	NormalizeRotInTwoPi(vRot.m_fZ);
+	NormalizeRotInTwoPi(vRot.X);
+	NormalizeRotInTwoPi(vRot.Y);
+	NormalizeRotInTwoPi(vRot.Z);
 }
 
 //--------------------------------------------------------------------------------
@@ -1677,11 +1859,11 @@ void CKFMath::NormalizeRotInPi(float& fRot)
 //  NormalizeRotInPi(Vec3)
 //	回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
-void CKFMath::NormalizeRotInPi(CKFVec3& vRot)
+void CKFMath::NormalizeRotInPi(Vector3& vRot)
 {
-	NormalizeRotInPi(vRot.m_fX);
-	NormalizeRotInPi(vRot.m_fY);
-	NormalizeRotInPi(vRot.m_fZ);
+	NormalizeRotInPi(vRot.X);
+	NormalizeRotInPi(vRot.Y);
+	NormalizeRotInPi(vRot.Z);
 }
 
 //--------------------------------------------------------------------------------
@@ -1705,21 +1887,22 @@ void CKFMath::NormalizeRotInZeroToTwoPi(float& fRot)
 //  NormalizeRotInPi(Vec3)
 //	回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
-void CKFMath::NormalizeRotInZeroToTwoPi(CKFVec3& vRot)
+void CKFMath::NormalizeRotInZeroToTwoPi(Vector3& vRot)
 {
-	NormalizeRotInZeroToTwoPi(vRot.m_fX);
-	NormalizeRotInZeroToTwoPi(vRot.m_fY);
-	NormalizeRotInZeroToTwoPi(vRot.m_fZ);
+	NormalizeRotInZeroToTwoPi(vRot.X);
+	NormalizeRotInZeroToTwoPi(vRot.Y);
+	NormalizeRotInZeroToTwoPi(vRot.Z);
 }
 
 //--------------------------------------------------------------------------------
 //  CalculateZDepth
 //	Z深度情報算出
 //--------------------------------------------------------------------------------
-float CKFMath::CalculateZDepth(const CKFVec3& vPos, const CKFVec3& vCameraEye, const CKFVec3& vCameraAt)
+float CKFMath::CalculateZDepth(const Vector3& Position, const Vector3& vCameraEye, const Vector3& vCameraAt)
 {
-	CKFVec3 vCameraForward = vCameraAt - vCameraEye;
-	CKFVec3 vPosToCamera = vPos - vCameraEye;
-	float fDepth = Vec3Dot(vCameraForward, vPosToCamera);
+	Vector3 vCameraForward = vCameraAt - vCameraEye;
+	Vector3 PositionToCamera = Position - vCameraEye;
+	float fDepth = Vec3Dot(vCameraForward, PositionToCamera);
 	return fDepth;
 }
+*/

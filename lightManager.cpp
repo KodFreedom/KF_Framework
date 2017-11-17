@@ -2,188 +2,97 @@
 //
 //　LightManager.cpp
 //	Author : Xu Wenjie
-//	Date   : 2016-05-31
-//--------------------------------------------------------------------------------
-//  Update : 
-//	
+//	Date   : 2017-11-02
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "lightManager.h"
-#include "rendererDX.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
+LightManager* LightManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
-//  ライト
+//  public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
+//  ライトの生成処理
 //--------------------------------------------------------------------------------
-CLight::CLight()
-	: m_nID(0)
-	, m_cDiffuse(CKFColor(1.0f))
-	, m_cAmbient(CKFColor(0.2f, 0.2f, 0.2f, 1.0f))
-	, m_vDirection(CKFVec3(0.0f, -1.0f, 0.0f))
+int	LightManager::CreateLight(const LightType& type,
+	const Color& diffuse, const Color& specular, const Color& ambient,
+	const Vector3& position, const Vector3& direction,
+	const float& cutoffRange, const float& falloff, const float& constantAttenuation,
+	const float& linearAttenuation, const float& quadraticAttenuation,
+	const float& theta, const float& phi)
 {
+	int id = lights.size();
+	auto& light = Light(type, diffuse, specular, ambient, position, direction, cutoffRange, falloff, constantAttenuation, linearAttenuation, quadraticAttenuation, theta, phi);
+	lights.emplace(id, light);
 
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	D3DLIGHT9 lightDX = light;
+	device->SetLight(id, &lightDX);
+	device->LightEnable(id, TRUE);
+#endif
+	return id;
 }
 
 //--------------------------------------------------------------------------------
-//  初期化処理
+//  ライトの破棄処理
 //--------------------------------------------------------------------------------
-void CLight::Init(const int &nID, const CKFVec3 &vDir)
+void LightManager::ReleaseLight(const int lightID)
 {
-	m_nID = nID;
-
-	m_vDirection = vDir;
-	CKFMath::VecNormalize(m_vDirection);
-
-	SetLight();
+	auto iterator = lights.find(lightID);
+	if (lights.end() == iterator) return;
+	lights.erase(iterator);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	device->LightEnable(lightID, FALSE);
+#endif
 }
+
+//--------------------------------------------------------------------------------
+//
+//  private
+//
+//--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+//--------------------------------------------------------------------------------
+//  キャスト
+//--------------------------------------------------------------------------------
+LightManager::Light::operator D3DLIGHT9() const
+{
+	D3DLIGHT9 result;
+	result.Type = (_D3DLIGHTTYPE)Type;
+	result.Diffuse = Diffuse;
+	result.Specular = Specular;
+	result.Ambient = Ambient;
+	result.Position = Position;
+	result.Direction = Direction;
+	result.Range = CutoffRange;
+	result.Falloff = Falloff;
+	result.Attenuation0 = ConstantAttenuation;
+	result.Attenuation1 = LinearAttenuation;
+	result.Attenuation2 = QuadraticAttenuation;
+	result.Theta = Theta;
+	result.Phi = Phi;
+	return result;
+}
+#endif
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void CLight::Uninit(void)
+void LightManager::uninit(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-
-	pDevice->LightEnable(m_nID, FALSE);
-}
-
-//--------------------------------------------------------------------------------
-//  方向設定
-//--------------------------------------------------------------------------------
-void CLight::SetDirection(const CKFVec3 &vDir)
-{
-	m_vDirection = vDir;
-	CKFMath::VecNormalize(m_vDirection);
-
-	SetLight();
-}
-
-//--------------------------------------------------------------------------------
-//  Deviceにライト設定
-//--------------------------------------------------------------------------------
-void CLight::SetLight(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	D3DLIGHT9 lightInfo;
-
-	//Light Init
-	ZeroMemory(&lightInfo, sizeof(D3DLIGHT9));
-	lightInfo.Type = D3DLIGHT_DIRECTIONAL;//平行光源
-	lightInfo.Diffuse = m_cDiffuse;
-	lightInfo.Ambient = m_cAmbient;
-	lightInfo.Direction = m_vDirection;
-
-	//デバイスにライト設定
-	pDevice->SetLight(m_nID, &lightInfo);
-	pDevice->LightEnable(m_nID, TRUE);
-}
-
-//--------------------------------------------------------------------------------
-//
-//  ライトマネージャ
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CLightManager::CLightManager()
-{
-	m_listLight.clear();
-}
-
-//--------------------------------------------------------------------------------
-//  デストラクタ
-//--------------------------------------------------------------------------------
-CLightManager::~CLightManager()
-{
-}
-
-//--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-bool CLightManager::Init(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CLightManager::Uninit(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-
 	ReleaseAll();
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-}
-
-//--------------------------------------------------------------------------------
-//  Light Off
-//--------------------------------------------------------------------------------
-void CLightManager::TurnAllLightOff(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-}
-
-//--------------------------------------------------------------------------------
-//  Light On
-//--------------------------------------------------------------------------------
-void CLightManager::TurnAllLightOn(void)
-{
-	LPDIRECT3DDEVICE9 pDevice = CMain::GetManager()->GetRenderer()->GetDevice();
-	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 
 //--------------------------------------------------------------------------------
 //  全てのライトを削除
 //--------------------------------------------------------------------------------
-void CLightManager::ReleaseAll(void)
+void LightManager::ReleaseAll(void)
 {
-	for_each(m_listLight.begin(), m_listLight.end(), [](CLight *pLight)
-	{
-		if (pLight != NULL)
-		{
-			pLight->Uninit();
-			delete pLight;
-			pLight = NULL;
-		}
-	});
-
-	m_listLight.clear();
-}
-
-//--------------------------------------------------------------------------------
-//  ライト作成
-//--------------------------------------------------------------------------------
-int CLightManager::CreateDirectionalLight(const CKFVec3 &vDir)
-{
-	int nID = m_listLight.size();
-
-	CLight *pLight = new CLight;
-	pLight->Init(nID, vDir);
-	m_listLight.push_back(pLight);
-
-	return nID;
-}
-
-//--------------------------------------------------------------------------------
-//  ライト方向設定
-//--------------------------------------------------------------------------------
-void CLightManager::SetLightDirection(const int &nLightID, const CKFVec3 &vDir)
-{
-	list<CLight*>::iterator itr = m_listLight.begin();
-	advance(itr, nLightID);
-	(*itr)->SetDirection(vDir);
+	lights.clear();
 }

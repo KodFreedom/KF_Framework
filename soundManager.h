@@ -12,54 +12,65 @@
 #include "main.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  列挙型定義
 //--------------------------------------------------------------------------------
-#define CSM CSoundManager	//マネージャの略称
+enum SoundLabel
+{
+	SL_GameBGM,
+	SL_Max,
+};
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CSoundManager
+class SoundManager
 {
 public:
-	enum SOUND_LABEL
+	static auto	Create(void)
 	{
-		BGM_GAME,
-		SL_MAX,
-	};
-
-	CSoundManager();
-	~CSoundManager() {}
-
-	void	Release(void)
-	{
-		UnloadAll();
-		delete this;
+		if (instance) return instance;
+		instance = new SoundManager;
+		instance->LoadAll();
+		return instance;
 	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
 	HRESULT	LoadAll(void);
 	void	UnloadAll(void);
-	void	Play(SOUND_LABEL label);
-	void	Stop(SOUND_LABEL label);
-	bool	IsOver(SOUND_LABEL label);
-	bool	IsPlaying(SOUND_LABEL label);
+	void	Play(const SoundLabel label);
+	void	Stop(const SoundLabel label);
+	bool	IsOver(const SoundLabel label);
+	bool	IsPlaying(const SoundLabel label);
 	void	StopAll(void);
 
 private:
-	//パラメータ構造体定義
-	struct SOUNDPARAM
+	//--------------------------------------------------------------------------------
+	//　構造体定義
+	//--------------------------------------------------------------------------------
+	struct Paramater
 	{
-		string strFileName;	// ファイル名
-		int nCntLoop;		// ループカウント
+		string	FileName;
+		int		CountLoop;
 	};
 
-	HRESULT CheckChunk(HANDLE hFile, DWORD format, DWORD *pChunkSize, DWORD *pChunkDataPosition);
-	HRESULT ReadChunkData(HANDLE hFile, void *pBuffer, DWORD dwBuffersize, DWORD dwBufferoffset);
+	//--------------------------------------------------------------------------------
+	//  関数宣言
+	//--------------------------------------------------------------------------------
+	SoundManager();
+	~SoundManager() {}
+	void	uninit(void) { UnloadAll(); }
+	HRESULT checkChunk(HANDLE file, DWORD format, DWORD *chunkSize, DWORD *chunkDataPosition);
+	HRESULT readChunkData(HANDLE file, void *buffer, DWORD buffersize, DWORD bufferoffset);
 
-	IXAudio2*				m_pXAudio2;							// XAudio2オブジェクトへのインターフェイス
-	IXAudio2MasteringVoice*	m_pMasteringVoice;					// マスターボイス
-	IXAudio2SourceVoice*	m_apSourceVoice[SL_MAX];	// ソースボイス
-	BYTE*					m_apDataAudio[SL_MAX];		// オーディオデータ
-	DWORD					m_aSizeAudio[SL_MAX];		// オーディオデータサイズ
-
-	static SOUNDPARAM 		m_aParam[SL_MAX];
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	IXAudio2*				instanceXAudio2;
+	IXAudio2MasteringVoice*	masteringVoice;
+	IXAudio2SourceVoice*	sourceVoices[SL_Max];
+	BYTE*					audioDatas[SL_Max];
+	DWORD					audioSizes[SL_Max];
+	static Paramater 		paramaters[SL_Max];
+	static SoundManager*	instance;
 };

@@ -8,23 +8,13 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
 #include "gameObject.h"
-
-#ifdef _DEBUG
-#include "rendererDX.h"
-#endif
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-CNullRigidbodyComponent	CGameObject::s_nullRigidbody;
-CNullMeshComponent		CGameObject::s_nullMesh;
-CNullRenderComponent	CGameObject::s_nullRender;
+NullRigidbody GameObject::nullRigidbody;
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -33,49 +23,61 @@ CNullRenderComponent	CGameObject::s_nullRender;
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CGameObject::CGameObject(const GOMLAYER& layer)
-	: m_layer(layer)
-	, m_bActive(true)
-	, m_bAlive(true)
-	, m_pRigidbody(&s_nullRigidbody)
-	, m_pMesh(&s_nullMesh)
-	, m_pRender(&s_nullRender)
+GameObject::GameObject(const Layer& layer)
+	: layer(layer)
+	, isActive(true)
+	, isAlive(true)
+	, rigidbody(&nullRigidbody)
 {
-	m_strName.clear();
-	m_strTag.clear();
-	m_listpBehavior.clear();
-	m_listpCollider.clear();
-	m_pTransform = new CTransformComponent(this);
-	CMain::GetManager()->GetGameObjectManager()->Register(this, m_layer);
+	name.clear();
+	tag.clear();
+	behaviors.clear();
+	colliders.clear();
+	renderers.clear();
+	transform = new Transform(this);
+	GameObjectManager::Instance()->Register(this, layer);
 }
 
 //--------------------------------------------------------------------------------
 //  SetActive
 //--------------------------------------------------------------------------------
-void CGameObject::SetActive(const bool& bActive)
+void GameObject::SetActive(const bool& value)
 {
-	m_bActive = bActive;
-
-	//Children
-	auto& listChildren = m_pTransform->GetChildren();
-	for (auto pChild : listChildren)
+	if (isActive == value) return;
+	isActive = value;
+	if (isActive)
 	{
-		pChild->GetGameObject()->SetActive(bActive);
+		transform->Awake();
+		for (auto behavior : behaviors) behavior->Awake();
+		rigidbody->Awake();
+		for (auto collider : colliders) collider->Awake();
+		for (auto renderer : renderers) renderer->Awake();
+	}
+	else
+	{
+		transform->Sleep();
+		for (auto behavior : behaviors) behavior->Sleep();
+		rigidbody->Sleep();
+		for (auto collider : colliders) collider->Sleep();
+		for (auto renderer : renderers) renderer->Sleep();
+	}
+	auto& children = transform->GetChildren();
+	for (auto child : children)
+	{
+		child->GetGameObject()->SetActive(value);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  SetAlive
 //--------------------------------------------------------------------------------
-void CGameObject::SetAlive(const bool& bAlive)
+void GameObject::SetAlive(const bool& value)
 {
-	m_bAlive = bAlive;
-
-	//Children
-	auto& listChildren = m_pTransform->GetChildren();
-	for (auto pChild : listChildren)
+	isAlive = value;
+	auto& children = transform->GetChildren();
+	for (auto child : children)
 	{
-		pChild->GetGameObject()->SetAlive(bAlive);
+		child->GetGameObject()->SetAlive(value);
 	}
 }
 
@@ -87,7 +89,7 @@ void CGameObject::SetAlive(const bool& bAlive)
 //--------------------------------------------------------------------------------
 //  パラメーター交換処理
 //--------------------------------------------------------------------------------
-void CGameObject::swapParam(void)
+void GameObject::swapParamater(void)
 {
-	m_pTransform->SwapParam();
+	transform->SwapParamater();
 }

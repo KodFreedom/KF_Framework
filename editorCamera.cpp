@@ -4,15 +4,16 @@
 //	Author : Xu Wenjie
 //	Date   : 2016-06-20
 //--------------------------------------------------------------------------------
-#ifdef _DEBUG
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
+#include "versionSetting.h"
+#if defined(_DEBUG) || defined(EDITOR)
 #include "main.h"
 #include "manager.h"
-#include "inputManager.h"
+#include "input.h"
 #include "editorCamera.h"
-#include "inputDX.h"
+#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -20,11 +21,11 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const float	CEditorCamera::sc_fRotSpeed = 0.05f;
-const float	CEditorCamera::sc_fStartRotMin = 0.2f;
-const float	CEditorCamera::sc_fZoomSpeed = 0.5f;
-const float	CEditorCamera::sc_fDistanceMin = 3.0f;
-const float	CEditorCamera::sc_fDistanceMax = 500.0f;
+const float	EditorCamera::rotationSpeed = 0.05f;
+const float	EditorCamera::startRotationMin = 0.2f;
+const float	EditorCamera::zoomSpeed = 0.5f;
+const float	EditorCamera::distanceMin = 3.0f;
+const float	EditorCamera::distanceMax = 500.0f;
 
 //--------------------------------------------------------------------------------
 //
@@ -34,57 +35,47 @@ const float	CEditorCamera::sc_fDistanceMax = 500.0f;
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CEditorCamera::CEditorCamera() : CCamera()
+EditorCamera::EditorCamera() : Camera()
 {
+	CameraManager::Instance()->RegisterAsMain(this);
 }
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CEditorCamera::Init(void)
+void EditorCamera::Init(void)
 {
-	CCamera::Init();
-	SetCamera(CKFVec3(0.0f), CKFVec3(0.0f, 20.0f, -20.0f), CKFVec3(0.0f, 1.0f, 0.0f), CKFVec3(1.0f, 0.0f, 0.0f));
+	Camera::Init();
+	SetPitch(45.0f / 180.0f * Pi);
+	SetDistance(20.0f);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CEditorCamera::Update(void)
+void EditorCamera::Update(void)
 {
-	auto pInput = CMain::GetManager()->GetInputManager();
-	if (!pInput->GetMouse()->GetMousePress(CMouseDX::MOUSE_RIGHT)) { return; }
+	auto input = Input::Instance();
+	if (!input->GetKeyPress(Key::Lock)) return;
 	
-	CKFVec3 vRot;
-	float fZoomSpeed = 0.0f;
-	float fAxisX = pInput->GetMoveHorizontal();
-	float fAxisY = pInput->GetMoveVertical();
-	float fRAxisX = pInput->GetRotHorizontal();
-	float fRAxisY = pInput->GetRotVertical();
-	float fZoom = pInput->GetZoom();
+	Vector3 rotation;
+	float zoomSpeed = 0.0f;
+	float axisX = input->RotHorizontal();
+	float axisY = input->RotVertical();
+	float zoom = input->Zoom();
 
-	//注目点回転
-	if (fabsf(fRAxisX) > sc_fStartRotMin)
+	if (fabsf(axisX) > startRotationMin)
 	{//Y軸回転
-		vRot.m_fY = sc_fRotSpeed * fRAxisX;
+		yaw(rotationSpeed * axisX);
 	}
-	if (fabsf(fRAxisY) > sc_fStartRotMin)
+	if (fabsf(axisY) > startRotationMin)
 	{//X軸回転
-		vRot.m_fX = sc_fRotSpeed * fRAxisY;
+		pitch(rotationSpeed * axisY);
 	}
 
-	//拡大縮小
-	if (fabsf(fZoom) > sc_fStartRotMin)
+	if (fabsf(zoom) > startRotationMin)
 	{
-		fZoomSpeed = sc_fZoomSpeed * fZoom;
+		SetDistance(Math::Clamp(distance + zoomSpeed * zoom, distanceMin, distanceMax));
 	}
-
-	//回転
-	Yaw(vRot.m_fY);
-	Pitch(vRot.m_fX);
-
-	//ズーム
-	m_fDistance += fZoomSpeed;
-	m_fDistance = m_fDistance < sc_fDistanceMin ? sc_fDistanceMin : m_fDistance > sc_fDistanceMax ? sc_fDistanceMax : m_fDistance;
 }
 #endif // _DEBUG

@@ -6,32 +6,29 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "inputManager.h"
+#include "input.h"
 
-#ifdef _DEBUG
-#include "debugManager.h"
-#include "ImGui\imgui.h"
+#if defined(_DEBUG) || defined(EDITOR)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
 #endif
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数宣言
-//--------------------------------------------------------------------------------
-CManager*	CMain::m_pManager = nullptr;
+#endif
 
 //--------------------------------------------------------------------------------
 //	extern関数
 //--------------------------------------------------------------------------------
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
 #endif
 
 //--------------------------------------------------------------------------------
 //	メイン関数
 //--------------------------------------------------------------------------------
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
 {
-	return CMain::Main(hInstance, hPrevInstance, IpCmdLine, nCmdShow);
+	return Main::WinMain(hInstance, hPrevInstance, IpCmdLine, cmdShow);
 }
 
 //--------------------------------------------------------------------------------
@@ -46,7 +43,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLi
 //			nCmdShow
 //	戻り値：int
 //--------------------------------------------------------------------------------
-int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow)
+int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(IpCmdLine);
@@ -104,35 +101,35 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 
 	//フルスクリーン
 #ifdef _DEBUG
-	bool bWindow = true;
+	bool isWindowMode = true;
 #else
-	bool bWindow = true;
-	UINT nID = MessageBox(hWnd, "フルスクリーンモードで起動しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
-	if (nID == IDYES) { bWindow = false; }
+	bool isWindowMode = true;
+	UINT id = MessageBox(hWnd, "フルスクリーンモードで起動しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+	if (id == IDYES) { isWindowMode = false; }
 #endif // _DEBUG
 
 	//Manager生成
-	m_pManager = new CManager;
-	if (!m_pManager->Init(hInstance, hWnd, bWindow))
+	if (!Manager::Create(hInstance, hWnd, isWindowMode))
 	{
+		UnregisterClass(CLASS_NAME, wcex.hInstance);
 		return -1;
-	};
+	}
 
 	//ウインドウの表示
-	ShowWindow(hWnd, nCmdShow);
+	ShowWindow(hWnd, cmdShow);
 	UpdateWindow(hWnd);
 
 	//時間カウンタ
-	LARGE_INTEGER nFrequency;
-	LARGE_INTEGER nCurrentTime;
-	LARGE_INTEGER nExecLastTime;
-	LARGE_INTEGER nFPSLastTime;
-	memset(&nFrequency, 0x00, sizeof nFrequency);
-	memset(&nCurrentTime, 0x00, sizeof nCurrentTime);
-	memset(&nExecLastTime, 0x00, sizeof nExecLastTime);
-	memset(&nFPSLastTime, 0x00, sizeof nFPSLastTime);
-	QueryPerformanceCounter(&nExecLastTime);
-	nFPSLastTime = nExecLastTime;
+	LARGE_INTEGER frequency;
+	LARGE_INTEGER currentTime;
+	LARGE_INTEGER execLastTime;
+	LARGE_INTEGER FPSLastTime;
+	memset(&frequency, 0x00, sizeof frequency);
+	memset(&currentTime, 0x00, sizeof currentTime);
+	memset(&execLastTime, 0x00, sizeof execLastTime);
+	memset(&FPSLastTime, 0x00, sizeof FPSLastTime);
+	QueryPerformanceCounter(&execLastTime);
+	FPSLastTime = execLastTime;
 
 	//メッセージループ
 	for (;;)
@@ -152,31 +149,22 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 		}
 		else
 		{
-			QueryPerformanceFrequency(&nFrequency);
-			QueryPerformanceCounter(&nCurrentTime);
-			float fTime = (float)(nCurrentTime.QuadPart - nExecLastTime.QuadPart) * 1000.0f / (float)nFrequency.QuadPart;
+			QueryPerformanceFrequency(&frequency);
+			QueryPerformanceCounter(&currentTime);
+			float fTime = (float)(currentTime.QuadPart - execLastTime.QuadPart) * 1000.0f / (float)frequency.QuadPart;
 			
 			if (fTime >= TIMER_INTERVAL)
 			{
-				nExecLastTime = nCurrentTime;
-
-				// 更新処理
-				m_pManager->Update();
-				m_pManager->LateUpdate();
-
-				// 描画処理
-				m_pManager->Draw();
+				execLastTime = currentTime;
+				Manager::Instance()->Update();
+				Manager::Instance()->LateUpdate();
+				Manager::Instance()->Render();
 			}
 		}
 	}
 
 	// 終了処理
-	if (m_pManager)
-	{
-		m_pManager->Uninit();
-		delete m_pManager;
-		m_pManager = nullptr;
-	}
+	Manager::Release();
 
 	//ウインドウクラスの登録お解除
 	//第一引数：メクラス名
@@ -195,9 +183,9 @@ int CMain::Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, i
 //			lParam：メッセージの二番目のパラメータ
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Main::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
 #endif // _DEBUG
 
@@ -212,18 +200,16 @@ LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		PostQuitMessage(0);	//WM_QUITというメッセージを呼ぶ
 		break;
 	case WM_ACTIVATEAPP:
-		if (m_pManager)
+		if (Input::Instance())
 		{
-			BOOL bActive = (BOOL)GetActiveWindow();
-			auto pInput = m_pManager->GetInputManager();
-
-			if (bActive)
+			BOOL isActive = (BOOL)GetActiveWindow();
+			if (isActive)
 			{
-				pInput->Acquire();
+				Input::Instance()->Acquire();
 			}
 			else
 			{
-				pInput->Unacquire();
+				Input::Instance()->Unacquire();
 			}
 		}
 		break;
@@ -240,15 +226,13 @@ LRESULT CALLBACK CMain::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //	引数：	hWnd：ウインドウのハンドル
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-void CMain::closeApp(HWND hWnd)
+void Main::closeApp(HWND hWnd)
 {
-	UINT nID = 0;//メッセージbox戻り値
-
 	//終了確認
-	nID = MessageBox(hWnd, "終了しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+	UINT id = MessageBox(hWnd, "終了しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
 
 	//押し判定
-	if (nID == IDYES) {
+	if (id == IDYES) {
 		//WM_DESTROYメッセージを送信
 		DestroyWindow(hWnd);
 	}

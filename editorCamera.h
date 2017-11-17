@@ -10,18 +10,18 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "camera.h"
-
+#if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class CEditorCamera : public CCamera
+class EditorCamera : public Camera
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CEditorCamera();
-	~CEditorCamera() {}
+	EditorCamera();
+	~EditorCamera() {}
 
 	void Init(void) override;
 	void Update(void) override;
@@ -30,11 +30,11 @@ private:
 	//--------------------------------------------------------------------------------
 	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const float		sc_fRotSpeed;		//カメラ回転速度
-	static const float		sc_fStartRotMin;	//カメラ回転開始のスティック最小値
-	static const float		sc_fZoomSpeed;		//ズーム速度
-	static const float		sc_fDistanceMin;	//注視点と注目点の最小距離
-	static const float		sc_fDistanceMax;	//注視点と注目点の最大距離	
+	static const float rotationSpeed;		//カメラ回転速度
+	static const float startRotationMin;	//カメラ回転開始のスティック最小値
+	static const float zoomSpeed;			//ズーム速度
+	static const float distanceMin;			//注視点と注目点の最小距離
+	static const float distanceMax;			//注視点と注目点の最大距離	
 	
 	//--------------------------------------------------------------------------------
 	//  関数定義
@@ -44,3 +44,4 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------	
 };
+#endif

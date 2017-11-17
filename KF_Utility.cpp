@@ -9,154 +9,178 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "KF_Utility.h"
+#include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//	関数名：GetStringUntilToken
+//  関数説明：符号まで文字列を取る
+//	引数：	filePointer：ファイルポインタ
+//			token：符号
+//			buffer：文字列保存用ところ
+//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	関数名：GetStrToken
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-int CKFUtility::GetStrToken(FILE* pFp, const string& strToken, string& strBuf)
+int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string& buffer)
 {
 	char c;
-	strBuf.clear();
-	while ((c = (char)fgetc(pFp)) != EOF)
+	buffer.clear();
+	while ((c = (char)fgetc(filePointer)) != EOF)
 	{
-		for (int nCnt = 0; nCnt < (int)strToken.length(); nCnt++)
+		for (int count = 0; count < (int)token.length(); ++count)
 		{
-			if (c == strToken.at(nCnt))
+			if (c == token.at(count))
 			{
-				return strBuf.length();
+				return buffer.length();
 			}
 		}
-		strBuf += c;
+		buffer += c;
 	}
 	return -1;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStrToken
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：GetStringUntilToken
+//  関数説明：符号まで文字列を取る
+//	引数：	file：ファイルの文字列
+//			token：符号
+//			buffer：文字列保存用ところ
+//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 //--------------------------------------------------------------------------------
-int CKFUtility::GetStrToken(string& str, const string& strToken, string& strBuf)
+int Utility::GetStringUntilToken(string& file, const string& token, string& buffer)
 {
-	strBuf.clear();
-	for (auto itr = str.begin(); itr != str.end();)
+	buffer.clear();
+	for (auto itr = file.begin(); itr != file.end();)
 	{
 		auto c = *itr;
-		itr = str.erase(itr);
-		for (int nCnt = 0; nCnt < (int)strToken.length(); nCnt++)
+		itr = file.erase(itr);
+		for (int count = 0; count < (int)token.length(); ++count)
 		{
-			if (c == strToken.at(nCnt))
+			if (c == token.at(count))
 			{
-				return strBuf.length();
+				return buffer.length();
 			}
 		}
-		strBuf += c;
+		buffer += c;
 	}
 
 	return -1;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStrCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：GetStringUntilString
+//  関数説明：文字列まで文字列を取る
+//	引数：	file：ファイルの文字列
+//			compare：比較する文字
+//			buffer：文字列保存用ところ
+//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 //--------------------------------------------------------------------------------
-int CKFUtility::GetStrCount(FILE* pFp, const string& strToken, const string& strComp)
+int Utility::GetStringUntilString(FILE* filePointer, const string& compare, string& buffer)
 {
-	int nCnt = 0;
-	string strBuf;
-	while (GetStrToken(pFp, strToken, strBuf) >= 0)
+	static string nullBuffer;
+	if (nullBuffer.empty()) nullBuffer.resize(256);
+	do
 	{
-		if (strBuf.compare(strComp) == 0)
+		buffer = nullBuffer;
+		fgets(&buffer[0], (int)buffer.capacity(), filePointer);
+		if (buffer.find(compare) != string::npos)
 		{
-			nCnt++;
+			return buffer.length();
+		}
+	} while (buffer.find("END_SCRIPT") == string::npos);
+	return -1;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：GetStringCount
+//  関数説明：文字列をカウントする
+//	引数：	filePointer：ファイルポインタ
+//			token：符号
+//			compareString：
+//	戻り値：カウント数
+//--------------------------------------------------------------------------------
+int Utility::GetStringCount(FILE* filePointer, const string& token, const string& compareString)
+{
+	int count = 0;
+	string buffer;
+	while (GetStringUntilToken(filePointer, token, buffer) >= 0)
+	{
+		if (buffer.compare(compareString) == 0)
+		{
+			++count;
 		}
 	}
 
 	//Fileの頭に戻る
-	fseek(pFp, 0, SEEK_SET);
+	fseek(filePointer, 0, SEEK_SET);
 
-	return nCnt;
+	return count;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStrCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：GetStringCount
+//  関数説明：文字列をカウントする
+//	引数：	file：ファイルの文字列
+//			token：符号
+//			compareString：
+//	戻り値：カウント数
 //--------------------------------------------------------------------------------
-int CKFUtility::GetStrCount(string& str, const string& strToken, const string& strComp)
+int Utility::GetStringCount(string& file, const string& token, const string& compareString)
 {
-	int nCnt = 0;
-	string strBuf;
-	while (GetStrToken(str, strToken, strBuf) >= 0)
+	int count = 0;
+	string buffer;
+	while (GetStringUntilToken(file, token, buffer) >= 0)
 	{
-		if (strBuf.compare(strComp) == 0)
+		if (buffer.compare(compareString) == 0)
 		{
-			nCnt++;
+			++count;
 		}
 	}
-	return nCnt;
+	return count;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetFileName
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
+//	関数名：AnalyzeFilePath
+//  関数説明：パスから名前とタイプを解析する
+//	引数：	filePath：パス
+//	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-string CKFUtility::GetFileName(const string& strFilePath)
+Utility::FileInfo Utility::AnalyzeFilePath(const string& filePath)
 {
-	auto strCpy = strFilePath;
-
-	//逆転
-	reverse(strCpy.begin(), strCpy.end());
+	FileInfo info;
+	auto copy = filePath;
+	reverse(copy.begin(), copy.end());
 
 	//ファイル型の取得
-	string strType;
-	GetStrToken(strCpy, ".", strType);
-
-	//ファイル名の取得
-	string strName;
-	GetStrToken(strCpy, "\\/", strName);
-	reverse(strName.begin(), strName.end());
-	return strName;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：GetStrCount
-//  関数説明：アクション（移動、跳ぶ、攻撃）
-//	引数：	vDirection：移動方向
-//			bJump：跳ぶフラグ
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void CKFUtility::AnalyzeFilePath(const string& strTexPath, string& strName, string& strType)
-{
-	auto strCpy = strTexPath;
-
-	//逆転
-	reverse(strCpy.begin(), strCpy.end());
-
-	//ファイル型の取得
-	if (GetStrToken(strCpy, ".", strType) > 0)
+	if (GetStringUntilToken(copy, ".", info.Type) > 0)
 	{
-		reverse(strType.begin(), strType.end());
+		reverse(info.Type.begin(), info.Type.end());
 	}
 
 	//ファイル名の取得
-	GetStrToken(strCpy, "\\/", strName);
-	reverse(strName.begin(), strName.end());
+	GetStringUntilToken(copy, "\\/", info.Name);
+	reverse(info.Name.begin(), info.Name.end());
+	return info;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：FindChildBy
+//  関数説明：子供から名前対応のオブジェクトを探し出す
+//	引数：	name：探したいオブジェクトの名前
+//			parent：親のオブジェクト
+//	戻り値：FileInfo
+//--------------------------------------------------------------------------------
+GameObject* Utility::FindChildBy(const string& name, GameObject* const parent)
+{
+	assert(!name.empty());
+	auto& children = parent->GetTransform()->GetChildren();
+	for (auto child : children)
+	{
+		auto childObject = child->GetGameObject();
+		if (childObject->GetName() == name) { return childObject; }
+		else
+		{
+			auto result = FindChildBy(name, childObject);
+			if (result) return result;
+		}
+	}
+	return nullptr;
 }

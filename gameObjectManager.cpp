@@ -4,7 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-5-10
 //--------------------------------------------------------------------------------
-
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
@@ -12,27 +11,21 @@
 #include "gameObject.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//  静的メンバ変数
 //--------------------------------------------------------------------------------
+GameObjectManager* GameObjectManager::instance = nullptr;
+
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-CGameObjectManager::CGameObjectManager()
-{
-	for (auto& list : m_aListGameObject){ list.clear(); }
-}
-
-//--------------------------------------------------------------------------------
 //  リリース処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::ReleaseAll(void)
+void GameObjectManager::ReleaseAll(void)
 {
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
 		{
@@ -45,13 +38,14 @@ void CGameObjectManager::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CGameObjectManager::Update(void)
+void GameObjectManager::Update(void)
 {
-	for (auto& list : m_aListGameObject)
+	// 生きてないオブジェクトを削除する
+	for (auto& list : GameObjects)
 	{
 		for (auto itr = list.begin(); itr != list.end();)
-		{//生きてないオブジェクトを削除
-			if (!(*itr)->m_bAlive)
+		{
+			if (!(*itr)->IsAlive())
 			{
 				(*itr)->Release();
 				itr = list.erase(itr);
@@ -60,11 +54,11 @@ void CGameObjectManager::Update(void)
 		}
 	}
 
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
-		for (auto pObj : list)
+		for (auto gameObject : list)
 		{
-			pObj->Update();
+			gameObject->Update();
 		}
 	}
 }
@@ -72,34 +66,13 @@ void CGameObjectManager::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void CGameObjectManager::LateUpdate(void)
+void GameObjectManager::LateUpdate(void)
 {
-	for (auto& list : m_aListGameObject)
+	for (auto& list : GameObjects)
 	{
-		for (auto pObj : list)
+		for (auto gameObject : list)
 		{
-			pObj->LateUpdate();
+			gameObject->LateUpdate();
 		}
 	}
-}
-
-//--------------------------------------------------------------------------------
-//  ゲームオブジェクトの確保
-//--------------------------------------------------------------------------------
-void CGameObjectManager::Register(CGameObject* pGameObj, const GOMLAYER& layer)
-{
-	m_aListGameObject[layer].push_back(pGameObj);
-}
-
-//--------------------------------------------------------------------------------
-//
-//  Private
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CGameObjectManager::uninit(void)
-{
-	ReleaseAll();
 }

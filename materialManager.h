@@ -7,75 +7,92 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  定数定義
+//  インクルードファイル
 //--------------------------------------------------------------------------------
-#define CMM CMaterialManager	//CMaterialManagerの略称
+#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	マテリアル
-//--------------------------------------------------------------------------------
-class CKFMaterial
+class Material
 {
 public:
-	CKFMaterial();
-	CKFMaterial(const CKFColor& cAmbient, const CKFColor& cDiffuse, const CKFColor& cSpecular, const CKFColor& cEmissive, const float& fPower)
-		: m_cAmbient(cAmbient)
-		, m_cDiffuse(cDiffuse)
-		, m_cSpecular(cSpecular)
-		, m_cEmissive(cEmissive)
-		, m_fPower(fPower)
-	{}
-	~CKFMaterial() {}
+	Material()
+		: Ambient(Color::White)
+		, Diffuse(Color::White)
+		, Specular(Color::Black)
+		, Emissive(Color::Black)
+		, Power(1.0f)
+	{
+		MainTexture.clear();
+	}
+	~Material() {}
 
-	CKFColor	m_cAmbient;		// 環境光の反射率
-	CKFColor	m_cDiffuse;		// 漫射光の反射率
-	CKFColor	m_cSpecular;	// 鏡面光の反射率
-	CKFColor	m_cEmissive;	// 自発光
-	float		m_fPower;		// ハイライトのシャープネス
+	string	MainTexture;// テクスチャ
+	Color	Ambient;	// 環境光の反射率
+	Color	Diffuse;	// 漫射光の反射率
+	Color	Specular;	// 鏡面光の反射率
+	Color	Emissive;	// 自発光
+	float	Power;		// ハイライトのシャープネス
 
 	//キャスト
-#ifdef USING_DIRECTX
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	operator D3DMATERIAL9 () const;
 #endif
-
-	//operator
-	bool operator==(const CKFMaterial& mat) const;
 };
 
 //--------------------------------------------------------------------------------
 //	マテリアルマネージャ
 //--------------------------------------------------------------------------------
-class CMaterialManager
+class MaterialManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  列挙型定義
+	//  関数定義
 	//--------------------------------------------------------------------------------
-	enum MAT_TYPE
+	static auto	Create(void)
 	{
-		MT_NORMAL = 0,
+		if (instance) return instance;
+		instance = new MaterialManager;
+		instance->init();
+		return instance;
+	}
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
+	void		Use(const string& materialName);
+	void		Disuse(const string& materialName);
+	Material*	GetMaterial(const string& materialName)
+	{
+		auto iterator = materials.find(materialName);
+		if (materials.end() == iterator) return nullptr;
+		return iterator->second.Pointer;
+	}
+	void		CreateMaterialFileBy(const string& materialName, const string& mainTextureName, const Color& ambient = Color::Gray, const Color& diffuse = Color::White, const Color& specular = Color::Black, const Color& emissive = Color::Black, const float& power = 1.0f);
+
+private:
+	//--------------------------------------------------------------------------------
+	//  構造体定義
+	//--------------------------------------------------------------------------------
+	struct MaterialInfo
+	{
+		MaterialInfo() : UserNumber(1), Pointer(nullptr) {}
+		int			UserNumber;
+		Material*	Pointer;
 	};
 
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CMaterialManager();
-	~CMaterialManager() {}
+	MaterialManager();
+	~MaterialManager() {}
+	void		init(void) {}
+	void		uninit(void) { materials.clear(); }
+	Material*	loadFrom(const string& materialName);
 
-	void					Release(void) 
-	{
-		m_umMaterial.clear();
-		delete this; 
-	}
-	const unsigned short	SaveMaterial(const CKFColor &cAmbient, const CKFColor &cDiffuse, const CKFColor &cSpecular, const CKFColor &cEmissive, const float &fPower);
-	const CKFMaterial&		GetMaterial(const unsigned short& usID);
-
-private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<unsigned short, CKFMaterial> m_umMaterial;
+	unordered_map<string, MaterialInfo>		materials;
+	static MaterialManager*					instance;
 };

@@ -10,15 +10,16 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "manager.h"
-#include "textureManager.h"
 #include "lightManager.h"
-#include "inputManager.h"
+#include "input.h"
 #include "soundManager.h"
 #include "mode.h"
 #include "modeDemo.h"
 #include "modeResult.h"
-#include "actionGameCamera.h"
-#include "fade.h"
+#include "thirdPersonCamera.h"
+#include "fadeSystem.h"
+#include "motionManager.h"
+#include "materialManager.h"
 
 //gameobject
 #include "stageSpawner.h"
@@ -26,12 +27,9 @@
 #include "gameObjectActor.h"
 
 #ifdef _DEBUG
-#include "debugManager.h"
+#include "debugObserver.h"
 #endif // _DEBUG
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -40,8 +38,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-CModeDemo::CModeDemo() : CMode()
-	, m_bEndMode(false)
+ModeDemo::ModeDemo() : Mode("Demo")
 {
 
 }
@@ -49,7 +46,7 @@ CModeDemo::CModeDemo() : CMode()
 //--------------------------------------------------------------------------------
 //  デストラクタ
 //--------------------------------------------------------------------------------
-CModeDemo::~CModeDemo()
+ModeDemo::~ModeDemo()
 {
 
 }
@@ -57,74 +54,58 @@ CModeDemo::~CModeDemo()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CModeDemo::Init(void)
+void ModeDemo::Init(void)
 {	
-	//ライトの初期化
-	CMain::GetManager()->GetLightManager()->CreateDirectionalLight(CKFVec3(0.5f, -0.5f, 0.5f));
+	LightManager::Instance()->CreateLight(LightType::LT_Directional);
 
 	//カメラの初期化
-	m_pCamera = new CActionGameCamera;
-	m_pCamera->Init();
+	auto camera = new ThirdPersionCamera;
+	camera->Init();
 
-	//ゲームオブジェクトの初期化
-	CGameObjectSpawner::CreateSkyBox(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	CStageSpawner::LoadStage("demo");
-	//CGameObjectSpawner::CreateCube(CKFVec3(0.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	auto pPlayer = CGameObjectActor::CreatePlayer("data/MODEL/motionPlayer.txt", CKFVec3(119.7f, 10.0f, -121.2f), CKFVec3(0.0f), CKFVec3(1.0f));
-	pPlayer->SetName("Player");
-
-#ifdef _DEBUG
-	CMain::GetManager()->GetDebugManager()->SetPlayer(pPlayer);
-#endif // _DEBUG
-	//auto pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-50.0, 30.0f, -7.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//pEnemy->SetName("Enemy00");
-	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(-12.0, 45.0f, -46.0f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//pEnemy->SetName("Enemy01");
-	//pEnemy = CGameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", CKFVec3(117.0f, 80.0f, 1.6f), CKFVec3(0.0f), CKFVec3(1.0f));
-	//pEnemy->SetName("Enemy02");
-	CGameObjectSpawner::CreateGoal(CKFVec3(112.0f, 16.0f, 51.0f));
-	m_pCamera->SetTarget(pPlayer);
-
-	//CMain::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
+	//MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
+	//MaterialManager::Instance()->CreateMaterialFileBy("sky", "skybox000.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("demoField", "demoField.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("cube", "nomal_cube.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
+//	//ゲームオブジェクトの初期化
+	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+	StageSpawner::LoadStage("demo");
+//	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
+//	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
+//	player->SetName("Player");
+//
+//#ifdef _DEBUG
+//	DebugObserver::Instance()->SetPlayer(player);
+//#endif // _DEBUG
+//	//auto pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-50.0, 30.0f, -7.0f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy00");
+//	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-12.0, 45.0f, -46.0f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy01");
+//	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(117.0f, 80.0f, 1.6f), Vector3(0.0f), Vector3(1.0f));
+//	//pEnemy->SetName("Enemy02");
+//	GameObjectSpawner::CreateGoal(Vector3(112.0f, 16.0f, 51.0f));
+//	camera->SetFollowTarget(player);
+//
+//	//Main::GetManager()->GetSoundManager()->Play(CSM::BGM_GAME);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void CModeDemo::Update(void)
+void ModeDemo::Update(void)
 {
-	CMode::Update();
+	Mode::Update();
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void CModeDemo::LateUpdate(void)
+void ModeDemo::LateUpdate(void)
 {
-	CMode::LateUpdate();
+	Mode::LateUpdate();
 
-	if (CMain::GetManager()->GetInputManager()->GetKeyTrigger(CInputManager::KEY::K_START))
+	if (Input::Instance()->GetKeyTrigger(Key::Start))
 	{
-		CMain::GetManager()->GetFade()->FadeToMode(new CModeResult);
+		FadeSystem::Instance()->FadeTo(new ModeResult);
 	}
-}
-
-//--------------------------------------------------------------------------------
-//
-//  Private
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void CModeDemo::uninit(void)
-{
-	//カメラとゲームオブジェクトの破棄
-	CMode::uninit();
-
-	//ライトの破棄
-	CMain::GetManager()->GetLightManager()->ReleaseAll();
-
-	//BGMの停止
-	CMain::GetManager()->GetSoundManager()->StopAll();
 }

@@ -13,64 +13,63 @@
 #include "stageSpawner.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
-#include "windmillBehaviorComponent.h"
+#include "windmillController.h"
 
 //--------------------------------------------------------------------------------
-//  クラス
+//
+//  Public
+//
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-void CStageSpawner::LoadStage(const string& strStageName)
+void StageSpawner::LoadStage(const string& stageName)
 {
-	CGameObjectSpawner::CreateField(strStageName);
+	GameObjectSpawner::CreateField(stageName);
 
-	//フィールドの保存
-	string strName = "data/STAGE/" + strStageName + "Stage" + ".stage";
-	FILE *pFile;
+	////フィールドの保存
+	//string filePath = "data/STAGE/" + stageName + "Stage" + ".stage";
+	//FILE *filePointer;
 
-	//file open
-	fopen_s(&pFile, strName.c_str(), "rb");
+	////file open
+	//fopen_s(&filePointer, filePath.c_str(), "rb");
 
-	if (!pFile)
-	{
-		MessageBox(NULL, "CStageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
-		return;
-	}
+	//if (!filePointer)
+	//{
+	//	MessageBox(NULL, "StageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
+	//	return;
+	//}
 
-	int nNumModelType = 0;
-	fread(&nNumModelType, sizeof(int), 1, pFile);
+	//int modelTypeNumber = 0;
+	//fread(&modelTypeNumber, sizeof(int), 1, filePointer);
 
-	for (int nCnt = 0; nCnt < nNumModelType; ++nCnt)
-	{
-		//ファイル名読込
-		int nSize = 0;
-		fread(&nSize, sizeof(int), 1, pFile);
-		string strModelName;
-		strModelName.resize(nSize);
-		fread(&strModelName[0], sizeof(char), nSize, pFile);
-		strModelName += ".model";
+	//for (int count = 0; count < modelTypeNumber; ++count)
+	//{
+	//	//ファイル名読込
+	//	int size = 0;
+	//	fread(&size, sizeof(int), 1, filePointer);
+	//	string modelName;
+	//	modelName.resize(size);
+	//	fread(&modelName[0], sizeof(char), size, filePointer);
+	//	modelName += ".model";
+	//	
+	//	//モデル数の読込
+	//	int number = 0;
+	//	fread(&number, sizeof(int), 1, filePointer);
 
-		//モデル数の読込
-		int nNum = 0;
-		fread(&nNum, sizeof(int), 1, pFile);
+	//	//位置回転の読込
+	//	for (int countModel = 0; countModel < number; ++countModel)
+	//	{
+	//		Vector3 position;
+	//		fread(&position, sizeof(Vector3), 1, filePointer);
+	//		Quaternion rotation;
+	//		fread(&rotation, sizeof(Quaternion), 1, filePointer);
+	//		auto gameObject = GameObjectSpawner::CreateModel(modelName, position, rotation, Vector3::One);
+	//		if (modelName == "Medieval_Windmill.model")
+	//		{
+	//			auto behavior = new WindmillController(gameObject);
+	//			behavior->Init();
+	//			gameObject->AddBehavior(behavior);
+	//		}
+	//	}
+	//}
 
-		//位置回転の読込
-		for (int nCntModel = 0; nCntModel < nNum; ++nCntModel)
-		{
-			CKFVec3 vPos;
-			fread(&vPos, sizeof(CKFVec3), 1, pFile);
-			CKFQuaternion qRot;
-			fread(&qRot, sizeof(CKFQuaternion), 1, pFile);
-			auto pObj = CGameObjectSpawner::CreateModel(strModelName, vPos, qRot, CKFVec3(1.0f));
-			if (strModelName == "Medieval_Windmill.model")
-			{
-				auto pBehavior = new CWindmillBehaviorComponent(pObj);
-				pBehavior->Init();
-				pObj->AddBehavior(pBehavior);
-			}
-		}
-	}
-
-	fclose(pFile);
+	//fclose(filePointer);
 }

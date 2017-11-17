@@ -12,61 +12,56 @@
 #include "main.h"
 
 //--------------------------------------------------------------------------------
-//  定数定義
-//--------------------------------------------------------------------------------
-#define GOM CGameObjectManager	//GameObjectManagerの略称
-
-//--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-enum GOMLAYER
+enum Layer
 {
-	L_DEFAULT = 0,
-	L_MAX
+	L_Default = 0,
+	L_Max
 };
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class CGameObject;
+class GameObject;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class CGameObjectManager
+class GameObjectManager
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	CGameObjectManager();
-	~CGameObjectManager() {}
-
-	static auto Create(void)
+	static auto	Create(void)
 	{
-		auto pGOM = new CGameObjectManager;
-		return pGOM;
+		if (instance) return instance;
+		instance = new GameObjectManager;
+		return instance;
 	}
-	void		Release(void)
+	static void Release(void) { SAFE_UNINIT(instance); }
+	static auto Instance(void) { return instance; }
+
+	void ReleaseAll(void);
+	void Update(void);
+	void LateUpdate(void);
+	void Register(GameObject* gameObject, const Layer& layer = L_Default)
 	{
-		uninit();
-		delete this;
+		GameObjects[layer].push_back(gameObject);
 	}
-
-	void		ReleaseAll(void);
-	void		Update(void);
-	void		LateUpdate(void);
-
-	void		Register(CGameObject* pGameObj, const GOMLAYER& layer = L_DEFAULT);
 
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	void		uninit(void);
+	GameObjectManager() { for (auto& list : GameObjects) list.clear(); }
+	~GameObjectManager() {}
+	void uninit(void) { ReleaseAll(); }
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<CGameObject*>	m_aListGameObject[L_MAX];
+	list<GameObject*>			GameObjects[L_Max];
+	static GameObjectManager*	instance;
 };

@@ -24,7 +24,7 @@ MODEL_FILENAME = data/MODEL/player/LegR.x		# [6]右腿
 MODEL_FILENAME = data/MODEL/player/FootR.x		# [7]右足
 MODEL_FILENAME = data/MODEL/player/LegL.x		# [8]左腿
 MODEL_FILENAME = data/MODEL/player/FootL.x		# [9]左足
-MODEL_FILENAME = greatsword_of_fn.model		# [10]左足
+MODEL_FILENAME = greatsword_of_fn.model			# [10]剣
 
 #------------------------------------------------------------------------------
 # キャラクター情報

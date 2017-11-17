@@ -7,29 +7,45 @@
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  ディファイン
 //--------------------------------------------------------------------------------
 #define SAFE_RELEASE(p)		if(p){ p->Release(); p = nullptr; }
+#define SAFE_UNINIT(p)		if(p){ p->uninit(); delete p; p = nullptr; }
 #define SAFE_DELETE(p)		if(p){ delete p; p = nullptr; }
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  Typedef
 //--------------------------------------------------------------------------------
-class CKFUtility
-{
-public:
-	static int		GetStrToken(FILE* pFp, const string& strToken, string& strBuf);
-	static int		GetStrToken(string& str, const string& strToken, string& strBuf);
-	static int		GetStrCount(FILE* pFp, const string& strToken, const string& strComp);
-	static int		GetStrCount(string& str, const string& strToken, const string& strComp);
-	static string	GetFileName(const string& strFilePath);
-	static void		AnalyzeFilePath(const string& strTexPath, string& strName, string& strType);
+typedef unsigned short us;
+typedef unsigned long  ul;
 
-private:
-	CKFUtility() {}
-	~CKFUtility() {}
-};
+//--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
+class GameObject;
+
+namespace KF
+{
+	namespace Utility
+	{
+		//--------------------------------------------------------------------------------
+		//  構造体定義
+		//--------------------------------------------------------------------------------
+		struct FileInfo
+		{
+			string Name;
+			string Type;
+		};
+
+		//--------------------------------------------------------------------------------
+		//  関数宣言
+		//--------------------------------------------------------------------------------
+		int			GetStringUntilToken(FILE* filePointer, const string& token, string& buffer);
+		int			GetStringUntilToken(string& file, const string& token, string& buffer);
+		int			GetStringUntilString(FILE* filePointer, const string& compare, string& buffer);
+		int			GetStringCount(FILE* filePointer, const string& token, const string& compareString);
+		int			GetStringCount(string& file, const string& token, const string& compareString);
+		FileInfo	AnalyzeFilePath(const string& filePath);
+		GameObject* FindChildBy(const string& name, GameObject* const parent);
+	}
+}
