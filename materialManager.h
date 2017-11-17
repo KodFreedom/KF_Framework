@@ -20,9 +20,9 @@ public:
 	Material()
 		: Ambient(Color::White)
 		, Diffuse(Color::White)
-		, Specular(Color::White)
-		, Emissive(Color::White)
-		, Power(0.0f)
+		, Specular(Color::Black)
+		, Emissive(Color::Black)
+		, Power(1.0f)
 	{
 		MainTexture.clear();
 	}
@@ -68,7 +68,7 @@ public:
 		if (materials.end() == iterator) return nullptr;
 		return iterator->second.Pointer;
 	}
-	void		CreateMaterialFileBy(const string& materialName, const string& mainTextureName, const Color& ambient = Color::White, const Color& diffuse = Color::Gray, const Color& specular = Color::White, const Color& emissive = Color::White, const float& power = 0.0f);
+	void		CreateMaterialFileBy(const string& materialName, const string& mainTextureName, const Color& ambient = Color::Gray, const Color& diffuse = Color::White, const Color& specular = Color::Black, const Color& emissive = Color::Black, const float& power = 1.0f);
 
 private:
 	//--------------------------------------------------------------------------------

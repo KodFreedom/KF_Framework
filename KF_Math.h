@@ -214,6 +214,8 @@ namespace KF
 
 		// Zp‰‰Zq
 		Matrix44& operator=(const Matrix44& value);
+		Matrix44 operator*(const float& value) const;
+		Matrix44 operator+(const Matrix44& value) const;
 		Matrix44 operator*(const Matrix44& value) const;
 		void operator*=(const Matrix44& value);
 

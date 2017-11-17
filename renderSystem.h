@@ -55,7 +55,7 @@ protected:
 	//--------------------------------------------------------------------------------
 	RenderSystem()
 		: backgroundColor(Color::Black), fogColor(Color::White)
-		, fogStartZ(0.0f), fogEndZ(1000.0f), fogDensity(1.0f) {}
+		, fogStartZ(100.0f), fogEndZ(1000.0f), fogDensity(0.01f) {}
 	~RenderSystem() {}
 	virtual bool init(HWND hWnd, BOOL isWindowMode) = 0;
 	virtual void uninit(void) = 0;

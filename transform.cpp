@@ -149,6 +149,24 @@ void Transform::SetNextRotation(const Vector3& euler)
 }
 
 //--------------------------------------------------------------------------------
+//	関数名：SetNextMatrix
+//  関数説明：次の行列の設定
+//	引数：	value：行列情報
+//	戻り値：なし
+//--------------------------------------------------------------------------------
+void Transform::SetNextMatrix(const Matrix44& value)
+{
+	nextRight = Vector3(value.Element11, value.Element12, value.Element13);
+	nextUp = Vector3(value.Element21, value.Element22, value.Element23);
+	nextForward = Vector3(value.Element31, value.Element32, value.Element33);
+	nextPosition = Vector3(value.Element41, value.Element42, value.Element43);
+	nextScale = (nextRight.Magnitude(), nextUp.Magnitude(), nextForward.Magnitude());
+	if (nextScale.X > 0.0f) nextRight /= nextScale.X;
+	if (nextScale.Y > 0.0f) nextUp /= nextScale.Y;
+	if (nextScale.Z > 0.0f) nextForward /= nextScale.Z;
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：SetOffset
 //  関数説明：親に対する相対行列の設定
 //	引数：	position：位置情報

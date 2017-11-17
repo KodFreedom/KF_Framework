@@ -56,9 +56,7 @@ void NormalMotionState::Update(Animator& animator)
 
 	for (auto born : animator.bones)
 	{
-		auto transform = born->GetTransform();
-		transform->SetNextPosition(iterator->Position);
-		transform->SetNextRotation(iterator->Rotation);
+		born->GetTransform()->SetNextMatrix(iterator->Matrix);
 		++iterator;
 	}
 
@@ -114,18 +112,10 @@ void BlendMotionState::Update(Animator& animator)
 
 	for (auto born : animator.bones)
 	{
-		auto currentMotionPosition = currentBoneFrameIterator->Position;
-		auto currentMotionRotation = currentBoneFrameIterator->Rotation;
-		
-		auto nextMotionPosition = nextMotionCurrentBoneFrameIterator->Position;
-		auto nextMotionRotation = nextMotionCurrentBoneFrameIterator->Rotation;
-		
-		auto blendPosition = currentMotionPosition * (1.0f - blendRate) + nextMotionPosition * blendRate;
-		auto blendRotation = currentMotionRotation * (1.0f - blendRate) + nextMotionRotation * blendRate;
-		
-		auto transform = born->GetTransform();
-		transform->SetNextPosition(blendPosition);
-		transform->SetNextRotation(blendRotation);
+		const auto& currentMotionMatrix = currentBoneFrameIterator->Matrix;
+		const auto& nextMotionMatrix = nextMotionCurrentBoneFrameIterator->Matrix;;
+		const auto& blendMatrix = currentMotionMatrix * (1.0f - blendRate) + nextMotionMatrix * blendRate;
+		born->GetTransform()->SetNextMatrix(blendMatrix);
 		++currentBoneFrameIterator;
 		++nextMotionCurrentBoneFrameIterator;
 	}

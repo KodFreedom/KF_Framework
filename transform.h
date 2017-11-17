@@ -82,6 +82,7 @@ public:
 	void		SetNextForward(const Vector3& value) { nextForward = value; }
 	void		SetNextUp(const Vector3& value) { nextUp = value; }
 	void		SetNextRight(const Vector3& value) { nextRight = value; }
+	void		SetNextMatrix(const Matrix44& value);
 	void		SetOffset(const Vector3& position, const Vector3& rotation);
 
 	//âÒì]ä÷êî

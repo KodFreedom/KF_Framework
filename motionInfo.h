@@ -20,12 +20,11 @@
 class BoneFrame
 {
 public:
-	BoneFrame(const Vector3& position = Vector3::Zero, const Quaternion& rotation = Quaternion::Identity)
-		: Position(position), Rotation(rotation) {}
+	BoneFrame(const Matrix44& matrix = Matrix44::Identity)
+		: Matrix(matrix) {}
 	~BoneFrame() {}
 
-	Vector3		Position;
-	Quaternion	Rotation;
+	Matrix44 Matrix;
 };
 
 //--------------------------------------------------------------------------------

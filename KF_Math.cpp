@@ -805,6 +805,44 @@ Matrix44& Matrix44::operator=(const Matrix44 &value)
 
 //--------------------------------------------------------------------------------
 //	関数名：operator*
+//  関数説明：floatと乗算処理
+//	引数：	value : 相手
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::operator*(const float& value) const
+{
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			result.Elements[countY][countX] = Elements[countY][countX] * value;
+		}
+	}
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator+
+//  関数説明：加算処理
+//	引数：	value : 相手
+//	戻り値：Matrix44
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::operator+(const Matrix44 &value) const
+{
+	Matrix44 result;
+	for (int countY = 0; countY < 4; ++countY)
+	{
+		for (int countX = 0; countX < 4; ++countX)
+		{
+			result.Elements[countY][countX] = Elements[countY][countX] + value.Elements[countY][countX];
+		}
+	}
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//	関数名：operator*
 //  関数説明：乗算処理
 //	引数：	value : 相手
 //	戻り値：Matrix44

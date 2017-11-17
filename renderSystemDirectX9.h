@@ -51,7 +51,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	LPDIRECT3D9			lpDirect3D9; // Direct3Dオブジェクト
-	LPDIRECT3DDEVICE9	lpD3DDevice; // Deviceオブジェクト(描画に必要)
+	LPDIRECT3D9						lpDirect3D9; // Direct3Dオブジェクト
+	LPDIRECT3DDEVICE9				lpD3DDevice; // Deviceオブジェクト(描画に必要)
 };
 #endif

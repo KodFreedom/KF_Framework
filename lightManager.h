@@ -37,7 +37,7 @@ public:
 	static auto Instance(void) { return instance; }
 
 	int	 CreateLight(const LightType& type = LT_Directional,
-		const Color& diffuse = Color::White, const Color& specular = Color::White, const Color& ambient = Color::White,
+		const Color& diffuse = Color::White, const Color& specular = Color::Black, const Color& ambient = Color::Gray,
 		const Vector3& position = Vector3::Zero, const Vector3& direction = Vector3::Down,
 		const float& cutoffRange = 0.0f, const float& falloff = 0.0f, const float& constantAttenuation = 0.0f,
 		const float& linearAttenuation = 0.0f, const float& quadraticAttenuation = 0.0f,

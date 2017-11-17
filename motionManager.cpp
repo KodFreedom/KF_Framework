@@ -64,14 +64,13 @@ void MotionManager::Disuse(const string& motionName)
 //--------------------------------------------------------------------------------
 void MotionManager::CreateMotionFileBy(const string& txtFilePath)
 {
-	FILE* filePointer;
+	FILE* filePointer = nullptr;
 	auto fileInfo = Utility::AnalyzeFilePath(txtFilePath);
 	fopen_s(&filePointer, txtFilePath.c_str(), "r");
 	if (!filePointer) return;
 
 	//ÉpÅ[ÉcêîÇÃì«Ç›çûÇ›
 	string buffer;
-	
 	string compare = "NUM_MODEL = ";
 	int partsNumber = 0;
 	if (Utility::GetStringUntilString(filePointer, compare, buffer) > 0)
@@ -84,10 +83,10 @@ void MotionManager::CreateMotionFileBy(const string& txtFilePath)
 		partsNumber = atoi(numberBuffer);
 	}
 
-	//XFileÇÃì«Ç›çûÇ›
+	//MeshÇÃì«Ç›çûÇ›
+
 	for (int countPart = 0; countPart < partsNumber; countPart++)
 	{
-		//XFILE XFile;
 		compare = "MODEL_FILENAME = ";
 		if (Utility::GetStringUntilString(filePointer, compare, buffer) > 0)
 		{
@@ -187,7 +186,7 @@ void MotionManager::CreateMotionFileBy(const string& txtFilePath)
 				countRot++;
 			}
 
-			auto vOffsetRot = Vector3((float)atof(rotationBuffer[0]), (float)atof(rotationBuffer[1]), (float)atof(rotationBuffer[2]));
+			auto offsetRotation = Vector3((float)atof(rotationBuffer[0]), (float)atof(rotationBuffer[1]), (float)atof(rotationBuffer[2]));
 		}
 	}
 

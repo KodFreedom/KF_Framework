@@ -64,7 +64,7 @@ void ModeDemo::Init(void)
 
 	//MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
 	//MaterialManager::Instance()->CreateMaterialFileBy("sky", "skybox000.jpg");
-	//MaterialManager::Instance()->CreateMaterialFileBy("field", "demoField.jpg");
+	//MaterialManager::Instance()->CreateMaterialFileBy("demoField", "demoField.jpg");
 	//MaterialManager::Instance()->CreateMaterialFileBy("cube", "nomal_cube.jpg");
 	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
 //	//ゲームオブジェクトの初期化

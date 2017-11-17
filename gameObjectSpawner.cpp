@@ -399,7 +399,7 @@ GameObject* GameObjectSpawner::createChildNode(Transform* parent, FILE* filePoin
 
 		//Check Type
 		auto& fileInfo = Utility::AnalyzeFilePath(meshName);
-		if (fileInfo.Type._Equal("mesh"))
+		if (fileInfo.Type._Equal("mesh") || fileInfo.Type._Equal("x"))
 		{//çúÇ»Çµ
 			auto childMesh = createChildMesh(transform, meshName);
 		}
