@@ -1,88 +1,249 @@
-//--------------------------------------------------------------------------------
-//	‰‰Z—pƒwƒbƒ_[
-//@KF_Math.h
-//	Author : Xu Wenjie
-//	Date   : 2016-07-24
+ï»¿//--------------------------------------------------------------------------------
+//ã€€kf_math.h
+//  classes and methods for math
+//	æ¼”ç®—ç”¨ã®ã‚¯ãƒ©ã‚¹ã¨ãƒ¡ã‚½ãƒƒãƒ‰
+//  ç”¨äºè®¡ç®—çš„ç±»å’Œå‡½æ•°
+//	Author : å¾æ–‡æ°(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹
-//--------------------------------------------------------------------------------
 #include <math.h>
 #include <time.h>
-#include "versionSetting.h"
+#include "version_setting.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
 #endif
 
-namespace KF
+namespace KodFreedom
 {
 	//--------------------------------------------------------------------------------
-	//  ‘O•ûéŒ¾
+	//  forward declaration / å‰æ–¹å®£è¨€ / å‰ç½®å£°æ˜
 	//--------------------------------------------------------------------------------
 	class Quaternion;
 	class Matrix44;
 	class Ray;
 
 	//--------------------------------------------------------------------------------
-	//  ’è”’è‹`
+	//  constant variables / å®šæ•° / å¸¸é‡
 	//--------------------------------------------------------------------------------
-	const float Pi = 3.1415926358979f; //‰~ü—¦
+	constexpr float kPi = 3.1415926358979f; // Pi / å††å‘¨ç‡ / åœ†å‘¨ç‡
 
 	//--------------------------------------------------------------------------------
-	//  ƒxƒNƒgƒ‹2ƒNƒ‰ƒX
+	//  vector2 / ãƒ™ã‚¯ãƒˆãƒ«2 / äºŒæ¬¡å…ƒå‘é‡
 	//--------------------------------------------------------------------------------
 	class Vector2
 	{
 	public:
-		Vector2() : X(0.0f), Y(0.0f) {}
-		Vector2(const float& value) : X(value), Y(value) {}
-		Vector2(const float& x, const float& y) : X(x), Y(y) {}
+		Vector2() : x_(0.0f), y_(0.0f) {}
+		Vector2(const float& value) : x_(value), y_(value) {}
+		Vector2(const float& x, const float& y) : x_(x), y_(y) {}
 		~Vector2() {}
 
-		// ƒƒ“ƒo[•Ï”
-		float X;
-		float Y;
+		// x component of the vector2 / ãƒ™ã‚¯ãƒˆãƒ«2ã®xè¦ç´  / äºŒæ¬¡å…ƒå‘é‡çš„xè¦ç´ 
+		float x_;
 
-		// ’è”’è‹`
-		static const Vector2 Zero;
-		static const Vector2 One;
+		// y component of the vector2 / ãƒ™ã‚¯ãƒˆãƒ«2ã®yè¦ç´  / äºŒæ¬¡å…ƒå‘é‡çš„yè¦ç´ 
+		float y_;
 
-		// ƒLƒƒƒXƒg
+		// vector2(0, 0) / x,yãŒå…¨éƒ¨0ã®ãƒ™ã‚¯ãƒˆãƒ«2 / è¦ç´ ä¸º0çš„äºŒæ¬¡å…ƒå‘é‡
+		static const Vector2 kZero;
+
+		// vector2(1, 1) / x,yãŒå…¨éƒ¨1ã®ãƒ™ã‚¯ãƒˆãƒ«2 / è¦ç´ ä¸º1çš„äºŒæ¬¡å…ƒå‘é‡
+		static const Vector2 kOne;
+
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-		operator D3DXVECTOR2() const;
+		//--------------------------------------------------------------------------------
+		//  operator D3DXVECTOR2()
+		//  cast to D3DXVECTOR2 / D3DXVECTOR2ã«ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ / è½¬æ¢æˆD3DXVECTOR2
+		//  returnï¼šD3DXVECTOR2
+		//--------------------------------------------------------------------------------
+		operator D3DXVECTOR2() const { return D3DXVECTOR2(x_, y_); }
 #endif
 
-		// Zp‰‰Zq
-		Vector2& operator=(const Vector2& value);
-		bool operator==(const Vector2& value) const;
+		//--------------------------------------------------------------------------------
+		//  operator=
+		//  override operator= / ä»£å…¥å‡¦ç† / èµ‹å€¼
+		//  value : å€¤ / å€¼
+		//  returnï¼šVector2
+		//--------------------------------------------------------------------------------
+		Vector2& operator=(const Vector2& value)
+		{
+			x_ = value.x_;
+			y_ = value.y_;
+			return *this;
+		}
 
-		Vector2 operator+(const Vector2& value) const;
-		void operator+=(const Vector2& value);
+		//--------------------------------------------------------------------------------
+		//  operator==
+		//  check if this equal value / åŒå€¤åˆ¤å®šå‡¦ç† / åˆ¤æ–­ä¸¤è¾¹å˜é‡æ˜¯å¦ç›¸ç­‰
+		//  value : å€¤ / å€¼
+		//  returnï¼šbool
+		//--------------------------------------------------------------------------------
+		bool operator==(const Vector2& value) const
+		{
+			return (x_ == value.x_ && y_ == value.y_);
+		}
 
-		Vector2 operator-(const Vector2& value) const;
-		void operator-=(const Vector2& value);
+		//--------------------------------------------------------------------------------
+		//  operator+
+		//  add / è¶³ã—ç®— / åŠ ç®—
+		//  value : å€¤ / å€¼
+		//  returnï¼šVector2
+		//--------------------------------------------------------------------------------
+		Vector2 operator+(const Vector2& value) const
+		{
+			return Vector2(x_ + value.x_, y_ + value.y_);
+		}
+		
+		//--------------------------------------------------------------------------------
+		//  operator+=
+		//  add to this / è‡ªåˆ†ã«è¶³ã™ / åŠ ç®—
+		//  value : å€¤ / å€¼
+		//--------------------------------------------------------------------------------
+		void operator+=(const Vector2& value)
+		{
+			x_ += value.x_;
+			y_ += value.y_;
+		}
 
-		Vector2 operator*(const float& value) const;
-		void operator*=(const float& value);
-		float operator*(const Vector2& value) const;
+		//--------------------------------------------------------------------------------
+		//  operator-
+		//  minus / å¼•ãç®— / å‡ç®—
+		//  value : å€¤ / å€¼
+		//  returnï¼šVector2
+		//--------------------------------------------------------------------------------
+		Vector2 operator-(const Vector2& value) const
+		{
+			return Vector2(x_ - value.x_, y_ - value.y_);
+		}
+		
+		//--------------------------------------------------------------------------------
+		//  operator-=
+		//  minus to this / è‡ªåˆ†ã«å¼•ã / å‡ç®—
+		//  value : å€¤ / å€¼
+		//--------------------------------------------------------------------------------
+		void operator-=(const Vector2& value)
+		{
+			x_ -= value.x_;
+			y_ -= value.y_;
+		}
 
-		// ƒƒ\ƒbƒh
-		float			Dot(const Vector2& value) const;
-		float			Magnitude(void) const;
-		float			SquareMagnitude(void) const;
-		void			Normalize(void);
-		Vector2			Normalized(void) const;
-		float			ToRadian(void) const;
-		Ray				ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse);
+		//--------------------------------------------------------------------------------
+		//  operator*
+		//  scale x and y / ã‚¹ã‚±ãƒ¼ãƒ« / ç¼©æ”¾
+		//  value : scale value / ã‚¹ã‚±ãƒ¼ãƒ«å€¤ / ç¼©æ”¾å€¼
+		//  returnï¼šVector2
+		//--------------------------------------------------------------------------------
+		Vector2 operator*(const float& value) const
+		{
+			return Vector2(x_ * value, y_ * value);
+		}
 
-		// Ã“Iƒƒ\ƒbƒh
-		static float	RadianBetween(const Vector2& valueL, const Vector2& valueR);
+		//--------------------------------------------------------------------------------
+		//  operator*=
+		//  scale x and y / ã‚¹ã‚±ãƒ¼ãƒ« / ç¼©æ”¾
+		//  value : scale value / ã‚¹ã‚±ãƒ¼ãƒ«å€¤ / ç¼©æ”¾å€¼
+		//--------------------------------------------------------------------------------
+		void operator*=(const float& value)
+		{
+			x_ *= value;
+			y_ *= value;
+		}
+
+		//--------------------------------------------------------------------------------
+		//  operator*
+		//  cross / å¤–ç© / å¤–ç§¯
+		//  value : å€¤ / å€¼
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		float operator*(const Vector2& value) const
+		{
+			return (x_ * value.y_ - y_ * value.x_);
+		}
+
+		//--------------------------------------------------------------------------------
+		//  Dot
+		//  dot / å†…ç© / å†…ç§¯
+		//  value : å€¤ / å€¼
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		float Dot(const Vector2& value) const
+		{
+			return (x_ * value.x_ + y_ * value.y_);
+		}
+
+		//--------------------------------------------------------------------------------
+		//  Magnitude
+		//  compute the magnitude / é•·ã•ã®è¨ˆç®— / é•¿åº¦è®¡ç®—
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		float Magnitude(void) const
+		{
+			return sqrtf(x_ * x_ + y_ * y_);
+		}
+
+		//--------------------------------------------------------------------------------
+		//  SquareMagnitude
+		//  compute the square magnitude / é•·ã•å¹³æ–¹ã®è¨ˆç®— / å¹³æ–¹é•¿åº¦è®¡ç®—
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		float SquareMagnitude(void) const
+		{
+			return (x_ * x_ + y_ * y_);
+		}
+		
+		//--------------------------------------------------------------------------------
+		//  Normalized
+		//  return the normalized vector / æ­£è¦åŒ–ã—ãŸã®å€¤ã‚’è¿”ã™ / è¿”å›æ­£è§„åŒ–åçš„å€¼
+		//  returnï¼šVector2
+		//--------------------------------------------------------------------------------
+		Vector2 Normalized(void) const
+		{
+			float magnitude = Magnitude();
+			if (magnitude <= 0.0f) return Vector2::kZero;
+			return Vector2(x_ / magnitude, y_ / magnitude);
+		}
+
+		//--------------------------------------------------------------------------------
+		//  Normalize
+		//  normalize the vector / æ­£è¦åŒ– / æ­£è§„åŒ–
+		//--------------------------------------------------------------------------------
+		void Normalize(void)
+		{
+			*this = this->Normalized();
+		}
+
+		//--------------------------------------------------------------------------------
+		//  ToRadian
+		//  return the radian between x, y / xyé–“ã®è§’åº¦ã®ç®—å‡º / è¿”å›xyçš„å¤¹è§’
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		float ToRadian(void) const
+		{
+			return atan2f(y_, x_);
+		}
+
+		//--------------------------------------------------------------------------------
+		//  RadianBetween
+		//  return the radian between two vector2 / Vector2é–“ã®è§’åº¦ã‚’è¿”ã™ / è¿”å›å‘é‡å¤¹è§’
+		//  fromï¼šfrom vector / é–‹å§‹ãƒ™ã‚¯ãƒˆãƒ« / å¼€å§‹å‘é‡
+		//  toï¼što vector / çµ‚äº†ãƒ™ã‚¯ãƒˆãƒ« / ç»“æŸå‘é‡
+		//  returnï¼šfloat
+		//--------------------------------------------------------------------------------
+		static float RadianBetween(const Vector2& from, const Vector2& to)
+		{
+			if (from == to) return 0.0f;
+			float square_magnitude_from = from.SquareMagnitude();
+			float square_magnitude_to = to.SquareMagnitude();
+			if (square_magnitude_from * square_magnitude_to <= 0.0f) return 0.0f;
+			float dot = from.Dot(to);
+			float cross = from * to;
+			float sign = cross >= 0.0f ? 1.0f : -1.0f;
+			return acosf(dot / (sqrtf(square_magnitude_from) * sqrtf(square_magnitude_to)) * sign);
+		}
 	};
 
 	//--------------------------------------------------------------------------------
-	//  ƒxƒNƒgƒ‹3ƒNƒ‰ƒX
+	//  ãƒ™ã‚¯ãƒˆãƒ«3ã‚¯ãƒ©ã‚¹
 	//--------------------------------------------------------------------------------
 	class Vector3
 	{
@@ -92,12 +253,12 @@ namespace KF
 		Vector3(const float& x, const float& y, const float& z) : X(x), Y(y), Z(z) {}
 		~Vector3() {}
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		float X;
 		float Y;
 		float Z;
 
-		// ’è”’è‹`
+		// å®šæ•°å®šç¾©
 		static const Vector3 Zero;
 		static const Vector3 One;
 		static const Vector3 Up;
@@ -110,13 +271,13 @@ namespace KF
 		static const Vector3 AxisY;
 		static const Vector3 AxisZ;
 
-		// ƒLƒƒƒXƒg
+		// ã‚­ãƒ£ã‚¹ãƒˆ
 		operator Vector2() const;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXVECTOR3() const;
 #endif
 
-		// Zp‰‰Zq
+		// ç®—è¡“æ¼”ç®—å­
 		Vector3& operator=(const Vector3& value);
 		bool operator==(const Vector3& value) const;
 		bool operator!=(const Vector3& value) const;
@@ -136,7 +297,7 @@ namespace KF
 		Vector3 operator/(const float& value) const;
 		void operator/=(const float& value);
 
-		// ƒƒ\ƒbƒh
+		// ãƒ¡ã‚½ãƒƒãƒ‰
 		float			Dot(const Vector3& value) const;
 		float			Magnitude(void) const;
 		float			SquareMagnitude(void) const;
@@ -144,7 +305,7 @@ namespace KF
 		Vector3			Normalized(void) const;
 		Quaternion		ToQuaternion(void) const;
 		
-		// Ã“Iƒƒ\ƒbƒh
+		// é™çš„ãƒ¡ã‚½ãƒƒãƒ‰
 		static float	DistanceBetween(const Vector3& pointA, const Vector3& pointB);
 		static float	SquareDistanceBetween(const Vector3& pointA, const Vector3& pointB);
 		static Vector3	TransformCoord(const Vector3& point, const Matrix44& transform);
@@ -156,7 +317,7 @@ namespace KF
 	};
 
 	//--------------------------------------------------------------------------------
-	//  ƒxƒNƒgƒ‹4ƒNƒ‰ƒX
+	//  ãƒ™ã‚¯ãƒˆãƒ«4ã‚¯ãƒ©ã‚¹
 	//--------------------------------------------------------------------------------
 	class Vector4
 	{
@@ -166,13 +327,13 @@ namespace KF
 		Vector4(const Vector3& value, const float& w) : X(value.X), Y(value.Y), Z(value.Z), W(w) {}
 		~Vector4() {}
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		float X;
 		float Y;
 		float Z;
 		float W;
 
-		// Zp‰‰Zq
+		// ç®—è¡“æ¼”ç®—å­
 		Vector4 operator*(const Matrix44& matrix) const;
 		void operator*=(const Matrix44& matrix);
 	};
@@ -191,7 +352,7 @@ namespace KF
 			const float& element41, const float& element42, const float& element43, const float& element44);
 		~Matrix44() {}
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		union 
 		{
 			struct 
@@ -204,27 +365,27 @@ namespace KF
 			float Elements[4][4];
 		};
 
-		// ’è”’è‹`
+		// å®šæ•°å®šç¾©
 		static const Matrix44 Identity;
 
-		// ƒLƒƒƒXƒg
+		// ã‚­ãƒ£ã‚¹ãƒˆ
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXMATRIX() const;
 #endif
 
-		// Zp‰‰Zq
+		// ç®—è¡“æ¼”ç®—å­
 		Matrix44& operator=(const Matrix44& value);
 		Matrix44 operator*(const float& value) const;
 		Matrix44 operator+(const Matrix44& value) const;
 		Matrix44 operator*(const Matrix44& value) const;
 		void operator*=(const Matrix44& value);
 
-		// ƒƒ\ƒbƒh
+		// ãƒ¡ã‚½ãƒƒãƒ‰
 		Vector3			ToEular(void) const;
 		Quaternion		ToQuaternion(void) const;
 		Matrix44		Transpose(void) const;
 
-		// Ã“Iƒƒ\ƒbƒh
+		// é™çš„ãƒ¡ã‚½ãƒƒãƒ‰
 		static Matrix44 Scale(const Vector3& scale);
 		static Matrix44 Rotation(const Vector3& right, const Vector3& up, const Vector3& forward);
 		static Matrix44	RotationAxis(const Vector3& axis, const float& radian);
@@ -239,7 +400,7 @@ namespace KF
 	};
 
 	//--------------------------------------------------------------------------------
-	//  ƒNƒH[ƒ^ƒjƒIƒ“
+	//  ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	//--------------------------------------------------------------------------------
 	class Quaternion
 	{
@@ -249,21 +410,21 @@ namespace KF
 		Quaternion(const float& x, const float& y, const float& z, const float& w) : X(x), Y(y), Z(z), W(w) {}
 		~Quaternion() {}
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		float X;
 		float Y;
 		float Z;
 		float W;
 
-		// ’è”’è‹`
+		// å®šæ•°å®šç¾©
 		static const Quaternion Identity;
 
-		// ƒLƒƒƒXƒg
+		// ã‚­ãƒ£ã‚¹ãƒˆ
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DXQUATERNION () const;
 #endif
 
-		// Zp‰‰Zq
+		// ç®—è¡“æ¼”ç®—å­
 		Quaternion operator+(const Quaternion& value) const;
 		void operator+=(const Quaternion& value);
 		Quaternion operator-(const Quaternion& value) const;
@@ -275,7 +436,7 @@ namespace KF
 		Quaternion operator*(const Quaternion& value) const;
 		void operator*=(const Quaternion& value);
 
-		// ƒƒ\ƒbƒh
+		// ãƒ¡ã‚½ãƒƒãƒ‰
 		float		Dot(const Quaternion& value) const;
 		float		SquareMagnitude(void) const;
 		float		Magnitude(void) const;
@@ -287,7 +448,7 @@ namespace KF
 	};
 
 	//--------------------------------------------------------------------------------
-	//  F
+	//  è‰²
 	//--------------------------------------------------------------------------------
 	class Color
 	{
@@ -297,7 +458,7 @@ namespace KF
 		Color(const float& r, const float& g, const float& b, const float& a) : R(r), G(g), B(b), A(a) {}
 		~Color() {}
 
-		// ’è”’è‹`
+		// å®šæ•°å®šç¾©
 		static const Color White;
 		static const Color Black;
 		static const Color Gray;
@@ -305,19 +466,19 @@ namespace KF
 		static const Color Blue;
 		static const Color Green;
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		float R;
 		float G;
 		float B;
 		float A;
 
-		//ƒLƒƒƒXƒg
+		//ã‚­ãƒ£ã‚¹ãƒˆ
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 		operator D3DCOLORVALUE () const;
 		operator unsigned long() const;
 #endif
 
-		//Zp‰‰Zq
+		//ç®—è¡“æ¼”ç®—å­
 		Color& operator=(const Color& value);
 		bool operator==(const Color& value);
 
@@ -332,7 +493,7 @@ namespace KF
 	};
 
 	//--------------------------------------------------------------------------------
-	//  ƒŒƒC
+	//  ãƒ¬ã‚¤
 	//--------------------------------------------------------------------------------
 	class Ray
 	{
@@ -347,16 +508,16 @@ namespace KF
 		{}
 		~Ray() {}
 
-		// ƒƒ“ƒo[•Ï”
+		// ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 		Vector3 Origin;
 		Vector3 Direction;
 
-		// ƒƒ\ƒbƒh
+		// ãƒ¡ã‚½ãƒƒãƒ‰
 		void	Transform(const Matrix44& transform);
 	};
 
 	//--------------------------------------------------------------------------------
-	//	ƒ‰ƒ“ƒ_ƒ€
+	//	ãƒ©ãƒ³ãƒ€ãƒ 
 	//--------------------------------------------------------------------------------
 	namespace Random
 	{
@@ -367,7 +528,7 @@ namespace KF
 	};
 
 	//--------------------------------------------------------------------------------
-	//	ŒvZ®
+	//	è¨ˆç®—å¼
 	//--------------------------------------------------------------------------------
 	namespace Math
 	{

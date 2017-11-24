@@ -177,9 +177,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KF_Math.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
@@ -384,11 +381,11 @@
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="kf_math.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KF_Math.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
@@ -524,9 +521,6 @@
     <ClInclude Include="fadeSystem.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="versionSetting.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="meshRenderer.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
@@ -628,6 +622,12 @@
     </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="version_setting.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="kf_math.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

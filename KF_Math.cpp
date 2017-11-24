@@ -1,20 +1,11 @@
-//--------------------------------------------------------------------------------
-//	演算用関数
-//	KF_Math.cpp
-//	Author : Xu Wenjie
-//	Date   : 2016-07-24
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "KF_Math.h"
-using namespace KF;
+#include "kf_math.h"
+using namespace KodFreedom;
 
 //--------------------------------------------------------------------------------
-//  静的メンバ変数
+//  constant variables / 定数 / 常量
 //--------------------------------------------------------------------------------
-const Vector2		Vector2::Zero = Vector2(0.0f);				
-const Vector2		Vector2::One = Vector2(1.0f);				
+const Vector2 Vector2::kZero = Vector2(0.0f);
+const Vector2 Vector2::kOne = Vector2(1.0f);
 const Vector3		Vector3::Zero = Vector3(0.0f);				
 const Vector3		Vector3::One = Vector3(1.0f);				
 const Vector3		Vector3::Up = Vector3(0.0f, 1.0f, 0.0f);	
@@ -35,240 +26,26 @@ const Color			Color::Red = Color(1.0f, 0.0f, 0.0f, 1.0f);
 const Color			Color::Blue = Color(0.0f, 0.0f, 1.0f, 1.0f);
 const Color			Color::Green = Color(0.0f, 1.0f, 0.0f, 1.0f);
 
-//--------------------------------------------------------------------------------
-//
-//  Vector2
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	関数名：operator D3DXVECTOR2()
-//  関数説明：キャスト(D3DXVECTOR2)
-//	引数：	なし
-//	戻り値：D3DXVECTOR2
-//--------------------------------------------------------------------------------
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-Vector2::operator D3DXVECTOR2() const
-{
-	D3DXVECTOR2 result;
-	result.x = X;
-	result.y = Y;
-	return result;
-}
-#endif
-
-//--------------------------------------------------------------------------------
-//	関数名：operator=
-//  関数説明：値の代入処理
-//	引数：	value : 値
-//	戻り値：Vector2
-//--------------------------------------------------------------------------------
-Vector2& Vector2::operator=(const Vector2& value)
-{
-	X = value.X;
-	Y = value.Y;
-	return *this;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator==
-//  関数説明：同値判定処理
-//	引数：	value : 相手
-//	戻り値：bool
-//--------------------------------------------------------------------------------
-bool Vector2::operator==(const Vector2& value) const
-{
-	return (X == value.X && Y == value.Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator+
-//  関数説明：足し算
-//	引数：	value : 相手
-//	戻り値：Vector2
-//--------------------------------------------------------------------------------
-Vector2 Vector2::operator+(const Vector2& value) const
-{
-	return Vector2(X + value.X, Y + value.Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator+=
-//  関数説明：足し算
-//	引数：	value : 相手
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Vector2::operator+=(const Vector2& value)
-{
-	X += value.X;
-	Y += value.Y;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator-
-//  関数説明：引き算
-//	引数：	value : 相手
-//	戻り値：Vector2
-//--------------------------------------------------------------------------------
-Vector2 Vector2::operator-(const Vector2& value) const
-{
-	return Vector2(X - value.X, Y - value.Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator-=
-//  関数説明：引き算
-//	引数：	value : 相手
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Vector2::operator-=(const Vector2& value)
-{
-	X -= value.X;
-	Y -= value.Y;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator*
-//  関数説明：外積
-//	引数：	value : 相手
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::operator*(const Vector2& value) const
-{
-	return (X * value.Y - Y * value.X);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator*
-//  関数説明：スケール
-//	引数：	value : スケール値
-//	戻り値：Vector2
-//--------------------------------------------------------------------------------
-Vector2 Vector2::operator*(const float& value) const
-{
-	return Vector2(X * value, Y * value);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：operator*=
-//  関数説明：スケール
-//	引数：	value : スケール値
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Vector2::operator*=(const float& value)
-{
-	X *= value;
-	Y *= value;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Dot
-//  関数説明：Vector2の内積計算
-//	引数：	value：内積計算の右手側
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::Dot(const Vector2& value) const
-{
-	return (X * value.X + Y * value.Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Magnitude
-//  関数説明：長さ計算
-//	引数：	なし
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::Magnitude(void) const
-{
-	return sqrtf(X * X + Y * Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：SquareMagnitude
-//  関数説明：長さの平方の計算
-//	引数：	なし
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::SquareMagnitude(void) const
-{
-	return (X * X + Y * Y);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Normalize
-//  関数説明：正規化
-//	引数：	なし
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Vector2::Normalize(void)
-{
-	*this = this->Normalized();
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Normalized
-//  関数説明：正規化したの値を返す
-//	引数：	なし
-//	戻り値：Vector2
-//--------------------------------------------------------------------------------
-Vector2 Vector2::Normalized(void) const
-{
-	float magnitude = this->Magnitude();
-	if (magnitude <= 0.0f) return Vector2(0.0f);
-	return Vector2(X / magnitude, Y / magnitude);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：ToRadian
-//  関数説明：角度の算出
-//	引数：	なし
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::ToRadian(void) const
-{
-	return atan2f(Y, X);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：ToPickingRay
-//  関数説明：スクリーン座標からレイの算出
-//	引数：	viewportSize：viewportの副幅
-//			projectMatrix00：射影行列の00番
-//			projectMatrix11：射影行列の11番
-//			viewInverse：view行列の逆行列
-//	戻り値：Ray
-//--------------------------------------------------------------------------------
-Ray Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
-{
-	auto& position3D = Vector2(
-		(((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
-		(((-2.0f * Y) / viewportSize.Y) + 1.0f) / projectMatrix11);
-	Ray result;
-	result.Origin = Vector3::Zero;
-	result.Direction = Vector3(position3D.X, position3D.Y, 1.0f);
-	result.Transform(viewInverse);
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RadianBetween
-//  関数説明：Vector2間の角度の算出
-//	引数：	valueL：左手側
-//			valueR：右手側
-//	戻り値：float
-//--------------------------------------------------------------------------------
-float Vector2::RadianBetween(const Vector2& valueL, const Vector2& valueR)
-{
-	if (valueL == valueR) return 0.0f;
-
-	float squareMagnitudeL = valueL.SquareMagnitude();
-	float squareMagnitudeR = valueR.SquareMagnitude();
-	if (squareMagnitudeL <= 0.0f || squareMagnitudeR <= 0.0f) return 0.0f;
-	
-	float dot = valueL.Dot(valueR);
-	float cross = valueL * valueR;
-	float sign = cross >= 0.0f ? 1.0f : -1.0f;
-	return acosf(dot / (sqrtf(squareMagnitudeL) * sqrtf(squareMagnitudeR)) * sign);
-}
+////--------------------------------------------------------------------------------
+////	関数名：ToPickingRay
+////  関数説明：スクリーン座標からレイの算出
+////	引数：	viewportSize：viewportの副幅
+////			projectMatrix00：射影行列の00番
+////			projectMatrix11：射影行列の11番
+////			viewInverse：view行列の逆行列
+////	戻り値：Ray
+////--------------------------------------------------------------------------------
+//Ray Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
+//{
+//	auto& position3D = Vector2(
+//		(((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
+//		(((-2.0f * Y) / viewportSize.Y) + 1.0f) / projectMatrix11);
+//	Ray result;
+//	result.Origin = Vector3::Zero;
+//	result.Direction = Vector3(position3D.X, position3D.Y, 1.0f);
+//	result.Transform(viewInverse);
+//	return result;
+//}
 
 //--------------------------------------------------------------------------------
 //

@@ -30,7 +30,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -38,7 +38,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -192,7 +192,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="collisionSystem.cpp" />
     <ClCompile Include="collisionDetector.cpp" />
-    <ClCompile Include="KF_Math.cpp" />
+    <ClCompile Include="kf_math.cpp" />
     <ClCompile Include="physicsSystem.cpp" />
     <ClCompile Include="KF_Utility.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
@@ -270,7 +270,7 @@
     <ClInclude Include="inputDeviceDX.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="collisionSystem.h" />
-    <ClInclude Include="KF_Math.h" />
+    <ClInclude Include="kf_math.h" />
     <ClInclude Include="physicsSystem.h" />
     <ClInclude Include="collisionDetector.h" />
     <ClInclude Include="KF_UtilityDX.h" />
@@ -301,7 +301,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
-    <ClInclude Include="versionSetting.h" />
+    <ClInclude Include="version_setting.h" />
     <ClInclude Include="walkState.h" />
     <ClInclude Include="windmillController.h" />
   </ItemGroup>
