@@ -195,7 +195,7 @@
     <ClCompile Include="kf_math.cpp" />
     <ClCompile Include="physicsSystem.cpp" />
     <ClCompile Include="kf_utility.cpp" />
-    <ClCompile Include="KF_UtilityDX.cpp" />
+    <ClCompile Include="kf_utility_directX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
@@ -273,7 +273,7 @@
     <ClInclude Include="kf_math.h" />
     <ClInclude Include="physicsSystem.h" />
     <ClInclude Include="collisionDetector.h" />
-    <ClInclude Include="KF_UtilityDX.h" />
+    <ClInclude Include="kf_utility_directX.h" />
     <ClInclude Include="lightManager.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />

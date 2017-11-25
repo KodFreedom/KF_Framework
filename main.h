@@ -1,8 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //　main.h
-//	Author : Xu Wenjie
-//	Date   : 2017-04-26
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 
@@ -12,8 +10,8 @@
 #include "common_setting.h"
 
 // KF関数
-#include "KF_Math.h"
-#include "KF_Utility.h"
+#include "kf_math.h"
+#include "kf_utility.h"
 using namespace KodFreedom;
 
 //--------------------------------------------------------------------------------
@@ -24,8 +22,7 @@ using namespace KodFreedom;
 #define FRAME_PER_SECOND	(60)								
 #define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)		//更新間隔
 #define DELTA_TIME			(TIMER_INTERVAL * 0.001f)			//更新間隔(秒単位)
-#define CLASS_NAME			"KF_Framework"						//クラスの名前
-#define WINDOW_NAME			"フレームワーク"					//ウインドウの名前
+
 
 #ifdef USING_DIRECTX
 #define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット
@@ -58,16 +55,40 @@ class Main
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//	関数名：WinMain
+	//  関数説明：メイン関数
+	//	引数：	instance
+	//			previous_instance
+	//			cmd_line
+	//			cmd_show
+	//	戻り値：int
 	//--------------------------------------------------------------------------------
-	static int				WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow);
+	static int WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show);
 private:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
 	Main() {}
+	Main(const Main& value) {}
 	~Main() {}
+	Main& operator=(const Main& value) {}
 
-	static LRESULT CALLBACK	wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static void				closeApp(HWND hWnd);
+	//--------------------------------------------------------------------------------
+	//	関数名：WndProc
+	//  関数説明：ウインドウプロシージャ関数
+	//	引数：	hwnd：ウインドウのハンドル
+	//			message：メッセージの識別子
+	//			wparam：メッセージの最初のパラメータ
+	//			lparam：メッセージの二番目のパラメータ
+	//	戻り値：LRESULT
+	//--------------------------------------------------------------------------------
+	static LRESULT CALLBACK	WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+	
+	//--------------------------------------------------------------------------------
+	//	関数名：CloseApp
+	//  関数説明：アプリを閉じる確認関数
+	//	引数：	hwnd：ウインドウのハンドル
+	//	戻り値：LRESULT
+	//--------------------------------------------------------------------------------
+	static void CloseApp(HWND hwnd);
 };

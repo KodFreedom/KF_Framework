@@ -192,9 +192,6 @@
     <ClCompile Include="manager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="KF_UtilityDX.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="materialManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
@@ -384,6 +381,9 @@
     <ClCompile Include="kf_utility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
+    <ClCompile Include="kf_utility_directX.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -397,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="KF_UtilityDX.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="manager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
@@ -627,6 +624,9 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="kf_utility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="kf_utility_directX.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
   </ItemGroup>
