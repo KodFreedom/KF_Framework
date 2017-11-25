@@ -222,9 +222,6 @@
     <ClCompile Include="UIObject.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="KF_Utility.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="modeEditor.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
@@ -384,6 +381,9 @@
     <ClCompile Include="motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
+    <ClCompile Include="kf_utility.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -439,9 +439,6 @@
     </ClInclude>
     <ClInclude Include="UIObject.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="KF_Utility.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="modeEditor.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -628,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="common_setting.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="kf_utility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -194,7 +194,7 @@
     <ClCompile Include="collisionDetector.cpp" />
     <ClCompile Include="kf_math.cpp" />
     <ClCompile Include="physicsSystem.cpp" />
-    <ClCompile Include="KF_Utility.cpp" />
+    <ClCompile Include="kf_utility.cpp" />
     <ClCompile Include="KF_UtilityDX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -264,7 +264,7 @@
     <ClInclude Include="gameObjectActor.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="gameObjectSpawner.h" />
-    <ClInclude Include="KF_Utility.h" />
+    <ClInclude Include="kf_utility.h" />
     <ClInclude Include="modeEditor.h" />
     <ClInclude Include="modelEditor.h" />
     <ClInclude Include="inputDeviceDX.h" />

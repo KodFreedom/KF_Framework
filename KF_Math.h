@@ -1411,7 +1411,7 @@ namespace KodFreedom
 		{
 			return Vector3(Range(min.x_, max.x_), Range(min.y_, max.y_), Range(min.z_, max.z_));
 		}
-	};
+	} // namespace Random
 
 	//--------------------------------------------------------------------------------
 	//	計算式
@@ -1504,5 +1504,5 @@ namespace KodFreedom
 		{
 			return fabsf(value_l) >= fabsf(value_r) ? value_l : value_r;
 		}
-	}
-}
+	} // namespace Math
+} // namespace KodFreedom

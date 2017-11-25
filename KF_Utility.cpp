@@ -1,29 +1,20 @@
 //--------------------------------------------------------------------------------
+//　kf_utility.cpp
+//  utility methods
 //	便利関数
-//　KF_Utility.h
-//	Author : Xu Wenjie
-//	Date   : 2017-08-18
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "KF_Utility.h"
-#include "gameObject.h"
+#include "kf_utility.h"
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStringUntilToken
-//  関数説明：符号まで文字列を取る
-//	引数：	filePointer：ファイルポインタ
-//			token：符号
-//			buffer：文字列保存用ところ
-//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
+//  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string& buffer)
+int Utility::GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer)
 {
 	char c;
 	buffer.clear();
-	while ((c = (char)fgetc(filePointer)) != EOF)
+	while ((c = (char)fgetc(file_pointer)) != EOF)
 	{
 		for (int count = 0; count < (int)token.length(); ++count)
 		{
@@ -38,12 +29,7 @@ int Utility::GetStringUntilToken(FILE* filePointer, const string& token, string&
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStringUntilToken
-//  関数説明：符号まで文字列を取る
-//	引数：	file：ファイルの文字列
-//			token：符号
-//			buffer：文字列保存用ところ
-//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
+//  符号まで文字列を取る
 //--------------------------------------------------------------------------------
 int Utility::GetStringUntilToken(string& file, const string& token, string& buffer)
 {
@@ -61,26 +47,20 @@ int Utility::GetStringUntilToken(string& file, const string& token, string& buff
 		}
 		buffer += c;
 	}
-
 	return -1;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStringUntilString
-//  関数説明：文字列まで文字列を取る
-//	引数：	file：ファイルの文字列
-//			compare：比較する文字
-//			buffer：文字列保存用ところ
-//	戻り値：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
+//  比較する文字列まで文字列を取る
 //--------------------------------------------------------------------------------
-int Utility::GetStringUntilString(FILE* filePointer, const string& compare, string& buffer)
+int Utility::GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer)
 {
 	static string nullBuffer;
 	if (nullBuffer.empty()) nullBuffer.resize(256);
 	do
 	{
 		buffer = nullBuffer;
-		fgets(&buffer[0], (int)buffer.capacity(), filePointer);
+		fgets(&buffer[0], (int)buffer.capacity(), file_pointer);
 		if (buffer.find(compare) != string::npos)
 		{
 			return buffer.length();
@@ -90,46 +70,36 @@ int Utility::GetStringUntilString(FILE* filePointer, const string& compare, stri
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStringCount
-//  関数説明：文字列をカウントする
-//	引数：	filePointer：ファイルポインタ
-//			token：符号
-//			compareString：
-//	戻り値：カウント数
+//  文字列をカウントする
 //--------------------------------------------------------------------------------
-int Utility::GetStringCount(FILE* filePointer, const string& token, const string& compareString)
+int Utility::GetStringCount(FILE* file_pointer, const string& token, const string& compare)
 {
 	int count = 0;
 	string buffer;
-	while (GetStringUntilToken(filePointer, token, buffer) >= 0)
+	while (GetStringUntilToken(file_pointer, token, buffer) >= 0)
 	{
-		if (buffer.compare(compareString) == 0)
+		if (buffer.compare(compare) == 0)
 		{
 			++count;
 		}
 	}
 
 	//Fileの頭に戻る
-	fseek(filePointer, 0, SEEK_SET);
+	fseek(file_pointer, 0, SEEK_SET);
 
 	return count;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetStringCount
-//  関数説明：文字列をカウントする
-//	引数：	file：ファイルの文字列
-//			token：符号
-//			compareString：
-//	戻り値：カウント数
+//  文字列をカウントする
 //--------------------------------------------------------------------------------
-int Utility::GetStringCount(string& file, const string& token, const string& compareString)
+int Utility::GetStringCount(string& file, const string& token, const string& compare)
 {
 	int count = 0;
 	string buffer;
 	while (GetStringUntilToken(file, token, buffer) >= 0)
 	{
-		if (buffer.compare(compareString) == 0)
+		if (buffer.compare(compare) == 0)
 		{
 			++count;
 		}
@@ -138,26 +108,23 @@ int Utility::GetStringCount(string& file, const string& token, const string& com
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：AnalyzeFilePath
-//  関数説明：パスから名前とタイプを解析する
-//	引数：	filePath：パス
-//	戻り値：FileInfo
+//  パスから名前とタイプを解析する
 //--------------------------------------------------------------------------------
-Utility::FileInfo Utility::AnalyzeFilePath(const string& filePath)
+Utility::FileInfo Utility::AnalyzeFilePath(const string& path)
 {
 	FileInfo info;
-	auto copy = filePath;
+	auto copy = path;
 	reverse(copy.begin(), copy.end());
 
 	//ファイル型の取得
-	if (GetStringUntilToken(copy, ".", info.Type) > 0)
+	if (GetStringUntilToken(copy, ".", info.type) > 0)
 	{
-		reverse(info.Type.begin(), info.Type.end());
+		reverse(info.type.begin(), info.type.end());
 	}
 
 	//ファイル名の取得
-	GetStringUntilToken(copy, "\\/", info.Name);
-	reverse(info.Name.begin(), info.Name.end());
+	GetStringUntilToken(copy, "\\/", info.name);
+	reverse(info.name.begin(), info.name.end());
 	return info;
 }
 
@@ -168,19 +135,19 @@ Utility::FileInfo Utility::AnalyzeFilePath(const string& filePath)
 //			parent：親のオブジェクト
 //	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-GameObject* Utility::FindChildBy(const string& name, GameObject* const parent)
-{
-	assert(!name.empty());
-	auto& children = parent->GetTransform()->GetChildren();
-	for (auto child : children)
-	{
-		auto childObject = child->GetGameObject();
-		if (childObject->GetName() == name) { return childObject; }
-		else
-		{
-			auto result = FindChildBy(name, childObject);
-			if (result) return result;
-		}
-	}
-	return nullptr;
-}
+//GameObject* Utility::FindChildBy(const string& name, GameObject* const parent)
+//{
+//	assert(!name.empty());
+//	auto& children = parent->GetTransform()->GetChildren();
+//	for (auto child : children)
+//	{
+//		auto childObject = child->GetGameObject();
+//		if (childObject->GetName() == name) { return childObject; }
+//		else
+//		{
+//			auto result = FindChildBy(name, childObject);
+//			if (result) return result;
+//		}
+//	}
+//	return nullptr;
+//}
