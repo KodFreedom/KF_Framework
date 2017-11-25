@@ -48,13 +48,10 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 		++iterator;
 	}
 
-	if (++current_motion_frame_counter_ == frameNumber)
+	if (++current_motion_frame_counter_ >= frameNumber
+		&& current_motion_info_->IsLoop)
 	{
-		if (!current_motion_info_->IsLoop)
-		{
-			--current_motion_frame_counter_;
-		}
-		else current_motion_frame_counter_ = 0;
+		current_motion_frame_counter_ = 0;
 	}
 }
 
@@ -66,14 +63,14 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 //--------------------------------------------------------------------------------
 //  constructor / コンストラクタ / 构造函数
 //--------------------------------------------------------------------------------
-BlendMotionState::BlendMotionState(const String& current_motion_name, const String& next_motion_name, const int current_motion_start_frame, const int blend_frame_number)
+BlendMotionState::BlendMotionState(const String& current_motion_name, NormalMotionState* next_motion_pointer, const int current_motion_start_frame, const int blend_frame_number)
 	: MotionState(current_motion_name, current_motion_start_frame)
 	, next_motion_frame_counter_(0)
-	, next_motion_name_(next_motion_name)
+	, next_motion_pointer_(next_motion_pointer)
 	, blend_frame_counter_(0)
 	, blend_frame_number_(blend_frame_number)
 {
-	next_motion_info_ = MotionManager::Instance()->GetMotionInfoBy(next_motion_name_);
+	next_motion_info_ = MotionManager::Instance()->GetMotionInfoBy(next_motion_pointer_->GetCurrentMotionName());
 }
 
 //--------------------------------------------------------------------------------
@@ -124,6 +121,6 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 void BlendMotionState::ChangeMotion(Animator& animator)
 {
 	if (blend_frame_counter_ < blend_frame_number_) return;
-
-	// TODO: change motion
+	next_motion_pointer_->Set(next_motion_frame_counter_);
+	animator.Change(next_motion_pointer_);
 }

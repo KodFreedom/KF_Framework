@@ -44,6 +44,7 @@ public:
 	void			SetJump(const bool& value) { isJump = value; }
 	void			SetDamaged(const bool& value) { isDamaged = value; }
 	void			SetMovement(const float& value) { movement = value; }
+	void			Change(MotionState* new_motion_state);
 
 private:
 	//--------------------------------------------------------------------------------

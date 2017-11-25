@@ -67,9 +67,13 @@ using namespace std;
 //--------------------------------------------------------------------------------
 //  typedef / タイプディファイン / 型声明
 //--------------------------------------------------------------------------------
+
+typedef unsigned short us;
+typedef unsigned long  ul;
+
 #ifdef UNICODE
-typedef std::wstring String;
-typedef wchar_t Char;
+typedef std::string String;
+typedef char Char;
 #else
 typedef std::string String;
 typedef char Char;
