@@ -9,48 +9,12 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include <Windows.h>
-#include <stdio.h>
-
-// STL
-#include <list>
-#include <vector>
-#include <unordered_map>
-#include <string>
-#include <algorithm>
-#include <sstream>
-#include <assert.h>
-using namespace std;
-
-// OpenMP
-#include <omp.h>
+#include "common_setting.h"
 
 // KF関数
 #include "KF_Math.h"
 #include "KF_Utility.h"
-using namespace KF;
-
-// DirectX系
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include <d3dx9.h>
-#endif
-#define DIRECTINPUT_VERSION (0x0800)
-#include <dinput.h>
-#include <XAudio2.h>//sound
-
-//--------------------------------------------------------------------------------
-//  ライブラリ読み込み
-//--------------------------------------------------------------------------------
-// DirectX系
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#pragma comment(lib,"d3d9.lib")
-#pragma comment(lib,"d3dx9.lib")
-#endif
-#pragma comment(lib,"dxguid.lib")
-#pragma comment(lib,"dinput8.lib")
-
-// システム時刻取得に必要
-#pragma comment(lib,"winmm.lib")	
+using namespace KodFreedom;
 
 //--------------------------------------------------------------------------------
 //  定数定義

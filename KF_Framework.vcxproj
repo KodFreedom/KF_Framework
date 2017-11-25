@@ -207,7 +207,7 @@
     <ClCompile Include="modelEditor.cpp" />
     <ClCompile Include="modeResult.cpp" />
     <ClCompile Include="modeTitle.cpp" />
-    <ClCompile Include="motionState.cpp" />
+    <ClCompile Include="motion_state.cpp" />
     <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerUI.cpp" />
     <ClCompile Include="renderSystem.cpp" />
@@ -284,7 +284,7 @@
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
     <ClInclude Include="motionInfo.h" />
-    <ClInclude Include="motionState.h" />
+    <ClInclude Include="motion_state.h" />
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="playerUI.h" />
@@ -301,7 +301,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
-    <ClInclude Include="version_setting.h" />
+    <ClInclude Include="common_setting.h" />
     <ClInclude Include="walkState.h" />
     <ClInclude Include="windmillController.h" />
   </ItemGroup>

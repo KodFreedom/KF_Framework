@@ -6,12 +6,7 @@
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include <math.h>
-#include <time.h>
-#include "version_setting.h"
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include <d3dx9.h>
-#endif
+#include "common_setting.h"
 
 namespace KodFreedom
 {

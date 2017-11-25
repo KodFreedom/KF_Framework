@@ -309,9 +309,6 @@
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="motionState.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
-    </ClCompile>
     <ClCompile Include="motionManager.cpp">
       <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
@@ -383,6 +380,9 @@
     </ClCompile>
     <ClCompile Include="kf_math.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,9 +545,6 @@
     <ClInclude Include="motionManager.h">
       <Filter>ヘッダー ファイル\Base\Motion</Filter>
     </ClInclude>
-    <ClInclude Include="motionState.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
-    </ClInclude>
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
@@ -623,11 +620,14 @@
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="version_setting.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
+    </ClInclude>
+    <ClInclude Include="common_setting.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
