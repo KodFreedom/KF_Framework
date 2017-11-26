@@ -4,7 +4,6 @@
 //	Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
 #include "mesh_manager.h"
 #include "kf_utility.h"
 #include "rendererManager.h"

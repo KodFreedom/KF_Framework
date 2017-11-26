@@ -91,12 +91,19 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetMeshManager(void) const { return mesh_manager_; }
 
+	//--------------------------------------------------------------------------------
+	//  マテリアル管理者を返す
+	//  return : MainSystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetMaterialManager(void) const { return material_manager_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
 	//--------------------------------------------------------------------------------
 	MainSystem() : current_mode_(nullptr), render_system_(nullptr)
-		, texture_manager_(nullptr), mesh_manager_(nullptr) {}
+		, texture_manager_(nullptr), mesh_manager_(nullptr)
+		, material_manager_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -123,5 +130,6 @@ private:
 	RenderSystem* render_system_; // レンダーシステム
 	TextureManager* texture_manager_; // テクスチャ管理者
 	MeshManager* mesh_manager_; // メッシュ管理者
+	MaterialManager* material_manager_; // マテリアル管理者
 	static MainSystem* instance_; // インスタンス
 };

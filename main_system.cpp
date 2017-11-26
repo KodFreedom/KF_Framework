@@ -7,9 +7,9 @@
 #include "main_system.h"
 #include "texture_manager.h"
 #include "mesh_manager.h"
+#include "material_manager.h"
 #include "rendererManager.h"
 #include "input.h"
-#include "materialManager.h"
 #include "gameObjectManager.h"
 #include "soundManager.h"
 #include "UISystem.h"
@@ -125,10 +125,10 @@ void MainSystem::Render(void)
 //--------------------------------------------------------------------------------
 //  ƒ‚[ƒhØ‚è‘Ö‚¦
 //--------------------------------------------------------------------------------
-void MainSystem::Change(Mode* nextMode)
+void MainSystem::Change(Mode* next_mode)
 {
 	SAFE_RELEASE(current_mode_);
-	current_mode_ = nextMode;
+	current_mode_ = next_mode;
 	current_mode_->Init();
 }
 
@@ -147,22 +147,21 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	// render api‚É‚æ‚Á‚Ärender system, texture manager, mesh manager‚Ì¶¬
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
-	auto render_system = RenderSystemDirectX9::Create(hwnd, is_window_mode);
-	if (!render_system) return false;
-	render_system_ = render_system;
-	const auto device = render_system->GetDevice();
+	auto render_system_directX9 = RenderSystemDirectX9::Create(hwnd, is_window_mode);
+	if (!render_system_directX9) return false;
+	render_system_ = render_system_directX9;
+	const auto device = render_system_directX9->GetDevice();
 	texture_manager_ = TextureManager::Create(device);
 	mesh_manager_ = MeshManager::Create(device);
-	
 #endif
 #endif
+	material_manager_ = MaterialManager::Create();
 
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hwnd);
 #endif
 	RendererManager::Create();
 	Input::Create(hinstance, hwnd);
-	MaterialManager::Create();
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
@@ -192,12 +191,12 @@ void MainSystem::Uninit(void)
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
-	MaterialManager::Release();
 	Input::Release();
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Release();
 #endif
 	RendererManager::Release();
+	SAFE_RELEASE(material_manager_);
 	SAFE_RELEASE(mesh_manager_);
 	SAFE_RELEASE(texture_manager_);
 	SAFE_RELEASE(render_system_);

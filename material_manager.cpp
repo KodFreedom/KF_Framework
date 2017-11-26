@@ -1,123 +1,89 @@
 //--------------------------------------------------------------------------------
-//	マテリアルマネージャ
-//　materialManager.h
-//	Author : Xu Wenjie
-//	Date   : 2016-07-24
+//　material_manager.cpp
+//  manage the materials_' save, load
+//	マテリアル管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "materialManager.h"
-#include "textureManager.h"
+#include "material_manager.h"
+#include "main_system.h"
+#include "texture_manager.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-MaterialManager* MaterialManager::instance = nullptr;
+const Material MaterialManager::kDefaultMaterial = Material();
 
-//--------------------------------------------------------------------------------
-//
-//	Material
-//
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  キャスト(D3DMATERIAL9)
-//	DXの環境のため(マテリアル)オーバーロードする
+//  与えられた名前のマテリアルを使う
 //--------------------------------------------------------------------------------
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-Material::operator D3DMATERIAL9() const
+void MaterialManager::Use(const String& material_name)
 {
-	D3DMATERIAL9 result;
-	result.Ambient = Ambient;
-	result.Diffuse = Diffuse;
-	result.Emissive = Emissive;
-	result.Specular = Specular;
-	result.Power = Power;
-	return result;
-}
-#endif
-
-//--------------------------------------------------------------------------------
-//
-//	MaterialManager
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//
-//  public
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	関数名：Use
-//  関数説明：マテリアルの追加
-//	引数：	materialName：マテリアルのの名前
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MaterialManager::Use(const string& materialName)
-{
-	auto iterator = materials.find(materialName);
-	if (iterator != materials.end())
+	auto iterator = materials_.find(material_name);
+	if (iterator != materials_.end())
 	{// すでに存在してる
-		++iterator->second.UserNumber;
+		++iterator->second.user_number;
 		return;
 	}
-	MaterialInfo newMaterial;
-	newMaterial.Pointer = loadFrom(materialName);
-	if (!newMaterial.Pointer) return;
-	TextureManager::Instance()->Use(newMaterial.Pointer->MainTexture);
-	materials.emplace(materialName, newMaterial);
+	MaterialInfo info;
+	info.pointer = LoadFromFile(material_name);
+	if (!info.pointer)
+	{// 読込できないの場合真っ赤で保存する
+		info.pointer = new Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+	}
+	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(info.pointer->diffuse_texture);
+	texture_manager->Use(info.pointer->specular_texture);
+	texture_manager->Use(info.pointer->normal_texture);
+	materials_.emplace(material_name, info);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Disuse
-//  関数説明：マテリアルの破棄
-//	引数：	materialName：マテリアルの名前
-//	戻り値：なし
+//  与えられた名前のマテリアルを使う
 //--------------------------------------------------------------------------------
-void MaterialManager::Disuse(const string& materialName)
+void MaterialManager::Use(const String& material_name, Material* material)
 {
-	auto iterator = materials.find(materialName);
-	if (materials.end() == iterator) return;
-	if (--iterator->second.UserNumber <= 0)
+	auto iterator = materials_.find(material_name);
+	if (iterator != materials_.end())
+	{// すでに存在してる
+		++iterator->second.user_number;
+		SAFE_DELETE(material);
+		return;
+	}
+
+	MaterialInfo info;
+	info.pointer = material;
+	if (!info.pointer)
+	{// materialがnullの場合真っ赤で保存する
+		info.pointer = new Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+	}
+	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(info.pointer->diffuse_texture);
+	texture_manager->Use(info.pointer->specular_texture);
+	texture_manager->Use(info.pointer->normal_texture);
+	materials_.emplace(material_name, info);
+}
+
+//--------------------------------------------------------------------------------
+//  与えられた名前のマテリアルを使わない
+//--------------------------------------------------------------------------------
+void MaterialManager::Disuse(const String& material_name)
+{
+	auto iterator = materials_.find(material_name);
+	if (materials_.end() == iterator) return;
+	if (--iterator->second.user_number <= 0)
 	{// 誰も使ってないので破棄する
-		TextureManager::Instance()->Disuse(iterator->second.Pointer->MainTexture);
-		delete iterator->second.Pointer;
-		materials.erase(iterator);
+		auto texture_manager = MainSystem::Instance()->GetTextureManager();
+		texture_manager->Disuse(iterator->second.pointer->diffuse_texture);
+		texture_manager->Disuse(iterator->second.pointer->specular_texture);
+		texture_manager->Disuse(iterator->second.pointer->normal_texture);
+		delete iterator->second.pointer;
+		materials_.erase(iterator);
 	}
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：CreateMaterial
-//  関数説明：マテリアルの作成
-//	引数：	materialName：マテリアルの名前
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void MaterialManager::CreateMaterialFileBy(const string& materialName, const string& mainTextureName,
-	const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, const float& power)
-{
-	string filePath = "data/MATERIAL/" + materialName + ".material";
-	FILE *filePointer = nullptr;
-	fopen_s(&filePointer, filePath.c_str(), "wb");
-	if (!filePointer)
-	{
-		assert("failed to open file!!");
-		return;
-	}
-	fwrite(&ambient, sizeof(Color), 1, filePointer);
-	fwrite(&diffuse, sizeof(Color), 1, filePointer);
-	fwrite(&specular, sizeof(Color), 1, filePointer);
-	fwrite(&emissive, sizeof(Color), 1, filePointer);
-	fwrite(&power, sizeof(float), 1, filePointer);
-	int number = mainTextureName.size();
-	fwrite(&number, sizeof(int), 1, filePointer);
-	fwrite(&mainTextureName[0], sizeof(char), number, filePointer);
-	fclose(filePointer);
 }
 
 //--------------------------------------------------------------------------------
@@ -126,39 +92,54 @@ void MaterialManager::CreateMaterialFileBy(const string& materialName, const str
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	コンストラクタ
+//  終了処理
 //--------------------------------------------------------------------------------
-MaterialManager::MaterialManager()
+void MaterialManager::Uninit(void)
 {
-	materials.clear();
+	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	for (auto iterator = materials_.begin(); iterator != materials_.end();)
+	{
+		texture_manager->Disuse(iterator->second.pointer->diffuse_texture);
+		texture_manager->Disuse(iterator->second.pointer->specular_texture);
+		texture_manager->Disuse(iterator->second.pointer->normal_texture);
+		delete iterator->second.pointer;
+		iterator = materials_.erase(iterator);
+	}
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：loadFrom
-//  関数説明：マテリアルの読み込み
-//	引数：	materialName：マテリアルの名前
-//	戻り値：Material*
+//  ファイルからマテリアルの読み込み
 //--------------------------------------------------------------------------------
-Material* MaterialManager::loadFrom(const string& materialName)
+Material* MaterialManager::LoadFromFile(const String& material_name)
 {
-	string filePath = "data/MATERIAL/" + materialName + ".material";
-	FILE *filePointer = nullptr;
-	fopen_s(&filePointer, filePath.c_str(), "rb");
-	if (!filePointer)
+	String path = L"data/material/" + material_name + L".material";
+	ifstream file(path);
+	if (!file.is_open())
 	{
 		assert("failed to open file!!");
 		return nullptr;
 	}
+	BinaryInputArchive archive(file);
 	auto result = new Material;
-	fread_s(&result->Ambient, sizeof(Color), sizeof(Color), 1, filePointer);
-	fread_s(&result->Diffuse, sizeof(Color), sizeof(Color), 1, filePointer);
-	fread_s(&result->Specular, sizeof(Color), sizeof(Color), 1, filePointer);
-	fread_s(&result->Emissive, sizeof(Color), sizeof(Color), 1, filePointer);
-	fread_s(&result->Power, sizeof(float), sizeof(float), 1, filePointer);
-	int number = 0;
-	fread_s(&number, sizeof(int), sizeof(int), 1, filePointer);
-	result->MainTexture.resize(number);
-	fread_s(&result->MainTexture[0], number, sizeof(char), number, filePointer);
-	fclose(filePointer);
+	int buffer_size;
+	string buffer;
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->diffuse_texture = String(buffer.begin(), buffer.end());
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->specular_texture = String(buffer.begin(), buffer.end());
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->normal_texture = String(buffer.begin(), buffer.end());
+	archive.loadBinary(&result->ambient, sizeof(result->ambient));
+	archive.loadBinary(&result->diffuse, sizeof(result->diffuse));
+	archive.loadBinary(&result->specular, sizeof(result->specular));
+	archive.loadBinary(&result->emissive, sizeof(result->emissive));
+	archive.loadBinary(&result->power, sizeof(result->power));
+	file.close();
 	return result;
 }

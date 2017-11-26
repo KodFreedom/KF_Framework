@@ -1,14 +1,10 @@
 //--------------------------------------------------------------------------------
-//	マテリアルマネージャ
-//　materialManager.h
-//	Author : Xu Wenjie
-//	Date   : 2016-07-24
+//　material_manager.h
+//  manage the materials' save, load
+//	マテリアル管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "main.h"
 
 //--------------------------------------------------------------------------------
@@ -17,28 +13,24 @@
 class Material
 {
 public:
-	Material()
-		: Ambient(Color::White)
-		, Diffuse(Color::White)
-		, Specular(Color::Black)
-		, Emissive(Color::Black)
-		, Power(1.0f)
-	{
-		MainTexture.clear();
-	}
+	Material(const Color& ambient = Color::kGray
+		, const Color& diffuse = Color::kWhite
+		, const Color& specular = Color::kBlack
+		, const Color& emissive = Color::kBlack
+		, const float& power = 1.0f)
+		: ambient(ambient), diffuse(diffuse)
+		, specular(specular), emissive(emissive)
+		, power(power) {}
 	~Material() {}
 
-	string	MainTexture;// テクスチャ
-	Color	Ambient;	// 環境光の反射率
-	Color	Diffuse;	// 漫射光の反射率
-	Color	Specular;	// 鏡面光の反射率
-	Color	Emissive;	// 自発光
-	float	Power;		// ハイライトのシャープネス
-
-	//キャスト
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	operator D3DMATERIAL9 () const;
-#endif
+	String diffuse_texture;
+	String specular_texture;
+	String normal_texture;
+	Color ambient; // 環境光の反射率
+	Color diffuse; // 漫射光の反射率
+	Color specular; // 鏡面光の反射率
+	Color emissive; // 自発光
+	float power; // ハイライトのシャープネス
 };
 
 //--------------------------------------------------------------------------------
@@ -48,27 +40,56 @@ class MaterialManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  生成処理
+	//  return : MaterialManager*
 	//--------------------------------------------------------------------------------
-	static auto	Create(void)
+	static MaterialManager* Create(void)
 	{
-		if (instance) return instance;
-		instance = new MaterialManager;
-		instance->init();
+		auto instance = MY_NEW MaterialManager();
 		return instance;
 	}
-	static void Release(void) { SAFE_UNINIT(instance); }
-	static auto Instance(void) { return instance; }
 
-	void		Use(const string& materialName);
-	void		Disuse(const string& materialName);
-	Material*	GetMaterial(const string& materialName)
+	//--------------------------------------------------------------------------------
+	//  破棄処理
+	//--------------------------------------------------------------------------------
+	void Release(void) { Uninit(); }
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のマテリアルを使う
+	//  すでにあるの場合ユーザーを1たす、ないの場合ファイルから読み込む
+	//  material_name : マテリアル名
+	//--------------------------------------------------------------------------------
+	void Use(const String& material_name);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のマテリアルを使う
+	//  すでにあるの場合ユーザーを1たす、ないの場合与えられた値で生成する
+	//  material_name : マテリアル名
+	//  material : マテリアル情報
+	//--------------------------------------------------------------------------------
+	void Use(const String& material_name, Material* material);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のマテリアルを使わない
+	//  ユーザーが-1になる、0になった場合メモリから破棄する
+	//  material_name : マテリアル名
+	//--------------------------------------------------------------------------------
+	void Disuse(const String& material_name);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のマテリアルのポインタを取得
+	//  material_name : テクスチャ名
+	//  return : const Material*
+	//--------------------------------------------------------------------------------
+	const Material* GetMaterial(const String& material_name) const
 	{
-		auto iterator = materials.find(materialName);
-		if (materials.end() == iterator) return nullptr;
-		return iterator->second.Pointer;
+		auto iterator = materials_.find(material_name);
+		if (materials_.end() == iterator)
+		{// ないの場合デフォルトのマテリアルを返す
+			return &kDefaultMaterial;
+		}
+		return iterator->second.pointer;
 	}
-	void		CreateMaterialFileBy(const string& materialName, const string& mainTextureName, const Color& ambient = Color::Gray, const Color& diffuse = Color::White, const Color& specular = Color::Black, const Color& emissive = Color::Black, const float& power = 1.0f);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -76,23 +97,38 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MaterialInfo
 	{
-		MaterialInfo() : UserNumber(1), Pointer(nullptr) {}
-		int			UserNumber;
-		Material*	Pointer;
+		MaterialInfo() : user_number(1), pointer(nullptr) {}
+		int	user_number;
+		Material* pointer;
 	};
 
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  静的メンバ変数
 	//--------------------------------------------------------------------------------
-	MaterialManager();
+	static const Material kDefaultMaterial;
+
+	//--------------------------------------------------------------------------------
+	//  constructors and destructors
+	//--------------------------------------------------------------------------------
+	MaterialManager() {}
+	MaterialManager(const MaterialManager& value) {}
+	MaterialManager& operator=(const MaterialManager& value) {}
 	~MaterialManager() {}
-	void		init(void) {}
-	void		uninit(void) { materials.clear(); }
-	Material*	loadFrom(const string& materialName);
+
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void);
+
+	//--------------------------------------------------------------------------------
+	//  ファイルからマテリアルの読み込み
+	//	material_name：マテリアルの名前
+	//	return：Material*
+	//--------------------------------------------------------------------------------
+	Material* LoadFromFile(const String& material_name);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	unordered_map<string, MaterialInfo>		materials;
-	static MaterialManager*					instance;
+	unordered_map<String, MaterialInfo> materials_;
 };
