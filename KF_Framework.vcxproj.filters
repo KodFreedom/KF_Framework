@@ -175,6 +175,9 @@
     <Filter Include="ヘッダー ファイル\Base\GameObject">
       <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader">
+      <UniqueIdentifier>{079332a2-ae93-4425-aeef-e90381f97d7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -188,9 +191,6 @@
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="materialManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
@@ -351,12 +351,6 @@
     <ClCompile Include="playerController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="renderSystem.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="renderSystemDirectX9.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
     <ClCompile Include="textureManager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
@@ -384,6 +378,12 @@
     <ClCompile Include="kf_utility_directX.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
+    <ClCompile Include="main_system.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="render_system_directX9.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -397,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="materialManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
@@ -593,12 +590,6 @@
     <ClInclude Include="editorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="renderSystem.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="renderSystemDirectX9.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
     <ClInclude Include="textureManager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
@@ -606,9 +597,6 @@
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="rendererManager.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="renderState.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectManager.h">
@@ -628,6 +616,21 @@
     </ClInclude>
     <ClInclude Include="kf_utility_directX.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="main_system.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="render_system.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="render_system_directX9.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_manager.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_enum.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

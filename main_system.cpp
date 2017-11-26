@@ -8,8 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "renderSystem.h"
+#include "main_system.h"
 #include "rendererManager.h"
 #include "input.h"
 #include "materialManager.h"
@@ -26,6 +25,12 @@
 #include "camera.h"
 #include "motionManager.h"
 
+#if defined(USING_DIRECTX)
+#if (DIRECTX_VERSION == 9)
+#include "render_system_directX9.h"
+#endif
+#endif
+
 #if defined(_DEBUG) || defined(EDITOR)
 #include "modeEditor.h"
 #include "debugObserver.h"
@@ -34,7 +39,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
 //--------------------------------------------------------------------------------
-Manager* Manager::instance = nullptr;
+MainSystem* MainSystem::instance_ = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -42,42 +47,34 @@ Manager* Manager::instance = nullptr;
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：Create
-//  関数説明：生成処理
-//	引数：	hInstance：値
-//			hWnd：
-//			isWindowMode：
-//	戻り値：Manager*
+//  create the instance / 生成処理
 //--------------------------------------------------------------------------------
-Manager* Manager::Create(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
+MainSystem* MainSystem::Create(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
-	if (instance) return instance;
-	instance = new Manager;
-	instance->init(hInstance, hWnd, isWindowMode);
-	return instance;
+	if (instance_) return instance_;
+	instance_ = new MainSystem;
+	instance_->Init(hinstance, hwnd, is_window_mode);
+	return instance_;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Release
-//  関数説明：破棄処理
-//	引数：	なし
-//	戻り値：なし
+//	破棄処理
 //--------------------------------------------------------------------------------
-void Manager::Release(void)
+void MainSystem::Release(void)
 {
-	SAFE_UNINIT(instance);
+	SAFE_UNINIT(instance_);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void Manager::Update(void)
+void MainSystem::Update(void)
 {
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Instance()->Update();
 #endif
 	Input::Instance()->Update();
-	currentMode->Update();
+	current_mode_->Update();
 	GameObjectManager::Instance()->Update();
 	CollisionSystem::Instance()->Update();
 	PhysicsSystem::Instance()->Update();
@@ -85,11 +82,11 @@ void Manager::Update(void)
 }
 
 //--------------------------------------------------------------------------------
-//  更新処理(描画直前)
+//  後更新処理(描画の前)
 //--------------------------------------------------------------------------------
-void Manager::LateUpdate(void)
+void MainSystem::LateUpdate(void)
 {
-	currentMode->LateUpdate();
+	current_mode_->LateUpdate();
 	GameObjectManager::Instance()->LateUpdate();
 	CameraManager::Instance()->LateUpdate();
 	CollisionSystem::Instance()->LateUpdate();
@@ -104,7 +101,7 @@ void Manager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void Manager::Render(void)
+void MainSystem::Render(void)
 {
 	if (RenderSystem::Instance()->BeginRender())
 	{
@@ -129,11 +126,11 @@ void Manager::Render(void)
 //--------------------------------------------------------------------------------
 //  モード切り替え
 //--------------------------------------------------------------------------------
-void Manager::Change(Mode* nextMode)
+void MainSystem::Change(Mode* nextMode)
 {
-	SAFE_RELEASE(currentMode);
-	currentMode = nextMode;
-	currentMode->Init();
+	SAFE_RELEASE(current_mode_);
+	current_mode_ = nextMode;
+	current_mode_->Init();
 }
 
 //--------------------------------------------------------------------------------
@@ -144,15 +141,26 @@ void Manager::Change(Mode* nextMode)
 //--------------------------------------------------------------------------------
 //  初期化
 //--------------------------------------------------------------------------------
-bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
+bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
-	Random::Init();
-	if (!RenderSystem::Create(hWnd, isWindowMode)) return false;
+	random::Init();
+
+	// render apiによってrender system, texture manager, mesh managerの生成
+#if defined(USING_DIRECTX)
+#if (DIRECTX_VERSION == 9)
+	auto render_system = RenderSystemDirectX9::Create(hwnd, is_window_mode);
+	if (!render_system) return false;
+	const auto device = render_system->GetDevice();
+
+#endif
+#endif
+
+	if (!RenderSystem::Create(hwnd, is_window_mode)) return false;
 #if defined(_DEBUG) || defined(EDITOR)
-	DebugObserver::Create(hWnd);
+	DebugObserver::Create(hwnd);
 #endif
 	RendererManager::Create();
-	Input::Create(hInstance, hWnd);
+	Input::Create(hinstance, hwnd);
 	MaterialManager::Create();
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
@@ -172,9 +180,9 @@ bool Manager::init(HINSTANCE hInstance, HWND hWnd, BOOL isWindowMode)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void Manager::uninit(void)
+void MainSystem::Uninit(void)
 {
-	SAFE_RELEASE(currentMode);
+	SAFE_RELEASE(current_mode_);
 	MotionManager::Release();
 	CameraManager::Release();
 	FadeSystem::Release();

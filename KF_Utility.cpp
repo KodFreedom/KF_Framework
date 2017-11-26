@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------
 //  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int Utility::GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer)
+int utility::GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer)
 {
 	char c;
 	buffer.clear();
@@ -31,7 +31,7 @@ int Utility::GetStringUntilToken(FILE* file_pointer, const string& token, string
 //--------------------------------------------------------------------------------
 //  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int Utility::GetStringUntilToken(string& file, const string& token, string& buffer)
+int utility::GetStringUntilToken(string& file, const string& token, string& buffer)
 {
 	buffer.clear();
 	for (auto itr = file.begin(); itr != file.end();)
@@ -53,7 +53,7 @@ int Utility::GetStringUntilToken(string& file, const string& token, string& buff
 //--------------------------------------------------------------------------------
 //  比較する文字列まで文字列を取る
 //--------------------------------------------------------------------------------
-int Utility::GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer)
+int utility::GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer)
 {
 	static string nullBuffer;
 	if (nullBuffer.empty()) nullBuffer.resize(256);
@@ -72,7 +72,7 @@ int Utility::GetStringUntilString(FILE* file_pointer, const string& compare, str
 //--------------------------------------------------------------------------------
 //  文字列をカウントする
 //--------------------------------------------------------------------------------
-int Utility::GetStringCount(FILE* file_pointer, const string& token, const string& compare)
+int utility::GetStringCount(FILE* file_pointer, const string& token, const string& compare)
 {
 	int count = 0;
 	string buffer;
@@ -93,7 +93,7 @@ int Utility::GetStringCount(FILE* file_pointer, const string& token, const strin
 //--------------------------------------------------------------------------------
 //  文字列をカウントする
 //--------------------------------------------------------------------------------
-int Utility::GetStringCount(string& file, const string& token, const string& compare)
+int utility::GetStringCount(string& file, const string& token, const string& compare)
 {
 	int count = 0;
 	string buffer;
@@ -110,7 +110,7 @@ int Utility::GetStringCount(string& file, const string& token, const string& com
 //--------------------------------------------------------------------------------
 //  パスから名前とタイプを解析する
 //--------------------------------------------------------------------------------
-Utility::FileInfo Utility::AnalyzeFilePath(const string& path)
+utility::FileInfo utility::AnalyzeFilePath(const string& path)
 {
 	FileInfo info;
 	auto copy = path;
@@ -135,7 +135,7 @@ Utility::FileInfo Utility::AnalyzeFilePath(const string& path)
 //			parent：親のオブジェクト
 //	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-//GameObject* Utility::FindChildBy(const string& name, GameObject* const parent)
+//GameObject* utility::FindChildBy(const string& name, GameObject* const parent)
 //{
 //	assert(!name.empty());
 //	auto& children = parent->GetTransform()->GetChildren();

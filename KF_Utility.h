@@ -6,16 +6,13 @@
 //--------------------------------------------------------------------------------
 #pragma once
 
-//--------------------------------------------------------------------------------
-//  ディファイン
-//--------------------------------------------------------------------------------
 #define SAFE_RELEASE(p)		if(p){ p->Release(); p = nullptr; }
-#define SAFE_UNINIT(p)		if(p){ p->uninit(); delete p; p = nullptr; }
-#define SAFE_DELETE(p)		if(p){ delete p; p = nullptr; }
+#define SAFE_UNINIT(p)		if(p){ p->Uninit(); MY_DELETE p; p = nullptr; }
+#define SAFE_DELETE(p)		if(p){ MY_DELETE p; p = nullptr; }
 
-namespace KodFreedom
+namespace kodfreedom
 {
-	namespace Utility
+	namespace utility
 	{
 		struct FileInfo
 		{

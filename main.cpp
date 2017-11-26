@@ -5,7 +5,7 @@
 //	Date   : 2017-04-19
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
+#include "main_system.h"
 #include "input.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
@@ -30,17 +30,21 @@ extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, 
 #endif
 
 //--------------------------------------------------------------------------------
-//	メイン関数
+//  関数定義
 //--------------------------------------------------------------------------------
-int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show)
-{
-	return Main::WinMain(instance, previous_instance, cmd_line, cmd_show);
-}
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+void CloseApp(HWND hwnd);
 
 //--------------------------------------------------------------------------------
-// メイン関数
+//	関数名：WinMain
+//  関数説明：メイン関数
+//	引数：	instance
+//			previous_instance
+//			cmd_line
+//			cmd_show
+//	戻り値：int
 //--------------------------------------------------------------------------------
-int Main::WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show)
+int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show)
 {
 	UNREFERENCED_PARAMETER(previous_instance);
 	UNREFERENCED_PARAMETER(cmd_line);
@@ -105,8 +109,8 @@ int Main::WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_lin
 	if (id == IDYES) { is_window_mode = false; }
 #endif // _DEBUG
 
-	//Manager生成
-	if (!Manager::Create(instance, hwnd, is_window_mode))
+	//MainSystem生成
+	if (!MainSystem::Create(instance, hwnd, is_window_mode))
 	{
 		UnregisterClass(CLASS_NAME, wcex.hInstance);
 		return -1;
@@ -153,15 +157,15 @@ int Main::WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_lin
 			if (fTime >= TIMER_INTERVAL)
 			{
 				execLastTime = currentTime;
-				Manager::Instance()->Update();
-				Manager::Instance()->LateUpdate();
-				Manager::Instance()->Render();
+				MainSystem::Instance()->Update();
+				MainSystem::Instance()->LateUpdate();
+				MainSystem::Instance()->Render();
 			}
 		}
 	}
 
 	// 終了処理
-	Manager::Release();
+	MainSystem::Release();
 
 	//ウインドウクラスの登録お解除
 	//第一引数：メクラス名
@@ -172,9 +176,15 @@ int Main::WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_lin
 }
 
 //--------------------------------------------------------------------------------
-//	ウインドウプロシージャ関数
+//	関数名：WndProc
+//  関数説明：ウインドウプロシージャ関数
+//	引数：	hwnd：ウインドウのハンドル
+//			message：メッセージの識別子
+//			wparam：メッセージの最初のパラメータ
+//			lparam：メッセージの二番目のパラメータ
+//	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-LRESULT CALLBACK Main::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 #if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_WndProcHandler(hwnd, message, wparam, lparam);
@@ -212,9 +222,12 @@ LRESULT CALLBACK Main::WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 }
 
 //--------------------------------------------------------------------------------
-//	アプリを閉じる確認関数
+//	関数名：CloseApp
+//  関数説明：アプリを閉じる確認関数
+//	引数：	hwnd：ウインドウのハンドル
+//	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-void Main::CloseApp(HWND hwnd)
+void CloseApp(HWND hwnd)
 {
 	//終了確認
 	UINT id = MessageBox(hwnd, L"終了しますか？", L"確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);

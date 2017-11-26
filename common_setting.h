@@ -2,28 +2,32 @@
 //　common_setting.h
 //  common setting and include common heads
 //	通用の設定とインクルードファイル
-//  通用设定与头文件
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 
 //--------------------------------------------------------------------------------
-//  define / ディファイン / 宏定义
+//  define / ディファイン
 //--------------------------------------------------------------------------------
 
 // エディタ
 #define EDITOR
 
-// RenderSystem
+// Render Api
 #define USING_DIRECTX
 #ifdef USING_DIRECTX
 #define DIRECTX_VERSION 9
 #endif
 
-//--------------------------------------------------------------------------------
-//  include / インクルード / 读取头文件
-//--------------------------------------------------------------------------------
+// 今後newをオーバーロードため
+#define MY_NEW new
 
+// 今後deleteをオーバーロードため
+#define MY_DELETE delete
+
+//--------------------------------------------------------------------------------
+//  include / インクルード
+//--------------------------------------------------------------------------------
 // System
 #include <math.h>
 #include <time.h>
@@ -38,10 +42,8 @@
 #include <assert.h>
 using namespace std;
 
-// OpenMP
 #include <omp.h>
 
-// DirectX
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
 #endif
@@ -50,10 +52,8 @@ using namespace std;
 #include <XAudio2.h>//sound
 
 //--------------------------------------------------------------------------------
-//  library / ライブラリ / 数据连接库
+//  library / ライブラリ
 //--------------------------------------------------------------------------------
-
-// DirectX
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -65,9 +65,8 @@ using namespace std;
 //#pragma comment(lib,"winmm.lib")	
 
 //--------------------------------------------------------------------------------
-//  typedef / タイプディファイン / 型声明
+//  typedef / タイプディファイン
 //--------------------------------------------------------------------------------
-
 typedef unsigned short us;
 typedef unsigned long  ul;
 

@@ -12,7 +12,7 @@
 // KF関数
 #include "kf_math.h"
 #include "kf_utility.h"
-using namespace KodFreedom;
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -22,73 +22,3 @@ using namespace KodFreedom;
 #define FRAME_PER_SECOND	(60)								
 #define TIMER_INTERVAL		(1000.0f / FRAME_PER_SECOND)		//更新間隔
 #define DELTA_TIME			(TIMER_INTERVAL * 0.001f)			//更新間隔(秒単位)
-
-
-#ifdef USING_DIRECTX
-#define	FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)					//頂点フォーマット
-#define FVF_VERTEX_3D	(D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 )	//3D頂点フォーマット
-#endif											
-
-//--------------------------------------------------------------------------------
-//  構造体定義
-//--------------------------------------------------------------------------------
-struct VERTEX_2D
-{// 2D頂点情報構造体　頂点フォーマットと構造を合わせること
-	Vector3			Position;
-	float			Rhw;
-	unsigned long	Color;
-	Vector2			UV;
-};
-
-struct VERTEX_3D
-{// 3D頂点情報構造体　頂点フォーマットと構造を合わせること
-	Vector3			Position;
-	Vector3			Normal;
-	unsigned long	Color;
-	Vector2			UV;
-};
-
-//--------------------------------------------------------------------------------
-//  クラス宣言
-//--------------------------------------------------------------------------------
-class Main
-{
-public:
-	//--------------------------------------------------------------------------------
-	//	関数名：WinMain
-	//  関数説明：メイン関数
-	//	引数：	instance
-	//			previous_instance
-	//			cmd_line
-	//			cmd_show
-	//	戻り値：int
-	//--------------------------------------------------------------------------------
-	static int WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show);
-private:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	Main() {}
-	Main(const Main& value) {}
-	~Main() {}
-	Main& operator=(const Main& value) {}
-
-	//--------------------------------------------------------------------------------
-	//	関数名：WndProc
-	//  関数説明：ウインドウプロシージャ関数
-	//	引数：	hwnd：ウインドウのハンドル
-	//			message：メッセージの識別子
-	//			wparam：メッセージの最初のパラメータ
-	//			lparam：メッセージの二番目のパラメータ
-	//	戻り値：LRESULT
-	//--------------------------------------------------------------------------------
-	static LRESULT CALLBACK	WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
-	
-	//--------------------------------------------------------------------------------
-	//	関数名：CloseApp
-	//  関数説明：アプリを閉じる確認関数
-	//	引数：	hwnd：ウインドウのハンドル
-	//	戻り値：LRESULT
-	//--------------------------------------------------------------------------------
-	static void CloseApp(HWND hwnd);
-};

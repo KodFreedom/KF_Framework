@@ -198,7 +198,7 @@
     <ClCompile Include="kf_utility_directX.cpp" />
     <ClCompile Include="lightManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="main_system.cpp" />
     <ClCompile Include="materialManager.cpp" />
     <ClCompile Include="meshManager.cpp" />
     <ClCompile Include="mode.cpp" />
@@ -210,8 +210,7 @@
     <ClCompile Include="motion_state.cpp" />
     <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerUI.cpp" />
-    <ClCompile Include="renderSystem.cpp" />
-    <ClCompile Include="renderSystemDirectX9.cpp" />
+    <ClCompile Include="render_system_directX9.cpp" />
     <ClCompile Include="rendererManager.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stageSpawner.cpp" />
@@ -231,6 +230,8 @@
     <ClInclude Include="motionManager.h" />
     <ClInclude Include="actorParamater.h" />
     <ClInclude Include="neutralState.h" />
+    <ClInclude Include="shader_enum.h" />
+    <ClInclude Include="shader_manager.h" />
     <ClInclude Include="UIObject2D.h" />
     <ClInclude Include="rigidbody3D.h" />
     <ClInclude Include="AABBCollider.h" />
@@ -276,7 +277,7 @@
     <ClInclude Include="kf_utility_directX.h" />
     <ClInclude Include="lightManager.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="manager.h" />
+    <ClInclude Include="main_system.h" />
     <ClInclude Include="materialManager.h" />
     <ClInclude Include="meshManager.h" />
     <ClInclude Include="mode.h" />
@@ -288,10 +289,9 @@
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerController.h" />
     <ClInclude Include="playerUI.h" />
-    <ClInclude Include="renderSystem.h" />
-    <ClInclude Include="renderSystemDirectX9.h" />
+    <ClInclude Include="render_system.h" />
+    <ClInclude Include="render_system_directX9.h" />
     <ClInclude Include="rendererManager.h" />
-    <ClInclude Include="renderState.h" />
     <ClInclude Include="rigidbody.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="sphereCollider.h" />
