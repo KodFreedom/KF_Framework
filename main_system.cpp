@@ -1,14 +1,11 @@
 //--------------------------------------------------------------------------------
-//
-//　manager.cpp
-//	Author : Xu Wenjie
-//	Date   : 2016-11-22
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
+//　main_system.cpp
+//	メインシステム
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "main_system.h"
+#include "texture_manager.h"
 #include "rendererManager.h"
 #include "input.h"
 #include "materialManager.h"
@@ -103,7 +100,7 @@ void MainSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Render(void)
 {
-	if (RenderSystem::Instance()->BeginRender())
+	if (render_system_->BeginRender())
 	{
 		CameraManager::Instance()->GetMainCamera()->Set();
 		RendererManager::Instance()->Render();
@@ -115,7 +112,8 @@ void MainSystem::Render(void)
 #if defined(_DEBUG) || defined(EDITOR)
 		DebugObserver::Instance()->Draw();
 #endif
-		RenderSystem::Instance()->EndRender();
+		render_system_->EndRender();
+		render_system_->Present();
 	}
 	else
 	{
@@ -151,11 +149,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	auto render_system = RenderSystemDirectX9::Create(hwnd, is_window_mode);
 	if (!render_system) return false;
 	const auto device = render_system->GetDevice();
-
+	texture_manager_ = TextureManager::Create(device);
+	render_system_ = render_system;
 #endif
 #endif
 
-	if (!RenderSystem::Create(hwnd, is_window_mode)) return false;
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hwnd);
 #endif

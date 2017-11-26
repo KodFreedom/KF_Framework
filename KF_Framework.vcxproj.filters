@@ -192,9 +192,6 @@
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
-    <ClCompile Include="materialManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectActor.cpp">
       <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
@@ -206,12 +203,6 @@
     </ClCompile>
     <ClCompile Include="modeResult.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="meshManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="soundManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="UISystem.cpp">
       <Filter>ソース ファイル\UI</Filter>
@@ -351,12 +342,6 @@
     <ClCompile Include="playerController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="textureManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="lightManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="rendererManager.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
@@ -384,6 +369,21 @@
     <ClCompile Include="render_system_directX9.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
+    <ClCompile Include="texture_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="material_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="light_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -397,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="materialManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
@@ -421,12 +418,6 @@
     </ClInclude>
     <ClInclude Include="motionInfo.h">
       <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="meshManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="soundManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="UISystem.h">
       <Filter>ヘッダー ファイル\UI</Filter>
@@ -590,12 +581,6 @@
     <ClInclude Include="editorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="textureManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="lightManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="rendererManager.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
@@ -631,6 +616,21 @@
     </ClInclude>
     <ClInclude Include="shader_enum.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="material_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="light_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
