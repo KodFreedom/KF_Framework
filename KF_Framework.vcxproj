@@ -76,7 +76,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,7 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

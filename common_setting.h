@@ -39,9 +39,18 @@
 #include <string>
 #include <algorithm>
 #include <sstream>
+#include <fstream>
 #include <assert.h>
 using namespace std;
 
+//Cereal
+#include <cereal/archives/JSON.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/string.hpp>
+using namespace cereal;
+
+// Openmp
 #include <omp.h>
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)

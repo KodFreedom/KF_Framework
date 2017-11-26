@@ -6,6 +6,7 @@
 #include "main.h"
 #include "main_system.h"
 #include "texture_manager.h"
+#include "mesh_manager.h"
 #include "rendererManager.h"
 #include "input.h"
 #include "materialManager.h"
@@ -148,9 +149,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #if (DIRECTX_VERSION == 9)
 	auto render_system = RenderSystemDirectX9::Create(hwnd, is_window_mode);
 	if (!render_system) return false;
+	render_system_ = render_system;
 	const auto device = render_system->GetDevice();
 	texture_manager_ = TextureManager::Create(device);
-	render_system_ = render_system;
+	mesh_manager_ = MeshManager::Create(device);
+	
 #endif
 #endif
 
@@ -195,5 +198,7 @@ void MainSystem::Uninit(void)
 	DebugObserver::Release();
 #endif
 	RendererManager::Release();
-	RenderSystem::Release();
+	SAFE_RELEASE(mesh_manager_);
+	SAFE_RELEASE(texture_manager_);
+	SAFE_RELEASE(render_system_);
 }

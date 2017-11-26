@@ -1,74 +1,87 @@
 //--------------------------------------------------------------------------------
-//	メッシュマネージャ
-//　meshManager.h
-//	Author : Xu Wenjie
-//	Date   : 2017-07-15
+//　mesh_manager.h
+//	メッシュ管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
+#include "common_setting.h"
+#include "render_system.h"
 
 //--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-enum DrawType
+enum MeshType // メッシュのタイプ
 {
-	PointList = 1,
-	LineList = 2,
-	LineStrip = 3,
-	TriangleList = 4,
-	TriangleStrip = 5,
-	TriangleFan = 6,
+	k3dMesh = 0,
+	k3dSkin
+};
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+enum DrawType // 描画タイプ
+{
+	kPointList = 1,
+	kLineList = 2,
+	kLineStrip = 3,
+	kTriangleList = 4,
+	kTriangleStrip = 5,
+	kTriangleFan = 6,
 };
 #else
 enum DrawType
 {
-	PointList = 0,
-	LineList = 1,
-	LineStrip = 3,
-	TriangleList = 4,
-	TriangleStrip = 5,
-	TriangleFan = 6,
+	kPointList = 0,
+	kLineList = 1,
+	kLineStrip = 3,
+	kTriangleList = 4,
+	kTriangleStrip = 5,
+	kTriangleFan = 6,
 };
 #endif
 
 //--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 struct Mesh
 {
 	Mesh()
-		: CurrentType(TriangleStrip)
-		, VertexNumber(0)
-		, IndexNumber(0)
-		, PolygonNumber(0)
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-		, VertexBuffer(nullptr)
-		, IndexBuffer(nullptr)
-#endif
-	{}
+		: type(k3dMesh)
+		, draw_type(kTriangleStrip)
+		, vertex_number(0)
+		, index_number(0)
+		, polygon_number(0)
+		, vertex_buffer(nullptr)
+		, index_buffer(nullptr) {}
 	~Mesh()
 	{
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-		SAFE_RELEASE(VertexBuffer);
-		SAFE_RELEASE(IndexBuffer);
-#endif
+		SAFE_RELEASE(vertex_buffer);
+		SAFE_RELEASE(index_buffer);
 	}
 
-	DrawType CurrentType;
-	int		 VertexNumber;
-	int		 IndexNumber;
-	int		 PolygonNumber;
-
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	LPDIRECT3DVERTEXBUFFER9 VertexBuffer;
-	LPDIRECT3DINDEXBUFFER9	IndexBuffer;
-#endif
+	MeshType type;
+	DrawType draw_type;
+	int vertex_number;
+	int index_number;
+	int polygon_number;
+	LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
+	LPDIRECT3DINDEXBUFFER9	index_buffer;
 };
+#else
+struct Mesh
+{
+	Mesh()
+		: type(k3d)
+		, draw_type(kTriangleStrip)
+		, vertex_number(0)
+		, index_number(0)
+		, polygon_number(0) {}
+	MeshType type;
+	DrawType draw_type;
+	int vertex_number;
+	int index_number;
+	int polygon_number;
+};
+#endif
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -77,29 +90,71 @@ class MeshManager
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  生成処理
+	//  return : MeshManager*
 	//--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	static void	Create(const LPDIRECT3DDEVICE9 device)
+	static MeshManager* Create(const LPDIRECT3DDEVICE9 device)
 	{
-		if (instance) return;
-		instance = new MeshManager;
-		instance->device = device;
+		auto instance = MY_NEW MeshManager(device);
+		return instance;
 	}
 #endif
-	static void	Release(void) { SAFE_UNINIT(instance); }
-	static auto	Instance(void) { return instance; }
+
+	//--------------------------------------------------------------------------------
+	//  破棄処理
+	//--------------------------------------------------------------------------------
+	void Release(void) { Uninit(); }
 	
-	void	Use(const string& meshName);
-	void	Use(const string& meshName, const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes);
-	void	Disuse(const string& meshName);
-	void	Update(const string& meshName, const vector<VERTEX_3D>& vertexes, const list<int>& indexesToUpdate);
-	void	SaveMesh(const string& meshName, const string& fileName);
-	Mesh*	GetMesh(const string& meshName)
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュを使う
+	//  すでにあるの場合ユーザーを1たす、ないの場合ファイルから読み込む
+	//  mesh_name : メッシュ名
+	//--------------------------------------------------------------------------------
+	void Use(const String& mesh_name);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュを使う
+	//  すでにあるの場合ユーザーを1たす、ないの場合与えられた頂点で作る
+	//  mesh_name : メッシュ名
+	//  type : 描画タイプ
+	//  vertexes : 頂点データ
+	//  indexes : インデックスデータ
+	//--------------------------------------------------------------------------------
+	void Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュを使わない
+	//  ユーザーが-1になる、0になった場合メモリから破棄する
+	//  mesh_name : メッシュ名
+	//--------------------------------------------------------------------------------
+	void Disuse(const String& mesh_name);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュを与えられた頂点とインデックスで更新する
+	//  mesh_name : メッシュ名
+	//  vertexes : 頂点データ
+	//  indexes : インデックスデータ
+	//--------------------------------------------------------------------------------
+	void Update(const String& mesh_name, const vector<Vertex3d>& vertexes, const list<int>& indexes);
+	
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュをファイルに書き出す
+	//  mesh_name : メッシュ名
+	//  file_name : ファイル名
+	//--------------------------------------------------------------------------------
+	void SaveMeshToFile(const String& mesh_name, const String& file_name);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた名前のメッシュのポインタを取得
+	//  mesh_name : メッシュ名
+	//  return : Mesh*
+	//--------------------------------------------------------------------------------
+	Mesh* GetMesh(const String& mesh_name) const
 	{
-		auto iterator = meshes.find(meshName);
-		if (meshes.end() == iterator) return nullptr;
-		return iterator->second.Pointer;
+		auto iterator = meshes_.find(mesh_name);
+		if (meshes_.end() == iterator) return nullptr;
+		return iterator->second.pointer;
 	}
 
 private:
@@ -108,33 +163,89 @@ private:
 	//--------------------------------------------------------------------------------
 	struct MeshInfo
 	{
-		MeshInfo() : UserNumber(1) , Pointer(nullptr) {}
-		~MeshInfo() {}
-		int		UserNumber;
-		Mesh*	Pointer;
+		MeshInfo() : user_number(1) , pointer(nullptr) {}
+		int user_number;
+		Mesh* pointer;
 	};
 
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	MeshManager() { meshes.clear(); }
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	MeshManager(const LPDIRECT3DDEVICE9 device) : device_(device) {}
+	MeshManager() : device_(nullptr) {}
+	MeshManager(const MeshManager& value) : device_(nullptr) {}
+#else
+	MeshManager() {}
+	MeshManager(const MeshManager& value) {}
+#endif
+	MeshManager& operator=(const MeshManager& value) {}
 	~MeshManager() {}
-	void		uninit(void);
-	MeshInfo	loadFromMesh(const string& filePath);
-	MeshInfo	loadFromXFile(const string& filePath);
-	MeshInfo	createCube(void);
-	MeshInfo	createSphere(void);
-	MeshInfo	createSkyBox(void);
-	MeshInfo	createMesh(const DrawType& type, const vector<VERTEX_3D>& vertexes, const vector<int>& indexes);
-	bool		createBuffer(Mesh* mesh);
-	int			getVertexNumberPerPolygon(const DrawType& type);
+
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void);
+
+	//--------------------------------------------------------------------------------
+	//  meshファイルからデータを読み込む
+	//  mesh_name : メッシュ名
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo LoadFromMesh(const String& mesh_name);
+
+	//--------------------------------------------------------------------------------
+	//  xファイルからデータを読み込む
+	//  mesh_name : メッシュ名
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	//MeshInfo LoadFromXFile(const String& mesh_name);
+
+	//--------------------------------------------------------------------------------
+	//  cubeメッシュを生成する
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo CreateCube(void);
+
+	//--------------------------------------------------------------------------------
+	//  sphereメッシュを生成する
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo CreateSphere(void);
+
+	//--------------------------------------------------------------------------------
+	//  skyboxメッシュを生成する
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo CreateSkyBox(void);
+
+	//--------------------------------------------------------------------------------
+	//  与えられた頂点とインデックスでメッシュを生成する
+	//  type : 描画タイプ
+	//  vertexes : 頂点データ
+	//  indexes : インデックスデータ
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes);
+	
+	//--------------------------------------------------------------------------------
+	//  create the vertex and index buffer, return true if successed
+	//  バーテックスとインデックスバッファの生成
+	//  return : bool
+	//--------------------------------------------------------------------------------
+	bool CreateBuffer(Mesh* mesh);
+
+	//--------------------------------------------------------------------------------
+	//  DrawTypeによってポリゴンの頂点を返す
+	//  return : int
+	//--------------------------------------------------------------------------------
+	int GetVertexNumberPerPolygon(const DrawType& type);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	static MeshManager*	instance;
-	unordered_map<string, MeshInfo> meshes;
+	unordered_map<String, MeshInfo> meshes_; // メッシュを保存するところ
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	LPDIRECT3DDEVICE9 device;
+	const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
 #endif
 };
