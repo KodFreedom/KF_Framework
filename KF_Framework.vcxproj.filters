@@ -178,6 +178,9 @@
     <Filter Include="ヘッダー ファイル\Base\Shader">
       <UniqueIdentifier>{079332a2-ae93-4425-aeef-e90381f97d7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Light">
+      <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -379,9 +382,6 @@
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
     <ClCompile Include="material_manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="light_manager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -630,7 +630,10 @@
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="light_manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

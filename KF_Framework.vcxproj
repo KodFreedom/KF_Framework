@@ -196,7 +196,6 @@
     <ClCompile Include="physicsSystem.cpp" />
     <ClCompile Include="kf_utility.cpp" />
     <ClCompile Include="kf_utility_directX.cpp" />
-    <ClCompile Include="light_manager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_system.cpp" />
     <ClCompile Include="material_manager.cpp" />
@@ -227,6 +226,7 @@
     <ClInclude Include="damagedState.h" />
     <ClInclude Include="jumpState.h" />
     <ClInclude Include="landState.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="motionManager.h" />
     <ClInclude Include="actorParamater.h" />
     <ClInclude Include="neutralState.h" />

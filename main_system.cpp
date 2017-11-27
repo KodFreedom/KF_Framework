@@ -8,6 +8,7 @@
 #include "texture_manager.h"
 #include "mesh_manager.h"
 #include "material_manager.h"
+#include "light_manager.h"
 #include "rendererManager.h"
 #include "input.h"
 #include "gameObjectManager.h"
@@ -156,6 +157,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #endif
 #endif
 	material_manager_ = MaterialManager::Create();
+	light_manager_ = LightManager::Create();
 
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hwnd);
@@ -196,6 +198,7 @@ void MainSystem::Uninit(void)
 	DebugObserver::Release();
 #endif
 	RendererManager::Release();
+	SAFE_RELEASE(light_manager_);
 	SAFE_RELEASE(material_manager_);
 	SAFE_RELEASE(mesh_manager_);
 	SAFE_RELEASE(texture_manager_);

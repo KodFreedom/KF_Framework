@@ -93,9 +93,15 @@ public:
 
 	//--------------------------------------------------------------------------------
 	//  マテリアル管理者を返す
-	//  return : MainSystem* const
+	//  return : MaterialManager* const
 	//--------------------------------------------------------------------------------
 	const auto GetMaterialManager(void) const { return material_manager_; }
+
+	//--------------------------------------------------------------------------------
+	//  ライト管理者を返す
+	//  return : LightManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetLightManager(void) const { return light_manager_; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -103,7 +109,7 @@ private:
 	//--------------------------------------------------------------------------------
 	MainSystem() : current_mode_(nullptr), render_system_(nullptr)
 		, texture_manager_(nullptr), mesh_manager_(nullptr)
-		, material_manager_(nullptr) {}
+		, material_manager_(nullptr), light_manager_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -126,10 +132,11 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Mode* current_mode_; // 今のモード
-	RenderSystem* render_system_; // レンダーシステム
-	TextureManager* texture_manager_; // テクスチャ管理者
-	MeshManager* mesh_manager_; // メッシュ管理者
-	MaterialManager* material_manager_; // マテリアル管理者
+	Mode*              current_mode_; // 今のモード
+	RenderSystem*      render_system_; // レンダーシステム
+	TextureManager*    texture_manager_; // テクスチャ管理者
+	MeshManager*       mesh_manager_; // メッシュ管理者
+	MaterialManager*   material_manager_; // マテリアル管理者
+	LightManager*      light_manager_; // ライトの管理者
 	static MainSystem* instance_; // インスタンス
 };
