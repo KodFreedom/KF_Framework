@@ -23,6 +23,7 @@ class CameraManager;
 class MotionManager;
 class TextureManager;
 class MeshManager;
+class LightManager;
 
 #if defined(_DEBUG)
 class DebugObserver;
@@ -109,6 +110,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetSoundManager(void) const { return sound_manager_; }
 
+	//--------------------------------------------------------------------------------
+	//  レンダラー管理者を返す
+	//  return : RendererManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetRendererManager(void) const { return renderer_manager_; }
+
 #ifdef _DEBUG
 	//--------------------------------------------------------------------------------
 	//  デバッグ観察者を返す
@@ -124,7 +131,7 @@ private:
 	MainSystem() : current_mode_(nullptr), render_system_(nullptr)
 		, texture_manager_(nullptr), mesh_manager_(nullptr)
 		, material_manager_(nullptr), light_manager_(nullptr)
-		, sound_manager_(nullptr)
+		, sound_manager_(nullptr), renderer_manager_(nullptr)
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
@@ -158,8 +165,10 @@ private:
 	MaterialManager*   material_manager_; // マテリアル管理者
 	LightManager*      light_manager_; // ライトの管理者
 	SoundManager*      sound_manager_; // サウンド管理者
+	RendererManager*   renderer_manager_; // レンダラー管理者
 #ifdef _DEBUG
 	DebugObserver*     debug_observer_; // デバッグ観察者
 #endif
+
 	static MainSystem* instance_; // インスタンス
 };

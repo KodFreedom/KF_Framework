@@ -159,7 +159,6 @@
     <ClCompile Include="landState.cpp" />
     <ClCompile Include="motionManager.cpp" />
     <ClCompile Include="neutralState.cpp" />
-    <ClCompile Include="renderState.cpp" />
     <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
@@ -210,7 +209,7 @@
     <ClCompile Include="playerController.cpp" />
     <ClCompile Include="playerUI.cpp" />
     <ClCompile Include="render_system_directX9.cpp" />
-    <ClCompile Include="rendererManager.cpp" />
+    <ClCompile Include="renderer_manager.cpp" />
     <ClCompile Include="sound_manager.cpp" />
     <ClCompile Include="stageSpawner.cpp" />
     <ClCompile Include="texture_manager.cpp" />
@@ -291,7 +290,7 @@
     <ClInclude Include="playerUI.h" />
     <ClInclude Include="render_system.h" />
     <ClInclude Include="render_system_directX9.h" />
-    <ClInclude Include="rendererManager.h" />
+    <ClInclude Include="renderer_manager.h" />
     <ClInclude Include="rigidbody.h" />
     <ClInclude Include="sound_manager.h" />
     <ClInclude Include="sphereCollider.h" />

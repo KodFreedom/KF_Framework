@@ -10,7 +10,7 @@
 #include "material_manager.h"
 #include "light_manager.h"
 #include "sound_manager.h"
-#include "rendererManager.h"
+#include "renderer_manager.h"
 #include "input.h"
 #include "gameObjectManager.h"
 #include "UISystem.h"
@@ -94,7 +94,7 @@ void MainSystem::LateUpdate(void)
 	CollisionSystem::Instance()->LateUpdate();
 	UISystem::Instance()->Update();
 	FadeSystem::Instance()->Update();
-	RendererManager::Instance()->Update();
+	renderer_manager_->Update();
 #ifdef _DEBUG
 	debug_observer_->LateUpdate();
 #endif
@@ -108,7 +108,7 @@ void MainSystem::Render(void)
 	if (render_system_->BeginRender())
 	{
 		CameraManager::Instance()->GetMainCamera()->Set();
-		RendererManager::Instance()->Render();
+		renderer_manager_->Render();
 #ifdef _DEBUG
 		CollisionSystem::Instance()->DrawCollider();
 #endif
@@ -122,7 +122,7 @@ void MainSystem::Render(void)
 	}
 	else
 	{
-		RendererManager::Instance()->Clear();
+		renderer_manager_->Clear();
 	}
 }
 
@@ -162,6 +162,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	material_manager_ = MaterialManager::Create();
 	light_manager_ = LightManager::Create();
 	sound_manager_ = SoundManager::Create();
+	renderer_manager_ = RendererManager::Create();
 #ifdef _DEBUG
 	debug_observer_ = DebugObserver::Create();
 #endif
@@ -199,10 +200,10 @@ void MainSystem::Uninit(void)
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
 	Input::Release();
-	RendererManager::Release();
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);
 #endif
+	SAFE_RELEASE(renderer_manager_);
 	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);
 	SAFE_RELEASE(material_manager_);

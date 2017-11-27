@@ -342,12 +342,6 @@
     <ClCompile Include="playerController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="rendererManager.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="renderState.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
     <ClCompile Include="gameObjectManager.cpp">
       <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
@@ -383,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="debug_observer.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_manager.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -578,9 +575,6 @@
     <ClInclude Include="editorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="rendererManager.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
@@ -634,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="debug_observer.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_manager.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
