@@ -130,6 +130,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetInput(void) const { return input_; }
 
+	//--------------------------------------------------------------------------------
+	//  フェイドシステムを返す
+	//  return : FadeSystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetFadeSystem(void) const { return fade_system_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -141,7 +147,7 @@ private:
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
-		, input_(nullptr) {}
+		, input_(nullptr), fade_system_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -176,6 +182,7 @@ private:
 	DebugObserver*     debug_observer_; // デバッグ観察者
 #endif
 	Input*             input_; // 入力管理者
+	FadeSystem*        fade_system_; // フェイドシステム
 
 	static MainSystem* instance_; // インスタンス
 };

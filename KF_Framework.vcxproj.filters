@@ -270,9 +270,6 @@
     <ClCompile Include="playerUI.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
-    <ClCompile Include="fadeSystem.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="cameraManager.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
@@ -380,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="input_device_directX.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="fade_system.cpp">
+      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -490,9 +490,6 @@
     </ClInclude>
     <ClInclude Include="playerUI.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="fadeSystem.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="meshRenderer.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="input_device_directX.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="fade_system.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

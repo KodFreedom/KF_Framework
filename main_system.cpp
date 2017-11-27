@@ -12,12 +12,12 @@
 #include "sound_manager.h"
 #include "renderer_manager.h"
 #include "input.h"
+#include "fade_system.h"
 #include "gameObjectManager.h"
 #include "UISystem.h"
 #include "mode.h"
 #include "modeTitle.h"
 #include "modeDemo.h"
-#include "fadeSystem.h"
 #include "collisionSystem.h"
 #include "physicsSystem.h"
 #include "cameraManager.h"
@@ -93,7 +93,7 @@ void MainSystem::LateUpdate(void)
 	CameraManager::Instance()->LateUpdate();
 	CollisionSystem::Instance()->LateUpdate();
 	UISystem::Instance()->Update();
-	FadeSystem::Instance()->Update();
+	fade_system_->Update();
 	renderer_manager_->Update();
 #ifdef _DEBUG
 	debug_observer_->LateUpdate();
@@ -113,7 +113,7 @@ void MainSystem::Render(void)
 		CollisionSystem::Instance()->DrawCollider();
 #endif
 		UISystem::Instance()->Draw();
-		FadeSystem::Instance()->Draw();
+		fade_system_->Render();
 #ifdef _DEBUG
 		debug_observer_->Render();
 #endif
@@ -193,11 +193,11 @@ void MainSystem::Uninit(void)
 	SAFE_RELEASE(current_mode_);
 	MotionManager::Release();
 	CameraManager::Release();
-	FadeSystem::Release();
 	UISystem::Release();
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
+	SAFE_RELEASE(fade_system_);
 	SAFE_RELEASE(input_);
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);

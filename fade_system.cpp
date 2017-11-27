@@ -1,21 +1,12 @@
 //--------------------------------------------------------------------------------
-//
-//　fade.cpp
-//	Author : Xu Wenjie
-//	Date   : 2017-06-09
+//　fade_system.h
+//  manage the materials' save, load
+//	マテリアル管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "fadeSystem.h"
-#include "manager.h"
-#include "textureManager.h"
+#include "fade_system.h"
+#include "main_system.h"
 #include "mode.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-FadeSystem* FadeSystem::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -27,15 +18,15 @@ FadeSystem* FadeSystem::instance = nullptr;
 //--------------------------------------------------------------------------------
 void FadeSystem::Update(void)
 {
-	switch (currentState)
+	switch (current_state_)
 	{
-	case State::None:
+	case FadeState::kFadeNone:
 		break;
-	case State::FadeIn:
-		fadeIn();
+	case FadeState::kFadeIn:
+		FadeIn();
 		break;
-	case State::FadeOut:
-		fadeOut();
+	case FadeState::kFadeOut:
+		FadeOut();
 		break;
 	default:
 		break;
@@ -45,7 +36,7 @@ void FadeSystem::Update(void)
 //--------------------------------------------------------------------------------
 //  描画処理
 //--------------------------------------------------------------------------------
-void FadeSystem::Draw(void)
+void FadeSystem::Render(void)
 {
 	//#ifdef USING_DIRECTX
 	//	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
@@ -66,23 +57,19 @@ void FadeSystem::Draw(void)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：FadeTo
-//  関数説明：次のモードにフェードする
-//	引数：	nextMode：次のモード
-//			fadeTime：フェードの時間（秒数）
-//	戻り値：なし
+//  次のモードにフェードする
 //--------------------------------------------------------------------------------
-void FadeSystem::FadeTo(Mode* nextMode, const float fadeTime)
+void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 {
-	if (currentState == State::FadeOut)
+	if (current_state_ == FadeState::kFadeOut)
 	{
-		delete nextMode;
+		delete next_mode;
 		return;
 	}
-	currentState = State::FadeOut;
-	timeCounter = 0.0f;
-	FadeSystem::nextMode = nextMode;
-	FadeSystem::fadeTime = fadeTime;
+	current_state_ = FadeState::kFadeOut;
+	time_counter_ = 0.0f;
+	next_mode_ = next_mode;
+	fade_time_ = fade_time;
 }
 
 //--------------------------------------------------------------------------------
@@ -93,7 +80,7 @@ void FadeSystem::FadeTo(Mode* nextMode, const float fadeTime)
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void FadeSystem::init(void)
+void FadeSystem::Init(void)
 {
 //#ifdef USING_DIRECTX
 //	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
@@ -155,7 +142,7 @@ void FadeSystem::init(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void FadeSystem::uninit(void)
+void FadeSystem::Uninit(void)
 {
 //#ifdef USING_DIRECTX
 //	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
@@ -166,54 +153,30 @@ void FadeSystem::uninit(void)
 //--------------------------------------------------------------------------------
 //  fadeIn
 //--------------------------------------------------------------------------------
-void FadeSystem::fadeIn(void)
+void FadeSystem::FadeIn(void)
 {
-	timeCounter -= DELTA_TIME;
-	if (timeCounter <= 0.0f)
+	time_counter_ -= DELTA_TIME;
+	if (time_counter_ <= 0.0f)
 	{
-		timeCounter = 0.0f;
-		currentState = State::None;
+		time_counter_ = 0.0f;
+		current_state_ = kFadeNone;
 	}
-	setColor();
+	color_.a_ = time_counter_ / fade_time_;
 }
 
 //--------------------------------------------------------------------------------
 //  fadeOut
 //--------------------------------------------------------------------------------
-void FadeSystem::fadeOut(void)
+void FadeSystem::FadeOut(void)
 {
-	timeCounter += DELTA_TIME;
-	if (timeCounter >= fadeTime)
+	time_counter_ += DELTA_TIME;
+	if (time_counter_ >= fade_time_)
 	{
-		timeCounter = fadeTime;
+		time_counter_ = fade_time_;
 
 		// Todo : Check SE & BGM(fade out effect)
-		currentState = State::FadeIn;
-		Manager::Instance()->Change(nextMode);
+		current_state_ = kFadeIn;
+		MainSystem::Instance()->Change(next_mode_);
 	}
-	setColor();
-}
-
-//--------------------------------------------------------------------------------
-//	色の設定
-//--------------------------------------------------------------------------------
-void FadeSystem::setColor(void)
-{
-	color.A = timeCounter / fadeTime;
-//#ifdef USING_DIRECTX
-//	//仮想アドレスを取得するためのポインタ
-//	VERTEX_2D *pVtx = NULL;
-//
-//	//頂点バッファをロックして、仮想アドレスを取得する
-//	vertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-//
-//	//頂点カラーの設定(0～255の整数値)
-//	pVtx[0].Color = cColor;
-//	pVtx[1].Color = cColor;
-//	pVtx[2].Color = cColor;
-//	pVtx[3].Color = cColor;
-//
-//	//仮想アドレス解放
-//	vertexBuffer->Unlock();
-//#endif
+	color_.a_ = time_counter_ / fade_time_;
 }
