@@ -75,7 +75,7 @@ void MainSystem::Update(void)
 #ifdef _DEBUG
 	debug_observer_->Update();
 #endif
-	Input::Instance()->Update();
+	input_->Update();
 	current_mode_->Update();
 	GameObjectManager::Instance()->Update();
 	CollisionSystem::Instance()->Update();
@@ -166,8 +166,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #ifdef _DEBUG
 	debug_observer_ = DebugObserver::Create();
 #endif
-	RendererManager::Create();
-	Input::Create(hinstance, hwnd);
+	input_ = Input::Create(hinstance, hwnd);
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
@@ -199,7 +198,7 @@ void MainSystem::Uninit(void)
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
-	Input::Release();
+	SAFE_RELEASE(input_);
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);
 #endif

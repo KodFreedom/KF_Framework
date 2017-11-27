@@ -187,7 +187,7 @@
     <ClCompile Include="gameObjectActor.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gameObjectSpawner.cpp" />
-    <ClCompile Include="inputDeviceDX.cpp" />
+    <ClCompile Include="input_device_directX.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="collisionSystem.cpp" />
     <ClCompile Include="collisionDetector.cpp" />
@@ -267,7 +267,7 @@
     <ClInclude Include="kf_utility.h" />
     <ClInclude Include="modeEditor.h" />
     <ClInclude Include="modelEditor.h" />
-    <ClInclude Include="inputDeviceDX.h" />
+    <ClInclude Include="input_device_directX.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="collisionSystem.h" />
     <ClInclude Include="kf_math.h" />

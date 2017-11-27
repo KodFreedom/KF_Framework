@@ -124,6 +124,12 @@ public:
 	const auto GetDebugObserver(void) const { return debug_observer_; }
 #endif
 
+	//--------------------------------------------------------------------------------
+	//  インプットを返す
+	//  return : Input* const
+	//--------------------------------------------------------------------------------
+	const auto GetInput(void) const { return input_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -135,7 +141,7 @@ private:
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
-		{}
+		, input_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -169,6 +175,7 @@ private:
 #ifdef _DEBUG
 	DebugObserver*     debug_observer_; // デバッグ観察者
 #endif
+	Input*             input_; // 入力管理者
 
 	static MainSystem* instance_; // インスタンス
 };

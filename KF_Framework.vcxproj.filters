@@ -237,9 +237,6 @@
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
       <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="inputDeviceDX.cpp">
-      <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
     </ClCompile>
@@ -381,6 +378,9 @@
     <ClCompile Include="renderer_manager.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
+    <ClCompile Include="input_device_directX.cpp">
+      <Filter>ソース ファイル\Base\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -451,9 +451,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="inputDeviceDX.h">
-      <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="renderer_manager.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="input_device_directX.h">
+      <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
