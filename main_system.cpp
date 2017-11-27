@@ -9,10 +9,10 @@
 #include "mesh_manager.h"
 #include "material_manager.h"
 #include "light_manager.h"
+#include "sound_manager.h"
 #include "rendererManager.h"
 #include "input.h"
 #include "gameObjectManager.h"
-#include "soundManager.h"
 #include "UISystem.h"
 #include "mode.h"
 #include "modeTitle.h"
@@ -158,6 +158,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #endif
 	material_manager_ = MaterialManager::Create();
 	light_manager_ = LightManager::Create();
+	sound_manager_ = SoundManager::Create();
 
 #if defined(_DEBUG) || defined(EDITOR)
 	DebugObserver::Create(hwnd);
@@ -168,7 +169,6 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
 	UISystem::Create();
-	SoundManager::Create();
 	FadeSystem::Create();
 	CameraManager::Create();
 	MotionManager::Create();
@@ -188,7 +188,6 @@ void MainSystem::Uninit(void)
 	MotionManager::Release();
 	CameraManager::Release();
 	FadeSystem::Release();
-	SoundManager::Release();
 	UISystem::Release();
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
@@ -198,6 +197,7 @@ void MainSystem::Uninit(void)
 	DebugObserver::Release();
 #endif
 	RendererManager::Release();
+	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);
 	SAFE_RELEASE(material_manager_);
 	SAFE_RELEASE(mesh_manager_);

@@ -1,48 +1,71 @@
 //--------------------------------------------------------------------------------
-//
-//　soundManager.h
-//	Author : Xu Wenjie
-//	Date   : 2017-1-23
+//　sound_manager.h
+//  manage the se,bgm's save, load
+//	サウンド管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
+#include "common_setting.h"
 
 //--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
 enum SoundLabel
 {
-	SL_GameBGM,
-	SL_Max,
+	eGameBGM,
+	eSoundMax,
 };
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  サウンド管理者クラス
 //--------------------------------------------------------------------------------
 class SoundManager
 {
 public:
-	static auto	Create(void)
+	//--------------------------------------------------------------------------------
+	//  生成処理
+	//  return : SoundManager*
+	//--------------------------------------------------------------------------------
+	static SoundManager* Create(void)
 	{
-		if (instance) return instance;
-		instance = new SoundManager;
-		instance->LoadAll();
+		auto instance = MY_NEW SoundManager();
+		instance->Init();
 		return instance;
 	}
-	static void Release(void) { SAFE_UNINIT(instance); }
-	static auto Instance(void) { return instance; }
 
-	HRESULT	LoadAll(void);
-	void	UnloadAll(void);
-	void	Play(const SoundLabel label);
-	void	Stop(const SoundLabel label);
-	bool	IsOver(const SoundLabel label);
-	bool	IsPlaying(const SoundLabel label);
-	void	StopAll(void);
+	//--------------------------------------------------------------------------------
+	//  破棄処理
+	//--------------------------------------------------------------------------------
+	void Release(void) { Uninit(); }
+
+	//--------------------------------------------------------------------------------
+	//  指定したサウンドを鳴らす
+	//  label : soundのラベル
+	//--------------------------------------------------------------------------------
+	void Play(const SoundLabel label);
+
+	//--------------------------------------------------------------------------------
+	//  指定したサウンドを止める
+	//  label : soundのラベル
+	//--------------------------------------------------------------------------------
+	void Stop(const SoundLabel label);
+
+	//--------------------------------------------------------------------------------
+	//  指定したサウンドが終わってるかをチェック
+	//  label : soundのラベル
+	//--------------------------------------------------------------------------------
+	bool IsOver(const SoundLabel label);
+
+	//--------------------------------------------------------------------------------
+	//  指定したサウンドがなってるかをチェック
+	//  label : soundのラベル
+	//--------------------------------------------------------------------------------
+	bool IsPlaying(const SoundLabel label);
+
+	//--------------------------------------------------------------------------------
+	//  全てのサウンドを止まる
+	//--------------------------------------------------------------------------------
+	void StopAll(void);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -50,27 +73,53 @@ private:
 	//--------------------------------------------------------------------------------
 	struct Paramater
 	{
-		string	FileName;
-		int		CountLoop;
+		String	file_path;
+		int		count_loop;
 	};
 
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	SoundManager();
+	SoundManager() : instance_xaudio2_(nullptr), mastering_voice_(nullptr)
+	{
+		for (int count = 0; count < static_cast<int>(eSoundMax); ++count)
+		{
+			source_voices_[count] = nullptr;
+			audio_datas_[count] = nullptr;
+			audio_sizes_[count] = 0;
+		}
+	}
+	SoundManager(const SoundManager& value) {}
+	SoundManager& operator=(const SoundManager& value) {}
 	~SoundManager() {}
-	void	uninit(void) { UnloadAll(); }
-	HRESULT checkChunk(HANDLE file, DWORD format, DWORD *chunkSize, DWORD *chunkDataPosition);
-	HRESULT readChunkData(HANDLE file, void *buffer, DWORD buffersize, DWORD bufferoffset);
+
+	//--------------------------------------------------------------------------------
+	//  初期化処理
+	//--------------------------------------------------------------------------------
+	bool Init(void);
+
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void);
+
+	//--------------------------------------------------------------------------------
+	//  チャンクのチェック
+	//--------------------------------------------------------------------------------
+	bool CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position);
+
+	//--------------------------------------------------------------------------------
+	//  チャンクデータの読み込み
+	//--------------------------------------------------------------------------------
+	bool ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, DWORD buffer_offset);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	IXAudio2*				instanceXAudio2;
-	IXAudio2MasteringVoice*	masteringVoice;
-	IXAudio2SourceVoice*	sourceVoices[SL_Max];
-	BYTE*					audioDatas[SL_Max];
-	DWORD					audioSizes[SL_Max];
-	static Paramater 		paramaters[SL_Max];
-	static SoundManager*	instance;
+	IXAudio2*				instance_xaudio2_;
+	IXAudio2MasteringVoice*	mastering_voice_;
+	IXAudio2SourceVoice*	source_voices_[eSoundMax];
+	BYTE*					audio_datas_[eSoundMax];
+	DWORD					audio_sizes_[eSoundMax];
+	static Paramater 		paramaters_[eSoundMax];
 };
