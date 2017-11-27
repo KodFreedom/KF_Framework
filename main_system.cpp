@@ -30,10 +30,13 @@
 #endif
 #endif
 
-#if defined(_DEBUG) || defined(EDITOR)
+#ifdef EDITOR
 #include "modeEditor.h"
-#include "debugObserver.h"
-#endif
+#endif // EDITOR
+
+#ifdef _DEBUG
+#include "debug_observer.h"
+#endif // _DEBUG
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
@@ -69,8 +72,8 @@ void MainSystem::Release(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Update(void)
 {
-#if defined(_DEBUG) || defined(EDITOR)
-	DebugObserver::Instance()->Update();
+#ifdef _DEBUG
+	debug_observer_->Update();
 #endif
 	Input::Instance()->Update();
 	current_mode_->Update();
@@ -92,8 +95,8 @@ void MainSystem::LateUpdate(void)
 	UISystem::Instance()->Update();
 	FadeSystem::Instance()->Update();
 	RendererManager::Instance()->Update();
-#if defined(_DEBUG) || defined(EDITOR)
-	DebugObserver::Instance()->LateUpdate();
+#ifdef _DEBUG
+	debug_observer_->LateUpdate();
 #endif
 }
 
@@ -111,8 +114,8 @@ void MainSystem::Render(void)
 #endif
 		UISystem::Instance()->Draw();
 		FadeSystem::Instance()->Draw();
-#if defined(_DEBUG) || defined(EDITOR)
-		DebugObserver::Instance()->Draw();
+#ifdef _DEBUG
+		debug_observer_->Render();
 #endif
 		render_system_->EndRender();
 		render_system_->Present();
@@ -159,9 +162,8 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	material_manager_ = MaterialManager::Create();
 	light_manager_ = LightManager::Create();
 	sound_manager_ = SoundManager::Create();
-
-#if defined(_DEBUG) || defined(EDITOR)
-	DebugObserver::Create(hwnd);
+#ifdef _DEBUG
+	debug_observer_ = DebugObserver::Create();
 #endif
 	RendererManager::Create();
 	Input::Create(hinstance, hwnd);
@@ -174,7 +176,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	MotionManager::Create();
 
 	//初期モード設定
+#ifdef EDITOR
+	Change(new ModeEditor);
+#else
 	Change(new ModeDemo);
+#endif // EDITOR
 
 	return true;
 }
@@ -193,10 +199,10 @@ void MainSystem::Uninit(void)
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
 	Input::Release();
-#if defined(_DEBUG) || defined(EDITOR)
-	DebugObserver::Release();
-#endif
 	RendererManager::Release();
+#ifdef _DEBUG
+	SAFE_RELEASE(debug_observer_);
+#endif
 	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);
 	SAFE_RELEASE(material_manager_);

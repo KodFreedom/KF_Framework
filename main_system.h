@@ -109,6 +109,14 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetSoundManager(void) const { return sound_manager_; }
 
+#ifdef _DEBUG
+	//--------------------------------------------------------------------------------
+	//  デバッグ観察者を返す
+	//  return : DebugObserver* const
+	//--------------------------------------------------------------------------------
+	const auto GetDebugObserver(void) const { return debug_observer_; }
+#endif
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -116,7 +124,11 @@ private:
 	MainSystem() : current_mode_(nullptr), render_system_(nullptr)
 		, texture_manager_(nullptr), mesh_manager_(nullptr)
 		, material_manager_(nullptr), light_manager_(nullptr)
-		, sound_manager_(nullptr) {}
+		, sound_manager_(nullptr)
+#ifdef _DEBUG
+		, debug_observer_(nullptr)
+#endif
+		{}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -146,5 +158,8 @@ private:
 	MaterialManager*   material_manager_; // マテリアル管理者
 	LightManager*      light_manager_; // ライトの管理者
 	SoundManager*      sound_manager_; // サウンド管理者
+#ifdef _DEBUG
+	DebugObserver*     debug_observer_; // デバッグ観察者
+#endif
 	static MainSystem* instance_; // インスタンス
 };

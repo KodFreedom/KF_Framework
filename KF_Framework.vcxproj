@@ -170,7 +170,7 @@
     <ClCompile Include="boxCollider.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
-    <ClCompile Include="debugObserver.cpp" />
+    <ClCompile Include="debug_observer.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -242,7 +242,7 @@
     <ClInclude Include="backgroundUI.h" />
     <ClInclude Include="boxCollider.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="debugObserver.h" />
+    <ClInclude Include="debug_observer.h" />
     <ClInclude Include="editorController.h" />
     <ClInclude Include="attackModeAI.h" />
     <ClInclude Include="normalModeAI.h" />

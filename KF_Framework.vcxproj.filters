@@ -237,9 +237,6 @@
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
       <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="debugObserver.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="inputDeviceDX.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
     </ClCompile>
@@ -384,6 +381,9 @@
     <ClCompile Include="material_manager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="debug_observer.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -454,9 +454,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="debugObserver.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
     <ClInclude Include="inputDeviceDX.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
@@ -634,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="light.h">
       <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_observer.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
