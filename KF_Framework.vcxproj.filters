@@ -413,9 +413,6 @@
     <ClInclude Include="modeResult.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
-    <ClInclude Include="motionInfo.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
     <ClInclude Include="UISystem.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="fade_system.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_data.h">
+      <Filter>ヘッダー ファイル\Base\Motion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

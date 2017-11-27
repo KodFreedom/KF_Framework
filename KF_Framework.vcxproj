@@ -283,7 +283,7 @@
     <ClInclude Include="modeDemo.h" />
     <ClInclude Include="modeResult.h" />
     <ClInclude Include="modeTitle.h" />
-    <ClInclude Include="motionInfo.h" />
+    <ClInclude Include="motion_data.h" />
     <ClInclude Include="motion_state.h" />
     <ClInclude Include="OBBCollider.h" />
     <ClInclude Include="playerController.h" />
