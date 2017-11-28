@@ -174,7 +174,7 @@
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="meshRenderer.cpp" />
+    <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="editorController.cpp" />
     <ClCompile Include="editor_camera.cpp" />
     <ClCompile Include="attackModeAI.cpp" />
@@ -254,7 +254,7 @@
     <ClInclude Include="ImGui\stb_rect_pack.h" />
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
-    <ClInclude Include="meshRenderer.h" />
+    <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="editor_camera.h" />
     <ClInclude Include="enemyController.h" />
     <ClInclude Include="fade_system.h" />

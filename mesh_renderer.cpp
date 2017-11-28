@@ -1,19 +1,15 @@
 //--------------------------------------------------------------------------------
-//	描画コンポネント
+//	メッシュ描画コンポネント
 //　MeshRenderer.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-05-18	
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "meshRenderer.h"
-#include "gameObject.h"
-#include "meshManager.h"
-#include "materialManager.h"
-#include "rendererManager.h"
+#include "mesh_renderer.h"
+#include "game_object.h"
+#include "main_system.h"
+#include "mesh_manager.h"
+#include "material_manager.h"
 #include "camera.h"
-#include "cameraManager.h"
+#include "camera_manager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -33,16 +29,17 @@ bool MeshRenderer::Init(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Uninit(void)
 {
-	if (!meshName.empty())
+	auto main_system = MainSystem::Instance();
+	if (!mesh_name_.empty())
 	{
-		MeshManager::Instance()->Disuse(meshName);
-		meshName.clear();
+		main_system->GetMeshManager()->Disuse(mesh_name_);
+		mesh_name_.clear();
 	}
 
-	if (!materialName.empty())
+	if (!material_name_.empty())
 	{
-		MaterialManager::Instance()->Disuse(meshName);
-		materialName.clear();
+		main_system->GetMaterialManager()->Disuse(mesh_name_);
+		material_name_.clear();
 	}
 }
 
@@ -51,39 +48,41 @@ void MeshRenderer::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Update(void)
 {
-	if (CameraManager::Instance()->GetMainCamera()->IsInRange(
-		owner->GetTransform()->GetCurrentPosition()))
+	auto main_system = MainSystem::Instance();
+	if (main_system->GetCameraManager()->
+		GetMainCamera()->IsInRange(
+		owner_.GetTransform()->GetPosition()))
 	{
-		RendererManager::Instance()->Register(this);
+		main_system->GetRendererManager()->Register(this);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  メッシュの設定
 //--------------------------------------------------------------------------------
-void MeshRenderer::SetMeshName(const string& name)
+void MeshRenderer::SetMesh(const String& name)
 {
-	if (!meshName.empty())
+	auto mesh_manager = MainSystem::Instance()->GetMeshManager();
+	if (!mesh_name_.empty())
 	{
-		MeshManager::Instance()->Disuse(meshName);
-		meshName.clear();
+		mesh_manager->Disuse(mesh_name_);
+		mesh_name_.clear();
 	}
-
-	meshName = name;
-	MeshManager::Instance()->Use(name);
+	mesh_name_ = name;
+	mesh_manager->Use(name);
 }
 
 //--------------------------------------------------------------------------------
 //  マテリアルの設定
 //--------------------------------------------------------------------------------
-void MeshRenderer::SetMaterialName(const string& name)
+void MeshRenderer::SetMaterial(const String& name)
 {
-	if (!materialName.empty())
+	auto material_manager = MainSystem::Instance()->GetMaterialManager();
+	if (!material_name_.empty())
 	{
-		MaterialManager::Instance()->Disuse(materialName);
-		materialName.clear();
+		material_manager->Disuse(material_name_);
+		material_name_.clear();
 	}
-
-	materialName = name;
-	MaterialManager::Instance()->Use(name);
+	material_name_ = name;
+	material_manager->Use(name);
 }

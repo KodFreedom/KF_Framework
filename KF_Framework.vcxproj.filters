@@ -234,9 +234,6 @@
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="meshRenderer.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="rigidbody3D.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
@@ -381,6 +378,9 @@
     <ClCompile Include="game_object_spawner.cpp">
       <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="mesh_renderer.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -448,9 +448,6 @@
     </ClInclude>
     <ClInclude Include="sphereCollider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="meshRenderer.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="game_object_spawner.h">
       <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

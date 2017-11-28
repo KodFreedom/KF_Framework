@@ -6,7 +6,8 @@
 #include "common_setting.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "render_system_directX9.h"
-#include "meshManager.h"
+#include "main_system.h"
+#include "mesh_manager.h"
 #if defined(_DEBUG) || defined(EDITOR)
 #include "ImGui\imgui_impl_dx9.h"
 #endif
@@ -19,14 +20,14 @@
 //--------------------------------------------------------------------------------
 //  •`‰æˆ—(3D)
 //--------------------------------------------------------------------------------
-void RenderSystemDirectX9::Render(const string& mesh_name)
+void RenderSystemDirectX9::Render(const String& mesh_name)
 {
-	auto mesh = MeshManager::Instance()->GetMesh(mesh_name);
+	auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(mesh_name);
 	device_->SetVertexDeclaration(vertex_declaration_3d_);
-	device_->SetStreamSource(0, mesh->VertexBuffer, 0, sizeof(Vertex3d));
-	device_->SetIndices(mesh->IndexBuffer);
-	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->CurrentType),
-		0, 0, mesh->VertexNumber, 0, mesh->PolygonNumber);
+	device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3d));
+	device_->SetIndices(mesh->index_buffer);
+	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->type),
+		0, 0, mesh->vertex_number, 0, mesh->polygon_number);
 }
 
 //--------------------------------------------------------------------------------

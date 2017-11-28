@@ -7,8 +7,8 @@
 #include "renderer_manager.h"
 #include "main_system.h"
 #include "render_system.h"
-#include "meshRenderer.h"
-#include "gameObject.h"
+#include "mesh_renderer.h"
+#include "game_object.h"
 #include "transform.h"
 
 //--------------------------------------------------------------------------------
@@ -53,5 +53,5 @@ void RendererManager::Render(void)
 //--------------------------------------------------------------------------------
 void RendererManager::Register(MeshRenderer* renderer)
 {
-	renderers_arrays_[renderer->GetRenderPriority()][renderer->GetRenderState()].push_back(renderer);
+	renderers_arrays_[renderer->GetRenderPriority()][renderer->GetShaderType()].push_back(renderer);
 }
