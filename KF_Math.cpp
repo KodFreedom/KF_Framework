@@ -5,7 +5,7 @@
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "kf_math.h"
-using namespace KodFreedom;
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  constant variables / 定数
@@ -57,6 +57,22 @@ const Color Color::kGreen = Color(0.0f, 1.0f, 0.0f, 1.0f);
 //	result.Transform(viewInverse);
 //	return result;
 //}
+
+//--------------------------------------------------------------------------------
+//
+//  Vector3
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  ベクトルを回転する
+//--------------------------------------------------------------------------------
+Vector3 Vector3::Rotate(const Vector3& direction, const Quaternion& rotation)
+{
+	Quaternion& direction_quaternion = Quaternion(direction.x_, direction.y_, direction.z_, 0.0f);
+	Quaternion& result = rotation.Conjugate() * direction_quaternion;
+	result *= rotation;
+	return Vector3(result.x_, result.y_, result.z_);
+}
 
 //--------------------------------------------------------------------------------
 //
@@ -307,7 +323,7 @@ Matrix44 Quaternion::ToMatrix(void) const
 //--------------------------------------------------------------------------------
 //	Quaternionを球形補間方式で補間する
 //--------------------------------------------------------------------------------
-Quaternion Math::Slerp(const Quaternion& from, const Quaternion& to, const float& time)
+Quaternion math::Slerp(const Quaternion& from, const Quaternion& to, const float& time)
 {
 	if (time <= 0.0f) { return from; }
 	if (time >= 1.0f) { return to; }

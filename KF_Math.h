@@ -594,6 +594,14 @@ namespace kodfreedom
 		{
 			return (current_normal * direction) * plane_normal;
 		}
+	
+		//--------------------------------------------------------------------------------
+		//  ベクトルを回転する
+		//  direction：回転相手
+		//  rotation：回転quaternion
+		//  return：Vector3
+		//--------------------------------------------------------------------------------
+		static Vector3 Rotate(const Vector3& direction, const Quaternion& rotation);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -922,7 +930,7 @@ namespace kodfreedom
 		//--------------------------------------------------------------------------------
 		//  create transform matrix with given rotation, scale, translation
 		//  与えられた回転、移動量、スケールで行列の作成
-		//  rotation：回転量
+		//  rotation：回転量(vector3)
 		//  translation：移動量
 		//  scale：スケール量
 		//  return：Matrix44
@@ -931,6 +939,22 @@ namespace kodfreedom
 		{
 			auto& result = Scale(scale);
 			result *= RotationYawPitchRoll(rotation);
+			result *= Translation(translation);
+			return result;
+		}
+
+		//--------------------------------------------------------------------------------
+		//  create transform matrix with given rotation, scale, translation
+		//  与えられた回転、移動量、スケールで行列の作成
+		//  rotation：回転量(quaternion)
+		//  translation：移動量
+		//  scale：スケール量
+		//  return：Matrix44
+		//--------------------------------------------------------------------------------
+		static Matrix44 Transform(const Quaternion& rotation, const Vector3& translation, const Vector3& scale = Vector3::kOne)
+		{
+			auto& result = Scale(scale);
+			result *= rotation.ToMatrix();
 			result *= Translation(translation);
 			return result;
 		}
@@ -1162,6 +1186,15 @@ namespace kodfreedom
 		{
 			*this = this->Normalized();
 		}
+
+		//--------------------------------------------------------------------------------
+		//  return the conjugate quaternion
+		//  return：Quaternion
+		//--------------------------------------------------------------------------------
+		Quaternion Conjugate(void) const
+		{
+			return Quaternion(-x_, -y_, -z_, -w_);
+		}
 		
 		//--------------------------------------------------------------------------------
 		//  mult each component with value別々で乗算
@@ -1184,6 +1217,19 @@ namespace kodfreedom
 		//	return：Matrix44
 		//--------------------------------------------------------------------------------
 		Matrix44 ToMatrix(void) const;
+
+		//--------------------------------------------------------------------------------
+		//	create a quaternion rotate by axis
+		//	return：Matrix44
+		//--------------------------------------------------------------------------------
+		static Quaternion RotateAxis(const Vector3& axis, const float& radian)
+		{
+			auto& axis_quaternion = Quaternion(axis.x_, axis.y_, axis.z_, 1.0f);
+			float sin = sinf(radian * 0.5f);
+			float cos = cosf(radian * 0.5f);
+			auto& scale = Quaternion(sin, sin, sin, cos);
+			return axis_quaternion * scale;
+		}
 	};
 
 	//--------------------------------------------------------------------------------
