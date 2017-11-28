@@ -27,19 +27,18 @@ class Collision
 {
 public:
 	Collision()
-		: RigidbodyOne(nullptr)
-		, RigidbodyTwo(nullptr)
-		, Normal(Vector3::Zero)
-		, Point(Vector3::Zero)
-		, Penetration(0.0f)
-	{}
+		: rigidbody_one(nullptr)
+		, rigidbody_two(nullptr)
+		, normal(Vector3::kZero)
+		, point(Vector3::kZero)
+		, penetration(0.0f) {}
 	~Collision() {}
 
-	Rigidbody3D*	RigidbodyOne;
-	Rigidbody3D*	RigidbodyTwo;
-	Vector3					Normal;
-	Vector3					Point;
-	float					Penetration;
+	Rigidbody3D* rigidbody_one;
+	Rigidbody3D* rigidbody_two;
+	Vector3      normal; // è’ìÀñ@ê¸
+	Vector3	     point; // è’ìÀì_
+	float        penetration; // è’ìÀê[ìx
 };
 
 //--------------------------------------------------------------------------------

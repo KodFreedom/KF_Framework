@@ -1,28 +1,19 @@
 //--------------------------------------------------------------------------------
 //	物理演算システム
-//　KF_PhysicsSystem.cpp
-//	Author : Xu Wenjie
-//	Date   : 2017-07-25
+//　physics_system.cpp
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "physicsSystem.h"
-#include "collisionDetector.h"
-#include "gameObject.h"
+#include "physics_system.h"
+#include "collision_detector.h"
+#include "game_object.h"
 #include "transform.h"
-#include "rigidbody3D.h"
+#include "rigidbody3d.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-PhysicsSystem* PhysicsSystem::instance = nullptr;
-const Vector3 PhysicsSystem::Gravity = Vector3(0.0f, -9.8f, 0.0f);
+const Vector3 PhysicsSystem::kGravity = Vector3(0.0f, -9.8f, 0.0f);
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -33,26 +24,24 @@ const Vector3 PhysicsSystem::Gravity = Vector3(0.0f, -9.8f, 0.0f);
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Update(void)
 {
-	for (auto iterator = collisions.begin(); iterator != collisions.end();)
+	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
 	{
-		resolve(**iterator);
+		Resolve(**iterator);
 		delete *iterator;
-		iterator = collisions.erase(iterator);
+		iterator = collisions_.erase(iterator);
 	}
 }
 
 //--------------------------------------------------------------------------------
 //	関数名：Clear
 //  関数説明：衝突情報を全部破棄する
-//	引数：	なし
-//	戻り値：なし
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Clear(void)
 {
-	for (auto iterator = collisions.begin(); iterator != collisions.end();)
+	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
 	{
 		delete *iterator;
-		iterator = collisions.erase(iterator);
+		iterator = collisions_.erase(iterator);
 	}
 }
 
@@ -64,117 +53,116 @@ void PhysicsSystem::Clear(void)
 //--------------------------------------------------------------------------------
 //  衝突処理
 //--------------------------------------------------------------------------------
-void PhysicsSystem::resolve(Collision& collision)
+void PhysicsSystem::Resolve(Collision& collision)
 {
-	resolveVelocity(collision);
-	resolveInterpenetration(collision);
+	ResolveVelocity(collision);
+	ResolveInterpenetration(collision);
 }
 
 //--------------------------------------------------------------------------------
 //  反発速度の算出
 //--------------------------------------------------------------------------------
-void PhysicsSystem::resolveVelocity(Collision& collision)
+void PhysicsSystem::ResolveVelocity(Collision& collision)
 {
 	//分離速度計算
-	float separatingVelocity = calculateSeparatingVelocity(collision);
+	float separating_velocity = CalculateSeparatingVelocity(collision);
 
 	//分離速度チェック
 	//衝突法線の逆方向になれば計算しない
-	if (separatingVelocity > 0.0f) return;
+	if (separating_velocity > 0.0f) return;
 
 	//跳ね返り係数の算出
-	float bounciness = collision.RigidbodyOne->bounciness;
-	if (collision.RigidbodyTwo)
+	float bounciness = collision.rigidbody_one->GetBounciness();
+	if (collision.rigidbody_two)
 	{
-		bounciness += collision.RigidbodyTwo->bounciness;
+		bounciness += collision.rigidbody_two->GetBounciness();
 		bounciness *= 0.5f;
 	}
 
 	//跳ね返り速度の算出
-	float bouncinessVelocity = -separatingVelocity * bounciness;
+	float bounciness_velocity = -separating_velocity * bounciness;
 
 	//衝突方向に作用力を計算する
-	auto acceleration = collision.RigidbodyOne->acceleration;
-	if (collision.RigidbodyTwo)
+	Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
+	if (collision.rigidbody_two)
 	{
-		acceleration -= collision.RigidbodyTwo->acceleration;
+		acceleration -= collision.rigidbody_two->GetAcceleration();
 	}
-	float separatingAcceleration = acceleration.Dot(collision.Normal);
+	float separating_acceleration = acceleration.Dot(collision.normal);
 
 	//衝突法線の逆方向になれば
-	if (separatingAcceleration < 0.0f)
+	if (separating_acceleration < 0.0f)
 	{
-		bouncinessVelocity += separatingAcceleration * bounciness;
-		if (bouncinessVelocity < 0.0f) bouncinessVelocity = 0.0f;
+		bounciness_velocity += separating_acceleration * bounciness;
+		if (bounciness_velocity < 0.0f) bounciness_velocity = 0.0f;
 	}
 
 	//速度差分計算
-	float deltaVelocity = bouncinessVelocity - separatingVelocity;
+	float delta_velocity = bounciness_velocity - separating_velocity;
 
 	//逆質量取得
-	float totalInverseMass = collision.RigidbodyOne->inverseMass;
-	if (collision.RigidbodyTwo)
+	float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
+	if (collision.rigidbody_two)
 	{
-		totalInverseMass += collision.RigidbodyTwo->inverseMass;
+		total_inverse_mass += collision.rigidbody_two->GetInverseMass();
 	}
 
 	//質量が無限大の場合計算しない
-	if (totalInverseMass <= 0.0f) return;
+	if (total_inverse_mass <= 0.0f) return;
 
 	//衝突力計算
-	float impulse = deltaVelocity / totalInverseMass;
+	float impulse = delta_velocity / total_inverse_mass;
 
 	//単位逆質量の衝突力
-	auto impulsePerInverseMass = collision.Normal * impulse;
+	const Vector3& impulse_per_inverse_mass = collision.normal * impulse;
 
 	//速度計算
-	collision.RigidbodyOne->velocity += impulsePerInverseMass * collision.RigidbodyOne->inverseMass;;
-	if (collision.RigidbodyTwo)
+	collision.rigidbody_one->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
+	if (collision.rigidbody_two)
 	{
-		collision.RigidbodyTwo->velocity += impulsePerInverseMass * -1.0f * collision.RigidbodyTwo->inverseMass;;
+		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  めり込みの解決
 //--------------------------------------------------------------------------------
-void PhysicsSystem::resolveInterpenetration(Collision& collision)
+void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 {
 	//衝突しない
-	if (collision.Penetration <= 0.0f) return;
+	if (collision.penetration <= 0.0f) return;
 
 	//逆質量計算
-	float totalInverseMass = collision.RigidbodyOne->inverseMass;
-	if (collision.RigidbodyTwo)
+	float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
+	if (collision.rigidbody_two)
 	{
-		totalInverseMass += collision.RigidbodyTwo->inverseMass;
+		total_inverse_mass += collision.rigidbody_two->GetInverseMass();
 	}
 
 	//質量が無限大の場合計算しない
-	if (totalInverseMass <= 0.0f) return;
+	if (total_inverse_mass <= 0.0f) return;
 
 	//質量単位戻り量計算
-	auto movementPerInverseMass = collision.Normal * collision.Penetration / totalInverseMass;
+	const Vector3& movement_per_inverse_mass = collision.normal * collision.penetration / total_inverse_mass;
 
 	//各Rigidbody戻り位置計算
-	auto transform = collision.RigidbodyOne->GetGameObject()->GetTransform();
-	collision.RigidbodyOne->movement += movementPerInverseMass * collision.RigidbodyOne->inverseMass;
-
-	if (collision.RigidbodyTwo)
+	auto transform = collision.rigidbody_one->GetGameObject().GetTransform();
+	collision.rigidbody_one->SetMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
+	if (collision.rigidbody_two)
 	{
-		transform = collision.RigidbodyTwo->GetGameObject()->GetTransform();
-		collision.RigidbodyTwo->movement -= movementPerInverseMass * collision.RigidbodyTwo->inverseMass;
+		transform = collision.rigidbody_two->GetGameObject().GetTransform();
+		collision.rigidbody_two->SetMovement(movement_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
 	}
 }
 
 //--------------------------------------------------------------------------------
 //  分離速度の算出
 //--------------------------------------------------------------------------------
-float PhysicsSystem::calculateSeparatingVelocity(Collision& collision)
+float PhysicsSystem::CalculateSeparatingVelocity(Collision& collision)
 {
-	auto relativeVelocity = collision.RigidbodyOne->velocity;
-	if (collision.RigidbodyTwo) relativeVelocity -= collision.RigidbodyTwo->velocity;
-	return relativeVelocity.Dot(collision.Normal);
+	auto relative_velocity = collision.rigidbody_one->GetVelocity();
+	if (collision.rigidbody_two) relative_velocity -= collision.rigidbody_two->GetVelocity();
+	return relative_velocity.Dot(collision.normal);
 }
 
 /*//--------------------------------------------------------------------------------

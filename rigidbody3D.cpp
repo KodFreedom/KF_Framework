@@ -7,9 +7,9 @@
 //--------------------------------------------------------------------------------
 //  インクルードファイル
 //--------------------------------------------------------------------------------
-#include "gameObject.h"
-#include "physicsSystem.h"
-#include "rigidbody3D.h"
+#include "rigidbody3d.h"
+#include "game_object.h"
+#include "physics_system.h"
 #include "collider.h"
 #include "sphereCollider.h"
 #include "AABBCollider.h"
@@ -23,56 +23,48 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-Rigidbody3D::Rigidbody3D(GameObject* const owner)
-	: Rigidbody(owner, Type::Rigidbody3D)
-	, mass(1.0f)
-	, inverseMass(1.0f)
-	, drag(1.0f)
-	, friction(1.0f)
-	, bounciness(0.0f)
-	, gravityCoefficient(5.0f)
-	, movement(Vector3::Zero)
-	, velocity(Vector3::Zero)
-	, acceleration(Vector3::Zero)
-	, forceAccum(Vector3::Zero)
-{
-}
+Rigidbody3D::Rigidbody3D(GameObject& owner)
+	: Rigidbody(owner, Type::kRigidbody3D)
+	, mass_(1.0f)
+	, inverse_mass_(1.0f)
+	, drag_(1.0f)
+	, friction_(1.0f)
+	, bounciness_(0.0f)
+	, gravity_multiplier_(5.0f)
+	, movement_(Vector3::kZero)
+	, velocity_(Vector3::kZero)
+	, acceleration_(Vector3::kZero)
+	, force_accum_(Vector3::kZero)
+{}
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void Rigidbody3D::Update(void)
 {
-	auto transform = owner->GetTransform();
+	auto transform = owner_.GetTransform();
 
 	//重力加速度
-	acceleration += PhysicsSystem::Gravity * gravityCoefficient;
+	acceleration_ += PhysicsSystem::kGravity * gravity_multiplier_;
 
 	//力から加速度を計算する
-	acceleration += forceAccum * inverseMass;
+	acceleration_ += force_accum_ * inverse_mass_;
 	
 	//回転力から回転加速度を計算する
 	//Matrix44 mtxIitWorld;
 	//calculateInertiaTensorWorld(mtxIitWorld);
-	//Vector3 vAngularAcceleration = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
+	//Vector3 vAngularacceleration_ = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
 
 	//速度
-	velocity += acceleration * DELTA_TIME;
-	//m_vAngularVelocity   += vAngularAcceleration;
+	velocity_ += acceleration_ * DELTA_TIME;
+	//m_vAngularvelocity_   += vAngularacceleration_;
 
 	//位置更新
-	transform->SetNextPosition(transform->GetNextPosition() + velocity * DELTA_TIME + movement);
+	movement_ += velocity_ * DELTA_TIME;
+	transform->SetPosition(transform->GetPosition() + movement_);
 
 	//回転更新
-	//pTrans->RotByEuler(m_vAngularVelocity);
-
-	//処理完了
-	forceAccum = Vector3::Zero;
-	acceleration = Vector3::Zero;
-	//m_vTorqueAccum = Vector3(0.0f);
-	velocity *= drag;
-	//m_vAngularVelocity *= AngularDrag;
-	movement = Vector3::Zero;
+	//pTrans->RotByEuler(m_vAngularvelocity_);
 }
 
 //--------------------------------------------------------------------------------
@@ -80,9 +72,17 @@ void Rigidbody3D::Update(void)
 //--------------------------------------------------------------------------------
 void Rigidbody3D::LateUpdate(void)
 {
-	auto transform = owner->GetTransform();
-	transform->SetNextPosition(transform->GetNextPosition() + movement);
-	movement = Vector3::Zero;
+	// 物理演算より位置補正
+	auto transform = owner_.GetTransform();
+	transform->SetPosition(transform->GetPosition() + movement_);
+
+	//処理完了
+	velocity_ *= drag_;
+	movement_ = Vector3::kZero;
+	force_accum_ = Vector3::kZero;
+	acceleration_ = Vector3::kZero;
+	//m_vTorqueAccum = Vector3(0.0f);
+	//m_vAngularvelocity_ *= Angulardrag_;
 }
 
 //--------------------------------------------------------------------------------
@@ -90,9 +90,8 @@ void Rigidbody3D::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void Rigidbody3D::SetMass(const float& value)
 {
-	assert(0.0f == value);
-	mass = value;
-	inverseMass = 1.0f / value;
+	mass_ = value;
+	inverse_mass_ = value == 0.0f ? INFINITY : 1.0f / value;
 }
 
 //--------------------------------------------------------------------------------

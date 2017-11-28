@@ -234,9 +234,6 @@
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="rigidbody3D.cpp">
-      <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
     </ClCompile>
@@ -381,6 +378,9 @@
     <ClCompile Include="mesh_renderer.cpp">
       <Filter>ソース ファイル\Component\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="rigidbody3d.cpp">
+      <Filter>ソース ファイル\Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -453,9 +453,6 @@
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
     </ClInclude>
     <ClInclude Include="rigidbody.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="rigidbody3D.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="animator.h">
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="mesh_renderer.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbody3d.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,18 +2,10 @@
 //	リジッドボディコンポネント
 //　rigidbodyComponent.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-18
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "component.h"
 
-//--------------------------------------------------------------------------------
-//  クラス宣言
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  リジッドボディコンポネントクラス
 //--------------------------------------------------------------------------------
@@ -21,52 +13,47 @@ class Rigidbody : public Component
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  構造体定義
+	//  列挙型定義
 	//--------------------------------------------------------------------------------
 	enum Type
 	{
-		NullRigidbody = 0,
-		Rigidbody3D
+		kRigidbodyNull = 0,
+		kRigidbody3D
 	};
 
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	Rigidbody(GameObject* const owner, const Type& type) : Component(owner), currentType(type) {}
+	Rigidbody(GameObject& owner, const Type& type)
+		: Component(owner), type_(type) {}
 	~Rigidbody() {}
 
-	virtual bool	Init(void) override = 0;
-	virtual void	Uninit(void) override = 0;
-	virtual void	Update(void) = 0;
-	virtual void	LateUpdate(void) = 0;
+	virtual bool Init(void) override = 0;
+	virtual void Uninit(void) override = 0;
+	virtual void Update(void) = 0;
+	virtual void LateUpdate(void) = 0;
 
 	//Get関数
-	const auto		GetType(void) const { return currentType; }
+	const auto& GetType(void) const { return type_; }
 
 protected:
 	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	Rigidbody() : Component(), currentType(Type::NullRigidbody) {}
-
-	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Type currentType;
+	Type type_;
 };
 
 //--------------------------------------------------------------------------------
 //  ヌルリジッドボディコンポネント
 //--------------------------------------------------------------------------------
-class NullRigidbody : public Rigidbody
+class RigidbodyNull : public Rigidbody
 {
 public:
-	NullRigidbody() : Rigidbody() {}
-	~NullRigidbody() {}
-
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override {}
-	void	Update(void) override {}
-	void	LateUpdate(void) override {}
-	void	Release(void) override {}
+	RigidbodyNull(GameObject& owner)
+		: Rigidbody(owner, kRigidbodyNull) {}
+	~RigidbodyNull() {}
+	bool Init(void) override { return true; }
+	void Uninit(void) override {}
+	void Update(void) override {}
+	void LateUpdate(void) override {}
 }; 

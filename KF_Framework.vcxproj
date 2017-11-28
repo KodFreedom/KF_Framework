@@ -160,7 +160,7 @@
     <ClCompile Include="motion_manager.cpp" />
     <ClCompile Include="neutralState.cpp" />
     <ClCompile Include="ui_object_2d.cpp" />
-    <ClCompile Include="rigidbody3D.cpp" />
+    <ClCompile Include="rigidbody3d.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="third_person_camera.cpp" />
     <ClCompile Include="actorController.cpp" />
@@ -232,7 +232,7 @@
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="ui_object_2d.h" />
-    <ClInclude Include="rigidbody3D.h" />
+    <ClInclude Include="rigidbody3d.h" />
     <ClInclude Include="AABBCollider.h" />
     <ClInclude Include="actorController.h" />
     <ClInclude Include="AI.h" />
