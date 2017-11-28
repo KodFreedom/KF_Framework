@@ -207,12 +207,6 @@
     <ClCompile Include="modeResult.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObject.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
     <ClCompile Include="modeEditor.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
@@ -257,15 +251,6 @@
     </ClCompile>
     <ClCompile Include="physicsSystem.cpp">
       <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObject2D.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="backgroundUI.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="playerUI.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
@@ -381,6 +366,21 @@
     <ClCompile Include="third_person_camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="ui_system.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_object_2d.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_object.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ui.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="background_ui.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -409,12 +409,6 @@
     </ClInclude>
     <ClInclude Include="modeResult.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="UISystem.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObject.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="modeEditor.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -475,15 +469,6 @@
     </ClInclude>
     <ClInclude Include="physicsSystem.h">
       <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObject2D.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="backgroundUI.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="playerUI.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="meshRenderer.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
@@ -631,6 +616,21 @@
     </ClInclude>
     <ClInclude Include="third_person_camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_system.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_object_2d.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_object.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ui.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="background_ui.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

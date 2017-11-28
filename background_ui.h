@@ -1,33 +1,33 @@
 //--------------------------------------------------------------------------------
-//
-//　UIObject.h
-//	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//　background_ui.h
+//	background uiオブジェクト
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
+#include "ui_object_2d.h"
 
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class UIObject
+class BackgroundUI : public UIObject2D
 {
-	friend class UISystem;
 public:
 	//--------------------------------------------------------------------------------
-	//  関数宣言
+	//  生成処理
 	//--------------------------------------------------------------------------------
-	UIObject(const us order = 0);
-	~UIObject() {}
-
-	virtual bool	Init(void) = 0;
-	virtual void	Uninit(void) = 0;
-	virtual void	Update(void) {}
-	virtual void	Draw(void) = 0;
-	void			Release(void);
+	static BackgroundUI* Create(const String& texture);
 
 private:
 	//--------------------------------------------------------------------------------
-	//  変数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	us order;
+	BackgroundUI() : UIObject2D(100) {}
+	BackgroundUI(const BackgroundUI& value) {}
+	BackgroundUI& operator=(const BackgroundUI& value) {}
+	~BackgroundUI() {}
+
+	//--------------------------------------------------------------------------------
+	//  初期化処理
+	//--------------------------------------------------------------------------------
+	bool Init(const String& texture);
 };

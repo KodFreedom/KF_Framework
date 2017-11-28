@@ -148,6 +148,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetCameraManager(void) const { return camera_manager_; }
 
+	//--------------------------------------------------------------------------------
+	//  UIシステムを返す
+	//  return : UISystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetUISystem(void) const { return ui_system_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -160,7 +166,8 @@ private:
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
-		, fade_system_(nullptr), camera_manager_(nullptr) {}
+		, fade_system_(nullptr), camera_manager_(nullptr)
+		, ui_system_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -198,6 +205,7 @@ private:
 	Input*             input_; // 入力管理者
 	FadeSystem*        fade_system_; // フェイドシステム
 	CameraManager*     camera_manager_; // カメラ管理者
+	UISystem*          ui_system_; // UIシステム
 
 	static MainSystem* instance_; // インスタンス
 };

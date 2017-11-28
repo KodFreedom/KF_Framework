@@ -1,20 +1,10 @@
 //--------------------------------------------------------------------------------
-//
-//　UISystem.cpp
-//	Author : Xu Wenjie
-//	Date   : 2017-07-17
+//　ui_system.cpp
+//	UIシステム
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "UISystem.h"
-#include "UIObject.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-UISystem* UISystem::instance = nullptr;
+#include "ui_system.h"
+#include "ui_object.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -26,7 +16,7 @@ UISystem* UISystem::instance = nullptr;
 //--------------------------------------------------------------------------------
 void UISystem::Update(void)
 {
-	for (auto object : objects)
+	for (auto object : objects_)
 	{
 		object->Update();
 	}
@@ -35,11 +25,11 @@ void UISystem::Update(void)
 //--------------------------------------------------------------------------------
 //  描画
 //--------------------------------------------------------------------------------
-void UISystem::Draw(void)
+void UISystem::Render(void)
 {
-	for (auto object : objects)
+	for (auto object : objects_)
 	{
-		object->Draw();
+		object->Render();
 	}
 }
 
@@ -48,8 +38,8 @@ void UISystem::Draw(void)
 //--------------------------------------------------------------------------------
 void UISystem::Register(UIObject* object)
 {
-	objects.push_back(object);
-	objects.sort(UISystem::compare);
+	objects_.push_back(object);
+	objects_.sort(UISystem::Compare);
 }
 
 //--------------------------------------------------------------------------------
@@ -57,19 +47,19 @@ void UISystem::Register(UIObject* object)
 //--------------------------------------------------------------------------------
 void UISystem::Deregister(UIObject* object)
 {
-	objects.remove(object);
+	objects_.remove(object);
 }
 
 //--------------------------------------------------------------------------------
 //  リリース
 //--------------------------------------------------------------------------------
-void UISystem::ReleaseAll(void)
+void UISystem::Clear(void)
 {
-	for (auto itr = objects.begin(); itr != objects.end();)
+	for (auto iterator = objects_.begin(); iterator != objects_.end();)
 	{
-		(*itr)->Uninit();
-		delete (*itr);
-		itr = objects.erase(itr);
+		(*iterator)->Uninit();
+		delete (*iterator);
+		iterator = objects_.erase(iterator);
 	}
 }
 
@@ -81,8 +71,8 @@ void UISystem::ReleaseAll(void)
 //--------------------------------------------------------------------------------
 //  比較関数
 //--------------------------------------------------------------------------------
-bool UISystem::compare(UIObject* objectA, UIObject* objectB)
+bool UISystem::Compare(UIObject* object_a, UIObject* object_b)
 {
-	return objectA->order < objectB->order;
+	return object_a->GetOrder() < object_b->GetOrder();
 }
 

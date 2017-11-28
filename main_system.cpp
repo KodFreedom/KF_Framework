@@ -14,14 +14,14 @@
 #include "renderer_manager.h"
 #include "input.h"
 #include "fade_system.h"
+#include "camera_manager.h"
+#include "ui_system.h"
 #include "gameObjectManager.h"
-#include "UISystem.h"
 #include "mode.h"
 #include "modeTitle.h"
 #include "modeDemo.h"
 #include "collisionSystem.h"
 #include "physicsSystem.h"
-#include "cameraManager.h"
 #include "camera.h"
 
 #if defined(USING_DIRECTX)
@@ -80,7 +80,7 @@ void MainSystem::Update(void)
 	GameObjectManager::Instance()->Update();
 	CollisionSystem::Instance()->Update();
 	PhysicsSystem::Instance()->Update();
-	CameraManager::Instance()->Update();
+	camera_manager_->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -90,9 +90,9 @@ void MainSystem::LateUpdate(void)
 {
 	current_mode_->LateUpdate();
 	GameObjectManager::Instance()->LateUpdate();
-	CameraManager::Instance()->LateUpdate();
+	camera_manager_->LateUpdate();
 	CollisionSystem::Instance()->LateUpdate();
-	UISystem::Instance()->Update();
+	ui_system_->Update();
 	fade_system_->Update();
 	renderer_manager_->Update();
 #ifdef _DEBUG
@@ -107,12 +107,12 @@ void MainSystem::Render(void)
 {
 	if (render_system_->BeginRender())
 	{
-		CameraManager::Instance()->GetMainCamera()->Set();
+		camera_manager_->SetCamera();
 		renderer_manager_->Render();
 #ifdef _DEBUG
 		CollisionSystem::Instance()->DrawCollider();
 #endif
-		UISystem::Instance()->Draw();
+		ui_system_->Render();
 		fade_system_->Render();
 #ifdef _DEBUG
 		debug_observer_->Render();
@@ -169,11 +169,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #endif
 	input_ = Input::Create(hinstance, hwnd);
 	fade_system_ = FadeSystem::Create();
+	camera_manager_ = CameraManager::Create();
+	ui_system_ = UISystem::Create();
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
-	UISystem::Create();
-	CameraManager::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
@@ -191,11 +191,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 void MainSystem::Uninit(void)
 {
 	SAFE_RELEASE(current_mode_);
-	CameraManager::Release();
-	UISystem::Release();
 	GameObjectManager::Release();
 	PhysicsSystem::Release();
 	CollisionSystem::Release();
+	SAFE_RELEASE(ui_system_);
+	SAFE_RELEASE(camera_manager_);
 	SAFE_RELEASE(fade_system_);
 	SAFE_RELEASE(input_);
 #ifdef _DEBUG
