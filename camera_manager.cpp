@@ -1,20 +1,11 @@
 //--------------------------------------------------------------------------------
-//  カメラマネージャ
-//　cameraManager.cpp
-//	Author : Xu Wenjie
-//	Date   : 2017-11-05
+//　camera_manager.cpp
+//  manage the cameras
+//	カメラ管理者
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "cameraManager.h"
+#include "camera_manager.h"
 #include "camera.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-CameraManager* CameraManager::instance = nullptr;
 
 //--------------------------------------------------------------------------------
 //
@@ -26,25 +17,33 @@ CameraManager* CameraManager::instance = nullptr;
 //--------------------------------------------------------------------------------
 void CameraManager::Update(void)
 {
-	for (auto camera : cameras) camera->Update();
+	for (auto camera : cameras_) camera->Update();
 }
 
 //--------------------------------------------------------------------------------
-//  更新処理
+//  後更新処理
 //--------------------------------------------------------------------------------
 void CameraManager::LateUpdate(void)
 {
-	for (auto camera : cameras) camera->LateUpdate();
+	for (auto camera : cameras_) camera->LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
-//  リリース処理
+//  全カメラのセット処理
 //--------------------------------------------------------------------------------
-void CameraManager::ReleaseAll(void)
+void CameraManager::SetCamera(void)
 {
-	for (auto iterator = cameras.begin(); iterator != cameras.end();)
+	for (auto camera : cameras_) camera->Set();
+}
+
+//--------------------------------------------------------------------------------
+//  クリア処理
+//--------------------------------------------------------------------------------
+void CameraManager::Clear(void)
+{
+	for (auto iterator = cameras_.begin(); iterator != cameras_.end();)
 	{
 		(*iterator)->Release();
-		iterator = cameras.erase(iterator);
+		iterator = cameras_.erase(iterator);
 	}
 }

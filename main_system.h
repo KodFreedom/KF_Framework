@@ -142,6 +142,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetFadeSystem(void) const { return fade_system_; }
 
+	//--------------------------------------------------------------------------------
+	//  カメラ管理者を返す
+	//  return : CameraManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetCameraManager(void) const { return camera_manager_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -154,7 +160,7 @@ private:
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
-		, fade_system_(nullptr) {}
+		, fade_system_(nullptr), camera_manager_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -191,6 +197,7 @@ private:
 #endif
 	Input*             input_; // 入力管理者
 	FadeSystem*        fade_system_; // フェイドシステム
+	CameraManager*     camera_manager_; // カメラ管理者
 
 	static MainSystem* instance_; // インスタンス
 };

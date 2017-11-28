@@ -168,11 +168,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	debug_observer_ = DebugObserver::Create();
 #endif
 	input_ = Input::Create(hinstance, hwnd);
+	fade_system_ = FadeSystem::Create();
 	CollisionSystem::Create();
 	PhysicsSystem::Create();
 	GameObjectManager::Create();
 	UISystem::Create();
-	FadeSystem::Create();
 	CameraManager::Create();
 
 	//‰Šúƒ‚[ƒhİ’è

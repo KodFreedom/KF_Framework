@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="actorState.cpp" />
-    <ClCompile Include="cameraManager.cpp" />
+    <ClCompile Include="camera_manager.cpp" />
     <ClCompile Include="damagedState.cpp" />
     <ClCompile Include="jumpState.cpp" />
     <ClCompile Include="landState.cpp" />
@@ -162,7 +162,7 @@
     <ClCompile Include="UIObject2D.cpp" />
     <ClCompile Include="rigidbody3D.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
-    <ClCompile Include="thirdPersonCamera.cpp" />
+    <ClCompile Include="third_person_camera.cpp" />
     <ClCompile Include="actorController.cpp" />
     <ClCompile Include="animator.cpp" />
     <ClCompile Include="backgroundUI.cpp" />
@@ -176,7 +176,7 @@
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="meshRenderer.cpp" />
     <ClCompile Include="editorController.cpp" />
-    <ClCompile Include="editorCamera.cpp" />
+    <ClCompile Include="editor_camera.cpp" />
     <ClCompile Include="attackModeAI.cpp" />
     <ClCompile Include="enemyController.cpp" />
     <ClCompile Include="normalModeAI.cpp" />
@@ -221,7 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actorState.h" />
-    <ClInclude Include="cameraManager.h" />
+    <ClInclude Include="camera_manager.h" />
     <ClInclude Include="damagedState.h" />
     <ClInclude Include="jumpState.h" />
     <ClInclude Include="landState.h" />
@@ -255,7 +255,7 @@
     <ClInclude Include="ImGui\stb_textedit.h" />
     <ClInclude Include="ImGui\stb_truetype.h" />
     <ClInclude Include="meshRenderer.h" />
-    <ClInclude Include="editorCamera.h" />
+    <ClInclude Include="editor_camera.h" />
     <ClInclude Include="enemyController.h" />
     <ClInclude Include="fade_system.h" />
     <ClInclude Include="fieldCollider.h" />
@@ -296,7 +296,7 @@
     <ClInclude Include="sphereCollider.h" />
     <ClInclude Include="stageSpawner.h" />
     <ClInclude Include="texture_manager.h" />
-    <ClInclude Include="thirdPersonCamera.h" />
+    <ClInclude Include="third_person_camera.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="UISystem.h" />
