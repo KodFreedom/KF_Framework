@@ -154,6 +154,24 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetUISystem(void) const { return ui_system_; }
 
+	//--------------------------------------------------------------------------------
+	//  衝突処理システムを返す
+	//  return : CollisionSystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetCollisionSystem(void) const { return collision_system_; }
+
+	//--------------------------------------------------------------------------------
+	//  物理システムを返す
+	//  return : PhysicsSystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetPhysicsSystem(void) const { return physics_system_; }
+
+	//--------------------------------------------------------------------------------
+	//  ゲームオブジェクト管理者を返す
+	//  return : GameObjectManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetGameObjectManager(void) const { return game_object_manager_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -167,7 +185,8 @@ private:
 		, debug_observer_(nullptr)
 #endif
 		, fade_system_(nullptr), camera_manager_(nullptr)
-		, ui_system_(nullptr) {}
+		, ui_system_(nullptr), collision_system_(nullptr)
+	    , physics_system_(nullptr), game_object_manager_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -206,6 +225,9 @@ private:
 	FadeSystem*        fade_system_; // フェイドシステム
 	CameraManager*     camera_manager_; // カメラ管理者
 	UISystem*          ui_system_; // UIシステム
+	CollisionSystem*   collision_system_; // 衝突処理システム
+	PhysicsSystem*     physics_system_; // 物理システム
+	GameObjectManager* game_object_manager_; // ゲームオブジェクト管理者
 
 	static MainSystem* instance_; // インスタンス
 };

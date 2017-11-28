@@ -1,16 +1,10 @@
 //--------------------------------------------------------------------------------
-//	ステージ生成関数
-//　stageSpawner.h
-//	Author : Xu Wenjie
-//	Date   : 2017-08-26
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
+//　stage_spawner.h
+//	ステージ生成処理
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
-#include "meshManager.h"
-#include "stageSpawner.h"
+#include "stage_spawner.h"
 #include "gameObjectSpawner.h"
 #include "gameObject.h"
 #include "windmillController.h"
@@ -20,9 +14,9 @@
 //  Public
 //
 //--------------------------------------------------------------------------------
-void StageSpawner::LoadStage(const string& stageName)
+void StageSpawner::LoadStage(const String& stage_name)
 {
-	GameObjectSpawner::CreateField(stageName);
+	GameObjectSpawner::CreateField(stage_name);
 
 	////フィールドの保存
 	//string filePath = "data/STAGE/" + stageName + "Stage" + ".stage";

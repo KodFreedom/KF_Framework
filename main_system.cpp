@@ -16,13 +16,11 @@
 #include "fade_system.h"
 #include "camera_manager.h"
 #include "ui_system.h"
-#include "gameObjectManager.h"
-#include "mode.h"
+#include "collision_system.h"
+#include "physics_system.h"
+#include "game_object_manager.h"
 #include "modeTitle.h"
 #include "modeDemo.h"
-#include "collisionSystem.h"
-#include "physicsSystem.h"
-#include "camera.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
@@ -77,9 +75,9 @@ void MainSystem::Update(void)
 #endif
 	input_->Update();
 	current_mode_->Update();
-	GameObjectManager::Instance()->Update();
-	CollisionSystem::Instance()->Update();
-	PhysicsSystem::Instance()->Update();
+	game_object_manager_->Update();
+	collision_system_->Update();
+	physics_system_->Update();
 	camera_manager_->Update();
 }
 
@@ -89,9 +87,9 @@ void MainSystem::Update(void)
 void MainSystem::LateUpdate(void)
 {
 	current_mode_->LateUpdate();
-	GameObjectManager::Instance()->LateUpdate();
+	game_object_manager_->LateUpdate();
 	camera_manager_->LateUpdate();
-	CollisionSystem::Instance()->LateUpdate();
+	collision_system_->LateUpdate();
 	ui_system_->Update();
 	fade_system_->Update();
 	renderer_manager_->Update();
@@ -110,7 +108,7 @@ void MainSystem::Render(void)
 		camera_manager_->SetCamera();
 		renderer_manager_->Render();
 #ifdef _DEBUG
-		CollisionSystem::Instance()->DrawCollider();
+		collision_system_->Render();
 #endif
 		ui_system_->Render();
 		fade_system_->Render();
@@ -171,9 +169,9 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	fade_system_ = FadeSystem::Create();
 	camera_manager_ = CameraManager::Create();
 	ui_system_ = UISystem::Create();
-	CollisionSystem::Create();
-	PhysicsSystem::Create();
-	GameObjectManager::Create();
+	collision_system_ = CollisionSystem::Create();
+	physics_system_ = PhysicsSystem::Create();
+	game_object_manager_ = GameObjectManager::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
@@ -191,9 +189,9 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 void MainSystem::Uninit(void)
 {
 	SAFE_RELEASE(current_mode_);
-	GameObjectManager::Release();
-	PhysicsSystem::Release();
-	CollisionSystem::Release();
+	SAFE_RELEASE(game_object_manager_);
+	SAFE_RELEASE(physics_system_);
+	SAFE_RELEASE(collision_system_);
 	SAFE_RELEASE(ui_system_);
 	SAFE_RELEASE(camera_manager_);
 	SAFE_RELEASE(fade_system_);

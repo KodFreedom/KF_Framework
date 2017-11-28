@@ -186,17 +186,11 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="gameObject.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="modeDemo.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectActor.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
@@ -209,12 +203,6 @@
     </ClCompile>
     <ClCompile Include="modeEditor.cpp">
       <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectSpawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="stageSpawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ソース ファイル\Base\ImGui</Filter>
@@ -240,17 +228,8 @@
     <ClCompile Include="fieldCollider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="collisionSystem.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="AABBCollider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="collisionDetector.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="physicsSystem.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
     </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
@@ -308,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="playerController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectManager.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="kf_math.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
@@ -381,13 +357,34 @@
     <ClCompile Include="background_ui.cpp">
       <Filter>ソース ファイル\UI\UIObject</Filter>
     </ClCompile>
+    <ClCompile Include="collision_detector.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_system.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_system.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_spawner.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_manager.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_actor.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_spawner.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObject.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="modeDemo.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
@@ -397,9 +394,6 @@
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectActor.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
@@ -412,12 +406,6 @@
     </ClInclude>
     <ClInclude Include="modeEditor.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectSpawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="stageSpawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
@@ -460,15 +448,6 @@
     </ClInclude>
     <ClInclude Include="sphereCollider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionSystem.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionDetector.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="physicsSystem.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
     </ClInclude>
     <ClInclude Include="meshRenderer.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
@@ -535,9 +514,6 @@
     </ClInclude>
     <ClInclude Include="editorController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectManager.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -631,6 +607,30 @@
     </ClInclude>
     <ClInclude Include="actor_parameter.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_detector.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_system.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_system.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_spawner.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_actor.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_manager.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_spawner.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
