@@ -99,6 +99,12 @@ public:
 	const auto GetMaterialManager(void) const { return material_manager_; }
 
 	//--------------------------------------------------------------------------------
+	//  モーション管理者を返す
+	//  return : MotionManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetMotionManager(void) const { return motion_manager_; }
+
+	//--------------------------------------------------------------------------------
 	//  ライト管理者を返す
 	//  return : LightManager* const
 	//--------------------------------------------------------------------------------
@@ -142,12 +148,13 @@ private:
 	//--------------------------------------------------------------------------------
 	MainSystem() : current_mode_(nullptr), render_system_(nullptr)
 		, texture_manager_(nullptr), mesh_manager_(nullptr)
-		, material_manager_(nullptr), light_manager_(nullptr)
-		, sound_manager_(nullptr), renderer_manager_(nullptr)
+		, material_manager_(nullptr), motion_manager_(nullptr)
+		, light_manager_(nullptr), sound_manager_(nullptr)
+		, renderer_manager_(nullptr), input_(nullptr)
 #ifdef _DEBUG
 		, debug_observer_(nullptr)
 #endif
-		, input_(nullptr), fade_system_(nullptr) {}
+		, fade_system_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -175,6 +182,7 @@ private:
 	TextureManager*    texture_manager_; // テクスチャ管理者
 	MeshManager*       mesh_manager_; // メッシュ管理者
 	MaterialManager*   material_manager_; // マテリアル管理者
+	MotionManager*     motion_manager_; // モーション管理者
 	LightManager*      light_manager_; // ライトの管理者
 	SoundManager*      sound_manager_; // サウンド管理者
 	RendererManager*   renderer_manager_; // レンダラー管理者

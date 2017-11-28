@@ -288,9 +288,6 @@
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="motionManager.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
-    </ClCompile>
     <ClCompile Include="windmillController.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
@@ -380,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="fade_system.cpp">
       <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_manager.cpp">
+      <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,9 +509,6 @@
     <ClInclude Include="animator.h">
       <Filter>ヘッダー ファイル\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="motionManager.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
@@ -630,6 +627,9 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="motion_data.h">
+      <Filter>ヘッダー ファイル\Base\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_manager.h">
       <Filter>ヘッダー ファイル\Base\Motion</Filter>
     </ClInclude>
   </ItemGroup>

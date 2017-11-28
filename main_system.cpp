@@ -8,6 +8,7 @@
 #include "texture_manager.h"
 #include "mesh_manager.h"
 #include "material_manager.h"
+#include "motion_manager.h"
 #include "light_manager.h"
 #include "sound_manager.h"
 #include "renderer_manager.h"
@@ -22,7 +23,6 @@
 #include "physicsSystem.h"
 #include "cameraManager.h"
 #include "camera.h"
-#include "motionManager.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
@@ -160,6 +160,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #endif
 #endif
 	material_manager_ = MaterialManager::Create();
+	motion_manager_ = MotionManager::Create();
 	light_manager_ = LightManager::Create();
 	sound_manager_ = SoundManager::Create();
 	renderer_manager_ = RendererManager::Create();
@@ -173,7 +174,6 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	UISystem::Create();
 	FadeSystem::Create();
 	CameraManager::Create();
-	MotionManager::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
@@ -191,7 +191,6 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 void MainSystem::Uninit(void)
 {
 	SAFE_RELEASE(current_mode_);
-	MotionManager::Release();
 	CameraManager::Release();
 	UISystem::Release();
 	GameObjectManager::Release();
@@ -205,6 +204,7 @@ void MainSystem::Uninit(void)
 	SAFE_RELEASE(renderer_manager_);
 	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);
+	SAFE_RELEASE(motion_manager_);
 	SAFE_RELEASE(material_manager_);
 	SAFE_RELEASE(mesh_manager_);
 	SAFE_RELEASE(texture_manager_);
