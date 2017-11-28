@@ -494,9 +494,6 @@
     <ClInclude Include="actorState.h">
       <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
-    <ClInclude Include="actorParamater.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="neutralState.h">
       <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
@@ -631,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="background_ui.h">
       <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_parameter.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

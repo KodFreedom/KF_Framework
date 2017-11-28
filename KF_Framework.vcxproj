@@ -227,7 +227,7 @@
     <ClInclude Include="landState.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="motion_manager.h" />
-    <ClInclude Include="actorParamater.h" />
+    <ClInclude Include="actor_parameter.h" />
     <ClInclude Include="neutralState.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
