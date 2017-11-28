@@ -1,17 +1,13 @@
 //--------------------------------------------------------------------------------
-//	コリジョンコンポネント
-//　collisionComponent.cpp
+//	colliderコンポネント
+//　collider.h
 //	Author : Xu Wenjie
-//	Date   : 2017-06-04
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "collider.h"
-#include "manager.h"
-#include "gameObject.h"
+#include "game_object.h"
+#include "main_system.h"
+#include "camera_manager.h"
 #include "camera.h"
-#include "cameraManager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -21,14 +17,14 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-Collider::Collider(GameObject* const owner, const ColliderType& type, const ColliderMode& mode)
+Collider::Collider(GameObject& owner, const ColliderType& type, const ColliderMode& mode)
 	: Component(owner)
-	, type(type)
-	, mode(mode)
-	, isTrigger(false)
-	, isRegistered(false)
-	, nextWorldMatrix(Matrix44::Identity)
-	, offset(Matrix44::Identity)
+	, type_(type)
+	, mode_(mode)
+	, is_trigger_(false)
+	, is_registered_(false)
+	, world_(Matrix44::kIdentity)
+	, offset_(Matrix44::kIdentity)
 {}
 
 //--------------------------------------------------------------------------------
@@ -36,7 +32,7 @@ Collider::Collider(GameObject* const owner, const ColliderType& type, const Coll
 //--------------------------------------------------------------------------------
 bool Collider::Init(void)
 {
-	nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
+	world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
 	return true;
 }
 
@@ -45,9 +41,9 @@ bool Collider::Init(void)
 //--------------------------------------------------------------------------------
 void Collider::Uninit(void)
 {
-	if (isRegistered)
+	if (is_registered_)
 	{
-		CollisionSystem::Instance()->Deregister(this);
+		MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
 	}
 }
 
@@ -56,8 +52,8 @@ void Collider::Uninit(void)
 //--------------------------------------------------------------------------------
 void Collider::Update(void)
 {
-	if (CameraManager::Instance()->GetMainCamera()->IsInRange(
-		owner->GetTransform()->GetCurrentPosition(), CollisionSystem::maxCollisionRange))
+	if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
+		->IsInRange(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
 	{
 		Awake();
 	}
@@ -67,49 +63,39 @@ void Collider::Update(void)
 		return;
 	}
 
-	if (mode == CM_Dynamic)
+	if (mode_ == kDynamic)
 	{
-		nextWorldMatrix = offset * owner->GetTransform()->GetNextWorldMatrix();
+		world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
 	}
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：SetOffset
-//  関数説明：相対位置の設定
-//	引数：	position：位置
-//			rotation：回転
-//	戻り値：なし
+//	相対位置の設定
 //--------------------------------------------------------------------------------
 void Collider::SetOffset(const Vector3& position, const Vector3& rotation)
 {
-	offset = Matrix44::RotationYawPitchRoll(rotation);
-	offset.Elements[3][0] = position.X;
-	offset.Elements[3][1] = position.Y;
-	offset.Elements[3][2] = position.Z;
+	offset_ = Matrix44::RotationYawPitchRoll(rotation);
+	offset_.m30_ = position.x_;
+	offset_.m31_ = position.y_;
+	offset_.m32_ = position.z_;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Sleep
-//  関数説明：一時的に当たり判定処理から抜ける
-//	引数：	なし
-//	戻り値：なし
+//	一時的に当たり判定処理から抜ける
 //--------------------------------------------------------------------------------
 void Collider::Sleep(void)
 {
-	if (!isRegistered) return;
-	isRegistered = false;
-	CollisionSystem::Instance()->Deregister(this);
+	if (!is_registered_) return;
+	is_registered_ = false;
+	MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Awake
-//  関数説明：当たり判定処理に登録する
-//	引数：	なし
-//	戻り値：なし
+//	当たり判定処理に登録する
 //--------------------------------------------------------------------------------
 void Collider::Awake(void)
 {
-	if (isRegistered) return;
-	isRegistered = true;
-	CollisionSystem::Instance()->Register(this);
+	if (is_registered_) return;
+	is_registered_ = true;
+	MainSystem::Instance()->GetCollisionSystem()->Register(this);
 }
