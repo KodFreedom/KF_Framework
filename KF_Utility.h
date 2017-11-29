@@ -71,5 +71,20 @@ namespace kodfreedom
 		//  return：FileInfo
 		//--------------------------------------------------------------------------------
 		FileInfo AnalyzeFilePath(const string& path);
+		
+		//--------------------------------------------------------------------------------
+		//  フォルダからファイル名を取得する
+		//  path：絶対パス
+		//  extension : 拡張子
+		//  return : vector<String>
+		//--------------------------------------------------------------------------------
+		vector<String> GetFilesFromFolder(const String& path, const String& extension);
+
+		//--------------------------------------------------------------------------------
+		//  プロジェクトのパスを取得する
+		//  return : String
+		//--------------------------------------------------------------------------------
+		String GetProjectPath(void);
+
 	} // namespace Utility
 } // namespace KodFreedom

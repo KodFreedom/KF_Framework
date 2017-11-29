@@ -20,13 +20,13 @@ class GameObjectSpawner
 {
 public:
 	static GameObject* CreateSkyBox(const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateField(const string& stageName);
+	static GameObject* CreateField(const String& stageName);
 	static GameObject* CreateCube(const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateXModel(const string& modelName, const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateModel(const string& modelName, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	static GameObject* CreateXModel(const String& modelName, const Vector3& position, const Vector3& rotation, const Vector3& scale);
+	static GameObject* CreateModel(const String& modelName, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 	static GameObject* CreateGoal(const Vector3& position);
-	static GameObjectActor* CreatePlayer(const string &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
-	static GameObjectActor* CreateEnemy(const string &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
+	static GameObjectActor* CreatePlayer(const String &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
+	static GameObjectActor* CreateEnemy(const String &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 
 #if defined(_DEBUG) || defined(EDITOR)
 	static GameObject* CreateStageEditor(GameObject* fieldEditor);

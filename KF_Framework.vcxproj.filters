@@ -252,15 +252,6 @@
     <ClCompile Include="attackModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
-    <ClCompile Include="editorController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldEditor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="modelEditor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="actorController.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
@@ -378,6 +369,15 @@
     <ClCompile Include="windmill_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="model_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="field_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="editor_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -478,15 +478,6 @@
     </ClInclude>
     <ClInclude Include="playerController.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="modelEditor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldEditor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="editorController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -628,6 +619,15 @@
     </ClInclude>
     <ClInclude Include="windmill_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="model_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="field_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

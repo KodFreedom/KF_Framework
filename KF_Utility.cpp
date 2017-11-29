@@ -129,6 +129,60 @@ utility::FileInfo utility::AnalyzeFilePath(const string& path)
 }
 
 //--------------------------------------------------------------------------------
+//  フォルダからファイル名を取得する
+//--------------------------------------------------------------------------------
+vector<String> utility::GetFilesFromFolder(const String& path, const String& extension)
+{
+	HANDLE handle;
+	WIN32_FIND_DATA data;
+	vector<String> file_names;
+
+	//拡張子の設定
+	String search_name = path + L"\\*." + extension;
+
+	handle = FindFirstFile(search_name.c_str(), &data);
+
+	if (handle == INVALID_HANDLE_VALUE) 
+	{
+		throw runtime_error("file not found");
+	}
+
+	do 
+	{
+		if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {}
+		else 
+		{
+			file_names.push_back(data.cFileName);
+		}
+	} while (FindNextFile(handle, &data));
+	FindClose(handle);
+	file_names.shrink_to_fit();
+	return file_names;
+}
+
+//--------------------------------------------------------------------------------
+//  プロジェクトのパスを取得する
+//--------------------------------------------------------------------------------
+String utility::GetProjectPath(void)
+{
+	char path[MAX_PATH + 1];
+	if (0 != GetModuleFileNameA(NULL, path, MAX_PATH))
+	{// 実行ファイルの完全パスを取得
+		char drive[MAX_PATH + 1]
+			, directory[MAX_PATH + 1]
+			, filename[MAX_PATH + 1]
+			, extension[MAX_PATH + 1];
+		//パス名を構成要素に分解します
+		_splitpath(path, drive, directory, filename, extension);
+		string projectpath = drive;
+		projectpath += directory;
+		return String(projectpath.begin(), projectpath.end());
+	}
+	throw runtime_error("error to get path");
+	return String();
+}
+
+//--------------------------------------------------------------------------------
 //	関数名：FindChildBy
 //  関数説明：子供から名前対応のオブジェクトを探し出す
 //	引数：	name：探したいオブジェクトの名前
