@@ -222,15 +222,6 @@
     <ClCompile Include="collider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="boxCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="AABBCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
@@ -381,6 +372,12 @@
     <ClCompile Include="rigidbody3d.cpp">
       <Filter>ソース ファイル\Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="field_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="aabb_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -432,21 +429,6 @@
       <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
     <ClInclude Include="collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="AABBCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="boxCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="OBBCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="sphereCollider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
@@ -631,6 +613,21 @@
     </ClInclude>
     <ClInclude Include="rigidbody3d.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="obb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="field_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="box_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

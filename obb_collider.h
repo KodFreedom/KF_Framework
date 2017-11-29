@@ -1,27 +1,21 @@
 //--------------------------------------------------------------------------------
-//	AABBColliderコンポネント
-//　AABBCollider.h
+//	OBBColliderコンポネント
+//　OBBCollider.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-28
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "boxCollider.h"
+#include "box_collider.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class AABBCollider : public BoxCollider
+class ObbCollider : public BoxCollider
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	AABBCollider(GameObject* const owner, const ColliderMode& mode, const Vector3& halfSize)
-		: BoxCollider(owner, CT_AABB, mode, halfSize) {}
-	~AABBCollider() {}
-	void Update(void) override;
+	ObbCollider(GameObject& owner, const ColliderMode& mode, const Vector3& half_size)
+		: BoxCollider(owner, kObb, mode, half_size) {}
+	~ObbCollider() {}
 };
