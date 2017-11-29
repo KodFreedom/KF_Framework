@@ -2,18 +2,12 @@
 //	プレイヤービヘイビアコンポネント
 //　FieldEditor.h
 //	Author : Xu Wenjie
-//	Date   : 2017-07-17
 //--------------------------------------------------------------------------------
 #pragma once
-#if defined(_DEBUG) || defined(EDITOR)
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
+#include "main.h"
+#if defined(EDITOR)
 #include "behavior.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
+#include "render_system.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -22,50 +16,91 @@ class FieldEditor : public Behavior
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	FieldEditor(GameObject* const owner);
+	FieldEditor(GameObject& owner);
 	~FieldEditor() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override {}
+	//--------------------------------------------------------------------------------
+	//  初期化
+	//--------------------------------------------------------------------------------
+	bool Init(void) override;
 
-	//Get関数
-	Vector3	AdjustPosInField(const Vector3& position, const bool& isAdjustHeight);
-	bool	GetActive(void) const { return isActive; }
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void) override;
 
-	//Set関数
-	void	SetActive(const bool& value);
-	void	SetPosition(const Vector3& value) { editorPosition = value; }
+	//--------------------------------------------------------------------------------
+	//  更新処理
+	//--------------------------------------------------------------------------------
+	void Update(void) override;
 
-	//Save
-	void	SaveAs(const string& fileName);
+	//--------------------------------------------------------------------------------
+	//  後更新処理
+	//--------------------------------------------------------------------------------
+	void LateUpdate(void) override {}
+
+	//--------------------------------------------------------------------------------
+	//  フィールドによって位置を調節する
+	//--------------------------------------------------------------------------------
+	Vector3	AdjustPositionInField(const Vector3& position, const bool& is_adjust_height);
+	
+	//--------------------------------------------------------------------------------
+	//  アクティブフラグの取得
+	//--------------------------------------------------------------------------------
+	bool IsActive(void) const { return is_active_; }
+
+	//--------------------------------------------------------------------------------
+	//  アクティブフラグの設定
+	//--------------------------------------------------------------------------------
+	void SetActive(const bool& value);
+
+	//--------------------------------------------------------------------------------
+	//  位置の設定
+	//--------------------------------------------------------------------------------
+	void SetPosition(const Vector3& value) { editor_position_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  フィールド情報を保存する関数
+	//--------------------------------------------------------------------------------
+	void SaveAsBinary(const String& name);
 
 private:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  フィールドの高さを取得
 	//--------------------------------------------------------------------------------
-	float		getHeight(const Vector3& position);
-	list<int>	getChoosenIndexes(void);
-	void		showMainWindow(void);
-	void		updateVertexesBy(const list<int>& choosenIndexes);
+	float GetHeight(const Vector3& position);
+
+	//--------------------------------------------------------------------------------
+	//  範囲内のインデックスを取得
+	//--------------------------------------------------------------------------------
+	list<int> GetChoosenIndexes(void);
+
+	//--------------------------------------------------------------------------------
+	//  メインウィンドウの表示
+	//--------------------------------------------------------------------------------
+	void ShowMainWindow(void);
+
+	//--------------------------------------------------------------------------------
+	//  頂点の更新
+	//--------------------------------------------------------------------------------
+	void UpdateVertexesBy(const list<int>& choosen_indexes);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	int					blockXNumber;
-	int					blockZNumber;
-	Vector2				blockSize;
-	Vector3				minPosition;
-	Vector3				maxPosition;
-	Vector3				editorPosition;
-	float				editorRadius;
-	float				raiseSpeed;
-	float				extendSpeed;
-	bool				isActive;
-	vector<VERTEX_3D>	vertexes;
-	list<int>			previousChoosenIndexes;
+	int              block_number_x_;
+	int	             block_number_z_;
+	Vector2          block_size_;
+	Vector3	         min_position_;
+	Vector3	         max_position_;
+	Vector3          editor_position_;
+	float            editor_radius_;
+	float            raise_speed_;
+	float            extend_speed_;
+	bool             is_active_;
+	vector<Vertex3d> vertexes_;
+	list<int>        previous_choosen_indexes_;
 };
 #endif // _DEBUG

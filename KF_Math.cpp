@@ -25,6 +25,9 @@ const Vector3 Vector3::kAxisX = Vector3::kRight;
 const Vector3 Vector3::kAxisY = Vector3::kUp;
 const Vector3 Vector3::kAxisZ = Vector3::kForward;
 
+const Vector4 Vector4::kZero = Vector4(0.0f);
+const Vector4 Vector4::kOne = Vector4(1.0f);
+
 const Matrix44 Matrix44::kZero = Matrix44(0.0f);
 const Matrix44 Matrix44::kIdentity = Matrix44();
 

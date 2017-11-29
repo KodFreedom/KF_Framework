@@ -12,15 +12,26 @@
 //--------------------------------------------------------------------------------
 struct Vertex2d // 2D頂点情報構造体
 {
-	Vector3 position;
+	Vertex2d()
+		: position(Vector4::kZero)
+		, uv(Vector2::kZero)
+		, color(Color::kWhite) {}
+	Vector4 position;
 	Vector2 uv;
+	Color   color;
 };
 
 struct Vertex3d // 3D頂点情報構造体
 {
+	Vertex3d()
+		: position(Vector3::kZero)
+		, normal(Vector3::kZero)
+		, uv(Vector2::kZero)
+		, color(Color::kWhite) {}
 	Vector3 position;
 	Vector3 normal;
 	Vector2 uv;
+	Color   color;
 };
 
 //--------------------------------------------------------------------------------

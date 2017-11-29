@@ -614,6 +614,12 @@ namespace kodfreedom
 		~Vector4() {}
 
 		//--------------------------------------------------------------------------------
+		//  set xyzw with given value
+		//  xyzwにvalueを入れる
+		//--------------------------------------------------------------------------------
+		Vector4(const float& value) : x_(value), y_(value), z_(value), w_(value) {}
+
+		//--------------------------------------------------------------------------------
 		//  set xyzw with given xyzw
 		//  xyzwにvalueを入れる
 		//--------------------------------------------------------------------------------
@@ -629,6 +635,9 @@ namespace kodfreedom
 		float y_; // y component of the Vector4 / ベクトル4のy要素
 		float z_; // z component of the Vector4 / ベクトル4のz要素
 		float w_; // w component of the Vector4 / ベクトル4のw要素
+
+		static const Vector4 kZero; // vector4(0, 0, 0, 0)
+		static const Vector4 kOne; // vector4(1, 1, 1, 1)
 
 		//--------------------------------------------------------------------------------
 		//  mult with matrix / マトリクスとの乗算
