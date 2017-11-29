@@ -228,9 +228,6 @@
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="windmillController.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="actorState.cpp">
       <Filter>ソース ファイル\Actor\State</Filter>
     </ClCompile>
@@ -378,6 +375,9 @@
     <ClCompile Include="aabb_collider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="windmill_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -441,9 +441,6 @@
       <Filter>ヘッダー ファイル\Component\Animator</Filter>
     </ClInclude>
     <ClInclude Include="behavior.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="windmillController.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="actorState.h">
@@ -628,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="aabb_collider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="windmill_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

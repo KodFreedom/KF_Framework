@@ -216,7 +216,7 @@
     <ClCompile Include="ui_object.cpp" />
     <ClCompile Include="ui_system.cpp" />
     <ClCompile Include="walkState.cpp" />
-    <ClCompile Include="windmillController.cpp" />
+    <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actorState.h" />
@@ -301,7 +301,7 @@
     <ClInclude Include="ui_system.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="walkState.h" />
-    <ClInclude Include="windmillController.h" />
+    <ClInclude Include="windmill_controller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

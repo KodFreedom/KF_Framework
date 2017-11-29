@@ -92,6 +92,7 @@ public:
 	void	AddBehavior(Behavior* const behavior) { behaviors.push_back(behavior); }
 	void	AddCollider(Collider* const collider) { colliders.push_back(collider); }
 	void	AddRenderer(MeshRenderer* const renderer) { renderers.push_back(renderer); }
+	GameObject* FindChildBy(const String& name);
 
 	//--------------------------------------------------------------------------------
 	//  check if this equal value / “¯’l”»’èˆ—

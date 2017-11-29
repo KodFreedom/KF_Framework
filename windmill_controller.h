@@ -5,10 +5,6 @@
 //	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "behavior.h"
 
 //--------------------------------------------------------------------------------
@@ -20,22 +16,22 @@ public:
 	//--------------------------------------------------------------------------------
 	//  関数定義
 	//--------------------------------------------------------------------------------
-	WindmillController(GameObject* const owner)
-		: Behavior(owner, "WindmillController")
-		, rotateSpeed(0.01f)
-		, fan(nullptr)
+	WindmillController(GameObject& owner)
+		: Behavior(owner, L"WindmillController")
+		, rotate_speed_(0.01f)
+		, fan_(nullptr)
 	{}
 	~WindmillController() {}
 
-	bool	Init(void) override;
-	void	Uninit(void) override {}
-	void	Update(void) override;
-	void	LateUpdate(void) override {}
+	bool Init(void) override;
+	void Uninit(void) override {}
+	void Update(void) override;
+	void LateUpdate(void) override {}
 
 private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	float		rotateSpeed;
-	GameObject*	fan;
+	float		rotate_speed_;
+	GameObject*	fan_;
 };
