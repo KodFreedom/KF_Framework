@@ -93,6 +93,16 @@ public:
 	void	AddCollider(Collider* const collider) { colliders.push_back(collider); }
 	void	AddRenderer(MeshRenderer* const renderer) { renderers.push_back(renderer); }
 
+	//--------------------------------------------------------------------------------
+	//  check if this equal value / 同値判定処理
+	//  value : 値
+	//  return：bool
+	//--------------------------------------------------------------------------------
+	bool operator==(const GameObject& value) const
+	{
+		return this == &value;
+	}
+
 protected:
 	//--------------------------------------------------------------------------------
 	//  関数定義

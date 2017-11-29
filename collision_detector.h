@@ -13,8 +13,8 @@ class Rigidbody3D;
 class Collider;
 class BoxCollider;
 class SphereCollider;
-class AABBCollider;
-class OBBCollider;
+class AabbCollider;
+class ObbCollider;
 class FieldCollider;
 
 //--------------------------------------------------------------------------------
@@ -91,9 +91,9 @@ class CollisionDetector
 public:
 	//è’ìÀîªíËä÷êî
 	static void Detect(SphereCollider& sphereL, SphereCollider& sphereR);
-	static void Detect(SphereCollider& sphere, AABBCollider& aabb);
-	static void Detect(SphereCollider& sphere, OBBCollider& obb);
-	static void Detect(AABBCollider& aabbL, AABBCollider& aabbR);
+	static void Detect(SphereCollider& sphere, AabbCollider& aabb);
+	static void Detect(SphereCollider& sphere, ObbCollider& obb);
+	static void Detect(AabbCollider& aabbL, AabbCollider& aabbR);
 	static void Detect(BoxCollider& boxL, BoxCollider& boxR);  
 	static void Detect(BoxCollider& box, FieldCollider& field);
 	static void Detect(SphereCollider& sphere, FieldCollider& field);
@@ -110,7 +110,7 @@ private:
 	CollisionDetector() {}
 	~CollisionDetector() {}
 
-	static Collision*	detect(const Vector3& point, const AABBCollider& aabb);
+	static Collision*	detect(const Vector3& point, const AabbCollider& aabb);
 	static Collision*	detect(const Vector3& point, const BoxCollider& box);
 	static Collision*	detect(const Vector3& point, const FieldCollider& field);
 	static Vector2*		detect(const Vector2& beginL, const Vector2& endL, const Vector2& beginR, const Vector2& endR);
@@ -118,7 +118,7 @@ private:
 
 	static float		projectBoxToAxis(const BoxCollider& box, const Vector3& axis);
 	static bool			isOverlapOnAxis(const BoxCollider& boxL, const BoxCollider& boxR, const Vector3& axis);
-	static bool			isOverlap(const AABBCollider& aabbL, const AABBCollider& aabbR);
+	static bool			isOverlap(const AabbCollider& aabbL, const AabbCollider& aabbR);
 	static bool			isOverlap(const Vector2& minL, const Vector2& maxL, const Vector2& minR, const Vector2& maxR);
 	static Collision*	maxPenetration(Collision* current, Collision* next);
 };
