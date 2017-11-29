@@ -1,29 +1,22 @@
 //--------------------------------------------------------------------------------
-//	コリジョン計算関数
-//　KF_CollisionUtility.cpp
+//	コリジョン探知器
+//　collisionDetector.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-08-13
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
-#include "collisionDetector.h"
-#include "physicsSystem.h"
-#include "sphereCollider.h"
-#include "fieldCollider.h"
-#include "boxCollider.h"
-#include "AABBCollider.h"
-#include "OBBCollider.h"
-#include "gameObject.h"
-#include "rigidbody3D.h"
+#include "collision_detector.h"
+#include "main_system.h"
+#include "physics_system.h"
+#include "sphere_collider.h"
+#include "field_collider.h"
+#include "aabb_collider.h"
+#include "obb_collider.h"
+#include "game_object.h"
+#include "rigidbody3d.h"
 #include "behavior.h"
 #include "transform.h"
 
 #ifdef _DEBUG
-#include "debugObserver.h"
+#include "debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -32,498 +25,451 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：スフィアとスフィアの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	sphereL：スフィアコライダー
-//			sphereR：スフィアコライダー
-//	戻り値：なし
+//	スフィアとスフィアの当たり判定関数
 //--------------------------------------------------------------------------------
-void CollisionDetector::Detect(SphereCollider& sphereL, SphereCollider& sphereR)
+void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphere_right)
 {
-	const auto& sphereLPosition = sphereL.GetNextWorldPosition();
-	const auto& sphereLRadius = sphereL.GetRadius();
-	const auto& sphereRPosition = sphereR.GetNextWorldPosition();
-	const auto& sphereRRadius = sphereR.GetRadius();
-	auto& midLine = sphereLPosition - sphereRPosition;
-	float minDistance = sphereLRadius + sphereRRadius;
-	float squareDistance = midLine.SquareMagnitude();
-	if (squareDistance >= minDistance * minDistance) return;
+	const auto& sphere_left_position = sphere_left.GetWorldPosition();
+	const auto& sphere_left_radius = sphere_left.GetRadius();
+	const auto& sphere_right_position = sphere_right.GetWorldPosition();
+	const auto& sphere_right_radius = sphere_right.GetRadius();
+	auto& midline = sphere_left_position - sphere_right_position;
+	float min_distance = sphere_left_radius + sphere_right_radius;
+	float square_distance = midline.SquareMagnitude();
+	if (square_distance >= min_distance * min_distance) return;
 
-	if (sphereL.IsTrigger() || sphereR.IsTrigger())
+	if (sphere_left.IsTrigger() || sphere_right.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto& leftBehaviors = sphereL.GetGameObject()->GetBehaviors();
-		for (auto& behavior : leftBehaviors) behavior->OnTrigger(sphereL, sphereR);
-
-		auto& rightBehaviors = sphereR.GetGameObject()->GetBehaviors();
-		for (auto& behavior : rightBehaviors) behavior->OnTrigger(sphereR, sphereL);
+		for (auto& behavior : sphere_left.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere_left, sphere_right);
+		for (auto& behavior : sphere_right.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere_right, sphere_left);
 		return;
 	}
 
 	auto collision = new Collision;
 
 	//衝突点の算出
-	collision->Point = sphereRPosition + midLine * 0.5f;
+	collision->point = sphere_right_position + midline * 0.5f;
 
 	//衝突深度の算出
-	float distance = sqrtf(squareDistance);
-	collision->Penetration = minDistance - distance;
+	float distance = sqrtf(square_distance);
+	collision->penetration = min_distance - distance;
 
 	//衝突法線の算出
-	collision->Normal = midLine / distance;
+	collision->normal = midline / distance;
 
 	//リジッドボディの取得
-	auto leftRigidbody = sphereL.GetGameObject()->GetRigidbody();
-	auto rightRigidbody = sphereR.GetGameObject()->GetRigidbody();
-	if (leftRigidbody->GetType() == Rigidbody::Rigidbody3D)
+	auto left_rigidbody = sphere_left.GetGameObject().GetRigidbody();
+	auto right_rigidbody = sphere_right.GetGameObject().GetRigidbody();
+	if (left_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(left_rigidbody);
 
-		if (rightRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (right_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+			collision->rigidbody_two = static_cast<Rigidbody3D*>(right_rigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
-		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+		collision->normal *= -1.0f;
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(right_rigidbody);
 	}
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(collision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.This = &sphereL;
-	info.Other = &sphereR;
-	info.Collisions.push_back(collision);
-	auto& leftBehaviors = sphereL.GetGameObject()->GetBehaviors();
-	for (auto& behavior : leftBehaviors) { behavior->OnCollision(info); }
+	info.self = &sphere_left;
+	info.other = &sphere_right;
+	info.collisions.push_back(collision);
+	for (auto& behavior : sphere_left.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 
-	info.This = &sphereR;
-	info.Other = &sphereL;
-	auto& rightBehaviors = sphereR.GetGameObject()->GetBehaviors();
-	for (auto& behavior : rightBehaviors) { behavior->OnCollision(info); }
+	info.self = &sphere_right;
+	info.other = &sphere_left;
+	for (auto& behavior : sphere_right.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：スフィアとAABBの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	sphere：スフィアコライダー
-//			aabb：回転なしボックスコライダー
-//	戻り値：なし
+//	スフィアとAABBの当たり判定関数
 //--------------------------------------------------------------------------------
-void CollisionDetector::Detect(SphereCollider& sphere, AABBCollider& aabb)
+void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 {
-	const auto& spherePosition = sphere.GetNextWorldPosition();
-	const auto& sphereRadius = sphere.GetRadius();
-	const auto& aabbHalfSize = aabb.GetHalfSize();
-	const auto& aabbPosition = aabb.GetNextWorldPosition();
-	auto& realPosition = spherePosition - aabbPosition;
+	const auto& sphere_position = sphere.GetWorldPosition();
+	const auto& sphere_radius = sphere.GetRadius();
+	const auto& aabb_half_size = aabb.GetHalfSize();
+	const auto& aabb_position = aabb.GetWorldPosition();
+	auto& real_position = sphere_position - aabb_position;
 
 	//分離軸チェック
-	if (fabsf(realPosition.X) - sphereRadius > aabbHalfSize.X
-		|| fabsf(realPosition.Y) - sphereRadius > aabbHalfSize.Y
-		|| fabsf(realPosition.Z) - sphereRadius > aabbHalfSize.Z)
+	if (fabsf(real_position.x_) - sphere_radius > aabb_half_size.x_
+		|| fabsf(real_position.y_) - sphere_radius > aabb_half_size.y_
+		|| fabsf(real_position.z_) - sphere_radius > aabb_half_size.z_)
 	{
 		return;
 	}
 
-	Vector3 closestPosition;
+	Vector3 closest_position;
 	float distance;
 
 	//AABBとスフィアの最近点の算出
-	distance = realPosition.X;
-	if (distance > aabbHalfSize.X) { distance = aabbHalfSize.X; }
-	else if (distance < -aabbHalfSize.X) { distance = -aabbHalfSize.X; }
-	closestPosition.X = distance;
+	distance = real_position.x_;
+	if (distance > aabb_half_size.x_) { distance = aabb_half_size.x_; }
+	else if (distance < -aabb_half_size.x_) { distance = -aabb_half_size.x_; }
+	closest_position.x_ = distance;
 
-	distance = realPosition.Y;
-	if (distance > aabbHalfSize.Y) { distance = aabbHalfSize.Y; }
-	else if (distance < -aabbHalfSize.Y) { distance = -aabbHalfSize.Y; }
-	closestPosition.Y = distance;
+	distance = real_position.y_;
+	if (distance > aabb_half_size.y_) { distance = aabb_half_size.y_; }
+	else if (distance < -aabb_half_size.y_) { distance = -aabb_half_size.y_; }
+	closest_position.y_ = distance;
 
-	distance = realPosition.Z;
-	if (distance > aabbHalfSize.Z) { distance = aabbHalfSize.Z; }
-	else if (distance < -aabbHalfSize.Z) { distance = -aabbHalfSize.Z; }
-	closestPosition.Z = distance;
+	distance = real_position.z_;
+	if (distance > aabb_half_size.z_) { distance = aabb_half_size.z_; }
+	else if (distance < -aabb_half_size.z_) { distance = -aabb_half_size.z_; }
+	closest_position.z_ = distance;
 
 	//衝突検知
-	float squareDistance = (closestPosition - realPosition).SquareMagnitude();
-	if (squareDistance >= sphereRadius * sphereRadius) return;
+	float square_distance = (closest_position - real_position).SquareMagnitude();
+	if (square_distance >= sphere_radius * sphere_radius) return;
 
 	//OnTrigger
 	if (sphere.IsTrigger() || aabb.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-		for (auto& behavior : sphereBehaviors) { behavior->OnTrigger(sphere, aabb); }
-
-		auto& aabbBehaviors = aabb.GetGameObject()->GetBehaviors();
-		for (auto& behavior : aabbBehaviors) { behavior->OnTrigger(aabb, sphere); }
+		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnTrigger(sphere, aabb); }
+		for (auto& behavior : aabb.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb, sphere); }
 		return;
 	}
 
 	//衝突情報
-	closestPosition = closestPosition + aabbPosition;
+	closest_position = closest_position + aabb_position;
 	auto collision = new Collision;
-	collision->Normal = spherePosition - closestPosition;
-	if (collision->Normal.SquareMagnitude() == 0.0f)
+	collision->normal = sphere_position - closest_position;
+	if (collision->normal.SquareMagnitude() == 0.0f)
 	{//中心がaabbの中にある
-		auto transform = sphere.GetGameObject()->GetTransform();
-		auto& currentPosition = transform->GetCurrentPosition();
-		auto& nextPosition = transform->GetNextPosition();
-		collision->Normal = currentPosition - nextPosition;
+		auto sphere_rigidbody = sphere.GetGameObject().GetRigidbody();
+		if (sphere_rigidbody->GetType() == Rigidbody::kRigidbody3D)
+		{
+			auto rigidbody = static_cast<Rigidbody3D*>(sphere_rigidbody);
+			collision->normal = rigidbody->GetAcceleration() * -1.0f;
+		}
 	}
-	collision->Normal.Normalize();
-	collision->Point = closestPosition;
-	collision->Penetration = sphereRadius - sqrtf(squareDistance);
+	collision->normal.Normalize();
+	collision->point = closest_position;
+	collision->penetration = sphere_radius - sqrtf(square_distance);
 
 	//リジッドボディの取得
-	auto sphereRigidbody = sphere.GetGameObject()->GetRigidbody();
-	auto aabbRigidbody = aabb.GetGameObject()->GetRigidbody();
-	if (sphereRigidbody->GetType() == Rigidbody::Rigidbody3D)
+	auto sphere_rigidbody = sphere.GetGameObject().GetRigidbody();
+	auto aabb_rigidbody = aabb.GetGameObject().GetRigidbody();
+	if (sphere_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphereRigidbody);
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere_rigidbody);
 
-		if (aabbRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (aabb_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(aabbRigidbody);
+			collision->rigidbody_two = static_cast<Rigidbody3D*>(aabb_rigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
-		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(aabbRigidbody);
+		collision->normal *= -1.0f;
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(aabb_rigidbody);
 	}
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(collision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.This = &sphere;
-	info.Other = &aabb;
-	info.Collisions.push_back(collision);
-	auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-	for (auto& behavior : sphereBehaviors) { behavior->OnCollision(info); }
+	info.self = &sphere;
+	info.other = &aabb;
+	info.collisions.push_back(collision);
+	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 
-	info.This = &aabb;
-	info.Other = &sphere;
-	auto& aabbBehaviors = aabb.GetGameObject()->GetBehaviors();
-	for (auto& behavior : aabbBehaviors) { behavior->OnCollision(info); }
+	info.self = &aabb;
+	info.other = &sphere;
+	for (auto& behavior : aabb.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：スフィアとOBBの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	sphere：スフィアコライダー
-//			obb：回転あるボックスコライダー
-//	戻り値：なし
+//	スフィアとOBBの当たり判定関数
 //--------------------------------------------------------------------------------
-void CollisionDetector::Detect(SphereCollider& sphere, OBBCollider& obb)
+void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 {
-	const auto& spherePosition = sphere.GetNextWorldPosition();
-	const auto& sphereRadius = sphere.GetRadius();
-	const auto& obbHalfSize = obb.GetHalfSize();
-	const auto& obbMatrix = obb.GetNextWorldMatrix();
-	auto& realPosition = Vector3::TransformInverse(spherePosition, obbMatrix);
+	const auto& sphere_position = sphere.GetWorldPosition();
+	const auto& sphere_radius = sphere.GetRadius();
+	const auto& obb_half_size = obb.GetHalfSize();
+	const auto& obb_matrix = obb.GetWorldMatrix();
+	auto& real_position = Vector3::TransformInverse(sphere_position, obb_matrix);
 
 	//分離軸チェック
-	if (fabsf(realPosition.X) - sphereRadius > obbHalfSize.X
-		|| fabsf(realPosition.Y) - sphereRadius > obbHalfSize.Y
-		|| fabsf(realPosition.Z) - sphereRadius > obbHalfSize.Z)
+	if (fabsf(real_position.x_) - sphere_radius > obb_half_size.x_
+		|| fabsf(real_position.y_) - sphere_radius > obb_half_size.y_
+		|| fabsf(real_position.z_) - sphere_radius > obb_half_size.z_)
 	{
 		return;
 	}
 
-	Vector3 closestPosition;
+	Vector3 closest_position;
 	float distance;
 
 	//OBBとスフィアの最近点の算出
-	distance = realPosition.X;
-	if (distance > obbHalfSize.X) { distance = obbHalfSize.X; }
-	else if (distance < -obbHalfSize.X) { distance = -obbHalfSize.X; }
-	closestPosition.X = distance;
+	distance = real_position.x_;
+	if (distance > obb_half_size.x_) { distance = obb_half_size.x_; }
+	else if (distance < -obb_half_size.x_) { distance = -obb_half_size.x_; }
+	closest_position.x_ = distance;
 
-	distance = realPosition.Y;
-	if (distance > obbHalfSize.Y) { distance = obbHalfSize.Y; }
-	else if (distance < -obbHalfSize.Y) { distance = -obbHalfSize.Y; }
-	closestPosition.Y = distance;
+	distance = real_position.y_;
+	if (distance > obb_half_size.y_) { distance = obb_half_size.y_; }
+	else if (distance < -obb_half_size.y_) { distance = -obb_half_size.y_; }
+	closest_position.y_ = distance;
 
-	distance = realPosition.Z;
-	if (distance > obbHalfSize.Z) { distance = obbHalfSize.Z; }
-	else if (distance < -obbHalfSize.Z) { distance = -obbHalfSize.Z; }
-	closestPosition.Z = distance;
+	distance = real_position.z_;
+	if (distance > obb_half_size.z_) { distance = obb_half_size.z_; }
+	else if (distance < -obb_half_size.z_) { distance = -obb_half_size.z_; }
+	closest_position.z_ = distance;
 
 	//衝突検知
-	float squareDistance = (closestPosition - realPosition).SquareMagnitude();
-	if (squareDistance >= sphereRadius * sphereRadius) return;
+	float square_distance = (closest_position - real_position).SquareMagnitude();
+	if (square_distance >= sphere_radius * sphere_radius) return;
 
 	//OnTrigger
 	if (sphere.IsTrigger() || obb.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-		for (auto& behavior : sphereBehaviors) { behavior->OnTrigger(sphere, obb); }
-
-		auto& obbBehaviors = obb.GetGameObject()->GetBehaviors();
-		for (auto& behavior : obbBehaviors) { behavior->OnTrigger(obb, sphere); }
+		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnTrigger(sphere, obb); }
+		for (auto& behavior : obb.GetGameObject().GetBehaviors()) { behavior->OnTrigger(obb, sphere); }
 		return;
 	}
 
 	//衝突情報
-	closestPosition = Vector3::TransformCoord(closestPosition, obbMatrix);
+	closest_position = Vector3::TransformCoord(closest_position, obb_matrix);
 	auto collision = new Collision;
-	collision->Normal = spherePosition - closestPosition;
-	if (collision->Normal.SquareMagnitude() == 0.0f)
+	collision->normal = sphere_position - closest_position;
+	if (collision->normal.SquareMagnitude() == 0.0f)
 	{//中心がobbの中にある
-		auto transform = sphere.GetGameObject()->GetTransform();
-		auto currentPosition = transform->GetCurrentPosition();
-		auto nextPosition = transform->GetNextPosition();
-		collision->Normal = currentPosition - nextPosition;
+		auto sphere_rigidbody = sphere.GetGameObject().GetRigidbody();
+		if (sphere_rigidbody->GetType() == Rigidbody::kRigidbody3D)
+		{
+			auto rigidbody = static_cast<Rigidbody3D*>(sphere_rigidbody);
+			collision->normal = rigidbody->GetAcceleration() * -1.0f;
+		}
 	}
-	collision->Normal.Normalize();
-	collision->Point = closestPosition;
-	collision->Penetration = sphereRadius - sqrtf(squareDistance);
+	collision->normal.Normalize();
+	collision->point = closest_position;
+	collision->penetration = sphere_radius - sqrtf(square_distance);
 
 	//リジッドボディの取得
-	auto sphereRigidbody = sphere.GetGameObject()->GetRigidbody();
-	auto obbRigidbody = obb.GetGameObject()->GetRigidbody();
-	if (sphereRigidbody->GetType() == Rigidbody::Rigidbody3D)
+	auto sphere_rigidbody = sphere.GetGameObject().GetRigidbody();
+	auto obbRigidbody = obb.GetGameObject().GetRigidbody();
+	if (sphere_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphereRigidbody);
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere_rigidbody);
 
-		if (obbRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (obbRigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(obbRigidbody);
+			collision->rigidbody_two = static_cast<Rigidbody3D*>(obbRigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
-		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(obbRigidbody);
+		collision->normal *= -1.0f;
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(obbRigidbody);
 	}
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(collision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.This = &sphere;
-	info.Other = &obb;
-	info.Collisions.push_back(collision);
-	auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-	for (auto& behavior : sphereBehaviors) { behavior->OnCollision(info); }
+	info.self = &sphere;
+	info.other = &obb;
+	info.collisions.push_back(collision);
+	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 
-	info.This = &obb;
-	info.Other = &sphere;
-	auto& obbBehaviors = obb.GetGameObject()->GetBehaviors();
-	for (auto& behavior : obbBehaviors) { behavior->OnCollision(info); }
+	info.self = &obb;
+	info.other = &sphere;
+	for (auto& behavior : obb.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：AABBとAABBの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	aabbL：回転なしボックスコライダー
-//			aabbR：回転なしボックスコライダー
-//	戻り値：なし
+//	AABBとAABBの当たり判定関数
 //--------------------------------------------------------------------------------
-void CollisionDetector::Detect(AABBCollider& aabbL, AABBCollider& aabbR)
+void CollisionDetector::Detect(AabbCollider& aabb_left, AabbCollider& aabb_right)
 {
-	if (!isOverlap(aabbL, aabbR)) return;
+	if (!IsOverlap(aabb_left, aabb_right)) return;
 
 	//OnTrigger
-	if (aabbL.IsTrigger() || aabbR.IsTrigger())
+	if (aabb_left.IsTrigger() || aabb_right.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto& leftBehaviors = aabbL.GetGameObject()->GetBehaviors();
-		for (auto& behavior : leftBehaviors) { behavior->OnTrigger(aabbL, aabbR); }
-
-		auto& rightBehaviors = aabbR.GetGameObject()->GetBehaviors();
-		for (auto& behavior : rightBehaviors) { behavior->OnTrigger(aabbR, aabbL); }
+		for (auto& behavior : aabb_left.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb_left, aabb_right); }
+		for (auto& behavior : aabb_right.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb_right, aabb_left); }
 		return;
 	}
 
 	//XYZ軸一番深度が浅いの軸を洗い出す
-	const auto& leftPosition = aabbL.GetNextWorldPosition();
-	const auto& leftHalfSize = aabbL.GetHalfSize();
-	const auto& rightPosition = aabbR.GetNextWorldPosition();
-	const auto& rightHalfSize = aabbR.GetHalfSize();
-	auto midLine = leftPosition - rightPosition;
-	auto noCollisionDistance = leftHalfSize + rightHalfSize;
-	auto penetrationX = noCollisionDistance.X - fabsf(midLine.X);
-	auto penetrationY = noCollisionDistance.Y - fabsf(midLine.Y);
-	auto penetrationZ = noCollisionDistance.Z - fabsf(midLine.Z);
+	const auto& left_position = aabb_left.GetWorldPosition();
+	const auto& left_half_size = aabb_left.GetHalfSize();
+	const auto& right_position = aabb_right.GetWorldPosition();
+	const auto& right_half_size = aabb_right.GetHalfSize();
+	auto midline = left_position - right_position;
+	auto no_collision_distance = left_half_size + right_half_size;
+	auto penetration_x = no_collision_distance.x_ - fabsf(midline.x_);
+	auto penetration_y = no_collision_distance.y_ - fabsf(midline.y_);
+	auto penetration_z = no_collision_distance.z_ - fabsf(midline.z_);
 
-	penetrationX = penetrationX > 0.0f ? penetrationX : noCollisionDistance.X;
-	penetrationY = penetrationY > 0.0f ? penetrationY : noCollisionDistance.Y;
-	penetrationZ = penetrationZ > 0.0f ? penetrationZ : noCollisionDistance.Z;
-	auto penetrationMin = min(penetrationX, min(penetrationY, penetrationZ));
+	penetration_x = penetration_x > 0.0f ? penetration_x : no_collision_distance.x_;
+	penetration_y = penetration_y > 0.0f ? penetration_y : no_collision_distance.y_;
+	penetration_z = penetration_z > 0.0f ? penetration_z : no_collision_distance.z_;
+	auto penetrationMin = min(penetration_x, min(penetration_y, penetration_z));
 	
 	auto collision = new Collision;
-	collision->Penetration = penetrationMin;
-	collision->Point = midLine * 0.5f;
-	if (penetrationX == penetrationMin)
+	collision->penetration = penetrationMin;
+	collision->point = midline * 0.5f;
+	if (penetration_x == penetrationMin)
 	{
-		collision->Normal = midLine.X < 0.0f ? Vector3::Left : Vector3::Right;
+		collision->normal = midline.x_ < 0.0f ? Vector3::kLeft : Vector3::kRight;
 	}
-	else if (penetrationY == penetrationMin)
+	else if (penetration_y == penetrationMin)
 	{
-		collision->Normal = midLine.Y < 0.0f ? Vector3::Down : Vector3::Up;
+		collision->normal = midline.y_ < 0.0f ? Vector3::kDown : Vector3::kUp;
 	}
 	else
 	{
-		collision->Normal = midLine.Z < 0.0f ? Vector3::Back : Vector3::Forward;
+		collision->normal = midline.z_ < 0.0f ? Vector3::kBack : Vector3::kForward;
 	}
 
 	//リジッドボディの取得
-	auto leftRigidbody = aabbL.GetGameObject()->GetRigidbody();
-	auto rightRigidbody = aabbR.GetGameObject()->GetRigidbody();
+	auto left_rigidbody = aabb_left.GetGameObject().GetRigidbody();
+	auto right_rigidbody = aabb_right.GetGameObject().GetRigidbody();
 
-	if (leftRigidbody->GetType() == Rigidbody::Rigidbody3D)
+	if (left_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 	{
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(left_rigidbody);
 
-		if (rightRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (right_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			collision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+			collision->rigidbody_two = static_cast<Rigidbody3D*>(right_rigidbody);
 		}
 	}
 	else
 	{//一番が持ってないなら衝突法線を反転する
-		collision->Normal *= -1.0f;
-		collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+		collision->normal *= -1.0f;
+		collision->rigidbody_one = static_cast<Rigidbody3D*>(right_rigidbody);
 	}
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(collision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.Collisions.push_back(collision);
-	info.This = &aabbL;
-	info.Other = &aabbR;
-	auto& leftBehaviors = aabbL.GetGameObject()->GetBehaviors();
-	for (auto& behavior : leftBehaviors) { behavior->OnCollision(info); }
+	info.collisions.push_back(collision);
+	info.self = &aabb_left;
+	info.other = &aabb_right;
+	for (auto& behavior : aabb_left.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 
-	info.This = &aabbR;
-	info.Other = &aabbL;
-	auto& rightBehaviors = aabbR.GetGameObject()->GetBehaviors();
-	for (auto& behavior : rightBehaviors) { behavior->OnCollision(info); }
+	info.self = &aabb_right;
+	info.other = &aabb_left;
+	for (auto& behavior : aabb_right.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：boxとboxの当たり判定関数(いずれかが必ずOBB)
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	boxL：ボックスコライダー
-//			boxR：ボックスコライダー
-//	戻り値：なし
+//	boxとboxの当たり判定関数(いずれかが必ずOBB)
 //--------------------------------------------------------------------------------
-void CollisionDetector::Detect(BoxCollider& boxL, BoxCollider& boxR)
+void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
 {
 	//ボックスがxyz軸上に重ねてるかどうかをチェックする
-	if (!isOverlapOnAxis(boxL, boxR, Vector3::AxisX)
-		&& !isOverlapOnAxis(boxL, boxR, Vector3::AxisY)
-		&& !isOverlapOnAxis(boxL, boxR, Vector3::AxisZ))
+	if (!IsOverlapOnAxis(box_left, box_right, Vector3::kAxisX)
+		&& !IsOverlapOnAxis(box_left, box_right, Vector3::kAxisY)
+		&& !IsOverlapOnAxis(box_left, box_right, Vector3::kAxisZ))
 	{
 		return;
 	}
 
-	//boxLのすべての頂点とboxRと判定し、めり込みが一番深いの頂点を洗い出す
-	Collision* boxLMaxPenetrationCollision = nullptr;
-	auto& leftVertexes = boxL.GetNextWorldVertexes();
-	for (auto& vertex : leftVertexes)
+	//box_leftのすべての頂点とbox_rightと判定し、めり込みが一番深いの頂点を洗い出す
+	Collision* left_max_penetration_collision = nullptr;
+	for (auto& vertex : box_left.GetWorldVertexes())
 	{
-		auto collision = detect(vertex, boxR);
-		boxLMaxPenetrationCollision = maxPenetration(boxLMaxPenetrationCollision, collision);
+		auto collision = Detect(vertex, box_right);
+		left_max_penetration_collision = MaxPenetration(left_max_penetration_collision, collision);
 	}
 
-	//boxRのすべての頂点とboxLと判定し、めり込みが一番深いの頂点を洗い出す
-	Collision* boxRMaxPenetrationCollision = nullptr;
-	auto& rightVertexes = boxR.GetNextWorldVertexes();
-	for (auto& vertex : rightVertexes)
+	//box_rightのすべての頂点とbox_leftと判定し、めり込みが一番深いの頂点を洗い出す
+	Collision* right_max_penetration_collision = nullptr;
+	for (auto& vertex : box_right.GetWorldVertexes())
 	{
-		auto collision = detect(vertex, boxR);
-		boxRMaxPenetrationCollision = maxPenetration(boxRMaxPenetrationCollision, collision);
+		auto collision = Detect(vertex, box_right);
+		right_max_penetration_collision = MaxPenetration(right_max_penetration_collision, collision);
 	}
 
-	if (!boxLMaxPenetrationCollision && !boxRMaxPenetrationCollision) return;
+	if (!left_max_penetration_collision && !right_max_penetration_collision) return;
 
 	//OnTrigger
-	if (boxL.IsTrigger() || boxR.IsTrigger())
+	if (box_left.IsTrigger() || box_right.IsTrigger())
 	{//トリガーだったら物理処理しない
-		auto& leftBehaviors = boxL.GetGameObject()->GetBehaviors();
-		for (auto& behavior : leftBehaviors) behavior->OnTrigger(boxL, boxR);
-		auto& rightBehaviors = boxR.GetGameObject()->GetBehaviors();
-		for (auto& behavior : rightBehaviors) behavior->OnTrigger(boxR, boxL);
-		if (boxLMaxPenetrationCollision) delete boxLMaxPenetrationCollision;
-		if (boxRMaxPenetrationCollision) delete boxRMaxPenetrationCollision;
+		for (auto& behavior : box_left.GetGameObject().GetBehaviors()) behavior->OnTrigger(box_left, box_right);
+		for (auto& behavior : box_right.GetGameObject().GetBehaviors()) behavior->OnTrigger(box_right, box_left);
+		if (left_max_penetration_collision) delete left_max_penetration_collision;
+		if (right_max_penetration_collision) delete right_max_penetration_collision;
 		return;
 	}
 
 	CollisionInfo info;
 
 	//リジッドボディの取得
-	auto leftRigidbody = boxL.GetGameObject()->GetRigidbody();
-	auto rightRigidbody = boxR.GetGameObject()->GetRigidbody();
+	auto left_rigidbody = box_left.GetGameObject().GetRigidbody();
+	auto right_rigidbody = box_right.GetGameObject().GetRigidbody();
 
-	if (boxLMaxPenetrationCollision)
+	if (left_max_penetration_collision)
 	{
-		if (leftRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (left_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
+			left_max_penetration_collision->rigidbody_one = static_cast<Rigidbody3D*>(left_rigidbody);
 
-			if (rightRigidbody->GetType() == Rigidbody::Rigidbody3D)
+			if (right_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 			{
-				boxLMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+				left_max_penetration_collision->rigidbody_two = static_cast<Rigidbody3D*>(right_rigidbody);
 			}
 		}
 		else
 		{//一番が持ってないなら衝突法線を反転する
-			boxLMaxPenetrationCollision->Normal *= -1.0f;
-			boxLMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+			left_max_penetration_collision->normal *= -1.0f;
+			left_max_penetration_collision->rigidbody_one = static_cast<Rigidbody3D*>(right_rigidbody);
 		}
 
 		//物理演算システムにレジストリ
-		PhysicsSystem::Instance()->Register(boxLMaxPenetrationCollision);
-		info.Collisions.push_back(boxLMaxPenetrationCollision);
+		MainSystem::Instance()->GetPhysicsSystem()->Register(left_max_penetration_collision);
+		info.collisions.push_back(left_max_penetration_collision);
 	}
 
-	if (boxRMaxPenetrationCollision)
+	if (right_max_penetration_collision)
 	{
-		if (rightRigidbody->GetType() == Rigidbody::Rigidbody3D)
+		if (right_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
-			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(rightRigidbody);
+			right_max_penetration_collision->rigidbody_one = static_cast<Rigidbody3D*>(right_rigidbody);
 
-			if (leftRigidbody->GetType() == Rigidbody::Rigidbody3D)
+			if (left_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 			{
-				boxRMaxPenetrationCollision->RigidbodyTwo = dynamic_cast<Rigidbody3D*>(leftRigidbody);
+				right_max_penetration_collision->rigidbody_two = static_cast<Rigidbody3D*>(left_rigidbody);
 			}
 		}
 		else
 		{//一番が持ってないなら衝突法線を反転する
-			boxRMaxPenetrationCollision->Normal *= -1.0f;
-			boxRMaxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(leftRigidbody);
+			right_max_penetration_collision->normal *= -1.0f;
+			right_max_penetration_collision->rigidbody_one = static_cast<Rigidbody3D*>(left_rigidbody);
 		}
 
 		//物理演算システムにレジストリ
-		PhysicsSystem::Instance()->Register(boxRMaxPenetrationCollision);
-		info.Collisions.push_back(boxRMaxPenetrationCollision);
+		MainSystem::Instance()->GetPhysicsSystem()->Register(right_max_penetration_collision);
+		info.collisions.push_back(right_max_penetration_collision);
 	}
 
 	//OnCollision
-	info.This = &boxL;
-	info.Other = &boxR;
-	auto& leftBehaviors = boxL.GetGameObject()->GetBehaviors();
-	for (auto& behavior : leftBehaviors) behavior->OnCollision(info);
+	info.self = &box_left;
+	info.other = &box_right;
+	for (auto& behavior : box_left.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
 
-	info.This = &boxR;
-	info.Other = &boxL;
-	auto& rightBehaviors = boxR.GetGameObject()->GetBehaviors();
-	for (auto& behavior : rightBehaviors) behavior->OnCollision(info);
+	info.self = &box_right;
+	info.other = &box_left;
+	for (auto& behavior : box_right.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
 }
 
 //--------------------------------------------------------------------------------
@@ -532,21 +478,16 @@ void CollisionDetector::Detect(BoxCollider& boxL, BoxCollider& boxR)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：スフィアとフィールドの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	sphere：スフィアコライダー
-//			field：フィールドコライダー
-//	戻り値：なし
+//	スフィアとフィールドの当たり判定関数
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 {
-	const auto& spherePosition = sphere.GetNextWorldPosition();
+	const auto& sphere_position = sphere.GetWorldPosition();
 	const auto& radius = sphere.GetRadius();
-	auto collision = detect(spherePosition, field);
+	auto collision = Detect(sphere_position, field);
 	if (!collision) return;
 
-	float penetration = collision->Penetration + radius;
+	float penetration = collision->penetration + radius;
 	if (penetration <= 0.0f)
 	{
 		delete collision;
@@ -555,86 +496,72 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 
 	if (sphere.IsTrigger())
 	{
-		auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-		for (auto& behavior : sphereBehaviors) behavior->OnTrigger(sphere, field);
-		auto& fieldBehaviors = field.GetGameObject()->GetBehaviors();
-		for (auto& behavior : fieldBehaviors) behavior->OnTrigger(field, sphere);
+		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere, field);
+		for (auto& behavior : field.GetGameObject().GetBehaviors()) behavior->OnTrigger(field, sphere);
 		delete collision;
 		return;
 	}
 
-	collision->Point = spherePosition + collision->Normal * penetration;
-	collision->Penetration = penetration;
-	collision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(sphere.GetGameObject()->GetRigidbody());
-	collision->RigidbodyTwo = nullptr;
+	collision->point = sphere_position + collision->normal * penetration;
+	collision->penetration = penetration;
+	collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere.GetGameObject().GetRigidbody());
+	collision->rigidbody_two = nullptr;
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(collision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.This = &sphere;
-	info.Other = &field;
-	info.Collisions.push_back(collision);
-	auto& sphereBehaviors = sphere.GetGameObject()->GetBehaviors();
-	for (auto& behavior : sphereBehaviors) behavior->OnCollision(info);
+	info.self = &sphere;
+	info.other = &field;
+	info.collisions.push_back(collision);
+	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
 
-	info.This = &field;
-	info.Other = &sphere;
-	auto& fieldBehaviors = field.GetGameObject()->GetBehaviors();
-	for (auto& behavior : fieldBehaviors) behavior->OnCollision(info);
+	info.self = &field;
+	info.other = &sphere;
+	for (auto& behavior : field.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：Boxとフィールドの当たり判定関数
-//			　当たったらコリジョン情報を物理演算マネージャに登録する
-//	引数：	box：ボックスコライダー
-//			field：フィールドコライダー
-//	戻り値：なし
+//	Boxとフィールドの当たり判定関数
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 {
 	//一番深いの頂点を案出する
-	auto& vertexes = box.GetNextWorldVertexes();
-	Collision* maxPenetrationCollision = nullptr;
-	for (auto& vertex : vertexes)
+	Collision* max_penetration_collision = nullptr;
+	for (auto& vertex : box.GetWorldVertexes())
 	{
-		auto collision = detect(vertex, field);
-		maxPenetrationCollision = maxPenetration(maxPenetrationCollision, collision);
+		auto collision = Detect(vertex, field);
+		max_penetration_collision = MaxPenetration(max_penetration_collision, collision);
 	}
 
-	if (!maxPenetrationCollision) return;
+	if (!max_penetration_collision) return;
 
 	if (box.IsTrigger())
 	{
-		auto& boxBehaviors = box.GetGameObject()->GetBehaviors();
-		for (auto& behavior : boxBehaviors) { behavior->OnTrigger(box, field); }
-		auto& fieldBehaviors = field.GetGameObject()->GetBehaviors();
-		for (auto& behavior : fieldBehaviors) { behavior->OnTrigger(field, box); }
-		delete maxPenetrationCollision;
+		for (auto& behavior : box.GetGameObject().GetBehaviors()) { behavior->OnTrigger(box, field); }
+		for (auto& behavior : field.GetGameObject().GetBehaviors()) { behavior->OnTrigger(field, box); }
+		delete max_penetration_collision;
 		return;
 	}
 
 	//リジッドボディの取得
-	maxPenetrationCollision->RigidbodyOne = dynamic_cast<Rigidbody3D*>(box.GetGameObject()->GetRigidbody());
-	maxPenetrationCollision->RigidbodyTwo = nullptr;
+	max_penetration_collision->rigidbody_one = static_cast<Rigidbody3D*>(box.GetGameObject().GetRigidbody());
+	max_penetration_collision->rigidbody_two = nullptr;
 
 	//物理演算システムにレジストリ
-	PhysicsSystem::Instance()->Register(maxPenetrationCollision);
+	MainSystem::Instance()->GetPhysicsSystem()->Register(max_penetration_collision);
 
 	//OnCollision
 	CollisionInfo info;
-	info.This = &box;
-	info.Other = &field;
-	info.Collisions.push_back(maxPenetrationCollision);
-	auto& boxBehaviors = box.GetGameObject()->GetBehaviors();
-	for (auto& behavior : boxBehaviors) { behavior->OnCollision(info); }
+	info.self = &box;
+	info.other = &field;
+	info.collisions.push_back(max_penetration_collision);
+	for (auto& behavior : box.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 
-	info.This = &field;
-	info.Other = &box;
-	auto& fieldBehaviors = field.GetGameObject()->GetBehaviors();
-	for (auto& behavior : fieldBehaviors) { behavior->OnCollision(info); }
+	info.self = &field;
+	info.other = &box;
+	for (auto& behavior : field.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -643,36 +570,31 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：レイとボックスの当たり判定
-//	引数：	ray：レイ
-//			distancetance：レイの長さ
-//			box：ボックスコライダー
-//	戻り値：RayHitInfo*
+//	レイとボックスの当たり判定
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, BoxCollider& box)
 {
-	auto collision = detect(ray.Origin, box);
+	auto collision = Detect(ray.origin_, box);
 	if (collision)
 	{
 		auto result = new RayHitInfo;
-		result->Normal = collision->Normal;
-		result->Position = ray.Origin;
-		result->Collider = &box;
-		result->Distance = collision->Penetration;
+		result->normal = collision->normal;
+		result->position = ray.origin_;
+		result->other = &box;
+		result->distance = collision->penetration;
 		delete collision;
 		return result;
 	}
 	
-	auto& rayEnd = ray.Origin + ray.Direction * distance;
-	collision = detect(rayEnd, box);
+	auto& ray_end = ray.origin_ + ray.direction_ * distance;
+	collision = Detect(ray_end, box);
 	if (collision)
 	{
 		auto result = new RayHitInfo;
-		result->Normal = collision->Normal;
-		result->Position = rayEnd;
-		result->Collider = &box;
-		result->Distance = collision->Penetration;
+		result->normal = collision->normal;
+		result->position = ray_end;
+		result->other = &box;
+		result->distance = collision->penetration;
 		delete collision;
 		return result;
 	}
@@ -681,77 +603,67 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：レイとスフィアの当たり判定
-//	引数：	ray：レイ
-//			distancetance：レイの長さ
-//			sphere：スフィアコライダー
-//	戻り値：RayHitInfo*
+//	レイとスフィアの当たり判定
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, SphereCollider& sphere)
 {
-	const auto& spherePosition = sphere.GetNextWorldPosition();
+	const auto& sphere_position = sphere.GetWorldPosition();
 	const auto& radius = sphere.GetRadius();
 
-	auto& sphereToOrigin = ray.Origin - spherePosition;
-	float workA = 2.0f * ray.Direction.Dot(sphereToOrigin);
-	float workB = sphereToOrigin.Dot(sphereToOrigin) - radius * radius;
+	auto& sphereToorigin_ = ray.origin_ - sphere_position;
+	float work_a = 2.0f * ray.direction_.Dot(sphereToorigin_);
+	float work_b = sphereToorigin_.Dot(sphereToorigin_) - radius * radius;
 	
-	float dicriminant = workA * workA - 4.0f * workB;
+	float dicriminant = work_a * work_a - 4.0f * work_b;
 	if (dicriminant < 0.0f) return nullptr;
 	dicriminant = sqrtf(dicriminant);
 
-	float timeA = (-workA + dicriminant) / 2.0f;
-	float timeB = (-workA - dicriminant) / 2.0f;
-	if (timeA < 0.0f && timeB < 0.0f) return nullptr;
+	float time_a = (-work_a + dicriminant) / 2.0f;
+	float time_b = (-work_a - dicriminant) / 2.0f;
+	if (time_a < 0.0f && time_b < 0.0f) return nullptr;
 	
 	//最短時間を保存
-	timeA = timeA < 0.0f ? timeB : timeA;
-	timeB = timeB < 0.0f ? timeA : timeB;
-	auto minTime = timeA <= timeB ? timeA : timeB;
+	time_a = time_a < 0.0f ? time_b : time_a;
+	time_b = time_b < 0.0f ? time_a : time_b;
+	auto min_time = time_a <= time_b ? time_a : time_b;
 
-	if (minTime > distance) { return nullptr; }
+	if (min_time > distance) { return nullptr; }
 
 	auto result = new RayHitInfo;
-	result->Distance = minTime;
-	result->Collider = &sphere;
-	result->Position = ray.Origin + ray.Direction * minTime;
-	result->Normal = (result->Position - spherePosition).Normalized();
+	result->distance = min_time;
+	result->other = &sphere;
+	result->position = ray.origin_ + ray.direction_ * min_time;
+	result->normal = (result->position - sphere_position).Normalized();
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：Detect
-//  関数説明：レイとフィールドの当たり判定
-//	引数：	ray：レイ
-//			distancetance：レイの長さ
-//			field：フィールドコライダー
-//	戻り値：RayHitInfo*
+//	レイとフィールドの当たり判定
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, FieldCollider& field)
 {
-	//auto beginRyMax = ray.Origin + ray.Direction * distancetance;
+	//auto begin_rightyMax = ray.origin_ + ray.direction_ * distancetance;
 	//int nNumVtxX = 0;
 	//int nNumVtxZ = 0;
 	//vector<Vector3> vecVtx;
-	//if (!field.GetVtxByRange(ray.Origin, beginRyMax, nNumVtxX, nNumVtxZ, vecVtx))
+	//if (!field.GetVtxByRange(ray.origin_, begin_rightyMax, nNumVtxX, nNumVtxZ, vecVtx))
 	//{
 	//	return false;
 	//}
 
 	//一時採用
-	auto collision = detect(ray.Origin + ray.Direction * distance, field);
+	auto collision = Detect(ray.origin_ + ray.direction_ * distance, field);
 	if (!collision) return nullptr;
-	if (collision->Penetration < 0.0f) 
+	if (collision->penetration < 0.0f) 
 	{
 		delete collision;
 		return nullptr;
 	}
 	auto result = new RayHitInfo;
-	result->Distance = collision->Penetration;
-	result->Normal = collision->Normal;
-	result->Collider = &field;
-	result->Position = ray.Origin + ray.Direction * distance;
+	result->distance = collision->penetration;
+	result->normal = collision->normal;
+	result->other = &field;
+	result->position = ray.origin_ + ray.direction_ * distance;
 	delete collision;
 	return result;
 }
@@ -762,182 +674,163 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Fie
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：detect
-//  関数説明：点とAABBの当たり判定
-//	引数：	point：点の位置
-//			aabb：AABBコライダー
-//	戻り値：Collision*
+//	点とAABBの当たり判定
 //--------------------------------------------------------------------------------
-Collision* CollisionDetector::detect(const Vector3& point, const AABBCollider& aabb)
+Collision* CollisionDetector::Detect(const Vector3& point, const AabbCollider& aabb)
 {
-	const auto& aabbPosition = aabb.GetNextWorldPosition();
-	const auto& halfSize = aabb.GetHalfSize();
-	auto& realPoint = point - aabbPosition;
+	const auto& aabb_position = aabb.GetWorldPosition();
+	const auto& half_size = aabb.GetHalfSize();
+	auto& real_point = point - aabb_position;
 
-	float minDepth = halfSize.X - fabsf(realPoint.X);
-	if (minDepth <= 0.0f) return nullptr;
-	auto normal = realPoint.X < 0.0f ? Vector3::Left : Vector3::Right;
+	float min_depth = half_size.x_ - fabsf(real_point.x_);
+	if (min_depth <= 0.0f) return nullptr;
+	auto normal = real_point.x_ < 0.0f ? Vector3::kLeft : Vector3::kRight;
 
-	float depth = halfSize.Y - fabsf(realPoint.Y);
+	float depth = half_size.y_ - fabsf(real_point.y_);
 	if (depth <= 0.0f) return nullptr;
-	else if (depth < minDepth)
+	else if (depth < min_depth)
 	{
-		minDepth = depth;
-		normal = realPoint.Y < 0.0f ? Vector3::Down : Vector3::Up;
+		min_depth = depth;
+		normal = real_point.y_ < 0.0f ? Vector3::kDown : Vector3::kUp;
 	}
 
-	depth = halfSize.Z - fabsf(realPoint.Z);
+	depth = half_size.z_ - fabsf(real_point.z_);
 	if (depth <= 0.0f) return nullptr;
-	else if (depth < minDepth)
+	else if (depth < min_depth)
 	{
-		minDepth = depth;
-		normal = realPoint.Z < 0.0f ? Vector3::Back : Vector3::Forward;
+		min_depth = depth;
+		normal = real_point.z_ < 0.0f ? Vector3::kBack : Vector3::kForward;
 	}
 
 	auto result = new Collision;
-	result->Normal = normal;
-	result->Penetration = minDepth;
-	result->Point = point;
+	result->normal = normal;
+	result->penetration = min_depth;
+	result->point = point;
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：detect
-//  関数説明：点とBoxの当たり判定
-//	引数：	collisionOut：衝突情報(出力用)
-//			vPoint：点の位置
-//			box：boxコライダー
-//	戻り値：Collision*
+//	点とBoxの当たり判定
 //--------------------------------------------------------------------------------
-Collision* CollisionDetector::detect(const Vector3& point, const BoxCollider& box)
+Collision* CollisionDetector::Detect(const Vector3& point, const BoxCollider& box)
 {
-	const auto& boxMatrix = box.GetNextWorldMatrix();
-	const auto& halfSize = box.GetHalfSize();
-	auto& realPoint = Vector3::TransformInverse(point, boxMatrix);
+	const auto& boxMatrix = box.GetWorldMatrix();
+	const auto& half_size = box.GetHalfSize();
+	auto& real_point = Vector3::TransformInverse(point, boxMatrix);
 
-	float minDepth = halfSize.X - fabsf(realPoint.X);
-	if (minDepth <= 0.0f) return nullptr;
-	auto normal = Vector3(boxMatrix.Elements[0][0], boxMatrix.Elements[0][1], boxMatrix.Elements[0][2])
-		* (realPoint.X < 0.0f ? -1.0f : 1.0f);
+	float min_depth = half_size.x_ - fabsf(real_point.x_);
+	if (min_depth <= 0.0f) return nullptr;
+	auto normal = Vector3(boxMatrix.m00_, boxMatrix.m01_, boxMatrix.m02_)
+		* (real_point.x_ < 0.0f ? -1.0f : 1.0f);
 
-	float depth = halfSize.Y - fabsf(realPoint.Y);
+	float depth = half_size.y_ - fabsf(real_point.y_);
 	if (depth <= 0.0f) return nullptr;
-	else if (depth < minDepth)
+	else if (depth < min_depth)
 	{
-		minDepth = depth;
-		normal = Vector3(boxMatrix.Elements[1][0], boxMatrix.Elements[1][1], boxMatrix.Elements[1][2])
-			* (realPoint.Y < 0.0f ? -1.0f : 1.0f);
+		min_depth = depth;
+		normal = Vector3(boxMatrix.m10_, boxMatrix.m11_, boxMatrix.m12_)
+			* (real_point.y_ < 0.0f ? -1.0f : 1.0f);
 	}
 
-	depth = halfSize.Z - fabsf(realPoint.Z);
+	depth = half_size.z_ - fabsf(real_point.z_);
 	if (depth <= 0.0f) return nullptr;
-	else if (depth < minDepth)
+	else if (depth < min_depth)
 	{
-		minDepth = depth;
-		normal = Vector3(boxMatrix.Elements[2][0], boxMatrix.Elements[2][1], boxMatrix.Elements[2][2])
-			* (realPoint.Z < 0.0f ? -1.0f : 1.0f);
+		min_depth = depth;
+		normal = Vector3(boxMatrix.m20_, boxMatrix.m21_, boxMatrix.m22_)
+			* (real_point.z_ < 0.0f ? -1.0f : 1.0f);
 	}
 
 	auto result = new Collision;
-	result->Normal = normal;
-	result->Penetration = minDepth;
-	result->Point = point;
+	result->normal = normal;
+	result->penetration = min_depth;
+	result->point = point;
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：detect
-//  関数説明：点とfieldの当たり判定
-//	引数：	point：点の位置
-//			field：fieldコライダー
-//	戻り値：Collision*
+//	点とfieldの当たり判定
 //--------------------------------------------------------------------------------
-Collision* CollisionDetector::detect(const Vector3& point, const FieldCollider& field)
+Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& field)
 {
-	auto polygonInfo = field.GetPolygonAt(point);
-	if (!polygonInfo) return nullptr;
+	auto polygon_info = field.GetPolygonAt(point);
+	if (!polygon_info) return nullptr;
 	Collision* result = nullptr;
 
 	// 地面法線の角度が60度以上なら地面法線を返す
 	// そうじゃないなら上方向を返す
-	float dot = Vector3::Up.Dot(polygonInfo->SurfaceNormal);
+	float dot = Vector3::kUp.Dot(polygon_info->normal);
 	if (dot > 0.5f)
 	{
-		float pointYOnField = polygonInfo->Side.Y - ((point.X - polygonInfo->Side.X) * polygonInfo->SurfaceNormal.X + (point.Z - polygonInfo->Side.Z) * polygonInfo->SurfaceNormal.Z) / polygonInfo->SurfaceNormal.Y;
-		float penetration = pointYOnField - point.Y;
+		float point_y_on_field = polygon_info->side.y_ - ((point.x_ - polygon_info->side.x_) * polygon_info->normal.x_ + (point.z_ - polygon_info->side.z_) * polygon_info->normal.z_) / polygon_info->normal.y_;
+		float penetration = point_y_on_field - point.y_;
 		if (penetration > 0.0f)
 		{
 			result = new Collision;
-			result->Point = point;
-			result->Penetration = penetration;
-			result->Normal = Vector3::Up;
+			result->point = point;
+			result->penetration = penetration;
+			result->normal = Vector3::kUp;
 		}
-		delete polygonInfo;
+		delete polygon_info;
 		return result;
 	}
 
 	// 地面の投影位置の算出
-	auto& center = (polygonInfo->LeftUp + polygonInfo->RightDown) * 0.5f;
-	auto& right = (polygonInfo->RightDown - polygonInfo->LeftUp).Normalized();
-	auto& forward = (right * polygonInfo->SurfaceNormal).Normalized();
-	auto& transform = Matrix44::Transform(right, polygonInfo->SurfaceNormal, forward, center);
-	auto& realPosition = Vector3::TransformInverse(point, transform);
+	auto& center = (polygon_info->left_up + polygon_info->right_down) * 0.5f;
+	auto& right = (polygon_info->right_down - polygon_info->left_up).Normalized();
+	auto& forward = (right * polygon_info->normal).Normalized();
+	auto& transform = Matrix44::Transform(right, polygon_info->normal, forward, center);
+	auto& real_position = Vector3::TransformInverse(point, transform);
 	
-	if (realPosition.Y < 0.0f)
+	if (real_position.y_ < 0.0f)
 	{// 登られないため法線を上方向と垂直方向にする
 		result = new Collision;
-		result->Point = point;
-		result->Normal = (Vector3::Up * polygonInfo->SurfaceNormal * Vector3::Up).Normalized();
-		result->Penetration = -realPosition.Y;
+		result->point = point;
+		result->normal = (Vector3::kUp * polygon_info->normal * Vector3::kUp).Normalized();
+		result->penetration = -real_position.y_;
 	}
-	delete polygonInfo;
+	delete polygon_info;
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：detect
-//  関数説明：直線と直線の交差判定(二次元)
-//	引数：	beginL：LineLeftの始点
-//			endL：LineLeftの終点
-//			beginR：LineRightの始点
-//			endR：LineRightの終点
-//	戻り値：Vector2*
+//	直線と直線の交差判定(二次元)
 //--------------------------------------------------------------------------------
-Vector2* CollisionDetector::detect(const Vector2& beginL, const Vector2& endL, const Vector2& beginR, const Vector2& endR)
+Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end_left, const Vector2& begin_right, const Vector2& end_right)
 {
-	auto& lineL = endL - beginL;
-	auto& lineR = endR - beginR;
+	auto& line_left = end_left - begin_left;
+	auto& line_right = end_right - begin_right;
 
 	//式： Y = slope * X + add
-	auto slopeL = (beginL.X - endL.X) == 0.0f ? 0.0f
-		: (beginL.Y - endL.Y) / (beginL.X - endL.X);
-	auto addL = beginL.Y - slopeL * beginL.X;
-	auto slopeR = (beginR.X - endR.X) == 0.0f ? 0.0f
-		: (beginR.Y - endR.Y) / (beginR.X - endR.X);
-	auto addR = beginR.Y - slopeL * beginR.X;
+	auto slope_left = (begin_left.x_ - end_left.x_) == 0.0f ? 0.0f
+		: (begin_left.y_ - end_left.y_) / (begin_left.x_ - end_left.x_);
+	auto add_left = begin_left.y_ - slope_left * begin_left.x_;
+	auto slope_right = (begin_right.x_ - end_right.x_) == 0.0f ? 0.0f
+		: (begin_right.y_ - end_right.y_) / (begin_right.x_ - end_right.x_);
+	auto add_right = begin_right.y_ - slope_left * begin_right.x_;
 
 	//平行
-	if (slopeL == slopeR) return nullptr;
+	if (slope_left == slope_right) return nullptr;
 
 	//交点の算出
 	auto result = new Vector2;
-	result->X = (addR - addL) / (slopeL - slopeR);
-	result->Y = slopeL * result->X + addL;
+	result->x_ = (add_right - add_left) / (slope_left - slope_right);
+	result->y_ = slope_left * result->x_ + add_left;
 
 	//交点がラインの範囲内にあるかをチェック
-	//LineL
-	auto beginLToResult = *result - beginL;
-	if (lineL.Dot(beginLToResult) < 0.0f // 方向チェック
-		|| beginLToResult.SquareMagnitude() > lineL.SquareMagnitude()) //長さチェック
+	//line_left
+	auto begin_left_to_result = *result - begin_left;
+	if (line_left.Dot(begin_left_to_result) < 0.0f // 方向チェック
+		|| begin_left_to_result.SquareMagnitude() > line_left.SquareMagnitude()) //長さチェック
 	{
 		delete result;
 		return nullptr;
 	}
 
-	//LineR
-	auto beginRToResult = *result - beginR;
-	if (lineR.Dot(beginRToResult) < 0.0f // 方向チェック
-		|| beginRToResult.SquareMagnitude() > lineR.SquareMagnitude()) //長さチェック
+	//line_right
+	auto begin_right_to_result = *result - begin_right;
+	if (line_right.Dot(begin_right_to_result) < 0.0f // 方向チェック
+		|| begin_right_to_result.SquareMagnitude() > line_right.SquareMagnitude()) //長さチェック
 	{
 		delete result;
 		return nullptr;
@@ -946,138 +839,109 @@ Vector2* CollisionDetector::detect(const Vector2& beginL, const Vector2& endL, c
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：detect
-//  関数説明：直線と直線の交差判定(三次元)
-//	引数：	beginL：LineLeftの始点
-//			endL：LineLeftの終点
-//			beginR：LineRightの始点
-//			endR：LineRightの終点
-//	戻り値：Vector3*
+//	直線と直線の交差判定(三次元)
 //--------------------------------------------------------------------------------
-Vector3* CollisionDetector::detect(const Vector3& beginL, const Vector3& endL, const Vector3& beginR, const Vector3& endR)
+Vector3* CollisionDetector::Detect(const Vector3& begin_left, const Vector3& end_left, const Vector3& begin_right, const Vector3& end_right)
 {
-	auto& lineL = beginL - endL;
-	auto& lineR = beginR - endR;
+	auto& line_left = begin_left - end_left;
+	auto& line_right = begin_right - end_right;
 
 	//平行チェック
-	if ((lineL * lineR) == Vector3::Zero) return nullptr;
+	if ((line_left * line_right) == Vector3::kZero) return nullptr;
 
 	//XY平面の交点の算出
-	auto pointXY = detect(Vector2(beginL.X, beginL.Y), Vector2(beginL.X, beginL.Y), Vector2(beginL.X, beginL.Y), Vector2(beginL.X, beginL.Y));
-	if (!pointXY) return nullptr;
+	auto point_on_xy = Detect(Vector2(begin_left.x_, begin_left.y_), Vector2(begin_left.x_, begin_left.y_), Vector2(begin_left.x_, begin_left.y_), Vector2(begin_left.x_, begin_left.y_));
+	if (!point_on_xy) return nullptr;
 
 	//相応のZ値を算出する
-	lineL.Normalize();
-	lineR.Normalize();
-	auto rateL = lineL.X != 0.0f ? (pointXY->X - beginL.X) / lineL.X
-		: lineL.Y != 0.0f ? (pointXY->Y - beginL.Y) / lineL.Y
+	line_left.Normalize();
+	line_right.Normalize();
+	auto rate_left = line_left.x_ != 0.0f ? (point_on_xy->x_ - begin_left.x_) / line_left.x_
+		: line_left.y_ != 0.0f ? (point_on_xy->y_ - begin_left.y_) / line_left.y_
 		: 0.0f;
-	auto rateR = lineR.X != 0.0f ? (pointXY->X - beginR.X) / lineR.X
-		: lineR.Y != 0.0f ? (pointXY->Y - beginR.Y) / lineR.Y
+	auto rate_right = line_right.x_ != 0.0f ? (point_on_xy->x_ - begin_right.x_) / line_right.x_
+		: line_right.y_ != 0.0f ? (point_on_xy->y_ - begin_right.y_) / line_right.y_
 		: 0.0f;
-	auto zL = beginL.Z + rateL * lineL.Z;
-	auto zR = beginR.Z + rateR * lineR.Z;
+	auto z_left = begin_left.z_ + rate_left * line_left.z_;
+	auto z_right = begin_right.z_ + rate_right * line_right.z_;
 
-	if (zL != zR)
+	if (z_left != z_right)
 	{
-		delete pointXY;
+		delete point_on_xy;
 		return nullptr;
 	}
 
-	auto result = new Vector3(pointXY->X, pointXY->Y, zL);
-	delete pointXY;
+	auto result = new Vector3(point_on_xy->x_, point_on_xy->y_, z_left);
+	delete point_on_xy;
 	return result;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：projectBoxToAxis
-//  関数説明：boxを与えられた軸に投影して長さを算出する関数
-//	引数：	box：ボックスコライダー
-//			axis：軸情報
-//	戻り値：float
+//	boxを与えられた軸に投影して長さを算出する関数
 //--------------------------------------------------------------------------------
-float CollisionDetector::projectBoxToAxis(const BoxCollider& box, const Vector3& axis)
+float CollisionDetector::ProjectBoxToAxis(const BoxCollider& box, const Vector3& axis)
 {
-	const Vector3& halfSize = box.GetHalfSize();
-	const Matrix44& boxMatrix = box.GetNextWorldMatrix();
-	return halfSize.X * fabsf(axis.Dot(Vector3(boxMatrix.Elements[0][0], boxMatrix.Elements[0][1], boxMatrix.Elements[0][2])))
-		+ halfSize.Y * fabsf(axis.Dot(Vector3(boxMatrix.Elements[1][0], boxMatrix.Elements[1][1], boxMatrix.Elements[1][2])))
-		+ halfSize.Z * fabsf(axis.Dot(Vector3(boxMatrix.Elements[2][0], boxMatrix.Elements[2][1], boxMatrix.Elements[2][2])));
+	const Vector3& half_size = box.GetHalfSize();
+	const Matrix44& box_matrix = box.GetWorldMatrix();
+	return half_size.x_ * fabsf(axis.Dot(Vector3(box_matrix.m00_, box_matrix.m01_, box_matrix.m02_)))
+		+ half_size.y_ * fabsf(axis.Dot(Vector3(box_matrix.m10_, box_matrix.m11_, box_matrix.m12_)))
+		+ half_size.z_ * fabsf(axis.Dot(Vector3(box_matrix.m20_, box_matrix.m21_, box_matrix.m22_)));
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：isOverlapOnAxis
-//  関数説明：ボックス同士が与えられた軸に重ねてるかどうかをチェックする
-//	引数：	boxL：ボックスコライダー
-//			boxR：ボックスコライダー
-//			axis：軸情報
-//	戻り値：bool
+//	ボックス同士が与えられた軸に重ねてるかどうかをチェックする
 //--------------------------------------------------------------------------------
-bool CollisionDetector::isOverlapOnAxis(const BoxCollider& boxL, const BoxCollider& boxR, const Vector3& axis)
+bool CollisionDetector::IsOverlapOnAxis(const BoxCollider& box_left, const BoxCollider& box_right, const Vector3& axis)
 {
 	//軸上の長さを算出する
-	float lengthOnAxisL = projectBoxToAxis(boxL, axis);
-	float lengthOnAxisR = projectBoxToAxis(boxR, axis);
+	float length_on_axis_left = ProjectBoxToAxis(box_left, axis);
+	float length_on_axis_right = ProjectBoxToAxis(box_right, axis);
 
 	//軸上の中心間の距離を算出する
-	auto& boxRToBoxL = boxL.GetNextWorldPosition() - boxR.GetNextWorldPosition();
-	float distance = fabsf(boxRToBoxL.Dot(axis));
+	auto& box_right_to_box_left = box_left.GetWorldPosition() - box_right.GetWorldPosition();
+	float distance = fabsf(box_right_to_box_left.Dot(axis));
 
 	//重ねてるかどうかをチェックする
-	return distance < (lengthOnAxisL + lengthOnAxisR);
+	return distance < (length_on_axis_left + length_on_axis_right);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：checkOverlapOnAxis
-//  関数説明：AABB同士がXYZ軸に重ねてるかどうかをチェックする(三次元)
-//	引数：	aabbL：AABBコライダー
-//			aabbR：AABBコライダー
-//	戻り値：bool
+//	AABB同士がXYZ軸に重ねてるかどうかをチェックする(三次元)
 //--------------------------------------------------------------------------------
-bool CollisionDetector::isOverlap(const AABBCollider& aabbL, const AABBCollider& aabbR)
+bool CollisionDetector::IsOverlap(const AabbCollider& aabb_left, const AabbCollider& aabb_right)
 {
-	const auto& aabbLPosition = aabbL.GetNextWorldPosition();
-	const auto& aabbLHalfSize = aabbL.GetHalfSize();
-	const auto& aabbRPosition = aabbR.GetNextWorldPosition();
-	const auto& aabbRHalfSize = aabbR.GetHalfSize();
-	auto& minL = aabbLPosition - aabbLHalfSize;
-	auto& maxL = aabbLPosition + aabbLHalfSize;
-	auto& minR = aabbRPosition - aabbRHalfSize;
-	auto& maxR = aabbRPosition + aabbRHalfSize;
+	const auto& aabb_left_position = aabb_left.GetWorldPosition();
+	const auto& aabb_left_half_size = aabb_left.GetHalfSize();
+	const auto& aabb_right_position = aabb_right.GetWorldPosition();
+	const auto& aabb_right_half_size = aabb_right.GetHalfSize();
+	auto& min_left = aabb_left_position - aabb_left_half_size;
+	auto& max_left = aabb_left_position + aabb_left_half_size;
+	auto& min_right = aabb_right_position - aabb_right_half_size;
+	auto& max_right = aabb_right_position + aabb_right_half_size;
 
 	//AABB同士がxyz軸上に重ねてるかどうかをチェックする
-	return isOverlap(Vector2(minL.Y, minL.Z), Vector2(maxL.Y, maxL.Z), Vector2(minR.Y, minR.Z), Vector2(maxR.Y, maxR.Z))	//X軸
-		&& isOverlap(Vector2(minL.Z, minL.X), Vector2(maxL.Z, maxL.X), Vector2(minR.Z, minR.X), Vector2(maxR.Z, maxR.X))	//Y軸
-		&& isOverlap(Vector2(minL.X, minL.Y), Vector2(maxL.X, maxL.Y), Vector2(minR.X, minR.Y), Vector2(maxR.X, maxR.Y));	//Z軸;
+	return IsOverlap(Vector2(min_left.y_, min_left.z_), Vector2(max_left.y_, max_left.z_), Vector2(min_right.y_, min_right.z_), Vector2(max_right.y_, max_right.z_))	//X軸
+		&& IsOverlap(Vector2(min_left.z_, min_left.x_), Vector2(max_left.z_, max_left.x_), Vector2(min_right.z_, min_right.x_), Vector2(max_right.z_, max_right.x_))	//Y軸
+		&& IsOverlap(Vector2(min_left.x_, min_left.y_), Vector2(max_left.x_, max_left.y_), Vector2(min_right.x_, min_right.y_), Vector2(max_right.x_, max_right.y_));	//Z軸;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：isOverlap
-//  関数説明：AABB同士が与えられた軸に重ねてるかどうかをチェックする(二次元)
-//	引数：	minL：aabbL一番左上の点情報
-//			maxL：aabbL一番右下の点情報
-//			minR：aabbR一番左上の点情報
-//			maxR：aabbR一番右下の点情報
-//	戻り値：bool
+//	AABB同士が与えられた軸に重ねてるかどうかをチェックする(二次元)
 //--------------------------------------------------------------------------------
-bool CollisionDetector::isOverlap(const Vector2& minL, const Vector2& maxL, const Vector2& minR, const Vector2& maxR)
+bool CollisionDetector::IsOverlap(const Vector2& min_left, const Vector2& max_left, const Vector2& min_right, const Vector2& max_right)
 {
-	return minL.X < maxR.X && minR.X < maxL.X
-		&& minL.Y < maxR.Y && minR.Y < maxL.Y;
+	return min_left.x_ < max_right.x_ && min_right.x_ < max_left.x_
+		&& min_left.y_ < max_right.y_ && min_right.y_ < max_left.y_;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：maxPenetration
-//  関数説明：衝突深度が一番深いのコリジョンを返す、残りのは破棄する
-//	引数：	current：今一番深いコリジョン
-//			next：新しいコリジョン
-//	戻り値：Collision*
+//	衝突深度が一番深いのコリジョンを返す、残りのは破棄する
 //--------------------------------------------------------------------------------
-Collision* CollisionDetector::maxPenetration(Collision* current, Collision* next)
+Collision* CollisionDetector::MaxPenetration(Collision* current, Collision* next)
 {
 	if (!next) return current;
 	if (!current) return next;
-	if (next->Penetration > current->Penetration)
+	if (next->penetration > current->penetration)
 	{
 		delete current;
 		return next;
