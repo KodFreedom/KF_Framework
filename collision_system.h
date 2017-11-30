@@ -109,7 +109,7 @@ public:
 	//	rayOwner：自分のゲームオブジェクト
 	//	return：RayHitInfo*
 	//--------------------------------------------------------------------------------
-	RayHitInfo*	RayCast(const Ray& ray, const float& distance, const GameObject* const rayOwner = nullptr);
+	RayHitInfo*	RayCast(const Ray& ray, const float& distance, const GameObject* const ray_owner = nullptr);
 
 private:
 	//--------------------------------------------------------------------------------

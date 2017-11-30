@@ -152,13 +152,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="actorState.cpp" />
     <ClCompile Include="camera_manager.cpp" />
-    <ClCompile Include="damagedState.cpp" />
-    <ClCompile Include="jumpState.cpp" />
-    <ClCompile Include="landState.cpp" />
+    <ClCompile Include="player_damaged_state.cpp" />
+    <ClCompile Include="player_jump_state.cpp" />
+    <ClCompile Include="player_land_state.cpp" />
     <ClCompile Include="motion_manager.cpp" />
-    <ClCompile Include="neutralState.cpp" />
+    <ClCompile Include="player_neutral_state.cpp" />
+    <ClCompile Include="player_state.cpp" />
     <ClCompile Include="ui_object_2d.cpp" />
     <ClCompile Include="rigidbody3d.cpp" />
     <ClCompile Include="aabb_collider.cpp" />
@@ -215,19 +215,20 @@
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="ui_object.cpp" />
     <ClCompile Include="ui_system.cpp" />
-    <ClCompile Include="walkState.cpp" />
+    <ClCompile Include="player_walk_state.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actor_state.h" />
     <ClInclude Include="camera_manager.h" />
-    <ClInclude Include="damagedState.h" />
-    <ClInclude Include="jumpState.h" />
-    <ClInclude Include="landState.h" />
+    <ClInclude Include="player_damaged_state.h" />
+    <ClInclude Include="player_jump_state.h" />
+    <ClInclude Include="player_land_state.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="motion_manager.h" />
     <ClInclude Include="actor_parameter.h" />
-    <ClInclude Include="neutralState.h" />
+    <ClInclude Include="player_neutral_state.h" />
+    <ClInclude Include="player_state.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="ui_object_2d.h" />
@@ -300,7 +301,7 @@
     <ClInclude Include="ui_object.h" />
     <ClInclude Include="ui_system.h" />
     <ClInclude Include="common_setting.h" />
-    <ClInclude Include="walkState.h" />
+    <ClInclude Include="player_walk_state.h" />
     <ClInclude Include="windmill_controller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

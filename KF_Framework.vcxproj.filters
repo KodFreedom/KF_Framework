@@ -181,6 +181,12 @@
     <Filter Include="ヘッダー ファイル\Base\Light">
       <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Player">
+      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Player">
+      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -227,24 +233,6 @@
     </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="actorState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="neutralState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="walkState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="jumpState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="landState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="damagedState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
     </ClCompile>
     <ClCompile Include="normalModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
@@ -378,6 +366,24 @@
     <ClCompile Include="actor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="player_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_neutral_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -442,21 +448,6 @@
     </ClInclude>
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="neutralState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="walkState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="jumpState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="damagedState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="landState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
@@ -628,6 +619,24 @@
     </ClInclude>
     <ClInclude Include="actor_state.h">
       <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="player_neutral_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

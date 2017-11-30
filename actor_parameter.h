@@ -36,6 +36,8 @@ public:
 	void SetJumpSpeed(const float& value) { jump_speed_ = value; }
 	void SetMinTurnSpeed(const float& value) { min_turn_speed_ = value; }
 	void SetMaxTurnSpeed(const float& value) { max_turn_speed_ = value; }
+	void SetMovementMultiplier(const float& value) { movement_multiplier_ = value; }
+	void SetGroundCheckDistance(const float& value) { ground_check_distance_ = value; }
 	
 	auto GetMaxLife(void) const { return max_life_; }
 	auto GetCurrentLife(void) const { return current_life_; }
@@ -43,6 +45,8 @@ public:
 	auto GetJumpSpeed(void) const { return jump_speed_; }
 	auto GetMinTurnSpeed(void) const { return min_turn_speed_; }
 	auto GetMaxTurnSpeed(void) const { return max_turn_speed_; }
+	const float& GetMovementMultiplier(void) const { return movement_multiplier_; }
+	const float& GetGroundCheckDistance(void) const { return ground_check_distance_; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -57,4 +61,6 @@ private:
 	float jump_speed_;
 	float min_turn_speed_;
 	float max_turn_speed_;
+	float movement_multiplier_;
+	float ground_check_distance_;
 };
