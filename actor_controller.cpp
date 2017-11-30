@@ -2,15 +2,10 @@
 //	生き物コントローラ
 //　ActorController.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-19
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "actorController.h"
-#include "gameObjectActor.h"
-#include "actorState.h"
+#include "actor_controller.h"
+#include "game_object.h"
+#include "actor_state.h"
 #include "animator.h"
 
 //--------------------------------------------------------------------------------
@@ -21,11 +16,9 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObjectActor* const owner, const string& name, Rigidbody3D& rigidbody)
-	: Behavior(owner, name), currentState(nullptr), rigidbody(rigidbody)
-{
-	animator = owner->GetAnimator();
-}
+ActorController::ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator)
+	: Behavior(owner, name), state_(nullptr), rigidbody_(rigidbody), animator_(animator)
+{}
 
 //--------------------------------------------------------------------------------
 //	関数名：Change
@@ -35,7 +28,7 @@ ActorController::ActorController(GameObjectActor* const owner, const string& nam
 //--------------------------------------------------------------------------------
 void ActorController::Change(ActorState* state)
 {
-	SAFE_DELETE(currentState);
-	currentState = state;
-	currentState->Init(*this);
+	SAFE_DELETE(state_);
+	state_ = state;
+	state_->Init(*this);
 }

@@ -252,15 +252,6 @@
     <ClCompile Include="attackModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
-    <ClCompile Include="actorController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="playerController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="kf_math.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
@@ -378,6 +369,15 @@
     <ClCompile Include="editor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="player_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -443,9 +443,6 @@
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="actorState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
     <ClInclude Include="neutralState.h">
       <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
@@ -469,15 +466,6 @@
     </ClInclude>
     <ClInclude Include="attackModeAI.h">
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="actorController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="playerController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\KF_Utility</Filter>
@@ -628,6 +616,18 @@
     </ClInclude>
     <ClInclude Include="editor_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="player_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
