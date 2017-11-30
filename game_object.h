@@ -1,20 +1,15 @@
 //--------------------------------------------------------------------------------
 //	ゲームオブジェクトスーパークラス
-//　gameObject.h
+//　game_object.h
 //	Author : Xu Wenjie
-//	Date   : 2017-04-26
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "transform.h"
 #include "behavior.h"
-#include "meshRenderer.h"
+#include "mesh_renderer.h"
 #include "rigidbody.h"
 #include "collider.h"
-#include "gameObjectManager.h"
+#include "game_object_manager.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -23,76 +18,180 @@ class GameObject
 {
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors for singleton
 	//--------------------------------------------------------------------------------
-	GameObject(const Layer& layer = L_Default);
+	GameObject(const Layer& layer = kDefaultLayer);
 	~GameObject() {}
 	
-	virtual bool	Init(void) 
+	//--------------------------------------------------------------------------------
+	//  初期化処理
+	//--------------------------------------------------------------------------------
+	virtual bool Init(void) 
 	{ 
-		if (!transform->Init()) { assert("init transform error!!"); return false; }
-		for (auto behavior : behaviors) { if (!behavior->Init()) { assert("init behavior error!!"); return false; } }
-		if (!rigidbody->Init()) { assert("init rigidbody error!!");  return false; }
-		for (auto collider : colliders) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
-		for (auto renderer : renderers) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
+		if (!transform_->Init()) { assert("init transform_ error!!"); return false; }
+		for (auto& pair : behaviors_) { if (!pair.second->Init()) { assert("init behavior error!!"); return false; } }
+		if (!rigidbody_->Init()) { assert("init rigidbody error!!");  return false; }
+		for (auto collider : colliders_) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
+		for (auto renderer : renderers_) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
 		return true;
 	}
-	virtual void	Update(void)
+
+	//--------------------------------------------------------------------------------
+	//  更新処理
+	//--------------------------------------------------------------------------------
+	virtual void Update(void)
 	{
-		if (!isActive) return;
-		swapParamater();
-		for (auto behavior : behaviors) behavior->Update();
-		rigidbody->Update();
-		for (auto collider : colliders) collider->Update();
+		if (!is_active_) return;
+		for (auto& pair : behaviors_) pair.second->Update();
+		rigidbody_->Update();
+		for (auto collider : colliders_) collider->Update();
 	}
-	virtual void	LateUpdate(void)
+
+	//--------------------------------------------------------------------------------
+	//  後更新処理
+	//--------------------------------------------------------------------------------
+	virtual void LateUpdate(void)
 	{
-		if (!isActive) return;
-		rigidbody->LateUpdate();
-		for (auto behavior : behaviors) { behavior->LateUpdate(); }
-		transform->UpdateMatrix();
-		for (auto renderer : renderers) { renderer->Update(); }
+		if (!is_active_) return;
+		rigidbody_->LateUpdate();
+		for (auto& pair : behaviors_) { pair.second->LateUpdate(); }
+		transform_->UpdateMatrix();
+		for (auto renderer : renderers_) { renderer->Update(); }
 	}
-	void			Release(void)
+
+	//--------------------------------------------------------------------------------
+	//  リリース処理
+	//--------------------------------------------------------------------------------
+	void Release(void)
 	{
-		uninit();
+		Uninit();
 		delete this;
 	}
 
-	//Get関数
-	auto	GetTransform(void) const { return transform; }
-	auto&	GetBehaviors(void) const { return behaviors; }
-	auto	GetRigidbody(void) const { return rigidbody; }
-	auto&	GetColliders(void) const { return colliders; }
-	auto&	GetName(void) const { return name; }
-	auto&	GetParentName(void) const
-	{
-		auto parent = transform->GetParent();
-		if (!parent) return name;
-		return parent->GetGameObject()->GetParentName();
-	}
-	auto&	GetTag(void) const { return tag; }
-	bool	IsAlive(void) const { return isAlive; }
-	bool	IsActive(void) const { return isActive; }
+	//--------------------------------------------------------------------------------
+	//  トランスフォームの取得
+	//--------------------------------------------------------------------------------
+	const auto GetTransform(void) const { return transform_; }
 
-	//Set関数
-	void	SetRigidbody(Rigidbody* const value)
+	//--------------------------------------------------------------------------------
+	//  名前でbehaviorの取得
+	//--------------------------------------------------------------------------------
+	Behavior* const GetBehaviorBy(const String& name)
 	{
+		auto iterator = behaviors_.find(name);
+		if (behaviors_.end() == iterator) { return nullptr; }
+		return iterator->second;
+	}
+
+	//--------------------------------------------------------------------------------
+	//  behaviorsの取得
+	//--------------------------------------------------------------------------------
+	const auto&	GetBehaviors(void) const { return behaviors_; }
+
+	//--------------------------------------------------------------------------------
+	//  リジッドボディの設定
+	//--------------------------------------------------------------------------------
+	const auto GetRigidbody(void) const { return rigidbody_; }
+
+	//--------------------------------------------------------------------------------
+	//  コライダーリストの取得
+	//--------------------------------------------------------------------------------
+	const auto& GetColliders(void) const { return colliders_; }
+
+	//--------------------------------------------------------------------------------
+	//  名前の取得
+	//--------------------------------------------------------------------------------
+	const String& GetName(void) const { return name_; }
+
+	//--------------------------------------------------------------------------------
+	//  親の名前の取得
+	//--------------------------------------------------------------------------------
+	const String& GetParentName(void) const
+	{
+		auto parent = transform_->GetParent();
+		if (!parent) return name_;
+		return parent->GetGameObject().GetParentName();
+	}
+
+	//--------------------------------------------------------------------------------
+	//  タグの取得
+	//--------------------------------------------------------------------------------
+	const auto& GetTag(void) const { return tag_; }
+
+	//--------------------------------------------------------------------------------
+	//  生きるフラグの取得
+	//--------------------------------------------------------------------------------
+	const bool& IsAlive(void) const { return is_alive_; }
+
+	//--------------------------------------------------------------------------------
+	//  アクティブの取得
+	//--------------------------------------------------------------------------------
+	const bool& IsActive(void) const { return is_active_; }
+
+	//--------------------------------------------------------------------------------
+	//  リジッドボディの設定
+	//--------------------------------------------------------------------------------
+	void SetRigidbody(Rigidbody* const value)
+	{
+		if (!value) return;
+
 		//Release
-		if (rigidbody->GetType() != Rigidbody::Type::NullRigidbody) { SAFE_RELEASE(rigidbody); }
+		SAFE_RELEASE(rigidbody_);
 
 		//Set
-		if (!value) { rigidbody = &nullRigidbody; }
-		else { rigidbody = value; }
+		rigidbody_ = value;
+		rigidbody_->Init();
 	}
-	void	SetActive(const bool& value);
-	void	SetAlive(const bool& value);
-	void	SetName(const string& value) { name = value; }
-	void	SetTag(const string& value) { tag = value; }
-	void	AddBehavior(Behavior* const behavior) { behaviors.push_back(behavior); }
-	void	AddCollider(Collider* const collider) { colliders.push_back(collider); }
-	void	AddRenderer(MeshRenderer* const renderer) { renderers.push_back(renderer); }
-	GameObject* FindChildBy(const String& name);
+
+	//--------------------------------------------------------------------------------
+	//  アクティブの設定
+	//--------------------------------------------------------------------------------
+	void SetActive(const bool& value);
+
+	//--------------------------------------------------------------------------------
+	//  生きるフラグの設定
+	//--------------------------------------------------------------------------------
+	void SetAlive(const bool& value);
+
+	//--------------------------------------------------------------------------------
+	//  名前の設定
+	//--------------------------------------------------------------------------------
+	void SetName(const String& value) { name_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  タグの設定
+	//--------------------------------------------------------------------------------
+	void SetTag(const String& value) { tag_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  ビヘビアの追加
+	//--------------------------------------------------------------------------------
+	void AddBehavior(Behavior* const behavior)
+	{
+		if (!behavior) return;
+		behavior->Init();
+		behaviors_.emplace(behavior->GetName(), behavior);
+	}
+	
+	//--------------------------------------------------------------------------------
+	//  コライダーの追加
+	//--------------------------------------------------------------------------------
+	void AddCollider(Collider* const collider) 
+	{
+		if (!collider) return;
+		collider->Init();
+		colliders_.push_back(collider);
+	}
+
+	//--------------------------------------------------------------------------------
+	//  レンダラーの追加
+	//--------------------------------------------------------------------------------
+	void AddRenderer(MeshRenderer* const renderer) 
+	{
+		if (!renderer) return;
+		renderer->Init();
+		renderers_.push_back(renderer);
+	}
 
 	//--------------------------------------------------------------------------------
 	//  check if this equal value / 同値判定処理
@@ -106,52 +205,46 @@ public:
 
 protected:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  終了処理
 	//--------------------------------------------------------------------------------
-	virtual void				swapParamater(void);
-	virtual void				uninit(void)
+	virtual void Uninit(void)
 	{
-		transform->Release();
-		rigidbody->Release();
-		for (auto itr = behaviors.begin(); itr != behaviors.end();)
+		transform_->Release();
+		rigidbody_->Release();
+		for (auto itr = behaviors_.begin(); itr != behaviors_.end();)
 		{
 			(*itr)->Release();
-			itr = behaviors.erase(itr);
+			itr = behaviors_.erase(itr);
 		}
-		for (auto itr = colliders.begin(); itr != colliders.end();)
+		for (auto itr = colliders_.begin(); itr != colliders_.end();)
 		{
 			(*itr)->Release();
-			itr = colliders.erase(itr);
+			itr = colliders_.erase(itr);
 		}
-		for (auto itr = renderers.begin(); itr != renderers.end();)
+		for (auto itr = renderers_.begin(); itr != renderers_.end();)
 		{
 			(*itr)->Release();
-			itr = renderers.erase(itr);
+			itr = renderers_.erase(itr);
 		}
 	}
 
 	//--------------------------------------------------------------------------------
 	//  コンポネント
 	//--------------------------------------------------------------------------------
-	Transform*			transform;
-	list<Behavior*>		behaviors;
-	Rigidbody*			rigidbody;
-	list<Collider*>		colliders;
-	list<MeshRenderer*> renderers;
+	Transform*                       transform_;
+	unordered_map<String, Behavior*> behaviors_;
+	Rigidbody*                       rigidbody_;
+	list<Collider*>                  colliders_;
+	list<MeshRenderer*>              renderers_;
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	bool	isActive;
-	bool	isAlive;
-	String	name;
-	String	tag;
-	Layer	layer;
-
-	//--------------------------------------------------------------------------------
-	//  ヌルコンポネント定義
-	//--------------------------------------------------------------------------------
-	static NullRigidbody	nullRigidbody;
+	bool   is_active_;
+	bool   is_alive_;
+	String name_;
+	String tag_;
+	Layer  layer_;
 
 private:
 	//--------------------------------------------------------------------------------

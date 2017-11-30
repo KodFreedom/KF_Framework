@@ -4,16 +4,9 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-26
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "main.h"
-#include "gameObject.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-NullRigidbody GameObject::nullRigidbody;
+#include "game_object.h"
+#include "main_system.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -24,18 +17,13 @@ NullRigidbody GameObject::nullRigidbody;
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 GameObject::GameObject(const Layer& layer)
-	: layer(layer)
-	, isActive(true)
-	, isAlive(true)
-	, rigidbody(&nullRigidbody)
+	: layer_(layer)
+	, is_active_(true)
+	, is_alive_(true)
 {
-	name.clear();
-	tag.clear();
-	behaviors.clear();
-	colliders.clear();
-	renderers.clear();
-	transform = new Transform(this);
-	GameObjectManager::Instance()->Register(this, layer);
+	transform_ = MY_NEW Transform(*this);
+	rigidbody_ = MY_NEW RigidbodyNull(*this);
+	MainSystem::Instance()->GetGameObjectManager()->Register(this, layer);
 }
 
 //--------------------------------------------------------------------------------
@@ -43,28 +31,28 @@ GameObject::GameObject(const Layer& layer)
 //--------------------------------------------------------------------------------
 void GameObject::SetActive(const bool& value)
 {
-	if (isActive == value) return;
-	isActive = value;
-	if (isActive)
+	if (is_active_ == value) return;
+	is_active_ = value;
+	if (is_active_)
 	{
-		transform->Awake();
-		for (auto behavior : behaviors) behavior->Awake();
-		rigidbody->Awake();
-		for (auto collider : colliders) collider->Awake();
-		for (auto renderer : renderers) renderer->Awake();
+		transform_->Awake();
+		for (auto& pair : behaviors_) pair.second->Awake();
+		rigidbody_->Awake();
+		for (auto collider : colliders_) collider->Awake();
+		for (auto renderer : renderers_) renderer->Awake();
 	}
 	else
 	{
-		transform->Sleep();
-		for (auto behavior : behaviors) behavior->Sleep();
-		rigidbody->Sleep();
-		for (auto collider : colliders) collider->Sleep();
-		for (auto renderer : renderers) renderer->Sleep();
+		transform_->Sleep();
+		for (auto& pair : behaviors_) pair.second->Sleep();
+		rigidbody_->Sleep();
+		for (auto collider : colliders_) collider->Sleep();
+		for (auto renderer : renderers_) renderer->Sleep();
 	}
-	auto& children = transform->GetChildren();
-	for (auto child : children)
+
+	for (auto& pair : transform_->GetChildren())
 	{
-		child->GetGameObject()->SetActive(value);
+		pair.second->GetGameObject().SetActive(value);
 	}
 }
 
@@ -73,23 +61,9 @@ void GameObject::SetActive(const bool& value)
 //--------------------------------------------------------------------------------
 void GameObject::SetAlive(const bool& value)
 {
-	isAlive = value;
-	auto& children = transform->GetChildren();
-	for (auto child : children)
+	is_alive_ = value;
+	for (auto& pair : transform_->GetChildren())
 	{
-		child->GetGameObject()->SetAlive(value);
+		pair.second->GetGameObject().SetAlive(value);
 	}
-}
-
-//--------------------------------------------------------------------------------
-//
-//  Protected
-//
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  パラメーター交換処理
-//--------------------------------------------------------------------------------
-void GameObject::swapParamater(void)
-{
-	transform->SwapParamater();
 }

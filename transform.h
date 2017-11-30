@@ -41,12 +41,21 @@ public:
 	//--------------------------------------------------------------------------------
 	//  子供登録処理
 	//--------------------------------------------------------------------------------
-	void RegisterChild(Transform* child) { children.push_back(child); }
+	void RegisterChild(Transform* child) 
+	{ 
+		if (!child) return;
+		children_.emplace(child->GetGameObject().GetName(), child);
+	}
 	
 	//--------------------------------------------------------------------------------
 	//  子供削除処理
 	//--------------------------------------------------------------------------------
-	void DeregisterChild(Transform* child) { children.remove(child); }
+	void DeregisterChild(Transform* child)
+	{
+		auto iterator = children_.find(child->GetGameObject().GetName());
+		if (children_.end() == iterator) return;
+		children_.erase(iterator);
+	}
 	
 	//--------------------------------------------------------------------------------
 	//  親登録処理
@@ -121,12 +130,12 @@ public:
 	//--------------------------------------------------------------------------------
 	//  親の取得
 	//--------------------------------------------------------------------------------
-	const auto GetParent(void) const { return parent; }
+	const auto GetParent(void) const { return parent_; }
 
 	//--------------------------------------------------------------------------------
 	//  子供の取得
 	//--------------------------------------------------------------------------------
-	const list<Transform*>& GetChildren(void) const { return children; }
+	const auto& GetChildren(void) const { return children_; }
 
 	//--------------------------------------------------------------------------------
 	//  位置の設定
@@ -184,6 +193,11 @@ public:
 	//--------------------------------------------------------------------------------
 	Vector3	TransformDirectionToLocal(const Vector3& direction);
 
+	//--------------------------------------------------------------------------------
+	//  子供を探す
+	//--------------------------------------------------------------------------------
+	Transform* FindChildBy(const String& name);
+
 private:
 	//--------------------------------------------------------------------------------
 	//  行列の算出(親なし)
@@ -198,11 +212,11 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Vector3          position_; // 位置
-	Quaternion       rotation_; // 回転
-	Vector3          scale_; // スケール
-	Matrix44         world_; // 世界行列
-	Transform*       parent; // 親
-	list<Transform*> children; // 子供
-	Matrix44         offset; // オフセット（親に対する）
+	Vector3                           position_; // 位置
+	Quaternion                        rotation_; // 回転
+	Vector3                           scale_; // スケール
+	Matrix44                          world_; // 世界行列
+	Transform*                        parent_; // 親
+	unordered_map<String, Transform*> children_; // 子供
+	Matrix44                          offset_; // オフセット（親に対する）
 };

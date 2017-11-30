@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "transform.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -22,8 +23,8 @@ Transform::Transform(GameObject& owner) : Component(owner)
 	, scale_(Vector3::kOne)
 	, rotation_(Quaternion::kIdentity)
 	, world_(Matrix44::kIdentity)
-	, parent(nullptr)
-	, offset(Matrix44::kIdentity)
+	, parent_(nullptr)
+	, offset_(Matrix44::kIdentity)
 {}
 
 //--------------------------------------------------------------------------------
@@ -31,11 +32,11 @@ Transform::Transform(GameObject& owner) : Component(owner)
 //--------------------------------------------------------------------------------
 void Transform::UpdateMatrix(void)
 {
-	if (parent) return;
+	if (parent_) return;
 	CalculateWorldMatrix();
-	for (auto child : children) 
+	for (auto& pair : children_) 
 	{
-		child->UpdateMatrix(world_);
+		pair.second->UpdateMatrix(world_);
 	}
 }
 
@@ -45,9 +46,9 @@ void Transform::UpdateMatrix(void)
 void Transform::UpdateMatrix(const Matrix44& parent)
 {
 	CalculateWorldMatrix(parent);
-	for (auto child : children)
+	for (auto& pair : children_)
 	{
-		child->UpdateMatrix(world_);
+		pair.second->UpdateMatrix(world_);
 	}
 }
 
@@ -56,13 +57,13 @@ void Transform::UpdateMatrix(const Matrix44& parent)
 //--------------------------------------------------------------------------------
 void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Vector3& offset_rotation)
 {
-	if (parent)
+	if (parent_)
 	{//親があるの場合前の親から削除
-		parent->DeregisterChild(this);
+		parent_->DeregisterChild(this);
 	}
-	parent = value;
-	parent->RegisterChild(this);
-	offset = Matrix44::Transform(offset_rotation, offset_translation);
+	parent_ = value;
+	parent_->RegisterChild(this);
+	offset_ = Matrix44::Transform(offset_rotation, offset_translation);
 }
 
 //--------------------------------------------------------------------------------
@@ -71,10 +72,10 @@ void Transform::RegisterParent(Transform* value, const Vector3& offset_translati
 const Matrix44& Transform::GetCurrentWorldMatrix(void) const
 {
 	auto& world = Matrix44::Transform(rotation_, position_, scale_);
-	if (parent)
+	if (parent_)
 	{
-		world *= offset;
-		world *= parent->GetCurrentWorldMatrix();
+		world *= offset_;
+		world *= parent_->GetCurrentWorldMatrix();
 	}
 	return world;
 }
@@ -84,8 +85,7 @@ const Matrix44& Transform::GetCurrentWorldMatrix(void) const
 //--------------------------------------------------------------------------------
 void Transform::SetOffset(const Vector3& translation, const Vector3& rotation)
 {
-	if (!parent) return;
-	offset = Matrix44::Transform(rotation, translation);
+	offset_ = Matrix44::Transform(rotation, translation);
 }
 
 //--------------------------------------------------------------------------------
@@ -128,6 +128,25 @@ Vector3 Transform::TransformDirectionToLocal(const Vector3& direction)
 }
 
 //--------------------------------------------------------------------------------
+//  子供を探す
+//--------------------------------------------------------------------------------
+Transform* Transform::FindChildBy(const String& name)
+{
+	if (owner_.GetName()._Equal(name)) return this;
+	auto iterator = children_.find(name);
+	if (children_.end() == iterator)
+	{
+		for (auto& pair : children_)
+		{
+			auto result = pair.second->FindChildBy(name);
+			if (result) return result;
+		}
+		return nullptr;
+	}
+	return iterator->second;
+}
+
+//--------------------------------------------------------------------------------
 //
 //  private
 //
@@ -146,6 +165,6 @@ void Transform::CalculateWorldMatrix(void)
 void Transform::CalculateWorldMatrix(const Matrix44& parent)
 {
 	CalculateWorldMatrix();
-	world_ *= offset;
+	world_ *= offset_;
 	world_ *= parent;
 }

@@ -40,8 +40,8 @@ void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphe
 
 	if (sphere_left.IsTrigger() || sphere_right.IsTrigger())
 	{//ƒgƒŠƒK[‚¾‚Á‚½‚ç•¨—ˆ—‚µ‚È‚¢
-		for (auto& behavior : sphere_left.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere_left, sphere_right);
-		for (auto& behavior : sphere_right.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere_right, sphere_left);
+		for (auto& pair : sphere_left.GetGameObject().GetBehaviors()) pair.second->OnTrigger(sphere_left, sphere_right);
+		for (auto& pair : sphere_right.GetGameObject().GetBehaviors()) pair.second->OnTrigger(sphere_right, sphere_left);
 		return;
 	}
 
@@ -83,11 +83,11 @@ void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphe
 	info.self = &sphere_left;
 	info.other = &sphere_right;
 	info.collisions.push_back(collision);
-	for (auto& behavior : sphere_left.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : sphere_left.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 
 	info.self = &sphere_right;
 	info.other = &sphere_left;
-	for (auto& behavior : sphere_right.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : sphere_right.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -135,8 +135,8 @@ void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 	//OnTrigger
 	if (sphere.IsTrigger() || aabb.IsTrigger())
 	{//ƒgƒŠƒK[‚¾‚Á‚½‚ç•¨—ˆ—‚µ‚È‚¢
-		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnTrigger(sphere, aabb); }
-		for (auto& behavior : aabb.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb, sphere); }
+		for (auto& pair : sphere.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(sphere, aabb); }
+		for (auto& pair : aabb.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(aabb, sphere); }
 		return;
 	}
 
@@ -183,11 +183,11 @@ void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 	info.self = &sphere;
 	info.other = &aabb;
 	info.collisions.push_back(collision);
-	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : sphere.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 
 	info.self = &aabb;
 	info.other = &sphere;
-	for (auto& behavior : aabb.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : aabb.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -235,8 +235,8 @@ void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 	//OnTrigger
 	if (sphere.IsTrigger() || obb.IsTrigger())
 	{//ƒgƒŠƒK[‚¾‚Á‚½‚ç•¨—ˆ—‚µ‚È‚¢
-		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnTrigger(sphere, obb); }
-		for (auto& behavior : obb.GetGameObject().GetBehaviors()) { behavior->OnTrigger(obb, sphere); }
+		for (auto& pair : sphere.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(sphere, obb); }
+		for (auto& pair : obb.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(obb, sphere); }
 		return;
 	}
 
@@ -283,11 +283,11 @@ void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 	info.self = &sphere;
 	info.other = &obb;
 	info.collisions.push_back(collision);
-	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : sphere.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 
 	info.self = &obb;
 	info.other = &sphere;
-	for (auto& behavior : obb.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : obb.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -300,8 +300,8 @@ void CollisionDetector::Detect(AabbCollider& aabb_left, AabbCollider& aabb_right
 	//OnTrigger
 	if (aabb_left.IsTrigger() || aabb_right.IsTrigger())
 	{//ƒgƒŠƒK[‚¾‚Á‚½‚ç•¨—ˆ—‚µ‚È‚¢
-		for (auto& behavior : aabb_left.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb_left, aabb_right); }
-		for (auto& behavior : aabb_right.GetGameObject().GetBehaviors()) { behavior->OnTrigger(aabb_right, aabb_left); }
+		for (auto& pair : aabb_left.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(aabb_left, aabb_right); }
+		for (auto& pair : aabb_right.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(aabb_right, aabb_left); }
 		return;
 	}
 
@@ -364,11 +364,11 @@ void CollisionDetector::Detect(AabbCollider& aabb_left, AabbCollider& aabb_right
 	info.collisions.push_back(collision);
 	info.self = &aabb_left;
 	info.other = &aabb_right;
-	for (auto& behavior : aabb_left.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : aabb_left.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 
 	info.self = &aabb_right;
 	info.other = &aabb_left;
-	for (auto& behavior : aabb_right.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : aabb_right.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
@@ -405,8 +405,8 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
 	//OnTrigger
 	if (box_left.IsTrigger() || box_right.IsTrigger())
 	{//ƒgƒŠƒK[‚¾‚Á‚½‚ç•¨—ˆ—‚µ‚È‚¢
-		for (auto& behavior : box_left.GetGameObject().GetBehaviors()) behavior->OnTrigger(box_left, box_right);
-		for (auto& behavior : box_right.GetGameObject().GetBehaviors()) behavior->OnTrigger(box_right, box_left);
+		for (auto& pair : box_left.GetGameObject().GetBehaviors()) pair.second->OnTrigger(box_left, box_right);
+		for (auto& pair : box_right.GetGameObject().GetBehaviors()) pair.second->OnTrigger(box_right, box_left);
 		if (left_max_penetration_collision) delete left_max_penetration_collision;
 		if (right_max_penetration_collision) delete right_max_penetration_collision;
 		return;
@@ -465,11 +465,11 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
 	//OnCollision
 	info.self = &box_left;
 	info.other = &box_right;
-	for (auto& behavior : box_left.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
+	for (auto& pair : box_left.GetGameObject().GetBehaviors()) pair.second->OnCollision(info);
 
 	info.self = &box_right;
 	info.other = &box_left;
-	for (auto& behavior : box_right.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
+	for (auto& pair : box_right.GetGameObject().GetBehaviors()) pair.second->OnCollision(info);
 }
 
 //--------------------------------------------------------------------------------
@@ -496,8 +496,8 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 
 	if (sphere.IsTrigger())
 	{
-		for (auto& behavior : sphere.GetGameObject().GetBehaviors()) behavior->OnTrigger(sphere, field);
-		for (auto& behavior : field.GetGameObject().GetBehaviors()) behavior->OnTrigger(field, sphere);
+		for (auto& pair : sphere.GetGameObject().GetBehaviors()) pair.second->OnTrigger(sphere, field);
+		for (auto& pair : field.GetGameObject().GetBehaviors()) pair.second->OnTrigger(field, sphere);
 		delete collision;
 		return;
 	}
@@ -515,11 +515,11 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 	info.self = &sphere;
 	info.other = &field;
 	info.collisions.push_back(collision);
-	for (auto& behavior : sphere.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
+	for (auto& pair : sphere.GetGameObject().GetBehaviors()) pair.second->OnCollision(info);
 
 	info.self = &field;
 	info.other = &sphere;
-	for (auto& behavior : field.GetGameObject().GetBehaviors()) behavior->OnCollision(info);
+	for (auto& pair : field.GetGameObject().GetBehaviors()) pair.second->OnCollision(info);
 }
 
 //--------------------------------------------------------------------------------
@@ -539,8 +539,8 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 
 	if (box.IsTrigger())
 	{
-		for (auto& behavior : box.GetGameObject().GetBehaviors()) { behavior->OnTrigger(box, field); }
-		for (auto& behavior : field.GetGameObject().GetBehaviors()) { behavior->OnTrigger(field, box); }
+		for (auto& pair : box.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(box, field); }
+		for (auto& pair : field.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(field, box); }
 		delete max_penetration_collision;
 		return;
 	}
@@ -557,11 +557,11 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 	info.self = &box;
 	info.other = &field;
 	info.collisions.push_back(max_penetration_collision);
-	for (auto& behavior : box.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : box.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 
 	info.self = &field;
 	info.other = &box;
-	for (auto& behavior : field.GetGameObject().GetBehaviors()) { behavior->OnCollision(info); }
+	for (auto& pair : field.GetGameObject().GetBehaviors()) { pair.second->OnCollision(info); }
 }
 
 //--------------------------------------------------------------------------------
