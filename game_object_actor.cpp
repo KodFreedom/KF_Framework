@@ -2,12 +2,8 @@
 //	アクター
 //　gameObjectActor.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-22
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "gameObjectActor.h"
+#include "game_object_actor.h"
 #include "animator.h"
 
 //--------------------------------------------------------------------------------
@@ -20,8 +16,8 @@
 //--------------------------------------------------------------------------------
 GameObjectActor::GameObjectActor(const Layer& layer)
 	: GameObject(layer)
-	, animator(nullptr)
 {
+	animator_ = MY_NEW Animator(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -30,7 +26,7 @@ GameObjectActor::GameObjectActor(const Layer& layer)
 bool GameObjectActor::Init(void)
 {
 	GameObject::Init();
-	if (animator) animator->Init();
+	animator_->Init();
 	return true;
 }
 
@@ -39,9 +35,9 @@ bool GameObjectActor::Init(void)
 //--------------------------------------------------------------------------------
 void GameObjectActor::LateUpdate(void)
 {
-	if (!isActive) return;
+	if (!is_active_) return;
 	GameObject::LateUpdate();
-	if (animator) animator->Update();
+	animator_->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -52,8 +48,8 @@ void GameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void GameObjectActor::uninit(void)
+void GameObjectActor::Uninit(void)
 {
-	GameObject::uninit();
-	SAFE_RELEASE(animator);
+	GameObject::Uninit();
+	SAFE_RELEASE(animator_);
 }

@@ -34,7 +34,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton
 	//--------------------------------------------------------------------------------
-	ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator);
+	ActorController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator);
 	~ActorController() {}
 
 	//--------------------------------------------------------------------------------

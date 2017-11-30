@@ -169,7 +169,6 @@ public:
 	void AddBehavior(Behavior* const behavior)
 	{
 		if (!behavior) return;
-		behavior->Init();
 		behaviors_.emplace(behavior->GetName(), behavior);
 	}
 	
@@ -179,7 +178,6 @@ public:
 	void AddCollider(Collider* const collider) 
 	{
 		if (!collider) return;
-		collider->Init();
 		colliders_.push_back(collider);
 	}
 
@@ -189,7 +187,6 @@ public:
 	void AddRenderer(MeshRenderer* const renderer) 
 	{
 		if (!renderer) return;
-		renderer->Init();
 		renderers_.push_back(renderer);
 	}
 

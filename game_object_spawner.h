@@ -2,9 +2,9 @@
 //	ゲームオブジェクト生成関数
 //　gameObjectSpawner.h
 //	Author : Xu Wenjie
-//	Date   : 2017-08-20
 //--------------------------------------------------------------------------------
 #pragma once
+#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -20,23 +20,28 @@ class GameObjectSpawner
 {
 public:
 	static GameObject* CreateSkyBox(const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateField(const String& stageName);
+	static GameObject* CreateField(const String& name);
 	static GameObject* CreateCube(const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateXModel(const String& modelName, const Vector3& position, const Vector3& rotation, const Vector3& scale);
-	static GameObject* CreateModel(const String& modelName, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	static GameObject* CreateXModel(const String& name, const Vector3& position, const Vector3& rotation, const Vector3& scale);
+	static GameObject* CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 	static GameObject* CreateGoal(const Vector3& position);
-	static GameObjectActor* CreatePlayer(const String &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
-	static GameObjectActor* CreateEnemy(const String &actorPath, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
+	static GameObjectActor* CreatePlayer(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
+	static GameObjectActor* CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 
-#if defined(_DEBUG) || defined(EDITOR)
-	static GameObject* CreateStageEditor(GameObject* fieldEditor);
+#if defined(EDITOR)
+	static GameObject* CreateStageEditor(GameObject* field_editor);
 	static GameObject* CreateFieldEditor(void);
-#endif // _DEBUG	
+#endif // EDITOR	
 
 private:
+	//--------------------------------------------------------------------------------
+	//  constructors and destructors
+	//--------------------------------------------------------------------------------
 	GameObjectSpawner() {}
+	GameObjectSpawner(const GameObjectSpawner& value) {}
+	GameObjectSpawner& operator=(const GameObjectSpawner& value) {}
 	~GameObjectSpawner() {}
 
-	static GameObject* createChildNode(Transform* parent, FILE* filePointer);
-	static GameObject* createChildMesh(Transform* parent, const string& meshName);
+	static GameObject* CreateChildNode(Transform* parent, BinaryInputArchive& archive);
+	static GameObject* CreateChildMesh(Transform* parent, const String& mesh_name);
 };

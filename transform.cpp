@@ -55,7 +55,7 @@ void Transform::UpdateMatrix(const Matrix44& parent)
 //--------------------------------------------------------------------------------
 // 親登録処理
 //--------------------------------------------------------------------------------
-void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Vector3& offset_rotation)
+void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Quaternion& offset_rotation)
 {
 	if (parent_)
 	{//親があるの場合前の親から削除

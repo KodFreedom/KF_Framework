@@ -31,7 +31,7 @@ int utility::GetStringUntilToken(FILE* file_pointer, const string& token, string
 //--------------------------------------------------------------------------------
 //  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int utility::GetStringUntilToken(string& file, const string& token, string& buffer)
+int utility::GetStringUntilToken(String& file, const String& token, String& buffer)
 {
 	buffer.clear();
 	for (auto itr = file.begin(); itr != file.end();)
@@ -93,10 +93,10 @@ int utility::GetStringCount(FILE* file_pointer, const string& token, const strin
 //--------------------------------------------------------------------------------
 //  文字列をカウントする
 //--------------------------------------------------------------------------------
-int utility::GetStringCount(string& file, const string& token, const string& compare)
+int utility::GetStringCount(String& file, const String& token, const String& compare)
 {
 	int count = 0;
-	string buffer;
+	String buffer;
 	while (GetStringUntilToken(file, token, buffer) >= 0)
 	{
 		if (buffer.compare(compare) == 0)
@@ -110,20 +110,20 @@ int utility::GetStringCount(string& file, const string& token, const string& com
 //--------------------------------------------------------------------------------
 //  パスから名前とタイプを解析する
 //--------------------------------------------------------------------------------
-utility::FileInfo utility::AnalyzeFilePath(const string& path)
+utility::FileInfo utility::AnalyzeFilePath(const String& path)
 {
 	FileInfo info;
 	auto copy = path;
 	reverse(copy.begin(), copy.end());
 
 	//ファイル型の取得
-	if (GetStringUntilToken(copy, ".", info.type) > 0)
+	if (GetStringUntilToken(copy, L".", info.type) > 0)
 	{
 		reverse(info.type.begin(), info.type.end());
 	}
 
 	//ファイル名の取得
-	GetStringUntilToken(copy, "\\/", info.name);
+	GetStringUntilToken(copy, L"\\/", info.name);
 	reverse(info.name.begin(), info.name.end());
 	return info;
 }
@@ -189,7 +189,7 @@ String utility::GetProjectPath(void)
 //			parent：親のオブジェクト
 //	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-//GameObject* utility::FindChildBy(const string& name, GameObject* const parent)
+//GameObject* utility::FindChildBy(const String& name, GameObject* const parent)
 //{
 //	assert(!name.empty());
 //	auto& children = parent->GetTransform()->GetChildren();

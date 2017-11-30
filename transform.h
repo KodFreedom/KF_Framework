@@ -60,7 +60,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  e“o˜^ˆ—
 	//--------------------------------------------------------------------------------
-	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Vector3& offset_rotation = Vector3::kZero);
+	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Quaternion& offset_rotation = Quaternion::kIdentity);
 
 	//--------------------------------------------------------------------------------
 	//  ˆÊ’u‚Ìæ“¾

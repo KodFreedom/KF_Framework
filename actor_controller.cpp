@@ -20,8 +20,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator)
-	: Behavior(owner, name), state_(nullptr), rigidbody_(rigidbody), animator_(animator)
+ActorController::ActorController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
+	: Behavior(owner, L"ActorController"), state_(nullptr), rigidbody_(rigidbody), animator_(animator)
 {
 	Change(MY_NEW NullActorState);
 }

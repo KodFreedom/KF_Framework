@@ -16,8 +16,8 @@ namespace kodfreedom
 	{
 		struct FileInfo
 		{
-			string name;
-			string type;
+			String name;
+			String type;
 		};
 
 		//--------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace kodfreedom
 		//  buffer：文字列保存用ところ
 		//  return：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 		//--------------------------------------------------------------------------------
-		int GetStringUntilToken(string& file, const string& token, string& buffer);
+		int GetStringUntilToken(String& file, const String& token, String& buffer);
 
 		//--------------------------------------------------------------------------------
 		//  比較する文字列まで文字列を取る
@@ -63,14 +63,14 @@ namespace kodfreedom
 		//  compare：比較する文字列
 		//  return：カウント数
 		//--------------------------------------------------------------------------------
-		int GetStringCount(string& file, const string& token, const string& compare);
+		int GetStringCount(String& file, const String& token, const String& compare);
 
 		//--------------------------------------------------------------------------------
 		//  パスから名前とタイプを解析する
 		//  path：パス
 		//  return：FileInfo
 		//--------------------------------------------------------------------------------
-		FileInfo AnalyzeFilePath(const string& path);
+		FileInfo AnalyzeFilePath(const String& path);
 		
 		//--------------------------------------------------------------------------------
 		//  フォルダからファイル名を取得する
