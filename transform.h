@@ -1,14 +1,9 @@
 //--------------------------------------------------------------------------------
-//	トランスフォームコンポネント
 //　transform.h
-//	Author : Xu Wenjie
-//	Date   : 2017-07-05
+//  トランスフォームコンポネント
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "component.h"
 
 //--------------------------------------------------------------------------------
@@ -16,113 +11,203 @@
 //--------------------------------------------------------------------------------
 class Transform : public Component
 {
-#if defined(_DEBUG) || defined(EDITOR)
-	friend class DebugObserver;
-#endif // _DEBUG
-
 public:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	Transform(GameObject* const owner);
+	Transform(GameObject& owner);
 	~Transform() {}
 	
-	bool		Init(void) override { return true; }
-	void		Uninit(void) override {}
-	void		SwapParamater(void);
-	void		UpdateMatrix(void);	
-	void		UpdateMatrix(const Matrix44& parent);
+	//--------------------------------------------------------------------------------
+	//  初期化処理
+	//--------------------------------------------------------------------------------
+	bool Init(void) override { return true; }
+
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void) override {}
+
+	//--------------------------------------------------------------------------------
+	//  行列更新処理（親がない）
+	//--------------------------------------------------------------------------------
+	void UpdateMatrix(void);
+
+	//--------------------------------------------------------------------------------
+	//  行列更新処理（親ある）
+	//--------------------------------------------------------------------------------
+	void UpdateMatrix(const Matrix44& parent);
 	
-	//親子関係
-	void		RegisterChild(Transform* value) { children.push_back(value); }
-	void		DeregisterChild(Transform* value) { children.remove(value); }
-	void		RegisterParent(Transform* value, const Vector3& offsetPosition = Vector3::Zero, const Vector3& offsetRotation = Vector3::Zero);
+	//--------------------------------------------------------------------------------
+	//  子供登録処理
+	//--------------------------------------------------------------------------------
+	void RegisterChild(Transform* child);
+	
+	//--------------------------------------------------------------------------------
+	//  子供削除処理
+	//--------------------------------------------------------------------------------
+	void DeregisterChild(Transform* child);
+	
+	//--------------------------------------------------------------------------------
+	//  親登録処理
+	//--------------------------------------------------------------------------------
+	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Quaternion& offset_rotation = Quaternion::kIdentity);
 
-	//Get関数
-	auto		GetCurrentPosition(void) const { return currentPosition; }
-	auto		GetCurrentRotation(void) const
-	{
-		return GetCurrentRotationMatrix().ToQuaternion();
-	}
-	auto		GetCurrentEulerRotation(void) const
-	{
-		return GetCurrentRotationMatrix().ToEular();
-	}
-	auto		GetCurrentScale(void) const { return currentScale; }
-	auto		GetCurrentForward(void) const { return currentForward; }
-	auto		GetCurrentUp(void) const { return currentUp; }
-	auto		GetCurrentRight(void) const { return currentRight; }
-	Matrix44	GetCurrentRotationMatrix(void) const
-	{
-		return Matrix44::Rotation(currentRight, currentUp, currentForward);
-	}
-	auto		GetCurrentWorldMatrix(void) const { return currentWorldMatrix; }
-	auto		GetNextPosition(void) const { return nextPosition; }
-	auto		GetNextRotation(void) const
-	{
-		return GetNextRotationMatrix().ToQuaternion();
-	}
-	auto		GetNextScale(void) const { return nextScale; }
-	auto		GetNextForward(void) const { return nextForward; }
-	auto		GetNextUp(void) const { return nextUp; }
-	auto		GetNextRight(void) const { return nextRight; }
-	Matrix44	GetNextRotationMatrix(void) const
-	{
-		return Matrix44::Rotation(nextRight, nextUp, nextForward);
-	}
-	Matrix44	GetNextWorldMatrix(void) const;
-	auto		GetParent(void) const { return parent; }
-	auto		GetChildren(void) const { return children; }
+	//--------------------------------------------------------------------------------
+	//  位置の取得
+	//--------------------------------------------------------------------------------
+	const Vector3& GetPosition(void) const { return position_; }
 
-	//Set関数
-	void		SetNextPosition(const Vector3& value) { nextPosition = value; }
-	void		SetNextRotation(const Quaternion& value);
-	void		SetNextRotation(const Vector3& euler);
-	void		SetNextScale(const Vector3& value) { nextScale = value; }
-	void		SetNextForward(const Vector3& value) { nextForward = value; }
-	void		SetNextUp(const Vector3& value) { nextUp = value; }
-	void		SetNextRight(const Vector3& value) { nextRight = value; }
-	void		SetNextMatrix(const Matrix44& value);
-	void		SetOffset(const Vector3& position, const Vector3& rotation);
+	//--------------------------------------------------------------------------------
+	//  回転の取得(quaternion)
+	//--------------------------------------------------------------------------------
+	const Quaternion& GetRotation(void) const { return rotation_; }
 
-	//回転関数
-	void		RotateByEuler(const Vector3& euler);
-	void		RotateByPitch(const float& radian);
-	void		RotateByYaw(const float& radian);
-	void		RotateByRoll(const float& radian);
-	void		RotateByUp(const Vector3& up);
-	void		RotateByForward(const Vector3& forward);
-	void		RotateByRight(const Vector3& right);
+	//--------------------------------------------------------------------------------
+	//  回転の取得(vector3)
+	//--------------------------------------------------------------------------------
+	Vector3 GetEulerRotation(void) const
+	{
+		return rotation_.ToEuler();
+	}
 
-	//他の関数
-	Vector3		TransformDirectionToLocal(const Vector3& direction);
+	//--------------------------------------------------------------------------------
+	//  スケールの取得
+	//--------------------------------------------------------------------------------
+	const Vector3& GetScale(void) const { return scale_; }
+	
+	//--------------------------------------------------------------------------------
+	//  前方向の取得
+	//--------------------------------------------------------------------------------
+	Vector3 GetForward(void) const 
+	{
+		return Vector3::Rotate(Vector3::kForward, rotation_);
+	}
+	
+	//--------------------------------------------------------------------------------
+	//  上方向の取得
+	//--------------------------------------------------------------------------------
+	Vector3 GetUp(void) const
+	{
+		return Vector3::Rotate(Vector3::kUp, rotation_);
+	}
+	
+	//--------------------------------------------------------------------------------
+	//  右方向の取得
+	//--------------------------------------------------------------------------------
+	Vector3 GetRight(void) const
+	{
+		return Vector3::Rotate(Vector3::kRight, rotation_);
+	}
+	
+	//--------------------------------------------------------------------------------
+	//  回転行列の取得
+	//--------------------------------------------------------------------------------
+	Matrix44 GetRotationMatrix(void) const
+	{
+		return rotation_.ToMatrix();
+	}
+
+	//--------------------------------------------------------------------------------
+	//  最新の世界行列の取得
+	//--------------------------------------------------------------------------------
+	Matrix44 GetCurrentWorldMatrix(void) const;
+
+	//--------------------------------------------------------------------------------
+	//  世界行列の取得
+	//--------------------------------------------------------------------------------
+	const Matrix44& GetWorldMatrix(void) const { return world_; }
+
+	//--------------------------------------------------------------------------------
+	//  親の取得
+	//--------------------------------------------------------------------------------
+	const auto GetParent(void) const { return parent_; }
+
+	//--------------------------------------------------------------------------------
+	//  子供の取得
+	//--------------------------------------------------------------------------------
+	const auto& GetChildren(void) const { return children_; }
+
+	//--------------------------------------------------------------------------------
+	//  位置の設定
+	//--------------------------------------------------------------------------------
+	void SetPosition(const Vector3& value) { position_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  回転の設定(quaternion)
+	//--------------------------------------------------------------------------------
+	void SetRotation(const Quaternion& value) { rotation_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  回転の設定(euler)
+	//--------------------------------------------------------------------------------
+	void SetRotation(const Vector3& euler) { rotation_ = euler.ToQuaternion(); }
+
+	//--------------------------------------------------------------------------------
+	//  スケールの設定
+	//--------------------------------------------------------------------------------
+	void SetScale(const Vector3& value) { scale_ = value; }
+
+	//--------------------------------------------------------------------------------
+	//  offsetの設定
+	//--------------------------------------------------------------------------------
+	void SetOffset(const Vector3& translation, const Vector3& rotation);
+
+	//--------------------------------------------------------------------------------
+	//  オーラー角より回転
+	//	euler：オーラー角
+	//--------------------------------------------------------------------------------
+	void RotateByEuler(const Vector3& euler)
+	{
+		rotation_ *= euler.ToQuaternion();
+	}
+
+	//--------------------------------------------------------------------------------
+	//  自分のX軸より回転
+	//--------------------------------------------------------------------------------
+	void RotateByPitch(const float& radian);
+
+	//--------------------------------------------------------------------------------
+	//  自分のY軸より回転
+	//--------------------------------------------------------------------------------
+	void RotateByYaw(const float& radian);
+
+	//--------------------------------------------------------------------------------
+	//  自分のZ軸より回転
+	//--------------------------------------------------------------------------------
+	void RotateByRoll(const float& radian);
+
+	//--------------------------------------------------------------------------------
+	//  世界軸の方向ベクトルを自分の軸に変換する
+	//	direction：方向ベクトル
+	//	return：Vector3
+	//--------------------------------------------------------------------------------
+	Vector3	TransformDirectionToLocal(const Vector3& direction);
+
+	//--------------------------------------------------------------------------------
+	//  子供を探す
+	//--------------------------------------------------------------------------------
+	Transform* FindChildBy(const String& name);
 
 private:
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  行列の算出(親なし)
 	//--------------------------------------------------------------------------------
-	void		calculateWorldMatrix(void);
-	void		calculateWorldMatrix(const Matrix44& parent);
+	void CalculateWorldMatrix(void);
+
+	//--------------------------------------------------------------------------------
+	//  行列の算出(親あり)
+	//--------------------------------------------------------------------------------
+	void CalculateWorldMatrix(const Matrix44& parent);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	//パラメーター
-	Vector3		currentPosition;
-	Vector3		currentScale;
-	Vector3		currentForward;
-	Vector3		currentUp;
-	Vector3		currentRight;
-	Matrix44	currentWorldMatrix;
-	Vector3		nextPosition;
-	Vector3		nextScale;
-	Vector3		nextForward;
-	Vector3		nextUp;
-	Vector3		nextRight;
-	
-	
-	//親子関係
-	Transform*			parent;
-	list<Transform*>	children;
-	Matrix44			offset;
+	Vector3                           position_; // 位置
+	Quaternion                        rotation_; // 回転
+	Vector3                           scale_; // スケール
+	Matrix44                          world_; // 世界行列
+	Transform*                        parent_; // 親
+	unordered_map<String, Transform*> children_; // 子供
+	Matrix44                          offset_; // オフセット（親に対する）
 };

@@ -1,17 +1,13 @@
 //--------------------------------------------------------------------------------
-//	カメラクラス
-//　Camera.h
-//	Author : Xu Wenjie
-//	Date   : 2016-05-31
+//　camera.h
+//	カメラ基底クラス
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
+#include "main.h"
 
 //--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  クラス
+//  カメラ基底クラス
 //--------------------------------------------------------------------------------
 class Camera
 {
@@ -21,44 +17,83 @@ class Camera
 	friend class CameraManager;
 public:
 	//--------------------------------------------------------------------------------
-	//  静的メンバ変数
+	//  定数定義
 	//--------------------------------------------------------------------------------
-	static const float defaultFarZ;
+	static constexpr float kDefaultfar_ = 1000.0f;
 
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	virtual void Init(void) {}
+	Camera();
+	~Camera() {}
+
+	//--------------------------------------------------------------------------------
+	//  初期化処理
+	//--------------------------------------------------------------------------------
+	virtual void Init(void);
+
+	//--------------------------------------------------------------------------------
+	//  更新処理
+	//--------------------------------------------------------------------------------
 	virtual void Update(void) {}
-	virtual void LateUpdate(void);
+
+	//--------------------------------------------------------------------------------
+	//  後更新処理
+	//--------------------------------------------------------------------------------
+	virtual void LateUpdate(void)
+	{
+		UpdateParameter();
+	}
+
+	//--------------------------------------------------------------------------------
+	//  破棄関数
+	//--------------------------------------------------------------------------------
 	virtual void Release(void)
 	{
-		uninit();
+		Uninit();
 		delete this;
 	}
 
-	void		 Set(void);
-	bool		 IsInRange(const Vector3& position, const float& radius = defaultFarZ);
-	void		 Move(const Vector3& movement);
-	auto		 GetRight(void) const { return worldRight; }
-	auto		 GetUp(void) const { return worldUp; }
-	auto		 GetForward(void) const { return worldForward; }
-	auto		 GetPositionEye(void) const { return worldPositionEye; }
-	auto		 GetPositionAt(void) const { return worldPositionAt; }
-	auto		 GetViewTranspose(void) const { return viewTranspose; }
-	auto		 GetFar(void) const { return farZ; }
+	//--------------------------------------------------------------------------------
+	//  セット処理(描画直前)
+	//--------------------------------------------------------------------------------
+	void Set(void);
+
+	//--------------------------------------------------------------------------------
+	//  カメラの範囲内に入ってるかどうか
+	//  position : 自分の位置
+	//  radius : 判定半径
+	//--------------------------------------------------------------------------------
+	bool IsInRange(const Vector3& position, const float& radius = kDefaultfar_);
+	
+	//--------------------------------------------------------------------------------
+	//  移動処理
+	//  movement : 移動量
+	//--------------------------------------------------------------------------------
+	void Move(const Vector3& movement)
+	{
+		rig_.position += movement;
+	}
+	auto GetWorldRight(void) const { return world_right_; }
+	auto GetWorldUp(void) const { return world_up_; }
+	auto GetWorldForward(void) const { return world_forward_; }
+	auto GetWorldEyePosition(void) const { return world_eye_position_; }
+	auto GetWorldAtPosition(void) const { return world_at_position_; }
+	auto GetView(void) const { return view_; }
+	auto GetViewTranspose(void) const { return view_transpose_; }
+	auto GetFar(void) const { return far_; }
 	virtual void SetDistance(const float& value)
 	{
-		distance = value;
-		localPositionEye.Z = -distance;
+		distance_ = value;
+		local_eye_position_.z_ = -distance_;
 	}
-	void		 SetPosition(const Vector3& value) { rig.Position = value; }
-	void		 SetOffsetY(const float& value) { pivot.Position.Y = value; }
-	void		 SetPitch(const float& radian) { pivot.Rotation.X = radian; }
-	void		 SetYaw(const float& radian) { rig.Rotation.Y = radian; }
-	void		 SetFovY(const float& radian) { fovY = radian; }
-	void		 SetNearZ(const float& value) { nearZ = value; }
-	void		 SetFarZ(const float& value) { farZ = value; }
+	void SetWorldPosition(const Vector3& value) { rig_.position = value; }
+	void SetOffsetY(const float& value) { pivot_.position.y_ = value; }
+	void SetPitch(const float& radian) { pivot_.rotation.x_ = radian; }
+	void SetYaw(const float& radian) { rig_.rotation.y_ = radian; }
+	void SetFov(const float& radian) { fov_ = radian; }
+	void SetNear(const float& value) { near_ = value; }
+	void SetFar(const float& value) { far_ = value; }
 
 protected:
 	//--------------------------------------------------------------------------------
@@ -66,49 +101,50 @@ protected:
 	//--------------------------------------------------------------------------------
 	struct CameraTransform
 	{
-		Vector3	Position;
-		Vector3	Rotation;
+		Vector3	position;
+		Vector3	rotation;
 	};
 
+	
+	virtual void Uninit(void) {}
+
 	//--------------------------------------------------------------------------------
-	//  関数定義
+	//  X軸回転
 	//--------------------------------------------------------------------------------
-	Camera();
-	~Camera() {}
-	virtual void uninit(void) {}
-	virtual void pitch(const float& radian);	
-	virtual void yaw(const float& radian);
-	//virtual void normalize(void);
-	void updateParamater(void);
+	virtual void Pitch(const float& radian)
+	{
+		pivot_.rotation.x_ += radian;
+	}
+
+	//--------------------------------------------------------------------------------
+	//  Y軸回転
+	//--------------------------------------------------------------------------------
+	virtual void Yaw(const float& radian)
+	{
+		rig_.rotation.y_ += radian;
+	}
+
+	//--------------------------------------------------------------------------------
+	//  パラメーターの算出
+	//--------------------------------------------------------------------------------
+	void UpdateParameter(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	CameraTransform rig;
-	CameraTransform pivot;
-	Vector3			localPositionEye;
-	Vector3			worldPositionEye;
-	Vector3			worldPositionAt;
-	Vector3			worldRight;
-	Vector3			worldUp;
-	Vector3			worldForward;
-	Matrix44		view;
-	Matrix44		viewTranspose;
-	float			distance;
-	float			fovY;
-	float			nearZ;
-	float			farZ;
-};
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-class NormalCamera : public Camera
-{
-public:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	NormalCamera();
-	~NormalCamera() {}
+	CameraTransform rig_;
+	CameraTransform pivot_;
+	Vector3         local_eye_position_;
+	Vector3         world_eye_position_;
+	Vector3         world_at_position_;
+	Vector3         world_right_;
+	Vector3         world_up_;
+	Vector3         world_forward_;
+	Matrix44        view_;
+	Matrix44        view_transpose_;
+	Matrix44        projection_;
+	float           distance_;
+	float           fov_;
+	float           near_;
+	float           far_;
 };

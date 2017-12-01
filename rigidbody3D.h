@@ -1,40 +1,78 @@
 //--------------------------------------------------------------------------------
-//
-//　3DPhysicsComponent.h
+//　rigidbody3d.h
 //	Author : Xu Wenjie
-//	Date   : 2017-05-31
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "rigidbody.h"
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  3dリジッドボディ
 //--------------------------------------------------------------------------------
 class Rigidbody3D : public Rigidbody
 {
-	friend class PhysicsSystem;
 public:
-	Rigidbody3D(GameObject* const owner);
+	//--------------------------------------------------------------------------------
+	//  constructors and destructors
+	//--------------------------------------------------------------------------------
+	Rigidbody3D(GameObject& owner);
 	~Rigidbody3D() {}
 
-	bool	Init(void) override { return true; }
-	void	Uninit(void) override {}
-	void	Update(void) override;
-	void	LateUpdate(void) override;
+	//--------------------------------------------------------------------------------
+	//  初期化
+	//--------------------------------------------------------------------------------
+	bool Init(void) override { return true; }
 
-	//Get関数
-	auto	GetVelocity(void) const { return velocity; }
+	//--------------------------------------------------------------------------------
+	//  終了処理
+	//--------------------------------------------------------------------------------
+	void Uninit(void) override {}
 
-	//Set関数
-	void	SetDrag(const float& value) { drag = value; }
-	void	SetMass(const float& value);
-	void	SetVelocity(const Vector3& value) { velocity = value; }
-	void	AddForce(const Vector3& force) { forceAccum += force; }
-	void	Move(const Vector3& value) { movement += value; }
+	//--------------------------------------------------------------------------------
+	//  更新処理
+	//--------------------------------------------------------------------------------
+	void Update(void) override;
+
+	//--------------------------------------------------------------------------------
+	//  後更新処理
+	//--------------------------------------------------------------------------------
+	void LateUpdate(void) override;
+
+	//--------------------------------------------------------------------------------
+	//  力を与える
+	//--------------------------------------------------------------------------------
+	void AddForce(const Vector3& force) { force_accum_ += force; }
+
+	//--------------------------------------------------------------------------------
+	//  速度を与える
+	//--------------------------------------------------------------------------------
+	void AddVelocity(const Vector3& value) { velocity_ += value; }
+
+	//--------------------------------------------------------------------------------
+	//  移動量を与える（質量無視）
+	//--------------------------------------------------------------------------------
+	void Move(const Vector3& value) { movement_ += value; }
+
+	//--------------------------------------------------------------------------------
+	//  Get関数
+	//--------------------------------------------------------------------------------
+	const auto& GetMass(void) const { return mass_; }
+	const auto& GetInverseMass(void) const { return inverse_mass_; }
+	const auto& GetDrag(void) const { return drag_; }
+	const auto& GetFriction(void) const { return friction_; }
+	const auto& GetBounciness(void) const { return bounciness_; }
+	const auto& GetVelocity(void) const { return velocity_; }
+	const auto& GetAcceleration(void) const { return acceleration_; }
+
+	//--------------------------------------------------------------------------------
+	//  Set関数
+	//--------------------------------------------------------------------------------
+	void SetMass(const float& value);
+	void SetDrag(const float& value) { drag_ = value; }
+	void SetFriction(const float& value) { friction_ = value; }
+	void SetBounciness(const float& value) { bounciness_ = value; }
+	void SetGravityMultiplier(const float& value) { gravity_multiplier_ = value; }
+	void SetVelocity(const Vector3& value) { velocity_ = value; }
+	void SetMovement(const Vector3& value) { movement_ = value; }
 	//void	SetInertiaTensor(Collider* pCollider);
 
 private:
@@ -57,19 +95,19 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	float		mass;					//質量
-	float		inverseMass;				//質量の逆数
-	float		drag;					//抵抗係数(空気抵抗)
-	//float		AngularDrag;				//回転抵抗係数
-	float		friction;				//摩擦係数
-	float		bounciness;				//跳ね返り係数
-	float		gravityCoefficient;		//重力係数
-	Vector3		movement;				//移動量
-	Vector3		velocity;				//速度
-	Vector3		acceleration;			//加速度
-	//Vector3	m_vAngularVelocity;			//回転速度
-	Vector3		forceAccum;				//合わせた作用力
-	//Vector3	m_vTorqueAccum;				//回転力
-	//Matrix44	m_mtxInertisTensor;			//慣性テンソルの行列
-	//BYTE		m_bRotLock;					//回転制限のフラグ
+	float   mass_; // 質量
+	float   inverse_mass_; // 質量の逆数
+	float   drag_; // 抵抗係数(空気抵抗)
+	//float angular_drag_; //回転抵抗係数
+	float   friction_; // 摩擦係数
+	float   bounciness_; // 跳ね返り係数
+	float   gravity_multiplier_; //重力係数
+	Vector3 movement_; // 移動量
+	Vector3 velocity_; // 速度
+	Vector3 acceleration_; // 加速度
+	//Vector3 angular_velocity_; // 回転速度
+	Vector3 force_accum_; // 合わせた作用力
+	//Vector3 torque_accum_; // 回転力
+	//Matrix44 inertis_tensor_; //慣性テンソルの行列
+	//BYTE rotation_lock_; //回転制限のフラグ
 };

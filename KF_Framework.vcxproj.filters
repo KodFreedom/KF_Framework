@@ -175,70 +175,28 @@
     <Filter Include="ヘッダー ファイル\Base\GameObject">
       <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader">
+      <UniqueIdentifier>{079332a2-ae93-4425-aeef-e90381f97d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Light">
+      <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Player">
+      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Player">
+      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KF_Math.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObject.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="modeDemo.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode.cpp">
       <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
-    <ClCompile Include="manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="KF_UtilityDX.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="materialManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectActor.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="modeTitle.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="modeResult.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="meshManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="soundManager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="UISystem.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObject.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="KF_Utility.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="modeEditor.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="editorCamera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectSpawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="stageSpawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ソース ファイル\Base\ImGui</Filter>
@@ -252,92 +210,17 @@
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
       <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="debugObserver.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="inputDeviceDX.cpp">
-      <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
     </ClCompile>
     <ClCompile Include="collider.cpp">
       <Filter>ソース ファイル\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="boxCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="fieldCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="collisionSystem.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="AABBCollider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="collisionDetector.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="physicsSystem.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObject2D.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="backgroundUI.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="playerUI.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="fadeSystem.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="cameraManager.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdPersonCamera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>ソース ファイル\Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="meshRenderer.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="rigidbody3D.cpp">
-      <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="motionState.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
-    </ClCompile>
-    <ClCompile Include="motionManager.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
-    </ClCompile>
-    <ClCompile Include="windmillController.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="actorState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="neutralState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="walkState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="jumpState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="landState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="damagedState.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
     </ClCompile>
     <ClCompile Include="normalModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
@@ -345,115 +228,175 @@
     <ClCompile Include="attackModeAI.cpp">
       <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
-    <ClCompile Include="editorController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    <ClCompile Include="kf_math.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="fieldEditor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    <ClCompile Include="motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
-    <ClCompile Include="modelEditor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    <ClCompile Include="kf_utility.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="actorController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    <ClCompile Include="kf_utility_directX.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="enemyController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="playerController.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="renderSystem.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="renderSystemDirectX9.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="textureManager.cpp">
+    <ClCompile Include="main_system.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="lightManager.cpp">
+    <ClCompile Include="render_system_directX9.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_manager.cpp">
       <Filter>ソース ファイル\Base\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="rendererManager.cpp">
+    <ClCompile Include="sound_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="material_manager.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="debug_observer.cpp">
+      <Filter>ソース ファイル\Base\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer_manager.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="renderState.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    <ClCompile Include="input_device_directX.cpp">
+      <Filter>ソース ファイル\Base\Input</Filter>
     </ClCompile>
-    <ClCompile Include="gameObjectManager.cpp">
+    <ClCompile Include="fade_system.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_manager.cpp">
+      <Filter>ソース ファイル\Base\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_manager.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="editor_camera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="third_person_camera.cpp">
+      <Filter>ソース ファイル\Base\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_system.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_object_2d.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_object.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ui.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="background_ui.cpp">
+      <Filter>ソース ファイル\UI\UIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_detector.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="collision_system.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_system.cpp">
+      <Filter>ソース ファイル\Base\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_spawner.cpp">
       <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_manager.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_actor.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_spawner.cpp">
+      <Filter>ソース ファイル\Base\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="rigidbody3d.cpp">
+      <Filter>ソース ファイル\Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="field_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="aabb_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="windmill_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="model_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="field_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="editor_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="player_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="player_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_neutral_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="mode_demo.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="mode_editor.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="mode_result.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="mode_title.cpp">
+      <Filter>ソース ファイル\Mode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KF_Math.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
     <ClInclude Include="main.h">
       <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObject.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="modeDemo.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
-    <ClInclude Include="KF_UtilityDX.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="materialManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="gameObjectActor.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="editorCamera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="modeTitle.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="modeResult.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="motionInfo.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="meshManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="soundManager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="UISystem.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObject.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="KF_Utility.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="modeEditor.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="gameObjectSpawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="stageSpawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
@@ -476,65 +419,11 @@
     <ClInclude Include="ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="debugObserver.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="inputDeviceDX.h">
-      <Filter>ヘッダー ファイル\Base\Input</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
     <ClInclude Include="collider.h">
       <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="AABBCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="boxCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="fieldCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="OBBCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="sphereCollider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionSystem.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="collisionDetector.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="physicsSystem.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObject2D.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="backgroundUI.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="playerUI.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="fadeSystem.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="versionSetting.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="meshRenderer.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="cameraManager.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdPersonCamera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
     </ClInclude>
     <ClInclude Include="transform.h">
       <Filter>ヘッダー ファイル\Component\Transform</Filter>
@@ -542,44 +431,11 @@
     <ClInclude Include="rigidbody.h">
       <Filter>ヘッダー ファイル\Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="rigidbody3D.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="animator.h">
       <Filter>ヘッダー ファイル\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="motionManager.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="motionState.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
-    </ClInclude>
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="windmillController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="actorState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="actorParamater.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="neutralState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="walkState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="jumpState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="damagedState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="landState.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
     </ClInclude>
     <ClInclude Include="AI.h">
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
@@ -590,44 +446,197 @@
     <ClInclude Include="attackModeAI.h">
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
     </ClInclude>
-    <ClInclude Include="actorController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    <ClInclude Include="kf_math.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="enemyController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    <ClInclude Include="motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
     </ClInclude>
-    <ClInclude Include="playerController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    <ClInclude Include="common_setting.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="modelEditor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    <ClInclude Include="kf_utility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="fieldEditor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    <ClInclude Include="kf_utility_directX.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="editorController.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="renderSystem.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="renderSystemDirectX9.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="textureManager.h">
+    <ClInclude Include="main_system.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="lightManager.h">
+    <ClInclude Include="render_system.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="render_system_directX9.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_manager.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_enum.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_manager.h">
       <Filter>ヘッダー ファイル\Base\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="rendererManager.h">
+    <ClInclude Include="sound_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="material_manager.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="light_manager.h">
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ヘッダー ファイル\Base\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_observer.h">
+      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_manager.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
-    <ClInclude Include="renderState.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    <ClInclude Include="input_device_directX.h">
+      <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
-    <ClInclude Include="gameObjectManager.h">
+    <ClInclude Include="fade_system.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_data.h">
+      <Filter>ヘッダー ファイル\Base\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_manager.h">
+      <Filter>ヘッダー ファイル\Base\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_manager.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_camera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="third_person_camera.h">
+      <Filter>ヘッダー ファイル\Base\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_system.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_object_2d.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_object.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ui.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="background_ui.h">
+      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_parameter.h">
+      <Filter>ヘッダー ファイル\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_detector.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="collision_system.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_system.h">
+      <Filter>ヘッダー ファイル\Base\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_spawner.h">
       <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_actor.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_manager.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="game_object_spawner.h">
+      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbody3d.h">
+      <Filter>ヘッダー ファイル\Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="obb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="field_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="box_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="windmill_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="model_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="field_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="player_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="player_neutral_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="mode_demo.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="mode_editor.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="mode_result.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="mode_title.h">
+      <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

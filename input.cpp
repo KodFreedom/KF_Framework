@@ -1,20 +1,11 @@
 //--------------------------------------------------------------------------------
-//	入力情報管理処理
 //　input.cpp
-//	Author : Xu Wenjie
-//	Date   : 2017-06-21
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
+//	入力ディバイス情報管理
+//	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "input.h"
-#include "inputDeviceDX.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-Input* Input::instance = nullptr;
+#include "input_device_directX.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -22,41 +13,14 @@ Input* Input::instance = nullptr;
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：Create
-//  関数説明：生成処理
-//	引数：	hInstance：値
-//			hWnd：
-//			isWindowMode：
-//	戻り値：Manager*
-//--------------------------------------------------------------------------------
-Input* Input::Create(HINSTANCE hInstance, HWND hWnd)
-{
-	if (instance) return instance;
-	instance = new Input;
-	instance->init(hInstance, hWnd);
-	return instance;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Release
-//  関数説明：破棄処理
-//	引数：	なし
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Input::Release(void)
-{
-	SAFE_UNINIT(instance);
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void Input::Update(void)
 {
-	keyboard->Update();
-	mouse->Update();
-	joystick->Update();
-	updateInputInfo();
+	keyboard_->Update();
+	mouse_->Update();
+	joystick_->Update();
+	UpdateInputInfo();
 }
 
 //--------------------------------------------------------------------------------
@@ -64,9 +28,9 @@ void Input::Update(void)
 //--------------------------------------------------------------------------------
 void Input::Acquire(void)
 {
-	keyboard->Acquire();
-	mouse->Acquire();
-	joystick->Acquire();
+	keyboard_->Acquire();
+	mouse_->Acquire();
+	joystick_->Acquire();
 }
 
 //--------------------------------------------------------------------------------
@@ -74,9 +38,9 @@ void Input::Acquire(void)
 //--------------------------------------------------------------------------------
 void Input::Unacquire(void)
 {
-	keyboard->Unacquire();
-	mouse->Unacquire();
-	joystick->Unacquire();
+	keyboard_->Unacquire();
+	mouse_->Unacquire();
+	joystick_->Unacquire();
 }
 
 //--------------------------------------------------------------------------------
@@ -88,212 +52,141 @@ void Input::Unacquire(void)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 Input::Input()
-	: keyboard(nullptr)
-	, mouse(nullptr)
-	, joystick(nullptr)
-	, moveHorizontal(0.0f)
-	, moveVertical(0.0f)
-	, rotHorizontal(0.0f)
-	, rotVertical(0.0f)
-	, zoom(0.0f)
-	, pressInfos(0)
-	, triggerInfos(0)
-	, releaseInfos(0)
-	, isEditorMode(false)
+	: keyboard_(nullptr)
+	, mouse_(nullptr)
+	, joystick_(nullptr)
+	, move_horizontal_(0.0f)
+	, move_vertical_(0.0f)
+	, rotation_horizontal_(0.0f)
+	, rotation_vertical_(0.0f)
+	, zoom_(0.0f)
+	, press_state_(0)
+	, trigger_state_(0)
+	, release_state_(0)
+	, is_editor_mode_(false)
 {}
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-bool Input::init(HINSTANCE hInst, HWND hWnd)
+bool Input::Init(HINSTANCE hinstance, HWND hwnd)
 {
-	keyboard = new KeyboardDX;
-	keyboard->Init(hInst, hWnd);
-	mouse = new MouseDX;
-	mouse->Init(hInst, hWnd);
-	joystick = new JoystickDX;
-	joystick->Init(hInst, hWnd);
+	keyboard_ = new KeyboardDirectX;
+	keyboard_->Init(hinstance, hwnd);
+	mouse_ = new MouseDirectX;
+	mouse_->Init(hinstance, hwnd);
+	joystick_ = new JoystickDirectX;
+	joystick_->Init(hinstance, hwnd);
 	return true;
 }
 
 //--------------------------------------------------------------------------------
 //  入力情報更新処理
 //--------------------------------------------------------------------------------
-void Input::updateInputInfo(void)
+void Input::UpdateInputInfo(void)
 {
-	bool pressFlags[(int)Key_Max] = { 0 };
-	bool triggerFlags[(int)Key_Max] = { 0 };
-	bool releaseFlags[(int)Key_Max] = { 0 };
+	bool press_flags[static_cast<int>(kKeyMax)] = { 0 };
+	bool trigger_flags[static_cast<int>(kKeyMax)] = { 0 };
+	bool release_flags[static_cast<int>(kKeyMax)] = { 0 };
 
 	// Move
-	float keyboardAxisX = -(float)keyboard->GetPress(DIK_A) + (float)keyboard->GetPress(DIK_D);
-	float keyboardAxisY = (float)keyboard->GetPress(DIK_W) - (float)keyboard->GetPress(DIK_S);
-	float joystickLeftAxisX = (float)joystick->GetLStickAxisX() / JoystickDX::StickAxisMax;
-	float joystickLeftAxisY = -(float)joystick->GetLStickAxisY() / JoystickDX::StickAxisMax;
-	joystickLeftAxisX = fabsf(joystickLeftAxisX) > JoystickDX::Dead ? joystickLeftAxisX : 0.0f;
-	joystickLeftAxisY = fabsf(joystickLeftAxisY) > JoystickDX::Dead ? joystickLeftAxisY : 0.0f;
-	moveHorizontal = Math::AbsMax(keyboardAxisX, joystickLeftAxisX);
-	moveVertical = Math::AbsMax(keyboardAxisY, joystickLeftAxisY);
+	float keyboard_axis_x = -static_cast<float>(keyboard_->GetPress(DIK_A))
+		+ static_cast<float>(keyboard_->GetPress(DIK_D));
+	float keyboard_axis_y = static_cast<float>(keyboard_->GetPress(DIK_W))
+		- static_cast<float>(keyboard_->GetPress(DIK_S));
+	float joystick_left_axis_x = static_cast<float>(joystick_->GetLStickAxisX()) / JoystickDirectX::kStickAxisMax;
+	float joystick_left_axis_y = -static_cast<float>(joystick_->GetLStickAxisY()) / JoystickDirectX::kStickAxisMax;
+	joystick_left_axis_x = fabsf(joystick_left_axis_x) > JoystickDirectX::kDead ? joystick_left_axis_x : 0.0f;
+	joystick_left_axis_y = fabsf(joystick_left_axis_y) > JoystickDirectX::kDead ? joystick_left_axis_y : 0.0f;
+	move_horizontal_ = math::AbsMax(keyboard_axis_x, joystick_left_axis_x);
+	move_vertical_ = math::AbsMax(keyboard_axis_y, joystick_left_axis_y);
 
 	// Rotation
-	float rotationAxisX = 0.0f;
-	float rotationAxisY = 0.0f;
-	if (isEditorMode)
+	float rotation_axis_x = 0.0f;
+	float rotation_axis_y = 0.0f;
+	if (is_editor_mode_)
 	{
-		rotationAxisX = (float)mouse->GetAxisX() * MouseDX::AxisSmooth;
-		rotationAxisY = (float)mouse->GetAxisY() * MouseDX::AxisSmooth;
+		rotation_axis_x = static_cast<float>(mouse_->GetAxisX()) * MouseDirectX::kAxisSmooth;
+		rotation_axis_y = static_cast<float>(mouse_->GetAxisY()) * MouseDirectX::kAxisSmooth;
 	}
 	else
 	{
-		rotationAxisX = -(float)keyboard->GetPress(DIK_Q) + (float)keyboard->GetPress(DIK_E);
-		rotationAxisY = -(float)keyboard->GetPress(DIK_R) + (float)keyboard->GetPress(DIK_T);
+		rotation_axis_x = -static_cast<float>(keyboard_->GetPress(DIK_Q)) + static_cast<float>(keyboard_->GetPress(DIK_E));
+		rotation_axis_y = -static_cast<float>(keyboard_->GetPress(DIK_R)) + static_cast<float>(keyboard_->GetPress(DIK_T));
 	}
-	float joystickRightAxisX = (float)joystick->GetRStickAxisX() / JoystickDX::StickAxisMax;
-	float joystickRightAxisY = (float)joystick->GetRStickAxisY() / JoystickDX::StickAxisMax;
-	rotHorizontal = Math::AbsMax(rotationAxisX, joystickRightAxisX);
-	rotVertical = Math::AbsMax(rotationAxisY, joystickRightAxisY);
+	float joystick_right_axis_x = static_cast<float>(joystick_->GetRStickAxisX()) / JoystickDirectX::kStickAxisMax;
+	float joystick_right_axis_y = static_cast<float>(joystick_->GetRStickAxisY()) / JoystickDirectX::kStickAxisMax;
+	rotation_horizontal_ = math::AbsMax(rotation_axis_x, joystick_right_axis_x);
+	rotation_vertical_ = math::AbsMax(rotation_axis_y, joystick_right_axis_y);
 
-	// zoom
-	float mouseAxisZ = -(float)mouse->GetAxisZ() / MouseDX::AxisMax;
-	float joystickAxisZ = (float)joystick->GetLTandRT() / JoystickDX::StickAxisMax;
-	zoom = Math::AbsMax(mouseAxisZ, joystickAxisZ);
+	// zoom_
+	float mouse_axis_z = -static_cast<float>(mouse_->GetAxisZ()) / MouseDirectX::kAxisMax;
+	float joystick_axis_z = static_cast<float>(joystick_->GetLTandRT()) / JoystickDirectX::kStickAxisMax;
+	zoom_ = math::AbsMax(mouse_axis_z, joystick_axis_z);
 
 	// Key
 	// Submit
-	pressFlags[(int)Key::Submit] = keyboard->GetPress(DIK_SPACE) | joystick->GetButtonPress(XboxButton::A);
-	triggerFlags[(int)Key::Submit] = keyboard->GetTrigger(DIK_SPACE) | joystick->GetButtonTrigger(XboxButton::A);
-	releaseFlags[(int)Key::Submit] = keyboard->GetRelease(DIK_SPACE) | joystick->GetButtonRelease(XboxButton::A);
+	press_flags[static_cast<int>(Key::kSubmit)] = keyboard_->GetPress(DIK_SPACE) | joystick_->GetButtonPress(XboxButton::kXboxA);
+	trigger_flags[static_cast<int>(Key::kSubmit)] = keyboard_->GetTrigger(DIK_SPACE) | joystick_->GetButtonTrigger(XboxButton::kXboxA);
+	release_flags[static_cast<int>(Key::kSubmit)] = keyboard_->GetRelease(DIK_SPACE) | joystick_->GetButtonRelease(XboxButton::kXboxA);
 
 	// Cancel
-	pressFlags[(int)Key::Cancel] = keyboard->GetPress(DIK_J) | joystick->GetButtonPress(XboxButton::B);
-	triggerFlags[(int)Key::Cancel] = keyboard->GetTrigger(DIK_J) | joystick->GetButtonTrigger(XboxButton::B);
-	releaseFlags[(int)Key::Cancel] = keyboard->GetRelease(DIK_J) | joystick->GetButtonRelease(XboxButton::B);
+	press_flags[static_cast<int>(Key::kCancel)] = keyboard_->GetPress(DIK_J) | joystick_->GetButtonPress(XboxButton::kXboxB);
+	trigger_flags[static_cast<int>(Key::kCancel)] = keyboard_->GetTrigger(DIK_J) | joystick_->GetButtonTrigger(XboxButton::kXboxB);
+	release_flags[static_cast<int>(Key::kCancel)] = keyboard_->GetRelease(DIK_J) | joystick_->GetButtonRelease(XboxButton::kXboxB);
 
 	// Start
-	pressFlags[(int)Key::Start] = keyboard->GetPress(DIK_RETURN) | joystick->GetButtonPress(XboxButton::Menu);
-	triggerFlags[(int)Key::Start] = keyboard->GetTrigger(DIK_RETURN) | joystick->GetButtonTrigger(XboxButton::Menu);
-	releaseFlags[(int)Key::Start] = keyboard->GetRelease(DIK_RETURN) | joystick->GetButtonRelease(XboxButton::Menu);
+	press_flags[static_cast<int>(Key::kStart)] = keyboard_->GetPress(DIK_RETURN) | joystick_->GetButtonPress(XboxButton::kXboxMenu);
+	trigger_flags[static_cast<int>(Key::kStart)] = keyboard_->GetTrigger(DIK_RETURN) | joystick_->GetButtonTrigger(XboxButton::kXboxMenu);
+	release_flags[static_cast<int>(Key::kStart)] = keyboard_->GetRelease(DIK_RETURN) | joystick_->GetButtonRelease(XboxButton::kXboxMenu);
 
 	// Up
-	pressFlags[(int)Key::Up] = keyboard->GetPress(DIK_UP);
-	triggerFlags[(int)Key::Up] = keyboard->GetTrigger(DIK_UP);
-	releaseFlags[(int)Key::Up] = keyboard->GetRelease(DIK_UP);
+	press_flags[static_cast<int>(Key::kUp)] = keyboard_->GetPress(DIK_UP);
+	trigger_flags[static_cast<int>(Key::kUp)] = keyboard_->GetTrigger(DIK_UP);
+	release_flags[static_cast<int>(Key::kUp)] = keyboard_->GetRelease(DIK_UP);
 
 	// Down
-	pressFlags[(int)Key::Down] = keyboard->GetPress(DIK_DOWN);
-	triggerFlags[(int)Key::Down] = keyboard->GetTrigger(DIK_DOWN);
-	releaseFlags[(int)Key::Down] = keyboard->GetRelease(DIK_DOWN);
+	press_flags[static_cast<int>(Key::kDown)] = keyboard_->GetPress(DIK_DOWN);
+	trigger_flags[static_cast<int>(Key::kDown)] = keyboard_->GetTrigger(DIK_DOWN);
+	release_flags[static_cast<int>(Key::kDown)] = keyboard_->GetRelease(DIK_DOWN);
 
 	// Left
-	pressFlags[(int)Key::Left] = keyboard->GetPress(DIK_LEFT);
-	triggerFlags[(int)Key::Left] = keyboard->GetTrigger(DIK_LEFT);
-	releaseFlags[(int)Key::Left] = keyboard->GetRelease(DIK_LEFT);
+	press_flags[static_cast<int>(Key::kLeft)] = keyboard_->GetPress(DIK_LEFT);
+	trigger_flags[static_cast<int>(Key::kLeft)] = keyboard_->GetTrigger(DIK_LEFT);
+	release_flags[static_cast<int>(Key::kLeft)] = keyboard_->GetRelease(DIK_LEFT);
 
 	// Right
-	pressFlags[(int)Key::Right] = keyboard->GetPress(DIK_RIGHT);
-	triggerFlags[(int)Key::Right] = keyboard->GetTrigger(DIK_RIGHT);
-	releaseFlags[(int)Key::Right] = keyboard->GetRelease(DIK_RIGHT);
+	press_flags[static_cast<int>(Key::kRight)] = keyboard_->GetPress(DIK_RIGHT);
+	trigger_flags[static_cast<int>(Key::kRight)] = keyboard_->GetTrigger(DIK_RIGHT);
+	release_flags[static_cast<int>(Key::kRight)] = keyboard_->GetRelease(DIK_RIGHT);
 
 	// Reset
-	pressFlags[(int)Key::Reset] = keyboard->GetPress(DIK_R);
-	triggerFlags[(int)Key::Reset] = keyboard->GetTrigger(DIK_R);
-	releaseFlags[(int)Key::Reset] = keyboard->GetRelease(DIK_R);
+	press_flags[static_cast<int>(Key::kReset)] = keyboard_->GetPress(DIK_R);
+	trigger_flags[static_cast<int>(Key::kReset)] = keyboard_->GetTrigger(DIK_R);
+	release_flags[static_cast<int>(Key::kReset)] = keyboard_->GetRelease(DIK_R);
 
 	// Lock
-	pressFlags[(int)Key::Lock] = mouse->GetPress(MouseButton::M_Right);
-	triggerFlags[(int)Key::Lock] = mouse->GetTrigger(MouseButton::M_Right);
-	releaseFlags[(int)Key::Lock] = mouse->GetRelease(MouseButton::M_Right);
+	press_flags[static_cast<int>(Key::kLock)] = mouse_->GetPress(MouseButton::kMouseRight);
+	trigger_flags[static_cast<int>(Key::kLock)] = mouse_->GetTrigger(MouseButton::kMouseRight);
+	release_flags[static_cast<int>(Key::kLock)] = mouse_->GetRelease(MouseButton::kMouseRight);
 
-	pressInfos = 0;
-	triggerInfos = 0;
-	releaseInfos = 0;
-	for (int count = 0; count < (int)Key_Max; ++count)
+	press_state_ = 0;
+	trigger_state_ = 0;
+	release_state_ = 0;
+	for (int count = 0; count < static_cast<int>(kKeyMax); ++count)
 	{
-		pressInfos |= pressFlags[count] << count;
-		triggerInfos |= triggerFlags[count] << count;
-		releaseInfos |= releaseFlags[count] << count;
+		press_state_ |= press_flags[count] << count;
+		trigger_state_ |= trigger_flags[count] << count;
+		release_state_ |= release_flags[count] << count;
 	}
-
-	/*
-	pressInfos =
-	(LONG)bSubmitPress << Submit
-	| (bCancelPress << Cancel)
-	| (bStartPress << Start)
-	| (bRotXMinusPress << Extend)
-	| (bRotXPlusPress << Shrink)
-	| (bRotYMinusPress << Raise)
-	| (bRotYPlusPress << Reduce)
-	| (bRotZMinusPress << RotationZMinus)
-	| (bRotZPlusPress << RotationZPlus)
-	| (bUpPress << Up)
-	| (bDownPress << Down)
-	| (bLeftPress << Left)
-	| (bRightPress << Right)
-	| (bLRacketPress << LeftBracket)
-	| (bRRacketPress << RightBracket)
-	| (bResetPress << Reset);
-
-	triggerInfos =
-	(LONG)bSubmitTrigger << Submit
-	| (bCancelTrigger << Cancel)
-	| (bStartTrigger << Start)
-	| (bRotXMinusTrigger << Extend)
-	| (bRotXPlusTrigger << Shrink)
-	| (bRotYMinusTrigger << Raise)
-	| (bRotYPlusTrigger << Reduce)
-	| (bRotZMinusTrigger << RotationZMinus)
-	| (bRotZPlusTrigger << RotationZPlus)
-	| (bUpTrigger << Up)
-	| (bDownTrigger << Down)
-	| (bLeftTrigger << Left)
-	| (bRightTrigger << Right)
-	| (bLRacketTrigger << LeftBracket)
-	| (bRRacketTrigger << RightBracket)
-	| (bResetTrigger << Reset);
-
-	releaseInfos =
-	(LONG)bSubmitRelease << Submit
-	| (bCancelRelease << Cancel)
-	| (bStartRelease << Start)
-	| (bRotXMinusRelease << Extend)
-	| (bRotXPlusRelease << Shrink)
-	| (bRotYMinusRelease << Raise)
-	| (bRotYPlusRelease << Reduce)
-	| (bRotZMinusRelease << RotationZMinus)
-	| (bRotZPlusRelease << RotationZPlus)
-	| (bUpRelease << Up)
-	| (bDownRelease << Down)
-	| (bLeftRelease << Left)
-	| (bRightRelease << Right)
-	| (bLRacketRelease << LeftBracket)
-	| (bRRacketRelease << RightBracket)
-	| (bResetRelease << Reset);
-	*/
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void Input::uninit(void)
+void Input::Uninit(void)
 {
-	if (keyboard)
-	{
-		keyboard->Uninit();
-		delete keyboard;
-		keyboard = nullptr;
-	}
-
-	if (mouse)
-	{
-		mouse->Uninit();
-		delete mouse;
-		mouse = nullptr;
-	}
-
-	if (joystick)
-	{
-		joystick->Uninit();
-		delete joystick;
-		joystick = nullptr;
-	}
+	SAFE_UNINIT(keyboard_);
+	SAFE_UNINIT(mouse_);
+	SAFE_UNINIT(joystick_);
 }

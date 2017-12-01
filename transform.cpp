@@ -8,6 +8,7 @@
 //  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "transform.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -17,270 +18,151 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-Transform::Transform(GameObject* const owner) : Component(owner)
-	, currentPosition(Vector3::Zero)
-	, currentScale(Vector3::One)
-	, currentForward(Vector3::Forward)
-	, currentUp(Vector3::Up)
-	, currentRight(Vector3::Right)
-	, currentWorldMatrix(Matrix44::Identity)
-	, nextPosition(Vector3::Zero)
-	, nextScale(Vector3::One)
-	, nextForward(Vector3::Forward)
-	, nextUp(Vector3::Up)
-	, nextRight(Vector3::Right)
-	, parent(nullptr)
-	, offset(Matrix44::Identity)
-{
-	children.clear();
-}
+Transform::Transform(GameObject& owner) : Component(owner)
+	, position_(Vector3::kZero)
+	, scale_(Vector3::kOne)
+	, rotation_(Quaternion::kIdentity)
+	, world_(Matrix44::kIdentity)
+	, parent_(nullptr)
+	, offset_(Matrix44::kIdentity)
+{}
 
 //--------------------------------------------------------------------------------
-//	関数名：UpdateMatrix
-//  関数説明：マトリクス算出(親がないの場合呼び出される)
-//	引数：	なし
-//	戻り値：なし
+//  マトリクス算出(親がないの場合呼び出される)
 //--------------------------------------------------------------------------------
 void Transform::UpdateMatrix(void)
 {
-	if (parent) return;
-	calculateWorldMatrix();
-	for (auto child : children) 
+	if (parent_) return;
+	CalculateWorldMatrix();
+	for (auto& pair : children_) 
 	{
-		child->UpdateMatrix(currentWorldMatrix);
+		pair.second->UpdateMatrix(world_);
 	}
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：UpdateMatrix
 //  関数説明：マトリクス算出(親があるの場合呼び出される)
-//	引数：	parent：親のマトリクス
-//	戻り値：なし
 //--------------------------------------------------------------------------------
 void Transform::UpdateMatrix(const Matrix44& parent)
 {
-	calculateWorldMatrix(parent);
-	for (auto child : children)
+	CalculateWorldMatrix(parent);
+	for (auto& pair : children_)
 	{
-		child->UpdateMatrix(currentWorldMatrix);
+		pair.second->UpdateMatrix(world_);
 	}
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：SwapParamater
-//  関数説明：パラメーター交換処理
-//	引数：	なし
-//	戻り値：なし
+// 親登録処理
 //--------------------------------------------------------------------------------
-void Transform::SwapParamater(void)
+void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Quaternion& offset_rotation)
 {
-	currentPosition = nextPosition;
-	currentScale = nextScale;
-	currentForward = nextForward;
-	currentRight = nextRight;
-	currentUp = nextUp;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RegisterParent
-//  関数説明：親の追加
-//	引数：	value：親のポインタ
-//			offsetPosition：相対位置
-//			offsetRotation：相対回転
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::RegisterParent(Transform* value, const Vector3& offsetPosition, const Vector3& offsetRotation)
-{
-	if (parent)
+	if (parent_)
 	{//親があるの場合前の親から削除
-		parent->DeregisterChild(this);
+		parent_->DeregisterChild(this);
 	}
-	parent = value;
-	parent->RegisterChild(this);
-	offset = Matrix44::Transform(offsetRotation, offsetPosition);
+	parent_ = value;
+	parent_->RegisterChild(this);
+	offset_ = Matrix44::Transform(offset_rotation, offset_translation);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：GetNextWorldMatrix
-//  関数説明：次のフレームの世界行列の取得
-//	引数：	なし
-//	戻り値：Matrix44
+//  子供登録処理
 //--------------------------------------------------------------------------------
-Matrix44 Transform::GetNextWorldMatrix(void) const
+void Transform::RegisterChild(Transform* child)
 {
-	auto& nextWorldMatrix = Matrix44::Transform(nextRight, nextUp, nextForward, nextPosition, nextScale);
-	if (parent)
+	if (!child) return;
+	children_.emplace(child->GetGameObject().GetName(), child);
+}
+
+//--------------------------------------------------------------------------------
+//  子供削除処理
+//--------------------------------------------------------------------------------
+void Transform::DeregisterChild(Transform* child)
+{
+	auto iterator = children_.find(child->GetGameObject().GetName());
+	if (children_.end() == iterator) return;
+	children_.erase(iterator);
+}
+
+//--------------------------------------------------------------------------------
+//  最新の世界行列の取得
+//--------------------------------------------------------------------------------
+Matrix44 Transform::GetCurrentWorldMatrix(void) const
+{
+	auto& world = Matrix44::Transform(rotation_, position_, scale_);
+	if (parent_)
 	{
-		nextWorldMatrix *= offset;
-		nextWorldMatrix *= parent->GetNextWorldMatrix();
+		world *= offset_;
+		world *= parent_->GetCurrentWorldMatrix();
 	}
-	return nextWorldMatrix;
+	return world;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：SetNextRotation
-//  関数説明：次の回転の設定
-//	引数：	value：回転情報
-//	戻り値：なし
+//  親に対する相対行列の設定
 //--------------------------------------------------------------------------------
-void Transform::SetNextRotation(const Quaternion& value)
+void Transform::SetOffset(const Vector3& translation, const Vector3& rotation)
 {
-	auto& rotation = value.ToMatrix();
-	nextRight.X = rotation.Elements[0][0];
-	nextRight.Y = rotation.Elements[0][1];
-	nextRight.Z = rotation.Elements[0][2];
-	nextUp.X = rotation.Elements[1][0];
-	nextUp.Y = rotation.Elements[1][1];
-	nextUp.Z = rotation.Elements[1][2];
-	nextForward.X = rotation.Elements[2][0];
-	nextForward.Y = rotation.Elements[2][1];
-	nextForward.Z = rotation.Elements[2][2];
+	offset_ = Matrix44::Transform(rotation, translation);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：SetRotNext
-//  関数説明：次の回転の設定
-//	引数：	value：回転情報
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::SetNextRotation(const Vector3& euler)
-{
-	SetNextRotation(euler.ToQuaternion());
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：SetNextMatrix
-//  関数説明：次の行列の設定
-//	引数：	value：行列情報
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::SetNextMatrix(const Matrix44& value)
-{
-	nextRight = Vector3(value.Element11, value.Element12, value.Element13);
-	nextUp = Vector3(value.Element21, value.Element22, value.Element23);
-	nextForward = Vector3(value.Element31, value.Element32, value.Element33);
-	nextPosition = Vector3(value.Element41, value.Element42, value.Element43);
-	nextScale = (nextRight.Magnitude(), nextUp.Magnitude(), nextForward.Magnitude());
-	if (nextScale.X > 0.0f) nextRight /= nextScale.X;
-	if (nextScale.Y > 0.0f) nextUp /= nextScale.Y;
-	if (nextScale.Z > 0.0f) nextForward /= nextScale.Z;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：SetOffset
-//  関数説明：親に対する相対行列の設定
-//	引数：	position：位置情報
-//			rotation：回転情報
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::SetOffset(const Vector3& position, const Vector3& rotation)
-{
-	if (!parent) return;
-	offset = Matrix44::Transform(rotation, position);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RotateByUp
-//  関数説明：上方向により回転
-//	引数：	up：上方向
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::RotateByUp(const Vector3& up)
-{
-	nextUp = up.Normalized();
-	nextRight = (nextUp * nextForward).Normalized();
-	nextForward = (nextRight * nextUp).Normalized();
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RotateByForward
-//  関数説明：前方向により回転
-//	引数：	forward：前方向
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::RotateByForward(const Vector3& forward)
-{
-	nextForward = forward.Normalized();
-	nextUp = (nextForward * nextRight).Normalized();
-	nextRight = (nextUp * nextForward).Normalized();
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RotateByRight
-//  関数説明：右方向により回転
-//	引数：	right：右方向
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::RotateByRight(const Vector3& right)
-{
-	nextRight = right.Normalized();
-	nextForward = (nextRight * nextUp).Normalized();
-	nextUp = (nextForward * nextRight).Normalized();
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RotateByEuler
-//  関数説明：オーラー角より回転
-//	引数：	euler：オーラー角
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void Transform::RotateByEuler(const Vector3& euler)
-{
-	auto& rotation = Matrix44::RotationYawPitchRoll(euler);
-	nextUp = Vector3::TransformNormal(nextUp, rotation);
-	nextForward = Vector3::TransformNormal(nextForward, rotation);
-	nextRight = Vector3::TransformNormal(nextRight, rotation);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：RotByPitch
-//  関数説明：自分のX軸(nextRight)より回転
-//	引数：	radian：ラジアン角
-//	戻り値：なし
+//  自分のX軸より回転
 //--------------------------------------------------------------------------------
 void Transform::RotateByPitch(const float& radian)
 {
-	auto& rotation = Matrix44::RotationAxis(nextRight, radian);
-	nextUp = Vector3::TransformNormal(nextUp, rotation);
-	nextForward = Vector3::TransformNormal(nextForward, rotation);
+	auto& right = GetRight();
+	auto& rotation = Quaternion::RotateAxis(right, radian);
+	rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：RotateByYaw
-//  関数説明：自分のY軸(nextUp)より回転
-//	引数：	radian：ラジアン角
-//	戻り値：なし
+//  自分のY軸より回転
 //--------------------------------------------------------------------------------
 void Transform::RotateByYaw(const float& radian)
 {
-	auto& rotation = Matrix44::RotationAxis(nextUp, radian);
-	nextForward = Vector3::TransformNormal(nextForward, rotation);
-	nextRight = Vector3::TransformNormal(nextRight, rotation);
+	auto& up = GetUp();
+	auto& rotation = Quaternion::RotateAxis(up, radian);
+	rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：RotateByRoll
-//  関数説明：自分のZ軸(nextForward)より回転
-//	引数：	radian：ラジアン角
-//	戻り値：なし
+//  自分のZ軸より回転
 //--------------------------------------------------------------------------------
 void Transform::RotateByRoll(const float& radian)
 {
-	auto& rotation = Matrix44::RotationAxis(nextForward, radian);
-	nextUp = Vector3::TransformNormal(nextUp, rotation);
-	nextRight = Vector3::TransformNormal(nextRight, rotation);
+	auto& forward = GetForward();
+	auto& rotation = Quaternion::RotateAxis(forward, radian);
+	rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：TransformDirectionToLocal
-//  関数説明：世界軸の方向ベクトルを自分の軸に変換する
-//	引数：	direction：方向ベクトル
-//	戻り値：なし
+//	世界軸の方向ベクトルを自分の軸に変換する
 //--------------------------------------------------------------------------------
 Vector3 Transform::TransformDirectionToLocal(const Vector3& direction)
 {
-	auto& inverse = currentWorldMatrix.Transpose();
-	return Vector3::TransformNormal(direction, inverse);
+	auto& transpose = world_.Transpose();
+	return Vector3::TransformNormal(direction, transpose);
+}
+
+//--------------------------------------------------------------------------------
+//  子供を探す
+//--------------------------------------------------------------------------------
+Transform* Transform::FindChildBy(const String& name)
+{
+	if (owner_.GetName()._Equal(name)) return this;
+	auto iterator = children_.find(name);
+	if (children_.end() == iterator)
+	{
+		for (auto& pair : children_)
+		{
+			auto result = pair.second->FindChildBy(name);
+			if (result) return result;
+		}
+		return nullptr;
+	}
+	return iterator->second;
 }
 
 //--------------------------------------------------------------------------------
@@ -289,25 +171,19 @@ Vector3 Transform::TransformDirectionToLocal(const Vector3& direction)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：calculateWorldMatrix
-//  関数説明：行列の算出(親なし)
-//	引数：	なし
-//	戻り値：なし
+//	行列の算出(親なし)
 //--------------------------------------------------------------------------------
-void Transform::calculateWorldMatrix(void)
+void Transform::CalculateWorldMatrix(void)
 {
-	currentWorldMatrix = Matrix44::Transform(currentRight, currentUp, currentForward, currentPosition, currentScale);
+	world_ = Matrix44::Transform(rotation_, position_, scale_);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：calculateWorldMatrix
-//  関数説明：行列の算出(親あり)
-//	引数：	mtxParent
-//	戻り値：なし
+//	行列の算出(親あり)
 //--------------------------------------------------------------------------------
-void Transform::calculateWorldMatrix(const Matrix44& parent)
+void Transform::CalculateWorldMatrix(const Matrix44& parent)
 {
-	calculateWorldMatrix();
-	currentWorldMatrix *= offset;
-	currentWorldMatrix *= parent;
+	CalculateWorldMatrix();
+	world_ *= offset_;
+	world_ *= parent;
 }

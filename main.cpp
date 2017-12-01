@@ -5,7 +5,7 @@
 //	Date   : 2017-04-19
 //--------------------------------------------------------------------------------
 #include "main.h"
-#include "manager.h"
+#include "main_system.h"
 #include "input.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
@@ -13,6 +13,12 @@
 #include "ImGui\imgui_impl_dx9.h"
 #endif
 #endif
+
+//--------------------------------------------------------------------------------
+//  定数定義
+//--------------------------------------------------------------------------------
+#define CLASS_NAME			L"KF_Framework"
+#define WINDOW_NAME			L"フレームワーク"
 
 //--------------------------------------------------------------------------------
 //	extern関数
@@ -24,38 +30,33 @@ extern LRESULT ImGui_ImplDX9_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, 
 #endif
 
 //--------------------------------------------------------------------------------
-//	メイン関数
+//  関数定義
 //--------------------------------------------------------------------------------
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
-{
-	return Main::WinMain(hInstance, hPrevInstance, IpCmdLine, cmdShow);
-}
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+void CloseApp(HWND hwnd);
 
-//--------------------------------------------------------------------------------
-//	クラス
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //	関数名：WinMain
 //  関数説明：メイン関数
-//	引数：	hInstance
-//			hPrevInstance
-//			IpCmdLine
-//			nCmdShow
+//	引数：	instance
+//			previous_instance
+//			cmd_line
+//			cmd_show
 //	戻り値：int
 //--------------------------------------------------------------------------------
-int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int cmdShow)
+int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_line, int cmd_show)
 {
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(IpCmdLine);
+	UNREFERENCED_PARAMETER(previous_instance);
+	UNREFERENCED_PARAMETER(cmd_line);
 
 	WNDCLASSEX wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);					//WNDCLASSEXのメモリサイズを指定
 	wcex.style = CS_CLASSDC;							//表示するウインドウのスタイルを設定
-	wcex.lpfnWndProc = wndProc;							//関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
+	wcex.lpfnWndProc = WndProc;							//関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
 	wcex.cbClsExtra = 0;								//通常は使用しないので０を指定
 	wcex.cbWndExtra = 0;								//通常は使用しないので０を指定
-	wcex.hInstance = hInstance;							//WinMainのパラメータのインスタンスハンドル
+	wcex.hInstance = instance;							//WinMainのパラメータのインスタンスハンドル
 	wcex.hIcon = NULL;									//自作icon出す、使用するアイコンを指定（Windowsがもっている）
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);			//マウスカーソルを指定
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);	//ウインドウのクライアント領域の背景色を設定
@@ -64,60 +65,60 @@ int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine,
 	wcex.hIconSm = NULL;								//拡張された部分（ミニicon）、小さいアイコンが設定された場合の情報を記述
 	RegisterClassEx(&wcex);								//ウインドウクラスの登録
 
-	HWND hWnd;
-	MSG msg;
+	HWND hwnd;
+	MSG message;
 	DWORD style = WS_OVERLAPPEDWINDOW ^ (WS_MAXIMIZEBOX | WS_THICKFRAME);
-	RECT cr = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
-	RECT dr;
+	RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
+	RECT real_rect;
 
 	//window size
-	AdjustWindowRect(&cr, style, false);
-	int ww = cr.right - cr.left;
-	int wh = cr.bottom - cr.top;
+	AdjustWindowRect(&rect, style, false);
+	int width = rect.right - rect.left;
+	int height = rect.bottom - rect.top;
 
 	//window pos
-	GetWindowRect(GetDesktopWindow(), &dr);
-	int dw = dr.right - dr.left;
-	int dh = dr.bottom - dr.top;
+	GetWindowRect(GetDesktopWindow(), &real_rect);
+	int real_width = real_rect.right - real_rect.left;
+	int real_height = real_rect.bottom - real_rect.top;
 
 	//画面溢出防止
-	int wx = ww > dw ? 0 : (dw - ww) / 2;
-	int wy = wh > dh ? 0 : (dh - wh) / 2;
+	int window_x = width > real_width ? 0 : (real_width - width) / 2;
+	int window_y = height > real_height ? 0 : (real_height - height) / 2;
 
 	//ウインドウを作成
-	hWnd = CreateWindowEx(
+	hwnd = CreateWindowEx(
 		0,				//拡張ウインドウスタイル
 		CLASS_NAME,		//クラスの名前
 		WINDOW_NAME,	//ウインドウの名前
 		style,			//**important**window type,ウインドウのスタイル
-		wx,				//ウインドウ左上座標X
-		wy,				//ウインドウ左上座標Y
-		ww,				//幅（ウインドウ全体）
-		wh,				//高さ（ウインドウ全体）
+		window_x,		//ウインドウ左上座標X
+		window_y,		//ウインドウ左上座標Y
+		width,			//幅（ウインドウ全体）
+		height,			//高さ（ウインドウ全体）
 		NULL,			//親ウィンドウのハンドル
 		NULL,			//メニューハンドルまたは子ウインドウID
-		hInstance,		//インスタンスハンドル
+		instance,		//インスタンスハンドル
 		NULL);			//ウインドウ作成データ
 
 	//フルスクリーン
 #ifdef _DEBUG
-	bool isWindowMode = true;
+	bool is_window_mode = true;
 #else
-	bool isWindowMode = true;
+	bool is_window_mode = true;
 	UINT id = MessageBox(hWnd, "フルスクリーンモードで起動しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
-	if (id == IDYES) { isWindowMode = false; }
+	if (id == IDYES) { is_window_mode = false; }
 #endif // _DEBUG
 
-	//Manager生成
-	if (!Manager::Create(hInstance, hWnd, isWindowMode))
+	//MainSystem生成
+	if (!MainSystem::Create(instance, hwnd, is_window_mode))
 	{
 		UnregisterClass(CLASS_NAME, wcex.hInstance);
 		return -1;
 	}
 
 	//ウインドウの表示
-	ShowWindow(hWnd, cmdShow);
-	UpdateWindow(hWnd);
+	ShowWindow(hwnd, cmd_show);
+	UpdateWindow(hwnd);
 
 	//時間カウンタ
 	LARGE_INTEGER frequency;
@@ -134,17 +135,17 @@ int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine,
 	//メッセージループ
 	for (;;)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0)
+		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE) != 0)
 		{
 			//window処理
-			if (msg.message == WM_QUIT)
+			if (message.message == WM_QUIT)
 			{
 				break;
 			}
 			else
 			{
-				TranslateMessage(&msg);		//仮想キーメッセージを文字メッセージへ変換
-				DispatchMessage(&msg);		//ウインドウプロシージャへメッセージを送出
+				TranslateMessage(&message);		//仮想キーメッセージを文字メッセージへ変換
+				DispatchMessage(&message);		//ウインドウプロシージャへメッセージを送出
 			}
 		}
 		else
@@ -156,84 +157,86 @@ int Main::WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine,
 			if (fTime >= TIMER_INTERVAL)
 			{
 				execLastTime = currentTime;
-				Manager::Instance()->Update();
-				Manager::Instance()->LateUpdate();
-				Manager::Instance()->Render();
+				MainSystem::Instance()->Update();
+				MainSystem::Instance()->LateUpdate();
+				MainSystem::Instance()->Render();
 			}
 		}
 	}
 
 	// 終了処理
-	Manager::Release();
+	MainSystem::Release();
 
 	//ウインドウクラスの登録お解除
 	//第一引数：メクラス名
 	//第二引数：アプリケーションインスタン
 	UnregisterClass(CLASS_NAME, wcex.hInstance);
 
-	return (int)msg.wParam;
+	return (int)message.wParam;
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：wndProc
+//	関数名：WndProc
 //  関数説明：ウインドウプロシージャ関数
-//	引数：	hWnd：ウインドウのハンドル
-//			uMsg：メッセージの識別子
-//			wParam：メッセージの最初のパラメータ
-//			lParam：メッセージの二番目のパラメータ
+//	引数：	hwnd：ウインドウのハンドル
+//			message：メッセージの識別子
+//			wparam：メッセージの最初のパラメータ
+//			lparam：メッセージの二番目のパラメータ
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-LRESULT CALLBACK Main::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 #if defined(_DEBUG) || defined(EDITOR)
-	ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	ImGui_ImplDX9_WndProcHandler(hwnd, message, wparam, lparam);
 #endif // _DEBUG
 
-	switch (uMsg) {
+	switch (message) {
 	case WM_KEYDOWN:		//esp key
-		if (LOWORD(wParam) == VK_ESCAPE) { closeApp(hWnd); }
+		if (LOWORD(wparam) == VK_ESCAPE) { CloseApp(hwnd); }
 		break;
 	case WM_CLOSE:
-		closeApp(hWnd);
+		CloseApp(hwnd);
 		return 0;
 	case WM_DESTROY:		//保存するかチェックの仕組みを作れる
 		PostQuitMessage(0);	//WM_QUITというメッセージを呼ぶ
 		break;
 	case WM_ACTIVATEAPP:
-		if (Input::Instance())
+	{
+		auto input = MainSystem::Instance()->GetInput();
+		if (input)
 		{
-			BOOL isActive = (BOOL)GetActiveWindow();
-			if (isActive)
+			if (GetActiveWindow())
 			{
-				Input::Instance()->Acquire();
+				input->Acquire();
 			}
 			else
 			{
-				Input::Instance()->Unacquire();
+				input->Unacquire();
 			}
 		}
 		break;
+	}
 	default:
 		break;
 	}
 
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	return DefWindowProc(hwnd, message, wparam, lparam);
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：closeApp
+//	関数名：CloseApp
 //  関数説明：アプリを閉じる確認関数
-//	引数：	hWnd：ウインドウのハンドル
+//	引数：	hwnd：ウインドウのハンドル
 //	戻り値：LRESULT
 //--------------------------------------------------------------------------------
-void Main::closeApp(HWND hWnd)
+void CloseApp(HWND hwnd)
 {
 	//終了確認
-	UINT id = MessageBox(hWnd, "終了しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+	UINT id = MessageBox(hwnd, L"終了しますか？", L"確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
 
 	//押し判定
 	if (id == IDYES) {
 		//WM_DESTROYメッセージを送信
-		DestroyWindow(hWnd);
+		DestroyWindow(hwnd);
 	}
 }

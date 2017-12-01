@@ -2,38 +2,28 @@
 //
 //　mode.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-04-28
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
 //--------------------------------------------------------------------------------
 #include "mode.h"
-#include "gameObjectManager.h"
-#include "physicsSystem.h"
-#include "UISystem.h"
-#include "rendererManager.h"
-#include "lightManager.h"
-#include "soundManager.h"
-#include "cameraManager.h"
+#include "main_system.h"
+#include "game_object_manager.h"
+#include "physics_system.h"
+#include "ui_system.h"
+#include "renderer_manager.h"
+#include "light_manager.h"
+#include "sound_manager.h"
+#include "camera_manager.h"
 
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//
-//  Private
-//
-//--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void Mode::uninit(void)
+void Mode::Uninit(void)
 {
-	PhysicsSystem::Instance()->Clear();
-	GameObjectManager::Instance()->ReleaseAll();
-	UISystem::Instance()->ReleaseAll();
-	RendererManager::Instance()->Clear();
-	LightManager::Instance()->ReleaseAll();
-	SoundManager::Instance()->StopAll();
-	CameraManager::Instance()->ReleaseAll();
+	auto main_system = MainSystem::Instance();
+	main_system->GetPhysicsSystem()->Clear();
+	main_system->GetGameObjectManager()->Clear();
+	main_system->GetUISystem()->Clear();
+	main_system->GetRendererManager()->Clear();
+	main_system->GetLightManager()->Clear();
+	main_system->GetSoundManager()->StopAll();
+	main_system->GetCameraManager()->Clear();
 }
