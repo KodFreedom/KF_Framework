@@ -144,7 +144,7 @@ void MainSystem::Change(Mode* next_mode)
 //--------------------------------------------------------------------------------
 bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
-	random::Init();
+	Random::Init();
 
 	// render apiÇ…ÇÊÇ¡Çƒrender system, texture manager, mesh managerÇÃê∂ê¨
 #if defined(USING_DIRECTX)

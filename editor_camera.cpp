@@ -48,7 +48,7 @@ void EditorCamera::Update(void)
 
 	if (fabsf(zoom) > kStartRotationMin)
 	{
-		SetDistance(math::Clamp(distance_ + zoomSpeed * zoom, kDistanceMin, kDistanceMax));
+		SetDistance(Math::Clamp(distance_ + zoomSpeed * zoom, kDistanceMin, kDistanceMax));
 	}
 }
 #endif // EDITOR

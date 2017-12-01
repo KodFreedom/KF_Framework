@@ -54,8 +54,8 @@ void ThirdPersionCamera::Update(void)
 		pitch_amount = kRotationSpeed * rotation_y;
 	}
 
-	pitch_speed_ = math::Lerp(pitch_speed_, pitch_amount, kRotationLerpTime);
-	yaw_speed_ = math::Lerp(yaw_speed_, yaw_amount, kRotationLerpTime);
+	pitch_speed_ = Math::Lerp(pitch_speed_, pitch_amount, kRotationLerpTime);
+	yaw_speed_ = Math::Lerp(yaw_speed_, yaw_amount, kRotationLerpTime);
 	Pitch(pitch_speed_);
 	Yaw(yaw_speed_);
 }
@@ -67,7 +67,7 @@ void ThirdPersionCamera::LateUpdate(void)
 {
 	if (follow_target_)
 	{
-		rig_.position = math::Lerp(rig_.position, follow_target_->GetTransform()->GetPosition(), kMoveLerpTime);
+		rig_.position = Math::Lerp(rig_.position, follow_target_->GetTransform()->GetPosition(), kMoveLerpTime);
 	}
 	Camera::LateUpdate();
 }
@@ -78,5 +78,5 @@ void ThirdPersionCamera::LateUpdate(void)
 void ThirdPersionCamera::Pitch(const float& radian)
 {
 	Camera::Pitch(radian);
-	pivot_.rotation.x_ = math::Clamp(pivot_.rotation.x_, kPitchMin, kPitchMax);
+	pivot_.rotation.x_ = Math::Clamp(pivot_.rotation.x_, kPitchMin, kPitchMax);
 }

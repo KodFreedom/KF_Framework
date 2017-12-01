@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//　kf_utility.cpp
-//  utility methods
+//　kf_Utility.cpp
+//  Utility methods
 //	便利関数
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------
 //  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int utility::GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer)
+int Utility::GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer)
 {
 	char c;
 	buffer.clear();
@@ -31,7 +31,7 @@ int utility::GetStringUntilToken(FILE* file_pointer, const string& token, string
 //--------------------------------------------------------------------------------
 //  符号まで文字列を取る
 //--------------------------------------------------------------------------------
-int utility::GetStringUntilToken(String& file, const String& token, String& buffer)
+int Utility::GetStringUntilToken(String& file, const String& token, String& buffer)
 {
 	buffer.clear();
 	for (auto itr = file.begin(); itr != file.end();)
@@ -53,7 +53,7 @@ int utility::GetStringUntilToken(String& file, const String& token, String& buff
 //--------------------------------------------------------------------------------
 //  比較する文字列まで文字列を取る
 //--------------------------------------------------------------------------------
-int utility::GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer)
+int Utility::GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer)
 {
 	static string nullBuffer;
 	if (nullBuffer.empty()) nullBuffer.resize(256);
@@ -72,7 +72,7 @@ int utility::GetStringUntilString(FILE* file_pointer, const string& compare, str
 //--------------------------------------------------------------------------------
 //  文字列をカウントする
 //--------------------------------------------------------------------------------
-int utility::GetStringCount(FILE* file_pointer, const string& token, const string& compare)
+int Utility::GetStringCount(FILE* file_pointer, const string& token, const string& compare)
 {
 	int count = 0;
 	string buffer;
@@ -93,7 +93,7 @@ int utility::GetStringCount(FILE* file_pointer, const string& token, const strin
 //--------------------------------------------------------------------------------
 //  文字列をカウントする
 //--------------------------------------------------------------------------------
-int utility::GetStringCount(String& file, const String& token, const String& compare)
+int Utility::GetStringCount(String& file, const String& token, const String& compare)
 {
 	int count = 0;
 	String buffer;
@@ -110,7 +110,7 @@ int utility::GetStringCount(String& file, const String& token, const String& com
 //--------------------------------------------------------------------------------
 //  パスから名前とタイプを解析する
 //--------------------------------------------------------------------------------
-utility::FileInfo utility::AnalyzeFilePath(const String& path)
+FileInfo Utility::AnalyzeFilePath(const String& path)
 {
 	FileInfo info;
 	auto copy = path;
@@ -131,7 +131,7 @@ utility::FileInfo utility::AnalyzeFilePath(const String& path)
 //--------------------------------------------------------------------------------
 //  フォルダからファイル名を取得する
 //--------------------------------------------------------------------------------
-vector<String> utility::GetFilesFromFolder(const String& path, const String& extension)
+vector<String> Utility::GetFilesFromFolder(const String& path, const String& extension)
 {
 	HANDLE handle;
 	WIN32_FIND_DATA data;
@@ -163,7 +163,7 @@ vector<String> utility::GetFilesFromFolder(const String& path, const String& ext
 //--------------------------------------------------------------------------------
 //  プロジェクトのパスを取得する
 //--------------------------------------------------------------------------------
-String utility::GetProjectPath(void)
+String Utility::GetProjectPath(void)
 {
 	char path[MAX_PATH + 1];
 	if (0 != GetModuleFileNameA(NULL, path, MAX_PATH))
@@ -189,7 +189,7 @@ String utility::GetProjectPath(void)
 //			parent：親のオブジェクト
 //	戻り値：FileInfo
 //--------------------------------------------------------------------------------
-//GameObject* utility::FindChildBy(const String& name, GameObject* const parent)
+//GameObject* Utility::FindChildBy(const String& name, GameObject* const parent)
 //{
 //	assert(!name.empty());
 //	auto& children = parent->GetTransform()->GetChildren();

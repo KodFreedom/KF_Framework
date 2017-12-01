@@ -95,9 +95,9 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 
 	for (auto& bone : avatar)
 	{
-		const auto& blend_translation = math::Lerp(current_iterator->translation_, next_iterator->translation_, blend_rate);
-		const auto& blend_rotation = math::Slerp(current_iterator->rotation_, next_iterator->rotation_, blend_rate);
-		const auto& blend_scale = math::Lerp(current_iterator->scale_, next_iterator->scale_, blend_rate);
+		const auto& blend_translation = Math::Lerp(current_iterator->translation_, next_iterator->translation_, blend_rate);
+		const auto& blend_rotation = Math::Slerp(current_iterator->rotation_, next_iterator->rotation_, blend_rate);
+		const auto& blend_scale = Math::Lerp(current_iterator->scale_, next_iterator->scale_, blend_rate);
 		bone.transform->SetPosition(blend_translation);
 		bone.transform->SetRotation(blend_rotation);
 		bone.transform->SetScale(blend_scale);

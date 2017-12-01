@@ -34,6 +34,11 @@ void RendererManager::Render(void)
 	auto shader_manager = MainSystem::Instance()->GetShaderManager();
 	for (int count_priority = 0; count_priority < static_cast<int>(kPriorityMax); ++count_priority)
 	{
+		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))
+		{
+			MainSystem::Instance()->GetRenderSystem()->SetRenderState(AlphaMode::kAlphaTest);
+		}
+
 		for (int count_shader = 0; count_shader < static_cast<int>(kShaderMax); ++count_shader)
 		{
 			auto& renderers = renderers_arrays_[count_priority][count_shader];
@@ -46,6 +51,11 @@ void RendererManager::Render(void)
 				iterator = renderers.erase(iterator);
 			}
 			shader_manager->Reset(static_cast<ShaderType>(count_shader));
+		}
+
+		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))
+		{
+			MainSystem::Instance()->GetRenderSystem()->SetRenderState(AlphaMode::kAlphaNone);
 		}
 	}
 }

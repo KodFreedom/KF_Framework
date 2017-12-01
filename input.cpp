@@ -98,8 +98,8 @@ void Input::UpdateInputInfo(void)
 	float joystick_left_axis_y = -static_cast<float>(joystick_->GetLStickAxisY()) / JoystickDirectX::kStickAxisMax;
 	joystick_left_axis_x = fabsf(joystick_left_axis_x) > JoystickDirectX::kDead ? joystick_left_axis_x : 0.0f;
 	joystick_left_axis_y = fabsf(joystick_left_axis_y) > JoystickDirectX::kDead ? joystick_left_axis_y : 0.0f;
-	move_horizontal_ = math::AbsMax(keyboard_axis_x, joystick_left_axis_x);
-	move_vertical_ = math::AbsMax(keyboard_axis_y, joystick_left_axis_y);
+	move_horizontal_ = Math::AbsMax(keyboard_axis_x, joystick_left_axis_x);
+	move_vertical_ = Math::AbsMax(keyboard_axis_y, joystick_left_axis_y);
 
 	// Rotation
 	float rotation_axis_x = 0.0f;
@@ -116,13 +116,13 @@ void Input::UpdateInputInfo(void)
 	}
 	float joystick_right_axis_x = static_cast<float>(joystick_->GetRStickAxisX()) / JoystickDirectX::kStickAxisMax;
 	float joystick_right_axis_y = static_cast<float>(joystick_->GetRStickAxisY()) / JoystickDirectX::kStickAxisMax;
-	rotation_horizontal_ = math::AbsMax(rotation_axis_x, joystick_right_axis_x);
-	rotation_vertical_ = math::AbsMax(rotation_axis_y, joystick_right_axis_y);
+	rotation_horizontal_ = Math::AbsMax(rotation_axis_x, joystick_right_axis_x);
+	rotation_vertical_ = Math::AbsMax(rotation_axis_y, joystick_right_axis_y);
 
 	// zoom_
 	float mouse_axis_z = -static_cast<float>(mouse_->GetAxisZ()) / MouseDirectX::kAxisMax;
 	float joystick_axis_z = static_cast<float>(joystick_->GetLTandRT()) / JoystickDirectX::kStickAxisMax;
-	zoom_ = math::AbsMax(mouse_axis_z, joystick_axis_z);
+	zoom_ = Math::AbsMax(mouse_axis_z, joystick_axis_z);
 
 	// Key
 	// Submit

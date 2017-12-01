@@ -109,7 +109,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	auto result = MY_NEW GameObject;
 
 	//Name
-	auto& file_info = utility::AnalyzeFilePath(name);
+	auto& file_info = Utility::AnalyzeFilePath(name);
 	result->SetName(file_info.name);
 
 	//コンポネント
@@ -164,7 +164,7 @@ GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
 {
-	auto& file_info = utility::AnalyzeFilePath(name);
+	auto& file_info = Utility::AnalyzeFilePath(name);
 	if (!file_info.type._Equal(L"model")) return nullptr;
 	
 	//Modelファイルの開く
@@ -393,7 +393,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		String real_name = String(mesh_name.begin(), mesh_name.end());
 
 		//Check Type
-		auto& file_info = utility::AnalyzeFilePath(real_name);
+		auto& file_info = Utility::AnalyzeFilePath(real_name);
 		if (file_info.type._Equal(L"mesh") || file_info.type._Equal(L"x"))
 		{//骨なし
 			auto renderer = MY_NEW MeshRenderer(*result);

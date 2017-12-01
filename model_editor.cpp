@@ -77,8 +77,8 @@ bool ModelEditor::Init(void)
 	//model_names_[MedBridge] = "Medieval Bridge";
 
 	// フォルダから全てのファイルを読み込む
-	String& folder_path = utility::GetProjectPath() + L"data\model";
-	model_names_ = utility::GetFilesFromFolder(folder_path, L"model");
+	String& folder_path = Utility::GetProjectPath() + L"data\\model";
+	model_names_ = Utility::GetFilesFromFolder(folder_path, L"model");
 
 	//Demo Objectの作成
 	size_t model_number = model_names_.size();

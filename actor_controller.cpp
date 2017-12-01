@@ -111,7 +111,7 @@ void ActorController::Move(void)
 		direction.Normalize();
 		move_amount *= parameter_.GetMovementMultiplier();
 		float rotation_y = atan2f(direction.x_, direction.z_);
-		float turn_speed = math::Lerp(parameter_.GetMaxTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
+		float turn_speed = Math::Lerp(parameter_.GetMaxTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
 		transform->RotateByYaw(rotation_y * turn_speed * DELTA_TIME);
 
 		//ˆÚ“®

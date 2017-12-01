@@ -74,6 +74,7 @@ public:
 	{
 		rig_.position += movement;
 	}
+
 	const auto& GetWorldRight(void) const { return world_right_; }
 	const auto& GetWorldUp(void) const { return world_up_; }
 	const auto& GetWorldForward(void) const { return world_forward_; }

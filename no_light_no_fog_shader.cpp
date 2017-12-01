@@ -22,7 +22,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 	LPD3DXBUFFER error_buffer = nullptr;
 	LPD3DXBUFFER code_buffer = nullptr;
 	HRESULT hr = D3DXCompileShaderFromFile(
-		L"perPixelLightingVertexShader.hlsl",
+		L"no_light_no_fog_vertex_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -40,7 +40,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 	}
 
 	hr = device->CreateVertexShader(
-		(LPDWORD)code_buffer->GetBufferPointer(),
+		static_cast<LPDWORD>(code_buffer->GetBufferPointer()),
 		&vertex_shader_); // シェーダー管理してくるところ
 
 	SAFE_RELEASE(code_buffer);
@@ -48,7 +48,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	// Pixel Shader
 	hr = D3DXCompileShaderFromFile(
-		L"perPixelLightingPixelShader.hlsl",
+		L"no_light_no_fog_pixel_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -66,7 +66,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 	}
 
 	hr = device->CreatePixelShader(
-		(LPDWORD)code_buffer->GetBufferPointer(),
+		static_cast<LPDWORD>(code_buffer->GetBufferPointer()),
 		&pixel_shader_ // シェーダー管理してくるところ
 	);
 

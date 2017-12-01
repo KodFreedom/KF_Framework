@@ -126,8 +126,8 @@ Vector3 FieldEditor::AdjustPositionInField(const Vector3& position, const bool& 
 	Vector3 result;
 
 	//îÕàÕì‡Ç…Ç∑ÇÈ
-	result.x_ = math::Clamp(position.x_, min_position_.x_, max_position_.x_);
-	result.z_ = math::Clamp(position.z_, min_position_.z_, max_position_.z_);
+	result.x_ = Math::Clamp(position.x_, min_position_.x_, max_position_.x_);
+	result.z_ = Math::Clamp(position.z_, min_position_.z_, max_position_.z_);
 
 	//çÇÇ≥ÇÃí≤êﬂ
 	if (is_adjust_height)

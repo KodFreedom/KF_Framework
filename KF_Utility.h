@@ -5,6 +5,7 @@
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
+#include "common_setting.h"
 
 #define SAFE_RELEASE(p)		if(p){ p->Release(); p = nullptr; }
 #define SAFE_UNINIT(p)		if(p){ p->Uninit(); MY_DELETE p; p = nullptr; }
@@ -12,14 +13,15 @@
 
 namespace kodfreedom
 {
-	namespace utility
+	struct FileInfo
 	{
-		struct FileInfo
-		{
-			String name;
-			String type;
-		};
+		String name;
+		String type;
+	};
 
+	class Utility
+	{
+	public:
 		//--------------------------------------------------------------------------------
 		//  符号まで文字列を取る
 		//  file_pointer：ファイルポインタ
@@ -27,7 +29,7 @@ namespace kodfreedom
 		//  buffer：文字列保存用ところ
 		//  return：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 		//--------------------------------------------------------------------------------
-		int GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer);
+		static int GetStringUntilToken(FILE* file_pointer, const string& token, string& buffer);
 
 		//--------------------------------------------------------------------------------
 		//  符号まで文字列を取る
@@ -36,7 +38,7 @@ namespace kodfreedom
 		//  buffer：文字列保存用ところ
 		//  return：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 		//--------------------------------------------------------------------------------
-		int GetStringUntilToken(String& file, const String& token, String& buffer);
+		static int GetStringUntilToken(String& file, const String& token, String& buffer);
 
 		//--------------------------------------------------------------------------------
 		//  比較する文字列まで文字列を取る
@@ -45,7 +47,7 @@ namespace kodfreedom
 		//  buffer：文字列保存用ところ
 		//  return：ファイルが終わったら-1を返す、そうじゃないなら文字数を返す
 		//--------------------------------------------------------------------------------
-		int GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer);
+		static int GetStringUntilString(FILE* file_pointer, const string& compare, string& buffer);
 
 		//--------------------------------------------------------------------------------
 		//  文字列をカウントする
@@ -54,7 +56,7 @@ namespace kodfreedom
 		//  compare：比較する文字列
 		//  return：カウント数
 		//--------------------------------------------------------------------------------
-		int GetStringCount(FILE* file_pointer, const string& token, const string& compare);
+		static int GetStringCount(FILE* file_pointer, const string& token, const string& compare);
 
 		//--------------------------------------------------------------------------------
 		//  文字列をカウントする
@@ -63,14 +65,14 @@ namespace kodfreedom
 		//  compare：比較する文字列
 		//  return：カウント数
 		//--------------------------------------------------------------------------------
-		int GetStringCount(String& file, const String& token, const String& compare);
+		static int GetStringCount(String& file, const String& token, const String& compare);
 
 		//--------------------------------------------------------------------------------
 		//  パスから名前とタイプを解析する
 		//  path：パス
 		//  return：FileInfo
 		//--------------------------------------------------------------------------------
-		FileInfo AnalyzeFilePath(const String& path);
+		static FileInfo AnalyzeFilePath(const String& path);
 		
 		//--------------------------------------------------------------------------------
 		//  フォルダからファイル名を取得する
@@ -78,13 +80,13 @@ namespace kodfreedom
 		//  extension : 拡張子
 		//  return : vector<String>
 		//--------------------------------------------------------------------------------
-		vector<String> GetFilesFromFolder(const String& path, const String& extension);
+		static vector<String> GetFilesFromFolder(const String& path, const String& extension);
 
 		//--------------------------------------------------------------------------------
 		//  プロジェクトのパスを取得する
 		//  return : String
 		//--------------------------------------------------------------------------------
-		String GetProjectPath(void);
+		static String GetProjectPath(void);
 
-	} // namespace Utility
+	};
 } // namespace KodFreedom
