@@ -74,14 +74,15 @@ public:
 	{
 		rig_.position += movement;
 	}
-	auto GetWorldRight(void) const { return world_right_; }
-	auto GetWorldUp(void) const { return world_up_; }
-	auto GetWorldForward(void) const { return world_forward_; }
-	auto GetWorldEyePosition(void) const { return world_eye_position_; }
-	auto GetWorldAtPosition(void) const { return world_at_position_; }
-	auto GetView(void) const { return view_; }
-	auto GetViewTranspose(void) const { return view_transpose_; }
-	auto GetFar(void) const { return far_; }
+	const auto& GetWorldRight(void) const { return world_right_; }
+	const auto& GetWorldUp(void) const { return world_up_; }
+	const auto& GetWorldForward(void) const { return world_forward_; }
+	const auto& GetWorldEyePosition(void) const { return world_eye_position_; }
+	const auto& GetWorldAtPosition(void) const { return world_at_position_; }
+	const auto& GetView(void) const { return view_; }
+	const auto& GetViewTranspose(void) const { return view_transpose_; }
+	const auto& GetProjection(void) const { return projection_; }
+	const auto& GetFar(void) const { return far_; }
 	virtual void SetDistance(const float& value)
 	{
 		distance_ = value;

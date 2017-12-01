@@ -10,6 +10,7 @@
 #include "mesh_renderer.h"
 #include "game_object.h"
 #include "transform.h"
+#include "shader_manager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -30,20 +31,21 @@ void RendererManager::Update(void)
 void RendererManager::Render(void)
 {
 	auto render_system = MainSystem::Instance()->GetRenderSystem();
+	auto shader_manager = MainSystem::Instance()->GetShaderManager();
 	for (int count_priority = 0; count_priority < static_cast<int>(kPriorityMax); ++count_priority)
 	{
 		for (int count_shader = 0; count_shader < static_cast<int>(kShaderMax); ++count_shader)
 		{
 			auto& renderers = renderers_arrays_[count_priority][count_shader];
 			if (renderers.empty()) continue;
-
-			//renderStates[count_shader]->Set();
+			shader_manager->Set(static_cast<ShaderType>(count_shader));
 			for (auto iterator = renderers.begin(); iterator != renderers.end();)
 			{
+				shader_manager->SetConstantTable(**iterator);
 				render_system->Render((*iterator)->GetMeshName());
 				iterator = renderers.erase(iterator);
 			}
-			//renderStates[count_shader]->Reset();
+			shader_manager->Reset(static_cast<ShaderType>(count_shader));
 		}
 	}
 }

@@ -24,10 +24,11 @@ public:
 		, pixel_shader_constant_table_(nullptr) {}
 	~ShaderDirectX9() {}
 
-	virtual void Init(void) = 0;
-	virtual void Uninit(void) = 0;
-	virtual void Set(const LPDIRECT3DDEVICE9 device) = 0;
-	virtual void SetConstantTable(const MeshRenderer& renderer) = 0;
+	virtual void Init(const LPDIRECT3DDEVICE9 device) = 0;
+	void Uninit(void);
+	virtual void Set(const LPDIRECT3DDEVICE9 device);
+	virtual void Reset(const LPDIRECT3DDEVICE9 device) = 0;
+	virtual void SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer) = 0;
 
 protected:
 	LPDIRECT3DVERTEXSHADER9	vertex_shader_;

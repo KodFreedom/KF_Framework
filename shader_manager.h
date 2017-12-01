@@ -45,6 +45,11 @@ public:
 	void Set(const ShaderType& type);
 
 	//--------------------------------------------------------------------------------
+	//  シェーダー使用完了の後片つけ
+	//--------------------------------------------------------------------------------
+	void Reset(const ShaderType& type);
+
+	//--------------------------------------------------------------------------------
 	//  シェーダーの定数テーブルの設定
 	//--------------------------------------------------------------------------------
 	void SetConstantTable(const MeshRenderer& renderer);
@@ -54,7 +59,10 @@ private:
 	//  constructors and destructors
 	//--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ShaderManager(const LPDIRECT3DDEVICE9 device) : device_(device) {}
+	ShaderManager(const LPDIRECT3DDEVICE9 device) : device_(device)
+	{
+		for (auto& shader : shaders_) shader = nullptr;
+	}
 	ShaderManager() : device_(nullptr) {}
 	ShaderManager(const ShaderManager& value) : device_(nullptr) {}
 #else

@@ -18,6 +18,7 @@
 #include "collision_system.h"
 #include "physics_system.h"
 #include "game_object_manager.h"
+#include "shader_manager.h"
 #include "mode_title.h"
 #include "mode_demo.h"
 
@@ -154,6 +155,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	const auto device = render_system_directX9->GetDevice();
 	texture_manager_ = TextureManager::Create(device);
 	mesh_manager_ = MeshManager::Create(device);
+	shader_manager_ = ShaderManager::Create(device);
 #endif
 #endif
 	material_manager_ = MaterialManager::Create();
@@ -198,6 +200,7 @@ void MainSystem::Uninit(void)
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);
 #endif
+	SAFE_RELEASE(shader_manager_);
 	SAFE_RELEASE(renderer_manager_);
 	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);

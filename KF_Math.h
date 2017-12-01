@@ -784,6 +784,27 @@ namespace kodfreedom
 		}
 
 		//--------------------------------------------------------------------------------
+		//  get the inverse matrix / inverse行列に変換して返す
+		//  return : Matrix44
+		//--------------------------------------------------------------------------------
+		Matrix44 Inverse(void) const
+		{
+			Matrix44 result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+			D3DXMATRIX inverse = *this;
+			D3DXMatrixInverse(&inverse, NULL, &inverse);
+			for (int count_y = 0; count_y < 4; ++count_y)
+			{
+				for (int count_x = 0; count_x < 4; ++count_x)
+				{
+					result.m_[count_y][count_x] = inverse(count_y, count_x);
+				}
+			}
+#endif
+			return result;
+		}
+
+		//--------------------------------------------------------------------------------
 		//  create scale matrix with scale value / 与えられた値でスケール行列の作成
 		//  scale：スケール値
 		//  return：Matrix44

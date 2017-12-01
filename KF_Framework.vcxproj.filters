@@ -187,6 +187,12 @@
     <Filter Include="ソース ファイル\Actor\State\Player">
       <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\Shader">
+      <UniqueIdentifier>{e2ae39f9-8234-4fe4-a0b5-1bb9312106e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL">
+      <UniqueIdentifier>{76f3dcde-c3fd-49e1-a9d7-6e129a3dc263}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -383,6 +389,18 @@
     </ClCompile>
     <ClCompile Include="mode_title.cpp">
       <Filter>ソース ファイル\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_manager.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="default_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_directX9.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="no_light_no_fog_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -641,5 +659,19 @@
     <ClInclude Include="shader_directX9.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="default_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="no_light_no_fog_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="default_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="default_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
