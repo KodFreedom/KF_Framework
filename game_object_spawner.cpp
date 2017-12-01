@@ -362,7 +362,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		switch (static_cast<ColliderType>(collider_type))
 		{
 		case kSphere:
-			collider = MY_NEW SphereCollider(*result, kStatic, collider_scale.X);
+			collider = MY_NEW SphereCollider(*result, kStatic, collider_scale.x_);
 			break;
 		case kAabb:
 			collider = MY_NEW AabbCollider(*result, kStatic, collider_scale * 0.5f);
@@ -396,49 +396,23 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		auto& file_info = utility::AnalyzeFilePath(real_name);
 		if (file_info.type._Equal(L"mesh") || file_info.type._Equal(L"x"))
 		{//骨なし
-			auto childMesh = createChildMesh(transform, meshName);
+			auto renderer = MY_NEW MeshRenderer(*result);
+			renderer->SetMesh(real_name);
+			result->AddRenderer(renderer);
 		}
-		else if (file_info.Type._Equal("oneSkinMesh"))
+		else if (file_info.type._Equal(L"oneSkinMesh"))
 		{//ワンスキーンメッシュ
-			MessageBox(NULL, "oneSkinMesh未対応", "GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+			MessageBox(NULL, L"oneSkinMesh未対応", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
 		}
 	}
 
 	//Child
-	int childNumber = 0;
-	fread_s(&childNumber, sizeof(int), sizeof(int), 1, filePointer);
-	for (int count = 0; count < childNumber; ++count)
+	int child_number = 0;
+	archive.loadBinary(&child_number, sizeof(child_number));
+	for (int count = 0; count < child_number; ++count)
 	{
-		auto child = createChildNode(transform, filePointer);
+		auto child = CreateChildNode(transform, archive);
 	}
-
-	//初期化
-	result->Init();
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：createChildMesh
-//  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	parent：ファイルの名前 
-//			meshName
-//	戻り値：GameObject*
-//--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::createChildMesh(Transform* parent, const string& meshName)
-{
-	auto result = MY_NEW GameObject;
-
-	//Name
-	auto& file_info = utility::AnalyzeFilePath(meshName);
-	result->SetName(file_info.Name);
-
-	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(result);
-	renderer->SetMesh(meshName);
-	result->AddRenderer(renderer);
-
-	//パラメーター
-	result->GetTransform()->RegisterParent(parent);
 
 	//初期化
 	result->Init();

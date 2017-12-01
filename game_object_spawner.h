@@ -43,5 +43,4 @@ private:
 	~GameObjectSpawner() {}
 
 	static GameObject* CreateChildNode(Transform* parent, BinaryInputArchive& archive);
-	static GameObject* CreateChildMesh(Transform* parent, const String& mesh_name);
 };
