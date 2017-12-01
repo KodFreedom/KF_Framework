@@ -6,7 +6,7 @@
 #include "third_person_camera.h"
 #include "main_system.h"
 #include "input.h"
-#include "gameObject.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -67,7 +67,7 @@ void ThirdPersionCamera::LateUpdate(void)
 {
 	if (follow_target_)
 	{
-		rig_.position = math::Lerp(rig_.position, follow_target_->GetTransform()->GetCurrentPosition(), kMoveLerpTime);
+		rig_.position = math::Lerp(rig_.position, follow_target_->GetTransform()->GetPosition(), kMoveLerpTime);
 	}
 	Camera::LateUpdate();
 }

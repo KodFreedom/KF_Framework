@@ -162,7 +162,7 @@ void FieldEditor::SaveAsBinary(const String& name)
 	//フィールドの保存
 	String path = L"data/field/" + name + L".field";
 	ofstream file(path);
-	if (!file.is_open)
+	if (!file.is_open())
 	{
 		assert("failed to open file");
 		return;

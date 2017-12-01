@@ -41,21 +41,12 @@ public:
 	//--------------------------------------------------------------------------------
 	//  q‹Ÿ“o˜^ˆ—
 	//--------------------------------------------------------------------------------
-	void RegisterChild(Transform* child) 
-	{ 
-		if (!child) return;
-		children_.emplace(child->GetGameObject().GetName(), child);
-	}
+	void RegisterChild(Transform* child);
 	
 	//--------------------------------------------------------------------------------
 	//  q‹Ÿíœˆ—
 	//--------------------------------------------------------------------------------
-	void DeregisterChild(Transform* child)
-	{
-		auto iterator = children_.find(child->GetGameObject().GetName());
-		if (children_.end() == iterator) return;
-		children_.erase(iterator);
-	}
+	void DeregisterChild(Transform* child);
 	
 	//--------------------------------------------------------------------------------
 	//  e“o˜^ˆ—
@@ -75,7 +66,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ‰ñ“]‚Ìæ“¾(vector3)
 	//--------------------------------------------------------------------------------
-	const Vector3& GetEulerRotation(void) const
+	Vector3 GetEulerRotation(void) const
 	{
 		return rotation_.ToEuler();
 	}
@@ -88,7 +79,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ‘O•ûŒü‚Ìæ“¾
 	//--------------------------------------------------------------------------------
-	const Vector3& GetForward(void) const 
+	Vector3 GetForward(void) const 
 	{
 		return Vector3::Rotate(Vector3::kForward, rotation_);
 	}
@@ -96,7 +87,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ã•ûŒü‚Ìæ“¾
 	//--------------------------------------------------------------------------------
-	const Vector3& GetUp(void) const
+	Vector3 GetUp(void) const
 	{
 		return Vector3::Rotate(Vector3::kUp, rotation_);
 	}
@@ -104,7 +95,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ‰E•ûŒü‚Ìæ“¾
 	//--------------------------------------------------------------------------------
-	const Vector3& GetRight(void) const
+	Vector3 GetRight(void) const
 	{
 		return Vector3::Rotate(Vector3::kRight, rotation_);
 	}
@@ -112,7 +103,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ‰ñ“]s—ñ‚Ìæ“¾
 	//--------------------------------------------------------------------------------
-	const Matrix44& GetRotationMatrix(void) const
+	Matrix44 GetRotationMatrix(void) const
 	{
 		return rotation_.ToMatrix();
 	}
@@ -120,7 +111,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ÅV‚Ì¢ŠEs—ñ‚Ìæ“¾
 	//--------------------------------------------------------------------------------
-	const Matrix44& GetCurrentWorldMatrix(void) const;
+	Matrix44 GetCurrentWorldMatrix(void) const;
 
 	//--------------------------------------------------------------------------------
 	//  ¢ŠEs—ñ‚Ìæ“¾

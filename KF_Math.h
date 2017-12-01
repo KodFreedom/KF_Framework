@@ -468,20 +468,7 @@ namespace kodfreedom
 		//  change the euler to quaternion / Euler角をQuaternionに変換
 		//  return：Quaternion
 		//--------------------------------------------------------------------------------
-		Quaternion ToQuaternion(void) const
-		{
-			// TODO: 計算式を調べる
-			Quaternion result;
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-			D3DXQUATERNION resultDX;
-			D3DXQuaternionRotationYawPitchRoll(&resultDX, y_, x_, z_);
-			result.x_ = resultDX.x;
-			result.y_ = resultDX.y;
-			result.z_ = resultDX.z;
-			result.w_ = resultDX.w;
-#endif
-			return result;
-		}
+		Quaternion ToQuaternion(void) const;
 		
 		//--------------------------------------------------------------------------------
 		//  両点の間の距離の算出
@@ -511,13 +498,7 @@ namespace kodfreedom
 		//  transform：変換行列
 		//  return：Vector3
 		//--------------------------------------------------------------------------------
-		static Vector3 TransformCoord(const Vector3& point, const Matrix44& transform)
-		{
-			auto& work = Vector4(point, 1.0f);
-			work *= transform;
-			if (work.w_ == 0.0f) return Vector3::kZero;
-			return Vector3(work.x_ / work.w_, work.y_ / work.w_, work.z_ / work.w_);
-		}
+		static Vector3 TransformCoord(const Vector3& point, const Matrix44& transform);
 
 		//--------------------------------------------------------------------------------
 		//  法線ベクトルを回転する
@@ -525,12 +506,7 @@ namespace kodfreedom
 		//  transform：変換行列
 		//  return：Vector3
 		//--------------------------------------------------------------------------------
-		static Vector3 TransformNormal(const Vector3& normal, const Matrix44& transform)
-		{
-			auto& work = Vector4(normal, 0.0f);
-			work *= transform;
-			return Vector3(work.x_, work.y_, work.z_);
-		}
+		static Vector3 TransformNormal(const Vector3& normal, const Matrix44& transform);
 		
 		//--------------------------------------------------------------------------------
 		//  ポイントを逆行列により変換する
@@ -538,24 +514,7 @@ namespace kodfreedom
 		//  transform：変換行列
 		//  return：Vector3
 		//--------------------------------------------------------------------------------
-		static Vector3 TransformInverse(const Vector3& point, const Matrix44& transform)
-		{
-			auto work = point;
-			work.x_ -= transform.m30_;
-			work.y_ -= transform.m31_;
-			work.z_ -= transform.m32_;
-			Vector3 result;
-			result.x_ = work.x_ * transform.m00_ +
-				work.y_ * transform.m01_ +
-				work.z_ * transform.m02_;
-			result.y_ = work.x_ * transform.m10_ +
-				work.y_ * transform.m11_ +
-				work.z_ * transform.m12_;
-			result.z_ = work.x_ * transform.m20_ +
-				work.y_ * transform.m21_ +
-				work.z_ * transform.m22_;
-			return result;
-		}
+		static Vector3 TransformInverse(const Vector3& point, const Matrix44& transform);
 
 		//--------------------------------------------------------------------------------
 		//  scale x,y,z by scale's x,y,z / XYZ別々でスケールする
@@ -644,52 +603,13 @@ namespace kodfreedom
 		//  matrix : 乗算相手
 		//  return：Vector4
 		//--------------------------------------------------------------------------------
-		Vector4 operator*(const Matrix44& matrix) const
-		{
-			Vector4 result;
-			result.x_ = x_ * matrix.m00_ +
-				y_ * matrix.m10_ +
-				z_ * matrix.m20_ +
-				w_ * matrix.m30_;
-			result.y_ = x_ * matrix.m01_ +
-				y_ * matrix.m11_ +
-				z_ * matrix.m21_ +
-				w_ * matrix.m31_;
-			result.z_ = x_ * matrix.m02_ +
-				y_ * matrix.m12_ +
-				z_ * matrix.m22_ +
-				w_ * matrix.m32_;
-			result.w_ = x_ * matrix.m03_ +
-				y_ * matrix.m13_ +
-				z_ * matrix.m23_ +
-				w_ * matrix.m33_;
-			return result;
-		}
+		Vector4 operator*(const Matrix44& matrix) const;
 
 		//--------------------------------------------------------------------------------
 		//  mult this with matrix / マトリクスとの乗算
 		//  matrix : 乗算相手
 		//--------------------------------------------------------------------------------
-		void operator*=(const Matrix44& matrix)
-		{
-			Vector4 copy = *this;
-			x_ = copy.x_ * matrix.m_[0][0] +
-				copy.y_ * matrix.m_[1][0] +
-				copy.z_ * matrix.m_[2][0] +
-				copy.w_ * matrix.m_[3][0];
-			y_ = copy.x_ * matrix.m_[0][1] +
-				copy.y_ * matrix.m_[1][1] +
-				copy.z_ * matrix.m_[2][1] +
-				copy.w_ * matrix.m_[3][1];
-			z_ = copy.x_ * matrix.m_[0][2] +
-				copy.y_ * matrix.m_[1][2] +
-				copy.z_ * matrix.m_[2][2] +
-				copy.w_ * matrix.m_[3][2];
-			w_ = copy.x_ * matrix.m_[0][3] +
-				copy.y_ * matrix.m_[1][3] +
-				copy.z_ * matrix.m_[2][3] +
-				copy.w_ * matrix.m_[3][3];
-		}
+		void operator*=(const Matrix44& matrix);
 	};
 
 	//--------------------------------------------------------------------------------
@@ -838,10 +758,7 @@ namespace kodfreedom
 		//  change to euler / オーラー角に変換
 		//  return : Vector3
 		//--------------------------------------------------------------------------------
-		Vector3 ToEuler(void) const
-		{
-			return this->ToQuaternion().ToEuler();
-		}
+		Vector3 ToEuler(void) const;
 
 		//--------------------------------------------------------------------------------
 		//  change to quaternion / Quaternionに変換
@@ -960,13 +877,7 @@ namespace kodfreedom
 		//  scale：スケール量
 		//  return：Matrix44
 		//--------------------------------------------------------------------------------
-		static Matrix44 Transform(const Quaternion& rotation, const Vector3& translation, const Vector3& scale = Vector3::kOne)
-		{
-			auto& result = Scale(scale);
-			result *= rotation.ToMatrix();
-			result *= Translation(translation);
-			return result;
-		}
+		static Matrix44 Transform(const Quaternion& rotation, const Vector3& translation, const Vector3& scale = Vector3::kOne);
 
 		//--------------------------------------------------------------------------------
 		//  create projection matrix / 射影行列の作成(左手座標系)
@@ -1427,7 +1338,7 @@ namespace kodfreedom
 		//--------------------------------------------------------------------------------
 		//  ランダムシステム初期化
 		//--------------------------------------------------------------------------------
-		void Init(void)
+		static void Init(void)
 		{
 			srand((unsigned)time(NULL));
 		}
@@ -1438,7 +1349,7 @@ namespace kodfreedom
 		//  max：最大値
 		//  return：int
 		//--------------------------------------------------------------------------------
-		int Range(const int& min, const int& max)
+		static int Range(const int& min, const int& max)
 		{
 			if (min >= max) return min;
 			return rand() % (max - min) + min;
@@ -1450,7 +1361,7 @@ namespace kodfreedom
 		//  max：最大値
 		//  return：float
 		//--------------------------------------------------------------------------------
-		float Range(const float& min, const float& max)
+		static float Range(const float& min, const float& max)
 		{
 			if (min >= max) { return min; }
 			return (rand() % 10000) * 0.0001f * (max - min) + min;
@@ -1462,7 +1373,7 @@ namespace kodfreedom
 		//  max：最大値
 		//  return：vector3
 		//--------------------------------------------------------------------------------
-		Vector3 Range(const Vector3& min, const Vector3& max)
+		static Vector3 Range(const Vector3& min, const Vector3& max)
 		{
 			return Vector3(Range(min.x_, max.x_), Range(min.y_, max.y_), Range(min.z_, max.z_));
 		}
@@ -1480,7 +1391,7 @@ namespace kodfreedom
 		//  time：時間(0 - 1)
 		//  return：Vector3
 		//--------------------------------------------------------------------------------
-		Vector3 Lerp(const Vector3& from, const Vector3& to, const float& time)
+		static Vector3 Lerp(const Vector3& from, const Vector3& to, const float& time)
 		{
 			if (time <= 0.0f) return from;
 			if (time >= 1.0f) return to;
@@ -1494,7 +1405,7 @@ namespace kodfreedom
 		//  time：時間(0 - 1)
 		//  return：float
 		//--------------------------------------------------------------------------------
-		float Lerp(const float& from, const float& to, const float& time)
+		static float Lerp(const float& from, const float& to, const float& time)
 		{
 			if (time <= 0.0f) return from;
 			if (time >= 1.0f) return to;
@@ -1508,7 +1419,7 @@ namespace kodfreedom
 		//  time：時間(0 - 1)
 		//  return：Color
 		//--------------------------------------------------------------------------------
-		Color Lerp(const Color& from, const Color& to, const float& time)
+		static Color Lerp(const Color& from, const Color& to, const float& time)
 		{
 			if (time <= 0.0f) return from;
 			if (time >= 1.0f) return to;
@@ -1522,7 +1433,7 @@ namespace kodfreedom
 		//  time：時間(0 - 1)
 		//  return：Vector3
 		//--------------------------------------------------------------------------------
-		Vector3 Slerp(const Vector3& from, const Vector3& to, const float& time)
+		static Vector3 Slerp(const Vector3& from, const Vector3& to, const float& time)
 		{
 			if (time <= 0.0f) return from;
 			if (time >= 1.0f) return to;
@@ -1536,7 +1447,57 @@ namespace kodfreedom
 		//  time：時間(0 - 1)
 		//  return：Quaternion
 		//--------------------------------------------------------------------------------
-		Quaternion Slerp(const Quaternion& from, const Quaternion& to, const float& time);
+		static Quaternion Slerp(const Quaternion& from, const Quaternion& to, const float& time)
+		{
+			if (time <= 0.0f) { return from; }
+			if (time >= 1.0f) { return to; }
+			Quaternion result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+			D3DXQUATERNION from_dx = from;
+			D3DXQUATERNION to_dx = to;
+			D3DXQUATERNION result_dx;
+			D3DXQuaternionSlerp(&result_dx, &from_dx, &to_dx, time);
+			result.x_ = result_dx.x;
+			result.y_ = result_dx.y;
+			result.z_ = result_dx.z;
+			result.w_ = result_dx.w;
+#else
+			//Quaternion qFromCpy = qFrom;
+			//Quaternion qToCpy = qTo;
+
+			//// Only unit quaternions are valid rotations.
+			//// Normalize to avoid undefined behavior.
+
+			//// Compute the cosine of the angle between the two vectors.
+			//float fDot = QuaternionDot(qFromCpy, qToCpy);
+
+			//if (fabs(fDot) > 0.9995f)
+			//{
+			//	// If the inputs are too close for comfort, linearly interpolate
+			//	// and normalize the result.
+			//	Quaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
+			//	QuaternionNormalize(qResult);
+			//	return qResult;
+			//}
+
+			//// If the dot product is negative, the quaternions
+			//// have opposite handed-ness and slerp won't take
+			//// the shorter path. Fix by reversing one quaternion.
+			//if (fDot < 0.0f) 
+			//{
+			//	qToCpy *= -1.0f;
+			//	fDot = -fDot;
+			//}
+
+			//ClampFloat(fDot, -1.0f, 1.0f);		// Robustness: Stay within domain of acos()
+			//float fTheta = acosf(fDot) * fTime;	// theta = angle between v0 and result 
+
+			//Quaternion qWork = qToCpy - qFromCpy * fDot;
+			//QuaternionNormalize(qWork);			// { v0, v2 } is now an orthonormal basis
+			//Quaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
+#endif
+			return result;
+		}
 
 		//--------------------------------------------------------------------------------
 		//  floatをminとmaxの間にする
@@ -1545,7 +1506,7 @@ namespace kodfreedom
 		//  max：最大値
 		//  return：float
 		//--------------------------------------------------------------------------------
-		float Clamp(const float& value, const float& min, const float& max)
+		static float Clamp(const float& value, const float& min, const float& max)
 		{
 			return value < min ? min : value > max ? max : value;
 		}
@@ -1555,7 +1516,7 @@ namespace kodfreedom
 		//	value_l、value_r：比較値
 		//	return：float
 		//--------------------------------------------------------------------------------
-		float AbsMax(const float& value_l, const float& value_r)
+		static float AbsMax(const float& value_l, const float& value_r)
 		{
 			return fabsf(value_l) >= fabsf(value_r) ? value_l : value_r;
 		}

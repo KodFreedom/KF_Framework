@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "main.h"
 #include "stage_spawner.h"
-#include "gameObjectSpawner.h"
-#include "gameObject.h"
-#include "windmillController.h"
+#include "game_object_spawner.h"
+#include "game_object.h"
+#include "windmill_controller.h"
 
 //--------------------------------------------------------------------------------
 //

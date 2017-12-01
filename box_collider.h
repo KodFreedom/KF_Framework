@@ -14,7 +14,7 @@ class BoxCollider : public Collider
 public:
 	//Getä÷êî
 	const auto&	GetLocalVertexes(void) const { return local_vertexes_; }
-	const auto& GetWorldVertexes(void) const
+	auto GetWorldVertexes(void) const
 	{
 		auto copy = local_vertexes_;
 		const auto& world = GetWorldMatrix();

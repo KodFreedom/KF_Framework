@@ -87,13 +87,13 @@ public:
 		distance_ = value;
 		local_eye_position_.z_ = -distance_;
 	}
-	void		 SetWorldPosition(const Vector3& value) { rig_.position = value; }
-	void		 SetOffsetY(const float& value) { pivot_.position.y_ = value; }
-	void		 SetPitch(const float& radian) { pivot_.rotation.x_ = radian; }
-	void		 SetYaw(const float& radian) { rig_.rotation.y_ = radian; }
-	void		 SetFov(const float& radian) { fov_ = radian; }
-	void		 SetNear(const float& value) { near_ = value; }
-	void		 SetFar(const float& value) { far_ = value; }
+	void SetWorldPosition(const Vector3& value) { rig_.position = value; }
+	void SetOffsetY(const float& value) { pivot_.position.y_ = value; }
+	void SetPitch(const float& radian) { pivot_.rotation.x_ = radian; }
+	void SetYaw(const float& radian) { rig_.rotation.y_ = radian; }
+	void SetFov(const float& radian) { fov_ = radian; }
+	void SetNear(const float& value) { near_ = value; }
+	void SetFar(const float& value) { far_ = value; }
 
 protected:
 	//--------------------------------------------------------------------------------

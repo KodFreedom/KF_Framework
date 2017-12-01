@@ -114,7 +114,7 @@ void FieldCollider::Load(const String& field_name)
 {
 	auto& path = L"data/field/" + field_name + L".field";
 	ifstream file(path);
-	if (!file.is_open)
+	if (!file.is_open())
 	{
 		assert("load error");
 		return;

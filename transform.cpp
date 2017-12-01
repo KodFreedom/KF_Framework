@@ -67,9 +67,28 @@ void Transform::RegisterParent(Transform* value, const Vector3& offset_translati
 }
 
 //--------------------------------------------------------------------------------
+//  q‹Ÿ“o˜^ˆ—
+//--------------------------------------------------------------------------------
+void Transform::RegisterChild(Transform* child)
+{
+	if (!child) return;
+	children_.emplace(child->GetGameObject().GetName(), child);
+}
+
+//--------------------------------------------------------------------------------
+//  q‹Ÿíœˆ—
+//--------------------------------------------------------------------------------
+void Transform::DeregisterChild(Transform* child)
+{
+	auto iterator = children_.find(child->GetGameObject().GetName());
+	if (children_.end() == iterator) return;
+	children_.erase(iterator);
+}
+
+//--------------------------------------------------------------------------------
 //  ÅV‚Ì¢ŠEs—ñ‚Ìæ“¾
 //--------------------------------------------------------------------------------
-const Matrix44& Transform::GetCurrentWorldMatrix(void) const
+Matrix44 Transform::GetCurrentWorldMatrix(void) const
 {
 	auto& world = Matrix44::Transform(rotation_, position_, scale_);
 	if (parent_)

@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 bool WindmillController::Init(void)
 {
-	fan_ = owner_.FindChildBy(L"Fan");
+	fan_ = owner_.GetTransform()->FindChildBy(L"Fan");
 	if(!fan_)
 	{
 		assert("No Fan!!");
@@ -28,5 +28,5 @@ bool WindmillController::Init(void)
 void WindmillController::Update(void)
 {
 	if (!fan_) return;
-	fan_->GetTransform()->RotateByRoll(rotate_speed_ * DELTA_TIME);
+	fan_->RotateByRoll(rotate_speed_ * DELTA_TIME);
 }

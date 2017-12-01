@@ -67,6 +67,67 @@ const Color Color::kGreen = Color(0.0f, 1.0f, 0.0f, 1.0f);
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  change the euler to quaternion / Euler角をQuaternionに変換
+//--------------------------------------------------------------------------------
+Quaternion Vector3::ToQuaternion(void) const
+{
+	// TODO: 計算式を調べる
+	Quaternion result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	D3DXQUATERNION resultDX;
+	D3DXQuaternionRotationYawPitchRoll(&resultDX, y_, x_, z_);
+	result.x_ = resultDX.x;
+	result.y_ = resultDX.y;
+	result.z_ = resultDX.z;
+	result.w_ = resultDX.w;
+#endif
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//  ポイントを回転する
+//--------------------------------------------------------------------------------
+Vector3 Vector3::TransformCoord(const Vector3& point, const Matrix44& transform)
+{
+	auto& work = Vector4(point, 1.0f);
+	work *= transform;
+	if (work.w_ == 0.0f) return Vector3::kZero;
+	return Vector3(work.x_ / work.w_, work.y_ / work.w_, work.z_ / work.w_);
+}
+
+//--------------------------------------------------------------------------------
+//  法線ベクトルを回転する
+//--------------------------------------------------------------------------------
+Vector3 Vector3::TransformNormal(const Vector3& normal, const Matrix44& transform)
+{
+	auto& work = Vector4(normal, 0.0f);
+	work *= transform;
+	return Vector3(work.x_, work.y_, work.z_);
+}
+
+//--------------------------------------------------------------------------------
+//  ポイントを逆行列により変換する
+//--------------------------------------------------------------------------------
+Vector3 Vector3::TransformInverse(const Vector3& point, const Matrix44& transform)
+{
+	auto work = point;
+	work.x_ -= transform.m30_;
+	work.y_ -= transform.m31_;
+	work.z_ -= transform.m32_;
+	Vector3 result;
+	result.x_ = work.x_ * transform.m00_ +
+		work.y_ * transform.m01_ +
+		work.z_ * transform.m02_;
+	result.y_ = work.x_ * transform.m10_ +
+		work.y_ * transform.m11_ +
+		work.z_ * transform.m12_;
+	result.z_ = work.x_ * transform.m20_ +
+		work.y_ * transform.m21_ +
+		work.z_ * transform.m22_;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
 //  ベクトルを回転する
 //--------------------------------------------------------------------------------
 Vector3 Vector3::Rotate(const Vector3& direction, const Quaternion& rotation)
@@ -75,6 +136,61 @@ Vector3 Vector3::Rotate(const Vector3& direction, const Quaternion& rotation)
 	Quaternion& result = rotation.Conjugate() * direction_quaternion;
 	result *= rotation;
 	return Vector3(result.x_, result.y_, result.z_);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Vector4
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  mult with matrix / マトリクスとの乗算
+//--------------------------------------------------------------------------------
+Vector4 Vector4::operator*(const Matrix44& matrix) const
+{
+	Vector4 result;
+	result.x_ = x_ * matrix.m00_ +
+		y_ * matrix.m10_ +
+		z_ * matrix.m20_ +
+		w_ * matrix.m30_;
+	result.y_ = x_ * matrix.m01_ +
+		y_ * matrix.m11_ +
+		z_ * matrix.m21_ +
+		w_ * matrix.m31_;
+	result.z_ = x_ * matrix.m02_ +
+		y_ * matrix.m12_ +
+		z_ * matrix.m22_ +
+		w_ * matrix.m32_;
+	result.w_ = x_ * matrix.m03_ +
+		y_ * matrix.m13_ +
+		z_ * matrix.m23_ +
+		w_ * matrix.m33_;
+	return result;
+}
+
+//--------------------------------------------------------------------------------
+//  mult this with matrix / マトリクスとの乗算
+//  matrix : 乗算相手
+//--------------------------------------------------------------------------------
+void Vector4::operator*=(const Matrix44& matrix)
+{
+	Vector4 copy = *this;
+	x_ = copy.x_ * matrix.m_[0][0] +
+		copy.y_ * matrix.m_[1][0] +
+		copy.z_ * matrix.m_[2][0] +
+		copy.w_ * matrix.m_[3][0];
+	y_ = copy.x_ * matrix.m_[0][1] +
+		copy.y_ * matrix.m_[1][1] +
+		copy.z_ * matrix.m_[2][1] +
+		copy.w_ * matrix.m_[3][1];
+	z_ = copy.x_ * matrix.m_[0][2] +
+		copy.y_ * matrix.m_[1][2] +
+		copy.z_ * matrix.m_[2][2] +
+		copy.w_ * matrix.m_[3][2];
+	w_ = copy.x_ * matrix.m_[0][3] +
+		copy.y_ * matrix.m_[1][3] +
+		copy.z_ * matrix.m_[2][3] +
+		copy.w_ * matrix.m_[3][3];
 }
 
 //--------------------------------------------------------------------------------
@@ -111,6 +227,14 @@ Matrix44::Matrix44(const float& m00, const float& m01, const float& m02, const f
 	, m10_(m10), m11_(m11), m12_(m12), m13_(m13)
 	, m20_(m20), m21_(m21), m22_(m22), m23_(m23)
 	, m30_(m30), m31_(m31), m32_(m32), m33_(m33) {}
+
+//--------------------------------------------------------------------------------
+//  change to euler / オーラー角に変換
+//--------------------------------------------------------------------------------
+Vector3 Matrix44::ToEuler(void) const
+{
+	return this->ToQuaternion().ToEuler();
+}
 
 //--------------------------------------------------------------------------------
 //  change to quaternion / Quaternionに変換
@@ -201,13 +325,13 @@ Matrix44 Matrix44::RotationYawPitchRoll(const Vector3& euler)
 	const float& siny = sinf(euler.y_);
 	const float& cosy = cosf(euler.y_);
 	const float& sinz = sinf(euler.z_);
-	const float& sinz = cosf(euler.z_);
-	result.m_[0][0] = cosy * sinz + sinx * siny * sinz;
+	const float& cosz = cosf(euler.z_);
+	result.m_[0][0] = cosy * cosz + sinx * siny * sinz;
 	result.m_[0][1] = cosx * sinz;
-	result.m_[0][2] = -siny * sinz + sinx * cosy * sinz;
-	result.m_[1][0] = -cosy * sinz + sinx * siny * sinz;
-	result.m_[1][1] = cosx * sinz;
-	result.m_[1][2] = siny * sinz + sinx * cosy * sinz;
+	result.m_[0][2] = -siny * cosz + sinx * cosy * sinz;
+	result.m_[1][0] = -cosy * sinz + sinx * siny * cosz;
+	result.m_[1][1] = cosx * cosz;
+	result.m_[1][2] = siny * sinz + sinx * cosy * cosz;
 	result.m_[2][0] = cosx * siny;
 	result.m_[2][1] = -sinx;
 	result.m_[2][2] = cosx * cosy;
@@ -224,6 +348,18 @@ Matrix44 Matrix44::Transform(const Vector3& right, const Vector3& up, const Vect
 					up.x_ * scale.y_, up.y_ * scale.y_, up.z_ * scale.y_, 0.0f,
 					forward.x_ * scale.z_, forward.y_ * scale.z_, forward.z_ * scale.z_, 0.0f,
 					translation.x_, translation.y_, translation.z_, 1.0f);
+}
+
+//--------------------------------------------------------------------------------
+//  create transform matrix with given rotation, scale, translation
+//  与えられた回転、移動量、スケールで行列の作成
+//--------------------------------------------------------------------------------
+Matrix44 Matrix44::Transform(const Quaternion& rotation, const Vector3& translation, const Vector3& scale)
+{
+	auto& result = Scale(scale);
+	result *= rotation.ToMatrix();
+	result *= Translation(translation);
+	return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -323,60 +459,6 @@ Matrix44 Quaternion::ToMatrix(void) const
 //  Math
 //
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//	Quaternionを球形補間方式で補間する
-//--------------------------------------------------------------------------------
-Quaternion math::Slerp(const Quaternion& from, const Quaternion& to, const float& time)
-{
-	if (time <= 0.0f) { return from; }
-	if (time >= 1.0f) { return to; }
-	Quaternion result;
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	D3DXQUATERNION from_dx = from;
-	D3DXQUATERNION to_dx = to;
-	D3DXQUATERNION result_dx;
-	D3DXQuaternionSlerp(&result_dx, &from_dx, &to_dx, time);
-	result.x_ = result_dx.x;
-	result.y_ = result_dx.y;
-	result.z_ = result_dx.z;
-	result.w_ = result_dx.w;
-#else
-	//Quaternion qFromCpy = qFrom;
-	//Quaternion qToCpy = qTo;
-
-	//// Only unit quaternions are valid rotations.
-	//// Normalize to avoid undefined behavior.
-
-	//// Compute the cosine of the angle between the two vectors.
-	//float fDot = QuaternionDot(qFromCpy, qToCpy);
-
-	//if (fabs(fDot) > 0.9995f)
-	//{
-	//	// If the inputs are too close for comfort, linearly interpolate
-	//	// and normalize the result.
-	//	Quaternion qResult = qFromCpy + (qToCpy - qFromCpy) * fTime;
-	//	QuaternionNormalize(qResult);
-	//	return qResult;
-	//}
-
-	//// If the dot product is negative, the quaternions
-	//// have opposite handed-ness and slerp won't take
-	//// the shorter path. Fix by reversing one quaternion.
-	//if (fDot < 0.0f) 
-	//{
-	//	qToCpy *= -1.0f;
-	//	fDot = -fDot;
-	//}
-
-	//ClampFloat(fDot, -1.0f, 1.0f);		// Robustness: Stay within domain of acos()
-	//float fTheta = acosf(fDot) * fTime;	// theta = angle between v0 and result 
-
-	//Quaternion qWork = qToCpy - qFromCpy * fDot;
-	//QuaternionNormalize(qWork);			// { v0, v2 } is now an orthonormal basis
-	//Quaternion qResult = qFromCpy * cosf(fTheta) + qWork * sinf(fTheta);
-#endif
-	return result;
-}
 
 /*
 //--------------------------------------------------------------------------------

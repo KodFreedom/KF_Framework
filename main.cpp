@@ -201,6 +201,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);	//WM_QUITというメッセージを呼ぶ
 		break;
 	case WM_ACTIVATEAPP:
+	{
 		auto input = MainSystem::Instance()->GetInput();
 		if (input)
 		{
@@ -214,6 +215,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 			}
 		}
 		break;
+	}
 	default:
 		break;
 	}

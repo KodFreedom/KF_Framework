@@ -208,20 +208,20 @@ protected:
 	{
 		transform_->Release();
 		rigidbody_->Release();
-		for (auto itr = behaviors_.begin(); itr != behaviors_.end();)
+		for (auto iterator = behaviors_.begin(); iterator != behaviors_.end();)
 		{
-			(*itr)->Release();
-			itr = behaviors_.erase(itr);
+			iterator->second->Release();
+			iterator = behaviors_.erase(iterator);
 		}
-		for (auto itr = colliders_.begin(); itr != colliders_.end();)
+		for (auto iterator = colliders_.begin(); iterator != colliders_.end();)
 		{
-			(*itr)->Release();
-			itr = colliders_.erase(itr);
+			(*iterator)->Release();
+			iterator = colliders_.erase(iterator);
 		}
-		for (auto itr = renderers_.begin(); itr != renderers_.end();)
+		for (auto iterator = renderers_.begin(); iterator != renderers_.end();)
 		{
-			(*itr)->Release();
-			itr = renderers_.erase(itr);
+			(*iterator)->Release();
+			iterator = renderers_.erase(iterator);
 		}
 	}
 

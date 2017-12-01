@@ -11,9 +11,9 @@
 //--------------------------------------------------------------------------------
 enum LightType
 {
-	kPoint = 1,
-	kSpot = 2,
-	kDirectional = 3,
+	kPointLight = 1,
+	kSpotLight = 2,
+	kDirectionalLight = 3,
 };
 
 //--------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ public:
 protected:
 	Light(const LightType& type, const Color& diffuse, const Color& ambient, const Color& specular)
 		: type_(type), diffuse_(diffuse), specular_(specular), ambient_(ambient) {}
-	Light(const Light& value) : type_(kDirectional) {}
+	Light(const Light& value) : type_(kDirectionalLight) {}
 	Light& operator=(const Light& value) {}
 	~Light() {}
 };
@@ -42,7 +42,7 @@ class DirectionalLight : public Light
 {
 public:
 	DirectionalLight(const Vector3& direction, const Color& diffuse, const Color& ambient, const Color& specular)
-		: Light(kDirectional, diffuse, ambient, specular)
+		: Light(kDirectionalLight, diffuse, ambient, specular)
 		, direction_(direction) {}
 	Vector3	direction_; // Direction in world space
 };

@@ -63,11 +63,11 @@ void EditorController::Update(void)
 //--------------------------------------------------------------------------------
 void EditorController::SetFieldEditor(GameObject* object)
 {
-	for (auto behavior : object->GetBehaviors())
+	for (auto& pair : object->GetBehaviors())
 	{
-		if (behavior->GetName()._Equal(L"FieldEditor"))
+		if (pair.second->GetName()._Equal(L"FieldEditor"))
 		{
-			field_editor_ = static_cast<FieldEditor*>(behavior);
+			field_editor_ = static_cast<FieldEditor*>(pair.second);
 			break;
 		}
 	}	

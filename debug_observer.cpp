@@ -8,13 +8,13 @@
 #include "ImGui\imgui.h"
 #include "main_system.h"
 #include "render_system.h"
-#include "collisionSystem.h"
+#include "collision_system.h"
 #include "mode.h"
 #include "camera.h"
-#include "cameraManager.h"
-#include "gameObjectActor.h"
+#include "camera_manager.h"
+#include "game_object_actor.h"
 #include "transform.h"
-#include "playerController.h"
+#include "actor_controller.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
@@ -149,7 +149,7 @@ void DebugObserver::ShowCameraWindow(void)
 {
 	if (!enable_camera_window_) return;
 
-	auto camera = CameraManager::Instance()->GetMainCamera();
+	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
 
 	// Begin
 	if (!ImGui::Begin("Camera Window", &enable_camera_window_))
@@ -159,7 +159,7 @@ void DebugObserver::ShowCameraWindow(void)
 	}
 
 	// Fov
-	ImGui::InputFloat("Fov", &camera->fovY);
+	ImGui::InputFloat("Fov", &camera->fov_);
 
 	// End
 	ImGui::End();
@@ -181,7 +181,7 @@ void DebugObserver::ShowPlayerWindow(void)
 
 	// Trans
 	auto transform = player_->GetTransform();
-	ImGui::InputFloat3("Trans", &transform->nextPosition.x_);
+	//ImGui::InputFloat3("Trans", &transform->nextPosition.x_);
 
 	// Actor Behavior
 	//auto pActor = static_cast<PlayerController*>(player->GetBehaviors().front());

@@ -4,10 +4,6 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "component.h"
 #include "collision_system.h"
 
@@ -54,8 +50,8 @@ public:
 	void SetOffset(const Vector3& position, const Vector3& rotation = Vector3::kZero);
 
 	// Get関数
-	const Vector3& GetLocalPosition(void) const { return Vector3(offset_.m30_, offset_.m31_, offset_.m32_); }
-	const Vector3& GetWorldPosition(void) const { return Vector3(world_.m30_, world_.m31_, world_.m32_); }
+	Vector3 GetLocalPosition(void) const { return Vector3(offset_.m30_, offset_.m31_, offset_.m32_); }
+	Vector3 GetWorldPosition(void) const { return Vector3(world_.m30_, world_.m31_, world_.m32_); }
 	const Matrix44& GetWorldMatrix(void) const { return world_; }
 	const Matrix44& GetOffset(void) const { return offset_; }
 	const auto& GetType(void) const { return type_; }

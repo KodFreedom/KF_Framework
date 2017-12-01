@@ -144,11 +144,11 @@ void CollisionSystem::Deregister(Collider* collider)
 RayHitInfo* CollisionSystem::RayCast(const Ray& ray, const float& distance, const GameObject* const ray_owner)
 {
 	RayHitInfo* real_result = nullptr;
-	auto result = RaycastDynamicSphere(ray, distance, ray_owner);
+	auto result = RaycastDynamicSphere(ray, distance, *ray_owner);
 	real_result = GetRealResult(real_result, result);
-	result = RaycastDynamicAabb(ray, distance, ray_owner);
+	result = RaycastDynamicAabb(ray, distance, *ray_owner);
 	real_result = GetRealResult(real_result, result);
-	result = RaycastDynamicObb(ray, distance, ray_owner);
+	result = RaycastDynamicObb(ray, distance, *ray_owner);
 	real_result = GetRealResult(real_result, result);
 	result = RaycastStaticSphere(ray, distance);
 	real_result = GetRealResult(real_result, result);
@@ -676,7 +676,7 @@ RayHitInfo* CollisionSystem::GetRealResult(RayHitInfo* current, RayHitInfo* next
 {
 	if (!next) return current;
 	if (!current) return next;
-	if (next->Distance < current->Distance)
+	if (next->distance < current->distance)
 	{
 		delete current;
 		return next;

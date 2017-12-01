@@ -6,9 +6,10 @@
 #pragma once
 #include "mesh_manager.h"
 #include "kf_utility.h"
-#include "rendererManager.h"
+#include "main_system.h"
+#include "renderer_manager.h"
 #include "camera.h"
-#include "cameraManager.h"
+#include "camera_manager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -732,8 +733,8 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	Vertex3d *vertexpointer;
 	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-	auto camera = CameraManager::Instance()->GetMainCamera();
-	float length = camera ? (float)camera->GetFar() * 0.5f : 500.0f;
+	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+	float length = camera ? camera->GetFar() * 0.5f : 500.0f;
 	int count_vertex = 0;
 	float uv_tweens = 1.0f / 1024.0f; //Œ„ŠÔ‚ğ–³‚­‚·‚½‚ß‚Éuv‚ğ1pxk‚ß‚é
 

@@ -3,7 +3,6 @@
 //	メインシステム
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "main_system.h"
 #include "texture_manager.h"
 #include "mesh_manager.h"

@@ -14,8 +14,8 @@
 enum RenderPriority
 {
 	kDefaultPriority = 0,
-	kAlphaTest,
-	kZSort,
+	kUseAlphaTest,
+	kUseDepthSort,
 	kPriorityMax
 };
 

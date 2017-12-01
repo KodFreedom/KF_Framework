@@ -102,7 +102,7 @@ void Animator::LoadFromFile(const String& file_name)
 {
 	String& path = L"data/avatar/" + file_name + L".avatar";
 	ifstream file(path);
-	if (!file.is_open)
+	if (!file.is_open())
 	{
 		assert("failed to open");
 		return;

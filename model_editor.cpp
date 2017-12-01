@@ -77,7 +77,8 @@ bool ModelEditor::Init(void)
 	//model_names_[MedBridge] = "Medieval Bridge";
 
 	// フォルダから全てのファイルを読み込む
-	model_names_ = utility::GetFilesFromFolder(utility::GetProjectPath() + L"data\model", L"model");
+	String& folder_path = utility::GetProjectPath() + L"data\model";
+	model_names_ = utility::GetFilesFromFolder(folder_path, L"model");
 
 	//Demo Objectの作成
 	size_t model_number = model_names_.size();
@@ -145,7 +146,7 @@ void ModelEditor::SaveAsBinary(const String& name)
 	//フィールドの保存
 	String path = L"data/stage/" + name + L".stage";
 	ofstream file(path);
-	if (!file.is_open)
+	if (!file.is_open())
 	{
 		assert("failed to open file");
 		return;

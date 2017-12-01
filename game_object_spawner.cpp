@@ -170,7 +170,7 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	//Modelファイルの開く
 	String path = L"data/model/" + name;
 	ifstream file(path);
-	if (!file.is_open)
+	if (!file.is_open())
 	{
 		assert("failed to open");
 		return nullptr;

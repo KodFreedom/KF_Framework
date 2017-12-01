@@ -2,15 +2,14 @@
 //　motion_state.cpp
 //  classes for motion state
 //	モーションステートのクラス
-//  用于动作状态机的类
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
+#include "main_system.h"
 #include "motion_state.h"
-#include "motionManager.h"
+#include "motion_manager.h"
 #include "animator.h"
-#include "motionInfo.h"
-#include "gameObject.h"
+#include "motion_data.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -18,12 +17,12 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  constructor / コンストラクタ / 构造函数
+//  constructor / コンストラクタ
 //--------------------------------------------------------------------------------
 MotionState::MotionState(const String& motion_name, const int start_frame)
-	: current_motion_name_(motion_name), current_motion_frame_counter_(start_frame)
+	: current_motion_name_(motion_name), current_frame_counter_(start_frame)
 {
-	current_motion_info_ = MotionManager::Instance()->GetMotionInfoBy(current_motion_name_);
+	current_motion_data_ = MainSystem::Instance()->GetMotionManager()->GetMotionDataBy(current_motion_name_);
 }
 
 //--------------------------------------------------------------------------------
@@ -32,26 +31,29 @@ MotionState::MotionState(const String& motion_name, const int start_frame)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  モーションの更新 / 更新动作
+//  モーションの更新
 //--------------------------------------------------------------------------------
 void NormalMotionState::UpdateMotion(Animator& animator)
 {
-	assert(current_motion_info_);
-	assert(animator.bones.size() <= current_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.size());
+	assert(current_motion_data_);
+	const auto& avatar = animator.GetAvatar();
+	assert(avatar.size() <= current_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
 	
-	auto frameNumber = (int)current_motion_info_->MotionFrames.size();
-	auto iterator = current_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.begin();
+	int frame_number = static_cast<int>(current_motion_data_->frames_.size());
+	auto iterator = current_motion_data_->frames_[current_frame_counter_].bone_transforms_.begin();
 
-	for (auto born : animator.bones)
+	for (auto& bone : avatar)
 	{
-		born->GetTransform()->SetNextMatrix(iterator->Matrix);
+		bone.transform->SetPosition(iterator->translation_);
+		bone.transform->SetRotation(iterator->rotation_);
+		bone.transform->SetScale(iterator->scale_);
 		++iterator;
 	}
 
-	if (++current_motion_frame_counter_ >= frameNumber
-		&& current_motion_info_->IsLoop)
+	if (++current_frame_counter_ >= frame_number
+		&& current_motion_data_->is_loop_)
 	{
-		current_motion_frame_counter_ = 0;
+		current_frame_counter_ = 0;
 	}
 }
 
@@ -61,66 +63,69 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  constructor / コンストラクタ / 构造函数
+//  constructor / コンストラクタ
 //--------------------------------------------------------------------------------
 BlendMotionState::BlendMotionState(const String& current_motion_name, NormalMotionState* next_motion_pointer, const int current_motion_start_frame, const int blend_frame_number)
 	: MotionState(current_motion_name, current_motion_start_frame)
-	, next_motion_frame_counter_(0)
+	, next_frame_counter_(0)
 	, next_motion_pointer_(next_motion_pointer)
 	, blend_frame_counter_(0)
 	, blend_frame_number_(blend_frame_number)
 {
-	next_motion_info_ = MotionManager::Instance()->GetMotionInfoBy(next_motion_pointer_->GetCurrentMotionName());
+	next_motion_data_ = MainSystem::Instance()->GetMotionManager()->GetMotionDataBy(next_motion_pointer_->GetCurrentMotionName());
 }
 
 //--------------------------------------------------------------------------------
-//  モーションの更新 / 更新动作
+//  モーションの更新
 //--------------------------------------------------------------------------------
 void BlendMotionState::UpdateMotion(Animator& animator)
 {
-	assert(current_motion_info_);
-	assert(next_motion_info_);
-	assert(animator.bones.size() <= current_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.size());
-	assert(animator.bones.size() <= next_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.size());
+	assert(current_motion_data_);
+	assert(next_motion_data_);
+	const auto& avatar = animator.GetAvatar();
+	assert(avatar.size() <= current_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
+	assert(avatar.size() <= next_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
 
-	auto frameNumber = (int)current_motion_info_->MotionFrames.size();
-	auto currentBoneFrameIterator = current_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.begin();
+	int frame_number = static_cast<int>(current_motion_data_->frames_.size());
+	auto current_iterator = current_motion_data_->frames_[current_frame_counter_].bone_transforms_.begin();
 
-	auto nextMotionFrameNumber = next_motion_info_->MotionFrames.size();
-	auto nextMotionCurrentBoneFrameIterator = next_motion_info_->MotionFrames[current_motion_frame_counter_].BoneFrames.begin();
-	auto blendRate = (float)blend_frame_counter_ / blend_frame_number_;
+	int next_frame_number = static_cast<int>(next_motion_data_->frames_.size());
+	auto next_iterator = next_motion_data_->frames_[current_frame_counter_].bone_transforms_.begin();
+	float blend_rate = static_cast<float>(blend_frame_counter_) / static_cast<float>(blend_frame_number_);
 
-	for (auto born : animator.bones)
+	for (auto& bone : avatar)
 	{
-		const auto& currentMotionMatrix = currentBoneFrameIterator->Matrix;
-		const auto& nextMotionMatrix = nextMotionCurrentBoneFrameIterator->Matrix;;
-		const auto& blendMatrix = currentMotionMatrix * (1.0f - blendRate) + nextMotionMatrix * blendRate;
-		born->GetTransform()->SetNextMatrix(blendMatrix);
-		++currentBoneFrameIterator;
-		++nextMotionCurrentBoneFrameIterator;
+		const auto& blend_translation = math::Lerp(current_iterator->translation_, next_iterator->translation_, blend_rate);
+		const auto& blend_rotation = math::Slerp(current_iterator->rotation_, next_iterator->rotation_, blend_rate);
+		const auto& blend_scale = math::Lerp(current_iterator->scale_, next_iterator->scale_, blend_rate);
+		bone.transform->SetPosition(blend_translation);
+		bone.transform->SetRotation(blend_rotation);
+		bone.transform->SetScale(blend_scale);
+		++current_iterator;
+		++next_iterator;
 	}
 
-	if (++current_motion_frame_counter_ == frameNumber)
+	if (++current_frame_counter_ == frame_number)
 	{
-		if (!current_motion_info_->IsLoop) --current_motion_frame_counter_;
-		else current_motion_frame_counter_ = 0;
+		if (!current_motion_data_->is_loop_) --current_frame_counter_;
+		else current_frame_counter_ = 0;
 	}
 
-	if (++next_motion_frame_counter_ == nextMotionFrameNumber)
+	if (++next_frame_counter_ == next_frame_number)
 	{
-		if (!next_motion_info_->IsLoop) --next_motion_frame_counter_;
-		else next_motion_frame_counter_ = 0;
+		if (!next_motion_data_->is_loop_) --next_frame_counter_;
+		else next_frame_counter_ = 0;
 	}
 
 	++blend_frame_counter_;
 }
 
 //--------------------------------------------------------------------------------
-//  モーションの切り替え / 切换动作
+//  モーションの切り替え
 //--------------------------------------------------------------------------------
 void BlendMotionState::ChangeMotion(Animator& animator)
 {
 	if (blend_frame_counter_ < blend_frame_number_) return;
-	next_motion_pointer_->Set(next_motion_frame_counter_);
+	next_motion_pointer_->Set(next_frame_counter_);
 	animator.Change(next_motion_pointer_);
 }

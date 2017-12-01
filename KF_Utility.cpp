@@ -173,7 +173,7 @@ String utility::GetProjectPath(void)
 			, filename[MAX_PATH + 1]
 			, extension[MAX_PATH + 1];
 		//パス名を構成要素に分解します
-		_splitpath(path, drive, directory, filename, extension);
+		_splitpath_s(path, drive, directory, filename, extension);
 		string projectpath = drive;
 		projectpath += directory;
 		return String(projectpath.begin(), projectpath.end());

@@ -468,8 +468,8 @@ BOOL CALLBACK JoystickDirectX::EnumAxesCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi
 	diprg.diph.dwHeaderSize = sizeof(diprg.diph);
 	diprg.diph.dwObj = lpddoi->dwType;
 	diprg.diph.dwHow = DIPH_BYID;
-	diprg.lMin = -kStickAxisMax;
-	diprg.lMax = +kStickAxisMax;
+	diprg.lMin = -static_cast<LONG>(kStickAxisMax);
+	diprg.lMax = +static_cast<LONG>(kStickAxisMax);
 	if (FAILED((*device_pointer)->SetProperty(DIPROP_RANGE, &diprg.diph)))
 	{
 		return DIENUM_STOP;
