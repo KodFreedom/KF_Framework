@@ -2,13 +2,8 @@
 //
 //　modeDemo.h
 //	Author : Xu Wenjie
-//	Date   : 2017-04-28
 //--------------------------------------------------------------------------------
 #pragma once
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
 #include "mode.h"
 
 //--------------------------------------------------------------------------------
@@ -23,7 +18,7 @@ public:
 	ModeDemo();
 	~ModeDemo();
 
-	void	Init(void) override;
-	void	Update(void) override;
-	void	LateUpdate(void) override;
+	void Init(void) override;
+	void Update(void) override;
+	void LateUpdate(void) override;
 };

@@ -199,11 +199,11 @@
     <ClCompile Include="material_manager.cpp" />
     <ClCompile Include="mesh_manager.cpp" />
     <ClCompile Include="mode.cpp" />
-    <ClCompile Include="modeDemo.cpp" />
-    <ClCompile Include="modeEditor.cpp" />
+    <ClCompile Include="mode_demo.cpp" />
+    <ClCompile Include="mode_editor.cpp" />
     <ClCompile Include="model_editor.cpp" />
-    <ClCompile Include="modeResult.cpp" />
-    <ClCompile Include="modeTitle.cpp" />
+    <ClCompile Include="mode_result.cpp" />
+    <ClCompile Include="mode_title.cpp" />
     <ClCompile Include="motion_state.cpp" />
     <ClCompile Include="player_controller.cpp" />
     <ClCompile Include="player_ui.cpp" />
@@ -265,7 +265,7 @@
     <ClInclude Include="game_object_manager.h" />
     <ClInclude Include="game_object_spawner.h" />
     <ClInclude Include="kf_utility.h" />
-    <ClInclude Include="modeEditor.h" />
+    <ClInclude Include="mode_editor.h" />
     <ClInclude Include="model_editor.h" />
     <ClInclude Include="input_device_directX.h" />
     <ClInclude Include="input.h" />
@@ -280,9 +280,9 @@
     <ClInclude Include="material_manager.h" />
     <ClInclude Include="mesh_manager.h" />
     <ClInclude Include="mode.h" />
-    <ClInclude Include="modeDemo.h" />
-    <ClInclude Include="modeResult.h" />
-    <ClInclude Include="modeTitle.h" />
+    <ClInclude Include="mode_demo.h" />
+    <ClInclude Include="mode_result.h" />
+    <ClInclude Include="mode_title.h" />
     <ClInclude Include="motion_data.h" />
     <ClInclude Include="motion_state.h" />
     <ClInclude Include="obb_collider.h" />

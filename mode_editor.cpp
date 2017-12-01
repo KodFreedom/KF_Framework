@@ -2,23 +2,16 @@
 //
 //　modeEditor.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-08-19
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "versionSetting.h"
-#if defined(_DEBUG) || defined(EDITOR)
-#include "main.h"
-#include "manager.h"
-#include "lightManager.h"
+#include "mode_editor.h"
+#if defined(EDITOR)
+#include "main_system.h"
+#include "light_manager.h"
 #include "input.h"
-#include "modeEditor.h"
-#include "editorCamera.h"
+#include "editor_camera.h"
 
 //gameobject
-#include "gameObjectSpawner.h"
-#include "gameObjectActor.h"
+#include "game_object_spawner.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -30,13 +23,14 @@
 //--------------------------------------------------------------------------------
 void ModeEditor::Init(void)
 {
-	LightManager::Instance()->CreateLight(LightType::LT_Directional);
+	auto main_system = MainSystem::Instance();
+	main_system->GetLightManager()->CreateDirectionLight(Vector3(-1.0f, -1.0f, 1.0f).Normalized());
 
 	//カメラの初期化
-	auto camera = new EditorCamera;
+	auto camera = MY_NEW EditorCamera;
 	camera->Init();
 
-	Input::Instance()->SetEditorMode(true);
+	main_system->GetInput()->SetEditorMode(true);
 
 	//ゲームオブジェクトの初期化
 	auto fieldEditor = GameObjectSpawner::CreateFieldEditor();
@@ -59,10 +53,10 @@ void ModeEditor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void ModeEditor::uninit(void)
+void ModeEditor::Uninit(void)
 {
-	Mode::uninit();
-	Input::Instance()->SetEditorMode(false);
+	Mode::Uninit();
+	MainSystem::Instance()->GetInput()->SetEditorMode(false);
 }
 #endif // _DEBUG
 

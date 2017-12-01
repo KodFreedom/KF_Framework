@@ -2,32 +2,22 @@
 //
 //　modeDemo.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-04-28
 //--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "manager.h"
-#include "lightManager.h"
+#include "mode_demo.h"
+#include "main_system.h"
+#include "light_manager.h"
 #include "input.h"
-#include "soundManager.h"
-#include "mode.h"
-#include "modeDemo.h"
-#include "modeResult.h"
-#include "thirdPersonCamera.h"
-#include "fadeSystem.h"
-#include "motionManager.h"
-#include "materialManager.h"
+#include "sound_manager.h"
+#include "mode_result.h"
+#include "third_person_camera.h"
+#include "fade_system.h"
 
 //gameobject
-#include "stageSpawner.h"
-#include "gameObjectSpawner.h"
-#include "gameObjectActor.h"
+#include "stage_spawner.h"
+#include "game_object_spawner.h"
 
 #ifdef _DEBUG
-#include "debugObserver.h"
+#include "debug_observer.h"
 #endif // _DEBUG
 
 //--------------------------------------------------------------------------------
@@ -38,7 +28,7 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ModeDemo::ModeDemo() : Mode("Demo")
+ModeDemo::ModeDemo() : Mode(L"Demo")
 {
 
 }
@@ -56,10 +46,11 @@ ModeDemo::~ModeDemo()
 //--------------------------------------------------------------------------------
 void ModeDemo::Init(void)
 {	
-	LightManager::Instance()->CreateLight(LightType::LT_Directional);
+	auto main_system = MainSystem::Instance();
+	main_system->GetLightManager()->CreateDirectionLight(Vector3(-1.0f, -1.0f, 1.0f).Normalized());
 
 	//カメラの初期化
-	auto camera = new ThirdPersionCamera;
+	auto camera = MY_NEW ThirdPersionCamera;
 	camera->Init();
 
 	//MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
@@ -69,7 +60,7 @@ void ModeDemo::Init(void)
 	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
 //	//ゲームオブジェクトの初期化
 	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	StageSpawner::LoadStage("demo");
+	StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 //	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
 //	player->SetName("Player");
@@ -104,8 +95,9 @@ void ModeDemo::LateUpdate(void)
 {
 	Mode::LateUpdate();
 
-	if (Input::Instance()->GetKeyTrigger(Key::Start))
+	auto main_system = MainSystem::Instance();
+	if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
 	{
-		FadeSystem::Instance()->FadeTo(new ModeResult);
+		main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
 	}
 }

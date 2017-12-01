@@ -2,19 +2,14 @@
 //
 //　modeDemo.cpp
 //	Author : Xu Wenjie
-//	Date   : 2017-07-05
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
-//--------------------------------------------------------------------------------
-#include "main.h"
-#include "lightManager.h"
+#include "mode_result.h"
+#include "main_system.h"
 #include "input.h"
-#include "modeResult.h"
+#include "mode_title.h"
 #include "camera.h"
-#include "fadeSystem.h"
-#include "modeTitle.h"
-#include "BackgroundUI.h"
+#include "fade_system.h"
+#include "background_ui.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -26,14 +21,12 @@
 //--------------------------------------------------------------------------------
 void ModeResult::Init(void)
 {
-	LightManager::Instance()->CreateLight(LightType::LT_Directional);
-
 	//カメラの初期化
-	auto camera = new NormalCamera;
+	auto camera = MY_NEW Camera;
 	camera->Init();
 
 	//UIの初期化
-	BackgroundUI::Create("endingGood.jpg");
+	BackgroundUI::Create(L"endingGood.jpg");
 }
 
 //--------------------------------------------------------------------------------
@@ -43,8 +36,8 @@ void ModeResult::Update(void)
 {
 	Mode::Update();
 
-	if (Input::Instance()->GetKeyTrigger(Key::Submit))
+	if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
 	{
-		FadeSystem::Instance()->FadeTo(new ModeTitle);
+		MainSystem::Instance()->GetFadeSystem()->FadeTo(MY_NEW ModeTitle);
 	}
 }

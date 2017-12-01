@@ -19,8 +19,8 @@
 #include "collision_system.h"
 #include "physics_system.h"
 #include "game_object_manager.h"
-#include "modeTitle.h"
-#include "modeDemo.h"
+#include "mode_title.h"
+#include "mode_demo.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
@@ -29,7 +29,7 @@
 #endif
 
 #ifdef EDITOR
-#include "modeEditor.h"
+#include "mode_editor.h"
 #endif // EDITOR
 
 #ifdef _DEBUG
@@ -52,7 +52,7 @@ MainSystem* MainSystem::instance_ = nullptr;
 MainSystem* MainSystem::Create(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
 	if (instance_) return instance_;
-	instance_ = new MainSystem;
+	instance_ = MY_NEW MainSystem;
 	instance_->Init(hinstance, hwnd, is_window_mode);
 	return instance_;
 }
@@ -175,9 +175,9 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
-	Change(new ModeEditor);
+	Change(MY_NEW ModeEditor);
 #else
-	Change(new ModeDemo);
+	Change(MY_NEW ModeDemo);
 #endif // EDITOR
 
 	return true;
