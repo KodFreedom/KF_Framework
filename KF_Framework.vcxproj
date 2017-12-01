@@ -229,6 +229,7 @@
     <ClInclude Include="actor_parameter.h" />
     <ClInclude Include="player_neutral_state.h" />
     <ClInclude Include="player_state.h" />
+    <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="ui_object_2d.h" />

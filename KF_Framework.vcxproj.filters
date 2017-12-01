@@ -638,5 +638,8 @@
     <ClInclude Include="mode_title.h">
       <Filter>ヘッダー ファイル\Mode</Filter>
     </ClInclude>
+    <ClInclude Include="shader_directX9.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
