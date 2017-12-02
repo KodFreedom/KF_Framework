@@ -172,7 +172,7 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	ifstream file(path);
 	if (!file.is_open())
 	{
-		assert("failed to open");
+		assert(file.is_open());
 		return nullptr;
 	}
 	BinaryInputArchive archive(file);
@@ -320,7 +320,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	auto result = MY_NEW GameObject;
 
 	//Node名
-	size_t name_size;
+	int name_size;
 	archive.loadBinary(&name_size, sizeof(name_size));
 	string name;
 	name.resize(name_size);
@@ -376,24 +376,45 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	for (int count = 0; count < mesh_number; ++count)
 	{
 		//Mesh Name
-		int mesh_name_size = 0;
-		archive.loadBinary(&mesh_name_size, sizeof(mesh_name_size));
-		string mesh_name;
-		mesh_name.resize(mesh_name_size);
-		archive.loadBinary(&mesh_name[0], mesh_name_size);
-		String real_name = String(mesh_name.begin(), mesh_name.end());
+		archive.loadBinary(&name_size, sizeof(name_size));
+		name.resize(name_size);
+		archive.loadBinary(&name[0], name_size);
+		String mesh_name = String(name.begin(), name.end());
 
-		//Check Type
-		auto& file_info = Utility::AnalyzeFilePath(real_name);
-		if (file_info.type._Equal(L"mesh") || file_info.type._Equal(L"x"))
+		//Material
+		archive.loadBinary(&name_size, sizeof(name_size));
+		name.resize(name_size);
+		archive.loadBinary(&name[0], name_size);
+		String material_name = String(name.begin(), name.end());
+
+		//Render Priority
+		RenderPriority priority;
+		archive.loadBinary(&priority, sizeof(priority));
+
+		//Shader Type
+		ShaderType shader_type;
+		archive.loadBinary(&shader_type, sizeof(shader_type));
+
+		//Mesh type
+		MeshType mesh_type;
+		archive.loadBinary(&mesh_type, sizeof(mesh_type));
+		//Check File Type
+		if (mesh_type == k3dMesh)
 		{//骨なし
 			auto renderer = MY_NEW MeshRenderer(*result);
-			renderer->SetMesh(real_name);
+			renderer->SetMesh(mesh_name + L".mesh");
+			renderer->SetMaterial(material_name);
+			renderer->SetRenderPriority(priority);
+			renderer->SetShaderType(shader_type);
 			result->AddRenderer(renderer);
 		}
-		else if (file_info.type._Equal(L"oneSkinMesh"))
+		else if (mesh_type == k3dSkin)
 		{//ワンスキーンメッシュ
 			MessageBox(NULL, L"oneSkinMesh未対応", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+		}
+		else
+		{
+			MessageBox(NULL, L"error mesh type!!", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
 		}
 	}
 

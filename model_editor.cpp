@@ -57,30 +57,11 @@ ModelEditor::ModelEditor(GameObject& owner)
 //--------------------------------------------------------------------------------
 bool ModelEditor::Init(void)
 {
-	//model_names_[Box] = "cube";
-	//model_names_[Tree] = "tree_1";
-	//model_names_[PineTree] = "Pine_tree";
-	//model_names_[Windmill] = "Medieval_Windmill";
-	//model_names_[Rock1] = "rock_1";
-	//model_names_[Rock2] = "rock_2";
-	//model_names_[Rock3] = "rock_3";
-	//model_names_[BakerHouse] = "Baker_house";
-	//model_names_[Barrel] = "Barrayel";
-	//model_names_[Bridge] = "Bridge";
-	//model_names_[Fence] = "Fence";
-	//model_names_[FancyTavern] = "Fancy_Tavern";
-	//model_names_[MedHouse1] = "Medieval house";
-	//model_names_[MedHouse2] = "Medieval_house_1";
-	//model_names_[MedHouseFantasy] = "Medieva_fantasy_house";
-	//model_names_[House] = "House";
-	//model_names_[Well] = "cartoon_well";
-	//model_names_[MedBridge] = "Medieval Bridge";
-
 	// フォルダから全てのファイルを読み込む
 	String& folder_path = Utility::GetProjectPath() + L"data\\model";
 	model_names_ = Utility::GetFilesFromFolder(folder_path, L"model");
 
-	//Demo Objectの作成
+	// Demo Objectの作成
 	size_t model_number = model_names_.size();
 	demo_model_infos_.resize(model_number);
 	for (size_t count = 0; count < model_number; ++count)
@@ -90,6 +71,9 @@ bool ModelEditor::Init(void)
 		demo_model_infos_[count].my_transform = gameObject->GetTransform();
 	}
 	created_model_infos_.resize(model_number);
+
+	// 標的を小さくする
+	owner_.GetTransform()->SetScale(Vector3(0.5f));
 	return true;
 }
 
@@ -240,7 +224,7 @@ void ModelEditor::ShowMainWindow(void)
 	size_t model_number = model_names_.size();
 	for (size_t count = 0; count < model_number; ++count)
 	{
-		ImGui::Text("%s : %d", model_names_[count].c_str()
+		ImGui::Text("%s : %d", string(model_names_[count].begin(), model_names_[count].end()).c_str()
 			, static_cast<int>(created_model_infos_[count].size()));
 	}
 	if (ImGui::Button("Show Created List")) { is_show_created_list_ ^= 1; }

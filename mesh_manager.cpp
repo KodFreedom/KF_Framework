@@ -152,7 +152,7 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 {
 	MeshInfo info;
 	String& path = L"data/mesh/" + mesh_name;
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
 		assert(file.is_open());
