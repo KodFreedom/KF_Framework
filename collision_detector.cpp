@@ -45,7 +45,7 @@ void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphe
 		return;
 	}
 
-	auto collision = new Collision;
+	auto collision = MY_NEW Collision;
 
 	//衝突点の算出
 	collision->point = sphere_right_position + midline * 0.5f;
@@ -142,7 +142,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 
 	//衝突情報
 	closest_position = closest_position + aabb_position;
-	auto collision = new Collision;
+	auto collision = MY_NEW Collision;
 	collision->normal = sphere_position - closest_position;
 	if (collision->normal.SquareMagnitude() == 0.0f)
 	{//中心がaabbの中にある
@@ -242,7 +242,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 
 	//衝突情報
 	closest_position = Vector3::TransformCoord(closest_position, obb_matrix);
-	auto collision = new Collision;
+	auto collision = MY_NEW Collision;
 	collision->normal = sphere_position - closest_position;
 	if (collision->normal.SquareMagnitude() == 0.0f)
 	{//中心がobbの中にある
@@ -321,7 +321,7 @@ void CollisionDetector::Detect(AabbCollider& aabb_left, AabbCollider& aabb_right
 	penetration_z = penetration_z > 0.0f ? penetration_z : no_collision_distance.z_;
 	auto penetrationMin = min(penetration_x, min(penetration_y, penetration_z));
 	
-	auto collision = new Collision;
+	auto collision = MY_NEW Collision;
 	collision->penetration = penetrationMin;
 	collision->point = midline * 0.5f;
 	if (penetration_x == penetrationMin)
@@ -577,7 +577,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 	auto collision = Detect(ray.origin_, box);
 	if (collision)
 	{
-		auto result = new RayHitInfo;
+		auto result = MY_NEW RayHitInfo;
 		result->normal = collision->normal;
 		result->position = ray.origin_;
 		result->other = &box;
@@ -590,7 +590,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 	collision = Detect(ray_end, box);
 	if (collision)
 	{
-		auto result = new RayHitInfo;
+		auto result = MY_NEW RayHitInfo;
 		result->normal = collision->normal;
 		result->position = ray_end;
 		result->other = &box;
@@ -629,7 +629,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Sph
 
 	if (min_time > distance) { return nullptr; }
 
-	auto result = new RayHitInfo;
+	auto result = MY_NEW RayHitInfo;
 	result->distance = min_time;
 	result->other = &sphere;
 	result->position = ray.origin_ + ray.direction_ * min_time;
@@ -659,7 +659,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Fie
 		delete collision;
 		return nullptr;
 	}
-	auto result = new RayHitInfo;
+	auto result = MY_NEW RayHitInfo;
 	result->distance = collision->penetration;
 	result->normal = collision->normal;
 	result->other = &field;
@@ -702,7 +702,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const AabbCollider& a
 		normal = real_point.z_ < 0.0f ? Vector3::kBack : Vector3::kForward;
 	}
 
-	auto result = new Collision;
+	auto result = MY_NEW Collision;
 	result->normal = normal;
 	result->penetration = min_depth;
 	result->point = point;
@@ -741,7 +741,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const BoxCollider& bo
 			* (real_point.z_ < 0.0f ? -1.0f : 1.0f);
 	}
 
-	auto result = new Collision;
+	auto result = MY_NEW Collision;
 	result->normal = normal;
 	result->penetration = min_depth;
 	result->point = point;
@@ -766,7 +766,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& 
 		float penetration = point_y_on_field - point.y_;
 		if (penetration > 0.0f)
 		{
-			result = new Collision;
+			result = MY_NEW Collision;
 			result->point = point;
 			result->penetration = penetration;
 			result->normal = Vector3::kUp;
@@ -784,7 +784,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& 
 	
 	if (real_position.y_ < 0.0f)
 	{// 登られないため法線を上方向と垂直方向にする
-		result = new Collision;
+		result = MY_NEW Collision;
 		result->point = point;
 		result->normal = (Vector3::kUp * polygon_info->normal * Vector3::kUp).Normalized();
 		result->penetration = -real_position.y_;
@@ -813,7 +813,7 @@ Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end
 	if (slope_left == slope_right) return nullptr;
 
 	//交点の算出
-	auto result = new Vector2;
+	auto result = MY_NEW Vector2;
 	result->x_ = (add_right - add_left) / (slope_left - slope_right);
 	result->y_ = slope_left * result->x_ + add_left;
 
@@ -871,7 +871,7 @@ Vector3* CollisionDetector::Detect(const Vector3& begin_left, const Vector3& end
 		return nullptr;
 	}
 
-	auto result = new Vector3(point_on_xy->x_, point_on_xy->y_, z_left);
+	auto result = MY_NEW Vector3(point_on_xy->x_, point_on_xy->y_, z_left);
 	delete point_on_xy;
 	return result;
 }

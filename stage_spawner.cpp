@@ -58,7 +58,7 @@ void StageSpawner::LoadStage(const String& stage_name)
 	//		auto gameObject = GameObjectSpawner::CreateModel(modelName, position, rotation, Vector3::One);
 	//		if (modelName == "Medieval_Windmill.model")
 	//		{
-	//			auto behavior = new WindmillController(gameObject);
+	//			auto behavior = MY_NEW WindmillController(gameObject);
 	//			behavior->Init();
 	//			gameObject->AddBehavior(behavior);
 	//		}

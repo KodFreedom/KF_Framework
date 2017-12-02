@@ -7,6 +7,8 @@
 #include "mesh_renderer.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "default_shader.h"
+#include "no_light_no_fog_shader.h"
+#include "cull_none_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -55,6 +57,10 @@ void ShaderManager::Init(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	shaders_[kDefaultShader] = MY_NEW DefaultShader();
 	shaders_[kDefaultShader]->Init(device_);
+	shaders_[kNoLightNoFog] = MY_NEW NoLightNoFogShader();
+	shaders_[kNoLightNoFog]->Init(device_);
+	shaders_[kCullNone] = MY_NEW CullNoneShader();
+	shaders_[kCullNone]->Init(device_);
 #endif
 }
 

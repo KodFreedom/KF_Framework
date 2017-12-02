@@ -11,6 +11,8 @@
 #if defined(_DEBUG) || defined(EDITOR)
 #include "ImGui\imgui_impl_dx9.h"
 #endif
+#include "camera.h"
+#include "camera_manager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -26,7 +28,7 @@ void RenderSystemDirectX9::Render(const String& mesh_name)
 	device_->SetVertexDeclaration(vertex_declaration_3d_);
 	device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3d));
 	device_->SetIndices(mesh->index_buffer);
-	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->type),
+	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->draw_type),
 		0, 0, mesh->vertex_number, 0, mesh->polygon_number);
 }
 
@@ -203,7 +205,7 @@ void RenderSystemDirectX9::InitVertexDeclaration(void)
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
 		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-		{ 0, 30, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		{ 0, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
 		D3DDECL_END()
 	};
 	device_->CreateVertexDeclaration(elements_3d, &vertex_declaration_3d_);

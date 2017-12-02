@@ -33,7 +33,7 @@ void MaterialManager::Use(const String& material_name)
 	info.pointer = LoadFromFile(material_name);
 	if (!info.pointer)
 	{// “Çž‚Å‚«‚È‚¢‚Ìê‡^‚ÁÔ‚Å•Û‘¶‚·‚é
-		info.pointer = new Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+		info.pointer = MY_NEW Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
 	texture_manager->Use(info.pointer->diffuse_texture);
@@ -59,7 +59,7 @@ void MaterialManager::Use(const String& material_name, Material* material)
 	info.pointer = material;
 	if (!info.pointer)
 	{// material‚ªnull‚Ìê‡^‚ÁÔ‚Å•Û‘¶‚·‚é
-		info.pointer = new Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+		info.pointer = MY_NEW Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
 	texture_manager->Use(info.pointer->diffuse_texture);
@@ -120,7 +120,7 @@ Material* MaterialManager::LoadFromFile(const String& material_name)
 		return nullptr;
 	}
 	BinaryInputArchive archive(file);
-	auto result = new Material;
+	auto result = MY_NEW Material;
 	int buffer_size;
 	string buffer;
 	archive.loadBinary(&buffer_size, sizeof(buffer_size));

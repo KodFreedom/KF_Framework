@@ -27,7 +27,7 @@ PolygonInfo* FieldCollider::GetPolygonAt(const Vector3& point) const
 		return nullptr;
 	}
 
-	auto result = new PolygonInfo;
+	auto result = MY_NEW PolygonInfo;
 	int right_down_x = left_up_x + 1;
 	int right_down_z = left_up_z + 1;
 
@@ -88,7 +88,7 @@ VertexesInRange* FieldCollider::GetVertexesInRange(const Vector3& begin, const V
 	}
 
 	//”ÍˆÍ“à‚Ì’¸“_‚ğ•Û‘¶‚·‚é
-	auto result = new VertexesInRange;
+	auto result = MY_NEW VertexesInRange;
 	result->vertex_number_x = max_x - min_x;
 	result->vertex_number_z = max_z - min_z;
 	result->vertexes.reserve(result->vertex_number_x * result->vertex_number_z);

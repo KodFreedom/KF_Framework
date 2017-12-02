@@ -108,7 +108,7 @@ void PlayerUI::Update(void)
 //--------------------------------------------------------------------------------
 PlayerUI* PlayerUI::Create(PlayerController* const playerBehavior)
 {
-	PlayerUI* ui = new PlayerUI(playerBehavior);
+	PlayerUI* ui = MY_NEW PlayerUI(playerBehavior);
 	ui->Init();
 	return ui;
 }

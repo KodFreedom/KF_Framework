@@ -35,7 +35,7 @@ void RendererManager::Render(void)
 	for (int count_priority = 0; count_priority < static_cast<int>(kPriorityMax); ++count_priority)
 	{
 		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))
-		{
+		{// enable alpha test
 			MainSystem::Instance()->GetRenderSystem()->SetRenderState(AlphaMode::kAlphaTest);
 		}
 
@@ -54,7 +54,7 @@ void RendererManager::Render(void)
 		}
 
 		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))
-		{
+		{// disable alpha test
 			MainSystem::Instance()->GetRenderSystem()->SetRenderState(AlphaMode::kAlphaNone);
 		}
 	}

@@ -35,7 +35,8 @@ void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	if (FAILED(hr))
 	{
-		assert("failed to compile");
+		string buffer = static_cast<char*>(error_buffer->GetBufferPointer());
+		MessageBox(NULL, String(buffer.begin(), buffer.end()).c_str(), L"エラー", MB_OK | MB_ICONWARNING);
 		error_buffer->Release();
 		return;
 	}
@@ -61,7 +62,8 @@ void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	if (FAILED(hr))
 	{
-		assert("failed to compile");
+		string buffer = static_cast<char*>(error_buffer->GetBufferPointer());
+		MessageBox(NULL, String(buffer.begin(), buffer.end()).c_str(), L"エラー", MB_OK | MB_ICONWARNING);
 		error_buffer->Release();
 		return;
 	}

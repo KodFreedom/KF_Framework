@@ -71,11 +71,11 @@ Input::Input()
 //--------------------------------------------------------------------------------
 bool Input::Init(HINSTANCE hinstance, HWND hwnd)
 {
-	keyboard_ = new KeyboardDirectX;
+	keyboard_ = MY_NEW KeyboardDirectX;
 	keyboard_->Init(hinstance, hwnd);
-	mouse_ = new MouseDirectX;
+	mouse_ = MY_NEW MouseDirectX;
 	mouse_->Init(hinstance, hwnd);
-	joystick_ = new JoystickDirectX;
+	joystick_ = MY_NEW JoystickDirectX;
 	joystick_->Init(hinstance, hwnd);
 	return true;
 }
