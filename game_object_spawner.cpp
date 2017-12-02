@@ -269,48 +269,39 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
 
 #if defined(EDITOR)
 //--------------------------------------------------------------------------------
-//  CreateStageEditor
+//  クラス
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateStageEditor(GameObject* field_editor)
+GameObject* GameObjectSpawner::CreateEditor(void)
 {
-	auto result = MY_NEW GameObject;
+	// FieldEditor
+	auto field = MY_NEW GameObject;
+	auto field_editor = MY_NEW FieldEditor(*field);
+	field->AddBehavior(field_editor);
+	auto renderer = MY_NEW MeshRenderer(*field);
+	renderer->SetMesh(L"field");
+	renderer->SetMaterial(L"editorField");
+	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
+	field->AddRenderer(renderer);
+	field->Init();
 
-	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
-	renderer->SetMesh(L"data/model/target.x");
-	result->AddRenderer(renderer);
+	// Main Controller
+	auto result = MY_NEW GameObject;
 	auto model_editor = MY_NEW ModelEditor(*result);
+	result->AddBehavior(model_editor);
 	auto editor_controller = MY_NEW EditorController(*result);
 	editor_controller->SetFieldEditor(field_editor);
 	editor_controller->SetModelEditor(model_editor);
 	result->AddBehavior(editor_controller);
-	result->AddBehavior(model_editor);
-
-	//初期化
-	result->Init();
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateFieldEditor(void)
-{
-	auto result = MY_NEW GameObject;
-
-	//コンポネント
-	auto pBehavior = MY_NEW FieldEditor(*result);
-	result->AddBehavior(pBehavior);
-	auto renderer = MY_NEW MeshRenderer(*result);
-	renderer->SetMesh(L"field");
-	renderer->SetMaterial(L"editorField");
+	renderer = MY_NEW MeshRenderer(*result);
+	renderer->SetMesh(L"data/model/target.x");
+	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
 
-	//初期化
+	// 初期化
 	result->Init();
 	return result;
 }
-#endif // _DEBUG
+#endif // EDITOR
 
 //--------------------------------------------------------------------------------
 //

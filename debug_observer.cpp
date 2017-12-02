@@ -158,7 +158,8 @@ void DebugObserver::ShowCameraWindow(void)
 		return;
 	}
 
-	// Fov
+	ImGui::InputFloat3("eye", &camera->world_eye_position_.x_);
+	ImGui::InputFloat3("at", &camera->world_at_position_.x_);
 	ImGui::InputFloat("Fov", &camera->fov_);
 
 	// End

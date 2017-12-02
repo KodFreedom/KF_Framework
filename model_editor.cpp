@@ -135,6 +135,7 @@ void ModelEditor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void ModelEditor::SetPosition(const Vector3& position)
 {
+	if (demo_model_infos_.empty()) return;
 	demo_model_infos_[current_model_no_].my_transform->SetPosition(position);
 }
 
@@ -220,17 +221,20 @@ void ModelEditor::ShowMainWindow(void)
 	// Model Type
 	ShowTypeListBox();
 
-	// Model Trans
-	auto& current_info = demo_model_infos_[current_model_no_];
+	if (!demo_model_infos_.empty())
+	{
+		// Model Trans
+		auto& current_info = demo_model_infos_[current_model_no_];
 
-	//モデル回転
-	if(ImGui::SliderFloat3("rotation", &current_info.rotation.x_, 0.0f, kPi * 2.0f))
-	{ 
-		current_info.my_transform->SetRotation(current_info.rotation);
+		//モデル回転
+		if (ImGui::SliderFloat3("rotation", &current_info.rotation.x_, 0.0f, kPi * 2.0f))
+		{
+			current_info.my_transform->SetRotation(current_info.rotation);
+		}
+
+		//モデルの作成
+		if (ImGui::Button("Create")) { Create(); }
 	}
-
-	//モデルの作成
-	if (ImGui::Button("Create")) { Create(); }
 
 	//モデルリスト
 	size_t model_number = model_names_.size();

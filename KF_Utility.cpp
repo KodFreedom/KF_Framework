@@ -144,7 +144,8 @@ vector<String> Utility::GetFilesFromFolder(const String& path, const String& ext
 
 	if (handle == INVALID_HANDLE_VALUE) 
 	{
-		throw runtime_error("file not found");
+		// file not found
+		return file_names;
 	}
 
 	do 

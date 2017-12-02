@@ -120,7 +120,7 @@ public:
 	//  vertexes : 頂点データ
 	//  indexes : インデックスデータ
 	//--------------------------------------------------------------------------------
-	void Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes);
+	void Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number = -1);
 
 	//--------------------------------------------------------------------------------
 	//  与えられた名前のメッシュを使わない
@@ -198,7 +198,7 @@ private:
 	//  mesh_name : メッシュ名
 	//  return : MeshInfo
 	//--------------------------------------------------------------------------------
-	//MeshInfo LoadFromXFile(const String& mesh_name);
+	MeshInfo LoadFromXFile(const String& mesh_name);
 
 	//--------------------------------------------------------------------------------
 	//  cubeメッシュを生成する
@@ -225,7 +225,7 @@ private:
 	//  indexes : インデックスデータ
 	//  return : MeshInfo
 	//--------------------------------------------------------------------------------
-	MeshInfo CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes);
+	MeshInfo CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number);
 	
 	//--------------------------------------------------------------------------------
 	//  create the vertex and index buffer, return true if successed
