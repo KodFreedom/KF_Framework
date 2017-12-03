@@ -12,6 +12,7 @@
 class GameObject;
 class GameObjectActor;
 class Transform;
+class Animator;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -41,5 +42,13 @@ private:
 	GameObjectSpawner& operator=(const GameObjectSpawner& value) {}
 	~GameObjectSpawner() {}
 
-	static GameObject* CreateChildNode(Transform* parent, BinaryInputArchive& archive);
+	//--------------------------------------------------------------------------------
+	//	関数名：CreateChildNode
+	//  関数説明：モデルファイルからゲームオブジェクト作成
+	//	引数：	parent：ファイルの名前 
+	//			archive : ファイルストリーム
+	//			animator : アニメーター（skinmeshのみ使う）
+	//	戻り値：GameObject*
+	//--------------------------------------------------------------------------------
+	static GameObject* CreateChildNode(Transform* parent, BinaryInputArchive& archive, Animator* animator = nullptr);
 };

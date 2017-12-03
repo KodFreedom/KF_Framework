@@ -20,7 +20,7 @@ void PlayerState::UpdateInput(ActorController& actor)
 	auto& axis = Vector2(input->MoveHorizontal(), input->MoveVertical());
 	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
 	auto& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-	auto& movement = (camera->GetWorldRight() * axis.x_ + camera_forward * axis.y_).Normalized();
+	auto& movement = (camera->GetWorldRight() * axis.x_ + camera_forward * axis.y_);
 	actor.SetMovement(movement);
 	actor.SetIsAttack(input->GetKeyTrigger(Key::kAttack));
 	actor.SetIsJump(input->GetKeyTrigger(Key::kJump));

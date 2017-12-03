@@ -7,6 +7,11 @@
 #include "mesh_renderer.h"
 
 //--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
+class Animator;
+
+//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 class MeshRenderer3dSkin : public MeshRenderer
@@ -15,14 +20,21 @@ public:
 	//--------------------------------------------------------------------------------
 	//  constructors and destructors
 	//--------------------------------------------------------------------------------
-	MeshRenderer3dSkin(GameObject& owner
+	MeshRenderer3dSkin(const Animator& animator, GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
 		, const ShaderType& shader_type = kDefaultShader)
-		: MeshRenderer(owner, priority, shader_type) {}
+		: MeshRenderer(owner, priority, shader_type)
+		, animator_(animator) {}
 	~MeshRenderer3dSkin() {}
 
 	//--------------------------------------------------------------------------------
 	//  描画処理
 	//--------------------------------------------------------------------------------
 	void RenderBy(const RenderSystem& render_system) override;
+
+private:
+	//--------------------------------------------------------------------------------
+	//  変数定義
+	//--------------------------------------------------------------------------------
+	const Animator& animator_; // ボーン情報を持ってるアニメーター
 };

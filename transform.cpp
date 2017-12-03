@@ -55,7 +55,7 @@ void Transform::UpdateMatrix(const Matrix44& parent)
 //--------------------------------------------------------------------------------
 // 親登録処理
 //--------------------------------------------------------------------------------
-void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Quaternion& offset_rotation)
+void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Quaternion& offset_rotation, const Vector3& offset_scale)
 {
 	if (parent_)
 	{//親があるの場合前の親から削除
@@ -63,7 +63,7 @@ void Transform::RegisterParent(Transform* value, const Vector3& offset_translati
 	}
 	parent_ = value;
 	parent_->RegisterChild(this);
-	offset_ = Matrix44::Transform(offset_rotation, offset_translation);
+	offset_ = Matrix44::Transform(offset_rotation, offset_translation, offset_scale);
 }
 
 //--------------------------------------------------------------------------------
@@ -105,6 +105,14 @@ Matrix44 Transform::GetCurrentWorldMatrix(void) const
 void Transform::SetOffset(const Vector3& translation, const Vector3& rotation)
 {
 	offset_ = Matrix44::Transform(rotation, translation);
+}
+
+//--------------------------------------------------------------------------------
+//  親に対する相対行列の設定
+//--------------------------------------------------------------------------------
+void Transform::SetOffset(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
+{
+	offset_ = Matrix44::Transform(rotation, translation, scale);
 }
 
 //--------------------------------------------------------------------------------

@@ -51,7 +51,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  e“o˜^ˆ—
 	//--------------------------------------------------------------------------------
-	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Quaternion& offset_rotation = Quaternion::kIdentity);
+	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Quaternion& offset_rotation = Quaternion::kIdentity, const Vector3& offset_scale = Vector3::kOne);
 
 	//--------------------------------------------------------------------------------
 	//  ˆÊ’u‚Ìæ“¾
@@ -152,6 +152,11 @@ public:
 	//  offset‚Ìİ’è
 	//--------------------------------------------------------------------------------
 	void SetOffset(const Vector3& translation, const Vector3& rotation);
+
+	//--------------------------------------------------------------------------------
+	//  offset‚Ìİ’è
+	//--------------------------------------------------------------------------------
+	void SetOffset(const Vector3& translation, const Quaternion& rotation, const Vector3& scale);
 
 	//--------------------------------------------------------------------------------
 	//  ƒI[ƒ‰[Šp‚æ‚è‰ñ“]

@@ -22,6 +22,28 @@ namespace kodfreedom
 	constexpr float kPi = 3.1415926358979f; // Pi / 円周率
 
 	//--------------------------------------------------------------------------------
+	//  Short4
+	//--------------------------------------------------------------------------------
+	class Short4
+	{
+	public:
+		Short4() : x_(0), y_(0), z_(0), w_(0) {}
+		~Short4() {}
+
+		union
+		{
+			struct
+			{
+				short x_;
+				short y_;
+				short z_;
+				short w_;
+			};
+			short m_[4];
+		};
+	};
+
+	//--------------------------------------------------------------------------------
 	//  ベクトル2
 	//--------------------------------------------------------------------------------
 	class Vector2
@@ -1134,7 +1156,7 @@ namespace kodfreedom
 		//--------------------------------------------------------------------------------
 		Quaternion Conjugate(void) const
 		{
-			return Quaternion(-x_, -y_, -z_, -w_);
+			return Quaternion(-x_, -y_, -z_, w_);
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -1169,7 +1191,7 @@ namespace kodfreedom
 			float sin = sinf(radian * 0.5f);
 			float cos = cosf(radian * 0.5f);
 			auto& scale = Quaternion(sin, sin, sin, cos);
-			return axis_quaternion * scale;
+			return axis_quaternion.MultiplySeparately(scale);
 		}
 	};
 

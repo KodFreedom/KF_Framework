@@ -170,7 +170,7 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 	archive.loadBinary(&info.pointer->polygon_number, sizeof(info.pointer->polygon_number));
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	if (!CreateBuffer(info.pointer))
+	if (!CreateBuffer3d(info.pointer))
 	{
 		assert(info.pointer);
 		file.close();
@@ -181,6 +181,52 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 	Vertex3d* vertex_pointer;
 	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
 	archive.loadBinary(vertex_pointer, sizeof(Vertex3d) * info.pointer->vertex_number);
+	info.pointer->vertex_buffer->Unlock();
+
+	//インデックス
+	WORD* index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	archive.loadBinary(index_pointer, sizeof(WORD) * info.pointer->index_number);
+	info.pointer->index_buffer->Unlock();
+#endif
+	file.close();
+	return info;
+}
+
+//--------------------------------------------------------------------------------
+//  skinファイルからデータを読み込む
+//--------------------------------------------------------------------------------
+MeshManager::MeshInfo MeshManager::LoadFromSkin(const String& skin_name)
+{
+	MeshInfo info;
+	String& path = L"data/skin/" + skin_name;
+	ifstream file(path, ios::binary);
+	if (!file.is_open())
+	{
+		assert(file.is_open());
+		return info;
+	}
+	BinaryInputArchive archive(file);
+
+	info.pointer = MY_NEW Mesh;
+	info.pointer->type = k3dSkin;
+	archive.loadBinary(&info.pointer->draw_type, sizeof(info.pointer->draw_type));
+	archive.loadBinary(&info.pointer->vertex_number, sizeof(info.pointer->vertex_number));
+	archive.loadBinary(&info.pointer->index_number, sizeof(info.pointer->index_number));
+	archive.loadBinary(&info.pointer->polygon_number, sizeof(info.pointer->polygon_number));
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	if (!CreateBuffer3dSkin(info.pointer))
+	{
+		assert(info.pointer);
+		file.close();
+		return info;
+	}
+
+	//頂点データ
+	Vertex3dSkin* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	archive.loadBinary(vertex_pointer, sizeof(Vertex3dSkin) * info.pointer->vertex_number);
 	info.pointer->vertex_buffer->Unlock();
 
 	//インデックス
@@ -438,7 +484,7 @@ MeshManager::MeshInfo MeshManager::LoadFromXFile(const String& mesh_name)
 	fclose(filepointer);
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	if (!CreateBuffer(info.pointer))
+	if (!CreateBuffer3d(info.pointer))
 	{
 		assert(info.pointer);
 		return info;
@@ -478,7 +524,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 	info.pointer->polygon_number = 6 * 2 + 5 * 4;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	if (!CreateBuffer(info.pointer))
+	if (!CreateBuffer3d(info.pointer))
 	{
 		assert(info.pointer);
 		return info;
@@ -486,7 +532,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 
 	Vertex3d* vertex_pointer;
 	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-	auto& half_size = Vector3::kOne * 0.5f;
+	auto& half_size = Vector3::kOne * 0.5f / 0.2f;
 	int count_vertex = 0;
 
 	// 後ろ
@@ -498,6 +544,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			-half_size.z_);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kBack;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
@@ -510,6 +557,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			half_size.z_ - (count / 2) * half_size.z_ * 2.0f);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kUp;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
@@ -522,6 +570,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			half_size.z_ - (count % 2) * half_size.z_ * 2.0f);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kLeft;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
@@ -534,6 +583,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			-half_size.z_ + (count / 2) * half_size.z_ * 2.0f);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kDown;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
@@ -546,6 +596,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			-half_size.z_ + (count % 2) * half_size.z_ * 2.0f);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kRight;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
@@ -558,6 +609,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 			half_size.z_);
 		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
 		vertex_pointer[count_vertex].normal = Vector3::kForward;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 	info.pointer->vertex_buffer->Unlock();
@@ -578,113 +630,6 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 		}
 	}
 	info.pointer->index_buffer->Unlock();
-
-	/*
-	// Modelファイルの保存
-	string fileName = "data/MODEL/cube.model";
-	FILE *filepointer;
-
-	// file open
-	fopen_s(&filepointer, fileName.c_str(), "wb");
-
-	// Node名
-	string nodeName = "cube";
-	int stringSize = (int)nodeName.size();
-	fwrite(&stringSize, sizeof(int), 1, filepointer);
-	fwrite(&nodeName[0], sizeof(char), stringSize, filepointer);
-
-	// Offset
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filepointer);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filepointer);
-	fwrite(&Vector3::One, sizeof(Vector3), 1, filepointer);
-
-	// Collider
-	int colliderNumber = 1;
-	fwrite(&colliderNumber, sizeof(int), 1, filepointer);
-
-	int type = 1;
-	fwrite(&type, sizeof(int), 1, filepointer);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filepointer);
-	fwrite(&Vector3::Zero, sizeof(Vector3), 1, filepointer);
-	fwrite(&Vector3::One, sizeof(Vector3), 1, filepointer);
-
-	// Texture
-	int textureNumber = 1;
-	fwrite(&textureNumber, sizeof(int), 1, filepointer);
-	string textureName = "nomal_cube.jpg";
-	stringSize = textureName.size();
-	fwrite(&stringSize, sizeof(int), 1, filepointer);
-	fwrite(&textureName[0], sizeof(char), stringSize, filepointer);
-
-	// Mesh
-	int meshNumber = 1;
-	fwrite(&meshNumber, sizeof(int), 1, filepointer);
-	string mesh_name = nodeName + ".mesh";
-	stringSize = (int)mesh_name.size();
-	fwrite(&stringSize, sizeof(int), 1, filepointer);
-	fwrite(&mesh_name[0], sizeof(char), stringSize, filepointer);
-
-	fclose(filepointer);
-
-	// Mesh
-	fileName = "data/MESH/cube.mesh";
-
-	// file open
-	fopen_s(&filepointer, fileName.c_str(), "wb");
-
-	// DrawType
-	int drawType = (int)info.pointer->CurrentType;
-	fwrite(&drawType, sizeof(int), 1, filepointer);
-
-	// NumVtx
-	fwrite(&info.pointer->vertex_number, sizeof(int), 1, filepointer);
-
-	// NumIdx
-	fwrite(&info.pointer->index_number, sizeof(int), 1, filepointer);
-
-	// NumPolygon
-	fwrite(&info.pointer->polygon_number, sizeof(int), 1, filepointer);
-
-	// Vtx&Idx
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-	fwrite(vertex_pointer, sizeof(Vertex3d), info.pointer->vertex_number, filepointer);
-	info.pointer->vertex_buffer->Unlock();
-	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
-	fwrite(index_pointer, sizeof(WORD), info.pointer->index_number, filepointer);
-	info.pointer->index_buffer->Unlock();
-
-	// Texture
-	textureName = "nomal_cube.jpg";
-	stringSize = textureName.size();
-	fwrite(&stringSize, sizeof(int), 1, filepointer);
-	fwrite(&textureName[0], sizeof(char), stringSize, filepointer);
-
-	//Lighting
-	auto lighting = Lighting_On;
-	fwrite(&lighting, sizeof(lighting), 1, filepointer);
-
-	//CullMode
-	auto cullMode = Cull_CCW;
-	fwrite(&cullMode, sizeof(cullMode), 1, filepointer);
-
-	//Synthesis
-	auto synthesis = S_Multiplication;
-	fwrite(&synthesis, sizeof(synthesis), 1, filepointer);
-
-	//FillMode
-	auto fillMode = Fill_Solid;
-	fwrite(&fillMode, sizeof(fillMode), 1, filepointer);
-
-	//Alpha
-	auto alpha = A_None;
-	fwrite(&alpha, sizeof(alpha), 1, filepointer);
-
-	//Fog
-	auto fog = Fog_On;
-	fwrite(&fog, sizeof(fog), 1, filepointer);
-
-	fclose(filepointer);
-	*/
 #endif
 	return info;
 }
@@ -695,7 +640,66 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 MeshManager::MeshInfo MeshManager::CreateSphere(void)
 {
 	MeshInfo info;
-	assert(info.pointer);
+	info.pointer = MY_NEW Mesh;
+	info.pointer->vertex_number = (kSphereCircleNumber + 1) * (kSphereVertexesPerCircle + 1);
+	info.pointer->index_number = kSphereCircleNumber * (kSphereCircleNumber * 2 + 2) + (kSphereVertexesPerCircle - 1) * 2;
+	info.pointer->polygon_number = info.pointer->index_number - 2;
+
+	if (!CreateBuffer3d(info.pointer))
+	{
+		assert(info.pointer);
+		return info;
+	}
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	Vertex3d* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	int vertex_counter = 0;
+	for (int count_circle = 0; count_circle < kSphereCircleNumber + 1; count_circle++)
+	{
+		for (int count_vertex = 0; count_vertex < kSphereVertexesPerCircle + 1; count_vertex++)
+		{
+			float angle_xz = count_circle * (D3DX_PI / (kSphereCircleNumber - 1));
+			float angle_y = count_vertex * (D3DX_PI * 2.0f / (kSphereVertexesPerCircle - 1));
+			vertex_pointer->position = Vector3(
+				sinf(angle_xz) * sinf(angle_y),
+				cosf(angle_xz),
+				sinf(angle_xz) * cosf(angle_y));
+			vertex_pointer->normal = vertex_pointer->position.Normalized();
+			vertex_pointer->color = Color::kWhite;
+			vertex_pointer->uv = Vector2(
+				static_cast<float>(count_vertex) / (kSphereVertexesPerCircle - 1),
+				static_cast<float>(count_circle) / (kSphereCircleNumber - 1) * 2.0f);
+			++vertex_counter;
+			++vertex_pointer;
+		}
+	}
+	info.pointer->vertex_buffer->Unlock();
+
+	WORD* index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	for (int count_circle = 0; count_circle < kSphereCircleNumber; count_circle++)
+	{
+		if (count_circle != 0)
+		{
+			*index_pointer = (kSphereVertexesPerCircle + 1) * (count_circle + 1);
+			++index_pointer;
+		}
+		for (int count_vertex = 0; count_vertex < kSphereVertexesPerCircle + 1; count_vertex++)
+		{
+			*index_pointer = (kSphereVertexesPerCircle + 1) * (count_circle + 1) + count_vertex;
+			++index_pointer;
+			*index_pointer = (kSphereVertexesPerCircle + 1) * count_circle + count_vertex;
+			++index_pointer;
+		}
+		if (count_circle + 1 != kSphereCircleNumber)
+		{
+			*index_pointer = *(index_pointer - 1);
+			++index_pointer;
+		}
+	}
+	info.pointer->index_buffer->Unlock();
+#endif
 	return info;
 }
 
@@ -710,7 +714,7 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 	info.pointer->index_number = 6 * 4 + 5 * 2;
 	info.pointer->polygon_number = 6 * 2 + 5 * 4;
 
-	if (!CreateBuffer(info.pointer))
+	if (!CreateBuffer3d(info.pointer))
 	{
 		assert(info.pointer);
 		return info;
@@ -812,7 +816,7 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 	//インデックス
 	WORD *index_pointer;
 	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
-	for (int count = 0; count < 6 * 4 + 5 * 2; ++count)
+	for (int count = 0; count < info.pointer->index_number; ++count)
 	{
 		if (count % 6 < 4)
 		{
@@ -848,7 +852,7 @@ MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector
 		info.pointer->polygon_number = polygon_number;
 	}
 
-	if (!CreateBuffer(info.pointer))
+	if (!CreateBuffer3d(info.pointer))
 	{
 		assert(info.pointer);
 		return info;
@@ -877,7 +881,7 @@ MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector
 //--------------------------------------------------------------------------------
 //  バーテックスとインデックスバッファの生成
 //--------------------------------------------------------------------------------
-bool MeshManager::CreateBuffer(Mesh* mesh)
+bool MeshManager::CreateBuffer3d(Mesh* const mesh) const
 {
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//頂点バッファ
@@ -891,7 +895,7 @@ bool MeshManager::CreateBuffer(Mesh* mesh)
 
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"MeshManager : CreateBuffer ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, L"MeshManager : CreateBuffer3d ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 
@@ -907,6 +911,45 @@ bool MeshManager::CreateBuffer(Mesh* mesh)
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, L"MeshManager : Createindex_buffer ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
+		return false;
+	}
+#endif
+	return true;
+}
+
+//--------------------------------------------------------------------------------
+//  バーテックスとインデックスバッファの生成
+//--------------------------------------------------------------------------------
+bool MeshManager::CreateBuffer3dSkin(Mesh* const mesh) const
+{
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	//頂点バッファ
+	HRESULT hr = device_->CreateVertexBuffer(
+		sizeof(Vertex3dSkin) * mesh->vertex_number,
+		D3DUSAGE_WRITEONLY,
+		0,
+		D3DPOOL_MANAGED,
+		&mesh->vertex_buffer,
+		NULL);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"MeshManager : CreateBuffer3dSkin ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
+		return false;
+	}
+
+	//インデックスバッファの作成
+	hr = device_->CreateIndexBuffer(
+		sizeof(WORD) * mesh->index_number,
+		D3DUSAGE_WRITEONLY,
+		D3DFMT_INDEX16,
+		D3DPOOL_MANAGED,
+		&mesh->index_buffer,
+		NULL);
+
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"MeshManager : CreateBuffer3dSkin ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
 		return false;
 	}
 #endif
@@ -933,6 +976,7 @@ int MeshManager::GetVertexNumberPerPolygon(const DrawType& type)
 	case DrawType::kTriangleFan:
 		return 3;
 	default:
-		return 0;
+		throw::runtime_error("error type");
+		return -1;
 	}
 }

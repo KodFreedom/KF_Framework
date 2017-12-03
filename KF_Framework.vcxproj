@@ -224,6 +224,15 @@
     <ClCompile Include="ui_object.cpp" />
     <ClCompile Include="ui_system.cpp" />
     <ClCompile Include="player_walk_state.cpp" />
+    <ClCompile Include="unity_chan_damaged_motion_state.cpp" />
+    <ClCompile Include="unity_chan_fall_down_motion_state.cpp" />
+    <ClCompile Include="unity_chan_jump_motion_state.cpp" />
+    <ClCompile Include="unity_chan_land_motion_state.cpp" />
+    <ClCompile Include="unity_chan_lying_motion_state.cpp" />
+    <ClCompile Include="unity_chan_rise_up_motion_state.cpp" />
+    <ClCompile Include="unity_chan_run_motion_state.cpp" />
+    <ClCompile Include="unity_chan_wait_motion_state.cpp" />
+    <ClCompile Include="unity_chan_walk_motion_state.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +326,15 @@
     <ClInclude Include="ui_system.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="player_walk_state.h" />
+    <ClInclude Include="unity_chan_damaged_motion_state.h" />
+    <ClInclude Include="unity_chan_fall_down_motion_state.h" />
+    <ClInclude Include="unity_chan_jump_motion_state.h" />
+    <ClInclude Include="unity_chan_land_motion_state.h" />
+    <ClInclude Include="unity_chan_lying_motion_state.h" />
+    <ClInclude Include="unity_chan_rise_up_motion_state.h" />
+    <ClInclude Include="unity_chan_run_motion_state.h" />
+    <ClInclude Include="unity_chan_wait_motion_state.h" />
+    <ClInclude Include="unity_chan_walk_motion_state.h" />
     <ClInclude Include="windmill_controller.h" />
   </ItemGroup>
   <ItemGroup>
