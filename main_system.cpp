@@ -18,12 +18,16 @@
 #include "collision_system.h"
 #include "physics_system.h"
 #include "game_object_manager.h"
+#include "shader_manager.h"
 #include "mode_title.h"
 #include "mode_demo.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
 #include "render_system_directX9.h"
+#if defined(_DEBUG) || defined(EDITOR)
+#include "ImGui\imgui_impl_dx9.h"
+#endif
 #endif
 #endif
 
@@ -69,6 +73,11 @@ void MainSystem::Release(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Update(void)
 {
+#if defined(_DEBUG) || defined(EDITOR)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	ImGui_ImplDX9_NewFrame();
+#endif
+#endif
 #ifdef _DEBUG
 	debug_observer_->Update();
 #endif
@@ -114,6 +123,9 @@ void MainSystem::Render(void)
 #ifdef _DEBUG
 		debug_observer_->Render();
 #endif
+#if defined(_DEBUG) || defined(EDITOR)
+		ImGui::Render();
+#endif
 		render_system_->EndRender();
 		render_system_->Present();
 	}
@@ -143,7 +155,7 @@ void MainSystem::Change(Mode* next_mode)
 //--------------------------------------------------------------------------------
 bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
-	random::Init();
+	Random::Init();
 
 	// render api‚É‚æ‚Á‚Ärender system, texture manager, mesh manager‚Ì¶¬
 #if defined(USING_DIRECTX)
@@ -154,6 +166,10 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	const auto device = render_system_directX9->GetDevice();
 	texture_manager_ = TextureManager::Create(device);
 	mesh_manager_ = MeshManager::Create(device);
+	shader_manager_ = ShaderManager::Create(device);
+#if defined(_DEBUG) || defined(EDITOR)
+	ImGui_ImplDX9_Init(hwnd, device);
+#endif
 #endif
 #endif
 	material_manager_ = MaterialManager::Create();
@@ -198,6 +214,7 @@ void MainSystem::Uninit(void)
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);
 #endif
+	SAFE_RELEASE(shader_manager_);
 	SAFE_RELEASE(renderer_manager_);
 	SAFE_RELEASE(sound_manager_);
 	SAFE_RELEASE(light_manager_);

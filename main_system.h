@@ -25,6 +25,7 @@ class MotionManager;
 class TextureManager;
 class MeshManager;
 class LightManager;
+class ShaderManager;
 
 #if defined(_DEBUG)
 class DebugObserver;
@@ -123,6 +124,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetRendererManager(void) const { return renderer_manager_; }
 
+	//--------------------------------------------------------------------------------
+	//  シェーダ管理者を返す
+	//  return : GetShaderManager* const
+	//--------------------------------------------------------------------------------
+	const auto GetShaderManager(void) const { return shader_manager_; }
+
 #ifdef _DEBUG
 	//--------------------------------------------------------------------------------
 	//  デバッグ観察者を返す
@@ -187,7 +194,8 @@ private:
 #endif
 		, fade_system_(nullptr), camera_manager_(nullptr)
 		, ui_system_(nullptr), collision_system_(nullptr)
-	    , physics_system_(nullptr), game_object_manager_(nullptr) {}
+	    , physics_system_(nullptr), game_object_manager_(nullptr)
+		, shader_manager_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -219,6 +227,7 @@ private:
 	LightManager*      light_manager_; // ライトの管理者
 	SoundManager*      sound_manager_; // サウンド管理者
 	RendererManager*   renderer_manager_; // レンダラー管理者
+	ShaderManager*     shader_manager_; // シェーダ管理者
 #ifdef _DEBUG
 	DebugObserver*     debug_observer_; // デバッグ観察者
 #endif

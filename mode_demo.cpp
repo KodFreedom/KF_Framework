@@ -59,8 +59,8 @@ void ModeDemo::Init(void)
 	//MaterialManager::Instance()->CreateMaterialFileBy("cube", "nomal_cube.jpg");
 	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
 //	//ゲームオブジェクトの初期化
-	GameObjectSpawner::CreateSkyBox(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	StageSpawner::LoadStage(L"demo");
+	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
+	//StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 //	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
 //	player->SetName("Player");

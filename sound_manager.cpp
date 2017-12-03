@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 SoundManager::Paramater SoundManager::paramaters_[eSoundMax] =
 {
-	{ L"data/BGM/gameBGM.wav", -1 },	// BGM
+	{ L"data/bgm/game.wav", -1 },	// BGM
 };
 
 //--------------------------------------------------------------------------------
@@ -173,64 +173,64 @@ bool SoundManager::Init(void)
 		file = CreateFile(paramaters_[count].file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 		if (file == INVALID_HANDLE_VALUE)
 		{
-			MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(1)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(1)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 		if (SetFilePointer(file, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
 		{// ファイルポインタを先頭に移動
-			MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(2)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(2)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		// WAVEファイルのチェック
 		if (!CheckChunk(file, 'FFIR', chunk_size, chunk_position))
 		{
-			MessageBox(NULL, L"WAVEファイルのチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"WAVEファイルのチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		if (!ReadChunkData(file, &file_type, sizeof(DWORD), chunk_position))
 		{
-			MessageBox(NULL, L"WAVEファイルのチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"WAVEファイルのチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 		if (file_type != 'EVAW')
 		{
-			MessageBox(NULL, L"WAVEファイルのチェックに失敗！(3)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"WAVEファイルのチェックに失敗！(3)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		// フォーマットチェック
 		if (!CheckChunk(file, ' tmf', chunk_size, chunk_position))
 		{
-			MessageBox(NULL, L"フォーマットチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"フォーマットチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		if (!ReadChunkData(file, &wfx, chunk_size, chunk_position))
 		{
-			MessageBox(NULL, L"フォーマットチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"フォーマットチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		// オーディオデータ読み込み
 		if (!CheckChunk(file, 'atad', audio_sizes_[count], chunk_position))
 		{
-			MessageBox(NULL, L"オーディオデータ読み込みに失敗！(1)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"オーディオデータ読み込みに失敗！(1)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		audio_datas_[count] = (BYTE*)malloc(audio_sizes_[count]);
 		if (!ReadChunkData(file, audio_datas_[count], audio_sizes_[count], chunk_position))
 		{
-			MessageBox(NULL, L"オーディオデータ読み込みに失敗！(2)", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"オーディオデータ読み込みに失敗！(2)", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 
 		// ソースボイスの生成
 		if (!instance_xaudio2_->CreateSourceVoice(&source_voices_[count], &(wfx.Format)))
 		{
-			MessageBox(NULL, L"ソースボイスの生成に失敗！", L"警告！", MB_ICONWARNING);
+			//MessageBox(NULL, L"ソースボイスの生成に失敗！", L"警告！", MB_ICONWARNING);
 			return false;
 		}
 

@@ -32,23 +32,22 @@ void EditorCamera::Update(void)
 	if (!input->GetKeyPress(Key::kLock)) return;
 	
 	Vector3 rotation;
-	float zoomSpeed = 0.0f;
-	float axisX = input->RotationHorizontal();
-	float axisY = input->RotationVertical();
+	float rotation_x = input->RotationHorizontal();
+	float rotation_y = input->RotationVertical();
 	float zoom = input->Zoom();
 
-	if (fabsf(axisX) > kStartRotationMin)
+	if (fabsf(rotation_x) > kStartRotationMin)
 	{//YŽ²‰ñ“]
-		Yaw(kRotationSpeed * axisX);
+		Yaw(kRotationSpeed * rotation_x);
 	}
-	if (fabsf(axisY) > kStartRotationMin)
+	if (fabsf(rotation_y) > kStartRotationMin)
 	{//XŽ²‰ñ“]
-		Pitch(kRotationSpeed * axisY);
+		Pitch(kRotationSpeed * rotation_y);
 	}
 
 	if (fabsf(zoom) > kStartRotationMin)
 	{
-		SetDistance(math::Clamp(distance_ + zoomSpeed * zoom, kDistanceMin, kDistanceMax));
+		SetDistance(Math::Clamp(distance_ + kZoomSpeed * zoom, kDistanceMin, kDistanceMax));
 	}
 }
 #endif // EDITOR

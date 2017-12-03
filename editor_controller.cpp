@@ -59,21 +59,6 @@ void EditorController::Update(void)
 }
 
 //--------------------------------------------------------------------------------
-//  コンストラクタ
-//--------------------------------------------------------------------------------
-void EditorController::SetFieldEditor(GameObject* object)
-{
-	for (auto& pair : object->GetBehaviors())
-	{
-		if (pair.second->GetName()._Equal(L"FieldEditor"))
-		{
-			field_editor_ = static_cast<FieldEditor*>(pair.second);
-			break;
-		}
-	}	
-}
-
-//--------------------------------------------------------------------------------
 //
 //	Private
 //

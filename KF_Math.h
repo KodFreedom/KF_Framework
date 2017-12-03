@@ -784,6 +784,27 @@ namespace kodfreedom
 		}
 
 		//--------------------------------------------------------------------------------
+		//  get the inverse matrix / inverse行列に変換して返す
+		//  return : Matrix44
+		//--------------------------------------------------------------------------------
+		Matrix44 Inverse(void) const
+		{
+			Matrix44 result;
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+			D3DXMATRIX inverse = *this;
+			D3DXMatrixInverse(&inverse, NULL, &inverse);
+			for (int count_y = 0; count_y < 4; ++count_y)
+			{
+				for (int count_x = 0; count_x < 4; ++count_x)
+				{
+					result.m_[count_y][count_x] = inverse(count_y, count_x);
+				}
+			}
+#endif
+			return result;
+		}
+
+		//--------------------------------------------------------------------------------
 		//  create scale matrix with scale value / 与えられた値でスケール行列の作成
 		//  scale：スケール値
 		//  return：Matrix44
@@ -1333,8 +1354,9 @@ namespace kodfreedom
 	//--------------------------------------------------------------------------------
 	//	ランダム
 	//--------------------------------------------------------------------------------
-	namespace random
+	class Random
 	{
+	public:
 		//--------------------------------------------------------------------------------
 		//  ランダムシステム初期化
 		//--------------------------------------------------------------------------------
@@ -1377,13 +1399,14 @@ namespace kodfreedom
 		{
 			return Vector3(Range(min.x_, max.x_), Range(min.y_, max.y_), Range(min.z_, max.z_));
 		}
-	} // namespace Random
+	};
 
 	//--------------------------------------------------------------------------------
 	//	計算式
 	//--------------------------------------------------------------------------------
-	namespace math
+	class Math
 	{
+	public:
 		//--------------------------------------------------------------------------------
 		//  Vector3を線形補間方式で補間する
 		//  from：始点
@@ -1520,5 +1543,5 @@ namespace kodfreedom
 		{
 			return fabsf(value_l) >= fabsf(value_r) ? value_l : value_r;
 		}
-	} // namespace Math
+	};
 } // namespace KodFreedom

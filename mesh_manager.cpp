@@ -31,13 +31,12 @@ void MeshManager::Use(const String& mesh_name)
 	// メッシュの作成
 	MeshInfo info;
 	if (mesh_name.find(L".mesh") != String::npos) info = LoadFromMesh(mesh_name);
-	//else if (mesh_name.find(L".x") != String::npos) info = LoadFromXFile(mesh_name);
+	else if (mesh_name.find(L".x") != String::npos) info = LoadFromXFile(mesh_name);
 	else if (mesh_name._Equal(L"cube")) info = CreateCube();
 	else if (mesh_name._Equal(L"sphere")) info = CreateSphere();
 	else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
 	else
 	{
-		assert("wrong type!!");
 		return;
 	}
 	meshes_.emplace(mesh_name, info);
@@ -46,7 +45,7 @@ void MeshManager::Use(const String& mesh_name)
 //--------------------------------------------------------------------------------
 //  与えられた名前のメッシュを使う
 //--------------------------------------------------------------------------------
-void MeshManager::Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes)
+void MeshManager::Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number)
 {
 	auto iterator = meshes_.find(mesh_name);
 	if (iterator != meshes_.end())
@@ -56,8 +55,8 @@ void MeshManager::Use(const String& mesh_name, const DrawType& type, const vecto
 	}
 
 	// メッシュの作成
-	MeshInfo newMesh = CreateMesh(type, vertexes, indexes);
-	meshes_.emplace(mesh_name, newMesh);
+	MeshInfo info = CreateMesh(type, vertexes, indexes, polygon_number);
+	meshes_.emplace(mesh_name, info);
 }
 
 //--------------------------------------------------------------------------------
@@ -83,11 +82,11 @@ void MeshManager::Update(const String& mesh_name, const vector<Vertex3d>& vertex
 	if (meshes_.end() == iterator) return;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	Vertex3d* vertexpointer;
-	iterator->second.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
+	Vertex3d* vertex_pointer;
+	iterator->second.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
 	for (auto index : indexes)
 	{
-		vertexpointer[index] = vertexes[index];
+		vertex_pointer[index] = vertexes[index];
 	}
 	iterator->second.pointer->vertex_buffer->Unlock();
 #endif
@@ -115,15 +114,15 @@ void MeshManager::SaveMeshToFile(const String& mesh_name, const String& file_nam
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//頂点データ
-	Vertex3d* vertexpointer;
-	pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-	archive.saveBinary(vertexpointer, sizeof(Vertex3d) * pointer->vertex_number);
+	Vertex3d* vertex_pointer;
+	pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	archive.saveBinary(vertex_pointer, sizeof(Vertex3d) * pointer->vertex_number);
 	pointer->vertex_buffer->Unlock();
 	
 	//インデックス
-	WORD* indexpointer;
-	pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
-	archive.saveBinary(indexpointer, sizeof(WORD) * pointer->index_number);
+	WORD* index_pointer;
+	pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	archive.saveBinary(index_pointer, sizeof(WORD) * pointer->index_number);
 	pointer->index_buffer->Unlock();
 #endif
 	file.close();
@@ -153,15 +152,15 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 {
 	MeshInfo info;
 	String& path = L"data/mesh/" + mesh_name;
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
-		assert("failed to open file!!");
+		assert(file.is_open());
 		return info;
 	}
 	BinaryInputArchive archive(file);
 
-	info.pointer = new Mesh;
+	info.pointer = MY_NEW Mesh;
 	info.pointer->type = k3dMesh;
 	archive.loadBinary(&info.pointer->draw_type, sizeof(info.pointer->draw_type));
 	archive.loadBinary(&info.pointer->vertex_number, sizeof(info.pointer->vertex_number));
@@ -171,21 +170,21 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	if (!CreateBuffer(info.pointer))
 	{
-		assert("failed to create buffer!!");
+		assert(info.pointer);
 		file.close();
 		return info;
 	}
 
 	//頂点データ
-	Vertex3d* vertexpointer;
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-	archive.loadBinary(vertexpointer, sizeof(Vertex3d) * info.pointer->vertex_number);
+	Vertex3d* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	archive.loadBinary(vertex_pointer, sizeof(Vertex3d) * info.pointer->vertex_number);
 	info.pointer->vertex_buffer->Unlock();
 
 	//インデックス
-	WORD* indexpointer;
-	info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
-	archive.loadBinary(indexpointer, sizeof(WORD) * info.pointer->index_number);
+	WORD* index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	archive.loadBinary(index_pointer, sizeof(WORD) * info.pointer->index_number);
 	info.pointer->index_buffer->Unlock();
 #endif
 	file.close();
@@ -195,290 +194,275 @@ MeshManager::MeshInfo MeshManager::LoadFromMesh(const String& mesh_name)
 //--------------------------------------------------------------------------------
 //  xファイルからデータを読み込む
 //--------------------------------------------------------------------------------
-/*
 MeshManager::MeshInfo MeshManager::LoadFromXFile(const String& mesh_name)
 {
-MeshInfo info;
+	MeshInfo info;
+	FILE* filepointer;
+	string path = string(mesh_name.begin(), mesh_name.end());
+	fopen_s(&filepointer, path.c_str(), "r");
+	if (!filepointer)
+	{
+		assert(filepointer);
+		return info;
+	}
 
-//file open
-fopen_s(&filepointer, filePath.c_str(), "r");
+	info.pointer = MY_NEW Mesh;
+	info.pointer->draw_type = DrawType::kTriangleList;
+	vector<Vector3>	vertexes;
+	vector<Vector3>	normals;
+	vector<Vector2>	uvs;
+	vector<Color>	colors;
+	vector<int>		vertex_indexes;
+	vector<int>		normal_indexes;
+	vector<int>		color_indexes;
 
-if (!filepointer)
-{
-assert("failed to open file!!");
-return info;
-}
+	string buffer;
+	while (Utility::GetStringUntilToken(filepointer, "\n", buffer) >= 0)
+	{
+		if (buffer.compare("Mesh {") == 0)
+		{
+			//頂点数の読込
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			stringstream ss;
+			int vertex_number;
+			ss << buffer;
+			ss >> vertex_number;
 
-info.pointer = new Mesh;
-info.pointer->CurrentType = DrawType::TriangleList;
-vector<Vector3>	vertexes;
-vector<Vector3>	normals;
-vector<Vector2>	uvs;
-vector<Color>	colors;
-vector<int>		vertexIndexes;
-vector<int>		normalIndexes;
-vector<int>		colorIndexes;
+			//頂点データの読込
+			vertexes.resize(vertex_number);
+			for (int count = 0; count < vertex_number; ++count)
+			{
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertexes[count].x_;
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertexes[count].y_;
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertexes[count].z_;
+				Utility::GetStringUntilToken(filepointer, "\n", buffer);
+			}
 
-string buffer;
-while (Utility::GetStringUntilToken(filepointer, "\n", buffer) >= 0)
-{
-if (buffer.compare("Mesh {") == 0)
-{
-//頂点数の読込
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-stringstream ss;
-int vertex_number;
-ss << buffer;
-ss >> vertex_number;
+			//ポリゴン数の読込
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			ss.clear();
+			ss << buffer;
+			ss >> info.pointer->polygon_number;
 
-//頂点データの読込
-vertexes.resize(vertex_number);
-for (int count = 0; count < vertex_number; ++count)
-{
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexes[count].X;
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexes[count].Y;
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexes[count].Z;
-Utility::GetStringUntilToken(filepointer, "\n", buffer);
-}
+			//インデックスの読込
+			info.pointer->vertex_number =
+				info.pointer->index_number = info.pointer->polygon_number * 3;
+			vertex_indexes.resize(info.pointer->index_number);
+			for (int count = 0; count < info.pointer->polygon_number; ++count)
+			{
+				//3;を飛ばす
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				Utility::GetStringUntilToken(filepointer, ",", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertex_indexes[count * 3];
+				Utility::GetStringUntilToken(filepointer, ",", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertex_indexes[count * 3 + 1];
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> vertex_indexes[count * 3 + 2];
+				Utility::GetStringUntilToken(filepointer, "\n", buffer);
+			}
+		}
 
-//ポリゴン数の読込
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> info.pointer->polygon_number;
+		if (buffer.compare(" MeshMaterialList {") == 0)
+		{
+			//Material数
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			stringstream ss;
+			int color_number;
+			ss << buffer;
+			ss >> color_number;
+			colors.resize(color_number);
 
-//インデックスの読込
-info.pointer->vertex_number =
-info.pointer->index_number = info.pointer->polygon_number * 3;
-vertexIndexes.resize(info.pointer->index_number);
-for (int count = 0; count < info.pointer->polygon_number; ++count)
-{
-//3;を飛ばす
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-Utility::GetStringUntilToken(filepointer, ",", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexIndexes[count * 3];
-Utility::GetStringUntilToken(filepointer, ",", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexIndexes[count * 3 + 1];
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> vertexIndexes[count * 3 + 2];
-Utility::GetStringUntilToken(filepointer, "\n", buffer);
-}
-}
+			//インデックス数
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			ss.clear();
+			int polygon_number;
+			ss << buffer;
+			ss >> polygon_number;
+			color_indexes.resize(polygon_number * 3);
 
-if (buffer.compare(" MeshMaterialList {") == 0)
-{
-//Material数
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-stringstream ss;
-int colorNumber;
-ss << buffer;
-ss >> colorNumber;
-colors.resize(colorNumber);
+			//インデックスの読み込み
+			for (int count = 0; count < polygon_number; ++count)
+			{
+				Utility::GetStringUntilToken(filepointer, ",;", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> color_indexes[count * 3];
+				color_indexes[count * 3 + 1] =
+					color_indexes[count * 3 + 2] =
+					color_indexes[count * 3];
+			}
 
-//インデックス数
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-int polygon_number;
-ss << buffer;
-ss >> polygon_number;
-colorIndexes.resize(polygon_number * 3);
+			//マテリアルの読み込み
+			for (int count = 0; count < color_number; ++count)
+			{
+				while (Utility::GetStringUntilToken(filepointer, "\n", buffer) >= 0)
+				{
+					if (buffer.compare("  Material {") == 0)
+					{
+						//R
+						Utility::GetStringUntilToken(filepointer, ";", buffer);
+						ss.clear();
+						ss << buffer;
+						ss >> colors[count].r_;
 
-//インデックスの読み込み
-for (int count = 0; count < polygon_number; ++count)
-{
-Utility::GetStringUntilToken(filepointer, ",;", buffer);
-ss.clear();
-ss << buffer;
-ss >> colorIndexes[count * 3];
-colorIndexes[count * 3 + 1] =
-colorIndexes[count * 3 + 2] =
-colorIndexes[count * 3];
-}
+						//G
+						Utility::GetStringUntilToken(filepointer, ";", buffer);
+						ss.clear();
+						ss << buffer;
+						ss >> colors[count].g_;
 
-//マテリアルの読み込み
-for (int count = 0; count < colorNumber; ++count)
-{
-while (Utility::GetStringUntilToken(filepointer, "\n", buffer) >= 0)
-{
-if (buffer.compare("  Material {") == 0)
-{
-//R
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> colors[count].R;
+						//B
+						Utility::GetStringUntilToken(filepointer, ";", buffer);
+						ss.clear();
+						ss << buffer;
+						ss >> colors[count].b_;
 
-//G
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> colors[count].G;
+						//A
+						Utility::GetStringUntilToken(filepointer, ";", buffer);
+						ss.clear();
+						ss << buffer;
+						ss >> colors[count].a_;
+						break;
+					}
+				}
+			}
+		}
 
-//B
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> colors[count].B;
+		if (buffer.compare(" MeshNormals {") == 0)
+		{
+			//法線数の読込
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			stringstream ss;
+			int normalNumber;
+			ss << buffer;
+			ss >> normalNumber;
 
-//A
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> colors[count].A;
+			//法線データの読込
+			normals.resize(normalNumber);
+			for (int count = 0; count < normalNumber; ++count)
+			{
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normals[count].x_;
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normals[count].y_;
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normals[count].z_;
+				Utility::GetStringUntilToken(filepointer, "\n", buffer);
+			}
 
-break;
-}
-}
-}
-}
+			//法線インデックス数を読込(頂点数と同じのため)
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			ss.clear();
+			int normal_index_number;
+			ss << buffer;
+			ss >> normal_index_number;
+			if (normal_index_number != info.pointer->polygon_number)
+			{//エラー
+				MessageBox(NULL, L"MeshManager:法線数と頂点数が違う！", L"エラー", MB_OK | MB_ICONWARNING);
+			}
 
-if (buffer.compare(" Meshnormals {") == 0)
-{
-//法線数の読込
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-stringstream ss;
-int normalNumber;
-ss << buffer;
-ss >> normalNumber;
+			//法線インデックスの読込
+			normal_indexes.resize(normal_index_number * 3);
+			for (int count = 0; count < info.pointer->polygon_number; ++count)
+			{
+				//3;を飛ばす
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				Utility::GetStringUntilToken(filepointer, ",", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normal_indexes[count * 3];
+				Utility::GetStringUntilToken(filepointer, ",", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normal_indexes[count * 3 + 1];
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> normal_indexes[count * 3 + 2];
+				Utility::GetStringUntilToken(filepointer, "\n", buffer);
+			}
+		}
 
-//法線データの読込
-normals.resize(normalNumber);
-for (int count = 0; count < normalNumber; ++count)
-{
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> normals[count].X;
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> normals[count].Y;
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> normals[count].Z;
-Utility::GetStringUntilToken(filepointer, "\n", buffer);
-}
+		if (buffer.compare(" MeshTextureCoords {") == 0)
+		{
+			//uv数の読込
+			Utility::GetStringUntilToken(filepointer, ";", buffer);
+			stringstream ss;
+			int uv_number;
+			ss << buffer;
+			ss >> uv_number;
+			if (uv_number != vertexes.size())
+			{//エラー
+				MessageBox(NULL, L"MeshManager:uv数と頂点数が違う！", L"エラー", MB_OK | MB_ICONWARNING);
+			}
 
-//法線インデックス数を読込(頂点数と同じのため)
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-int normalindex_number;
-ss << buffer;
-ss >> normalindex_number;
-if (normalindex_number != info.pointer->polygon_number)
-{//エラー
-MessageBox(NULL,"MeshManager:法線数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
-}
-
-//法線インデックスの読込
-normalIndexes.resize(normalindex_number * 3);
-for (int count = 0; count < info.pointer->polygon_number; ++count)
-{
-//3;を飛ばす
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-Utility::GetStringUntilToken(filepointer, ",", buffer);
-ss.clear();
-ss << buffer;
-ss >> normalIndexes[count * 3];
-Utility::GetStringUntilToken(filepointer, ",", buffer);
-ss.clear();
-ss << buffer;
-ss >> normalIndexes[count * 3 + 1];
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> normalIndexes[count * 3 + 2];
-Utility::GetStringUntilToken(filepointer, "\n", buffer);
-}
-}
-
-if (buffer.compare(" MeshTextureCoords {") == 0)
-{
-//uv数の読込
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-stringstream ss;
-int uvNumber;
-ss << buffer;
-ss >> uvNumber;
-if (uvNumber != vertexes.size())
-{//エラー
-MessageBox(NULL, "MeshManager:uv数と頂点数が違う！", "エラー", MB_OK | MB_ICONWARNING);
-}
-
-//uvデータの読込
-uvs.resize(uvNumber);
-for (int count = 0; count < uvNumber; ++count)
-{
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> uvs[count].X;
-Utility::GetStringUntilToken(filepointer, ";", buffer);
-ss.clear();
-ss << buffer;
-ss >> uvs[count].Y;
-Utility::GetStringUntilToken(filepointer, "\n", buffer);
-}
-}
-}
-
-fclose(filepointer);
+			//uvデータの読込
+			uvs.resize(uv_number);
+			for (int count = 0; count < uv_number; ++count)
+			{
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> uvs[count].x_;
+				Utility::GetStringUntilToken(filepointer, ";", buffer);
+				ss.clear();
+				ss << buffer;
+				ss >> uvs[count].y_;
+				Utility::GetStringUntilToken(filepointer, "\n", buffer);
+			}
+		}
+	}
+	fclose(filepointer);
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-if (!createBuffer(info.pointer))
-{
-assert("failed to create buffer!!");
-return info;
-}
+	if (!CreateBuffer(info.pointer))
+	{
+		assert(info.pointer);
+		return info;
+	}
 
-//仮想アドレスを取得するためのポインタ
-Vertex3d *vertexpointer;
+	Vertex3d* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	for (int count = 0; count < info.pointer->index_number; ++count)
+	{
+		vertex_pointer[count].position = vertexes[vertex_indexes[count]];
+		vertex_pointer[count].normal = normals[normal_indexes[count]];
+		vertex_pointer[count].uv = uvs[vertex_indexes[count]];
+		vertex_pointer[count].color = colors[color_indexes[count]];
+	}
+	info.pointer->vertex_buffer->Unlock();
 
-//頂点バッファをロックして、仮想アドレスを取得する
-info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-
-for (int count = 0; count < info.pointer->index_number; ++count)
-{
-vertexpointer[count].position = vertexes[vertexIndexes[count]];
-vertexpointer[count].normal = normals[normalIndexes[count]];
-vertexpointer[count].uv = uvs[vertexIndexes[count]];
-vertexpointer[count].Color = colors[colorIndexes[count]];
-}
-
-//仮想アドレス解放
-info.pointer->vertex_buffer->Unlock();
-
-//インデックス
-WORD *indexpointer;
-info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
-
-for (int count = 0; count < info.pointer->index_number; ++count)
-{
-indexpointer[count] = count;
-}
-
-info.pointer->index_buffer->Unlock();
+	WORD* index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	for (int count = 0; count < info.pointer->index_number; ++count)
+	{
+		index_pointer[count] = count;
+	}
+	info.pointer->index_buffer->Unlock();
 #endif
-
-return info;
+	return info;
 }
-*/
 
 //--------------------------------------------------------------------------------
 //  Cubeの作成
@@ -486,7 +470,7 @@ return info;
 MeshManager::MeshInfo MeshManager::CreateCube(void)
 {
 	MeshInfo info;
-	info.pointer = new Mesh;
+	info.pointer = MY_NEW Mesh;
 	info.pointer->vertex_number = 6 * 4;
 	info.pointer->index_number = 6 * 4 + 5 * 2;
 	info.pointer->polygon_number = 6 * 2 + 5 * 4;
@@ -494,101 +478,101 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	if (!CreateBuffer(info.pointer))
 	{
-		assert("failed to create buffer!!");
+		assert(info.pointer);
 		return info;
 	}
 
-	Vertex3d* vertexpointer;
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
+	Vertex3d* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
 	auto& half_size = Vector3::kOne * 0.5f;
 	int count_vertex = 0;
 
 	// 後ろ
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-half_size.x_ + (count % 2) * half_size.x_ * 2.0f,
 			half_size.y_ - (count / 2) * half_size.y_ * 2.0f,
 			-half_size.z_);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kBack;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kBack;
 		++count_vertex;
 	}
 
 	// 上
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-half_size.x_ + (count % 2) * half_size.x_ * 2.0f,
 			half_size.y_,
 			half_size.z_ - (count / 2) * half_size.z_ * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kUp;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kUp;
 		++count_vertex;
 	}
 
 	// 左
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-half_size.x_,
 			half_size.y_ - (count / 2) * half_size.y_ * 2.0f,
 			half_size.z_ - (count % 2) * half_size.z_ * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kLeft;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kLeft;
 		++count_vertex;
 	}
 
 	// 下
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-half_size.x_ + (count % 2) * half_size.x_ * 2.0f,
 			-half_size.y_,
 			-half_size.z_ + (count / 2) * half_size.z_ * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kDown;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kDown;
 		++count_vertex;
 	}
 
 	// 右
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			half_size.x_,
 			half_size.y_ - (count / 2) * half_size.y_ * 2.0f,
 			-half_size.z_ + (count % 2) * half_size.z_ * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kRight;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kRight;
 		++count_vertex;
 	}
 
 	// 正面
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			half_size.x_ - (count % 2) * half_size.x_ * 2.0f,
 			half_size.y_ - (count / 2) * half_size.y_ * 2.0f,
 			half_size.z_);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
-		vertexpointer[count_vertex].normal = Vector3::kForward;
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 1.0f, (count / 2) * 1.0f);
+		vertex_pointer[count_vertex].normal = Vector3::kForward;
 		++count_vertex;
 	}
 	info.pointer->vertex_buffer->Unlock();
 
 	// インデックス
-	WORD *indexpointer;
-	info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
+	WORD *index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
 
 	for (int count = 0; count < info.pointer->index_number; ++count)
 	{
 		if (count % 6 < 4)
 		{
-			indexpointer[count] = (WORD)((count / 6) * 4 + (count % 6) % 4);
+			index_pointer[count] = (WORD)((count / 6) * 4 + (count % 6) % 4);
 		}
 		else
 		{// 縮退
-			indexpointer[count] = (WORD)((count / 6) * 4 + (count % 2) + 3);
+			index_pointer[count] = (WORD)((count / 6) * 4 + (count % 2) + 3);
 		}
 	}
 	info.pointer->index_buffer->Unlock();
@@ -660,11 +644,11 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 	fwrite(&info.pointer->polygon_number, sizeof(int), 1, filepointer);
 
 	// Vtx&Idx
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-	fwrite(vertexpointer, sizeof(Vertex3d), info.pointer->vertex_number, filepointer);
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	fwrite(vertex_pointer, sizeof(Vertex3d), info.pointer->vertex_number, filepointer);
 	info.pointer->vertex_buffer->Unlock();
-	info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
-	fwrite(indexpointer, sizeof(WORD), info.pointer->index_number, filepointer);
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	fwrite(index_pointer, sizeof(WORD), info.pointer->index_number, filepointer);
 	info.pointer->index_buffer->Unlock();
 
 	// Texture
@@ -709,7 +693,7 @@ MeshManager::MeshInfo MeshManager::CreateCube(void)
 MeshManager::MeshInfo MeshManager::CreateSphere(void)
 {
 	MeshInfo info;
-	assert("未実装!!");
+	assert(info.pointer);
 	return info;
 }
 
@@ -719,20 +703,20 @@ MeshManager::MeshInfo MeshManager::CreateSphere(void)
 MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 {
 	MeshInfo info;
-	info.pointer = new Mesh;
+	info.pointer = MY_NEW Mesh;
 	info.pointer->vertex_number = 6 * 4;
 	info.pointer->index_number = 6 * 4 + 5 * 2;
 	info.pointer->polygon_number = 6 * 2 + 5 * 4;
 
 	if (!CreateBuffer(info.pointer))
 	{
-		assert("failed to create buffer!!");
+		assert(info.pointer);
 		return info;
 	}
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	Vertex3d *vertexpointer;
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
+	Vertex3d *vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
 	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
 	float length = camera ? camera->GetFar() * 0.5f : 500.0f;
 	int count_vertex = 0;
@@ -741,94 +725,100 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 	// 後ろ
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			length - (count / 2) * length * 2.0f,
 			-length);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kForward;
+		vertex_pointer[count_vertex].normal = Vector3::kForward;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
 	// 上
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			length,
 			length - (count / 2) * length * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kDown;
+		vertex_pointer[count_vertex].normal = Vector3::kDown;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
 	// 左
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-length,
 			length - (count / 2) * length * 2.0f,
 			-length + (count % 2) * length * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.5f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.5f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kRight;
+		vertex_pointer[count_vertex].normal = Vector3::kRight;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
 	// 下
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			length - (count % 2) * length * 2.0f,
 			-length,
 			-length + (count / 2) * length * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 2.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kUp;
+		vertex_pointer[count_vertex].normal = Vector3::kUp;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
 	// 右
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			length,
 			length - (count / 2) * length * 2.0f,
 			length - (count % 2) * length * 2.0f);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kLeft;
+		vertex_pointer[count_vertex].normal = Vector3::kLeft;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 
 	// 正面
 	for (int count = 0; count < 4; ++count)
 	{
-		vertexpointer[count_vertex].position = Vector3(
+		vertex_pointer[count_vertex].position = Vector3(
 			-length + (count % 2) * length * 2.0f,
 			length - (count / 2) * length * 2.0f,
 			length);
-		vertexpointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.75f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
+		vertex_pointer[count_vertex].uv = Vector2((count % 2) * 0.25f + 0.75f + uv_tweens - (count % 2) * uv_tweens * 2.0f,
 			(count / 2) * 1.0f / 3.0f + 1.0f / 3.0f + uv_tweens - (count / 2) * uv_tweens * 2.0f);
-		vertexpointer[count_vertex].normal = Vector3::kBack;
+		vertex_pointer[count_vertex].normal = Vector3::kBack;
+		vertex_pointer[count_vertex].color = Color::kWhite;
 		++count_vertex;
 	}
 	info.pointer->vertex_buffer->Unlock();
 
 	//インデックス
-	WORD *indexpointer;
-	info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
+	WORD *index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
 	for (int count = 0; count < 6 * 4 + 5 * 2; ++count)
 	{
 		if (count % 6 < 4)
 		{
-			indexpointer[count] = (count / 6) * 4 + (count % 6) % 4;
+			index_pointer[count] = (count / 6) * 4 + (count % 6) % 4;
 		}
 		else
 		{//縮退
-			indexpointer[count] = (count / 6) * 4 + (count % 2) + 3;
+			index_pointer[count] = (count / 6) * 4 + (count % 2) + 3;
 		}
 	}
 	info.pointer->index_buffer->Unlock();
@@ -839,31 +829,44 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 //--------------------------------------------------------------------------------
 //  与えられた頂点とインデックスでメッシュを生成する
 //--------------------------------------------------------------------------------
-MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes)
+MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number)
 {
 	MeshInfo info;
-	info.pointer = new Mesh;
+	info.pointer = MY_NEW Mesh;
+	info.pointer->type = MeshType::k3dMesh;
+	info.pointer->draw_type = type;
 	info.pointer->vertex_number = (int)vertexes.size();
 	info.pointer->index_number = (int)indexes.size();
-	info.pointer->polygon_number = info.pointer->index_number / GetVertexNumberPerPolygon(type);
+	if (polygon_number == -1)
+	{
+		info.pointer->polygon_number = info.pointer->index_number / GetVertexNumberPerPolygon(type);
+	}
+	else
+	{
+		info.pointer->polygon_number = polygon_number;
+	}
 
 	if (!CreateBuffer(info.pointer))
 	{
-		assert("failed to create buffer!!");
+		assert(info.pointer);
 		return info;
 	}
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//Vertex
-	Vertex3d* vertexpointer;
-	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertexpointer, 0);
-	memcpy_s(vertexpointer, info.pointer->vertex_number, &vertexes.front(), vertexes.size());
+	Vertex3d* vertex_pointer;
+	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+	memcpy_s(vertex_pointer, sizeof(Vertex3d) * info.pointer->vertex_number
+		, &vertexes[0], sizeof(Vertex3d) * vertexes.size());
 	info.pointer->vertex_buffer->Unlock();
 
 	//インデックス
-	WORD* indexpointer;
-	info.pointer->index_buffer->Lock(0, 0, (void**)&indexpointer, 0);
-	memcpy_s(indexpointer, info.pointer->index_number, &indexes.front(), indexes.size());
+	WORD* index_pointer;
+	info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+	for (int count = 0; count < info.pointer->index_number; ++count)
+	{
+		index_pointer[count] = static_cast<WORD>(indexes[count]);
+	}
 	info.pointer->index_buffer->Unlock();
 #endif
 	return info;

@@ -153,12 +153,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera_manager.cpp" />
+    <ClCompile Include="cull_none_shader.cpp" />
+    <ClCompile Include="default_shader.cpp" />
+    <ClCompile Include="no_light_no_fog_shader.cpp" />
     <ClCompile Include="player_damaged_state.cpp" />
     <ClCompile Include="player_jump_state.cpp" />
     <ClCompile Include="player_land_state.cpp" />
     <ClCompile Include="motion_manager.cpp" />
     <ClCompile Include="player_neutral_state.cpp" />
     <ClCompile Include="player_state.cpp" />
+    <ClCompile Include="shader_directX9.cpp" />
+    <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="ui_object_2d.cpp" />
     <ClCompile Include="rigidbody3d.cpp" />
     <ClCompile Include="aabb_collider.cpp" />
@@ -221,6 +226,9 @@
   <ItemGroup>
     <ClInclude Include="actor_state.h" />
     <ClInclude Include="camera_manager.h" />
+    <ClInclude Include="cull_none_shader.h" />
+    <ClInclude Include="default_shader.h" />
+    <ClInclude Include="no_light_no_fog_shader.h" />
     <ClInclude Include="player_damaged_state.h" />
     <ClInclude Include="player_jump_state.h" />
     <ClInclude Include="player_land_state.h" />
@@ -229,6 +237,7 @@
     <ClInclude Include="actor_parameter.h" />
     <ClInclude Include="player_neutral_state.h" />
     <ClInclude Include="player_state.h" />
+    <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="ui_object_2d.h" />
@@ -303,6 +312,52 @@
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="player_walk_state.h" />
     <ClInclude Include="windmill_controller.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="default_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cull_none_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="cull_none_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="no_light_no_fog_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="no_light_no_fog_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -37,9 +37,9 @@ bool FieldEditor::Init(void)
 	// Vertex
 	auto& start = Vector3(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
 	vertexes_.resize((block_number_x_ + 1) * (block_number_z_ + 1));
-	for (int count_z = 0; count_z < block_number_z_ + 1; count_z++)
+	for (int count_z = 0; count_z < block_number_z_ + 1; ++count_z)
 	{
-		for (int count_x = 0; count_x < block_number_x_ + 1; count_x++)
+		for (int count_x = 0; count_x < block_number_x_ + 1; ++count_x)
 		{
 			int index = count_z * (block_number_x_ + 1) + count_x;
 			auto& position = start
@@ -75,7 +75,7 @@ bool FieldEditor::Init(void)
 		}
 	}
 
-	MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleList, vertexes_, indexes);
+	MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
 	return true;
 }
 
@@ -126,8 +126,8 @@ Vector3 FieldEditor::AdjustPositionInField(const Vector3& position, const bool& 
 	Vector3 result;
 
 	//範囲内にする
-	result.x_ = math::Clamp(position.x_, min_position_.x_, max_position_.x_);
-	result.z_ = math::Clamp(position.z_, min_position_.z_, max_position_.z_);
+	result.x_ = Math::Clamp(position.x_, min_position_.x_, max_position_.x_);
+	result.z_ = Math::Clamp(position.z_, min_position_.z_, max_position_.z_);
 
 	//高さの調節
 	if (is_adjust_height)
@@ -257,9 +257,9 @@ list<int> FieldEditor::GetChoosenIndexes(void)
 	max_x = max_x > block_number_x_ ? block_number_x_ : max_x;
 	max_z = max_z > block_number_z_ ? block_number_z_ : max_z;
 
-	for (int count_z = min_z; count_z <= max_z; count_z)
+	for (int count_z = min_z; count_z <= max_z; ++count_z)
 	{
-		for (int count_x = min_x; count_x <= max_x; count_x)
+		for (int count_x = min_x; count_x <= max_x; ++count_x)
 		{
 			auto index = count_z * (block_number_z_ + 1) + count_x;
 			auto position = vertexes_[index].position;
@@ -286,8 +286,8 @@ void FieldEditor::ShowMainWindow(void)
 	}
 
 	// Controll
-	ImGui::Text("Extend / Shrink : T / Y");
-	ImGui::Text("Raise / Reduce : G / H");
+	ImGui::Text("Shrink / Extend : Left / Right");
+	ImGui::Text("Raise / Reduce : Up / Down");
 
 	// Radius
 	ImGui::Text("Radius : %f", editor_radius_);
@@ -307,10 +307,12 @@ void FieldEditor::ShowMainWindow(void)
 //--------------------------------------------------------------------------------
 void FieldEditor::UpdateVertexesBy(const list<int>& choosenIndexes)
 {
+	// 前フレーム選択された頂点の色を戻す
 	for (int index : previous_choosen_indexes_)
 	{
 		vertexes_[index].color = Color::kWhite;
 	}
+	MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, previous_choosen_indexes_);
 	
 	for (int index : choosenIndexes)
 	{

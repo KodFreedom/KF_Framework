@@ -109,7 +109,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	auto result = MY_NEW GameObject;
 
 	//Name
-	auto& file_info = utility::AnalyzeFilePath(name);
+	auto& file_info = Utility::AnalyzeFilePath(name);
 	result->SetName(file_info.name);
 
 	//コンポネント
@@ -164,7 +164,7 @@ GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
 {
-	auto& file_info = utility::AnalyzeFilePath(name);
+	auto& file_info = Utility::AnalyzeFilePath(name);
 	if (!file_info.type._Equal(L"model")) return nullptr;
 	
 	//Modelファイルの開く
@@ -172,7 +172,7 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	ifstream file(path);
 	if (!file.is_open())
 	{
-		assert("failed to open");
+		assert(file.is_open());
 		return nullptr;
 	}
 	BinaryInputArchive archive(file);
@@ -269,48 +269,39 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
 
 #if defined(EDITOR)
 //--------------------------------------------------------------------------------
-//  CreateStageEditor
+//  クラス
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateStageEditor(GameObject* field_editor)
+GameObject* GameObjectSpawner::CreateEditor(void)
 {
-	auto result = MY_NEW GameObject;
+	// FieldEditor
+	auto field = MY_NEW GameObject;
+	auto field_editor = MY_NEW FieldEditor(*field);
+	field->AddBehavior(field_editor);
+	auto renderer = MY_NEW MeshRenderer(*field);
+	renderer->SetMesh(L"field");
+	renderer->SetMaterial(L"editorField");
+	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
+	field->AddRenderer(renderer);
+	field->Init();
 
-	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
-	renderer->SetMesh(L"data/model/target.x");
-	result->AddRenderer(renderer);
+	// Main Controller
+	auto result = MY_NEW GameObject;
 	auto model_editor = MY_NEW ModelEditor(*result);
+	result->AddBehavior(model_editor);
 	auto editor_controller = MY_NEW EditorController(*result);
 	editor_controller->SetFieldEditor(field_editor);
 	editor_controller->SetModelEditor(model_editor);
 	result->AddBehavior(editor_controller);
-	result->AddBehavior(model_editor);
-
-	//初期化
-	result->Init();
-	return result;
-}
-
-//--------------------------------------------------------------------------------
-//  クラス
-//--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateFieldEditor(void)
-{
-	auto result = MY_NEW GameObject;
-
-	//コンポネント
-	auto pBehavior = MY_NEW FieldEditor(*result);
-	result->AddBehavior(pBehavior);
-	auto renderer = MY_NEW MeshRenderer(*result);
-	renderer->SetMesh(L"field");
-	renderer->SetMaterial(L"editorField");
+	renderer = MY_NEW MeshRenderer(*result);
+	renderer->SetMesh(L"data/model/target.x");
+	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
 
-	//初期化
+	// 初期化
 	result->Init();
 	return result;
 }
-#endif // _DEBUG
+#endif // EDITOR
 
 //--------------------------------------------------------------------------------
 //
@@ -329,7 +320,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	auto result = MY_NEW GameObject;
 
 	//Node名
-	size_t name_size;
+	int name_size;
 	archive.loadBinary(&name_size, sizeof(name_size));
 	string name;
 	name.resize(name_size);
@@ -385,24 +376,45 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	for (int count = 0; count < mesh_number; ++count)
 	{
 		//Mesh Name
-		int mesh_name_size = 0;
-		archive.loadBinary(&mesh_name_size, sizeof(mesh_name_size));
-		string mesh_name;
-		mesh_name.resize(mesh_name_size);
-		archive.loadBinary(&mesh_name[0], mesh_name_size);
-		String real_name = String(mesh_name.begin(), mesh_name.end());
+		archive.loadBinary(&name_size, sizeof(name_size));
+		name.resize(name_size);
+		archive.loadBinary(&name[0], name_size);
+		String mesh_name = String(name.begin(), name.end());
 
-		//Check Type
-		auto& file_info = utility::AnalyzeFilePath(real_name);
-		if (file_info.type._Equal(L"mesh") || file_info.type._Equal(L"x"))
+		//Material
+		archive.loadBinary(&name_size, sizeof(name_size));
+		name.resize(name_size);
+		archive.loadBinary(&name[0], name_size);
+		String material_name = String(name.begin(), name.end());
+
+		//Render Priority
+		RenderPriority priority;
+		archive.loadBinary(&priority, sizeof(priority));
+
+		//Shader Type
+		ShaderType shader_type;
+		archive.loadBinary(&shader_type, sizeof(shader_type));
+
+		//Mesh type
+		MeshType mesh_type;
+		archive.loadBinary(&mesh_type, sizeof(mesh_type));
+		//Check File Type
+		if (mesh_type == k3dMesh)
 		{//骨なし
 			auto renderer = MY_NEW MeshRenderer(*result);
-			renderer->SetMesh(real_name);
+			renderer->SetMesh(mesh_name + L".mesh");
+			renderer->SetMaterial(material_name);
+			renderer->SetRenderPriority(priority);
+			renderer->SetShaderType(shader_type);
 			result->AddRenderer(renderer);
 		}
-		else if (file_info.type._Equal(L"oneSkinMesh"))
+		else if (mesh_type == k3dSkin)
 		{//ワンスキーンメッシュ
 			MessageBox(NULL, L"oneSkinMesh未対応", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+		}
+		else
+		{
+			MessageBox(NULL, L"error mesh type!!", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
 		}
 	}
 

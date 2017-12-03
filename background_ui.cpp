@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------
 BackgroundUI* BackgroundUI::Create(const String& texture)
 {
-	auto ui = new BackgroundUI;
+	auto ui = MY_NEW BackgroundUI;
 	ui->Init(texture);
 	return ui;
 }

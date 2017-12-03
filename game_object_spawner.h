@@ -29,8 +29,7 @@ public:
 	static GameObjectActor* CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 
 #if defined(EDITOR)
-	static GameObject* CreateStageEditor(GameObject* field_editor);
-	static GameObject* CreateFieldEditor(void);
+	static GameObject* CreateEditor(void);
 #endif // EDITOR	
 
 private:
