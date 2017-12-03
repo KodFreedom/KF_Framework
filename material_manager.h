@@ -21,6 +21,20 @@ public:
 		: ambient(ambient), diffuse(diffuse)
 		, specular(specular), emissive(emissive)
 		, power(power) {}
+	Material(const String& diffuse_texture
+		, const String& specular_texture = String()
+		, const String& normal_texture = String()
+		, const Color& ambient = Color::kGray
+		, const Color& diffuse = Color::kWhite
+		, const Color& specular = Color::kBlack
+		, const Color& emissive = Color::kBlack
+		, const float& power = 1.0f)
+		: diffuse_texture(diffuse_texture)
+		, specular_texture(specular_texture)
+		, normal_texture(normal_texture)
+		, ambient(ambient), diffuse(diffuse)
+		, specular(specular), emissive(emissive)
+		, power(power) {}
 	~Material() {}
 
 	String diffuse_texture;
@@ -46,6 +60,7 @@ public:
 	static MaterialManager* Create(void)
 	{
 		auto instance = MY_NEW MaterialManager();
+		instance->Init();
 		return instance;
 	}
 
@@ -114,6 +129,11 @@ private:
 	MaterialManager(const MaterialManager& value) {}
 	MaterialManager& operator=(const MaterialManager& value) {}
 	~MaterialManager() {}
+
+	//--------------------------------------------------------------------------------
+	//  ‰Šú‰»ˆ—
+	//--------------------------------------------------------------------------------
+	void Init(void);
 
 	//--------------------------------------------------------------------------------
 	//  I—¹ˆ—
