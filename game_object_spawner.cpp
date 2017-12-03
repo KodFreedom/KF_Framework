@@ -10,7 +10,7 @@
 #include "material_manager.h"
 #include "mesh_manager.h"
 #include "renderer_manager.h"
-#include "mesh_renderer.h"
+#include "mesh_renderer_3d.h"
 #include "sphere_collider.h"
 #include "obb_collider.h"
 #include "aabb_collider.h"
@@ -38,7 +38,7 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	auto result = MY_NEW GameObject;
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"skyBox");
 	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	renderer->SetMaterial(L"sky");
@@ -64,7 +64,7 @@ GameObject* GameObjectSpawner::CreateField(const String& name)
 	String field_name = name + L"Field";
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(field_name + L".mesh");
 	renderer->SetMaterial(field_name);
 	result->AddRenderer(renderer);
@@ -83,7 +83,7 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	auto result = MY_NEW GameObject;
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"cube");
 	renderer->SetMaterial(L"cube");
 	result->AddRenderer(renderer);
@@ -113,7 +113,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	result->SetName(file_info.name);
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(name);
 	result->AddRenderer(renderer);
 
@@ -277,7 +277,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	auto field = MY_NEW GameObject;
 	auto field_editor = MY_NEW FieldEditor(*field);
 	field->AddBehavior(field_editor);
-	auto renderer = MY_NEW MeshRenderer(*field);
+	auto renderer = MY_NEW MeshRenderer3d(*field);
 	renderer->SetMesh(L"field");
 	renderer->SetMaterial(L"editorField");
 	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
@@ -292,7 +292,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	editor_controller->SetFieldEditor(field_editor);
 	editor_controller->SetModelEditor(model_editor);
 	result->AddBehavior(editor_controller);
-	renderer = MY_NEW MeshRenderer(*result);
+	renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"data/model/target.x");
 	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
@@ -401,7 +401,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		//Check File Type
 		if (mesh_type == k3dMesh)
 		{//骨なし
-			auto renderer = MY_NEW MeshRenderer(*result);
+			auto renderer = MY_NEW MeshRenderer3d(*result);
 			renderer->SetMesh(mesh_name + L".mesh");
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);

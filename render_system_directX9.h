@@ -61,10 +61,22 @@ public:
 	}
 
 	//--------------------------------------------------------------------------------
+	//  描画処理(2D)
+	//	mesh_name：メッシュ名前
+	//--------------------------------------------------------------------------------
+	void Render2dMesh(const String& mesh_name) const override;
+
+	//--------------------------------------------------------------------------------
 	//  描画処理(3D)
 	//	mesh_name：メッシュ名前
 	//--------------------------------------------------------------------------------
-	void Render(const String& mesh_name) override;
+	void Render3dMesh(const String& mesh_name) const override;
+
+	//--------------------------------------------------------------------------------
+	//  描画処理(3dSkin)
+	//	skin_name：メッシュ名前
+	//--------------------------------------------------------------------------------
+	void Render3dSkin(const String& skin_name) const override;
 
 	//--------------------------------------------------------------------------------
 	//  カリングモードの設定
@@ -92,7 +104,8 @@ private:
 	//--------------------------------------------------------------------------------
 	RenderSystemDirectX9() : RenderSystem()
 		, instance_(nullptr), device_(nullptr)
-		, vertex_declaration_2d_(nullptr), vertex_declaration_3d_(nullptr) {}
+		, vertex_declaration_2d_(nullptr), vertex_declaration_3d_(nullptr)
+		, vertex_declaration_3d_skin_(nullptr) {}
 	RenderSystemDirectX9(const RenderSystemDirectX9& value) {}
 	RenderSystemDirectX9& operator=(const RenderSystemDirectX9& value) {}
 	~RenderSystemDirectX9() {}
@@ -139,5 +152,6 @@ private:
 	LPDIRECT3DDEVICE9 device_; // Deviceディバイス
 	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_2d_; // 2dバーテックスデクラレーション
 	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_3d_; // 3dバーテックスデクラレーション
+	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_3d_skin_; // 3dスキンバーテックスデクラレーション
 };
 #endif

@@ -155,6 +155,9 @@
     <ClCompile Include="camera_manager.cpp" />
     <ClCompile Include="cull_none_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
+    <ClCompile Include="mesh_renderer_2d.cpp" />
+    <ClCompile Include="mesh_renderer_3d.cpp" />
+    <ClCompile Include="mesh_renderer_3d_skin.cpp" />
     <ClCompile Include="no_light_no_fog_shader.cpp" />
     <ClCompile Include="player_damaged_state.cpp" />
     <ClCompile Include="player_jump_state.cpp" />
@@ -224,6 +227,8 @@
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mesh_renderer_2d.h" />
+    <ClInclude Include="mesh_renderer_3d.h" />
     <ClInclude Include="actor_state.h" />
     <ClInclude Include="camera_manager.h" />
     <ClInclude Include="cull_none_shader.h" />
@@ -240,6 +245,7 @@
     <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
+    <ClInclude Include="mesh_renderer_3d_skin.h" />
     <ClInclude Include="ui_object_2d.h" />
     <ClInclude Include="rigidbody3d.h" />
     <ClInclude Include="aabb_collider.h" />

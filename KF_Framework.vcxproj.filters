@@ -405,6 +405,15 @@
     <ClCompile Include="cull_none_shader.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="mesh_renderer_2d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer_3d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer_3d_skin.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -671,6 +680,15 @@
     <ClInclude Include="cull_none_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="mesh_renderer_3d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer_2d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer_3d_skin.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default_pixel_shader.hlsl">
@@ -679,19 +697,9 @@
     <None Include="default_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="no_light_no_fog_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="no_light_no_fog_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="cull_none_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="cull_none_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
+    <None Include="cull_none_pixel_shader.hlsl" />
+    <None Include="cull_none_vertex_shader.hlsl" />
+    <None Include="no_light_no_fog_pixel_shader.hlsl" />
+    <None Include="no_light_no_fog_vertex_shader.hlsl" />
   </ItemGroup>
 </Project>

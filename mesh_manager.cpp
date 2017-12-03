@@ -31,12 +31,14 @@ void MeshManager::Use(const String& mesh_name)
 	// ÉÅÉbÉVÉÖÇÃçÏê¨
 	MeshInfo info;
 	if (mesh_name.find(L".mesh") != String::npos) info = LoadFromMesh(mesh_name);
+	else if (mesh_name.find(L".skin") != String::npos) info = LoadFromSkin(mesh_name);
 	else if (mesh_name.find(L".x") != String::npos) info = LoadFromXFile(mesh_name);
 	else if (mesh_name._Equal(L"cube")) info = CreateCube();
 	else if (mesh_name._Equal(L"sphere")) info = CreateSphere();
 	else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
 	else
 	{
+		throw::runtime_error("unsupport file type!!");
 		return;
 	}
 	meshes_.emplace(mesh_name, info);
