@@ -11,7 +11,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-const Material MaterialManager::kDefaultMaterial = Material();
+const Material MaterialManager::kDefaultMaterial = Material(L"polygon.jpg");
 
 //--------------------------------------------------------------------------------
 //
@@ -33,7 +33,8 @@ void MaterialManager::Use(const String& material_name)
 	info.pointer = LoadFromFile(material_name);
 	if (!info.pointer)
 	{// 読込できないの場合真っ赤で保存する
-		info.pointer = MY_NEW Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+		info.pointer = MY_NEW Material(L"polygon.jpg", String(), String()
+			, Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
 	texture_manager->Use(info.pointer->diffuse_texture);
@@ -59,7 +60,8 @@ void MaterialManager::Use(const String& material_name, Material* material)
 	info.pointer = material;
 	if (!info.pointer)
 	{// materialがnullの場合真っ赤で保存する
-		info.pointer = MY_NEW Material(Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+		info.pointer = MY_NEW Material(L"polygon.jpg", String(), String()
+			, Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
 	texture_manager->Use(info.pointer->diffuse_texture);
@@ -92,6 +94,18 @@ void MaterialManager::Disuse(const String& material_name)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  初期化処理
+//--------------------------------------------------------------------------------
+void MaterialManager::Init(void)
+{
+	// default material
+	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(kDefaultMaterial.diffuse_texture);
+	texture_manager->Use(kDefaultMaterial.specular_texture);
+	texture_manager->Use(kDefaultMaterial.normal_texture);
+}
+
+//--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
 void MaterialManager::Uninit(void)
@@ -105,6 +119,11 @@ void MaterialManager::Uninit(void)
 		delete iterator->second.pointer;
 		iterator = materials_.erase(iterator);
 	}
+
+	// default material
+	texture_manager->Disuse(kDefaultMaterial.diffuse_texture);
+	texture_manager->Disuse(kDefaultMaterial.specular_texture);
+	texture_manager->Disuse(kDefaultMaterial.normal_texture);
 }
 
 //--------------------------------------------------------------------------------
@@ -116,7 +135,7 @@ Material* MaterialManager::LoadFromFile(const String& material_name)
 	ifstream file(path);
 	if (!file.is_open())
 	{
-		assert("failed to open file!!");
+		assert(file.is_open());
 		return nullptr;
 	}
 	BinaryInputArchive archive(file);

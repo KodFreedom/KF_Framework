@@ -10,7 +10,8 @@
 #include "material_manager.h"
 #include "mesh_manager.h"
 #include "renderer_manager.h"
-#include "mesh_renderer.h"
+#include "mesh_renderer_3d.h"
+#include "mesh_renderer_3d_skin.h"
 #include "sphere_collider.h"
 #include "obb_collider.h"
 #include "aabb_collider.h"
@@ -18,6 +19,8 @@
 #include "rigidbody3d.h"
 #include "animator.h"
 #include "actor_controller.h"
+#include "player_neutral_state.h"
+#include "unity_chan_wait_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"
@@ -38,7 +41,7 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	auto result = MY_NEW GameObject;
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"skyBox");
 	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	renderer->SetMaterial(L"sky");
@@ -64,7 +67,7 @@ GameObject* GameObjectSpawner::CreateField(const String& name)
 	String field_name = name + L"Field";
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(field_name + L".mesh");
 	renderer->SetMaterial(field_name);
 	result->AddRenderer(renderer);
@@ -83,7 +86,7 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 	auto result = MY_NEW GameObject;
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"cube");
 	renderer->SetMaterial(L"cube");
 	result->AddRenderer(renderer);
@@ -113,7 +116,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	result->SetName(file_info.name);
 
 	//コンポネント
-	auto renderer = MY_NEW MeshRenderer(*result);
+	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(name);
 	result->AddRenderer(renderer);
 
@@ -169,7 +172,7 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	
 	//Modelファイルの開く
 	String path = L"data/model/" + name;
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
 		assert(file.is_open());
@@ -201,22 +204,45 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale)
 {
 	auto result = MY_NEW GameObjectActor;
+	auto transform = result->GetTransform();
+	auto animator = result->GetAnimator();
 
-	//Tag
-	result->SetTag(L"Player");
+	//Modelファイルの開く
+	String path = L"data/model/actor/" + name + L".model";
+	ifstream file(path, ios::binary);
+	if (!file.is_open())
+	{
+		assert(file.is_open());
+		return result;
+	}
+	BinaryInputArchive archive(file);
+	CreateChildNode(transform, archive, animator);
+	file.close();
+
+	//Animator
+	animator->SetAvatar(name);
+	animator->Change(MY_NEW UnityChanWaitMotionState(0));
 
 	//コンポネント
 	auto rigidbody = MY_NEW Rigidbody3D(*result);
+	rigidbody->SetGravityMultiplier(0.0f);
 	result->SetRigidbody(rigidbody);
-	auto animator = result->GetAnimator();
-	result->AddBehavior(MY_NEW ActorController(*result, *rigidbody, *animator));
+
+	//Actor Controller
+	auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
+	actor_controller->Change(MY_NEW PlayerNeutralState);
+	result->AddBehavior(actor_controller);
+
+	//Collider
 	auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
 	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	collider->SetTag(L"body");
 	result->AddCollider(collider);
+	
+	//Tag
+	result->SetTag(L"Player");
 
 	//パラメーター
-	auto transform = result->GetTransform();
 	transform->SetPosition(position);
 	transform->SetScale(scale);
 	transform->SetRotation(rotation);
@@ -277,7 +303,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	auto field = MY_NEW GameObject;
 	auto field_editor = MY_NEW FieldEditor(*field);
 	field->AddBehavior(field_editor);
-	auto renderer = MY_NEW MeshRenderer(*field);
+	auto renderer = MY_NEW MeshRenderer3d(*field);
 	renderer->SetMesh(L"field");
 	renderer->SetMaterial(L"editorField");
 	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
@@ -292,7 +318,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	editor_controller->SetFieldEditor(field_editor);
 	editor_controller->SetModelEditor(model_editor);
 	result->AddBehavior(editor_controller);
-	renderer = MY_NEW MeshRenderer(*result);
+	renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"data/model/target.x");
 	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
@@ -309,13 +335,9 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	関数名：createChildNode
-//  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	parent：ファイルの名前 
-//			filePointer
-//	戻り値：GameObject*
+//	モデルファイルからゲームオブジェクト作成
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArchive& archive)
+GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArchive& archive, Animator* animator)
 {
 	auto result = MY_NEW GameObject;
 
@@ -335,7 +357,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&rotation, sizeof(rotation));
 	archive.loadBinary(&scale, sizeof(scale));
 	auto transform = result->GetTransform();
-	if (parent) transform->RegisterParent(parent, position, rotation);
+	if (parent) transform->RegisterParent(parent, position, rotation/*, scale*/);
 
 	//Collider
 	int collider_number = 0;
@@ -373,6 +395,13 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	//Mesh
 	int mesh_number = 0;
 	archive.loadBinary(&mesh_number, sizeof(mesh_number));
+	if (mesh_number == 0)
+	{
+		auto renderer = MY_NEW MeshRenderer3d(*result);
+		renderer->SetMesh(L"cube");
+		renderer->SetShaderType(kNoLightNoFog);
+		result->AddRenderer(renderer);
+	}
 	for (int count = 0; count < mesh_number; ++count)
 	{
 		//Mesh Name
@@ -401,16 +430,22 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		//Check File Type
 		if (mesh_type == k3dMesh)
 		{//骨なし
-			auto renderer = MY_NEW MeshRenderer(*result);
+			auto renderer = MY_NEW MeshRenderer3d(*result);
 			renderer->SetMesh(mesh_name + L".mesh");
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);
-			renderer->SetShaderType(shader_type);
+			renderer->SetShaderType(kNoLightNoFog);
 			result->AddRenderer(renderer);
 		}
 		else if (mesh_type == k3dSkin)
 		{//ワンスキーンメッシュ
-			MessageBox(NULL, L"oneSkinMesh未対応", L"GameObjectSpawner::createChildNode", MB_OK | MB_ICONWARNING);
+			assert(animator);
+			auto renderer = MY_NEW MeshRenderer3dSkin(*animator, *result);
+			renderer->SetMesh(mesh_name + L".skin");
+			renderer->SetMaterial(material_name);
+			renderer->SetRenderPriority(priority);
+			renderer->SetShaderType(kNoLightNoFog);
+			result->AddRenderer(renderer);
 		}
 		else
 		{
@@ -423,7 +458,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&child_number, sizeof(child_number));
 	for (int count = 0; count < child_number; ++count)
 	{
-		auto child = CreateChildNode(transform, archive);
+		auto child = CreateChildNode(transform, archive, animator);
 	}
 
 	//初期化

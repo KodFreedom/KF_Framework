@@ -20,13 +20,42 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  描画処理(3D)
+//  描画処理(2D)
+//	mesh_name：メッシュ名前
 //--------------------------------------------------------------------------------
-void RenderSystemDirectX9::Render(const String& mesh_name)
+void RenderSystemDirectX9::Render2dMesh(const String& mesh_name) const
+{
+	auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(mesh_name);
+	device_->SetVertexDeclaration(vertex_declaration_2d_);
+	device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex2d));
+	device_->SetIndices(mesh->index_buffer);
+	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->draw_type),
+		0, 0, mesh->vertex_number, 0, mesh->polygon_number);
+}
+
+//--------------------------------------------------------------------------------
+//  描画処理(3D)
+//	mesh_name：メッシュ名前
+//--------------------------------------------------------------------------------
+void RenderSystemDirectX9::Render3dMesh(const String& mesh_name) const
 {
 	auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(mesh_name);
 	device_->SetVertexDeclaration(vertex_declaration_3d_);
 	device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3d));
+	device_->SetIndices(mesh->index_buffer);
+	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->draw_type),
+		0, 0, mesh->vertex_number, 0, mesh->polygon_number);
+}
+
+//--------------------------------------------------------------------------------
+//  描画処理(3dSkin)
+//	skin_name：メッシュ名前
+//--------------------------------------------------------------------------------
+void RenderSystemDirectX9::Render3dSkin(const String& skin_name) const
+{
+	auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(skin_name);
+	device_->SetVertexDeclaration(vertex_declaration_3d_skin_);
+	device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3dSkin));
 	device_->SetIndices(mesh->index_buffer);
 	device_->DrawIndexedPrimitive(static_cast<_D3DPRIMITIVETYPE>(mesh->draw_type),
 		0, 0, mesh->vertex_number, 0, mesh->polygon_number);
@@ -96,6 +125,7 @@ void RenderSystemDirectX9::Uninit(void)
 #endif
 	SAFE_RELEASE(vertex_declaration_2d_);
 	SAFE_RELEASE(vertex_declaration_3d_);
+	SAFE_RELEASE(vertex_declaration_3d_skin_);
 	SAFE_RELEASE(device_);
 	SAFE_RELEASE(instance_);
 }
@@ -209,6 +239,19 @@ void RenderSystemDirectX9::InitVertexDeclaration(void)
 		D3DDECL_END()
 	};
 	device_->CreateVertexDeclaration(elements_3d, &vertex_declaration_3d_);
+
+	// 3dSkin
+	D3DVERTEXELEMENT9 elements_3d_skin[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+		{ 0, 48, D3DDECLTYPE_SHORT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		{ 0, 56, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		D3DDECL_END()
+	};
+	device_->CreateVertexDeclaration(elements_3d_skin, &vertex_declaration_3d_skin_);
 }
 
 //--------------------------------------------------------------------------------

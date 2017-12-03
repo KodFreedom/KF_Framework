@@ -15,15 +15,15 @@ public:
 	//  ŠÖ”’è‹`
 	//--------------------------------------------------------------------------------
 	ActorParameter()
-		: level_(0)
-		, max_life_(0.0f)
-		, current_life_(0.0f)
-		, attack_(0.0f)
-		, defence_(0.0f)
-		, move_speed_(0.0f)
-		, jump_speed_(0.0f)
+		: level_(1)
+		, max_life_(1.0f)
+		, current_life_(1.0f)
+		, attack_(1.0f)
+		, defence_(1.0f)
+		, move_speed_(1.0f)
+		, jump_speed_(1.0f)
 		, min_turn_speed_(0.0f)
-		, max_turn_speed_(0.0f)
+		, max_turn_speed_(kPi)
 	{}
 	~ActorParameter() {}
 

@@ -15,6 +15,7 @@
 //gameobject
 #include "stage_spawner.h"
 #include "game_object_spawner.h"
+#include "game_object_actor.h"
 
 #ifdef _DEBUG
 #include "debug_observer.h"
@@ -62,8 +63,9 @@ void ModeDemo::Init(void)
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 	//StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-//	auto player = GameObjectSpawner::CreatePlayer("data/MODEL/motionPlayer.txt", Vector3(119.7f, 10.0f, -121.2f), Vector3(0.0f), Vector3(1.0f));
-//	player->SetName("Player");
+	auto player = GameObjectSpawner::CreatePlayer(L"unitychan", Vector3::kZero, Vector3::kZero, Vector3(0.02f));
+	player->SetName(L"Player");
+	camera->SetFollowTarget(player);
 //
 //#ifdef _DEBUG
 //	DebugObserver::Instance()->SetPlayer(player);

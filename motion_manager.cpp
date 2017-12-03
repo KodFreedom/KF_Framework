@@ -413,7 +413,7 @@ void MotionManager::Clear(void)
 MotionData* MotionManager::LoadFromFile(const String& motion_name)
 {
 	auto& path = L"data/motion/" + motion_name + L".motion";
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open()) return nullptr;
 	auto data = MY_NEW MotionData;
 	BinaryInputArchive archive(file);

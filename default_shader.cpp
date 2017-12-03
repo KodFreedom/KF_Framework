@@ -118,28 +118,14 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 	pixel_shader_constant_table_->SetValue(device, "light_ambient", &light->ambient_, sizeof(light->ambient_));
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	if (material)
-	{
-		device->SetTexture(0, main_system->GetTextureManager()->Get(material->diffuse_texture));
-		device->SetTexture(1, main_system->GetTextureManager()->Get(material->normal_texture));
-		device->SetTexture(2, main_system->GetTextureManager()->Get(material->specular_texture));
-		pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
-		pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
-		pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
-		pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
-		pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
-	}
-	else
-	{
-		float power = 1.0f;
-		device->SetTexture(0, nullptr);
-		device->SetTexture(1, nullptr);
-		device->SetTexture(2, nullptr);
-		pixel_shader_constant_table_->SetValue(device, "material_diffuse", &Color::kWhite, sizeof(Color::kWhite));
-		pixel_shader_constant_table_->SetValue(device, "material_ambient", &Color::kGray, sizeof(Color::kGray));
-		pixel_shader_constant_table_->SetValue(device, "material_emissive", &Color::kBlack, sizeof(Color::kBlack));
-		pixel_shader_constant_table_->SetValue(device, "material_specular", &Color::kBlack, sizeof(Color::kBlack));
-		pixel_shader_constant_table_->SetValue(device, "material_power", &power, sizeof(power));
-	}
+	auto texture_manager = main_system->GetTextureManager();
+	device->SetTexture(0, texture_manager->Get(material->diffuse_texture));
+	device->SetTexture(1, texture_manager->Get(material->normal_texture));
+	device->SetTexture(2, texture_manager->Get(material->specular_texture));
+	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
+	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
+	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
+	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
+	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
 }
 #endif

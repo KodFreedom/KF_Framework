@@ -158,6 +158,12 @@ public:
 
 private:
 	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	static constexpr int kSphereCircleNumber = 10;
+	static constexpr int kSphereVertexesPerCircle = 10;
+
+	//--------------------------------------------------------------------------------
 	//  構造体定義
 	//--------------------------------------------------------------------------------
 	struct MeshInfo
@@ -194,6 +200,13 @@ private:
 	MeshInfo LoadFromMesh(const String& mesh_name);
 
 	//--------------------------------------------------------------------------------
+	//  skinファイルからデータを読み込む
+	//  skin_name : スキンメッシュ名
+	//  return : MeshInfo
+	//--------------------------------------------------------------------------------
+	MeshInfo LoadFromSkin(const String& skin_name);
+
+	//--------------------------------------------------------------------------------
 	//  xファイルからデータを読み込む
 	//  mesh_name : メッシュ名
 	//  return : MeshInfo
@@ -228,11 +241,18 @@ private:
 	MeshInfo CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number);
 	
 	//--------------------------------------------------------------------------------
-	//  create the vertex and index buffer, return true if successed
+	//  create the 3d vertex and index buffer, return true if successed
 	//  バーテックスとインデックスバッファの生成
 	//  return : bool
 	//--------------------------------------------------------------------------------
-	bool CreateBuffer(Mesh* mesh);
+	bool CreateBuffer3d(Mesh* const mesh) const;
+
+	//--------------------------------------------------------------------------------
+	//  create the 3dSkin vertex and index buffer, return true if successed
+	//  バーテックスとインデックスバッファの生成
+	//  return : bool
+	//--------------------------------------------------------------------------------
+	bool CreateBuffer3dSkin(Mesh* const mesh) const;
 
 	//--------------------------------------------------------------------------------
 	//  DrawTypeによってポリゴンの頂点を返す

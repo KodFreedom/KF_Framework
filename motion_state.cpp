@@ -44,9 +44,11 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 
 	for (auto& bone : avatar)
 	{
-		bone.transform->SetPosition(iterator->translation_);
-		bone.transform->SetRotation(iterator->rotation_);
-		bone.transform->SetScale(iterator->scale_);
+		bone.transform->SetOffset(iterator->translation_
+			, iterator->rotation_, iterator->scale_);
+		//bone.transform->SetPosition(iterator->translation_);
+		//bone.transform->SetRotation(iterator->rotation_);
+		//bone.transform->SetScale(iterator->scale_);
 		++iterator;
 	}
 
@@ -84,13 +86,13 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 	assert(next_motion_data_);
 	const auto& avatar = animator.GetAvatar();
 	assert(avatar.size() <= current_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
-	assert(avatar.size() <= next_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
+	assert(avatar.size() <= next_motion_data_->frames_[next_frame_counter_].bone_transforms_.size());
 
 	int frame_number = static_cast<int>(current_motion_data_->frames_.size());
 	auto current_iterator = current_motion_data_->frames_[current_frame_counter_].bone_transforms_.begin();
 
 	int next_frame_number = static_cast<int>(next_motion_data_->frames_.size());
-	auto next_iterator = next_motion_data_->frames_[current_frame_counter_].bone_transforms_.begin();
+	auto next_iterator = next_motion_data_->frames_[next_frame_counter_].bone_transforms_.begin();
 	float blend_rate = static_cast<float>(blend_frame_counter_) / static_cast<float>(blend_frame_number_);
 
 	for (auto& bone : avatar)
@@ -98,9 +100,12 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 		const auto& blend_translation = Math::Lerp(current_iterator->translation_, next_iterator->translation_, blend_rate);
 		const auto& blend_rotation = Math::Slerp(current_iterator->rotation_, next_iterator->rotation_, blend_rate);
 		const auto& blend_scale = Math::Lerp(current_iterator->scale_, next_iterator->scale_, blend_rate);
-		bone.transform->SetPosition(blend_translation);
-		bone.transform->SetRotation(blend_rotation);
-		bone.transform->SetScale(blend_scale);
+		
+		bone.transform->SetOffset(blend_translation
+			, blend_rotation, blend_scale);
+		//bone.transform->SetPosition(blend_translation);
+		//bone.transform->SetRotation(blend_rotation);
+		//bone.transform->SetScale(blend_scale);
 		++current_iterator;
 		++next_iterator;
 	}

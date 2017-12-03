@@ -41,6 +41,7 @@ void PlayerNeutralState::Update(ActorController& actor)
 	}
 
 	actor.CheckGrounded();
+	actor.Move();
 
 	if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
 	{

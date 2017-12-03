@@ -106,13 +106,6 @@ void NoLightNoFogShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const 
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	if (material)
-	{
-		device->SetTexture(0, main_system->GetTextureManager()->Get(material->diffuse_texture));
-	}
-	else
-	{
-		device->SetTexture(0, nullptr);
-	}
+	device->SetTexture(0, main_system->GetTextureManager()->Get(material->diffuse_texture));
 }
 #endif

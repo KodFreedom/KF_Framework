@@ -124,9 +124,6 @@
     <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Normal">
       <UniqueIdentifier>{e839a2c1-c343-401c-b8b1-aa6185f4c779}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Blend">
-      <UniqueIdentifier>{95aebe46-32ab-47d5-bfbb-75df21dd050d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Base\Motion">
       <UniqueIdentifier>{cb274add-2675-4099-97a6-dc2c9e1bb78c}</UniqueIdentifier>
     </Filter>
@@ -193,6 +190,12 @@
     <Filter Include="ヘッダー ファイル\Base\Shader\HLSL">
       <UniqueIdentifier>{76f3dcde-c3fd-49e1-a9d7-6e129a3dc263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\Motion\MotionState">
+      <UniqueIdentifier>{097be50f-f66e-4c11-b094-087cc9489341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Motion\MotionState\Normal">
+      <UniqueIdentifier>{6f58992f-1bdb-40b1-bda0-843e012e7a97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -236,9 +239,6 @@
     </ClCompile>
     <ClCompile Include="kf_math.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
     <ClCompile Include="kf_utility.cpp">
       <Filter>ソース ファイル\KF_Utility</Filter>
@@ -404,6 +404,45 @@
     </ClCompile>
     <ClCompile Include="cull_none_shader.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer_2d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer_3d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_renderer_3d_skin.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_damaged_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_fall_down_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_jump_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_land_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_lying_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_rise_up_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_run_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_wait_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="unity_chan_walk_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -671,6 +710,42 @@
     <ClInclude Include="cull_none_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="mesh_renderer_3d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer_2d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_renderer_3d_skin.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_damaged_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_fall_down_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_land_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_lying_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_rise_up_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_run_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_wait_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="unity_chan_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default_pixel_shader.hlsl">
@@ -679,19 +754,17 @@
     <None Include="default_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="no_light_no_fog_vertex_shader.hlsl">
+    <None Include="cull_none_pixel_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="no_light_no_fog_pixel_shader.hlsl">
+    </None>
+    <None Include="cull_none_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="cull_none_pixel_shader.hlsl">
+    </None>
+    <None Include="no_light_no_fog_pixel_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="cull_none_vertex_shader.hlsl">
+    </None>
+    <None Include="no_light_no_fog_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

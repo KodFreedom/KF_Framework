@@ -30,8 +30,8 @@ void RendererManager::Update(void)
 //--------------------------------------------------------------------------------
 void RendererManager::Render(void)
 {
-	auto render_system = MainSystem::Instance()->GetRenderSystem();
-	auto shader_manager = MainSystem::Instance()->GetShaderManager();
+	const auto render_system = MainSystem::Instance()->GetRenderSystem();
+	const auto shader_manager = MainSystem::Instance()->GetShaderManager();
 	for (int count_priority = 0; count_priority < static_cast<int>(kPriorityMax); ++count_priority)
 	{
 		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))
@@ -43,13 +43,16 @@ void RendererManager::Render(void)
 		{
 			auto& renderers = renderers_arrays_[count_priority][count_shader];
 			if (renderers.empty()) continue;
+
 			shader_manager->Set(static_cast<ShaderType>(count_shader));
+
 			for (auto iterator = renderers.begin(); iterator != renderers.end();)
-			{
+			{// render
 				shader_manager->SetConstantTable(**iterator);
-				render_system->Render((*iterator)->GetMeshName());
+				(*iterator)->RenderBy(*render_system);
 				iterator = renderers.erase(iterator);
 			}
+
 			shader_manager->Reset(static_cast<ShaderType>(count_shader));
 		}
 
