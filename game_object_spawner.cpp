@@ -397,10 +397,10 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&mesh_number, sizeof(mesh_number));
 	if (mesh_number == 0)
 	{
-		//auto renderer = MY_NEW MeshRenderer3d(*result);
-		//renderer->SetMesh(L"cube");
-		//renderer->SetShaderType(kNoLightNoFog);
-		//result->AddRenderer(renderer);
+		auto renderer = MY_NEW MeshRenderer3d(*result);
+		renderer->SetMesh(L"cube");
+		renderer->SetShaderType(kNoLightNoFog);
+		result->AddRenderer(renderer);
 	}
 	for (int count = 0; count < mesh_number; ++count)
 	{
@@ -444,7 +444,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 			renderer->SetMesh(mesh_name + L".skin");
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);
-			renderer->SetShaderType(kNoLightNoFog);
+			renderer->SetShaderType(kDefaultSkinShader);
 			result->AddRenderer(renderer);
 		}
 		else

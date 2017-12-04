@@ -9,6 +9,7 @@
 #include "default_shader.h"
 #include "no_light_no_fog_shader.h"
 #include "cull_none_shader.h"
+#include "default_skin_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -61,6 +62,8 @@ void ShaderManager::Init(void)
 	shaders_[kNoLightNoFog]->Init(device_);
 	shaders_[kCullNone] = MY_NEW CullNoneShader();
 	shaders_[kCullNone]->Init(device_);
+	shaders_[kDefaultSkinShader] = MY_NEW DefaultSkinShader();
+	shaders_[kDefaultSkinShader]->Init(device_);
 #endif
 }
 

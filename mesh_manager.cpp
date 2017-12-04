@@ -224,9 +224,11 @@ MeshManager::MeshInfo MeshManager::LoadFromSkin(const String& skin_name)
 	}
 
 	//頂点データ
+	vector<Vertex3dSkin> test;
+	test.resize(info.pointer->vertex_number);
 	Vertex3dSkin* vertex_pointer;
 	info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-	archive.loadBinary(vertex_pointer, sizeof(Vertex3dSkin) * info.pointer->vertex_number);
+	archive.loadBinary(&test[0], sizeof(Vertex3dSkin) * info.pointer->vertex_number);
 	info.pointer->vertex_buffer->Unlock();
 
 	//インデックス

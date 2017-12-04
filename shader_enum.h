@@ -63,5 +63,6 @@ enum ShaderType
 	kDefaultShader = 0, // LightOn_CCW_Multi_Solid_FogOn
 	kNoLightNoFog, // LightOff_CCW_Multi_Solid_FogOff
 	kCullNone, // LightOn_None_Multi_Solid_FogOn
+	kDefaultSkinShader, // SkinShader
 	kShaderMax
 };
