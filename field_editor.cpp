@@ -27,6 +27,7 @@ FieldEditor::FieldEditor(GameObject& owner)
 	, raise_speed_(1.0f)
 	, extend_speed_(1.0f)
 	, is_active_(true)
+	, mode_(kAverage)
 {}
 
 //--------------------------------------------------------------------------------
@@ -108,10 +109,25 @@ void FieldEditor::Update(void)
 	//升降
 	input_value = static_cast<float>(input->GetKeyPress(Key::kRaise))
 		- static_cast<float>(input->GetKeyPress(Key::kReduce));
-	for (auto index : indexes)
+	float raise_amount = input_value * raise_speed_;
+	if (mode_ == kAverage)
 	{
-		vertexes_[index].position.y_ += input_value * raise_speed_;
+		for (auto index : indexes)
+		{
+			vertexes_[index].position.y_ += raise_amount;
+		}
 	}
+	else
+	{ // 距離によって線形補間
+		for (auto index : indexes)
+		{
+			auto& vertex = vertexes_[index].position;
+			float rate = editor_radius_ == 0.0f ? 1.0f :
+				(editor_radius_ - Vector2(editor_position_.x_ - vertex.x_, editor_position_.z_ - vertex.z_).Magnitude()) / editor_radius_;
+			vertex.y_ += raise_amount * rate;
+		}
+	}
+	
 
 	auto& choosen_indexes = GetChoosenIndexes();
 	UpdateVertexesBy(choosen_indexes);
@@ -145,9 +161,12 @@ void FieldEditor::SetActive(const bool& value)
 {
 	is_active_ = value;
 	if (!is_active_)
-	{//Field Reset
-		list<int> choosen_indexes;
-		MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, choosen_indexes);
+	{// 前フレーム選択された頂点の色を戻す
+		for (int index : previous_choosen_indexes_)
+		{
+			vertexes_[index].color = Color::kWhite;
+		}
+		MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, previous_choosen_indexes_);
 	}
 }
 
@@ -164,7 +183,7 @@ void FieldEditor::SaveAsBinary(const String& name)
 	ofstream file(path);
 	if (!file.is_open())
 	{
-		assert("failed to open file");
+		assert(file.is_open());
 		return;
 	}
 	BinaryOutputArchive archive(file);
@@ -288,6 +307,15 @@ void FieldEditor::ShowMainWindow(void)
 	// Controll
 	ImGui::Text("Shrink / Extend : Left / Right");
 	ImGui::Text("Raise / Reduce : Up / Down");
+
+	// Raise mode
+	static const char* labels[] = {
+		"Average",
+		"Linear by distance"
+	};
+
+	//Type
+	ImGui::ListBox("Raise mode", (int*)(&mode_), labels, 2);
 
 	// Radius
 	ImGui::Text("Radius : %f", editor_radius_);
