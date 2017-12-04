@@ -22,7 +22,7 @@ public:
 	//--------------------------------------------------------------------------------
 	MeshRenderer3dSkin(const Animator& animator, GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
-		, const ShaderType& shader_type = kDefaultShader)
+		, const ShaderType& shader_type = kDefaultSkinShader)
 		: MeshRenderer(owner, priority, shader_type)
 		, animator_(animator) {}
 	~MeshRenderer3dSkin() {}
@@ -31,6 +31,11 @@ public:
 	//  描画処理
 	//--------------------------------------------------------------------------------
 	void RenderBy(const RenderSystem& render_system) override;
+
+	//--------------------------------------------------------------------------------
+	//  アニメーターの取得
+	//--------------------------------------------------------------------------------
+	const auto& GetAnimator(void) const { return animator_; }
 
 private:
 	//--------------------------------------------------------------------------------

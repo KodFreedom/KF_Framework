@@ -216,6 +216,13 @@ void ModelEditor::ShowMainWindow(void)
 			current_info.my_transform->SetRotation(current_info.rotation);
 		}
 
+		//モデルスケール
+		Vector3 scale = current_info.my_transform->GetScale();
+		if (ImGui::InputFloat3("scale", &scale.x_))
+		{
+			current_info.my_transform->SetScale(scale);
+		}
+
 		//モデルの作成
 		if (ImGui::Button("Create")) { Create(); }
 	}

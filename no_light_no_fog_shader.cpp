@@ -106,6 +106,7 @@ void NoLightNoFogShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const 
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	device->SetTexture(0, main_system->GetTextureManager()->Get(material->diffuse_texture));
+	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
+	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
 }
 #endif

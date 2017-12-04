@@ -1,29 +1,30 @@
 //--------------------------------------------------------------------------------
-//　cull_none_shader.cpp
+//　default_skin_shader.cpp
 //	シェーダークラス
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "cull_none_shader.h"
+#include "default_skin_shader.h"
 #include "main_system.h"
 #include "render_system.h"
 #include "camera.h"
 #include "camera_manager.h"
-#include "light_manager.h"
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
+#include "mesh_renderer_3d_skin.h"
+#include "animator.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
+void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 {
 	// Vertex Shader
 	LPD3DXBUFFER error_buffer = nullptr;
 	LPD3DXBUFFER code_buffer = nullptr;
 	HRESULT hr = D3DXCompileShaderFromFile(
-		L"cull_none_vertex_shader.hlsl",
+		L"default_skin_vertex_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -50,7 +51,7 @@ void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	// Pixel Shader
 	hr = D3DXCompileShaderFromFile(
-		L"cull_none_pixel_shader.hlsl",
+		L"default_skin_pixel_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -80,56 +81,42 @@ void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 //  使用処理
 //--------------------------------------------------------------------------------
-void CullNoneShader::Set(const LPDIRECT3DDEVICE9 device)
+void DefaultSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 {
 	ShaderDirectX9::Set(device);
-	MainSystem::Instance()->GetRenderSystem()->SetRenderState(CullMode::KCullNone);
 }
 
 //--------------------------------------------------------------------------------
 //  使用完了の後片付け
 //--------------------------------------------------------------------------------
-void CullNoneShader::Reset(const LPDIRECT3DDEVICE9 device)
+void DefaultSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 {
-	MainSystem::Instance()->GetRenderSystem()->SetRenderState(CullMode::kCcw);
+
 }
 
 //--------------------------------------------------------------------------------
 //  定数テーブルの設定
 //--------------------------------------------------------------------------------
-void CullNoneShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
+void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
 	auto main_system = MainSystem::Instance();
 	auto camera = main_system->GetCameraManager()->GetMainCamera();
+	auto& world = Matrix44::kIdentity;
 	auto& view = camera->GetView();
 	auto& projection = camera->GetProjection();
-	auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
-	auto& world_inverse = world.Inverse();
-
 	D3DXMATRIX world_view_projection = world * view * projection;
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
-
-	auto& camera_position_local = Vector3::TransformCoord(camera->GetWorldEyePosition(), world_inverse);
-	pixel_shader_constant_table_->SetValue(device, "camera_position_local", &camera_position_local, sizeof(camera_position_local));
-
-	auto& light = main_system->GetLightManager()->GetDirectionLights().front();
-	auto& light_direction_local = Vector3::TransformNormal(light->direction_, world_inverse);
-	pixel_shader_constant_table_->SetValue(device, "light_direction_local", &light_direction_local, sizeof(light_direction_local));
-	pixel_shader_constant_table_->SetValue(device, "light_diffuse", &light->diffuse_, sizeof(light->diffuse_));
-	pixel_shader_constant_table_->SetValue(device, "light_ambient", &light->ambient_, sizeof(light->ambient_));
+	
+	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
+	const auto& bone_texture = skin_mesh_renderer->GetAnimator().GetBoneTexture();
+	assert(bone_texture.pointer);
+	assert(bone_texture.size);
+	vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
+	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
+	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	auto texture_manager = main_system->GetTextureManager();
 	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
-	UINT norma_texture_index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
-	UINT specular_texture_index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture");
-	device->SetTexture(diffuse_texture_index, texture_manager->Get(material->diffuse_texture));
-	device->SetTexture(norma_texture_index, texture_manager->Get(material->normal_texture));
-	device->SetTexture(specular_texture_index, texture_manager->Get(material->specular_texture));
-	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
-	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
-	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
-	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
-	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
+	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
 }
 #endif

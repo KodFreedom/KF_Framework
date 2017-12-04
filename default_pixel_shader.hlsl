@@ -9,6 +9,8 @@ float4 material_emissive;
 float4 material_specular;
 float  material_power;
 sampler diffuse_texture;
+sampler normal_texture;
+sampler specular_texture;
 
 struct PixelIn
 {

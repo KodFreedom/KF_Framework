@@ -119,9 +119,12 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	auto texture_manager = main_system->GetTextureManager();
-	device->SetTexture(0, texture_manager->Get(material->diffuse_texture));
-	device->SetTexture(1, texture_manager->Get(material->normal_texture));
-	device->SetTexture(2, texture_manager->Get(material->specular_texture));
+	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
+	UINT norma_texture_index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
+	UINT specular_texture_index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture");
+	device->SetTexture(diffuse_texture_index, texture_manager->Get(material->diffuse_texture));
+	device->SetTexture(norma_texture_index, texture_manager->Get(material->normal_texture));
+	device->SetTexture(specular_texture_index, texture_manager->Get(material->specular_texture));
 	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
 	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
 	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));

@@ -444,6 +444,9 @@
     <ClCompile Include="motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
     </ClCompile>
+    <ClCompile Include="default_skin_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -746,6 +749,9 @@
     <ClInclude Include="unity_chan_walk_motion_state.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
     </ClInclude>
+    <ClInclude Include="default_skin_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default_pixel_shader.hlsl">
@@ -764,6 +770,12 @@
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
     <None Include="no_light_no_fog_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </None>
+    <None Include="default_skin_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </None>
+    <None Include="default_skin_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
   </ItemGroup>

@@ -56,6 +56,19 @@ public:
 		if (textures_.end() == iterator) return nullptr;
 		return iterator->second.pointer;
 	}
+
+	//--------------------------------------------------------------------------------
+	//  空のテクスチャの作成
+	//  size : width と heightのサイズ
+	//  return : LPDIRECT3DTEXTURE9
+	//--------------------------------------------------------------------------------
+	LPDIRECT3DTEXTURE9 CreateEmptyTexture(const UINT size)
+	{
+		LPDIRECT3DTEXTURE9 texture = nullptr;
+		device_->CreateTexture(size, size, 1, D3DUSAGE_DYNAMIC
+			, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &texture, NULL);
+		return texture;
+	}
 #endif
 
 private:

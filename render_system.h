@@ -31,7 +31,7 @@ struct Vertex3dSkin // 3dスキン頂点情報構造体
 	Vector3 normal;
 	Vector2 uv;
 	Color   color;
-	Short4  bone_indexes;
+	Vector4 bone_indexes;
 	Vector4 bone_weights;
 };
 
