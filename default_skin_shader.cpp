@@ -12,6 +12,7 @@
 #include "texture_manager.h"
 #include "game_object.h"
 #include "mesh_renderer_3d_skin.h"
+#include "animator.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -105,14 +106,15 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
 	auto& projection = camera->GetProjection();
 	D3DXMATRIX world_view_projection = world * view * projection;
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
-	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
-	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
-	device->SetSamplerState(bone_texture_index, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-	device->SetSamplerState(bone_texture_index, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-	device->SetSamplerState(bone_texture_index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	device->SetSamplerState(bone_texture_index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-	device->SetTexture(bone_texture_index, skin_mesh_renderer->GetBoneTexture());
 	
+	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
+	const auto& bone_texture = skin_mesh_renderer->GetAnimator().GetBoneTexture();
+	assert(bone_texture.pointer);
+	assert(bone_texture.size);
+	vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
+	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
+	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
+
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
 	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));

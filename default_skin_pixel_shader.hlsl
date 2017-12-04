@@ -9,5 +9,5 @@ struct PixelIn
 
 float4 main(PixelIn pixel) : COLOR0
 {
-	return float4(1,1,1,1);
+	return tex2D(diffuse_texture, pixel.uv) * pixel.color;
 }

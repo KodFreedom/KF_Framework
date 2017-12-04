@@ -395,13 +395,13 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	//Mesh
 	int mesh_number = 0;
 	archive.loadBinary(&mesh_number, sizeof(mesh_number));
-	if (mesh_number == 0)
-	{
-		auto renderer = MY_NEW MeshRenderer3d(*result);
-		renderer->SetMesh(L"cube");
-		renderer->SetShaderType(kNoLightNoFog);
-		result->AddRenderer(renderer);
-	}
+	//if (mesh_number == 0)
+	//{
+	//	auto renderer = MY_NEW MeshRenderer3d(*result);
+	//	renderer->SetMesh(L"cube");
+	//	renderer->SetShaderType(kNoLightNoFog);
+	//	result->AddRenderer(renderer);
+	//}
 	for (int count = 0; count < mesh_number; ++count)
 	{
 		//Mesh Name

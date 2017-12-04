@@ -772,13 +772,11 @@
     <None Include="no_light_no_fog_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="default_skin_vertex_shader.hlsl">
+    <None Include="default_skin_pixel_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="default_skin_pixel_shader.hlsl">
+    </None>
+    <None Include="default_skin_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

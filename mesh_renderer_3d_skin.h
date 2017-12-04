@@ -22,7 +22,7 @@ public:
 	//--------------------------------------------------------------------------------
 	MeshRenderer3dSkin(const Animator& animator, GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
-		, const ShaderType& shader_type = kDefaultShader)
+		, const ShaderType& shader_type = kDefaultSkinShader)
 		: MeshRenderer(owner, priority, shader_type)
 		, animator_(animator) {}
 	~MeshRenderer3dSkin() {}
@@ -32,12 +32,10 @@ public:
 	//--------------------------------------------------------------------------------
 	void RenderBy(const RenderSystem& render_system) override;
 
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//--------------------------------------------------------------------------------
-	//  テクスチャの取得
+	//  アニメーターの取得
 	//--------------------------------------------------------------------------------
-	const LPDIRECT3DTEXTURE9 GetBoneTexture(void) const;
-#endif
+	const auto& GetAnimator(void) const { return animator_; }
 
 private:
 	//--------------------------------------------------------------------------------

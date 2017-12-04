@@ -14,13 +14,3 @@ void MeshRenderer3dSkin::RenderBy(const RenderSystem& render_system)
 {
 	render_system.Render3dSkin(mesh_name_);
 }
-
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-//--------------------------------------------------------------------------------
-//  テクスチャの取得
-//--------------------------------------------------------------------------------
-const LPDIRECT3DTEXTURE9 MeshRenderer3dSkin::GetBoneTexture(void) const
-{
-	return animator_.GetBoneTexture();
-}
-#endif

@@ -65,9 +65,8 @@ public:
 	LPDIRECT3DTEXTURE9 CreateEmptyTexture(const UINT size)
 	{
 		LPDIRECT3DTEXTURE9 texture = nullptr;
-		D3DXCreateTexture(device_, size, size
-			, 1, D3DUSAGE_DYNAMIC, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT,
-			&texture);
+		device_->CreateTexture(size, size, 1, D3DUSAGE_DYNAMIC
+			, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &texture, NULL);
 		return texture;
 	}
 #endif
