@@ -36,20 +36,21 @@ void PlayerWalkState::Uninit(ActorController& actor)
 void PlayerWalkState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
-	if (actor.GetMovement().SquareMagnitude() <= 0.0f)
-	{
-		actor.Change(new PlayerNeutralState);
-		return;
-	}
-
 	actor.CheckGrounded();
 	actor.Move();
-
-	if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+	if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
 	{
-		actor.Jump();
-		actor.Change(new PlayerJumpState);
-		return;
+		if(actor.GetMovement().SquareMagnitude() <= 0.0f)
+		{
+			actor.Change(new PlayerNeutralState);
+			return;
+		}
+
+		if(actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+		{
+			actor.Change(new PlayerJumpState);
+			return;
+		}
 	}
 }
 

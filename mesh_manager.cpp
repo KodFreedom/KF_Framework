@@ -105,7 +105,7 @@ void MeshManager::SaveMeshToFile(const String& mesh_name, const String& file_nam
 	auto pointer = iterator->second.pointer;
 
 	String& path = L"data/mesh/" + file_name + L".mesh";
-	ofstream file(path);
+	ofstream file(path, ios::binary);
 	if (!file.is_open()) return;
 	BinaryOutputArchive archive(file);
 

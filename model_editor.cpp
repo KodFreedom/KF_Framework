@@ -130,10 +130,10 @@ void ModelEditor::SaveAsBinary(const String& name)
 {
 	//フィールドの保存
 	String path = L"data/stage/" + name + L".stage";
-	ofstream file(path);
+	ofstream file(path, ios::binary);
 	if (!file.is_open())
 	{
-		assert("failed to open file");
+		assert(file.is_open());
 		return;
 	}
 	BinaryOutputArchive archive(file);
@@ -145,9 +145,10 @@ void ModelEditor::SaveAsBinary(const String& name)
 	for (size_t count = 0; count < model_number; ++count)
 	{
 		//ファイル名保存
-		size_t name_size = model_names_[count].size();
+		string name = string(model_names_[count].begin(), model_names_[count].end());
+		size_t name_size = name.size();
 		archive.saveBinary(&name_size, sizeof(name_size));
-		archive.saveBinary(&model_names_[count][0], name_size);
+		archive.saveBinary(&name[0], name_size);
 		
 		//作ったモデル数の保存
 		size_t created_model_number = created_model_infos_[count].size();

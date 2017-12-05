@@ -18,7 +18,7 @@ void PlayerJumpState::Init(ActorController& actor)
 	auto& parameter = actor.GetParamater();
 	parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
 	parameter.SetMovementMultiplier(kAirborneMovementMultiplier);
-	auto animator = actor.GetAnimator();
+	auto& animator = actor.GetAnimator();
 	animator.SetGrounded(false);
 	animator.SetJump(true);
 }
@@ -28,7 +28,7 @@ void PlayerJumpState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 void PlayerJumpState::Uninit(ActorController& actor)
 {
-	auto animator = actor.GetAnimator();
+	auto& animator = actor.GetAnimator();
 	animator.SetGrounded(true);
 	animator.SetJump(false);
 }
@@ -39,15 +39,29 @@ void PlayerJumpState::Uninit(ActorController& actor)
 void PlayerJumpState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
-	actor.CheckGrounded();
-	actor.Move();
-	if (actor.GetCurrentGroundInfo().is_grounded)
+	
+	++frame_counter_;
+	if (frame_counter_ == kWaitFrame)
 	{
-		actor.Change(new PlayerLandState);
-		return;
+		actor.Jump();
 	}
-	auto& parameter = actor.GetParamater();
-	parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
+	else if (frame_counter_ > kWaitFrame)
+	{
+		actor.CheckGrounded();
+		actor.Move();
+
+		if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+		{
+			if (actor.GetCurrentGroundInfo().is_grounded)
+			{
+				actor.Change(new PlayerLandState);
+				return;
+			}
+		}
+	}
+	
+	//auto& parameter = actor.GetParamater();
+	//parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
 }
 
 //--------------------------------------------------------------------------------

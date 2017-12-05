@@ -20,6 +20,11 @@
 #endif
 
 //--------------------------------------------------------------------------------
+//  定数定義
+//--------------------------------------------------------------------------------
+const float CollisionDetector::kMaxFieldSlopeCos = cosf(CollisionDetector::kMaxFieldSlope);
+
+//--------------------------------------------------------------------------------
 //
 //  衝突判定関数
 //
@@ -502,10 +507,26 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 		return;
 	}
 
-	collision->point = sphere_position + collision->normal * penetration;
-	collision->penetration = penetration;
 	collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere.GetGameObject().GetRigidbody());
 	collision->rigidbody_two = nullptr;
+	float dot = Vector3::kUp.Dot(collision->normal);
+	if (dot < kMaxFieldSlopeCos)
+	{// 地面法線の角度が登れる最大角度以下の場合(水平面に対して)
+		// 登られないため
+		// スフィアの移動方向の逆向きを衝突法線にして
+		// 衝突深度を計算し直す
+		// Pnew = Pnow + Normal * Penetration
+		// (Pnow - Pcol).sqrMag + Radius * Radius = (Pnew - Pnow).sqrMag = Penetration * Penetration
+		//collision->normal = collision->rigidbody_one->GetMovement().Normalized() * -1.0f;
+		//collision->penetration = sqrtf((sphere_position - collision->point).SquareMagnitude() + radius * radius);
+		collision->penetration = collision->normal.Dot(collision->rigidbody_one->GetMovement() * -1.0f);
+		//collision->normal = collision->rigidbody_one->GetMovement().Normalized() * -1.0f;
+	}
+	else
+	{// そうじゃないなら衝突法線を世界上方向にする
+		collision->normal = Vector3::kUp;
+		collision->penetration = penetration;
+	}
 
 	//物理演算システムにレジストリ
 	MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
@@ -642,16 +663,6 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Sph
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, FieldCollider& field)
 {
-	//auto begin_rightyMax = ray.origin_ + ray.direction_ * distancetance;
-	//int nNumVtxX = 0;
-	//int nNumVtxZ = 0;
-	//vector<Vector3> vecVtx;
-	//if (!field.GetVtxByRange(ray.origin_, begin_rightyMax, nNumVtxX, nNumVtxZ, vecVtx))
-	//{
-	//	return false;
-	//}
-
-	//一時採用
 	auto collision = Detect(ray.origin_ + ray.direction_ * distance, field);
 	if (!collision) return nullptr;
 	if (collision->penetration < 0.0f) 
@@ -757,38 +768,28 @@ Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& 
 	if (!polygon_info) return nullptr;
 	Collision* result = nullptr;
 
-	// 地面法線の角度が60度以上なら地面法線を返す
-	// そうじゃないなら上方向を返す
-	float dot = Vector3::kUp.Dot(polygon_info->normal);
-	if (dot > 0.5f)
-	{
-		float point_y_on_field = polygon_info->side.y_ - ((point.x_ - polygon_info->side.x_) * polygon_info->normal.x_ + (point.z_ - polygon_info->side.z_) * polygon_info->normal.z_) / polygon_info->normal.y_;
-		float penetration = point_y_on_field - point.y_;
-		if (penetration > 0.0f)
-		{
-			result = MY_NEW Collision;
-			result->point = point;
-			result->penetration = penetration;
-			result->normal = Vector3::kUp;
-		}
-		delete polygon_info;
-		return result;
-	}
+	// 地面判定はxz平面なので衝突法線は必ず世界の上方向になる
+	float point_y_on_field = polygon_info->side.y_ - ((point.x_ - polygon_info->side.x_) * polygon_info->normal.x_ + (point.z_ - polygon_info->side.z_) * polygon_info->normal.z_) / polygon_info->normal.y_;
 
-	// 地面の投影位置の算出
-	auto& center = (polygon_info->left_up + polygon_info->right_down) * 0.5f;
-	auto& right = (polygon_info->right_down - polygon_info->left_up).Normalized();
-	auto& forward = (right * polygon_info->normal).Normalized();
-	auto& transform = Matrix44::Transform(right, polygon_info->normal, forward, center);
-	auto& real_position = Vector3::TransformInverse(point, transform);
-	
-	if (real_position.y_ < 0.0f)
-	{// 登られないため法線を上方向と垂直方向にする
-		result = MY_NEW Collision;
-		result->point = point;
-		result->normal = (Vector3::kUp * polygon_info->normal * Vector3::kUp).Normalized();
-		result->penetration = -real_position.y_;
-	}
+	//// 地面の投影位置の算出
+	//auto& center = (polygon_info->left_up + polygon_info->right_down) * 0.5f;
+	//auto& right = (polygon_info->right_down - polygon_info->left_up).Normalized();
+	//auto& forward = (right * polygon_info->normal).Normalized();
+	//auto& transform = Matrix44::Transform(right, polygon_info->normal, forward, center);
+	//auto& real_position = Vector3::TransformInverse(point, transform);
+	//result->penetration = -real_position.y_;
+	//// 登られないため法線を上方向と垂直方向にする
+	//result = MY_NEW Collision;
+	//result->point = point;
+	//result->normal = (Vector3::kUp * polygon_info->normal * Vector3::kUp).Normalized();
+	//result->penetration = -real_position.y_;
+	//delete polygon_info;
+	//return result;
+
+	result = MY_NEW Collision;
+	result->point = Vector3(point.x_, point_y_on_field, point.z_);
+	result->normal = polygon_info->normal; // 壁スリを判定するため地面法線を返す
+	result->penetration = point_y_on_field - point.y_;
 	delete polygon_info;
 	return result;
 }

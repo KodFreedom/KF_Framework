@@ -32,8 +32,9 @@ void PlayerDamagedState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
 	time_counter_ -= DELTA_TIME;
-	if (time_counter_ <= 0.0f &&
-		!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"Damaged"))
+	if (time_counter_ <= 0.0f 
+		&& actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState
+		&& !actor.GetAnimator().GetCurrentAnimationName()._Equal(L"unity_chan_damaged"))
 	{
 		actor.Change(new PlayerNeutralState);
 		return;

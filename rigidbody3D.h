@@ -62,6 +62,7 @@ public:
 	const auto& GetBounciness(void) const { return bounciness_; }
 	const auto& GetVelocity(void) const { return velocity_; }
 	const auto& GetAcceleration(void) const { return acceleration_; }
+	const auto& GetMovement(void) const { return movement_; }
 
 	//--------------------------------------------------------------------------------
 	//  Setä÷êî

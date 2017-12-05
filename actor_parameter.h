@@ -24,6 +24,8 @@ public:
 		, jump_speed_(1.0f)
 		, min_turn_speed_(0.0f)
 		, max_turn_speed_(kPi)
+		, movement_multiplier_(1.0f)
+		, ground_check_distance_(0.0f)
 	{}
 	~ActorParameter() {}
 

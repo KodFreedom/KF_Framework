@@ -82,20 +82,20 @@ void PhysicsSystem::ResolveVelocity(Collision& collision)
 	//跳ね返り速度の算出
 	float bounciness_velocity = -separating_velocity * bounciness;
 
-	//衝突方向に作用力を計算する
-	Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
-	if (collision.rigidbody_two)
-	{
-		acceleration -= collision.rigidbody_two->GetAcceleration();
-	}
-	float separating_acceleration = acceleration.Dot(collision.normal);
-
-	//衝突法線の逆方向になれば
-	if (separating_acceleration < 0.0f)
-	{
-		bounciness_velocity += separating_acceleration * bounciness;
-		if (bounciness_velocity < 0.0f) bounciness_velocity = 0.0f;
-	}
+	////衝突方向に作用力を計算する
+	//Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
+	//if (collision.rigidbody_two)
+	//{
+	//	acceleration -= collision.rigidbody_two->GetAcceleration();
+	//}
+	//float separating_acceleration = acceleration.Dot(collision.normal);
+	//
+	////衝突法線の逆方向になれば
+	//if (separating_acceleration < 0.0f)
+	//{
+	//	bounciness_velocity += separating_acceleration * bounciness;
+	//	if (bounciness_velocity < 0.0f) bounciness_velocity = 0.0f;
+	//}
 
 	//速度差分計算
 	float delta_velocity = bounciness_velocity - separating_velocity;

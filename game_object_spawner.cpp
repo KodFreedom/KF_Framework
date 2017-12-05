@@ -225,11 +225,15 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//コンポネント
 	auto rigidbody = MY_NEW Rigidbody3D(*result);
-	rigidbody->SetGravityMultiplier(0.0f);
+	rigidbody->SetGravityMultiplier(4.0f);
 	result->SetRigidbody(rigidbody);
 
 	//Actor Controller
 	auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
+	actor_controller->GetParamater().SetMoveSpeed(10.0f);
+	actor_controller->GetParamater().SetJumpSpeed(10.0f);
+	actor_controller->GetParamater().SetMinTurnSpeed(kPi);
+	actor_controller->GetParamater().SetMaxTurnSpeed(kPi * 2.0f);
 	actor_controller->Change(MY_NEW PlayerNeutralState);
 	result->AddBehavior(actor_controller);
 
@@ -357,7 +361,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&rotation, sizeof(rotation));
 	archive.loadBinary(&scale, sizeof(scale));
 	auto transform = result->GetTransform();
-	if (parent) transform->RegisterParent(parent, position, rotation/*, scale*/);
+	if (parent) transform->RegisterParent(parent, position, rotation, scale);
 
 	//Collider
 	int collider_number = 0;

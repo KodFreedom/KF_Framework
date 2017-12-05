@@ -32,25 +32,19 @@ void PlayerLandState::Uninit(ActorController& actor)
 void PlayerLandState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
-	actor.CheckGrounded();
-	actor.Move();
 
-	if (actor.GetMovement().SquareMagnitude() > 0.0f)
+	if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
 	{
-		actor.Change(new PlayerWalkState);
-		return;
-	}
+		if (actor.GetMovement().SquareMagnitude() > 0.0f)
+		{
+			actor.Change(new PlayerWalkState);
+			return;
+		}
 
-	if (actor.IsJump())
-	{
-		actor.Jump();
-		actor.Change(new PlayerJumpState);
-		return;
-	}
-
-	if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"Landing"))
-	{
-		actor.Change(new PlayerNeutralState);
-		return;
+		if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"unity_chan_land"))
+		{
+			actor.Change(new PlayerNeutralState);
+			return;
+		}
 	}
 }

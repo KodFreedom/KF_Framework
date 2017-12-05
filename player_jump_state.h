@@ -15,7 +15,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton
 	//--------------------------------------------------------------------------------
-	PlayerJumpState() : PlayerState(L"PlayerJumpState") {}
+	PlayerJumpState() : PlayerState(L"PlayerJumpState"), frame_counter_(0) {}
 	~PlayerJumpState() {}
 
 	//--------------------------------------------------------------------------------
@@ -54,4 +54,10 @@ private:
 	//--------------------------------------------------------------------------------
 	static constexpr float kAirborneGroundCheckDistance = 0.1f;
 	static constexpr float kAirborneMovementMultiplier = 0.5f;
+	static constexpr int kWaitFrame = 20;
+
+	//--------------------------------------------------------------------------------
+	//  ïœêîêÈåæ
+	//--------------------------------------------------------------------------------
+	int frame_counter_;
 };

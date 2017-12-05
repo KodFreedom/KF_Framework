@@ -101,21 +101,23 @@ void ActorController::Change(ActorState* state)
 void ActorController::Move(void)
 {
 	float move_amount = movement_.Magnitude();
+	move_amount = min(move_amount, 1.0f) * parameter_.GetMovementMultiplier();
 	if (move_amount > 0.0f)
 	{
 		auto transform = owner_.GetTransform();
 
 		// ‰ñ“]
-		Vector3& direction = transform->TransformDirectionToLocal(movement_ / move_amount);
-		direction = Vector3::ProjectOnPlane(direction, current_ground_info_.normal);
-		direction.Normalize();
-		move_amount *= parameter_.GetMovementMultiplier();
-		float rotation_y = atan2f(direction.x_, direction.z_);
+		Vector3& turn_direction = movement_ / move_amount;
+		turn_direction = transform->TransformDirectionToLocal(turn_direction);
+		//turn_direction = Vector3::ProjectOnPlane(turn_direction, current_ground_info_.normal);
+		float rotation_y = atan2f(turn_direction.x_, turn_direction.z_);
 		float turn_speed = Math::Lerp(parameter_.GetMaxTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
 		transform->RotateByYaw(rotation_y * turn_speed * DELTA_TIME);
 
 		//ˆÚ“®
-		rigidbody_.Move(direction * move_amount * parameter_.GetMoveSpeed() * DELTA_TIME);
+		Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos ?
+			Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized() : transform->GetForward();
+		rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * DELTA_TIME);
 	}
 	animator_.SetMovement(move_amount);
 }

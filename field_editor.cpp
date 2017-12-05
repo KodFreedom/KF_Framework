@@ -180,7 +180,7 @@ void FieldEditor::SaveAsBinary(const String& name)
 
 	//フィールドの保存
 	String path = L"data/field/" + name + L".field";
-	ofstream file(path);
+	ofstream file(path, ios::binary);
 	if (!file.is_open())
 	{
 		assert(file.is_open());
@@ -200,7 +200,10 @@ void FieldEditor::SaveAsBinary(const String& name)
 	archive.saveBinary(&vertex_number, sizeof(vertex_number));
 
 	//頂点データの保存
-	archive.saveBinary(&vertexes_[0], sizeof(Vector3) * vertex_number);
+	for (size_t count = 0; count < vertex_number; ++count)
+	{
+		archive.saveBinary(&vertexes_[count].position, sizeof(vertexes_[count].position));
+	}
 
 	file.close();
 }
