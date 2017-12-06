@@ -447,6 +447,12 @@
     <ClCompile Include="default_skin_shader.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="shadow_map_system.cpp">
+      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow_map_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -752,6 +758,12 @@
     <ClInclude Include="default_skin_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="shadow_map_system.h">
+      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_map_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default_pixel_shader.hlsl">
@@ -778,5 +790,13 @@
     <None Include="default_skin_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="basic_shadow_map_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="basic_shadow_map_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

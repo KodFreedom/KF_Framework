@@ -110,6 +110,7 @@ bool RenderSystemDirectX9::Init(HWND hwnd, BOOL is_window_mode)
 #if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_Init(hwnd, device_);
 #endif
+	device_->GetRenderTarget(0, &back_buffer_surface_);
 	return true;
 }
 

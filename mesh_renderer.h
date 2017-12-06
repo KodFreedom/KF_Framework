@@ -24,7 +24,8 @@ public:
 	MeshRenderer(GameObject& owner, const RenderPriority& priority, const ShaderType& shader_type)
 		: Component(owner)
 		, priority_(priority)
-		, shader_type_(shader_type) {}
+		, shader_type_(shader_type)
+		, is_cast_shadow_(false) {}
 	~MeshRenderer() {}
 
 	//--------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ public:
 	void SetMaterial(const String& name);
 	void SetRenderPriority(const RenderPriority& value) { priority_ = value; }
 	void SetShaderType(const ShaderType& value) { shader_type_ = value; }
+	void SetCastShadowFlag(const bool& value) { is_cast_shadow_ = value; }
 
 	//Getä÷êî
 	const auto& GetMeshName(void) const { return mesh_name_; }
@@ -67,4 +69,5 @@ protected:
 	String          material_name_;
 	RenderPriority  priority_;
 	ShaderType      shader_type_;
+	bool            is_cast_shadow_;
 };

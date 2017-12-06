@@ -1,6 +1,7 @@
 //--------------------------------------------------------------------------------
-//　shader_manager.h
-//	シェーダー管理者
+//　shadow_map_system.h
+//  render objects to shadow map
+//	シャドウマップをレンダリングするシステム
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
@@ -11,24 +12,23 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class MeshRenderer;
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-class ShaderDirectX9;
-#endif
+class MeshRenderer3d;
+class MeshRenderer3dSkin;
 
 //--------------------------------------------------------------------------------
-//  クラス定義
+//  クラス
 //--------------------------------------------------------------------------------
-class ShaderManager
+class ShadowMapSystem
 {
 public:
 	//--------------------------------------------------------------------------------
 	//  生成処理
-	//  return : MaterialManager*
+	//  return : TextureManager*
 	//--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	static ShaderManager* Create(const LPDIRECT3DDEVICE9 device)
+	static ShadowMapSystem* Create(const LPDIRECT3DDEVICE9 device)
 	{
-		auto instance = MY_NEW ShaderManager(device);
+		auto instance = MY_NEW ShadowMapSystem(device);
 		instance->Init();
 		return instance;
 	}
@@ -40,53 +40,48 @@ public:
 	void Release(void) { Uninit(); }
 
 	//--------------------------------------------------------------------------------
-	//  シェーダーの使用
+	//  描画処理
 	//--------------------------------------------------------------------------------
-	void Set(const ShaderType& type);
+	void Render(void);
 
 	//--------------------------------------------------------------------------------
-	//  シェーダーの使用
+	//  rendererを登録する
+	//  renderer : レンダラー
 	//--------------------------------------------------------------------------------
-	void Set(const ShadowMapShaderType& type);
+	void Register(MeshRenderer3d* renderer);
 
 	//--------------------------------------------------------------------------------
-	//  シェーダー使用完了の後片つけ
+	//  rendererを登録する
+	//  renderer : レンダラー
 	//--------------------------------------------------------------------------------
-	void Reset(const ShaderType& type);
+	void Register(MeshRenderer3dSkin* renderer);
 
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	//--------------------------------------------------------------------------------
-	//  シェーダー使用完了の後片つけ
+	//  シャドウマップのポインタを取得
+	//  return : const LPDIRECT3DTEXTURE9
 	//--------------------------------------------------------------------------------
-	void Reset(const ShadowMapShaderType& type);
-
-	//--------------------------------------------------------------------------------
-	//  シェーダーの定数テーブルの設定
-	//--------------------------------------------------------------------------------
-	void SetConstantTable(const ShaderType& type, const MeshRenderer& renderer);
-
-	//--------------------------------------------------------------------------------
-	//  シェーダーの定数テーブルの設定
-	//--------------------------------------------------------------------------------
-	void SetConstantTable(const ShadowMapShaderType& type, const MeshRenderer& renderer);
+	const LPDIRECT3DTEXTURE9 GetShadowMap(void) const
+	{
+		return shadow_map_;
+	}
+#endif
 
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors and destructors
 	//--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ShaderManager(const LPDIRECT3DDEVICE9 device) : device_(device)
-	{
-		for (auto& shader : shaders_) shader = nullptr;
-		for (auto& shader : shadow_map_shaders_) shader = nullptr;
-	}
-	ShaderManager() : device_(nullptr) {}
-	ShaderManager(const ShaderManager& value) : device_(nullptr) {}
+	ShadowMapSystem(const LPDIRECT3DDEVICE9 device) : device_(device)
+	, shadow_map_(nullptr), shadow_map_surface_(nullptr) {}
+	ShadowMapSystem() : device_(nullptr) {}
+	ShadowMapSystem(const ShadowMapSystem& value) : device_(nullptr) {}
 #else
-	ShaderManager() {}
-	ShaderManager(const ShaderManager& value) {}
+	ShadowMapSystem() {}
+	ShadowMapSystem(const ShadowMapSystem& value) {}
 #endif
-	ShaderManager& operator=(const ShaderManager& value) {}
-	~ShaderManager() {}
+	ShadowMapSystem& operator=(const ShadowMapSystem& value) {}
+	~ShadowMapSystem() {}
 
 	//--------------------------------------------------------------------------------
 	//  初期化処理
@@ -94,16 +89,18 @@ private:
 	void Init(void);
 
 	//--------------------------------------------------------------------------------
-	//  終了処理
+	//  破棄処理
 	//--------------------------------------------------------------------------------
 	void Uninit(void);
 
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
+	list<MeshRenderer*> renderers_array_[kShadowMapShaderMax]; // シャドウを表示するレンダラー
+
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ShaderDirectX9* shaders_[ShaderType::kShaderMax];
-	ShaderDirectX9* shadow_map_shaders_[ShadowMapShaderType::kShadowMapShaderMax];
+	LPDIRECT3DTEXTURE9 shadow_map_;
+	LPDIRECT3DSURFACE9 shadow_map_surface_;
 	const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
 #endif
 };

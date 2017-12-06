@@ -6,6 +6,21 @@
 #include "mesh_renderer_3d_skin.h"
 #include "render_system.h"
 #include "animator.h"
+#include "main_system.h"
+#include "shadow_map_system.h"
+
+//--------------------------------------------------------------------------------
+//  XVˆ—
+//--------------------------------------------------------------------------------
+void MeshRenderer3dSkin::Update(void)
+{
+	MeshRenderer::Update();
+	if (is_cast_shadow_)
+	{
+		MainSystem::Instance()->GetShadowMapSystem()->Register(this);
+	}
+}
+
 
 //--------------------------------------------------------------------------------
 //  •`‰æˆ—

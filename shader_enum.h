@@ -66,3 +66,9 @@ enum ShaderType
 	kDefaultSkinShader, // SkinShader
 	kShaderMax
 };
+
+enum ShadowMapShaderType
+{
+	kBasicShadowMapShader = 0,
+	kShadowMapShaderMax
+};

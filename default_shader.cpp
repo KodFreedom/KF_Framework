@@ -12,6 +12,7 @@
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
+#include "shadow_map_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -105,9 +106,11 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 	auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
 	auto& world_inverse = world.Inverse();
 	
+	// Vertex
 	D3DXMATRIX world_view_projection = world * view * projection;
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
 	
+	// Pixel
 	auto& camera_position_local = Vector3::TransformCoord(camera->GetWorldEyePosition(), world_inverse);
 	pixel_shader_constant_table_->SetValue(device, "camera_position_local", &camera_position_local, sizeof(camera_position_local));
 	
@@ -130,5 +133,28 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
 	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
 	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
+
+	// Shadow Map
+	// Views—ñ
+	D3DXVECTOR3 light_pos(-10.0f, 30.0f, 10.0f);
+	D3DXVECTOR3 light_at(0.0f, -5.0f, 0.0f);
+	D3DXVECTOR3 light_up(0.0f, 1.0f, 0.0f);
+	D3DXMATRIX world_light, view_light, projection_light;
+	D3DXMatrixIdentity(&world_light);
+	//D3DXMatrixTranslation(&world_light, light_pos.x, light_pos.y, light_pos.z);
+	D3DXMatrixLookAtLH(&view_light, &light_pos, &light_at, &light_up);
+	D3DXMatrixPerspectiveFovLH(&projection_light, 75.0f / 180.0 * kPi, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 100.0f);
+	D3DXMATRIX world_view_projection_light = world_light * view_light * projection_light;
+	vertex_shader_constant_table_->SetMatrix(device, "world", &(D3DXMATRIX)world);
+	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
+
+	D3DXVECTOR4 offset(
+		0.5f / SCREEN_WIDTH,
+		0.5f / SCREEN_HEIGHT,
+		0.0f,
+		0.0f);
+	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);
+	UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
+	device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
 }
 #endif
