@@ -23,6 +23,8 @@
 //  ’è”’è‹`
 //--------------------------------------------------------------------------------
 const float CollisionDetector::kMaxFieldSlopeCos = cosf(CollisionDetector::kMaxFieldSlope);
+const float CollisionDetector::kMinWallSlopeCos = cosf(CollisionDetector::kMinWallSlope);
+const float CollisionDetector::kMaxObbSlopeCos = cosf(CollisionDetector::kMaxObbSlope);
 
 //--------------------------------------------------------------------------------
 //
@@ -255,10 +257,16 @@ void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 		if (sphere_rigidbody->GetType() == Rigidbody::kRigidbody3D)
 		{
 			auto rigidbody = static_cast<Rigidbody3D*>(sphere_rigidbody);
-			collision->normal = rigidbody->GetAcceleration() * -1.0f;
+			collision->normal = rigidbody->GetMovement() * -1.0f;
 		}
 	}
 	collision->normal.Normalize();
+	float dot = Vector3::kUp.Dot(collision->normal);
+	if (dot > kMaxObbSlopeCos)
+	{// Obb‚ÌŠp“x‚ª“o‚ê‚éÅ‘åŠp“xˆÈã‚Ìê‡(…•½–Ê‚É‘Î‚µ‚Ä)
+	 // Õ“Ë–@ü‚ð¢ŠEã•ûŒü‚É‚·‚é
+		collision->normal = Vector3::kUp;
+	}
 	collision->point = closest_position;
 	collision->penetration = sphere_radius - sqrtf(square_distance);
 
@@ -510,10 +518,16 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 	collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere.GetGameObject().GetRigidbody());
 	collision->rigidbody_two = nullptr;
 	float dot = Vector3::kUp.Dot(collision->normal);
-
 	if (dot < kMaxFieldSlopeCos)
 	{// ’n–Ê–@ü‚ÌŠp“x‚ª“o‚ê‚éÅ‘åŠp“xˆÈã‚Ìê‡(…•½–Ê‚É‘Î‚µ‚Ä)
 		// “o‚ç‚ê‚È‚¢‚½‚ß–@ü•ûŒü‚ÌˆÚ“®—Ê‚ðÕ“Ë[“x‚É‚·‚é
+		if (dot < kMinWallSlopeCos)
+		{// Šp“x‚ª‘å‚«‚·‚¬‚é‚Æd—Í‚ª’µ‚Ë•Ô‚é‚±‚Æ‚ª‚Å‚«‚È‚¢‚½‚ßAŠp“x‚ðC³‚·‚é
+			Vector3& right = Vector3::kUp * collision->normal;
+			Quaternion& rotation = Quaternion::RotateAxis(right, kMinWallSlope);
+			collision->normal = Vector3::Rotate(Vector3::kUp, rotation).Normalized();
+		}
+
 		collision->penetration = collision->normal.Dot(collision->rigidbody_one->GetMovement() * -1.0f);
 	}
 	else

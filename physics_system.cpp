@@ -112,12 +112,13 @@ void PhysicsSystem::ResolveVelocity(Collision& collision)
 
 	//’PˆÊ‹t¿—Ê‚ÌÕ“Ë—Í
 	const Vector3& impulse_per_inverse_mass = collision.normal * impulse;
-
+	
 	//‘¬“xŒvZ
+	//3D‰ñ“]‚ªÀ‘•‚µ‚Ä‚È‚¢‚Ì‚ÅA‰ñ“]‘¬“x‚ğƒJƒbƒg‚·‚é
 	collision.rigidbody_one->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
 	if (collision.rigidbody_two)
 	{
-		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
+		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
 	}
 }
 

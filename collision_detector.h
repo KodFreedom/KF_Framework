@@ -91,6 +91,10 @@ public:
 	//--------------------------------------------------------------------------------
 	static constexpr float kMaxFieldSlope = 45.0f * kPi / 180.0f; // フィールド登れる最大角度
 	static const float kMaxFieldSlopeCos; // フィールド登れる最大角度のcos値
+	static constexpr float kMinWallSlope = 60.0f * kPi / 180.0f; // フィールドが壁と認める最小角度
+	static const float kMinWallSlopeCos; // フィールドが壁と認める最小角度のcos値
+	static constexpr float kMaxObbSlope = 60.0f * kPi / 180.0f; // Obb登れる最大角度
+	static const float kMaxObbSlopeCos; // Obb登れる最大角度のcos値
 
 	//--------------------------------------------------------------------------------
 	//	関数名：Detect

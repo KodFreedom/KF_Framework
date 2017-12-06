@@ -238,8 +238,8 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	result->AddBehavior(actor_controller);
 
 	//Collider
-	auto collider = MY_NEW SphereCollider(*result, kDynamic, 1.0f);
-	collider->SetOffset(Vector3(0.0f, 0.95f, 0.0f));
+	auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
+	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
 	collider->SetTag(L"body");
 	result->AddCollider(collider);
 	
