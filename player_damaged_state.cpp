@@ -14,7 +14,7 @@
 void PlayerDamagedState::Init(ActorController& actor)
 {
 	actor.GetAnimator().SetDamaged(true);
-	actor.GetParamater().SetMovementMultiplier(kDamagedMovementMultiplier);
+	actor.GetParameter().SetMovementMultiplier(kDamagedMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------

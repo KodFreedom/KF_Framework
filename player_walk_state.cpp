@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 void PlayerWalkState::Init(ActorController& actor)
 {
-	auto& parameter = actor.GetParamater();
+	auto& parameter = actor.GetParameter();
 	parameter.SetGroundCheckDistance(kGroundedGroundCheckDistance);
 	parameter.SetMovementMultiplier(kGroundedMovementMultiplier);
 }

@@ -230,16 +230,16 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//Actor Controller
 	auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
-	actor_controller->GetParamater().SetMoveSpeed(10.0f);
-	actor_controller->GetParamater().SetJumpSpeed(10.0f);
-	actor_controller->GetParamater().SetMinTurnSpeed(kPi);
-	actor_controller->GetParamater().SetMaxTurnSpeed(kPi * 2.0f);
+	actor_controller->GetParameter().SetMoveSpeed(10.0f);
+	actor_controller->GetParameter().SetJumpSpeed(10.0f);
+	actor_controller->GetParameter().SetMinTurnSpeed(kPi);
+	actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
 	actor_controller->Change(MY_NEW PlayerNeutralState);
 	result->AddBehavior(actor_controller);
 
 	//Collider
-	auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
-	collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
+	auto collider = MY_NEW SphereCollider(*result, kDynamic, 1.0f);
+	collider->SetOffset(Vector3(0.0f, 0.95f, 0.0f));
 	collider->SetTag(L"body");
 	result->AddCollider(collider);
 	
@@ -466,6 +466,6 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	}
 
 	//‰Šú‰»
-	result->Init();
+	//result->Init();
 	return result;
 }

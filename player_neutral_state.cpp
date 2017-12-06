@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 void PlayerNeutralState::Init(ActorController& actor)
 {
-	actor.GetParamater().SetGroundCheckDistance(kNeutralGroundCheckDistance);
+	actor.GetParameter().SetGroundCheckDistance(kNeutralGroundCheckDistance);
 }
 
 //--------------------------------------------------------------------------------

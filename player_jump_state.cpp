@@ -15,7 +15,7 @@
 //--------------------------------------------------------------------------------
 void PlayerJumpState::Init(ActorController& actor)
 {
-	auto& parameter = actor.GetParamater();
+	auto& parameter = actor.GetParameter();
 	parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
 	parameter.SetMovementMultiplier(kAirborneMovementMultiplier);
 	auto& animator = actor.GetAnimator();
@@ -60,7 +60,7 @@ void PlayerJumpState::Update(ActorController& actor)
 		}
 	}
 	
-	//auto& parameter = actor.GetParamater();
+	//auto& parameter = actor.GetParameter();
 	//parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
 }
 

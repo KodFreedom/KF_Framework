@@ -15,7 +15,7 @@
 //--------------------------------------------------------------------------------
 void PlayerLandState::Init(ActorController& actor)
 {
-	actor.GetParamater().SetMovementMultiplier(kLandMovementMultiplier);
+	actor.GetParameter().SetMovementMultiplier(kLandMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------

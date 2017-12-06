@@ -53,6 +53,11 @@ public:
 	void Move(const Vector3& value) { movement_ += value; }
 
 	//--------------------------------------------------------------------------------
+	//  ˆÚ“®—Ê‚ğ—^‚¦‚éi•¨—‰‰Z—pj
+	//--------------------------------------------------------------------------------
+	void AddFixedMovement(const Vector3& value) { fixed_movement_ += value; }
+
+	//--------------------------------------------------------------------------------
 	//  GetŠÖ”
 	//--------------------------------------------------------------------------------
 	const auto& GetMass(void) const { return mass_; }
@@ -99,15 +104,16 @@ private:
 	float   mass_; // ¿—Ê
 	float   inverse_mass_; // ¿—Ê‚Ì‹t”
 	float   drag_; // ’ïRŒW”(‹ó‹C’ïR)
-	//float angular_drag_; //‰ñ“]’ïRŒW”
 	float   friction_; // –€CŒW”
 	float   bounciness_; // ’µ‚Ë•Ô‚èŒW”
 	float   gravity_multiplier_; //d—ÍŒW”
 	Vector3 movement_; // ˆÚ“®—Ê
+	Vector3 fixed_movement_; // •¨—‰‰Z‚É‚æ‚é•â³
 	Vector3 velocity_; // ‘¬“x
 	Vector3 acceleration_; // ‰Á‘¬“x
-	//Vector3 angular_velocity_; // ‰ñ“]‘¬“x
 	Vector3 force_accum_; // ‡‚í‚¹‚½ì—p—Í
+	//Vector3 angular_velocity_; // ‰ñ“]‘¬“x
+	//float angular_drag_; //‰ñ“]’ïRŒW”
 	//Vector3 torque_accum_; // ‰ñ“]—Í
 	//Matrix44 inertis_tensor_; //Šµ«ƒeƒ“ƒ\ƒ‹‚Ìs—ñ
 	//BYTE rotation_lock_; //‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO

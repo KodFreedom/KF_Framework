@@ -510,17 +510,11 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 	collision->rigidbody_one = static_cast<Rigidbody3D*>(sphere.GetGameObject().GetRigidbody());
 	collision->rigidbody_two = nullptr;
 	float dot = Vector3::kUp.Dot(collision->normal);
+
 	if (dot < kMaxFieldSlopeCos)
-	{// 地面法線の角度が登れる最大角度以下の場合(水平面に対して)
-		// 登られないため
-		// スフィアの移動方向の逆向きを衝突法線にして
-		// 衝突深度を計算し直す
-		// Pnew = Pnow + Normal * Penetration
-		// (Pnow - Pcol).sqrMag + Radius * Radius = (Pnew - Pnow).sqrMag = Penetration * Penetration
-		//collision->normal = collision->rigidbody_one->GetMovement().Normalized() * -1.0f;
-		//collision->penetration = sqrtf((sphere_position - collision->point).SquareMagnitude() + radius * radius);
+	{// 地面法線の角度が登れる最大角度以上の場合(水平面に対して)
+		// 登られないため法線方向の移動量を衝突深度にする
 		collision->penetration = collision->normal.Dot(collision->rigidbody_one->GetMovement() * -1.0f);
-		//collision->normal = collision->rigidbody_one->GetMovement().Normalized() * -1.0f;
 	}
 	else
 	{// そうじゃないなら衝突法線を世界上方向にする

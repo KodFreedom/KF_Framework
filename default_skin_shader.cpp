@@ -84,7 +84,6 @@ void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 void DefaultSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 {
 	ShaderDirectX9::Set(device);
-	MainSystem::Instance()->GetRenderSystem()->SetRenderState(CullMode::KCullNone);
 }
 
 //--------------------------------------------------------------------------------

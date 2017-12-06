@@ -54,22 +54,17 @@ void ModeDemo::Init(void)
 	auto camera = MY_NEW ThirdPersionCamera;
 	camera->Init();
 
-	//MotionManager::Instance()->CreateMotionFileBy("data/MODEL/motionPlayer.txt");
-	//MaterialManager::Instance()->CreateMaterialFileBy("sky", "skybox000.jpg");
-	//MaterialManager::Instance()->CreateMaterialFileBy("demoField", "demoField.jpg");
-	//MaterialManager::Instance()->CreateMaterialFileBy("cube", "nomal_cube.jpg");
-	//MaterialManager::Instance()->CreateMaterialFileBy("editorField", "editorField.jpg");
-//	//ゲームオブジェクトの初期化
+	//ゲームオブジェクトの初期化
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 	StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
 	auto player = GameObjectSpawner::CreatePlayer(L"unitychan", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
 	player->SetName(L"Player");
 	camera->SetFollowTarget(player);
-//
-//#ifdef _DEBUG
-//	DebugObserver::Instance()->SetPlayer(player);
-//#endif // _DEBUG
+
+#ifdef _DEBUG
+	MainSystem::Instance()->GetDebugObserver()->SetPlayer(player);
+#endif // _DEBUG
 //	//auto pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-50.0, 30.0f, -7.0f), Vector3(0.0f), Vector3(1.0f));
 //	//pEnemy->SetName("Enemy00");
 //	//pEnemy = GameObjectActor::CreateEnemy("data/MODEL/motionPlayer.txt", Vector3(-12.0, 45.0f, -46.0f), Vector3(0.0f), Vector3(1.0f));

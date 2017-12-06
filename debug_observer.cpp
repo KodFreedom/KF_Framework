@@ -182,13 +182,24 @@ void DebugObserver::ShowPlayerWindow(void)
 
 	// Trans
 	auto transform = player_->GetTransform();
-	//ImGui::InputFloat3("Trans", &transform->nextPosition.x_);
+	Vector3 position = transform->GetPosition();
+	Quaternion rotation = transform->GetRotation();
+	Vector3 scale = transform->GetScale();
+	if (ImGui::InputFloat3("Position", &position.x_)) transform->SetPosition(position);
+	if (ImGui::InputFloat4("Rotation", &rotation.x_)) transform->SetRotation(rotation);
+	if (ImGui::InputFloat3("Scale", &scale.x_)) transform->SetScale(scale);
 
-	// Actor Behavior
-	//auto pActor = static_cast<PlayerController*>(player->GetBehaviors().front());
-	//ImGui::InputFloat("Move Speed", &pActor->m_fMoveSpeed);
-	//ImGui::InputFloat("Jump Speed", &pActor->m_fJumpSpeed);
-	//ImGui::Text("IsGrounded : %d", (int)pActor->m_bIsGrounded);
+	// Behavior
+	auto behavior = player_->GetBehaviorBy(L"ActorController");
+	if (behavior)
+	{
+		auto controller = static_cast<ActorController*>(behavior);
+		auto& parameter = controller->GetParameter();
+		ImGui::InputFloat("Move speed", &parameter.move_speed_);
+		ImGui::InputFloat("Jump speed", &parameter.jump_speed_);
+		ImGui::InputFloat("Min turn speed", &parameter.min_turn_speed_);
+		ImGui::InputFloat("Max turn speed", &parameter.max_turn_speed_);
+	}
 
 	// End
 	ImGui::End();

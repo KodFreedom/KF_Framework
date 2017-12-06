@@ -5,8 +5,6 @@
 //--------------------------------------------------------------------------------
 #include "physics_system.h"
 #include "collision_detector.h"
-#include "game_object.h"
-#include "transform.h"
 #include "rigidbody3d.h"
 
 //--------------------------------------------------------------------------------
@@ -82,20 +80,19 @@ void PhysicsSystem::ResolveVelocity(Collision& collision)
 	//跳ね返り速度の算出
 	float bounciness_velocity = -separating_velocity * bounciness;
 
-	////衝突方向に作用力を計算する
-	//Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
-	//if (collision.rigidbody_two)
-	//{
-	//	acceleration -= collision.rigidbody_two->GetAcceleration();
-	//}
-	//float separating_acceleration = acceleration.Dot(collision.normal);
-	//
-	////衝突法線の逆方向になれば
-	//if (separating_acceleration < 0.0f)
-	//{
-	//	bounciness_velocity += separating_acceleration * bounciness;
-	//	if (bounciness_velocity < 0.0f) bounciness_velocity = 0.0f;
-	//}
+	//衝突方向に作用力を計算する
+	Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
+	if (collision.rigidbody_two)
+	{
+		acceleration -= collision.rigidbody_two->GetAcceleration();
+	}
+	float separating_acceleration = acceleration.Dot(collision.normal);
+	
+	//衝突法線の逆方向になれば
+	if (separating_acceleration < 0.0f)
+	{
+		bounciness_velocity = max(bounciness_velocity + separating_acceleration * bounciness, 0.0f);
+	}
 
 	//速度差分計算
 	float delta_velocity = bounciness_velocity - separating_velocity;
@@ -146,12 +143,10 @@ void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 	const Vector3& movement_per_inverse_mass = collision.normal * collision.penetration / total_inverse_mass;
 
 	//各Rigidbody戻り位置計算
-	auto transform = collision.rigidbody_one->GetGameObject().GetTransform();
-	collision.rigidbody_one->SetMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
+	collision.rigidbody_one->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
 	if (collision.rigidbody_two)
 	{
-		transform = collision.rigidbody_two->GetGameObject().GetTransform();
-		collision.rigidbody_two->SetMovement(movement_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
+		collision.rigidbody_two->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
 	}
 }
 

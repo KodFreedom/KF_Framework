@@ -28,6 +28,7 @@ Rigidbody3D::Rigidbody3D(GameObject& owner)
 	, velocity_(Vector3::kZero)
 	, acceleration_(Vector3::kZero)
 	, force_accum_(Vector3::kZero)
+	, fixed_movement_(Vector3::kZero)
 {}
 
 //--------------------------------------------------------------------------------
@@ -43,19 +44,19 @@ void Rigidbody3D::Update(void)
 	//力から加速度を計算する
 	acceleration_ += force_accum_ * inverse_mass_;
 	
-	//回転力から回転加速度を計算する
-	//Matrix44 mtxIitWorld;
-	//calculateInertiaTensorWorld(mtxIitWorld);
-	//Vector3 vAngularacceleration_ = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
-
 	//速度
 	velocity_ += acceleration_ * DELTA_TIME;
-	//m_vAngularvelocity_   += vAngularacceleration_;
-
+	
 	//位置更新
 	movement_ += velocity_ * DELTA_TIME;
 	transform->SetPosition(transform->GetPosition() + movement_);
 
+	// TODO : 3D回転
+	//回転力から回転加速度を計算する
+	//Matrix44 mtxIitWorld;
+	//calculateInertiaTensorWorld(mtxIitWorld);
+	//Vector3 vAngularacceleration_ = CKFMath::Vec3TransformCoord(m_vTorqueAccum, mtxIitWorld);
+	//m_vAngularvelocity_   += vAngularacceleration_;
 	//回転更新
 	//pTrans->RotByEuler(m_vAngularvelocity_);
 }
@@ -67,11 +68,12 @@ void Rigidbody3D::LateUpdate(void)
 {
 	// 物理演算より位置補正
 	auto transform = owner_.GetTransform();
-	transform->SetPosition(transform->GetPosition() + movement_);
+	transform->SetPosition(transform->GetPosition() + fixed_movement_);
 
 	//処理完了
 	velocity_ *= drag_;
 	movement_ = Vector3::kZero;
+	fixed_movement_ = Vector3::kZero;
 	force_accum_ = Vector3::kZero;
 	acceleration_ = Vector3::kZero;
 	//m_vTorqueAccum = Vector3(0.0f);
