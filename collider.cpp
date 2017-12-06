@@ -32,7 +32,7 @@ Collider::Collider(GameObject& owner, const ColliderType& type, const ColliderMo
 //--------------------------------------------------------------------------------
 bool Collider::Init(void)
 {
-	world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
+	world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
 	return true;
 }
 

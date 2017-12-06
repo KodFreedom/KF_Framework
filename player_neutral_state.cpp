@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 void PlayerNeutralState::Init(ActorController& actor)
 {
-	actor.GetParamater().SetGroundCheckDistance(kNeutralGroundCheckDistance);
+	actor.GetParameter().SetGroundCheckDistance(kNeutralGroundCheckDistance);
 }
 
 //--------------------------------------------------------------------------------
@@ -34,20 +34,22 @@ void PlayerNeutralState::Uninit(ActorController& actor)
 void PlayerNeutralState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
-	if (actor.GetMovement().SquareMagnitude() > 0.0f)
-	{
-		actor.Change(new PlayerWalkState);
-		return;
-	}
-
 	actor.CheckGrounded();
 	actor.Move();
 
-	if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+	if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
 	{
-		actor.Jump();
-		actor.Change(new PlayerJumpState);
-		return;
+		if (actor.GetMovement().SquareMagnitude() > 0.0f)
+		{
+			actor.Change(new PlayerWalkState);
+			return;
+		}
+
+		if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+		{
+			actor.Change(new PlayerJumpState);
+			return;
+		}
 	}
 }
 

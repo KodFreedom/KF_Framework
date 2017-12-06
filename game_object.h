@@ -26,15 +26,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ‰Šú‰»ˆ—
 	//--------------------------------------------------------------------------------
-	virtual bool Init(void) 
-	{ 
-		if (!transform_->Init()) { assert("init transform_ error!!"); return false; }
-		for (auto& pair : behaviors_) { if (!pair.second->Init()) { assert("init behavior error!!"); return false; } }
-		if (!rigidbody_->Init()) { assert("init rigidbody error!!");  return false; }
-		for (auto collider : colliders_) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
-		for (auto renderer : renderers_) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
-		return true;
-	}
+	virtual bool Init(void);
 
 	//--------------------------------------------------------------------------------
 	//  XVˆ—

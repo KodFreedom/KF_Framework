@@ -19,8 +19,8 @@
 //--------------------------------------------------------------------------------
 //  constructor / コンストラクタ
 //--------------------------------------------------------------------------------
-MotionState::MotionState(const String& motion_name, const int start_frame)
-	: current_motion_name_(motion_name), current_frame_counter_(start_frame)
+MotionState::MotionState(const String& motion_name, const int start_frame, const MotionStateType& type)
+	: current_motion_name_(motion_name), current_frame_counter_(start_frame), type_(type)
 {
 	current_motion_data_ = MainSystem::Instance()->GetMotionManager()->GetMotionDataBy(current_motion_name_);
 }
@@ -68,7 +68,7 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 //  constructor / コンストラクタ
 //--------------------------------------------------------------------------------
 BlendMotionState::BlendMotionState(const String& current_motion_name, NormalMotionState* next_motion_pointer, const int current_motion_start_frame, const int blend_frame_number)
-	: MotionState(current_motion_name, current_motion_start_frame)
+	: MotionState(current_motion_name, current_motion_start_frame, kBlendMotionState)
 	, next_frame_counter_(0)
 	, next_motion_pointer_(next_motion_pointer)
 	, blend_frame_counter_(0)

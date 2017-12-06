@@ -113,7 +113,7 @@ VertexesInRange* FieldCollider::GetVertexesInRange(const Vector3& begin, const V
 void FieldCollider::Load(const String& field_name)
 {
 	auto& path = L"data/field/" + field_name + L".field";
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
 		assert("load error");

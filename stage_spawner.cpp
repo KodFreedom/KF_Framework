@@ -18,52 +18,52 @@ void StageSpawner::LoadStage(const String& stage_name)
 {
 	GameObjectSpawner::CreateField(stage_name);
 
-	////フィールドの保存
-	//string filePath = "data/STAGE/" + stageName + "Stage" + ".stage";
-	//FILE *filePointer;
+	//フィールドの読込
+	String path = L"data/stage/" + stage_name + L"Stage.stage";
+	ifstream file(path, ios::binary);
+	if (!file.is_open())
+	{
+		assert(file.is_open());
+		return;
+	}
+	BinaryInputArchive archive(file);
 
-	////file open
-	//fopen_s(&filePointer, filePath.c_str(), "rb");
+	//Model数の読込
+	size_t model_number;
+	archive.loadBinary(&model_number, sizeof model_number);
+	for (size_t count = 0; count < model_number; ++count)
+	{
+		//ファイル名読込
+		size_t name_size;
+		archive.loadBinary(&name_size, sizeof(name_size));
+		string name;
+		name.resize(name_size);
+		archive.loadBinary(&name[0], name_size);
+		String model_name = String(name.begin(), name.end());
 
-	//if (!filePointer)
-	//{
-	//	MessageBox(NULL, "StageSpawner : LoadStage ERROR!! ファイルが見つからない!!", "エラー", MB_OK | MB_ICONWARNING);
-	//	return;
-	//}
+		//作ったモデル数の読込
+		size_t created_model_number;
+		archive.loadBinary(&created_model_number, sizeof(created_model_number));
 
-	//int modelTypeNumber = 0;
-	//fread(&modelTypeNumber, sizeof(int), 1, filePointer);
+		//位置回転スケールの読込
+		for (size_t count_model = 0; count_model < created_model_number; ++count_model)
+		{
+			Vector3 position;
+			archive.loadBinary(&position, sizeof(position));
+			Quaternion rotation;
+			archive.loadBinary(&rotation, sizeof(rotation));
+			Vector3 scale;
+			archive.loadBinary(&scale, sizeof(scale));
 
-	//for (int count = 0; count < modelTypeNumber; ++count)
-	//{
-	//	//ファイル名読込
-	//	int size = 0;
-	//	fread(&size, sizeof(int), 1, filePointer);
-	//	string modelName;
-	//	modelName.resize(size);
-	//	fread(&modelName[0], sizeof(char), size, filePointer);
-	//	modelName += ".model";
-	//	
-	//	//モデル数の読込
-	//	int number = 0;
-	//	fread(&number, sizeof(int), 1, filePointer);
-
-	//	//位置回転の読込
-	//	for (int countModel = 0; countModel < number; ++countModel)
-	//	{
-	//		Vector3 position;
-	//		fread(&position, sizeof(Vector3), 1, filePointer);
-	//		Quaternion rotation;
-	//		fread(&rotation, sizeof(Quaternion), 1, filePointer);
-	//		auto gameObject = GameObjectSpawner::CreateModel(modelName, position, rotation, Vector3::One);
-	//		if (modelName == "Medieval_Windmill.model")
-	//		{
-	//			auto behavior = MY_NEW WindmillController(gameObject);
-	//			behavior->Init();
-	//			gameObject->AddBehavior(behavior);
-	//		}
-	//	}
-	//}
-
-	//fclose(filePointer);
+			// 作成
+			auto model = GameObjectSpawner::CreateModel(model_name, position, rotation, scale);
+			//if (modelName == "Medieval_Windmill.model")
+			//{
+			//	auto behavior = MY_NEW WindmillController(gameObject);
+			//	behavior->Init();
+			//	gameObject->AddBehavior(behavior);
+			//}
+		}
+	}
+	file.close();
 }

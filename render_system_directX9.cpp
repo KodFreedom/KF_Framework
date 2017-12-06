@@ -11,8 +11,6 @@
 #if defined(_DEBUG) || defined(EDITOR)
 #include "ImGui\imgui_impl_dx9.h"
 #endif
-#include "camera.h"
-#include "camera_manager.h"
 
 //--------------------------------------------------------------------------------
 //
