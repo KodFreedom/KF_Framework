@@ -22,6 +22,12 @@ class ShadowMapSystem
 {
 public:
 	//--------------------------------------------------------------------------------
+	//  定数定義
+	//--------------------------------------------------------------------------------
+	static constexpr float kShadowMapWidth = 2048.0f;
+	static constexpr float kShadowMapHeight = 2048.0f;
+
+	//--------------------------------------------------------------------------------
 	//  生成処理
 	//  return : TextureManager*
 	//--------------------------------------------------------------------------------
@@ -97,10 +103,10 @@ private:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	list<MeshRenderer*> renderers_array_[kShadowMapShaderMax]; // シャドウを表示するレンダラー
-
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	LPDIRECT3DTEXTURE9 shadow_map_;
 	LPDIRECT3DSURFACE9 shadow_map_surface_;
+	LPDIRECT3DSURFACE9 depth_stencil_surface_;
 	const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
 #endif
 };

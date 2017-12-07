@@ -39,32 +39,49 @@ void ShadowMapSystem::Register(MeshRenderer3dSkin* renderer)
 void ShadowMapSystem::Render(void)
 {
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	device_->SetRenderTarget(0, shadow_map_surface_);
-	device_->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL), Color::kWhite, 1.0f, 0);
-	if (FAILED(device_->BeginScene())) { return; }
-#endif
-
-	const auto render_system = MainSystem::Instance()->GetRenderSystem();
-	const auto shader_manager = MainSystem::Instance()->GetShaderManager();
-
-	for (int count = 0; count < static_cast<int>(kShadowMapShaderMax); ++count)
+	if (FAILED(device_->SetRenderTarget(0, shadow_map_surface_))) 
 	{
-		if (renderers_array_[count].empty()) continue;
+		return;
+	}
+	device_->SetDepthStencilSurface(depth_stencil_surface_);
 
-		const auto& current_type = static_cast<ShadowMapShaderType>(count);
-		shader_manager->Set(current_type);
-
-		for (auto iterator = renderers_array_[count].begin(); iterator != renderers_array_[count].end();)
-		{// render
-			shader_manager->SetConstantTable(current_type, **iterator);
-			(*iterator)->RenderBy(*render_system);
-			iterator = renderers_array_[count].erase(iterator);
+	HRESULT hr = device_->BeginScene();
+	if (hr == S_OK)
+	{
+		if (FAILED(device_->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL), D3DCOLOR_RGBA(255, 255, 255, 255), 1.0f, 0)))
+		{
+			return;
 		}
 
-		shader_manager->Reset(current_type);
+		const auto render_system = MainSystem::Instance()->GetRenderSystem();
+		const auto shader_manager = MainSystem::Instance()->GetShaderManager();
+
+		for (int count = 0; count < static_cast<int>(kShadowMapShaderMax); ++count)
+		{
+			if (renderers_array_[count].empty()) continue;
+
+			const auto& current_type = static_cast<ShadowMapShaderType>(count);
+			shader_manager->Set(current_type);
+
+			for (auto iterator = renderers_array_[count].begin(); iterator != renderers_array_[count].end();)
+			{// render
+				shader_manager->SetConstantTable(current_type, **iterator);
+				(*iterator)->RenderBy(*render_system);
+				iterator = renderers_array_[count].erase(iterator);
+			}
+
+			shader_manager->Reset(current_type);
+		}
+
+		device_->EndScene();
 	}
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	device_->EndScene();
+	else
+	{
+		for (int count = 0; count < static_cast<int>(kShadowMapShaderMax); ++count)
+		{
+			renderers_array_[count].clear();
+		}
+	}
 #endif
 }
 
@@ -80,20 +97,17 @@ void ShadowMapSystem::Init(void)
 {
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	// シャドウマップとして使用するテクスチャの作成
-	HRESULT hr = device_->CreateTexture(SCREEN_WIDTH, SCREEN_HEIGHT, 1
-		, D3DUSAGE_RENDERTARGET
-		, D3DFMT_A32B32G32R32F
-		, D3DPOOL_DEFAULT
-		, &shadow_map_, NULL);
+	HRESULT hr = device_->CreateTexture(kShadowMapWidth, kShadowMapHeight
+		, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &shadow_map_,NULL);
 	assert(hr == S_OK);
 
 	// テクスチャからレンダリングターゲットにするサーフェースの取得
 	hr = shadow_map_->GetSurfaceLevel(0, &shadow_map_surface_);
 	assert(hr == S_OK);
 
-	// テクスチャへのレンダリングに使う深度バッファの作成
-	//hr = device_->CreateDepthStencilSurface(SCREEN_WIDTH, SCREEN_HEIGHT
-	//	, D3DFMT_D24X8, D3DMULTISAMPLE_NONE, 0, TRUE, &shadow_map_surface_, NULL);
+	//// テクスチャへのレンダリングに使う深度バッファの作成
+	hr = device_->CreateDepthStencilSurface(kShadowMapWidth, kShadowMapHeight
+		, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, TRUE, &depth_stencil_surface_, NULL);
 #endif
 }
 

@@ -43,8 +43,13 @@ class DirectionalLight : public Light
 public:
 	DirectionalLight(const Vector3& direction, const Color& diffuse, const Color& ambient, const Color& specular)
 		: Light(kDirectionalLight, diffuse, ambient, specular)
-		, direction_(direction) {}
+		, position_(Vector3::kOne), at_(Vector3::kZero)
+		, direction_(direction), near_(0.0f) , far_(0.0f) {}
+	Vector3	position_; // Position in world space
+	Vector3 at_;
 	Vector3	direction_; // Direction in world space
+	float near_;
+	float far_;
 };
 
 ////--------------------------------------------------------------------------------

@@ -111,6 +111,9 @@ bool RenderSystemDirectX9::Init(HWND hwnd, BOOL is_window_mode)
 	ImGui_ImplDX9_Init(hwnd, device_);
 #endif
 	device_->GetRenderTarget(0, &back_buffer_surface_);
+	//// テクスチャへのレンダリングに使う深度バッファの作成
+	device_->CreateDepthStencilSurface(SCREEN_WIDTH, SCREEN_HEIGHT
+		, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, TRUE, &depth_stencil_surface_, NULL);
 	return true;
 }
 
@@ -161,7 +164,7 @@ bool RenderSystemDirectX9::CreateDevice(HWND hwnd, BOOL is_window_mode)
 	present_parameters.BackBufferFormat				= display_mode.Format;			// カラーモードの指定
 	present_parameters.SwapEffect					= D3DSWAPEFFECT_DISCARD;		// 映像信号に同期してフリップする
 	present_parameters.EnableAutoDepthStencil		= TRUE;							// デプスバッファ（Ｚバッファ）とステンシルバッファを作成
-	present_parameters.AutoDepthStencilFormat		= D3DFMT_D16;					// デプスバッファとして16bitを使う
+	present_parameters.AutoDepthStencilFormat		= D3DFMT_D24S8;					// デプスバッファとして16bitを使う
 	present_parameters.Windowed						= is_window_mode;				// ウィンドウモード
 	present_parameters.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;		// リフレッシュレート
 	present_parameters.PresentationInterval			= D3DPRESENT_INTERVAL_DEFAULT;	// インターバル

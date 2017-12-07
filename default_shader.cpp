@@ -136,21 +136,18 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 
 	// Shadow Map
 	// Views—ñ
-	D3DXVECTOR3 light_pos(-10.0f, 30.0f, 10.0f);
-	D3DXVECTOR3 light_at(0.0f, -5.0f, 0.0f);
 	D3DXVECTOR3 light_up(0.0f, 1.0f, 0.0f);
-	D3DXMATRIX world_light, view_light, projection_light;
-	D3DXMatrixIdentity(&world_light);
-	//D3DXMatrixTranslation(&world_light, light_pos.x, light_pos.y, light_pos.z);
-	D3DXMatrixLookAtLH(&view_light, &light_pos, &light_at, &light_up);
-	D3DXMatrixPerspectiveFovLH(&projection_light, 75.0f / 180.0 * kPi, (float)SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 100.0f);
-	D3DXMATRIX world_view_projection_light = world_light * view_light * projection_light;
-	vertex_shader_constant_table_->SetMatrix(device, "world", &(D3DXMATRIX)world);
+	D3DXMATRIX view_light, projection_light;
+	D3DXMatrixLookAtLH(&view_light, &(D3DXVECTOR3)light->position_
+		, &(D3DXVECTOR3)(light->at_), &light_up);
+	D3DXMatrixOrthoLH(&projection_light, 2048, 2048, light->near_, light->far_);
+	//D3DXMatrixPerspectiveFovLH(&projection_light, 75.0f / 180.0 * kPi, (float)2048 / 2048, light->near_, light->far_);
+	D3DXMATRIX world_view_projection_light = (D3DXMATRIX)world * view_light * projection_light;
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
 
 	D3DXVECTOR4 offset(
-		0.5f / SCREEN_WIDTH,
-		0.5f / SCREEN_HEIGHT,
+		0.5f / 2048,
+		0.5f / 2048,
 		0.0f,
 		0.0f);
 	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);

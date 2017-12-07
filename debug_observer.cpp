@@ -16,6 +16,8 @@
 #include "transform.h"
 #include "actor_controller.h"
 #include "shadow_map_system.h"
+#include "light_manager.h"
+#include "light.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
@@ -105,6 +107,12 @@ void DebugObserver::ShowMainWindow(void)
 
 	ImGui::Image((void*)MainSystem::Instance()->GetShadowMapSystem()->GetShadowMap(), ImVec2(256, 144)
 	, ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1), ImVec4(1,1,1,1));
+
+	auto light = MainSystem::Instance()->GetLightManager()->GetDirectionLights().front();
+	ImGui::InputFloat3("Light Position", &light->position_.x_);
+	ImGui::InputFloat3("Light At", &light->at_.x_);
+	ImGui::InputFloat("Light Near", &light->near_);
+	ImGui::InputFloat("Light Far", &light->far_);
 
 	// End
 	ImGui::End();

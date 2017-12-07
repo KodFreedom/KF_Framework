@@ -1,5 +1,4 @@
 // Constant Table
-float4x4 world;
 float4x4 world_view_projection;
 float4x4 world_view_projection_light;
 
@@ -27,8 +26,7 @@ VertexOut main(VertexIn vertex)
 	result.position = mul(float4(vertex.position, 1.0f), world_view_projection);
 	result.normal_local = vertex.normal;
 	result.position_local = vertex.position;
-	float4 world_position = mul(float4(vertex.position, 1.0f), world);
-	result.position_light = mul(world_position, world_view_projection_light);
+	result.position_light = mul(float4(vertex.position, 1.0f), world_view_projection_light);
 	result.uv = vertex.uv;
 	result.color = vertex.color;
 	return result;

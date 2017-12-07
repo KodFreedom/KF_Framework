@@ -450,7 +450,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);
 			renderer->SetShaderType(kDefaultSkinShader);
-			renderer->SetCastShadowFlag(true);
+			renderer->SetCastShadowFlag(false);
 			result->AddRenderer(renderer);
 		}
 		else
