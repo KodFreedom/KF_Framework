@@ -112,13 +112,16 @@ void MainSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Render(void)
 {
+	// –‘O€”õ
+	camera_manager_->SetCamera();
+	light_manager_->SetLight();
+
 	// shadowmap
 	shadow_map_system_->Render();
 
 	// backbuffer
 	if (render_system_->BeginRender())
 	{
-		camera_manager_->SetCamera();
 		renderer_manager_->Render();
 #ifdef _DEBUG
 		collision_system_->Render();

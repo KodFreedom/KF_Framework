@@ -8,9 +8,13 @@ float4 material_ambient;
 float4 material_emissive;
 float4 material_specular;
 float  material_power;
-sampler diffuse_texture;
-sampler normal_texture;
-sampler specular_texture;
+sampler color_texture = sampler_state
+{
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
 struct PixelIn
 {
@@ -33,5 +37,5 @@ float4 main(PixelIn pixel) : COLOR0
 	float3 diffuse = material_diffuse.rgb * ((dot(pixel.normal_local, -light_direction_local) + 1.0f) * 0.5f) * light_diffuse.rgb; // material * lightcolor
 	float3 ambient = material_ambient.rgb * light_ambient.rgb; // material * lightcolor
 	float4 color = float4(diffuse + ambient + specular + material_emissive.rgb, 1.0f);
-	return color * tex2D(diffuse_texture, pixel.uv) * pixel.color;
+	return color * tex2D(color_texture, pixel.uv) * pixel.color;
 }

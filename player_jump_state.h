@@ -54,7 +54,7 @@ private:
 	//--------------------------------------------------------------------------------
 	static constexpr float kAirborneGroundCheckDistance = 0.1f;
 	static constexpr float kAirborneMovementMultiplier = 0.5f;
-	static constexpr int kWaitFrame = 20;
+	static constexpr int kWaitFrame = 1;
 
 	//--------------------------------------------------------------------------------
 	//  •Ï”éŒ¾

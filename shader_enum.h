@@ -64,11 +64,14 @@ enum ShaderType
 	kNoLightNoFog, // LightOff_CCW_Multi_Solid_FogOff
 	kCullNone, // LightOn_None_Multi_Solid_FogOn
 	kDefaultSkinShader, // SkinShader
+	kJuggernautMeshShader,
+	kJuggernautSkinShader,
 	kShaderMax
 };
 
 enum ShadowMapShaderType
 {
 	kBasicShadowMapShader = 0,
+	kBasicSkinShadowMapShader,
 	kShadowMapShaderMax
 };

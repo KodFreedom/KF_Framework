@@ -99,17 +99,9 @@ void ShadowMapShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void ShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
-	// Views—ñ
-	auto& light = MainSystem::Instance()->GetLightManager()->GetDirectionLights().front();
-	D3DXVECTOR3 light_up(0.0f, 1.0f, 0.0f);
-	D3DXMATRIX view_light, projection_light;
+	auto& light = MainSystem::Instance()->GetLightManager()->GetShadowMapLight();
 	auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
-	//D3DXMatrixTranslation(&world_light, light_pos.x, light_pos.y, light_pos.z);
-	D3DXMatrixLookAtLH(&view_light, &(D3DXVECTOR3)light->position_
-		, &(D3DXVECTOR3)(light->at_) , &light_up);
-	//D3DXMatrixOrthoLH(&projection_light, 2048, 2048, light->near_, light->far_);
-	D3DXMatrixPerspectiveFovLH(&projection_light, 75.0f / 180.0 * kPi, (float)2048 / 2048, light->near_, light->far_);
-	D3DXMATRIX world_view_projection_light = (D3DXMATRIX)world * view_light * projection_light;
+	D3DXMATRIX world_view_projection_light = (D3DXMATRIX)world * light.GetView() * light.GetProjection();
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
 }
 #endif

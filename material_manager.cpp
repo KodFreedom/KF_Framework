@@ -33,12 +33,16 @@ void MaterialManager::Use(const String& material_name)
 	info.pointer = LoadFromFile(material_name);
 	if (!info.pointer)
 	{// 読込できないの場合真っ赤で保存する
-		info.pointer = MY_NEW Material(L"polygon.jpg", String(), String()
+		info.pointer = MY_NEW Material(L"polygon.jpg"
+			, String(), String(), String(), String(), String()
 			, Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(info.pointer->color_texture);
 	texture_manager->Use(info.pointer->diffuse_texture);
+	texture_manager->Use(info.pointer->diffuse_texture_mask);
 	texture_manager->Use(info.pointer->specular_texture);
+	texture_manager->Use(info.pointer->specular_texture_mask);
 	texture_manager->Use(info.pointer->normal_texture);
 	materials_.emplace(material_name, info);
 }
@@ -60,12 +64,16 @@ void MaterialManager::Use(const String& material_name, Material* material)
 	info.pointer = material;
 	if (!info.pointer)
 	{// materialがnullの場合真っ赤で保存する
-		info.pointer = MY_NEW Material(L"polygon.jpg", String(), String()
+		info.pointer = MY_NEW Material(L"polygon.jpg"
+			, String(), String(), String(), String(), String()
 			, Color::kRed, Color::kRed, Color::kRed, Color::kRed);
 	}
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(info.pointer->color_texture);
 	texture_manager->Use(info.pointer->diffuse_texture);
+	texture_manager->Use(info.pointer->diffuse_texture_mask);
 	texture_manager->Use(info.pointer->specular_texture);
+	texture_manager->Use(info.pointer->specular_texture_mask);
 	texture_manager->Use(info.pointer->normal_texture);
 	materials_.emplace(material_name, info);
 }
@@ -80,8 +88,11 @@ void MaterialManager::Disuse(const String& material_name)
 	if (--iterator->second.user_number <= 0)
 	{// 誰も使ってないので破棄する
 		auto texture_manager = MainSystem::Instance()->GetTextureManager();
+		texture_manager->Disuse(iterator->second.pointer->color_texture);
 		texture_manager->Disuse(iterator->second.pointer->diffuse_texture);
+		texture_manager->Disuse(iterator->second.pointer->diffuse_texture_mask);
 		texture_manager->Disuse(iterator->second.pointer->specular_texture);
+		texture_manager->Disuse(iterator->second.pointer->specular_texture_mask);
 		texture_manager->Disuse(iterator->second.pointer->normal_texture);
 		delete iterator->second.pointer;
 		materials_.erase(iterator);
@@ -100,8 +111,11 @@ void MaterialManager::Init(void)
 {
 	// default material
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+	texture_manager->Use(kDefaultMaterial.color_texture);
 	texture_manager->Use(kDefaultMaterial.diffuse_texture);
+	texture_manager->Use(kDefaultMaterial.diffuse_texture_mask);
 	texture_manager->Use(kDefaultMaterial.specular_texture);
+	texture_manager->Use(kDefaultMaterial.specular_texture_mask);
 	texture_manager->Use(kDefaultMaterial.normal_texture);
 }
 
@@ -113,16 +127,22 @@ void MaterialManager::Uninit(void)
 	auto texture_manager = MainSystem::Instance()->GetTextureManager();
 	for (auto iterator = materials_.begin(); iterator != materials_.end();)
 	{
+		texture_manager->Disuse(iterator->second.pointer->color_texture);
 		texture_manager->Disuse(iterator->second.pointer->diffuse_texture);
+		texture_manager->Disuse(iterator->second.pointer->diffuse_texture_mask);
 		texture_manager->Disuse(iterator->second.pointer->specular_texture);
+		texture_manager->Disuse(iterator->second.pointer->specular_texture_mask);
 		texture_manager->Disuse(iterator->second.pointer->normal_texture);
 		delete iterator->second.pointer;
 		iterator = materials_.erase(iterator);
 	}
 
 	// default material
+	texture_manager->Disuse(kDefaultMaterial.color_texture);
 	texture_manager->Disuse(kDefaultMaterial.diffuse_texture);
+	texture_manager->Disuse(kDefaultMaterial.diffuse_texture_mask);
 	texture_manager->Disuse(kDefaultMaterial.specular_texture);
+	texture_manager->Disuse(kDefaultMaterial.specular_texture_mask);
 	texture_manager->Disuse(kDefaultMaterial.normal_texture);
 }
 
@@ -132,7 +152,7 @@ void MaterialManager::Uninit(void)
 Material* MaterialManager::LoadFromFile(const String& material_name)
 {
 	String path = L"data/material/" + material_name + L".material";
-	ifstream file(path);
+	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
 		assert(file.is_open());
@@ -142,18 +162,37 @@ Material* MaterialManager::LoadFromFile(const String& material_name)
 	auto result = MY_NEW Material;
 	int buffer_size;
 	string buffer;
+
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->color_texture = String(buffer.begin(), buffer.end());
+
 	archive.loadBinary(&buffer_size, sizeof(buffer_size));
 	buffer.resize(buffer_size);
 	archive.loadBinary(&buffer[0], buffer_size);
 	result->diffuse_texture = String(buffer.begin(), buffer.end());
+
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->diffuse_texture_mask = String(buffer.begin(), buffer.end());
+
 	archive.loadBinary(&buffer_size, sizeof(buffer_size));
 	buffer.resize(buffer_size);
 	archive.loadBinary(&buffer[0], buffer_size);
 	result->specular_texture = String(buffer.begin(), buffer.end());
+
+	archive.loadBinary(&buffer_size, sizeof(buffer_size));
+	buffer.resize(buffer_size);
+	archive.loadBinary(&buffer[0], buffer_size);
+	result->specular_texture_mask = String(buffer.begin(), buffer.end());
+
 	archive.loadBinary(&buffer_size, sizeof(buffer_size));
 	buffer.resize(buffer_size);
 	archive.loadBinary(&buffer[0], buffer_size);
 	result->normal_texture = String(buffer.begin(), buffer.end());
+
 	archive.loadBinary(&result->ambient, sizeof(result->ambient));
 	archive.loadBinary(&result->diffuse, sizeof(result->diffuse));
 	archive.loadBinary(&result->specular, sizeof(result->specular));

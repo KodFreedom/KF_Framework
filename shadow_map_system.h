@@ -24,8 +24,8 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ’è”’è‹`
 	//--------------------------------------------------------------------------------
-	static constexpr float kShadowMapWidth = 2048.0f;
-	static constexpr float kShadowMapHeight = 2048.0f;
+	static constexpr float kShadowMapWidth = 1024.0f;
+	static constexpr float kShadowMapHeight = 1024.0f;
 
 	//--------------------------------------------------------------------------------
 	//  ¶¬ˆ—

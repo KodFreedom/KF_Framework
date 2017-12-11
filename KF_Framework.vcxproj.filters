@@ -196,6 +196,27 @@
     <Filter Include="ソース ファイル\Base\Motion\MotionState\Normal">
       <UniqueIdentifier>{6f58992f-1bdb-40b1-bda0-843e012e7a97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL\jugg">
+      <UniqueIdentifier>{dd59067c-2133-4b86-96ec-87b2eeed51b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL\shadow_map">
+      <UniqueIdentifier>{01822993-837d-42db-b7a0-9d466b36bf3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Shader\Mesh">
+      <UniqueIdentifier>{27ddd998-1b99-4e17-9865-ba71a0bde8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Shader\Skin">
+      <UniqueIdentifier>{67677291-0591-4db7-ae14-ec080fcca19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\Mesh">
+      <UniqueIdentifier>{e62bd730-c545-48ae-abaa-0651891273b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\Skin">
+      <UniqueIdentifier>{22384b21-ef6d-41e6-afa6-49abc5047d4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Light">
+      <UniqueIdentifier>{a5e018c2-f77c-49fc-bfae-9bd3a850e56c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -393,16 +414,7 @@
     <ClCompile Include="shader_manager.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="default_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="shader_directX9.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="no_light_no_fog_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="cull_none_shader.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
     <ClCompile Include="mesh_renderer_2d.cpp">
@@ -414,44 +426,74 @@
     <ClCompile Include="mesh_renderer_3d_skin.cpp">
       <Filter>ソース ファイル\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="unity_chan_damaged_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_fall_down_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_jump_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_land_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_lying_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_rise_up_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_run_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_wait_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="unity_chan_walk_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClCompile>
     <ClCompile Include="motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
-    </ClCompile>
-    <ClCompile Include="default_skin_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
     </ClCompile>
     <ClCompile Include="shadow_map_system.cpp">
       <Filter>ソース ファイル\Base\RenderSystem</Filter>
     </ClCompile>
+    <ClCompile Include="jugg_attack_left_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_attack_right_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_death_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_flail_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_jump_attack_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_jump_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_neutral_look_around_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_neutral_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_spain_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_stun_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_ultra_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_walk_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="cull_none_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="default_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_mesh_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="no_light_no_fog_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="default_skin_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="jugg_skin_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
+    </ClCompile>
     <ClCompile Include="shadow_map_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
+      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="skin_shadow_map_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -710,15 +752,6 @@
     <ClInclude Include="shader_directX9.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="default_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="no_light_no_fog_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="cull_none_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="mesh_renderer_3d.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
@@ -728,41 +761,68 @@
     <ClInclude Include="mesh_renderer_3d_skin.h">
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="unity_chan_damaged_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_fall_down_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_jump_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_land_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_lying_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_rise_up_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_run_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_wait_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="unity_chan_walk_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="default_skin_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="shadow_map_system.h">
       <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
     </ClInclude>
+    <ClInclude Include="jugg_attack_left_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_attack_right_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_death_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_flail_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_jump_attack_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_neutral_look_around_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_neutral_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_spain_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_stun_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_ultra_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="cull_none_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="default_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_mesh_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="no_light_no_fog_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="default_skin_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="jugg_skin_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
+    </ClInclude>
     <ClInclude Include="shadow_map_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
+      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="skin_shadow_map_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -790,13 +850,28 @@
     <None Include="default_skin_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
     </None>
+    <None Include="basic_shadow_map_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
+    </None>
+    <None Include="basic_shadow_map_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
+    </None>
+    <None Include="basic_skin_shadow_map_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="basic_shadow_map_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    <FxCompile Include="jugg_mesh_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
     </FxCompile>
-    <FxCompile Include="basic_shadow_map_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
+    <FxCompile Include="jugg_mesh_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
+    </FxCompile>
+    <FxCompile Include="jugg_skin_pixel_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
+    </FxCompile>
+    <FxCompile Include="jugg_skin_vertex_shader.hlsl">
+      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

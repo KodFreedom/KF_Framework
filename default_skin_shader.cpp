@@ -116,7 +116,7 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
 	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
-	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
+	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
 }
 #endif

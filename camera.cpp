@@ -83,9 +83,11 @@ void Camera::UpdateParameter(void)
 	auto& world_rig = Matrix44::Transform(rig_.rotation, rig_.position);
 	auto& world_pivot = Matrix44::Transform(pivot_.rotation, pivot_.position);
 	world_pivot *= world_rig;
-	world_right_ = Vector3::TransformNormal(Vector3::kRight, world_pivot).Normalized();
-	world_up_ = Vector3::TransformNormal(Vector3::kUp, world_pivot).Normalized();
+
 	world_forward_ = Vector3::TransformNormal(Vector3::kForward, world_pivot).Normalized();
+	world_right_ = (Vector3::kUp * world_forward_).Normalized();
+	world_up_ = (world_forward_ * world_right_).Normalized();
+	
 	world_eye_position_ = Vector3::TransformCoord(local_eye_position_, world_pivot);
 	world_at_position_ = world_eye_position_ + world_forward_ * distance_;
 }

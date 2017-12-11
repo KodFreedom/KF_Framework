@@ -11,6 +11,9 @@
 #include "cull_none_shader.h"
 #include "default_skin_shader.h"
 #include "shadow_map_shader.h"
+#include "jugg_mesh_shader.h"
+#include "jugg_skin_shader.h"
+#include "skin_shadow_map_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -93,8 +96,14 @@ void ShaderManager::Init(void)
 	shaders_[kCullNone]->Init(device_);
 	shaders_[kDefaultSkinShader] = MY_NEW DefaultSkinShader();
 	shaders_[kDefaultSkinShader]->Init(device_);
+	shaders_[kJuggernautMeshShader] = MY_NEW JuggMeshShader();
+	shaders_[kJuggernautMeshShader]->Init(device_);
+	shaders_[kJuggernautSkinShader] = MY_NEW JuggSkinShader();
+	shaders_[kJuggernautSkinShader]->Init(device_);
 	shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader();
 	shadow_map_shaders_[kBasicShadowMapShader]->Init(device_);
+	shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader();
+	shadow_map_shaders_[kBasicSkinShadowMapShader]->Init(device_);
 #endif
 }
 

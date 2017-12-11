@@ -103,16 +103,16 @@ void DebugObserver::ShowMainWindow(void)
 	if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
 	if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;
 	if (ImGui::Button(enable_player_window_ ? "Close Player Window" : "Open Player Window")) enable_player_window_ ^= 1;
-	if (ImGui::Button(enable_fog_window_ ? "Close Fog Window" : "Open Fog Window")) enable_fog_window_ ^= 1;
+	//if (ImGui::Button(enable_fog_window_ ? "Close Fog Window" : "Open Fog Window")) enable_fog_window_ ^= 1;
 
-	ImGui::Image((void*)MainSystem::Instance()->GetShadowMapSystem()->GetShadowMap(), ImVec2(256, 144)
+	ImGui::Image((void*)MainSystem::Instance()->GetShadowMapSystem()->GetShadowMap(), ImVec2(128, 128)
 	, ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1), ImVec4(1,1,1,1));
 
-	auto light = MainSystem::Instance()->GetLightManager()->GetDirectionLights().front();
-	ImGui::InputFloat3("Light Position", &light->position_.x_);
-	ImGui::InputFloat3("Light At", &light->at_.x_);
-	ImGui::InputFloat("Light Near", &light->near_);
-	ImGui::InputFloat("Light Far", &light->far_);
+	auto light = MainSystem::Instance()->GetLightManager()->GetShadowMapLight();
+	ImGui::InputFloat3("Light Position", &light.position_.x_);
+	ImGui::InputFloat3("Light At", &light.look_at_.x_);
+	ImGui::InputFloat("Light Near", &light.near_);
+	ImGui::InputFloat("Light Far", &light.far_);
 
 	// End
 	ImGui::End();

@@ -13,6 +13,32 @@
 class Transform;
 
 //--------------------------------------------------------------------------------
+//  列挙型定義
+//--------------------------------------------------------------------------------
+enum IKParts
+{
+	kHead,
+	kNeck,
+	kShoulderLeft,
+	kUpperArmLeft,
+	kLowerArmLeft,
+	kHandLeft,
+	kShoulderRight,
+	kUpperArmRight,
+	kLowerArmRight,
+	kHandRight,
+	kUpperLegLeft,
+	kLowerLegLeft,
+	kFootLeft,
+	kToesLeft,
+	kUpperLegRight,
+	kLowerLegRight,
+	kFootRight,
+	kToesRight,
+	kIKMax
+};
+
+//--------------------------------------------------------------------------------
 //  構造体定義
 //--------------------------------------------------------------------------------
 struct BoneTexture
@@ -69,68 +95,34 @@ public:
 	const auto& GetCurrentAnimationStateType(void) const { return state_->GetType(); }
 
 	//--------------------------------------------------------------------------------
-	//  アバターの取得
+	//  ゲッター
 	//--------------------------------------------------------------------------------
 	const auto& GetAvatar(void) const { return avatar_; }
-
-	//--------------------------------------------------------------------------------
-	//  着地フラグの取得
-	//--------------------------------------------------------------------------------
 	const bool& GetIsGrounded(void) const { return is_grounded_; }
-
-	//--------------------------------------------------------------------------------
-	//  死亡フラグの取得
-	//--------------------------------------------------------------------------------
 	const bool& GetIsDead(void) const { return is_dead_; }
-
-	//--------------------------------------------------------------------------------
-	//  ダメージフラグの取得
-	//--------------------------------------------------------------------------------
 	const bool& GetIsDamaged(void) const { return is_damaged_; }
-
-	//--------------------------------------------------------------------------------
-	//  ジャンプフラグの取得
-	//--------------------------------------------------------------------------------
 	const bool& GetIsJump(void) const { return is_jump_; }
-
-	//--------------------------------------------------------------------------------
-	//  立ち上がるフラグの取得
-	//--------------------------------------------------------------------------------
 	const bool& GetIsRiseUp(void) const { return is_rise_up_; }
-
-	//--------------------------------------------------------------------------------
-	//  移動量の取得
-	//--------------------------------------------------------------------------------
+	const bool& GetIsAttack(void) const { return is_attack_; }
+	const bool& GetIsSkill(void) const { return is_skill_; }
+	const bool& GetIsSkillOver(void) const { return is_skill_over_; }
+	const bool& GetIsStun(void) const { return is_stun_; }
+	const bool& GetIsUltra(void) const { return is_ultra_; }
 	const float& GetMovement(void) const { return movement_; }
+	const float& GetTimeCounter(void) const { return time_counter_; }
 
 	//--------------------------------------------------------------------------------
-	//  アバターの設定
+	//  セッター
 	//--------------------------------------------------------------------------------
 	void SetAvatar(const String& file_name);
-
-	//--------------------------------------------------------------------------------
-	//  攻撃フラグの設定
-	//--------------------------------------------------------------------------------
 	void SetAttack(const bool& value) { is_attack_ = value; }
-
-	//--------------------------------------------------------------------------------
-	//  着地フラグの設定
-	//--------------------------------------------------------------------------------
 	void SetGrounded(const bool& value) { is_grounded_ = value; }
-
-	//--------------------------------------------------------------------------------
-	//  ジャンプフラグの設定
-	//--------------------------------------------------------------------------------
 	void SetJump(const bool& value) { is_jump_ = value; }
-
-	//--------------------------------------------------------------------------------
-	//  ダメージ受けたフラグの設定
-	//--------------------------------------------------------------------------------
 	void SetDamaged(const bool& value) { is_damaged_ = value; }
-
-	//--------------------------------------------------------------------------------
-	//  移動量の設定
-	//--------------------------------------------------------------------------------
+	void SetSkill(const bool& value) { is_skill_ = value; }
+	void SetSkillOver(const bool& value) { is_skill_over_ = value; }
+	void SetStun(const bool& value) { is_stun_ = value; }
+	void SetUltra(const bool& value) { is_ultra_ = value; }
 	void SetMovement(const float& value) { movement_ = value; }
 
 	//--------------------------------------------------------------------------------
@@ -181,6 +173,12 @@ private:
 	bool           is_damaged_;
 	bool           is_dead_;
 	bool           is_rise_up_;
+	bool           is_skill_;
+	bool           is_skill_over_;
+	bool           is_stun_;
+	bool           is_ultra_;
 	float          movement_;
+	float          time_counter_;
 	BoneTexture    bone_texture_;
+	int            ik_controllers_[kIKMax];
 };

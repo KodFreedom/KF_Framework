@@ -105,8 +105,6 @@ bool RenderSystemDirectX9::Init(HWND hwnd, BOOL is_window_mode)
 	if (!CreateDevice(hwnd, is_window_mode)) return false;
 	InitVertexDeclaration();
 	InitRenderSate();
-	InitSamplerState();
-	InitFog();
 #if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_Init(hwnd, device_);
 #endif
@@ -248,9 +246,12 @@ void RenderSystemDirectX9::InitVertexDeclaration(void)
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
 		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
 		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-		{ 0, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
-		{ 0, 64, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		{ 0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		{ 0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		{ 0, 56, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 3 },
+		{ 0, 68, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 4 },
+		{ 0, 80, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 5 },
+		{ 0, 92, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 6 },
 		D3DDECL_END()
 	};
 	device_->CreateVertexDeclaration(elements_3d_skin, &vertex_declaration_3d_skin_);
@@ -271,44 +272,5 @@ void RenderSystemDirectX9::InitRenderSate(void)
 	SetRenderState(FillMode::kSolid);
 	SetRenderState(FogMode::kFogOff);
 	SetRenderState(AlphaMode::kAlphaNone);
-}
-
-//--------------------------------------------------------------------------------
-//  サンプラーステートの初期化
-//--------------------------------------------------------------------------------
-void RenderSystemDirectX9::InitSamplerState(void)
-{
-	device_->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);	// テクスチャＵ値の繰り返し設定
-	device_->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);	// テクスチャＶ値の繰り返し設定
-	device_->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);		// テクスチャ拡大時の補間設定
-	device_->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);		// テクスチャ縮小時の補間設定
-}
-
-//--------------------------------------------------------------------------------
-//  Fogの初期化
-//--------------------------------------------------------------------------------
-void RenderSystemDirectX9::InitFog(void)
-{
-	// フォグを有効にする
-	device_->SetRenderState(D3DRS_FOGENABLE, TRUE);
-	
-	// フォグカラー設定
-	device_->SetRenderState(D3DRS_FOGCOLOR, fog_color_);
-	
-	// バーテックスフォグ(線形公式)を使用
-	device_->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
-	
-	// フォグ範囲設定
-	device_->SetRenderState(D3DRS_FOGSTART, *((LPDWORD)(&fog_start_z_)));
-	device_->SetRenderState(D3DRS_FOGEND, *((LPDWORD)(&fog_end_z_)));
-	
-	// ピクセルフォグ(指数の２ )を使用
-	device_->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP2);
-	
-	// フォグ密度設定
-	device_->SetRenderState(D3DRS_FOGDENSITY, *((LPDWORD)(&fog_density_)));
-	
-	// 範囲ベースのフォグを使用
-	device_->SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
 }
 #endif

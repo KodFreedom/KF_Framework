@@ -25,7 +25,8 @@ public:
 		: Component(owner)
 		, priority_(priority)
 		, shader_type_(shader_type)
-		, is_cast_shadow_(false) {}
+		, is_cast_shadow_(false)
+		, bounding_sphere_radius_(0.0f) {}
 	~MeshRenderer() {}
 
 	//--------------------------------------------------------------------------------
@@ -54,6 +55,8 @@ public:
 	void SetRenderPriority(const RenderPriority& value) { priority_ = value; }
 	void SetShaderType(const ShaderType& value) { shader_type_ = value; }
 	void SetCastShadowFlag(const bool& value) { is_cast_shadow_ = value; }
+	void SetBoundingSpherePosition(const Vector3& value) { bounding_sphere_position_ = value; }
+	void SetBoundingSphereRadius(const float& value) { bounding_sphere_radius_ = value; }
 
 	//Getä÷êî
 	const auto& GetMeshName(void) const { return mesh_name_; }
@@ -70,4 +73,6 @@ protected:
 	RenderPriority  priority_;
 	ShaderType      shader_type_;
 	bool            is_cast_shadow_;
+	Vector3         bounding_sphere_position_;
+	float           bounding_sphere_radius_;
 };
