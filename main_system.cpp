@@ -19,6 +19,7 @@
 #include "physics_system.h"
 #include "game_object_manager.h"
 #include "shader_manager.h"
+#include "shadow_map_system.h"
 #include "mode_title.h"
 #include "mode_demo.h"
 
@@ -111,9 +112,16 @@ void MainSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Render(void)
 {
+	// Ž–‘O€”õ
+	camera_manager_->SetCamera();
+	light_manager_->SetLight();
+
+	// shadowmap
+	shadow_map_system_->Render();
+
+	// backbuffer
 	if (render_system_->BeginRender())
 	{
-		camera_manager_->SetCamera();
 		renderer_manager_->Render();
 #ifdef _DEBUG
 		collision_system_->Render();
@@ -167,6 +175,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	texture_manager_ = TextureManager::Create(device);
 	mesh_manager_ = MeshManager::Create(device);
 	shader_manager_ = ShaderManager::Create(device);
+	shadow_map_system_ = ShadowMapSystem::Create(device);
 #if defined(_DEBUG) || defined(EDITOR)
 	ImGui_ImplDX9_Init(hwnd, device);
 #endif
@@ -214,6 +223,7 @@ void MainSystem::Uninit(void)
 #ifdef _DEBUG
 	SAFE_RELEASE(debug_observer_);
 #endif
+	SAFE_RELEASE(shadow_map_system_);
 	SAFE_RELEASE(shader_manager_);
 	SAFE_RELEASE(renderer_manager_);
 	SAFE_RELEASE(sound_manager_);

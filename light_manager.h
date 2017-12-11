@@ -29,33 +29,24 @@ public:
 	void Release(void) { Clear(); }
 
 	//--------------------------------------------------------------------------------
-	//  ディレクションライトの作成
-	//  direction : ライトの方向
-	//  diffuse : // 漫射光の色
-	//  ambient : // 環境光の色
-	//  specular : // 鏡面光の色
+	//  全ライトのセット処理
 	//--------------------------------------------------------------------------------
-	void CreateDirectionLight(const Vector3& direction, const Color& diffuse = Color::kWhite, const Color& ambient = Color::kGray, const Color& specular = Color::kWhite)
+	void SetLight(void)
 	{
-		directional_lights_.push_back(MY_NEW DirectionalLight(direction, diffuse, ambient, specular));
+		shadow_map_light_.Set();
 	}
 
 	//--------------------------------------------------------------------------------
-	//  ディレクションライトの取得
-	//  return : const list<DirectionalLight*>&
+	//  シャドウマップライトの取得
+	//  return : ShadowMapLight&
 	//--------------------------------------------------------------------------------
-	const auto& GetDirectionLights(void) const { return directional_lights_; }
+	auto& GetShadowMapLight(void) { return shadow_map_light_; }
 
 	//--------------------------------------------------------------------------------
 	//  ライトの削除
 	//--------------------------------------------------------------------------------
 	void Clear(void)
 	{
-		for (auto iterator = directional_lights_.begin(); iterator != directional_lights_.end();)
-		{
-			SAFE_DELETE(*iterator);
-			iterator = directional_lights_.erase(iterator);
-		}
 	}
 
 private:
@@ -70,7 +61,5 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	list<DirectionalLight*> directional_lights_;
-	//list<SpotLight*> spot_lights_;
-	//list<PointLight*> point_lights_;
+	ShadowMapLight shadow_map_light_;
 };

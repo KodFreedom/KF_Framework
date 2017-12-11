@@ -156,6 +156,21 @@
     <ClCompile Include="cull_none_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
+    <ClCompile Include="jugg_attack_left_motion_state.cpp" />
+    <ClCompile Include="jugg_attack_right_motion_state.cpp" />
+    <ClCompile Include="jugg_death_motion_state.cpp" />
+    <ClCompile Include="jugg_flail_motion_state.cpp" />
+    <ClCompile Include="jugg_jump_attack_motion_state.cpp" />
+    <ClCompile Include="jugg_jump_motion_state.cpp" />
+    <ClCompile Include="jugg_mesh_shader.cpp" />
+    <ClCompile Include="jugg_neutral_look_around_motion_state.cpp" />
+    <ClCompile Include="jugg_neutral_motion_state.cpp" />
+    <ClCompile Include="jugg_skin_shader.cpp" />
+    <ClCompile Include="jugg_spain_motion_state.cpp" />
+    <ClCompile Include="jugg_stun_motion_state.cpp" />
+    <ClCompile Include="jugg_ultra_motion_state.cpp" />
+    <ClCompile Include="jugg_walk_motion_state.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="mesh_renderer_2d.cpp" />
     <ClCompile Include="mesh_renderer_3d.cpp" />
     <ClCompile Include="mesh_renderer_3d_skin.cpp" />
@@ -168,6 +183,9 @@
     <ClCompile Include="player_state.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
+    <ClCompile Include="shadow_map_shader.cpp" />
+    <ClCompile Include="shadow_map_system.cpp" />
+    <ClCompile Include="skin_shadow_map_shader.cpp" />
     <ClCompile Include="ui_object_2d.cpp" />
     <ClCompile Include="rigidbody3d.cpp" />
     <ClCompile Include="aabb_collider.cpp" />
@@ -225,19 +243,24 @@
     <ClCompile Include="ui_object.cpp" />
     <ClCompile Include="ui_system.cpp" />
     <ClCompile Include="player_walk_state.cpp" />
-    <ClCompile Include="unity_chan_damaged_motion_state.cpp" />
-    <ClCompile Include="unity_chan_fall_down_motion_state.cpp" />
-    <ClCompile Include="unity_chan_jump_motion_state.cpp" />
-    <ClCompile Include="unity_chan_land_motion_state.cpp" />
-    <ClCompile Include="unity_chan_lying_motion_state.cpp" />
-    <ClCompile Include="unity_chan_rise_up_motion_state.cpp" />
-    <ClCompile Include="unity_chan_run_motion_state.cpp" />
-    <ClCompile Include="unity_chan_wait_motion_state.cpp" />
-    <ClCompile Include="unity_chan_walk_motion_state.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="default_skin_shader.h" />
+    <ClInclude Include="jugg_attack_left_motion_state.h" />
+    <ClInclude Include="jugg_attack_right_motion_state.h" />
+    <ClInclude Include="jugg_death_motion_state.h" />
+    <ClInclude Include="jugg_flail_motion_state.h" />
+    <ClInclude Include="jugg_jump_attack_motion_state.h" />
+    <ClInclude Include="jugg_jump_motion_state.h" />
+    <ClInclude Include="jugg_mesh_shader.h" />
+    <ClInclude Include="jugg_neutral_look_around_motion_state.h" />
+    <ClInclude Include="jugg_neutral_motion_state.h" />
+    <ClInclude Include="jugg_skin_shader.h" />
+    <ClInclude Include="jugg_spain_motion_state.h" />
+    <ClInclude Include="jugg_stun_motion_state.h" />
+    <ClInclude Include="jugg_ultra_motion_state.h" />
+    <ClInclude Include="jugg_walk_motion_state.h" />
     <ClInclude Include="mesh_renderer_2d.h" />
     <ClInclude Include="mesh_renderer_3d.h" />
     <ClInclude Include="actor_state.h" />
@@ -257,6 +280,9 @@
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="mesh_renderer_3d_skin.h" />
+    <ClInclude Include="shadow_map_shader.h" />
+    <ClInclude Include="shadow_map_system.h" />
+    <ClInclude Include="skin_shadow_map_shader.h" />
     <ClInclude Include="ui_object_2d.h" />
     <ClInclude Include="rigidbody3d.h" />
     <ClInclude Include="aabb_collider.h" />
@@ -328,15 +354,6 @@
     <ClInclude Include="ui_system.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="player_walk_state.h" />
-    <ClInclude Include="unity_chan_damaged_motion_state.h" />
-    <ClInclude Include="unity_chan_fall_down_motion_state.h" />
-    <ClInclude Include="unity_chan_jump_motion_state.h" />
-    <ClInclude Include="unity_chan_land_motion_state.h" />
-    <ClInclude Include="unity_chan_lying_motion_state.h" />
-    <ClInclude Include="unity_chan_rise_up_motion_state.h" />
-    <ClInclude Include="unity_chan_run_motion_state.h" />
-    <ClInclude Include="unity_chan_wait_motion_state.h" />
-    <ClInclude Include="unity_chan_walk_motion_state.h" />
     <ClInclude Include="windmill_controller.h" />
   </ItemGroup>
   <ItemGroup>
@@ -394,6 +411,59 @@
       <FileType>Document</FileType>
     </None>
     <None Include="default_skin_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="basic_shadow_map_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="basic_shadow_map_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="basic_skin_shadow_map_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="jugg_mesh_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="jugg_mesh_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="jugg_skin_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="jugg_skin_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

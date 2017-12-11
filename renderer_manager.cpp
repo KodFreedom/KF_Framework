@@ -44,16 +44,17 @@ void RendererManager::Render(void)
 			auto& renderers = renderers_arrays_[count_priority][count_shader];
 			if (renderers.empty()) continue;
 
-			shader_manager->Set(static_cast<ShaderType>(count_shader));
+			const ShaderType& current_type = static_cast<ShaderType>(count_shader);
+			shader_manager->Set(current_type);
 
 			for (auto iterator = renderers.begin(); iterator != renderers.end();)
 			{// render
-				shader_manager->SetConstantTable(**iterator);
+				shader_manager->SetConstantTable(current_type, **iterator);
 				(*iterator)->RenderBy(*render_system);
 				iterator = renderers.erase(iterator);
 			}
 
-			shader_manager->Reset(static_cast<ShaderType>(count_shader));
+			shader_manager->Reset(current_type);
 		}
 
 		if (RenderPriority::kUseAlphaTest == static_cast<RenderPriority>(count_priority))

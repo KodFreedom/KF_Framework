@@ -10,6 +10,10 @@
 #include "no_light_no_fog_shader.h"
 #include "cull_none_shader.h"
 #include "default_skin_shader.h"
+#include "shadow_map_shader.h"
+#include "jugg_mesh_shader.h"
+#include "jugg_skin_shader.h"
+#include "skin_shadow_map_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -40,9 +44,37 @@ void ShaderManager::Reset(const ShaderType& type)
 //--------------------------------------------------------------------------------
 //  シェーダーの定数テーブルの設定
 //--------------------------------------------------------------------------------
-void ShaderManager::SetConstantTable(const MeshRenderer& renderer)
+void ShaderManager::SetConstantTable(const ShaderType& type, const MeshRenderer& renderer)
 {
-	shaders_[renderer.GetShaderType()]->SetConstantTable(device_, renderer);
+	shaders_[type]->SetConstantTable(device_, renderer);
+}
+
+//--------------------------------------------------------------------------------
+//  シェーダーの使用
+//--------------------------------------------------------------------------------
+void ShaderManager::Set(const ShadowMapShaderType& type)
+{
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	shadow_map_shaders_[type]->Set(device_);
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//  シェーダー使用完了の後片つけ
+//--------------------------------------------------------------------------------
+void ShaderManager::Reset(const ShadowMapShaderType& type)
+{
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+	shadow_map_shaders_[type]->Reset(device_);
+#endif
+}
+
+//--------------------------------------------------------------------------------
+//  シェーダーの定数テーブルの設定
+//--------------------------------------------------------------------------------
+void ShaderManager::SetConstantTable(const ShadowMapShaderType& type, const MeshRenderer& renderer)
+{
+	shadow_map_shaders_[type]->SetConstantTable(device_, renderer);
 }
 
 //--------------------------------------------------------------------------------
@@ -64,6 +96,14 @@ void ShaderManager::Init(void)
 	shaders_[kCullNone]->Init(device_);
 	shaders_[kDefaultSkinShader] = MY_NEW DefaultSkinShader();
 	shaders_[kDefaultSkinShader]->Init(device_);
+	shaders_[kJuggernautMeshShader] = MY_NEW JuggMeshShader();
+	shaders_[kJuggernautMeshShader]->Init(device_);
+	shaders_[kJuggernautSkinShader] = MY_NEW JuggSkinShader();
+	shaders_[kJuggernautSkinShader]->Init(device_);
+	shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader();
+	shadow_map_shaders_[kBasicShadowMapShader]->Init(device_);
+	shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader();
+	shadow_map_shaders_[kBasicSkinShadowMapShader]->Init(device_);
 #endif
 }
 
@@ -73,6 +113,11 @@ void ShaderManager::Init(void)
 void ShaderManager::Uninit(void)
 {
 	for (auto& shader : shaders_)
+	{
+		SAFE_UNINIT(shader);
+	}
+
+	for (auto& shader : shadow_map_shaders_)
 	{
 		SAFE_UNINIT(shader);
 	}

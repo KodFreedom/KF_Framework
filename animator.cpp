@@ -27,8 +27,20 @@ Animator::Animator(GameObject& owner)
 	, is_attack_(false)
 	, is_jump_(false)
 	, is_damaged_(false)
+	, is_rise_up_(false)
+	, is_skill_(false)
+	, is_skill_over_(false)
+	, is_dead_(false)
+	, is_stun_(false)
+	, is_ultra_(false)
 	, movement_(0.0f)
+	, time_counter_(0.0f)
 {
+	for (auto& controller : ik_controllers_)
+	{
+		controller = 0;
+	}
+
 	bone_texture_.size = 0;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	bone_texture_.pointer = nullptr;
@@ -69,6 +81,7 @@ void Animator::Update(void)
 {
 	if (avatar_.empty()) return;
 	state_->Update(*this);
+	time_counter_ += DELTA_TIME;
 }
 
 //--------------------------------------------------------------------------------
@@ -109,6 +122,7 @@ void Animator::Change(MotionState* new_motion_state)
 {
 	SAFE_DELETE(state_);
 	state_ = new_motion_state;
+	time_counter_ = 0.0f;
 }
 
 //--------------------------------------------------------------------------------
@@ -143,6 +157,12 @@ void Animator::LoadFromFile(const String& file_name)
 		archive.loadBinary(&name[0], name_size);
 		avatar_[count].name = String(name.begin(), name.end());
 		archive.loadBinary(&avatar_[count].bind_pose_inverse, sizeof(avatar_[count].bind_pose_inverse));
+	}
+
+	// IKController
+	for (auto& controller : ik_controllers_)
+	{
+		archive.loadBinary(&controller, sizeof(controller));
 	}
 
 	// Motion

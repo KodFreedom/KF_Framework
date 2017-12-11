@@ -20,7 +20,7 @@
 #include "animator.h"
 #include "actor_controller.h"
 #include "player_neutral_state.h"
-#include "unity_chan_wait_motion_state.h"
+#include "jugg_neutral_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"
@@ -221,7 +221,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//Animator
 	animator->SetAvatar(name);
-	animator->Change(MY_NEW UnityChanWaitMotionState(0));
+	animator->Change(MY_NEW JuggNeutralMotionState(0));
 
 	//コンポネント
 	auto rigidbody = MY_NEW Rigidbody3D(*result);
@@ -370,10 +370,12 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	{
 		int collider_type = 0;
 		Vector3 collider_positon, collider_rotation, collider_scale;
+		bool is_trigger;
 		archive.loadBinary(&collider_type, sizeof(collider_type));
 		archive.loadBinary(&collider_positon, sizeof(collider_positon));
 		archive.loadBinary(&collider_rotation, sizeof(collider_rotation));
 		archive.loadBinary(&collider_scale, sizeof(collider_scale));
+		archive.loadBinary(&is_trigger, sizeof(is_trigger));
 
 		Collider* collider = nullptr;
 		switch (static_cast<ColliderType>(collider_type))
@@ -392,6 +394,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		}
 
 		if (!collider) continue;
+		collider->SetTrigger(is_trigger);
 		collider->SetOffset(collider_positon, collider_rotation);
 		result->AddCollider(collider);
 	}
@@ -428,9 +431,20 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		ShaderType shader_type;
 		archive.loadBinary(&shader_type, sizeof(shader_type));
 
+		//Cast Shadow
+		bool is_cast_shadow;
+		archive.loadBinary(&is_cast_shadow, sizeof(is_cast_shadow));
+
+		//Bounding Sphere
+		Vector3 bounding_sphere_position;
+		float bounding_sphere_radius;
+		archive.loadBinary(&bounding_sphere_position, sizeof(bounding_sphere_position));
+		archive.loadBinary(&bounding_sphere_radius, sizeof(bounding_sphere_radius));
+
 		//Mesh type
 		MeshType mesh_type;
 		archive.loadBinary(&mesh_type, sizeof(mesh_type));
+
 		//Check File Type
 		if (mesh_type == k3dMesh)
 		{//骨なし
@@ -438,7 +452,10 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 			renderer->SetMesh(mesh_name + L".mesh");
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);
-			renderer->SetShaderType(kNoLightNoFog);
+			renderer->SetShaderType(shader_type);
+			renderer->SetCastShadowFlag(is_cast_shadow);
+			renderer->SetBoundingSpherePosition(bounding_sphere_position);
+			renderer->SetBoundingSphereRadius(bounding_sphere_radius);
 			result->AddRenderer(renderer);
 		}
 		else if (mesh_type == k3dSkin)
@@ -448,7 +465,10 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 			renderer->SetMesh(mesh_name + L".skin");
 			renderer->SetMaterial(material_name);
 			renderer->SetRenderPriority(priority);
-			renderer->SetShaderType(kDefaultSkinShader);
+			renderer->SetShaderType(shader_type);
+			renderer->SetCastShadowFlag(is_cast_shadow);
+			renderer->SetBoundingSpherePosition(bounding_sphere_position);
+			renderer->SetBoundingSphereRadius(bounding_sphere_radius);
 			result->AddRenderer(renderer);
 		}
 		else

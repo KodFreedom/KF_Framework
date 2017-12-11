@@ -48,7 +48,6 @@ ModeDemo::~ModeDemo()
 void ModeDemo::Init(void)
 {	
 	auto main_system = MainSystem::Instance();
-	main_system->GetLightManager()->CreateDirectionLight(Vector3(-1.0f, -1.0f, 1.0f).Normalized());
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = MY_NEW ThirdPersionCamera;
@@ -58,7 +57,7 @@ void ModeDemo::Init(void)
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 	StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	auto player = GameObjectSpawner::CreatePlayer(L"unitychan", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
+	auto player = GameObjectSpawner::CreatePlayer(L"juggernaut", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
 	player->SetName(L"Player");
 	camera->SetFollowTarget(player);
 

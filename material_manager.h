@@ -21,24 +21,33 @@ public:
 		: ambient(ambient), diffuse(diffuse)
 		, specular(specular), emissive(emissive)
 		, power(power) {}
-	Material(const String& diffuse_texture
+	Material(const String& color_texture
+		, const String& diffuse_texture = String()
+		, const String& diffuse_texture_mask = String()
 		, const String& specular_texture = String()
+		, const String& specular_texture_mask = String()
 		, const String& normal_texture = String()
 		, const Color& ambient = Color::kGray
 		, const Color& diffuse = Color::kWhite
 		, const Color& specular = Color::kBlack
 		, const Color& emissive = Color::kBlack
 		, const float& power = 1.0f)
-		: diffuse_texture(diffuse_texture)
+		: color_texture(color_texture)
+		, diffuse_texture(diffuse_texture)
+		, diffuse_texture_mask(diffuse_texture_mask)
 		, specular_texture(specular_texture)
+		, specular_texture_mask(specular_texture_mask)
 		, normal_texture(normal_texture)
 		, ambient(ambient), diffuse(diffuse)
 		, specular(specular), emissive(emissive)
 		, power(power) {}
 	~Material() {}
 
+	String color_texture;
 	String diffuse_texture;
+	String diffuse_texture_mask;
 	String specular_texture;
+	String specular_texture_mask;
 	String normal_texture;
 	Color ambient; // ŠÂ‹«Œõ‚Ì”½ŽË—¦
 	Color diffuse; // –ŸŽËŒõ‚Ì”½ŽË—¦

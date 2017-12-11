@@ -24,7 +24,6 @@
 void ModeEditor::Init(void)
 {
 	auto main_system = MainSystem::Instance();
-	main_system->GetLightManager()->CreateDirectionLight(Vector3(-1.0f, -1.0f, 1.0f).Normalized());
 
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = MY_NEW EditorCamera;

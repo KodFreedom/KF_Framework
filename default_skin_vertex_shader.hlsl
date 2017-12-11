@@ -58,4 +58,3 @@ VertexOut main(VertexIn vertex)
 	result.color = vertex.color;
 	return result;
 }
-

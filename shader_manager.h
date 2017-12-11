@@ -45,14 +45,29 @@ public:
 	void Set(const ShaderType& type);
 
 	//--------------------------------------------------------------------------------
+	//  シェーダーの使用
+	//--------------------------------------------------------------------------------
+	void Set(const ShadowMapShaderType& type);
+
+	//--------------------------------------------------------------------------------
 	//  シェーダー使用完了の後片つけ
 	//--------------------------------------------------------------------------------
 	void Reset(const ShaderType& type);
 
 	//--------------------------------------------------------------------------------
+	//  シェーダー使用完了の後片つけ
+	//--------------------------------------------------------------------------------
+	void Reset(const ShadowMapShaderType& type);
+
+	//--------------------------------------------------------------------------------
 	//  シェーダーの定数テーブルの設定
 	//--------------------------------------------------------------------------------
-	void SetConstantTable(const MeshRenderer& renderer);
+	void SetConstantTable(const ShaderType& type, const MeshRenderer& renderer);
+
+	//--------------------------------------------------------------------------------
+	//  シェーダーの定数テーブルの設定
+	//--------------------------------------------------------------------------------
+	void SetConstantTable(const ShadowMapShaderType& type, const MeshRenderer& renderer);
 
 private:
 	//--------------------------------------------------------------------------------
@@ -62,6 +77,7 @@ private:
 	ShaderManager(const LPDIRECT3DDEVICE9 device) : device_(device)
 	{
 		for (auto& shader : shaders_) shader = nullptr;
+		for (auto& shader : shadow_map_shaders_) shader = nullptr;
 	}
 	ShaderManager() : device_(nullptr) {}
 	ShaderManager(const ShaderManager& value) : device_(nullptr) {}
@@ -87,6 +103,7 @@ private:
 	//--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	ShaderDirectX9* shaders_[ShaderType::kShaderMax];
+	ShaderDirectX9* shadow_map_shaders_[ShadowMapShaderType::kShadowMapShaderMax];
 	const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
 #endif
 };

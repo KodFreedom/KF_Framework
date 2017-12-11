@@ -26,6 +26,7 @@ class TextureManager;
 class MeshManager;
 class LightManager;
 class ShaderManager;
+class ShadowMapSystem;
 
 #if defined(_DEBUG)
 class DebugObserver;
@@ -180,6 +181,12 @@ public:
 	//--------------------------------------------------------------------------------
 	const auto GetGameObjectManager(void) const { return game_object_manager_; }
 
+	//--------------------------------------------------------------------------------
+	//  シャドウマップシステムを返す
+	//  return : ShadowMapSystem* const
+	//--------------------------------------------------------------------------------
+	const auto GetShadowMapSystem(void) const { return shadow_map_system_; }
+
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors for singleton / シングルトンのコンストラクタ
@@ -195,7 +202,7 @@ private:
 		, fade_system_(nullptr), camera_manager_(nullptr)
 		, ui_system_(nullptr), collision_system_(nullptr)
 	    , physics_system_(nullptr), game_object_manager_(nullptr)
-		, shader_manager_(nullptr) {}
+		, shader_manager_(nullptr), shadow_map_system_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -238,6 +245,7 @@ private:
 	CollisionSystem*   collision_system_; // 衝突処理システム
 	PhysicsSystem*     physics_system_; // 物理システム
 	GameObjectManager* game_object_manager_; // ゲームオブジェクト管理者
+	ShadowMapSystem*   shadow_map_system_; // シャドウマップシステム
 
 	static MainSystem* instance_; // インスタンス
 };

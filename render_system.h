@@ -30,9 +30,12 @@ struct Vertex3dSkin // 3dスキン頂点情報構造体
 	Vector3 position;
 	Vector3 normal;
 	Vector2 uv;
-	Color   color;
-	Vector4 bone_indexes;
-	Vector4 bone_weights;
+	Vector3 bone_indexes_02;
+	Vector3 bone_indexes_35;
+	Vector3 bone_indexes_68;
+	Vector3 bone_weights_02;
+	Vector3 bone_weights_35;
+	Vector3 bone_weights_68;
 };
 
 //--------------------------------------------------------------------------------
@@ -52,19 +55,9 @@ public:
 	const auto& GetBackgroundColor(void) const { return background_color_; }
 
 	//--------------------------------------------------------------------------------
-	//  フォグ色の取得
-	//--------------------------------------------------------------------------------
-	const auto& GetFogColor(void) const { return fog_color_; }
-
-	//--------------------------------------------------------------------------------
-	//  背景色の設定
+	//  背景色の取得
 	//--------------------------------------------------------------------------------
 	void SetBackgroundColor(const Color& color) { background_color_ = color; }
-
-	//--------------------------------------------------------------------------------
-	//  フォグ色の設定
-	//--------------------------------------------------------------------------------
-	void SetFogColor(const Color& color) { fog_color_ = color; }
 
 	//--------------------------------------------------------------------------------
 	//  描画開始
@@ -124,8 +117,7 @@ protected:
 	//  constructors and destructors
 	//--------------------------------------------------------------------------------
 	RenderSystem()
-		: background_color_(Color::kBlack), fog_color_(Color::kWhite)
-		, fog_start_z_(100.0f), fog_end_z_(1000.0f), fog_density_(0.01f) {}
+		: background_color_(Color::kBlack) {}
 	RenderSystem(const RenderSystem& value) {}
 	RenderSystem& operator=(const RenderSystem& value) {}
 	~RenderSystem() {}
@@ -139,8 +131,4 @@ protected:
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	Color background_color_; // 背景色
-	Color fog_color_; // フォグの色
-	float fog_start_z_; // フォグ開始範囲
-	float fog_end_z_; // フォグ終了範囲
-	float fog_density_; // フォグの濃さ
 };

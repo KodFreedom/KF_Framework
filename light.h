@@ -11,9 +11,7 @@
 //--------------------------------------------------------------------------------
 enum LightType
 {
-	kPointLight = 1,
-	kSpotLight = 2,
-	kDirectionalLight = 3,
+	kShadowMapLight = 0,
 };
 
 //--------------------------------------------------------------------------------
@@ -27,55 +25,38 @@ public:
 	Color specular_; // Specular color of light
 	Color ambient_; // Ambient color of light
 
+	virtual void Set(void) = 0;
+
 protected:
 	Light(const LightType& type, const Color& diffuse, const Color& ambient, const Color& specular)
 		: type_(type), diffuse_(diffuse), specular_(specular), ambient_(ambient) {}
-	Light(const Light& value) : type_(kDirectionalLight) {}
+	Light(const Light& value) : type_(kShadowMapLight) {}
 	Light& operator=(const Light& value) {}
 	~Light() {}
 };
 
-//--------------------------------------------------------------------------------
-//  ディレクションライト
-//--------------------------------------------------------------------------------
-class DirectionalLight : public Light
+class ShadowMapLight : public Light
 {
+#ifdef _DEBUG
+	friend class DebugObserver;
+#endif // _DEBUG
 public:
-	DirectionalLight(const Vector3& direction, const Color& diffuse, const Color& ambient, const Color& specular)
-		: Light(kDirectionalLight, diffuse, ambient, specular)
-		, direction_(direction) {}
-	Vector3	direction_; // Direction in world space
-};
+	ShadowMapLight()
+		: Light(kShadowMapLight, Color::kWhite, Color::kGray, Color::kWhite)
+		, position_(Vector3(25.0f, 50.0f, -25.0f)), look_at_(Vector3::kZero)
+		, near_(10.0f), far_(100.0f) {}
 
-////--------------------------------------------------------------------------------
-////  スポットライト
-////--------------------------------------------------------------------------------
-//class SpotLight : public Light
-//{
-//public:
-//	SpotLight()
-//		: Light(kSpot) {}
-//	Vector3	position_; // Position in world space
-//	float cutoffRange_; // Cutoff range
-//	float falloff_; // Falloff
-//	float constantAttenuation_; // Constant attenuation
-//	float linearAttenuation_; // Linear attenuation
-//	float quadraticAttenuation_; // Quadratic attenuation
-//	float theta_; // Inner angle of spotlight cone
-//	float phi_; // Outer angle of spotlight cone
-//};
-//
-////--------------------------------------------------------------------------------
-////  ポイントライト
-////--------------------------------------------------------------------------------
-//class PointLight : public Light
-//{
-//public:
-//	PointLight() : Light(kPoint) {}
-//	Vector3	position_; // Position in world space
-//	float cutoffRange_; // Cutoff range
-//	float falloff_; // Falloff
-//	float constantAttenuation_; // Constant attenuation
-//	float linearAttenuation_; // Linear attenuation
-//	float quadraticAttenuation_; // Quadratic attenuation
-//};
+	void Set(void);
+	const Vector3& GetDirection(void) const { return direction_; }
+	const Matrix44& GetView(void) const { return view_; }
+	const Matrix44& GetProjection(void) const { return projection_; }
+
+private:
+	Vector3	position_;
+	Vector3 look_at_;
+	Vector3 direction_;
+	float near_;
+	float far_;
+	Matrix44 view_;
+	Matrix44 projection_;
+};

@@ -1,5 +1,11 @@
 // Constant table
-sampler diffuse_texture;
+sampler color_texture = sampler_state
+{
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
 struct PixelIn
 {
@@ -9,5 +15,5 @@ struct PixelIn
 
 float4 main(PixelIn pixel) : COLOR0
 {
-	return tex2D(diffuse_texture, pixel.uv) * pixel.color;
+	return tex2D(color_texture, pixel.uv) * pixel.color;
 }

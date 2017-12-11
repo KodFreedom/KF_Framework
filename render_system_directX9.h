@@ -40,8 +40,10 @@ public:
 	//--------------------------------------------------------------------------------
 	bool BeginRender(void) override
 	{
+		device_->SetRenderTarget(0, back_buffer_surface_);
+		device_->SetDepthStencilSurface(depth_stencil_surface_);
 		device_->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER), background_color_, 1.0f, 0);
-		return static_cast<bool>(device_->BeginScene());
+		return device_->BeginScene() >= 0;
 	}
 
 	//--------------------------------------------------------------------------------
@@ -105,7 +107,8 @@ private:
 	RenderSystemDirectX9() : RenderSystem()
 		, instance_(nullptr), device_(nullptr)
 		, vertex_declaration_2d_(nullptr), vertex_declaration_3d_(nullptr)
-		, vertex_declaration_3d_skin_(nullptr) {}
+		, vertex_declaration_3d_skin_(nullptr), back_buffer_surface_(nullptr)
+		, depth_stencil_surface_(nullptr) {}
 	RenderSystemDirectX9(const RenderSystemDirectX9& value) {}
 	RenderSystemDirectX9& operator=(const RenderSystemDirectX9& value) {}
 	~RenderSystemDirectX9() {}
@@ -136,22 +139,14 @@ private:
 	void InitRenderSate(void);
 
 	//--------------------------------------------------------------------------------
-	//  サンプラーステートの初期化
-	//--------------------------------------------------------------------------------
-	void InitSamplerState(void);
-
-	//--------------------------------------------------------------------------------
-	//  Fogの初期化
-	//--------------------------------------------------------------------------------
-	void InitFog(void);
-
-	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
 	LPDIRECT3D9	instance_; // Direct3Dオブジェクト
 	LPDIRECT3DDEVICE9 device_; // Deviceディバイス
+	LPDIRECT3DSURFACE9 back_buffer_surface_; // バックバッファのサーフェス
 	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_2d_; // 2dバーテックスデクラレーション
 	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_3d_; // 3dバーテックスデクラレーション
 	LPDIRECT3DVERTEXDECLARATION9 vertex_declaration_3d_skin_; // 3dスキンバーテックスデクラレーション
+	LPDIRECT3DSURFACE9 depth_stencil_surface_;
 };
 #endif
