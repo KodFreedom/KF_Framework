@@ -43,8 +43,8 @@ class ShadowMapLight : public Light
 public:
 	ShadowMapLight()
 		: Light(kShadowMapLight, Color::kWhite, Color::kGray, Color::kWhite)
-		, position_(Vector3(25.0f, 50.0f, -25.0f)), look_at_(Vector3::kZero)
-		, near_(10.0f), far_(100.0f) {}
+		, position_(Vector3(35.0f, 50.0f, -35.0f)), look_at_(Vector3::kZero)
+		, near_(5.0f), far_(100.0f) {}
 
 	void Set(void);
 	const Vector3& GetDirection(void) const { return direction_; }

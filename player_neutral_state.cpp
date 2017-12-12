@@ -7,6 +7,8 @@
 #include "player_walk_state.h"
 #include "player_jump_state.h"
 #include "player_damaged_state.h"
+#include "player_fallen_state.h"
+#include "player_attack_state.h"
 #include "actor_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -18,6 +20,7 @@
 void PlayerNeutralState::Init(ActorController& actor)
 {
 	actor.GetParameter().SetGroundCheckDistance(kNeutralGroundCheckDistance);
+	actor.GetAnimator().SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
@@ -41,13 +44,25 @@ void PlayerNeutralState::Update(ActorController& actor)
 	{
 		if (actor.GetMovement().SquareMagnitude() > 0.0f)
 		{
-			actor.Change(new PlayerWalkState);
+			actor.Change(MY_NEW PlayerWalkState);
 			return;
 		}
 
 		if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
 		{
-			actor.Change(new PlayerJumpState);
+			actor.Change(MY_NEW PlayerJumpState);
+			return;
+		}
+
+		if (!actor.GetCurrentGroundInfo().is_grounded)
+		{
+			actor.Change(MY_NEW PlayerFallenState);
+			return;
+		}
+
+		if (actor.IsAttack())
+		{
+			actor.Change(MY_NEW PlayerAttackState);
 			return;
 		}
 	}

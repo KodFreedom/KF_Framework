@@ -143,14 +143,12 @@ void ActorController::CheckGrounded(void)
 
 	if (ray_hit_info)
 	{
-		animator_.SetGrounded(true);
 		current_ground_info_.is_grounded = true;
 		current_ground_info_.normal = ray_hit_info->normal;
 		delete ray_hit_info;
 		return;
 	}
-	
-	animator_.SetGrounded(false);
+
 	current_ground_info_.is_grounded = false;
 	current_ground_info_.normal = Vector3::kUp;
 }

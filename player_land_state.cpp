@@ -16,6 +16,7 @@
 void PlayerLandState::Init(ActorController& actor)
 {
 	actor.GetParameter().SetMovementMultiplier(kLandMovementMultiplier);
+	actor.GetAnimator().SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
@@ -37,13 +38,13 @@ void PlayerLandState::Update(ActorController& actor)
 	{
 		if (actor.GetMovement().SquareMagnitude() > 0.0f)
 		{
-			actor.Change(new PlayerWalkState);
+			actor.Change(MY_NEW PlayerWalkState);
 			return;
 		}
 
-		if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"unity_chan_land"))
+		if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"landing"))
 		{
-			actor.Change(new PlayerNeutralState);
+			actor.Change(MY_NEW PlayerNeutralState);
 			return;
 		}
 	}

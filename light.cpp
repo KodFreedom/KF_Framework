@@ -34,6 +34,9 @@ void ShadowMapLight::Set(void)
 	view_ = view_transpose.Transpose();
 
 	// ProjectionçsóÒ
+	//D3DXMATRIX ortho;
+	//D3DXMatrixOrthoLH(&ortho, ShadowMapSystem::kShadowMapWidth, ShadowMapSystem::kShadowMapHeight, near_, far_);
+	//projection_ = Matrix44::ToMatrix44(ortho);
 	projection_ = Matrix44::ProjectionLeftHand(kPi * 0.3f
 		, (float)ShadowMapSystem::kShadowMapWidth / ShadowMapSystem::kShadowMapHeight, near_, far_);
 }

@@ -175,7 +175,10 @@
     <ClCompile Include="mesh_renderer_3d.cpp" />
     <ClCompile Include="mesh_renderer_3d_skin.cpp" />
     <ClCompile Include="no_light_no_fog_shader.cpp" />
+    <ClCompile Include="player_attack_state.cpp" />
     <ClCompile Include="player_damaged_state.cpp" />
+    <ClCompile Include="player_fallen_state.cpp" />
+    <ClCompile Include="player_jump_attack_state.cpp" />
     <ClCompile Include="player_jump_state.cpp" />
     <ClCompile Include="player_land_state.cpp" />
     <ClCompile Include="motion_manager.cpp" />
@@ -268,7 +271,10 @@
     <ClInclude Include="cull_none_shader.h" />
     <ClInclude Include="default_shader.h" />
     <ClInclude Include="no_light_no_fog_shader.h" />
+    <ClInclude Include="player_attack_state.h" />
     <ClInclude Include="player_damaged_state.h" />
+    <ClInclude Include="player_fallen_state.h" />
+    <ClInclude Include="player_jump_attack_state.h" />
     <ClInclude Include="player_jump_state.h" />
     <ClInclude Include="player_land_state.h" />
     <ClInclude Include="light.h" />

@@ -495,6 +495,15 @@
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
+    <ClCompile Include="player_fallen_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jump_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -824,6 +833,15 @@
     <ClInclude Include="skin_shadow_map_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
     </ClInclude>
+    <ClInclude Include="player_fallen_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jump_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default_pixel_shader.hlsl">
@@ -859,19 +877,17 @@
     <None Include="basic_skin_shadow_map_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="jugg_mesh_pixel_shader.hlsl">
+    <None Include="jugg_mesh_pixel_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </FxCompile>
-    <FxCompile Include="jugg_mesh_vertex_shader.hlsl">
+    </None>
+    <None Include="jugg_mesh_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </FxCompile>
-    <FxCompile Include="jugg_skin_pixel_shader.hlsl">
+    </None>
+    <None Include="jugg_skin_pixel_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </FxCompile>
-    <FxCompile Include="jugg_skin_vertex_shader.hlsl">
+    </None>
+    <None Include="jugg_skin_vertex_shader.hlsl">
       <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

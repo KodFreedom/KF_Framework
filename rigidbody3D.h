@@ -68,6 +68,7 @@ public:
 	const auto& GetVelocity(void) const { return velocity_; }
 	const auto& GetAcceleration(void) const { return acceleration_; }
 	const auto& GetMovement(void) const { return movement_; }
+	const auto& GetGravityMultiplier(void) const { return gravity_multiplier_; }
 
 	//--------------------------------------------------------------------------------
 	//  Setä÷êî

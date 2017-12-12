@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "player_jump_state.h"
 #include "player_land_state.h"
+#include "player_jump_attack_state.h"
 #include "actor_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -29,7 +30,6 @@ void PlayerJumpState::Init(ActorController& actor)
 void PlayerJumpState::Uninit(ActorController& actor)
 {
 	auto& animator = actor.GetAnimator();
-	animator.SetGrounded(true);
 	animator.SetJump(false);
 }
 
@@ -54,14 +54,17 @@ void PlayerJumpState::Update(ActorController& actor)
 		{
 			if (actor.GetCurrentGroundInfo().is_grounded)
 			{
-				actor.Change(new PlayerLandState);
+				actor.Change(MY_NEW PlayerLandState);
+				return;
+			}
+
+			if (actor.IsAttack())
+			{
+				actor.Change(MY_NEW PlayerJumpAttackState);
 				return;
 			}
 		}
 	}
-	
-	//auto& parameter = actor.GetParameter();
-	//parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
 }
 
 //--------------------------------------------------------------------------------
