@@ -148,6 +148,5 @@ protected:
 	Vector3        movement_;
 	bool           is_attack_;
 	bool           is_jump_;
-	float          ground_check_distance_;
 	GroundInfo     current_ground_info_;
 };

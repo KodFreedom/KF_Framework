@@ -13,6 +13,8 @@
 #include "game_object.h"
 #include "mesh_renderer_3d_skin.h"
 #include "animator.h"
+#include "light_manager.h"
+#include "shadow_map_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -104,6 +106,7 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	vertex_shader_constant_table_->SetMatrix(device, "view", &static_cast<D3DXMATRIX>(camera->GetView()));
 	vertex_shader_constant_table_->SetMatrix(device, "projection", &static_cast<D3DXMATRIX>(camera->GetProjection()));
 
+	// Skin Bone Data
 	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
 	const auto& bone_texture = skin_mesh_renderer->GetAnimator().GetBoneTexture();
 	assert(bone_texture.pointer);
@@ -115,5 +118,14 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
 	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
+
+	// Shadow Map
+	auto& light = main_system->GetLightManager()->GetShadowMapLight();
+	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
+	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)light.GetProjection());
+	D3DXVECTOR4 offset(0.5f / ShadowMapSystem::kShadowMapWidth, 0.5f / ShadowMapSystem::kShadowMapHeight, 0.0f, 0.0f);
+	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);
+	UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
+	device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
 }
 #endif

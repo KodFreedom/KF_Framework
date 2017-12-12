@@ -1,6 +1,8 @@
 // Constant Table
 float4x4 view;
 float4x4 projection;
+float4x4 view_light;
+float4x4 projection_light;
 sampler bone_texture = sampler_state
 {
 	MipFilter = NONE;
@@ -30,6 +32,7 @@ struct VertexOut
 	float4 position_world : POSITION0;
 	float3 normal_world : NORMAL0;
 	float2 uv : TEXCOORD0;
+	float4 position_light : TEXCOORD1;
 };
 
 float4x4 GetBoneMatrixBy(const int index)
@@ -68,6 +71,10 @@ VertexOut main(VertexIn vertex)
 	result.position_world = mul(float4(vertex.position_local, 1.0f), world_view_projection);
 	result.normal_world = mul(float4(vertex.normal_local, 0.0f), world_view_projection).xyz;
 	result.normal_world = normalize(result.normal_world);
+
+	// ShadowMap—p
+	float4x4 world_view_projection_light = mul(mul(bone_world, view_light), projection_light);
+	result.position_light = mul(float4(vertex.position_local, 1.0f), world_view_projection_light);
 
 	result.uv = vertex.uv;
 	return result;

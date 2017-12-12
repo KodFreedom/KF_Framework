@@ -36,7 +36,7 @@ void PlayerDamagedState::Update(ActorController& actor)
 		&& actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState
 		&& !actor.GetAnimator().GetCurrentAnimationName()._Equal(L"unity_chan_damaged"))
 	{
-		actor.Change(new PlayerNeutralState);
+		actor.Change(MY_NEW PlayerNeutralState);
 		return;
 	}
 }

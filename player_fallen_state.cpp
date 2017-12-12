@@ -1,14 +1,10 @@
 //--------------------------------------------------------------------------------
-//	歩くステート
-//　player_walk_state.cpp
+//	落ちるステート
+//　player_fallen_state.cpp
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_walk_state.h"
-#include "player_neutral_state.h"
-#include "player_jump_state.h"
-#include "player_damaged_state.h"
 #include "player_fallen_state.h"
-#include "player_attack_state.h"
+#include "player_land_state.h"
 #include "actor_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -17,52 +13,39 @@
 //--------------------------------------------------------------------------------
 //	初期化関数
 //--------------------------------------------------------------------------------
-void PlayerWalkState::Init(ActorController& actor)
+void PlayerFallenState::Init(ActorController& actor)
 {
 	auto& parameter = actor.GetParameter();
-	parameter.SetGroundCheckDistance(kGroundedGroundCheckDistance);
-	parameter.SetMovementMultiplier(kGroundedMovementMultiplier);
+	parameter.SetGroundCheckDistance(kAirborneGroundCheckDistance);
+	parameter.SetMovementMultiplier(kAirborneMovementMultiplier);
+	auto& animator = actor.GetAnimator();
+	animator.SetGrounded(false);
 }
 
 //--------------------------------------------------------------------------------
 //	終了処理
 //--------------------------------------------------------------------------------
-void PlayerWalkState::Uninit(ActorController& actor)
+void PlayerFallenState::Uninit(ActorController& actor)
 {
-
+	auto& animator = actor.GetAnimator();
+	animator.SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
 //	更新処理
 //--------------------------------------------------------------------------------
-void PlayerWalkState::Update(ActorController& actor)
+void PlayerFallenState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
+
 	actor.CheckGrounded();
 	actor.Move();
+
 	if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
 	{
-		if(actor.GetMovement().SquareMagnitude() <= 0.0f)
+		if (actor.GetCurrentGroundInfo().is_grounded)
 		{
-			actor.Change(MY_NEW PlayerNeutralState);
-			return;
-		}
-
-		if(actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
-		{
-			actor.Change(MY_NEW PlayerJumpState);
-			return;
-		}
-
-		if (!actor.GetCurrentGroundInfo().is_grounded)
-		{
-			actor.Change(MY_NEW PlayerFallenState);
-			return;
-		}
-
-		if (actor.IsAttack())
-		{
-			actor.Change(MY_NEW PlayerAttackState);
+			actor.Change(MY_NEW PlayerLandState);
 			return;
 		}
 	}
@@ -71,14 +54,14 @@ void PlayerWalkState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerWalkState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerFallenState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
 {
 	if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
 	{//武器チェック
 		if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
 		{
 			// Damage
-			actor.Change(MY_NEW PlayerDamagedState);
+			//actor.Change(new PlayerDamagedState);
 			return;
 		}
 	}
@@ -95,7 +78,7 @@ void PlayerWalkState::OnTrigger(ActorController& actor, Collider& self, Collider
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerWalkState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerFallenState::OnCollision(ActorController& actor, CollisionInfo& info)
 {
 
 }
