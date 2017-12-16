@@ -1,8 +1,11 @@
-// Constant Table
+//--------------------------------------------------------------------------------
+//  Constant table
+//--------------------------------------------------------------------------------
 float4x4 view;
 float4x4 projection;
 float4x4 view_light;
 float4x4 projection_light;
+
 sampler bone_texture = sampler_state
 {
 	MipFilter = NONE;
@@ -13,7 +16,9 @@ sampler bone_texture = sampler_state
 };
 float texture_size;
 
-// Vertex Struct
+//--------------------------------------------------------------------------------
+//  In/Out struct
+//--------------------------------------------------------------------------------
 struct VertexIn
 {
 	float3 position_local : POSITION0;
@@ -29,12 +34,16 @@ struct VertexIn
 
 struct VertexOut
 {
-	float4 position_world : POSITION0;
+	float4 position : POSITION0;
 	float3 normal_world : NORMAL0;
 	float2 uv : TEXCOORD0;
 	float4 position_light : TEXCOORD1;
+	float3 position_world : TEXCOORD2;
 };
 
+//--------------------------------------------------------------------------------
+//  Shader method
+//--------------------------------------------------------------------------------
 float4x4 GetBoneMatrixBy(const int index)
 {
 	float2 uv;
@@ -55,6 +64,7 @@ float4x4 GetBoneMatrixBy(const int index)
 VertexOut main(VertexIn vertex)
 {
 	VertexOut result;
+	result.uv = vertex.uv;
 
 	// 行列の算出
 	float4x4 bone_world = (float4x4)0;
@@ -68,7 +78,8 @@ VertexOut main(VertexIn vertex)
 	float4x4 world_view_projection = mul(mul(bone_world, view), projection);
 
 	// 位置と法線を変更
-	result.position_world = mul(float4(vertex.position_local, 1.0f), world_view_projection);
+	result.position = mul(float4(vertex.position_local, 1.0f), world_view_projection);
+	result.position_world = result.position.xyz;
 	result.normal_world = mul(float4(vertex.normal_local, 0.0f), world_view_projection).xyz;
 	result.normal_world = normalize(result.normal_world);
 
@@ -76,6 +87,5 @@ VertexOut main(VertexIn vertex)
 	float4x4 world_view_projection_light = mul(mul(bone_world, view_light), projection_light);
 	result.position_light = mul(float4(vertex.position_local, 1.0f), world_view_projection_light);
 
-	result.uv = vertex.uv;
 	return result;
 }
