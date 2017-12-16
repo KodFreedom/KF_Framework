@@ -113,17 +113,15 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 	pixel_shader_constant_table_->SetValue(device, "camera_position_local", &camera_position_local, sizeof(camera_position_local));
 	
 	auto& light = main_system->GetLightManager()->GetShadowMapLight();
-	auto& light_direction_local = Vector3::TransformNormal(light.GetDirection(), world_inverse);
+	auto& light_direction_local = Vector3::TransformNormal(light.GetDirection(), world_inverse).Normalized();
 	pixel_shader_constant_table_->SetValue(device, "light_direction_local", &light_direction_local, sizeof(light_direction_local));
 	pixel_shader_constant_table_->SetValue(device, "light_diffuse", &light.diffuse_, sizeof(light.diffuse_));
-	pixel_shader_constant_table_->SetValue(device, "light_ambient", &light.ambient_, sizeof(light.ambient_));
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	auto texture_manager = main_system->GetTextureManager();
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
 	device->SetTexture(color_texture_index, texture_manager->Get(material->color_texture));
 	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
-	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
 	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
 	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
 	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
@@ -131,7 +129,6 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
 	// Shadow Map
 	D3DXMATRIX world_view_projection_light = world * light.GetView() * light.GetProjection();
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
-
 	D3DXVECTOR4 offset(0.5f / ShadowMapSystem::kShadowMapWidth, 0.5f / ShadowMapSystem::kShadowMapHeight, 0.0f, 0.0f);
 	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);
 	UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
