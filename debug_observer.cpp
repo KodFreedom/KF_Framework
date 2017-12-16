@@ -12,12 +12,18 @@
 #include "mode.h"
 #include "camera.h"
 #include "camera_manager.h"
-#include "game_object_actor.h"
-#include "transform.h"
-#include "actor_controller.h"
+
+// shadowmap
 #include "shadow_map_system.h"
 #include "light_manager.h"
 #include "light.h"
+
+// player
+#include "game_object_actor.h"
+#include "transform.h"
+#include "actor_controller.h"
+#include "rigidbody3D.h"
+#include "animator.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "ImGui\imgui_impl_dx9.h"
@@ -170,8 +176,26 @@ void DebugObserver::ShowCameraWindow(void)
 		return;
 	}
 
-	ImGui::InputFloat3("eye", &camera->world_eye_position_.x_);
-	ImGui::InputFloat3("at", &camera->world_at_position_.x_);
+	// Rig
+	ImGui::Text("Rig position : %.3f, %.3f, %.3f", camera->rig_.position.x_, camera->rig_.position.y_, camera->rig_.position.z_);
+	ImGui::Text("Rig rotation : %.3f, %.3f, %.3f", camera->rig_.rotation.x_, camera->rig_.rotation.y_, camera->rig_.rotation.z_);
+
+	// Pivot
+	ImGui::Text("Pivot position : %.3f, %.3f, %.3f", camera->pivot_.position.x_, camera->pivot_.position.y_, camera->pivot_.position.z_);
+	ImGui::Text("Pivot rotation : %.3f, %.3f, %.3f", camera->pivot_.rotation.x_, camera->pivot_.rotation.y_, camera->pivot_.rotation.z_);
+	
+	// Eye,At
+	ImGui::Text("World eye : %.3f, %.3f, %.3f", camera->world_eye_position_.x_, camera->world_eye_position_.y_, camera->world_eye_position_.z_);
+	ImGui::Text("World at : %.3f, %.3f, %.3f", camera->world_at_position_.x_, camera->world_at_position_.y_, camera->world_at_position_.z_);
+
+	// Right, Up, Forward
+	ImGui::Text("World right : %.3f, %.3f, %.3f", camera->world_right_.x_, camera->world_right_.y_, camera->world_right_.z_);
+	ImGui::Text("World up : %.3f, %.3f, %.3f", camera->world_up_.x_, camera->world_up_.y_, camera->world_up_.z_);
+	ImGui::Text("World forward : %.3f, %.3f, %.3f", camera->world_forward_.x_, camera->world_forward_.y_, camera->world_forward_.z_);
+
+	// Far, Near, Fov
+	ImGui::InputFloat("Far", &camera->far_);
+	ImGui::InputFloat("Near", &camera->near_);
 	ImGui::InputFloat("Fov", &camera->fov_);
 
 	// End
@@ -206,7 +230,23 @@ void DebugObserver::ShowPlayerWindow(void)
 	if (behavior)
 	{
 		auto controller = static_cast<ActorController*>(behavior);
+
+		// State
+		auto& state_name = controller->GetCurrentStateName();
+		ImGui::Text("State : %s", string(state_name.begin(), state_name.end()).c_str());
+
+		// Animation
+		auto& animation_name = controller->GetAnimator().GetCurrentAnimationName();
+		ImGui::Text("Animation : %s", string(animation_name.begin(), animation_name.end()).c_str());
+
+		// Rigidbody
+		const auto& rigidbody = controller->GetRigidbody();
+		ImGui::Text("Gravity multiplier : %.3f", rigidbody.GetGravityMultiplier());
+		
+		// Parameter
 		auto& parameter = controller->GetParameter();
+		ImGui::Text("Ground check distance : %.3f", parameter.ground_check_distance_);
+		ImGui::Text("Movement multiplier : %.3f", parameter.movement_multiplier_);
 		ImGui::InputFloat("Move speed", &parameter.move_speed_);
 		ImGui::InputFloat("Jump speed", &parameter.jump_speed_);
 		ImGui::InputFloat("Min turn speed", &parameter.min_turn_speed_);

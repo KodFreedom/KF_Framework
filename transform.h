@@ -85,7 +85,7 @@ public:
 	//--------------------------------------------------------------------------------
 	Vector3 GetForward(void) const 
 	{
-		return Vector3::Rotate(Vector3::kForward, rotation_);
+		return Vector3::Rotate(Vector3::kForward, rotation_).Normalized();
 	}
 	
 	//--------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ public:
 	//--------------------------------------------------------------------------------
 	Vector3 GetUp(void) const
 	{
-		return Vector3::Rotate(Vector3::kUp, rotation_);
+		return Vector3::Rotate(Vector3::kUp, rotation_).Normalized();
 	}
 	
 	//--------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ public:
 	//--------------------------------------------------------------------------------
 	Vector3 GetRight(void) const
 	{
-		return Vector3::Rotate(Vector3::kRight, rotation_);
+		return Vector3::Rotate(Vector3::kRight, rotation_).Normalized();
 	}
 	
 	//--------------------------------------------------------------------------------
