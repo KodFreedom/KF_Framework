@@ -38,7 +38,7 @@ void MeshManager::Use(const String& mesh_name)
 	else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
 	else
 	{
-		throw::runtime_error("unsupport file type!!");
+		//throw::runtime_error("unsupport file type!!");
 		return;
 	}
 	meshes_.emplace(mesh_name, info);

@@ -105,7 +105,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
 	bool is_window_mode = true;
 #else
 	bool is_window_mode = true;
-	UINT id = MessageBox(hWnd, "フルスクリーンモードで起動しますか？", "確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+	UINT id = MessageBox(hwnd, L"フルスクリーンモードで起動しますか？", L"確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
 	if (id == IDYES) { is_window_mode = false; }
 #endif // _DEBUG
 
@@ -202,6 +202,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 		break;
 	case WM_ACTIVATEAPP:
 	{
+		if (!MainSystem::Instance()) break;
 		auto input = MainSystem::Instance()->GetInput();
 		if (input)
 		{

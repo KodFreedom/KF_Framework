@@ -108,15 +108,15 @@ void ActorController::Move(void)
 
 		// 回転
 		Vector3& turn_direction = movement_ / move_amount;
-		turn_direction = transform->TransformDirectionToLocal(turn_direction);
-		//turn_direction = Vector3::ProjectOnPlane(turn_direction, current_ground_info_.normal);
+		turn_direction = transform->TransformDirectionToLocal(turn_direction).Normalized();
 		float rotation_y = atan2f(turn_direction.x_, turn_direction.z_);
 		float turn_speed = Math::Lerp(parameter_.GetMaxTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
 		transform->RotateByYaw(rotation_y * turn_speed * DELTA_TIME);
 
 		//移動
-		Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos ?
-			Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized() : transform->GetForward();
+		Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos
+			? Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized()
+			: transform->GetForward();
 		rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * DELTA_TIME);
 	}
 	animator_.SetMovement(move_amount);
@@ -151,4 +151,12 @@ void ActorController::CheckGrounded(void)
 
 	current_ground_info_.is_grounded = false;
 	current_ground_info_.normal = Vector3::kUp;
+}
+
+//--------------------------------------------------------------------------------
+//  今のステート名前を返す
+//--------------------------------------------------------------------------------
+const String& ActorController::GetCurrentStateName(void) const
+{
+	return state_->GetName();
 }
