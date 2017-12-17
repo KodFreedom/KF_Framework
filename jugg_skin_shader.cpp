@@ -102,10 +102,16 @@ void JuggSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
 	auto main_system = MainSystem::Instance();
+
+	// Camera
 	auto camera = main_system->GetCameraManager()->GetMainCamera();
 	vertex_shader_constant_table_->SetMatrix(device, "view", &static_cast<D3DXMATRIX>(camera->GetView()));
 	vertex_shader_constant_table_->SetMatrix(device, "projection", &static_cast<D3DXMATRIX>(camera->GetProjection()));
-	pixel_shader_constant_table_->SetValue(device, "camera_position_world", &camera->GetWorldEyePosition(), sizeof(Vector3));
+	vertex_shader_constant_table_->SetValue(device, "camera_position_world", &camera->GetWorldEyePosition(), sizeof(Vector3));
+
+	// Light
+	auto& light = main_system->GetLightManager()->GetShadowMapLight();
+	vertex_shader_constant_table_->SetValue(device, "light_direction_world", &light.GetDirection(), sizeof(Vector3));
 
 	// Skin Bone Data
 	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
@@ -116,19 +122,42 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
 	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
-	// Light
-	auto& light = main_system->GetLightManager()->GetShadowMapLight();
-	pixel_shader_constant_table_->SetValue(device, "light_direction_world", &light.GetDirection(), sizeof(Vector3));
-
 	// Material
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
-	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
-	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
-	UINT diffuse_texture_mask_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture_mask");
-	device->SetTexture(diffuse_texture_mask_index, main_system->GetTextureManager()->Get(material->diffuse_texture_mask));
-
+	auto texture_manager = main_system->GetTextureManager();
+	UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+	device->SetTexture(index, texture_manager->Get(material->color_texture_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
+	device->SetTexture(index, texture_manager->Get(material->diffuse_texture_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture_mask");
+	device->SetTexture(index, texture_manager->Get(material->diffuse_texture_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture");
+	device->SetTexture(index, texture_manager->Get(material->specular_texture_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture_mask");
+	device->SetTexture(index, texture_manager->Get(material->specular_texture_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
+	device->SetTexture(index, texture_manager->Get(material->normal_texture_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("detail_texture");
+	device->SetTexture(index, texture_manager->Get(material->detail_texture_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("detail_mask");
+	device->SetTexture(index, texture_manager->Get(material->detail_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("tint_by_base_mask");
+	device->SetTexture(index, texture_manager->Get(material->tint_by_base_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("rim_mask");
+	device->SetTexture(index, texture_manager->Get(material->rim_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("translucency");
+	device->SetTexture(index, main_system->GetTextureManager()->Get(material->translucency_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("metalness_mask");
+	device->SetTexture(index, main_system->GetTextureManager()->Get(material->metalness_mask_));
+	index = pixel_shader_constant_table_->GetSamplerIndex("self_illum_mask");
+	device->SetTexture(index, main_system->GetTextureManager()->Get(material->self_illum_mask_));
+	//index = pixel_shader_constant_table_->GetSamplerIndex("fresnel_warp_color");
+	//device->SetTexture(index, main_system->GetTextureManager()->Get(material->fresnel_warp_color_));
+	//index = pixel_shader_constant_table_->GetSamplerIndex("fresnel_warp_rim");
+	//device->SetTexture(index, main_system->GetTextureManager()->Get(material->fresnel_warp_rim_));
+	//index = pixel_shader_constant_table_->GetSamplerIndex("fresnel_warp_specular");
+	//device->SetTexture(index, main_system->GetTextureManager()->Get(material->fresnel_warp_specular_));
+	
 	// Shadow Map
 	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
 	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)light.GetProjection());

@@ -1,13 +1,29 @@
 //--------------------------------------------------------------------------------
 //  Constant table
 //--------------------------------------------------------------------------------
-float3 camera_position_world;
-float3 light_direction_world;
-
 // Material
 sampler color_texture;
 sampler diffuse_texture;
 sampler diffuse_texture_mask;
+sampler specular_texture;
+sampler specular_texture_mask;
+sampler detail_texture;
+sampler detail_mask;
+sampler tint_by_base_mask;
+sampler rim_mask;
+sampler translucency;
+sampler metalness_mask;
+sampler self_illum_mask;
+sampler normal_texture = sampler_state
+{
+	MipFilter = LINEAR;
+	MagFilter = LINEAR;
+	MinFilter = ANISOTROPIC;
+	MaxAnisotropy = 8;
+};
+//sampler fresnel_warp_color;
+//sampler fresnel_warp_rim;
+//sampler fresnel_warp_specular;
 
 // shadowmap
 float4 shadow_map_offset;
@@ -25,10 +41,10 @@ sampler shadow_map = sampler_state
 //--------------------------------------------------------------------------------
 struct PixelIn
 {
-	float3 normal_world : NORMAL0;
 	float2 uv : TEXCOORD0;
 	float4 position_light : TEXCOORD1;
-	float3 position_world : TEXCOORD2;
+	float3 position_to_camera_tangent : TEXCOORD2;
+	float3 light_direction_tangent : TEXCOORD3;
 };
 
 //--------------------------------------------------------------------------------
@@ -37,18 +53,31 @@ struct PixelIn
 float4 main(PixelIn pixel) : COLOR0
 {
 	// êFÇéZèoÇ∑ÇÈ
-	pixel.normal_world = normalize(pixel.normal_world);
-	float3 position_to_camera = normalize(camera_position_world - pixel.position_world.xyz);
-	float3 reflect_light_direction = reflect(light_direction_world, pixel.normal_world);
-	float light_to_camera = max(dot(reflect_light_direction, position_to_camera), 0.0f);
-	float half_lambert = dot(pixel.normal_world, -light_direction_world) * 0.5f + 0.5f;
+	pixel.position_to_camera_tangent = normalize(pixel.position_to_camera_tangent);
+	pixel.light_direction_tangent = normalize(pixel.light_direction_tangent);
+	float3 normal_tangent = tex2D(normal_texture, pixel.uv).rgb * 2.0f - 1.0f;
+	float3 reflect_light_direction_tangent = reflect(pixel.light_direction_tangent, normal_tangent);
+	float brightness = max(dot(reflect_light_direction_tangent, pixel.position_to_camera_tangent), 0.0f);
+	float half_lambert = dot(normal_tangent, -pixel.light_direction_tangent) * 0.5f + 0.5f;
+
+	// color
+	float3 color = tex2D(color_texture, pixel.uv).rgb;
 
 	// diffuse
-	float4 diffuse_color = tex2D(diffuse_texture, float2(half_lambert, light_to_camera));
-	//float4 diffuse_mask = tex2D(diffuse_texture_mask, float2(half_lambert, light_to_camera));
+	float3 diffuse_color = tex2D(diffuse_texture, float2(half_lambert, brightness)).rgb;
+
+	// specular
+	float3 specular_color = brightness * tex2D(specular_texture, pixel.uv).rgb;
+
+	// detail
+	float3 detail_color = tex2D(detail_texture, pixel.uv).rgb;
 
 	// total color
-	float4 color = tex2D(color_texture, pixel.uv) * diffuse_color;
+	float3 final_color = color * (tex2D(tint_by_base_mask, pixel.uv).rgb
+		+ tex2D(self_illum_mask, pixel.uv).rgb
+		+ diffuse_color * tex2D(diffuse_texture_mask, pixel.uv).rgb
+		+ specular_color * tex2D(specular_texture_mask, pixel.uv).rgb * tex2D(metalness_mask, pixel.uv).rgb)
+		+ detail_color * tex2D(detail_mask, pixel.uv).rgb;
 
 	// shadowmapÇ©ÇÁílÇéÊìæ
 	float2 shadow_map_uv = 0.5f * pixel.position_light.xy / pixel.position_light.w + float2(0.5f, 0.5f);
@@ -63,5 +92,5 @@ float4 main(PixelIn pixel) : COLOR0
 	float result = depth - tex2D(shadow_map, shadow_map_uv).x;
 	float shadow_map_multiplier = step(0.00065f, result) * -0.5f + 1.0f;
 
-	return float4(color.rgb * shadow_map_multiplier, color.a);
+	return float4(final_color * shadow_map_multiplier, tex2D(translucency, pixel.uv).r);
 }
