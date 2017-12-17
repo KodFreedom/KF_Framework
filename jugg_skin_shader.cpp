@@ -105,6 +105,7 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	auto camera = main_system->GetCameraManager()->GetMainCamera();
 	vertex_shader_constant_table_->SetMatrix(device, "view", &static_cast<D3DXMATRIX>(camera->GetView()));
 	vertex_shader_constant_table_->SetMatrix(device, "projection", &static_cast<D3DXMATRIX>(camera->GetProjection()));
+	pixel_shader_constant_table_->SetValue(device, "camera_position_world", &camera->GetWorldEyePosition(), sizeof(Vector3));
 
 	// Skin Bone Data
 	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
@@ -115,12 +116,20 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
 	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
+	// Light
+	auto& light = main_system->GetLightManager()->GetShadowMapLight();
+	pixel_shader_constant_table_->SetValue(device, "light_direction_world", &light.GetDirection(), sizeof(Vector3));
+
+	// Material
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
 	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
+	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
+	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
+	UINT diffuse_texture_mask_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture_mask");
+	device->SetTexture(diffuse_texture_mask_index, main_system->GetTextureManager()->Get(material->diffuse_texture_mask));
 
 	// Shadow Map
-	auto& light = main_system->GetLightManager()->GetShadowMapLight();
 	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
 	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)light.GetProjection());
 	D3DXVECTOR4 offset(0.5f / ShadowMapSystem::kShadowMapWidth, 0.5f / ShadowMapSystem::kShadowMapHeight, 0.0f, 0.0f);
