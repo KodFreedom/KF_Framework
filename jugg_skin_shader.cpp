@@ -126,6 +126,8 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
 	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
 	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
+	UINT diffuse_texture_mask_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture_mask");
+	device->SetTexture(diffuse_texture_mask_index, main_system->GetTextureManager()->Get(material->diffuse_texture_mask));
 
 	// Shadow Map
 	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
