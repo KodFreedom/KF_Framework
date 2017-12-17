@@ -29,13 +29,19 @@ struct Vertex3dSkin // 3dスキン頂点情報構造体
 {
 	Vector3 position;
 	Vector3 normal;
+	Vector3 tangent;
+	Vector3 binormal;
 	Vector2 uv;
-	Vector3 bone_indexes_02;
-	Vector3 bone_indexes_35;
-	Vector3 bone_indexes_68;
-	Vector3 bone_weights_02;
-	Vector3 bone_weights_35;
-	Vector3 bone_weights_68;
+	Short2 bone_indexes_0;
+	Short2 bone_indexes_1;
+	Short2 bone_indexes_2;
+	Short2 bone_indexes_3;
+	Short2 bone_indexes_4;
+	Vector2 bone_weights_0;
+	Vector2 bone_weights_1;
+	Vector2 bone_weights_2;
+	Vector2 bone_weights_3;
+	Vector2 bone_weights_4;
 };
 
 //--------------------------------------------------------------------------------

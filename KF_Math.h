@@ -22,13 +22,13 @@ namespace kodfreedom
 	constexpr float kPi = 3.1415926358979f; // Pi / 円周率
 
 	//--------------------------------------------------------------------------------
-	//  Short4
+	//  Short2
 	//--------------------------------------------------------------------------------
-	class Short4
+	class Short2
 	{
 	public:
-		Short4() : x_(0), y_(0), z_(0), w_(0) {}
-		~Short4() {}
+		Short2() : x_(0), y_(0) {}
+		~Short2() {}
 
 		union
 		{
@@ -36,10 +36,8 @@ namespace kodfreedom
 			{
 				short x_;
 				short y_;
-				short z_;
-				short w_;
 			};
-			short m_[4];
+			short m_[2];
 		};
 	};
 

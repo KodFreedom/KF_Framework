@@ -50,7 +50,7 @@ private:
 	static constexpr float kRotationSpeed = 0.05f;
 	static constexpr float kStartRotationMin = 0.2f;
 	static constexpr float kRotationLerpTime = 0.1f;
-	static constexpr float kDistanceDefault = 6.0f;
+	static constexpr float kDistanceDefault = 5.0f;
 	static constexpr float kDistanceMin = 3.0f;
 	static constexpr float kDistanceMax = 10.0f;
 	static constexpr float kMoveLerpTime = 0.075f;
