@@ -8,6 +8,8 @@ float3 light_direction_world;
 sampler color_texture;
 sampler diffuse_texture;
 sampler diffuse_texture_mask;
+sampler specular_texture;
+sampler specular_texture_mask;
 
 // shadowmap
 float4 shadow_map_offset;
@@ -45,10 +47,16 @@ float4 main(PixelIn pixel) : COLOR0
 
 	// diffuse
 	float4 diffuse_color = tex2D(diffuse_texture, float2(half_lambert, light_to_camera));
-	//float4 diffuse_mask = tex2D(diffuse_texture_mask, float2(half_lambert, light_to_camera));
+	float4 diffuse_mask = tex2D(diffuse_texture_mask, pixel.uv);
+	diffuse_color = diffuse_color * diffuse_mask;
+
+	// specular
+	float4 specular_color = light_to_camera * tex2D(specular_texture, pixel.uv);
+	float4 specular_mask = tex2D(specular_texture_mask, pixel.uv);
+	specular_color = specular_color * specular_mask;
 
 	// total color
-	float4 color = tex2D(color_texture, pixel.uv) * diffuse_color;
+	float4 color = tex2D(color_texture, pixel.uv) + (diffuse_color + specular_color);
 
 	// shadowmap‚©‚ç’l‚ðŽæ“¾
 	float2 shadow_map_uv = 0.5f * pixel.position_light.xy / pixel.position_light.w + float2(0.5f, 0.5f);

@@ -119,11 +119,11 @@ void CullNoneShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	auto texture_manager = main_system->GetTextureManager();
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-	device->SetTexture(color_texture_index, texture_manager->Get(material->color_texture));
-	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse, sizeof(material->diffuse));
-	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient, sizeof(material->ambient));
-	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive, sizeof(material->emissive));
-	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular, sizeof(material->specular));
-	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power, sizeof(material->power));
+	device->SetTexture(color_texture_index, texture_manager->Get(material->color_texture_));
+	pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+	pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient_, sizeof(material->ambient_));
+	pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive_, sizeof(material->emissive_));
+	pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular_, sizeof(material->specular_));
+	pixel_shader_constant_table_->SetValue(device, "material_power", &material->power_, sizeof(material->power_));
 }
 #endif

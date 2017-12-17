@@ -123,11 +123,15 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	// Material
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture));
+	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture_));
 	UINT diffuse_texture_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture");
-	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture));
+	device->SetTexture(diffuse_texture_index, main_system->GetTextureManager()->Get(material->diffuse_texture_));
 	UINT diffuse_texture_mask_index = pixel_shader_constant_table_->GetSamplerIndex("diffuse_texture_mask");
-	device->SetTexture(diffuse_texture_mask_index, main_system->GetTextureManager()->Get(material->diffuse_texture_mask));
+	device->SetTexture(diffuse_texture_mask_index, main_system->GetTextureManager()->Get(material->diffuse_texture_mask_));
+	UINT specular_texture_index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture");
+	device->SetTexture(specular_texture_index, main_system->GetTextureManager()->Get(material->specular_texture_));
+	UINT specular_texture_mask_index = pixel_shader_constant_table_->GetSamplerIndex("specular_texture_mask");
+	device->SetTexture(specular_texture_mask_index, main_system->GetTextureManager()->Get(material->specular_texture_mask_));
 
 	// Shadow Map
 	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
