@@ -110,11 +110,11 @@ void CullNoneShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	auto& camera_position_local = Vector3::TransformCoord(camera->GetWorldEyePosition(), world_inverse);
 	pixel_shader_constant_table_->SetValue(device, "camera_position_local", &camera_position_local, sizeof(camera_position_local));
 
-	auto& light = main_system->GetLightManager()->GetShadowMapLight();
-	auto& light_direction_local = Vector3::TransformNormal(light.GetDirection(), world_inverse);
+	auto& light = main_system->GetLightManager()->GetDirectionalLights().front();
+	auto& light_direction_local = Vector3::TransformNormal(light->direction_, world_inverse);
 	pixel_shader_constant_table_->SetValue(device, "light_direction_local", &light_direction_local, sizeof(light_direction_local));
-	pixel_shader_constant_table_->SetValue(device, "light_diffuse", &light.diffuse_, sizeof(light.diffuse_));
-	pixel_shader_constant_table_->SetValue(device, "light_ambient", &light.ambient_, sizeof(light.ambient_));
+	pixel_shader_constant_table_->SetValue(device, "light_diffuse", &light->diffuse_, sizeof(light->diffuse_));
+	pixel_shader_constant_table_->SetValue(device, "light_ambient", &light->ambient_, sizeof(light->ambient_));
 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	auto texture_manager = main_system->GetTextureManager();

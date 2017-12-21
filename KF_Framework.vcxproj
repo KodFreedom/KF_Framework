@@ -76,7 +76,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,7 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -170,6 +170,10 @@
     <ClCompile Include="jugg_stun_motion_state.cpp" />
     <ClCompile Include="jugg_ultra_motion_state.cpp" />
     <ClCompile Include="jugg_walk_motion_state.cpp" />
+    <ClCompile Include="library\ImGui\imgui.cpp" />
+    <ClCompile Include="library\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="library\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="library\ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="mesh_renderer_2d.cpp" />
     <ClCompile Include="mesh_renderer_3d.cpp" />
@@ -199,10 +203,6 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
     <ClCompile Include="debug_observer.cpp" />
-    <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\imgui_impl_dx9.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="editor_controller.cpp" />
     <ClCompile Include="editor_camera.cpp" />
@@ -264,6 +264,13 @@
     <ClInclude Include="jugg_stun_motion_state.h" />
     <ClInclude Include="jugg_ultra_motion_state.h" />
     <ClInclude Include="jugg_walk_motion_state.h" />
+    <ClInclude Include="library\ImGui\imconfig.h" />
+    <ClInclude Include="library\ImGui\imgui.h" />
+    <ClInclude Include="library\ImGui\imgui_impl_dx9.h" />
+    <ClInclude Include="library\ImGui\imgui_internal.h" />
+    <ClInclude Include="library\ImGui\stb_rect_pack.h" />
+    <ClInclude Include="library\ImGui\stb_textedit.h" />
+    <ClInclude Include="library\ImGui\stb_truetype.h" />
     <ClInclude Include="mesh_renderer_2d.h" />
     <ClInclude Include="mesh_renderer_3d.h" />
     <ClInclude Include="actor_state.h" />
@@ -305,13 +312,6 @@
     <ClInclude Include="normalModeAI.h" />
     <ClInclude Include="collider.h" />
     <ClInclude Include="component.h" />
-    <ClInclude Include="ImGui\imconfig.h" />
-    <ClInclude Include="ImGui\imgui.h" />
-    <ClInclude Include="ImGui\imgui_impl_dx9.h" />
-    <ClInclude Include="ImGui\imgui_internal.h" />
-    <ClInclude Include="ImGui\stb_rect_pack.h" />
-    <ClInclude Include="ImGui\stb_textedit.h" />
-    <ClInclude Include="ImGui\stb_truetype.h" />
     <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="editor_camera.h" />
     <ClInclude Include="enemy_controller.h" />

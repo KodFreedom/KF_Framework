@@ -11,6 +11,8 @@
 #include "render_system.h"
 #include "mesh_renderer_3d.h"
 #include "mesh_renderer_3d_skin.h"
+#include "camera_manager.h"
+#include "camera.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -38,6 +40,31 @@ void ShadowMapSystem::Register(MeshRenderer3dSkin* renderer)
 //--------------------------------------------------------------------------------
 void ShadowMapSystem::Render(void)
 {
+	// Set light
+	// ˆÚ“®
+	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+	const Vector3& look_at = camera->GetWorldAtPosition();
+    const Vector3& position = look_at + offset_;
+
+	// Views—ñ
+    const Vector3& direction = (look_at - position).Normalized();
+    const Vector3& right = (Vector3::kUp * direction).Normalized();
+    const Vector3& up = (direction * right).Normalized();
+
+    const Vector3& negative_eye = position * -1.0f;
+    const Matrix44& view_transpose = Matrix44(
+		right.x_, right.y_, right.z_, right.Dot(negative_eye),
+		up.x_, up.y_, up.z_, up.Dot(negative_eye),
+        direction.x_, direction.y_, direction.z_, direction.Dot(negative_eye),
+		0.0f, 0.0f, 0.0f, 1.0f);
+	view_ = view_transpose.Transpose();
+
+	// Projections—ñ
+    //projection_ = Matrix44::OrthographicLeftHand(-range_, range_, -range_, range_, near_, far_);
+	projection_ = Matrix44::ProjectionLeftHand(kPi * 0.3f
+		, (float)kShadowMapWidth / kShadowMapHeight, near_, far_);
+
+	// Render
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	device_->SetRenderTarget(0, shadow_map_surface_);
 	device_->SetDepthStencilSurface(depth_stencil_surface_);

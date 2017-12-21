@@ -94,9 +94,6 @@
     <Filter Include="ヘッダー ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{0d2518bf-4a81-4317-85ed-3c64c62f7522}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\ImGui">
-      <UniqueIdentifier>{93f7d4c3-a8e7-476c-848e-4cd79575de54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{06ee83df-d177-4aae-bcba-0f0d5327dbc0}</UniqueIdentifier>
     </Filter>
@@ -163,9 +160,6 @@
     <Filter Include="ソース ファイル\Component\Renderer">
       <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\ImGui">
-      <UniqueIdentifier>{88e67559-49a6-4540-b010-3b1b95d8b6a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Base\GameObject">
       <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
     </Filter>
@@ -215,7 +209,13 @@
       <UniqueIdentifier>{22384b21-ef6d-41e6-afa6-49abc5047d4c}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base\Light">
-      <UniqueIdentifier>{a5e018c2-f77c-49fc-bfae-9bd3a850e56c}</UniqueIdentifier>
+      <UniqueIdentifier>{d7c8e2af-4b7c-44ef-aa73-23f76a32bb0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Imgui">
+      <UniqueIdentifier>{16d7b0f9-1474-4f82-a631-578069a87426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Imgui">
+      <UniqueIdentifier>{e3020380-88c7-4e4b-88c5-e1cb386c035d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -227,18 +227,6 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ソース ファイル\Base\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>ソース ファイル\Base\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ソース ファイル\Base\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
-      <Filter>ソース ファイル\Base\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
@@ -492,9 +480,6 @@
     <ClCompile Include="skin_shadow_map_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\Skin</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>ソース ファイル\Base\Light</Filter>
-    </ClCompile>
     <ClCompile Include="player_fallen_state.cpp">
       <Filter>ソース ファイル\Actor\State\Player</Filter>
     </ClCompile>
@@ -503,6 +488,21 @@
     </ClCompile>
     <ClCompile Include="player_jump_attack_state.cpp">
       <Filter>ソース ファイル\Actor\State\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\Base\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="library\ImGui\imgui_demo.cpp">
+      <Filter>ソース ファイル\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="library\ImGui\imgui_draw.cpp">
+      <Filter>ソース ファイル\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="library\ImGui\imgui_impl_dx9.cpp">
+      <Filter>ソース ファイル\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="library\ImGui\imgui.cpp">
+      <Filter>ソース ファイル\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,27 +517,6 @@
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx9.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\stb_rect_pack.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\stb_textedit.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\stb_truetype.h">
-      <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
@@ -841,6 +820,27 @@
     </ClInclude>
     <ClInclude Include="player_jump_attack_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\imconfig.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\imgui.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\imgui_impl_dx9.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\imgui_internal.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\stb_rect_pack.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\stb_textedit.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="library\ImGui\stb_truetype.h">
+      <Filter>ヘッダー ファイル\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

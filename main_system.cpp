@@ -112,9 +112,8 @@ void MainSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void MainSystem::Render(void)
 {
-	// 事前準備
+	// 事前セッティング
 	camera_manager_->SetCamera();
-	light_manager_->SetLight();
 
 	// shadowmap
 	shadow_map_system_->Render();
@@ -172,6 +171,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	if (!render_system_directX9) return false;
 	render_system_ = render_system_directX9;
 	const auto device = render_system_directX9->GetDevice();
+
 	texture_manager_ = TextureManager::Create(device);
 	mesh_manager_ = MeshManager::Create(device);
 	shader_manager_ = ShaderManager::Create(device);

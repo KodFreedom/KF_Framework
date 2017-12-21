@@ -110,8 +110,8 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	vertex_shader_constant_table_->SetValue(device, "camera_position_world", &camera->GetWorldEyePosition(), sizeof(Vector3));
 
 	// Light
-	auto& light = main_system->GetLightManager()->GetShadowMapLight();
-	vertex_shader_constant_table_->SetValue(device, "light_direction_world", &light.GetDirection(), sizeof(Vector3));
+    auto& light = main_system->GetLightManager()->GetDirectionalLights().front();
+	vertex_shader_constant_table_->SetValue(device, "light_direction_world", &light->direction_, sizeof(light->direction_));
 
 	// Skin Bone Data
 	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
@@ -159,8 +159,9 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
 	//device->SetTexture(index, main_system->GetTextureManager()->Get(material->fresnel_warp_specular_));
 	
 	// Shadow Map
-	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)light.GetView());
-	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)light.GetProjection());
+    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
+	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)shadow_map_system->GetLightView());
+	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)shadow_map_system->GetLightProjection());
 	D3DXVECTOR4 offset(0.5f / ShadowMapSystem::kShadowMapWidth, 0.5f / ShadowMapSystem::kShadowMapHeight, 0.0f, 0.0f);
 	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);
 	UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");

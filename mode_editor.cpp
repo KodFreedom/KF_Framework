@@ -6,7 +6,7 @@
 #include "mode_editor.h"
 #if defined(EDITOR)
 #include "main_system.h"
-#include "light_manager.h"
+#include "light.h"
 #include "input.h"
 #include "editor_camera.h"
 
@@ -28,6 +28,9 @@ void ModeEditor::Init(void)
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = MY_NEW EditorCamera;
 	camera->Init();
+
+    //ƒ‰ƒCƒg‚Ì‰Šú‰»
+    auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	main_system->GetInput()->SetEditorMode(true);
 

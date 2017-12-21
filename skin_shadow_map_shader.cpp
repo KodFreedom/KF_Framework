@@ -11,10 +11,9 @@
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
-#include "light_manager.h"
-#include "light.h"
 #include "mesh_renderer_3d_skin.h"
 #include "animator.h"
+#include "shadow_map_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -101,9 +100,9 @@ void SkinShadowMapShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void SkinShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
-	auto& light = MainSystem::Instance()->GetLightManager()->GetShadowMapLight();
-	vertex_shader_constant_table_->SetMatrix(device, "view_light", &static_cast<D3DXMATRIX>(light.GetView()));
-	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &static_cast<D3DXMATRIX>(light.GetProjection()));
+    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
+	vertex_shader_constant_table_->SetMatrix(device, "view_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightView()));
+	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightProjection()));
 
 	// bone
 	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);

@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------------
 //　shadow_map_system.h
 //  render objects to shadow map
-//	シャドウマップをレンダリングするシステム
-//	Author : 徐文杰(KodFreedom)
+//    シャドウマップをレンダリングするシステム
+//    Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "main.h"
 #include "shader_enum.h"
 
 //--------------------------------------------------------------------------------
@@ -21,92 +21,111 @@ class MeshRenderer3dSkin;
 class ShadowMapSystem
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	static constexpr float kShadowMapWidth = 1024.0f;
-	static constexpr float kShadowMapHeight = 1024.0f;
+    //--------------------------------------------------------------------------------
+    //  定数定義
+    //--------------------------------------------------------------------------------
+    static constexpr float kShadowMapWidth = 1024.0f;
+    static constexpr float kShadowMapHeight = 1024.0f;
 
-	//--------------------------------------------------------------------------------
-	//  生成処理
-	//  return : TextureManager*
-	//--------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    //  生成処理
+    //  return : TextureManager*
+    //--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	static ShadowMapSystem* Create(const LPDIRECT3DDEVICE9 device)
-	{
-		auto instance = MY_NEW ShadowMapSystem(device);
-		instance->Init();
-		return instance;
-	}
+    static ShadowMapSystem* Create(const LPDIRECT3DDEVICE9 device)
+    {
+        auto instance = MY_NEW ShadowMapSystem(device);
+        instance->Init();
+        return instance;
+    }
 #endif
 
-	//--------------------------------------------------------------------------------
-	//  破棄処理
-	//--------------------------------------------------------------------------------
-	void Release(void) { Uninit(); }
+    //--------------------------------------------------------------------------------
+    //  破棄処理
+    //--------------------------------------------------------------------------------
+    void Release(void) { Uninit(); }
 
-	//--------------------------------------------------------------------------------
-	//  描画処理
-	//--------------------------------------------------------------------------------
-	void Render(void);
+    //--------------------------------------------------------------------------------
+    //  描画処理
+    //--------------------------------------------------------------------------------
+    void Render(void);
 
-	//--------------------------------------------------------------------------------
-	//  rendererを登録する
-	//  renderer : レンダラー
-	//--------------------------------------------------------------------------------
-	void Register(MeshRenderer3d* renderer);
+    //--------------------------------------------------------------------------------
+    //  rendererを登録する
+    //  renderer : レンダラー
+    //--------------------------------------------------------------------------------
+    void Register(MeshRenderer3d* renderer);
 
-	//--------------------------------------------------------------------------------
-	//  rendererを登録する
-	//  renderer : レンダラー
-	//--------------------------------------------------------------------------------
-	void Register(MeshRenderer3dSkin* renderer);
+    //--------------------------------------------------------------------------------
+    //  rendererを登録する
+    //  renderer : レンダラー
+    //--------------------------------------------------------------------------------
+    void Register(MeshRenderer3dSkin* renderer);
+
+    //--------------------------------------------------------------------------------
+    //  Get関数
+    //--------------------------------------------------------------------------------
+    const Matrix44& GetLightView(void) const { return view_; }
+    const Matrix44& GetLightProjection(void) const { return projection_; }
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	//--------------------------------------------------------------------------------
-	//  シャドウマップのポインタを取得
-	//  return : const LPDIRECT3DTEXTURE9
-	//--------------------------------------------------------------------------------
-	const LPDIRECT3DTEXTURE9 GetShadowMap(void) const
-	{
-		return shadow_map_;
-	}
+    //--------------------------------------------------------------------------------
+    //  シャドウマップのポインタを取得
+    //  return : const LPDIRECT3DTEXTURE9
+    //--------------------------------------------------------------------------------
+    const LPDIRECT3DTEXTURE9 GetShadowMap(void) const
+    {
+        return shadow_map_;
+    }
 #endif
 
 private:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	ShadowMapSystem(const LPDIRECT3DDEVICE9 device) : device_(device)
-	, shadow_map_(nullptr), shadow_map_surface_(nullptr) {}
-	ShadowMapSystem() : device_(nullptr) {}
-	ShadowMapSystem(const ShadowMapSystem& value) : device_(nullptr) {}
+    ShadowMapSystem(const LPDIRECT3DDEVICE9 device)
+        : device_(device)
+        , shadow_map_(nullptr)
+        , shadow_map_surface_(nullptr)
+        , offset_(Vector3(10.0f, 40.0f, -10.0f))
+        , range_(4.0f) 
+        , near_(1.0f)
+        , far_(100.0f) {}
+    ShadowMapSystem() : device_(nullptr) {}
+    ShadowMapSystem(const ShadowMapSystem& value) : device_(nullptr) {}
 #else
-	ShadowMapSystem() {}
-	ShadowMapSystem(const ShadowMapSystem& value) {}
+    ShadowMapSystem() {}
+    ShadowMapSystem(const ShadowMapSystem& value) {}
 #endif
-	ShadowMapSystem& operator=(const ShadowMapSystem& value) {}
-	~ShadowMapSystem() {}
+    ShadowMapSystem& operator=(const ShadowMapSystem& value) {}
+    ~ShadowMapSystem() {}
 
-	//--------------------------------------------------------------------------------
-	//  初期化処理
-	//--------------------------------------------------------------------------------
-	void Init(void);
+    //--------------------------------------------------------------------------------
+    //  初期化処理
+    //--------------------------------------------------------------------------------
+    void Init(void);
 
-	//--------------------------------------------------------------------------------
-	//  破棄処理
-	//--------------------------------------------------------------------------------
-	void Uninit(void);
+    //--------------------------------------------------------------------------------
+    //  破棄処理
+    //--------------------------------------------------------------------------------
+    void Uninit(void);
 
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	list<MeshRenderer*> renderers_array_[kShadowMapShaderMax]; // シャドウを表示するレンダラー
+    //--------------------------------------------------------------------------------
+    //  変数定義
+    //--------------------------------------------------------------------------------
+    list<MeshRenderer*> renderers_array_[kShadowMapShaderMax]; // シャドウを表示するレンダラー
+    Vector3 offset_;
+    float range_;
+    float near_;
+    float far_;
+    Matrix44 view_;
+    Matrix44 projection_;
+
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	LPDIRECT3DTEXTURE9 shadow_map_;
-	LPDIRECT3DSURFACE9 shadow_map_surface_;
-	LPDIRECT3DSURFACE9 depth_stencil_surface_;
-	const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
+    LPDIRECT3DTEXTURE9 shadow_map_;
+    LPDIRECT3DSURFACE9 shadow_map_surface_;
+    LPDIRECT3DSURFACE9 depth_stencil_surface_;
+    const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
 #endif
 };

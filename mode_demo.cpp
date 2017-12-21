@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "mode_demo.h"
 #include "main_system.h"
-#include "light_manager.h"
+#include "light.h"
 #include "input.h"
 #include "sound_manager.h"
 #include "mode_result.h"
@@ -52,6 +52,9 @@ void ModeDemo::Init(void)
 	//カメラの初期化
 	auto camera = MY_NEW ThirdPersionCamera;
 	camera->Init();
+
+    //ライトの初期化
+    auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	//ゲームオブジェクトの初期化
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);

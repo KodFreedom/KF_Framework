@@ -11,8 +11,7 @@
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
-#include "light_manager.h"
-#include "light.h"
+#include "shadow_map_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -99,9 +98,9 @@ void ShadowMapShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void ShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
-	auto& light = MainSystem::Instance()->GetLightManager()->GetShadowMapLight();
+    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
 	auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
-	D3DXMATRIX world_view_projection_light = (D3DXMATRIX)world * light.GetView() * light.GetProjection();
+    D3DXMATRIX world_view_projection_light = (D3DXMATRIX)world * shadow_map_system->GetLightView() * shadow_map_system->GetLightProjection();
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
 }
 #endif
