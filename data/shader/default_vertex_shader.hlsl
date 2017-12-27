@@ -4,7 +4,6 @@
 float4x4 world_view_projection;
 float4x4 world_view_projection_light;
 
-
 //--------------------------------------------------------------------------------
 //  In/Out struct
 //--------------------------------------------------------------------------------
@@ -31,7 +30,7 @@ struct VertexOut
 //--------------------------------------------------------------------------------
 VertexOut main(VertexIn vertex)
 {
-	VertexOut result;
+	VertexOut result = (VertexOut)0;
 	result.position = mul(float4(vertex.position, 1.0f), world_view_projection);
 	result.normal_local = vertex.normal;
 	result.position_local = vertex.position;

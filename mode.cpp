@@ -10,8 +10,8 @@
 #include "ui_system.h"
 #include "renderer_manager.h"
 #include "light_manager.h"
-#include "sound_manager.h"
 #include "camera_manager.h"
+#include "shadow_map_system.h"
 
 //--------------------------------------------------------------------------------
 //  I—¹ˆ—
@@ -24,6 +24,6 @@ void Mode::Uninit(void)
 	main_system->GetUISystem()->Clear();
 	main_system->GetRendererManager()->Clear();
 	main_system->GetLightManager()->Clear();
-	main_system->GetSoundManager()->StopAll();
 	main_system->GetCameraManager()->Clear();
+    main_system->GetShadowMapSystem()->Clear();
 }

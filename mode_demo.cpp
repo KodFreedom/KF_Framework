@@ -11,6 +11,7 @@
 #include "mode_result.h"
 #include "third_person_camera.h"
 #include "fade_system.h"
+#include "shadow_map_system.h"
 
 //gameobject
 #include "stage_spawner.h"
@@ -64,6 +65,9 @@ void ModeDemo::Init(void)
 	player->SetName(L"Player");
 	camera->SetFollowTarget(player);
 
+    // ShadowMap
+    main_system->GetShadowMapSystem()->SetTarget(player->GetTransform());
+
 #ifdef _DEBUG
 	MainSystem::Instance()->GetDebugObserver()->SetPlayer(player);
 #endif // _DEBUG
@@ -97,6 +101,7 @@ void ModeDemo::LateUpdate(void)
 	auto main_system = MainSystem::Instance();
 	if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
 	{
+        main_system->GetShadowMapSystem()->SetTarget(nullptr);
 		main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
 	}
 }

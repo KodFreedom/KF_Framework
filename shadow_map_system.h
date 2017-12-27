@@ -14,6 +14,7 @@
 class MeshRenderer;
 class MeshRenderer3d;
 class MeshRenderer3dSkin;
+class Transform;
 
 //--------------------------------------------------------------------------------
 //  クラス
@@ -63,6 +64,16 @@ public:
     void Register(MeshRenderer3dSkin* renderer);
 
     //--------------------------------------------------------------------------------
+    //  クリア処理
+    //--------------------------------------------------------------------------------
+    void Clear(void);
+
+    //--------------------------------------------------------------------------------
+    //  Set関数
+    //--------------------------------------------------------------------------------
+    void SetTarget(Transform* target) { target_ = target; }
+
+    //--------------------------------------------------------------------------------
     //  Get関数
     //--------------------------------------------------------------------------------
     const Matrix44& GetLightView(void) const { return view_; }
@@ -88,10 +99,11 @@ private:
         : device_(device)
         , shadow_map_(nullptr)
         , shadow_map_surface_(nullptr)
-        , offset_(Vector3(10.0f, 40.0f, -10.0f))
-        , range_(4.0f) 
-        , near_(1.0f)
-        , far_(100.0f) {}
+        , offset_(Vector3(20.0f, 80.0f, -20.0f))
+        , range_(20.0f) 
+        , near_(0.0f)
+        , far_(200.0f)
+        , target_(nullptr) {}
     ShadowMapSystem() : device_(nullptr) {}
     ShadowMapSystem(const ShadowMapSystem& value) : device_(nullptr) {}
 #else
@@ -121,6 +133,7 @@ private:
     float far_;
     Matrix44 view_;
     Matrix44 projection_;
+    Transform* target_;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     LPDIRECT3DTEXTURE9 shadow_map_;

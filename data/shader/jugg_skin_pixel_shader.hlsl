@@ -26,14 +26,13 @@ sampler normal_texture = sampler_state
 //sampler fresnel_warp_specular;
 
 // shadowmap
-float4 shadow_map_offset;
 sampler shadow_map = sampler_state
 {
 	MipFilter = NONE;
 	MinFilter = POINT;
 	MagFilter = POINT;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
+	AddressU = BORDER;
+	AddressV = BORDER;
 };
 
 //--------------------------------------------------------------------------------
@@ -50,9 +49,39 @@ struct PixelIn
 //--------------------------------------------------------------------------------
 //  Shader method
 //--------------------------------------------------------------------------------
+float computeShadow(PixelIn pixel)
+{
+	// Set the bias value for fixing the floating point precision issues.
+    float bias = 0.00001f;
+
+	// Calculate the projected texture coordinates.
+	float2 project_uv;
+    project_uv.x = pixel.position_light.x / pixel.position_light.w * 0.5f + 0.5f;
+    project_uv.y = -pixel.position_light.y / pixel.position_light.w * 0.5f + 0.5f;
+
+	// Sample the shadow map depth value from the depth texture using the sampler at the projected texture coordinate location.
+    float depth = tex2D(shadow_map, project_uv).r;
+
+	// Calculate the depth of the light.
+    float light_depth = pixel.position_light.z / pixel.position_light.w;
+
+	// Subtract the bias from the lightDepthValue.
+    light_depth -= bias;
+
+	// Compare the depth of the shadow map value and the depth of the light to determine whether to shadow or to light this pixel.
+	// If the light is in front of the object then light the pixel, if not then shadow this pixel since an object (occluder) is casting a shadow on it.
+	float shadow = step(depth, light_depth);
+
+	// Determine if the projected coordinates are in the 0 to 1 range
+	// If so then this pixel is in the view of the light.
+	shadow *= (1.0f - (float)any(saturate(project_uv) - project_uv));
+
+	return shadow;
+}
+
 float4 main(PixelIn pixel) : COLOR0
 {
-	// 色を算出する
+	// material color
 	pixel.position_to_camera_tangent = normalize(pixel.position_to_camera_tangent);
 	pixel.light_direction_tangent = normalize(pixel.light_direction_tangent);
 	float3 normal_tangent = tex2D(normal_texture, pixel.uv).rgb * 2.0f - 1.0f;
@@ -79,18 +108,8 @@ float4 main(PixelIn pixel) : COLOR0
 		+ specular_color * tex2D(specular_texture_mask, pixel.uv).rgb * tex2D(metalness_mask, pixel.uv).rgb)
 		+ detail_color * tex2D(detail_mask, pixel.uv).rgb;
 
-	// shadowmapから値を取得
-	float2 shadow_map_uv = 0.5f * pixel.position_light.xy / pixel.position_light.w + float2(0.5f, 0.5f);
-	shadow_map_uv.y = 1.0f - shadow_map_uv.y;
-	shadow_map_uv.x += shadow_map_offset.x;
-	shadow_map_uv.y += shadow_map_offset.y;
-
-	// 光源から頂点までの距離を計算
-	float depth = pixel.position_light.z / pixel.position_light.w;
-
-	// シャドウマップの深度値と比較
-	float result = depth - tex2D(shadow_map, shadow_map_uv).x;
-	float shadow_map_multiplier = step(0.00065f, result) * -0.5f + 1.0f;
+	// ShadowMap(0.0f - 1.0f)
+	float shadow_map_multiplier = computeShadow(pixel) * -0.5f + 1.0f;
 
 	return float4(final_color * shadow_map_multiplier, tex2D(translucency, pixel.uv).r);
 }

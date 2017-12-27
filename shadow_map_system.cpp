@@ -11,8 +11,7 @@
 #include "render_system.h"
 #include "mesh_renderer_3d.h"
 #include "mesh_renderer_3d_skin.h"
-#include "camera_manager.h"
-#include "camera.h"
+#include "transform.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -41,11 +40,10 @@ void ShadowMapSystem::Register(MeshRenderer3dSkin* renderer)
 void ShadowMapSystem::Render(void)
 {
 	// Set light
-	// 移動
-	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
-	const Vector3& look_at = camera->GetWorldAtPosition();
+    // 移動
+    Vector3 look_at = target_ ? target_->GetPosition() : Vector3::kZero;
     const Vector3& position = look_at + offset_;
-
+    
 	// View行列
     const Vector3& direction = (look_at - position).Normalized();
     const Vector3& right = (Vector3::kUp * direction).Normalized();
@@ -60,9 +58,9 @@ void ShadowMapSystem::Render(void)
 	view_ = view_transpose.Transpose();
 
 	// Projection行列
-    //projection_ = Matrix44::OrthographicLeftHand(-range_, range_, -range_, range_, near_, far_);
-	projection_ = Matrix44::ProjectionLeftHand(kPi * 0.3f
-		, (float)kShadowMapWidth / kShadowMapHeight, near_, far_);
+    projection_ = Matrix44::OrthographicLeftHand(-range_, range_, -range_, range_, near_, far_);
+	//projection_ = Matrix44::ProjectionLeftHand(kPi * 0.3f
+	//	, (float)kShadowMapWidth / kShadowMapHeight, near_, far_);
 
 	// Render
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -90,12 +88,20 @@ void ShadowMapSystem::Render(void)
 	}
 	else
 	{
-		for (int count = 0; count < static_cast<int>(kShadowMapShaderMax); ++count)
-		{
-			renderers_array_[count].clear();
-		}
+        Clear();
 	}
 #endif
+}
+
+//--------------------------------------------------------------------------------
+//  クリア処理
+//--------------------------------------------------------------------------------
+void ShadowMapSystem::Clear(void)
+{
+    for (auto& renderers : renderers_array_)
+    {
+        renderers.clear();
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -131,10 +137,7 @@ void ShadowMapSystem::Init(void)
 //--------------------------------------------------------------------------------
 void ShadowMapSystem::Uninit(void)
 {
-	for (auto& renderers : renderers_array_)
-	{
-		renderers.clear();
-	}
+    Clear();
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	SAFE_RELEASE(shadow_map_);
 	SAFE_RELEASE(shadow_map_surface_);

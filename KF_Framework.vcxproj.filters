@@ -181,20 +181,11 @@
     <Filter Include="ソース ファイル\Base\Shader">
       <UniqueIdentifier>{e2ae39f9-8234-4fe4-a0b5-1bb9312106e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL">
-      <UniqueIdentifier>{76f3dcde-c3fd-49e1-a9d7-6e129a3dc263}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Base\Motion\MotionState">
       <UniqueIdentifier>{097be50f-f66e-4c11-b094-087cc9489341}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base\Motion\MotionState\Normal">
       <UniqueIdentifier>{6f58992f-1bdb-40b1-bda0-843e012e7a97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL\jugg">
-      <UniqueIdentifier>{dd59067c-2133-4b86-96ec-87b2eeed51b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\HLSL\shadow_map">
-      <UniqueIdentifier>{01822993-837d-42db-b7a0-9d466b36bf3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base\Shader\Mesh">
       <UniqueIdentifier>{27ddd998-1b99-4e17-9865-ba71a0bde8b9}</UniqueIdentifier>
@@ -842,52 +833,5 @@
     <ClInclude Include="library\ImGui\stb_truetype.h">
       <Filter>ヘッダー ファイル\Imgui</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="default_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="cull_none_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="cull_none_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="no_light_no_fog_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="no_light_no_fog_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="default_skin_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="default_skin_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL</Filter>
-    </None>
-    <None Include="basic_shadow_map_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
-    </None>
-    <None Include="basic_shadow_map_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
-    </None>
-    <None Include="basic_skin_shadow_map_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\shadow_map</Filter>
-    </None>
-    <None Include="jugg_mesh_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </None>
-    <None Include="jugg_mesh_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </None>
-    <None Include="jugg_skin_pixel_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </None>
-    <None Include="jugg_skin_vertex_shader.hlsl">
-      <Filter>ヘッダー ファイル\Base\Shader\HLSL\jugg</Filter>
-    </None>
   </ItemGroup>
 </Project>
