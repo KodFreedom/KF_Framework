@@ -5,12 +5,13 @@
 //--------------------------------------------------------------------------------
 #include "mode_demo.h"
 #include "main_system.h"
-#include "light_manager.h"
+#include "light.h"
 #include "input.h"
 #include "sound_manager.h"
 #include "mode_result.h"
 #include "third_person_camera.h"
 #include "fade_system.h"
+#include "shadow_map_system.h"
 
 //gameobject
 #include "stage_spawner.h"
@@ -53,6 +54,9 @@ void ModeDemo::Init(void)
 	auto camera = MY_NEW ThirdPersionCamera;
 	camera->Init();
 
+    //ライトの初期化
+    auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
+
 	//ゲームオブジェクトの初期化
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 	StageSpawner::LoadStage(L"demo");
@@ -60,6 +64,9 @@ void ModeDemo::Init(void)
 	auto player = GameObjectSpawner::CreatePlayer(L"juggernaut", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
 	player->SetName(L"Player");
 	camera->SetFollowTarget(player);
+
+    // ShadowMap
+    main_system->GetShadowMapSystem()->SetTarget(player->GetTransform());
 
 #ifdef _DEBUG
 	MainSystem::Instance()->GetDebugObserver()->SetPlayer(player);
@@ -94,6 +101,7 @@ void ModeDemo::LateUpdate(void)
 	auto main_system = MainSystem::Instance();
 	if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
 	{
+        main_system->GetShadowMapSystem()->SetTarget(nullptr);
 		main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
 	}
 }

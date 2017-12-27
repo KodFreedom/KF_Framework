@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "fade_system.h"
 #include "background_ui.h"
+#include "light.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -25,6 +26,9 @@ void ModeTitle::Init(void)
 	//ƒJƒƒ‰‚Ì‰Šú‰»
 	auto camera = MY_NEW Camera;
 	camera->Init();
+
+    //ƒ‰ƒCƒg‚Ì‰Šú‰»
+    auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	//UI‚Ì‰Šú‰»
 	BackgroundUI::Create(L"title.jpg");

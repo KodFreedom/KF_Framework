@@ -24,7 +24,7 @@ void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 	LPD3DXBUFFER error_buffer = nullptr;
 	LPD3DXBUFFER code_buffer = nullptr;
 	HRESULT hr = D3DXCompileShaderFromFile(
-		L"default_skin_vertex_shader.hlsl",
+		L"data/shader/default_skin_vertex_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -51,7 +51,7 @@ void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	// Pixel Shader
 	hr = D3DXCompileShaderFromFile(
-		L"default_skin_pixel_shader.hlsl",
+		L"data/shader/default_skin_pixel_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名

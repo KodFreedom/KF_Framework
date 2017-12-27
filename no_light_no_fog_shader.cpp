@@ -22,7 +22,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 	LPD3DXBUFFER error_buffer = nullptr;
 	LPD3DXBUFFER code_buffer = nullptr;
 	HRESULT hr = D3DXCompileShaderFromFile(
-		L"no_light_no_fog_vertex_shader.hlsl",
+		L"data/shader/no_light_no_fog_vertex_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名
@@ -49,7 +49,7 @@ void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 
 	// Pixel Shader
 	hr = D3DXCompileShaderFromFile(
-		L"no_light_no_fog_pixel_shader.hlsl",
+		L"data/shader/no_light_no_fog_pixel_shader.hlsl",
 		NULL,
 		NULL,
 		"main",	// FunctionNameエントリー関数名

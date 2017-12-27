@@ -114,12 +114,6 @@ void DebugObserver::ShowMainWindow(void)
 	ImGui::Image((void*)MainSystem::Instance()->GetShadowMapSystem()->GetShadowMap(), ImVec2(128, 128)
 	, ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1), ImVec4(1,1,1,1));
 
-	auto light = MainSystem::Instance()->GetLightManager()->GetShadowMapLight();
-	ImGui::InputFloat3("Light Position", &light.position_.x_);
-	ImGui::InputFloat3("Light At", &light.look_at_.x_);
-	ImGui::InputFloat("Light Near", &light.near_);
-	ImGui::InputFloat("Light Far", &light.far_);
-
 	// End
 	ImGui::End();
 }
