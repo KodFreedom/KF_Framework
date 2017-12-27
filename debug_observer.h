@@ -76,7 +76,8 @@ private:
 	//--------------------------------------------------------------------------------
 	DebugObserver() : enable_collision_system_window_(false)
 		, enable_camera_window_(false), enable_player_window_(false)
-		, enable_fog_window_(false), player_(nullptr) {}
+		, enable_fog_window_(false), enable_shadow_map_system_window_(false)
+        , enable_log_window_(false), player_(nullptr) {}
 	DebugObserver(const DebugObserver& value) {}
 	DebugObserver& operator=(const DebugObserver& value) {}
 	~DebugObserver() {}
@@ -106,6 +107,16 @@ private:
 	//--------------------------------------------------------------------------------
 	void ShowFogWindow(void);
 
+    //--------------------------------------------------------------------------------
+    //  ShadowMapèÓïÒÇÃï\é¶èàóù
+    //--------------------------------------------------------------------------------
+    void ShowShadowMapWindow(void);
+
+    //--------------------------------------------------------------------------------
+    //  LogèÓïÒÇÃï\é¶èàóù
+    //--------------------------------------------------------------------------------
+    void ShowLogWindow(void);
+
 	//--------------------------------------------------------------------------------
 	//  ïœêîíËã`
 	//--------------------------------------------------------------------------------
@@ -114,6 +125,8 @@ private:
 	bool enable_camera_window_;
 	bool enable_player_window_;
 	bool enable_fog_window_;
+    bool enable_shadow_map_system_window_;
+    bool enable_log_window_;
 	GameObjectActor* player_;
 };
 #endif
