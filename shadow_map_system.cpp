@@ -59,8 +59,6 @@ void ShadowMapSystem::Render(void)
 
 	// ProjectionçsóÒ
     projection_ = Matrix44::OrthographicLeftHand(-range_, range_, -range_, range_, near_, far_);
-	//projection_ = Matrix44::ProjectionLeftHand(kPi * 0.3f
-	//	, (float)kShadowMapWidth / kShadowMapHeight, near_, far_);
 
 	// Render
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)

@@ -363,9 +363,9 @@ Matrix44 Matrix44::Transform(const Quaternion& rotation, const Vector3& translat
 }
 
 //--------------------------------------------------------------------------------
-//  create projection matrix / 射影行列の作成(左手座標系)
+//  create perspective matrix / パースペクティブ行列の作成(左手座標系)
 //--------------------------------------------------------------------------------
-Matrix44 Matrix44::ProjectionLeftHand(const float& fov_radian_y, const float& aspect_ratio, const float& near_z, const float& far_z)
+Matrix44 Matrix44::PerspectiveLeftHand(const float& fov_radian_y, const float& aspect_ratio, const float& near_z, const float& far_z)
 {
 	assert(near_z < far_z);
 	float fov_cos = cosf(fov_radian_y * 0.5f);

@@ -3,6 +3,7 @@
 //Å@3DRigidbodyComponent.cpp
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "rigidbody3d.h"
 #include "game_object.h"
 #include "physics_system.h"

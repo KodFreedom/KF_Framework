@@ -4,8 +4,9 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
 #include "behavior.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 #include "actor_parameter.h"
 
 //--------------------------------------------------------------------------------

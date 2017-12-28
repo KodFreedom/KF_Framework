@@ -5,6 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "shader_manager.h"
 #include "mesh_renderer.h"
+#include "kf_utility.h"
+using namespace kodfreedom;
+
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "default_shader.h"
 #include "no_light_no_fog_shader.h"

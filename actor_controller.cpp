@@ -3,6 +3,7 @@
 //Å@ActorController.cpp
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "actor_controller.h"
 #include "game_object.h"
 #include "actor_state.h"

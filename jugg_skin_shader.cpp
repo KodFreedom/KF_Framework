@@ -162,9 +162,8 @@ void JuggSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mesh
     auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
 	vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)shadow_map_system->GetLightView());
 	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)shadow_map_system->GetLightProjection());
-	D3DXVECTOR4 offset(0.5f / ShadowMapSystem::kShadowMapWidth, 0.5f / ShadowMapSystem::kShadowMapHeight, 0.0f, 0.0f);
-	pixel_shader_constant_table_->SetVector(device, "shadow_map_offset", &offset);
-	UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
+    pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system->GetBias());
+    UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
 	device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
 }
 #endif

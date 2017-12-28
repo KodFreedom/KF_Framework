@@ -82,6 +82,7 @@ public:
     //--------------------------------------------------------------------------------
     const Matrix44& GetLightView(void) const { return view_; }
     const Matrix44& GetLightProjection(void) const { return projection_; }
+    const float& GetBias(void) const { return bias_; }
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     //--------------------------------------------------------------------------------
@@ -107,6 +108,7 @@ private:
         , range_(20.0f) 
         , near_(0.0f)
         , far_(200.0f)
+        , bias_(0.00001f)
         , target_(nullptr) {}
     ShadowMapSystem() : device_(nullptr) {}
     ShadowMapSystem(const ShadowMapSystem& value) : device_(nullptr) {}
@@ -135,6 +137,7 @@ private:
     float range_;
     float near_;
     float far_;
+    float bias_;
     Matrix44 view_;
     Matrix44 projection_;
     Transform* target_;

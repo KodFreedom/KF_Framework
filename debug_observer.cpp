@@ -328,6 +328,9 @@ void DebugObserver::ShowShadowMapWindow(void)
     }
 
     auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
+
+    // Bias
+    ImGui::InputFloat("Bias", &shadow_map_system->bias_);
     
     // Range
     ImGui::SliderFloat("Range", &shadow_map_system->range_, 0.0f, 50.0f);

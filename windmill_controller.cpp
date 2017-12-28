@@ -4,6 +4,7 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "windmill_controller.h"
 #include "game_object.h"
 #include "transform.h"
@@ -14,11 +15,7 @@
 bool WindmillController::Init(void)
 {
 	fan_ = owner_.GetTransform()->FindChildBy(L"Fan");
-	if(!fan_)
-	{
-		assert("No Fan!!");
-		return false;
-	}
+    assert(fan_);
 	return true;
 }
 

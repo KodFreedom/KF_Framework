@@ -59,7 +59,7 @@ void Camera::Set(void)
 	view_ = view_transpose_.Transpose();
 
 	// ProjectionçsóÒ
-	projection_ = Matrix44::ProjectionLeftHand(fov_, (float)SCREEN_WIDTH / SCREEN_HEIGHT, near_, far_);
+	projection_ = Matrix44::PerspectiveLeftHand(fov_, (float)SCREEN_WIDTH / SCREEN_HEIGHT, near_, far_);
 }
 
 //--------------------------------------------------------------------------------
