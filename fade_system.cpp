@@ -174,7 +174,6 @@ void FadeSystem::FadeOut(void)
 	{
 		time_counter_ = fade_time_;
 
-		// Todo : Check SE & BGM(fade out effect)
 		current_state_ = kFadeIn;
 		MainSystem::Instance()->Change(next_mode_);
 	}

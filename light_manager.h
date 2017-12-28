@@ -26,7 +26,11 @@ public:
 	//--------------------------------------------------------------------------------
 	//  ”jŠüˆ—
 	//--------------------------------------------------------------------------------
-	void Release(void) { Clear(); }
+	void Release(void) 
+    {
+        Clear();
+        MY_DELETE this;
+    }
 
 	//--------------------------------------------------------------------------------
 	//  ƒ‰ƒCƒg‚Ìíœ
@@ -35,7 +39,7 @@ public:
 	{
         for (auto iterator = directional_lights_.begin(); iterator != directional_lights_.end();)
         {
-            MY_DELETE(*iterator);
+            MY_DELETE (*iterator);
             iterator = directional_lights_.erase(iterator);
         }
 	}

@@ -12,18 +12,18 @@
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  リリース処理
+//  クリア処理
 //--------------------------------------------------------------------------------
 void GameObjectManager::Clear(void)
 {
-	for (auto& game_objects : game_objects_array_)
-	{
-		for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
-		{
-			(*iterator)->Release();
-			iterator = game_objects.erase(iterator);
-		}
-	}
+    for (int count = 0; count < kUnableAutoDelete; ++count)
+    {
+        for (auto iterator = game_objects_array_[count].begin(); iterator != game_objects_array_[count].end();)
+        {
+            (*iterator)->Release();
+            iterator = game_objects_array_[count].erase(iterator);
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -66,4 +66,21 @@ void GameObjectManager::LateUpdate(void)
 			game_object->LateUpdate();
 		}
 	}
+}
+
+//--------------------------------------------------------------------------------
+//  破棄処理
+//--------------------------------------------------------------------------------
+void GameObjectManager::Release(void)
+{
+    for (auto& game_objects : game_objects_array_)
+    {
+        for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
+        {
+            (*iterator)->Release();
+            iterator = game_objects.erase(iterator);
+        }
+    }
+
+    MY_DELETE this;
 }
