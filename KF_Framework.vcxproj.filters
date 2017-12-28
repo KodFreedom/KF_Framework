@@ -175,12 +175,6 @@
     <Filter Include="ヘッダー ファイル\Base\System\RenderSystem">
       <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\UI">
-      <UniqueIdentifier>{c9948f76-6530-4a87-adf5-1614d1461ed8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\UI\UIObject">
-      <UniqueIdentifier>{71144254-1792-4758-82ba-bd69e5597eaa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Base\Imgui">
       <UniqueIdentifier>{16d7b0f9-1474-4f82-a631-578069a87426}</UniqueIdentifier>
     </Filter>
@@ -282,19 +276,7 @@
     <ClCompile Include="third_person_camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="ui_system.cpp">
-      <Filter>ソース ファイル\Base\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_object_2d.cpp">
-      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_object.cpp">
-      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
-    </ClCompile>
     <ClCompile Include="player_ui.cpp">
-      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="background_ui.cpp">
       <Filter>ソース ファイル\Base\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="collision_detector.cpp">
@@ -610,21 +592,6 @@
     </ClInclude>
     <ClInclude Include="third_person_camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_system.h">
-      <Filter>ヘッダー ファイル\Base\System\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_object_2d.h">
-      <Filter>ヘッダー ファイル\Base\System\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_object.h">
-      <Filter>ヘッダー ファイル\Base\System\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="player_ui.h">
-      <Filter>ヘッダー ファイル\Base\System\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="background_ui.h">
-      <Filter>ヘッダー ファイル\Base\System\UI\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="actor_parameter.h">
       <Filter>ヘッダー ファイル\Actor</Filter>

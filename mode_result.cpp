@@ -9,7 +9,6 @@
 #include "mode_title.h"
 #include "camera.h"
 #include "fade_system.h"
-#include "background_ui.h"
 #include "light.h"
 
 //--------------------------------------------------------------------------------
@@ -30,7 +29,7 @@ void ModeResult::Init(void)
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	//UIÇÃèâä˙âª
-	BackgroundUI::Create(L"endingGood.jpg");
+	//BackgroundUI::Create(L"endingGood.jpg");
 }
 
 //--------------------------------------------------------------------------------

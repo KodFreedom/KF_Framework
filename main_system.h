@@ -17,7 +17,6 @@ class MaterialManager;
 class CollisionSystem;
 class PhysicsSystem;
 class GameObjectManager;
-class UISystem;
 class SoundManager;
 class FadeSystem;
 class CameraManager;
@@ -158,12 +157,6 @@ public:
 	const auto GetCameraManager(void) const { return camera_manager_; }
 
 	//--------------------------------------------------------------------------------
-	//  UIシステムを返す
-	//  return : UISystem* const
-	//--------------------------------------------------------------------------------
-	const auto GetUISystem(void) const { return ui_system_; }
-
-	//--------------------------------------------------------------------------------
 	//  衝突処理システムを返す
 	//  return : CollisionSystem* const
 	//--------------------------------------------------------------------------------
@@ -200,8 +193,7 @@ private:
 		, debug_observer_(nullptr)
 #endif
 		, fade_system_(nullptr), camera_manager_(nullptr)
-		, ui_system_(nullptr), collision_system_(nullptr)
-	    , physics_system_(nullptr), game_object_manager_(nullptr)
+		, collision_system_(nullptr), physics_system_(nullptr), game_object_manager_(nullptr)
 		, shader_manager_(nullptr), shadow_map_system_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
@@ -241,7 +233,6 @@ private:
 	Input*             input_; // 入力管理者
 	FadeSystem*        fade_system_; // フェイドシステム
 	CameraManager*     camera_manager_; // カメラ管理者
-	UISystem*          ui_system_; // UIシステム
 	CollisionSystem*   collision_system_; // 衝突処理システム
 	PhysicsSystem*     physics_system_; // 物理システム
 	GameObjectManager* game_object_manager_; // ゲームオブジェクト管理者
