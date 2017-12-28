@@ -199,22 +199,23 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 }
 
 //--------------------------------------------------------------------------------
-//  fade生成処理
+//  BasicPolygon2d生成処理
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateFade(void)
+GameObject* GameObjectSpawner::CreateBasicPolygon2d(const Vector3& scale, const Layer& layer, const String& material_name, const ShaderType& shader_type, const RenderPriority& render_priority, const float& rotation, const Vector3& position)
 {
-    auto result = MY_NEW GameObject(kUnableAutoDelete);
+    auto result = MY_NEW GameObject(layer);
 
     //コンポネント
-    auto renderer = MY_NEW MeshRenderer2d(*result, k2dMask);
+    auto renderer = MY_NEW MeshRenderer2d(*result, render_priority, shader_type);
     renderer->SetMesh(L"polygon2d");
-    renderer->SetMaterial(L"fade");
-    renderer->SetShaderType(ShaderType::kDefault2dShader);
+    renderer->SetMaterial(material_name);
     result->AddRenderer(renderer);
 
     //パラメーター
     auto transform = result->GetTransform();
-    transform->SetScale(Vector3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f));
+    transform->SetScale(scale);
+    transform->SetRotation(Vector3(0.0f, 0.0f, rotation));
+    transform->SetPosition(position);
 
     result->Init();
     return result;

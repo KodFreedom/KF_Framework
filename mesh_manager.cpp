@@ -854,10 +854,10 @@ MeshManager::MeshInfo MeshManager::CreatePolygon2d(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     Vertex2d* vertex_pointer;
     info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-    vertex_pointer[0].position = Vector3(0.0f, 0.0f, 0.0f);
-    vertex_pointer[1].position = Vector3(1.0f, 0.0f, 0.0f);
-    vertex_pointer[2].position = Vector3(0.0f, 1.0f, 0.0f);
-    vertex_pointer[3].position = Vector3(1.0f, 1.0f, 0.0f);
+    vertex_pointer[0].position = Vector3(-0.5f, -0.5f, 0.0f);
+    vertex_pointer[1].position = Vector3( 0.5f, -0.5f, 0.0f);
+    vertex_pointer[2].position = Vector3(-0.5f,  0.5f, 0.0f);
+    vertex_pointer[3].position = Vector3( 0.5f,  0.5f, 0.0f);
     vertex_pointer[0].color = Color::kWhite;
     vertex_pointer[1].color = Color::kWhite;
     vertex_pointer[2].color = Color::kWhite;

@@ -63,7 +63,7 @@ void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 {
 	if (current_state_ == FadeState::kFadeOut)
 	{
-		delete next_mode;
+		MY_DELETE next_mode;
 		return;
 	}
 	current_state_ = FadeState::kFadeOut;
@@ -82,11 +82,9 @@ void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 //--------------------------------------------------------------------------------
 void FadeSystem::Init(void)
 {
-    Material* material = MY_NEW Material;
-    material->diffuse_ = Color::kBlack;
-    MainSystem::Instance()->GetMaterialManager()->Use(L"fade", material);
+    MainSystem::Instance()->GetMaterialManager()->Use(L"fade", Color::kBlack);
     material_ = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"fade");
-    GameObjectSpawner::CreateFade();
+    GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kUnableAutoDelete, L"fade", kDefault2dShader, k2dMask);
 }
 
 //--------------------------------------------------------------------------------

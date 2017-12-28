@@ -6,7 +6,6 @@
 //--------------------------------------------------------------------------------
 #include "kf_math.h"
 using namespace kodfreedom;
-#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  constant variables / íËêî
@@ -31,11 +30,6 @@ const Vector4 Vector4::kOne = Vector4(1.0f);
 
 const Matrix44 Matrix44::kZero = Matrix44(0.0f);
 const Matrix44 Matrix44::kIdentity = Matrix44();
-const Matrix44 Matrix44::kProjection2d = Matrix44(
-    2.0f / static_cast<float>(SCREEN_WIDTH), 0.0f, 0.0f, 0.0f,
-    0.0f, -2.0f / static_cast<float>(SCREEN_HEIGHT), 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f, 0.0f, 1.0f);
 
 const Quaternion Quaternion::kIdentity = Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 

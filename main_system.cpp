@@ -82,6 +82,7 @@ void MainSystem::Update(void)
 #ifdef _DEBUG
 	debug_observer_->Update();
 #endif
+    fade_system_->Update();
 	input_->Update();
 	current_mode_->Update();
 	game_object_manager_->Update();
@@ -100,7 +101,6 @@ void MainSystem::LateUpdate(void)
 	camera_manager_->LateUpdate();
 	collision_system_->LateUpdate();
 	ui_system_->Update();
-	fade_system_->Update();
 	renderer_manager_->Update();
 #ifdef _DEBUG
 	debug_observer_->LateUpdate();

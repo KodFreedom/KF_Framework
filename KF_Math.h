@@ -671,7 +671,6 @@ namespace kodfreedom
 
         static const Matrix44 kZero; // matrix with all elements equal 0 / 要素が全部0の行列
         static const Matrix44 kIdentity; // identity matrix / 単位行列
-        static const Matrix44 kProjection2d; // 2d projection matrix / 2dプロジェクション行列
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
         //--------------------------------------------------------------------------------

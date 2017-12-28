@@ -1,7 +1,9 @@
 //--------------------------------------------------------------------------------
 //  Constant table
 //--------------------------------------------------------------------------------
-float4x4 world_projection;
+float4x4 world;
+float4x4 projection;
+float2 offset;
 
 //--------------------------------------------------------------------------------
 //  In/Out struct
@@ -25,7 +27,8 @@ struct VertexOut
 VertexOut main(VertexIn vertex)
 {
 	VertexOut result = (VertexOut)0;
-	result.position = mul(float4(vertex.position, 1.0f), world_projection);
+	result.position = mul(float4(vertex.position, 1.0f), world);
+	result.position = mul(result.position + float4(offset, 0.0f, 0.0f), projection);
 	result.color = vertex.color;
 	return result;
 }

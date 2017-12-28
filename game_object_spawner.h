@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "main.h"
+#include "renderer_manager.h"
+#include "game_object_manager.h"
 
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
@@ -26,7 +28,7 @@ public:
 	static GameObject* CreateXModel(const String& name, const Vector3& position, const Vector3& rotation, const Vector3& scale);
 	static GameObject* CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 	static GameObject* CreateGoal(const Vector3& position);
-    static GameObject* CreateFade(void);
+    static GameObject* CreateBasicPolygon2d(const Vector3& scale, const Layer& layer = kDefaultLayer, const String& material_name = String(), const ShaderType& shader_type = kDefault2dShader, const RenderPriority& render_priority = k2d, const float& rotation = 0.0f, const Vector3& position = Vector3::kZero);
 	static GameObjectActor* CreatePlayer(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 	static GameObjectActor* CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 

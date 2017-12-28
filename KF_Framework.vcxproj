@@ -189,6 +189,7 @@
     <ClCompile Include="motion_manager.cpp" />
     <ClCompile Include="player_neutral_state.cpp" />
     <ClCompile Include="player_state.cpp" />
+    <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="shadow_map_shader.cpp" />
