@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="camera_manager.cpp" />
     <ClCompile Include="cull_none_shader.cpp" />
+    <ClCompile Include="default_2d_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
     <ClCompile Include="jugg_attack_left_motion_state.cpp" />
@@ -249,6 +250,7 @@
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="default_2d_shader.h" />
     <ClInclude Include="default_skin_shader.h" />
     <ClInclude Include="jugg_attack_left_motion_state.h" />
     <ClInclude Include="jugg_attack_right_motion_state.h" />

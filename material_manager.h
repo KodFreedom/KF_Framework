@@ -139,7 +139,7 @@ public:
 	//  material_name : テクスチャ名
 	//  return : const Material*
 	//--------------------------------------------------------------------------------
-	const Material* GetMaterial(const String& material_name) const
+	Material* GetMaterial(const String& material_name) const
 	{
 		auto iterator = materials_.find(material_name);
 		if (materials_.end() == iterator)
@@ -163,7 +163,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  静的メンバ変数
 	//--------------------------------------------------------------------------------
-	static const Material kDefaultMaterial;
+	static Material kDefaultMaterial;
 
 	//--------------------------------------------------------------------------------
 	//  constructors and destructors

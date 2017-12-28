@@ -10,6 +10,7 @@
 #include "material_manager.h"
 #include "mesh_manager.h"
 #include "renderer_manager.h"
+#include "mesh_renderer_2d.h"
 #include "mesh_renderer_3d.h"
 #include "mesh_renderer_3d_skin.h"
 #include "sphere_collider.h"
@@ -197,6 +198,27 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	return result;
 }
 
+//--------------------------------------------------------------------------------
+//  fade生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateFade(void)
+{
+    auto result = MY_NEW GameObject(kUnableAutoDelete);
+
+    //コンポネント
+    auto renderer = MY_NEW MeshRenderer2d(*result, k2dMask);
+    renderer->SetMesh(L"polygon2d");
+    renderer->SetMaterial(L"fade");
+    renderer->SetShaderType(ShaderType::kDefault2dShader);
+    result->AddRenderer(renderer);
+
+    //パラメーター
+    auto transform = result->GetTransform();
+    transform->SetScale(Vector3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f));
+
+    result->Init();
+    return result;
+}
 
 //--------------------------------------------------------------------------------
 //  生成処理

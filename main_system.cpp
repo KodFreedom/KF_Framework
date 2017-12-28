@@ -126,7 +126,6 @@ void MainSystem::Render(void)
 		collision_system_->Render();
 #endif
 		ui_system_->Render();
-		fade_system_->Render();
 #ifdef _DEBUG
 		debug_observer_->Render();
 #endif
@@ -190,12 +189,12 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	debug_observer_ = DebugObserver::Create();
 #endif
 	input_ = Input::Create(hinstance, hwnd);
-	fade_system_ = FadeSystem::Create();
 	camera_manager_ = CameraManager::Create();
 	ui_system_ = UISystem::Create();
 	collision_system_ = CollisionSystem::Create();
 	physics_system_ = PhysicsSystem::Create();
 	game_object_manager_ = GameObjectManager::Create();
+    fade_system_ = FadeSystem::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR

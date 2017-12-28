@@ -16,6 +16,8 @@ enum RenderPriority
 	kDefaultPriority = 0,
 	kUseAlphaTest,
 	kUseDepthSort,
+    k2d,
+    k2dMask,
 	kPriorityMax
 };
 

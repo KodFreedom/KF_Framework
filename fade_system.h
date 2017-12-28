@@ -5,12 +5,12 @@
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
 class Mode;
+class Material;
 
 //--------------------------------------------------------------------------------
 //  フェイドシステムクラス
@@ -22,31 +22,17 @@ public:
 	//  生成処理
 	//  return : FadeSystem*
 	//--------------------------------------------------------------------------------
-	static FadeSystem* Create(void)
-	{
-		auto instance = MY_NEW FadeSystem();
-		instance->Init();
-		return instance;
-	}
+    static FadeSystem* Create(void);
 
 	//--------------------------------------------------------------------------------
 	//  破棄処理
 	//--------------------------------------------------------------------------------
-	void Release(void) 
-    {
-        Uninit();
-        MY_DELETE this;
-    }
+    void Release(void);
 	
 	//--------------------------------------------------------------------------------
 	//  更新処理
 	//--------------------------------------------------------------------------------
 	void Update(void);
-
-	//--------------------------------------------------------------------------------
-	//  描画処理
-	//--------------------------------------------------------------------------------
-	void Render(void);
 
 	//--------------------------------------------------------------------------------
 	//  次のモードにフェードする
@@ -70,9 +56,8 @@ private:
 	//  constructors and destructors
 	//--------------------------------------------------------------------------------
 	FadeSystem()
-		: current_state_(kFadeIn), next_mode_(nullptr)
-		, color_(Color::kBlack), fade_time_(0.0f)
-		, time_counter_(0.0f) {}
+		: current_state_(kFadeIn), next_mode_(nullptr), material_(nullptr)
+		, fade_time_(1.0f), time_counter_(1.0f) {}
 	FadeSystem(const FadeSystem& value) {}
 	FadeSystem& operator=(const FadeSystem& value) {}
 	~FadeSystem() {}
@@ -100,9 +85,9 @@ private:
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
-	Color     color_;
-	FadeState current_state_;
-	Mode*     next_mode_;
-	float     fade_time_;
-	float     time_counter_;
+    Material*   material_;
+	FadeState   current_state_;
+	Mode*       next_mode_;
+	float       fade_time_;
+	float       time_counter_;
 };

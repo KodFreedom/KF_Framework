@@ -12,7 +12,8 @@
 enum MeshType // メッシュのタイプ
 {
 	k3dMesh = 0,
-	k3dSkin
+	k3dSkin,
+    k2dMesh
 };
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -235,6 +236,12 @@ private:
 	//--------------------------------------------------------------------------------
 	MeshInfo CreateSkyBox(void);
 
+    //--------------------------------------------------------------------------------
+    //  Polygon2dを生成する
+    //  return : MeshInfo
+    //--------------------------------------------------------------------------------
+    MeshInfo CreatePolygon2d(void);
+
 	//--------------------------------------------------------------------------------
 	//  与えられた頂点とインデックスでメッシュを生成する
 	//  type : 描画タイプ
@@ -244,6 +251,13 @@ private:
 	//--------------------------------------------------------------------------------
 	MeshInfo CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number);
 	
+    //--------------------------------------------------------------------------------
+    //  create the 2d vertex and index buffer, return true if successed
+    //  バーテックスとインデックスバッファの生成
+    //  return : bool
+    //--------------------------------------------------------------------------------
+    bool CreateBuffer2d(Mesh* const mesh) const;
+
 	//--------------------------------------------------------------------------------
 	//  create the 3d vertex and index buffer, return true if successed
 	//  バーテックスとインデックスバッファの生成

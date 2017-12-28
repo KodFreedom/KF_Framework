@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 struct Vertex2d // 2Dí∏ì_èÓïÒç\ë¢ëÃ
 {
-	Vector4 position;
+	Vector3 position;
 	Vector2 uv;
 	Color   color;
 };
