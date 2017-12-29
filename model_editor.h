@@ -4,9 +4,11 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
+#include "common_setting.h"
 #if defined(EDITOR)
 #include "behavior.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾

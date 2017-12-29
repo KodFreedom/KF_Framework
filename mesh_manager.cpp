@@ -10,6 +10,8 @@
 #include "renderer_manager.h"
 #include "camera.h"
 #include "camera_manager.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 
 //--------------------------------------------------------------------------------
 //

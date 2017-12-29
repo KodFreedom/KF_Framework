@@ -3,11 +3,11 @@
 //　3DRigidbodyComponent.cpp
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "rigidbody3d.h"
 #include "game_object.h"
 #include "physics_system.h"
 #include "collider.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -46,10 +46,10 @@ void Rigidbody3D::Update(void)
 	acceleration_ += force_accum_ * inverse_mass_;
 	
 	//速度
-	velocity_ += acceleration_ * DELTA_TIME;
+	velocity_ += acceleration_ * Time::Instance()->DeltaTime();
 	
 	//位置更新
-	movement_ += velocity_ * DELTA_TIME;
+	movement_ += velocity_ * Time::Instance()->DeltaTime();
 	transform->SetPosition(transform->GetPosition() + movement_);
 
 	// TODO : 3D回転

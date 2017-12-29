@@ -4,9 +4,11 @@
 //	ƒ‚[ƒVƒ‡ƒ“ŠÇ—Ò
 //	Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "motion_manager.h"
 #include "motion_data.h"
+#include "kf_utility.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 
 //--------------------------------------------------------------------------------
 //	

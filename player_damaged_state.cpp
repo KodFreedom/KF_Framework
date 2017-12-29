@@ -3,11 +3,11 @@
 //@player_damaged_state.h
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "player_damaged_state.h"
 #include "player_neutral_state.h"
 #include "actor_controller.h"
 #include "animator.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //	‰Šú‰»ŠÖ”
@@ -32,7 +32,7 @@ void PlayerDamagedState::Uninit(ActorController& actor)
 void PlayerDamagedState::Update(ActorController& actor)
 {
 	PlayerState::Update(actor);
-	time_counter_ -= DELTA_TIME;
+	time_counter_ -= Time::Instance()->DeltaTime();
 	if (time_counter_ <= 0.0f 
 		&& actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState
 		&& !actor.GetAnimator().GetCurrentAnimationName()._Equal(L"unity_chan_damaged"))

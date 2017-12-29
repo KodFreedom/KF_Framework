@@ -240,9 +240,6 @@
     <ClCompile Include="kf_utility.cpp">
       <Filter>ソース ファイル\Base\KF_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="kf_utility_directX.cpp">
-      <Filter>ソース ファイル\Base\KF_Utility</Filter>
-    </ClCompile>
     <ClCompile Include="main_system.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
@@ -489,11 +486,11 @@
     <ClCompile Include="default_2d_texture_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\2d</Filter>
     </ClCompile>
+    <ClCompile Include="time.cpp">
+      <Filter>ソース ファイル\Base\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="mode.h">
       <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
@@ -540,9 +537,6 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="kf_utility.h">
-      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="kf_utility_directX.h">
       <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="main_system.h">
@@ -817,6 +811,9 @@
     </ClInclude>
     <ClInclude Include="default_2d_texture_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

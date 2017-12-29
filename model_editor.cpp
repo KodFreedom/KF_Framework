@@ -5,7 +5,6 @@
 //--------------------------------------------------------------------------------
 #include "model_editor.h"
 #if defined(EDITOR)
-#include "main.h"
 #include "game_object.h"
 #include "game_object_spawner.h"
 #include "transform.h"

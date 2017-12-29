@@ -4,6 +4,8 @@
 //	マテリアル管理者
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 #include "material_manager.h"
 #include "main_system.h"
 #include "texture_manager.h"
@@ -18,6 +20,27 @@ Material MaterialManager::kDefaultMaterial = Material(L"polygon.jpg");
 //  public
 //
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  生成処理
+//  return : MaterialManager*
+//--------------------------------------------------------------------------------
+MaterialManager* MaterialManager::Create(void)
+{
+    auto instance = MY_NEW MaterialManager();
+    instance->Init();
+    return instance;
+}
+
+//--------------------------------------------------------------------------------
+//  破棄処理
+//--------------------------------------------------------------------------------
+void MaterialManager::Release(void)
+{
+    Uninit();
+    MY_DELETE this;
+}
+
+
 //--------------------------------------------------------------------------------
 //  与えられた名前のマテリアルを使う
 //--------------------------------------------------------------------------------

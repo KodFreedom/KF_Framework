@@ -11,6 +11,7 @@
 #include "main_system.h"
 #include "motion_manager.h"
 #include "texture_manager.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -81,7 +82,7 @@ void Animator::Update(void)
 {
 	if (avatar_.empty()) return;
 	state_->Update(*this);
-	time_counter_ += DELTA_TIME;
+	time_counter_ += Time::Instance()->DeltaTime();
 }
 
 //--------------------------------------------------------------------------------

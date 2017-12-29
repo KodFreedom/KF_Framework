@@ -4,7 +4,6 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_state.h"
-#include "main.h"
 #include "main_system.h"
 #include "input.h"
 #include "camera_manager.h"

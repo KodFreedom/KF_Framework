@@ -4,9 +4,9 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-19
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "main_system.h"
 #include "input.h"
+#include "time.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -109,9 +109,19 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
 	if (id == IDYES) { is_window_mode = false; }
 #endif // _DEBUG
 
+    //Timeの生成
+    Time* time = Time::Create();
+    if (!time)
+    {
+        UnregisterClass(CLASS_NAME, wcex.hInstance);
+        return -1;
+    }
+
 	//MainSystem生成
-	if (!MainSystem::Create(instance, hwnd, is_window_mode))
+    MainSystem* main_system = MainSystem::Create(instance, hwnd, is_window_mode);
+	if (!main_system)
 	{
+        Time::Release();
 		UnregisterClass(CLASS_NAME, wcex.hInstance);
 		return -1;
 	}
@@ -119,18 +129,6 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
 	//ウインドウの表示
 	ShowWindow(hwnd, cmd_show);
 	UpdateWindow(hwnd);
-
-	//時間カウンタ
-	LARGE_INTEGER frequency;
-	LARGE_INTEGER currentTime;
-	LARGE_INTEGER execLastTime;
-	LARGE_INTEGER FPSLastTime;
-	memset(&frequency, 0x00, sizeof frequency);
-	memset(&currentTime, 0x00, sizeof currentTime);
-	memset(&execLastTime, 0x00, sizeof execLastTime);
-	memset(&FPSLastTime, 0x00, sizeof FPSLastTime);
-	QueryPerformanceCounter(&execLastTime);
-	FPSLastTime = execLastTime;
 
 	//メッセージループ
 	for (;;)
@@ -148,24 +146,17 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
 				DispatchMessage(&message);		//ウインドウプロシージャへメッセージを送出
 			}
 		}
-		else
+		else if(time->CanUpdateFrame())
 		{
-			QueryPerformanceFrequency(&frequency);
-			QueryPerformanceCounter(&currentTime);
-			float fTime = (float)(currentTime.QuadPart - execLastTime.QuadPart) * 1000.0f / (float)frequency.QuadPart;
-			
-			if (fTime >= TIMER_INTERVAL)
-			{
-				execLastTime = currentTime;
-				MainSystem::Instance()->Update();
-				MainSystem::Instance()->LateUpdate();
-				MainSystem::Instance()->Render();
-			}
+            main_system->Update();
+            main_system->LateUpdate();
+            main_system->Render();
 		}
 	}
 
 	// 終了処理
 	MainSystem::Release();
+    Time::Release();
 
 	//ウインドウクラスの登録お解除
 	//第一引数：メクラス名

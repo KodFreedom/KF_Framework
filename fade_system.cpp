@@ -4,13 +4,13 @@
 //	ƒ}ƒeƒŠƒAƒ‹ŠÇ—ŽÒ
 //	Author : ™•¶ž^(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "fade_system.h"
 #include "main_system.h"
 #include "mode.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
 #include "material_manager.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -101,7 +101,7 @@ void FadeSystem::Uninit(void)
 //--------------------------------------------------------------------------------
 void FadeSystem::FadeIn(void)
 {
-	time_counter_ -= DELTA_TIME;
+	time_counter_ -= Time::Instance()->DeltaTime();
 	if (time_counter_ <= 0.0f)
 	{
 		time_counter_ = 0.0f;
@@ -115,7 +115,7 @@ void FadeSystem::FadeIn(void)
 //--------------------------------------------------------------------------------
 void FadeSystem::FadeOut(void)
 {
-	time_counter_ += DELTA_TIME;
+	time_counter_ += Time::Instance()->DeltaTime();
 	if (time_counter_ >= fade_time_)
 	{
 		time_counter_ = fade_time_;

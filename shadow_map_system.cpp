@@ -5,13 +5,13 @@
 //	Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "shadow_map_system.h"
-#include "main.h"
 #include "main_system.h"
 #include "shader_manager.h"
 #include "render_system.h"
 #include "mesh_renderer_3d.h"
 #include "mesh_renderer_3d_skin.h"
 #include "transform.h"
+#include "kf_utility.h"
 
 //--------------------------------------------------------------------------------
 //

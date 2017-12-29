@@ -11,6 +11,8 @@
 #include "mode.h"
 #include "camera.h"
 #include "ImGui\imgui.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ

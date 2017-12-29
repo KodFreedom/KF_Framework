@@ -4,7 +4,10 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
+#include "kf_math.h"
+using namespace kodfreedom;
 #include "renderer_manager.h"
 #include "game_object_manager.h"
 

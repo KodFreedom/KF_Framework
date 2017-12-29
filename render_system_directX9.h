@@ -5,7 +5,9 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "common_setting.h"
+#include "kf_utility.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include <d3dx9.h>
 #include "render_system.h"
 
 //--------------------------------------------------------------------------------
