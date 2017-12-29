@@ -3,9 +3,11 @@
 //	入力ディバイス情報管理
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "input.h"
 #include "input_device_directX.h"
+#include "kf_math.h"
+#include "kf_utility.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //

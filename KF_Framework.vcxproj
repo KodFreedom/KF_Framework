@@ -224,7 +224,6 @@
     <ClCompile Include="kf_math.cpp" />
     <ClCompile Include="physics_system.cpp" />
     <ClCompile Include="kf_utility.cpp" />
-    <ClCompile Include="kf_utility_directX.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_system.cpp" />
     <ClCompile Include="material_manager.cpp" />
@@ -243,6 +242,7 @@
     <ClCompile Include="sound_manager.cpp" />
     <ClCompile Include="stage_spawner.cpp" />
     <ClCompile Include="texture_manager.cpp" />
+    <ClCompile Include="time.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="player_walk_state.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
@@ -330,9 +330,7 @@
     <ClInclude Include="kf_math.h" />
     <ClInclude Include="physics_system.h" />
     <ClInclude Include="collision_detector.h" />
-    <ClInclude Include="kf_utility_directX.h" />
     <ClInclude Include="light_manager.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="main_system.h" />
     <ClInclude Include="material_manager.h" />
     <ClInclude Include="mesh_manager.h" />
@@ -353,6 +351,7 @@
     <ClInclude Include="stage_spawner.h" />
     <ClInclude Include="texture_manager.h" />
     <ClInclude Include="third_person_camera.h" />
+    <ClInclude Include="time.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="player_walk_state.h" />

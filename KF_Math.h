@@ -1,11 +1,16 @@
 ﻿//--------------------------------------------------------------------------------
 //　kf_math.h
 //  classes and methods for math
-//    演算用のクラスとメソッド
-//    Author : 徐文杰(KodFreedom)
+//  演算用のクラスとメソッド
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
+#include <time.h>
+#include <math.h>
 #include "common_setting.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include <d3dx9.h>
+#endif
 
 namespace kodfreedom
 {

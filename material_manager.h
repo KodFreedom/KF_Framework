@@ -5,7 +5,8 @@
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  マテリアル
@@ -96,21 +97,12 @@ public:
 	//  生成処理
 	//  return : MaterialManager*
 	//--------------------------------------------------------------------------------
-	static MaterialManager* Create(void)
-	{
-		auto instance = MY_NEW MaterialManager();
-		instance->Init();
-		return instance;
-	}
+    static MaterialManager* Create(void);
 
 	//--------------------------------------------------------------------------------
 	//  破棄処理
 	//--------------------------------------------------------------------------------
-	void Release(void) 
-    {
-        Uninit();
-        MY_DELETE this;
-    }
+    void Release(void);
 
 	//--------------------------------------------------------------------------------
 	//  与えられた名前のマテリアルを使う

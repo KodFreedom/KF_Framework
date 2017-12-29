@@ -4,10 +4,10 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-09-12
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "windmill_controller.h"
 #include "game_object.h"
 #include "transform.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -25,5 +25,5 @@ bool WindmillController::Init(void)
 void WindmillController::Update(void)
 {
 	if (!fan_) return;
-	fan_->RotateByRoll(rotate_speed_ * DELTA_TIME);
+	fan_->RotateByRoll(rotate_speed_ * Time::Instance()->ScaledDeltaTime());
 }

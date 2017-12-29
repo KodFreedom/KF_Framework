@@ -3,8 +3,9 @@
 //Å@fieldCollider.cpp
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "field_collider.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 
 //--------------------------------------------------------------------------------
 //  

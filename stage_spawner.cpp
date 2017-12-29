@@ -3,7 +3,10 @@
 //	ステージ生成処理
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "main.h"
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
+#include "kf_math.h"
+using namespace kodfreedom;
 #include "stage_spawner.h"
 #include "game_object_spawner.h"
 #include "game_object.h"

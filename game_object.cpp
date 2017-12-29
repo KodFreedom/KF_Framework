@@ -4,7 +4,6 @@
 //	Author : Xu Wenjie
 //	Date   : 2017-04-26
 //--------------------------------------------------------------------------------
-#include "main.h"
 #include "game_object.h"
 #include "main_system.h"
 
