@@ -31,6 +31,8 @@ public:
 	virtual void SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer) = 0;
 
 protected:
+    void CompileShaderFrom(const String& shader_name, const LPDIRECT3DDEVICE9 device);
+
 	LPDIRECT3DVERTEXSHADER9	vertex_shader_;
 	LPD3DXCONSTANTTABLE     vertex_shader_constant_table_;
 	LPDIRECT3DPIXELSHADER9	pixel_shader_;

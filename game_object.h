@@ -10,6 +10,8 @@
 #include "rigidbody.h"
 #include "collider.h"
 #include "game_object_manager.h"
+#include "kf_utility.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -57,7 +59,7 @@ public:
 	void Release(void)
 	{
 		Uninit();
-		delete this;
+		MY_DELETE this;
 	}
 
 	//--------------------------------------------------------------------------------

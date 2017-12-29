@@ -302,7 +302,7 @@ void ModelEditor::ShowCreatedList(void)
 					{
 						iterator->my_transform->SetPosition(position);
 					}
-					if (ImGui::InputFloat3("Rot", &iterator->rotation.x_, 0.0f, kPi * 2.0f))
+					if (ImGui::InputFloat3("Rot", &iterator->rotation.x_))
 					{
 						iterator->my_transform->SetRotation(iterator->rotation);
 					}

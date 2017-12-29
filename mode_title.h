@@ -18,6 +18,7 @@ public:
 	ModeTitle() : Mode(L"Title") {}
 	~ModeTitle() {}
 
-	void	Init(void) override;
-	void	Update(void) override;
+	void Init(void) override;
+    void Uninit(void) override;
+	void Update(void) override;
 };

@@ -13,26 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\KF_Utility">
-      <UniqueIdentifier>{f54e67db-2928-4e7c-84e3-af7ed0f61f83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\KF_Utility">
-      <UniqueIdentifier>{05fccfed-a36c-486b-ad47-f486f528dab1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Base">
       <UniqueIdentifier>{371bb56d-2b93-4600-941a-6e9be8bf1ff8}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base">
       <UniqueIdentifier>{cf4c7665-b793-4e59-a24f-e354e36825a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Mode">
-      <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Manager">
-      <UniqueIdentifier>{cdbbfe2e-e186-4cde-909d-65f75121e5db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Manager">
-      <UniqueIdentifier>{a72cad8e-b70a-4729-a70a-78d50f9dbc5f}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
@@ -70,23 +55,8 @@
     <Filter Include="ヘッダー ファイル\Component\Animator">
       <UniqueIdentifier>{5f0158e7-dc6d-47a9-9064-3433114e16a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Spawner">
-      <UniqueIdentifier>{668b0480-d542-491b-9834-5afd54ca9fb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Animator">
       <UniqueIdentifier>{e303acce-4c1a-4f78-9f63-9fb6ef063d46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\UI">
-      <UniqueIdentifier>{c9948f76-6530-4a87-adf5-1614d1461ed8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\UI">
-      <UniqueIdentifier>{e61b84ce-404a-4320-a362-afe7fb577d74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\UI\UIObject">
-      <UniqueIdentifier>{71144254-1792-4758-82ba-bd69e5597eaa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\UI\UIObject">
-      <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Component\Behavior">
       <UniqueIdentifier>{d980ca8c-896c-4789-9255-ed456b26394a}</UniqueIdentifier>
@@ -108,9 +78,6 @@
     </Filter>
     <Filter Include="ソース ファイル\Base\Physics">
       <UniqueIdentifier>{ad354fd5-add1-4ac6-b9da-2e1d0c3e4d08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Mode">
-      <UniqueIdentifier>{1cfef04b-6b22-4cc5-bb53-1947b9c22e4c}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Base\Motion">
       <UniqueIdentifier>{dea147e3-4109-4939-8ad4-ddf15a8bf6a0}</UniqueIdentifier>
@@ -147,12 +114,6 @@
     </Filter>
     <Filter Include="ソース ファイル\Component\Behavior\Actor">
       <UniqueIdentifier>{a586df49-f1c4-4f34-a9d4-ac1a669403bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\RenderSystem">
-      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\RenderSystem">
-      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Component\Renderer">
       <UniqueIdentifier>{22fa5a67-1fc7-4590-971a-57214f56695a}</UniqueIdentifier>
@@ -202,11 +163,47 @@
     <Filter Include="ソース ファイル\Base\Light">
       <UniqueIdentifier>{d7c8e2af-4b7c-44ef-aa73-23f76a32bb0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Imgui">
+    <Filter Include="ソース ファイル\Base\System">
+      <UniqueIdentifier>{a72cad8e-b70a-4729-a70a-78d50f9dbc5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\System\RenderSystem">
+      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\System">
+      <UniqueIdentifier>{cdbbfe2e-e186-4cde-909d-65f75121e5db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\System\RenderSystem">
+      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Imgui">
       <UniqueIdentifier>{16d7b0f9-1474-4f82-a631-578069a87426}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Imgui">
+    <Filter Include="ヘッダー ファイル\Base\KF_Utility">
+      <UniqueIdentifier>{f54e67db-2928-4e7c-84e3-af7ed0f61f83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Mode">
+      <UniqueIdentifier>{1cfef04b-6b22-4cc5-bb53-1947b9c22e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Imgui">
       <UniqueIdentifier>{e3020380-88c7-4e4b-88c5-e1cb386c035d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\KF_Utility">
+      <UniqueIdentifier>{05fccfed-a36c-486b-ad47-f486f528dab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Mode">
+      <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\UI">
+      <UniqueIdentifier>{e61b84ce-404a-4320-a362-afe7fb577d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\UI\UIObject">
+      <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Shader\2d">
+      <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\2d">
+      <UniqueIdentifier>{e4a5b11e-4486-4aa8-964f-61c20a70c3c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -214,7 +211,7 @@
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="mode.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
+      <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
@@ -238,43 +235,40 @@
       <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
     <ClCompile Include="kf_math.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
+      <Filter>ソース ファイル\Base\KF_Utility</Filter>
     </ClCompile>
     <ClCompile Include="kf_utility.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
+      <Filter>ソース ファイル\Base\KF_Utility</Filter>
     </ClCompile>
     <ClCompile Include="kf_utility_directX.cpp">
-      <Filter>ソース ファイル\KF_Utility</Filter>
+      <Filter>ソース ファイル\Base\KF_Utility</Filter>
     </ClCompile>
     <ClCompile Include="main_system.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="render_system_directX9.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="texture_manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="sound_manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="mesh_manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="material_manager.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="debug_observer.cpp">
-      <Filter>ソース ファイル\Base\Manager</Filter>
+      <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="renderer_manager.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="input_device_directX.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="fade_system.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="motion_manager.cpp">
       <Filter>ソース ファイル\Base\Motion</Filter>
@@ -288,20 +282,8 @@
     <ClCompile Include="third_person_camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="ui_system.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_object_2d.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_object.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
     <ClCompile Include="player_ui.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
-    </ClCompile>
-    <ClCompile Include="background_ui.cpp">
-      <Filter>ソース ファイル\UI\UIObject</Filter>
+      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="collision_detector.cpp">
       <Filter>ソース ファイル\Base\Physics</Filter>
@@ -379,16 +361,16 @@
       <Filter>ソース ファイル\Actor\State\Player</Filter>
     </ClCompile>
     <ClCompile Include="mode_demo.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
+      <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode_editor.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
+      <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode_result.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
+      <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
     <ClCompile Include="mode_title.cpp">
-      <Filter>ソース ファイル\Mode</Filter>
+      <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
     <ClCompile Include="shader_manager.cpp">
       <Filter>ソース ファイル\Base\Shader</Filter>
@@ -409,7 +391,7 @@
       <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
     </ClCompile>
     <ClCompile Include="shadow_map_system.cpp">
-      <Filter>ソース ファイル\Base\RenderSystem</Filter>
+      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="jugg_attack_left_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Normal</Filter>
@@ -484,16 +466,28 @@
       <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui_demo.cpp">
-      <Filter>ソース ファイル\Imgui</Filter>
+      <Filter>ソース ファイル\Base\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui_draw.cpp">
-      <Filter>ソース ファイル\Imgui</Filter>
+      <Filter>ソース ファイル\Base\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui_impl_dx9.cpp">
-      <Filter>ソース ファイル\Imgui</Filter>
+      <Filter>ソース ファイル\Base\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui.cpp">
-      <Filter>ソース ファイル\Imgui</Filter>
+      <Filter>ソース ファイル\Base\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="fade_system.cpp">
+      <Filter>ソース ファイル\Base\System</Filter>
+    </ClCompile>
+    <ClCompile Include="render_system.cpp">
+      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="default_2d_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="default_2d_texture_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\2d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -501,7 +495,7 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="mode.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
+      <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>ヘッダー ファイル\Component</Filter>
@@ -537,7 +531,7 @@
       <Filter>ヘッダー ファイル\Actor\AI</Filter>
     </ClInclude>
     <ClInclude Include="kf_math.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="motion_state.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
@@ -546,19 +540,19 @@
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="kf_utility.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="kf_utility_directX.h">
-      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
     </ClInclude>
     <ClInclude Include="main_system.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="render_system.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="render_system_directX9.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="shader_manager.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
@@ -567,16 +561,16 @@
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
     <ClInclude Include="texture_manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="sound_manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="mesh_manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="material_manager.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="light_manager.h">
       <Filter>ヘッダー ファイル\Base\Light</Filter>
@@ -585,16 +579,13 @@
       <Filter>ヘッダー ファイル\Base\Light</Filter>
     </ClInclude>
     <ClInclude Include="debug_observer.h">
-      <Filter>ヘッダー ファイル\Base\Manager</Filter>
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="renderer_manager.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="input_device_directX.h">
       <Filter>ヘッダー ファイル\Base\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="fade_system.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="motion_data.h">
       <Filter>ヘッダー ファイル\Base\Motion</Filter>
@@ -610,21 +601,6 @@
     </ClInclude>
     <ClInclude Include="third_person_camera.h">
       <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_system.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_object_2d.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_object.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="player_ui.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
-    </ClInclude>
-    <ClInclude Include="background_ui.h">
-      <Filter>ヘッダー ファイル\UI\UIObject</Filter>
     </ClInclude>
     <ClInclude Include="actor_parameter.h">
       <Filter>ヘッダー ファイル\Actor</Filter>
@@ -717,16 +693,16 @@
       <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
     </ClInclude>
     <ClInclude Include="mode_demo.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
+      <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
     <ClInclude Include="mode_editor.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
+      <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
     <ClInclude Include="mode_result.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
+      <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
     <ClInclude Include="mode_title.h">
-      <Filter>ヘッダー ファイル\Mode</Filter>
+      <Filter>ヘッダー ファイル\Base\Mode</Filter>
     </ClInclude>
     <ClInclude Include="shader_directX9.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
@@ -741,7 +717,7 @@
       <Filter>ヘッダー ファイル\Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="shadow_map_system.h">
-      <Filter>ヘッダー ファイル\Base\RenderSystem</Filter>
+      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
     </ClInclude>
     <ClInclude Include="jugg_attack_left_motion_state.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState\Normal</Filter>
@@ -813,25 +789,34 @@
       <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imconfig.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui_impl_dx9.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui_internal.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_rect_pack.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_textedit.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_truetype.h">
-      <Filter>ヘッダー ファイル\Imgui</Filter>
+      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="fade_system.h">
+      <Filter>ヘッダー ファイル\Base\System</Filter>
+    </ClInclude>
+    <ClInclude Include="default_2d_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="default_2d_texture_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

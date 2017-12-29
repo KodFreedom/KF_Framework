@@ -154,6 +154,8 @@
   <ItemGroup>
     <ClCompile Include="camera_manager.cpp" />
     <ClCompile Include="cull_none_shader.cpp" />
+    <ClCompile Include="default_2d_shader.cpp" />
+    <ClCompile Include="default_2d_texture_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
     <ClCompile Include="jugg_attack_left_motion_state.cpp" />
@@ -188,18 +190,17 @@
     <ClCompile Include="motion_manager.cpp" />
     <ClCompile Include="player_neutral_state.cpp" />
     <ClCompile Include="player_state.cpp" />
+    <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="shadow_map_shader.cpp" />
     <ClCompile Include="shadow_map_system.cpp" />
     <ClCompile Include="skin_shadow_map_shader.cpp" />
-    <ClCompile Include="ui_object_2d.cpp" />
     <ClCompile Include="rigidbody3d.cpp" />
     <ClCompile Include="aabb_collider.cpp" />
     <ClCompile Include="third_person_camera.cpp" />
     <ClCompile Include="actor_controller.cpp" />
     <ClCompile Include="animator.cpp" />
-    <ClCompile Include="background_ui.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
     <ClCompile Include="debug_observer.cpp" />
@@ -243,12 +244,12 @@
     <ClCompile Include="stage_spawner.cpp" />
     <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="transform.cpp" />
-    <ClCompile Include="ui_object.cpp" />
-    <ClCompile Include="ui_system.cpp" />
     <ClCompile Include="player_walk_state.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="default_2d_shader.h" />
+    <ClInclude Include="default_2d_texture_shader.h" />
     <ClInclude Include="default_skin_shader.h" />
     <ClInclude Include="jugg_attack_left_motion_state.h" />
     <ClInclude Include="jugg_attack_right_motion_state.h" />
@@ -296,14 +297,12 @@
     <ClInclude Include="shadow_map_shader.h" />
     <ClInclude Include="shadow_map_system.h" />
     <ClInclude Include="skin_shadow_map_shader.h" />
-    <ClInclude Include="ui_object_2d.h" />
     <ClInclude Include="rigidbody3d.h" />
     <ClInclude Include="aabb_collider.h" />
     <ClInclude Include="actor_controller.h" />
     <ClInclude Include="AI.h" />
     <ClInclude Include="animator.h" />
     <ClInclude Include="behavior.h" />
-    <ClInclude Include="background_ui.h" />
     <ClInclude Include="box_collider.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="debug_observer.h" />
@@ -345,7 +344,6 @@
     <ClInclude Include="motion_state.h" />
     <ClInclude Include="obb_collider.h" />
     <ClInclude Include="player_controller.h" />
-    <ClInclude Include="player_ui.h" />
     <ClInclude Include="render_system.h" />
     <ClInclude Include="render_system_directX9.h" />
     <ClInclude Include="renderer_manager.h" />
@@ -356,8 +354,6 @@
     <ClInclude Include="texture_manager.h" />
     <ClInclude Include="third_person_camera.h" />
     <ClInclude Include="transform.h" />
-    <ClInclude Include="ui_object.h" />
-    <ClInclude Include="ui_system.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="player_walk_state.h" />
     <ClInclude Include="windmill_controller.h" />

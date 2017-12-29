@@ -38,7 +38,7 @@ void MeshRenderer::Uninit(void)
 
 	if (!material_name_.empty())
 	{
-		main_system->GetMaterialManager()->Disuse(mesh_name_);
+		main_system->GetMaterialManager()->Disuse(material_name_);
 		material_name_.clear();
 	}
 }

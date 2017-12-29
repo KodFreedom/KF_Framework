@@ -56,6 +56,8 @@ void DebugObserver::LateUpdate(void)
 	ShowCameraWindow();
 	ShowPlayerWindow();
 	ShowFogWindow();
+    ShowShadowMapWindow();
+    ShowLogWindow();
 }
 
 //--------------------------------------------------------------------------------
@@ -109,10 +111,9 @@ void DebugObserver::ShowMainWindow(void)
 	if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
 	if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;
 	if (ImGui::Button(enable_player_window_ ? "Close Player Window" : "Open Player Window")) enable_player_window_ ^= 1;
+    if (ImGui::Button(enable_shadow_map_system_window_ ? "Close Shadow Map Window" : "Open Shadow Map Window")) enable_shadow_map_system_window_ ^= 1;
+    if (ImGui::Button(enable_log_window_ ? "Close Log Window" : "Open Log Window")) enable_log_window_ ^= 1;
 	//if (ImGui::Button(enable_fog_window_ ? "Close Fog Window" : "Open Fog Window")) enable_fog_window_ ^= 1;
-
-	ImGui::Image((void*)MainSystem::Instance()->GetShadowMapSystem()->GetShadowMap(), ImVec2(128, 128)
-	, ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1,1), ImVec4(1,1,1,1));
 
 	// End
 	ImGui::End();
@@ -310,5 +311,65 @@ void DebugObserver::ShowFogWindow(void)
 
 	// End
 	ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  ShadowMapèÓïÒÇÃï\é¶èàóù
+//--------------------------------------------------------------------------------
+void DebugObserver::ShowShadowMapWindow(void)
+{
+    if (!enable_shadow_map_system_window_) return;
+
+    // Begin
+    if (!ImGui::Begin("Shadow Map Window", &enable_shadow_map_system_window_))
+    {
+        ImGui::End();
+        return;
+    }
+
+    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
+
+    // Bias
+    ImGui::InputFloat("Bias", &shadow_map_system->bias_);
+    
+    // Range
+    ImGui::SliderFloat("Range", &shadow_map_system->range_, 0.0f, 50.0f);
+
+    // Near
+    ImGui::SliderFloat("Near", &shadow_map_system->near_, 0.0f, 10.0f);
+
+    // Far
+    ImGui::SliderFloat("Far", &shadow_map_system->far_, 50.0f, 500.0f);
+
+    // Offset
+    ImGui::InputFloat3("Offset", (float*)&shadow_map_system->offset_.x_);
+
+    // Image
+    ImGui::Image((void*)shadow_map_system->GetShadowMap(), ImVec2(128, 128)
+        , ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
+
+    // End
+    ImGui::End();
+}
+
+//--------------------------------------------------------------------------------
+//  LogèÓïÒÇÃï\é¶èàóù
+//--------------------------------------------------------------------------------
+void DebugObserver::ShowLogWindow(void)
+{
+    if (!enable_log_window_) return;
+
+    // Begin
+    if (!ImGui::Begin("Log Window", &enable_log_window_))
+    {
+        ImGui::End();
+        return;
+    }
+
+    string log(log_.begin(), log_.end());
+    ImGui::Text(log.c_str());
+
+    // End
+    ImGui::End();
 }
 #endif//_DEBUG

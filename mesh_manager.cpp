@@ -36,6 +36,7 @@ void MeshManager::Use(const String& mesh_name)
 	else if (mesh_name._Equal(L"cube")) info = CreateCube();
 	else if (mesh_name._Equal(L"sphere")) info = CreateSphere();
 	else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
+    else if (mesh_name._Equal(L"polygon2d")) info = CreatePolygon2d();
 	else
 	{
 		//throw::runtime_error("unsupport file type!!");
@@ -833,6 +834,52 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 }
 
 //--------------------------------------------------------------------------------
+//  Polygon2dを生成する
+//--------------------------------------------------------------------------------
+MeshManager::MeshInfo MeshManager::CreatePolygon2d(void)
+{
+    MeshInfo info;
+    info.pointer = MY_NEW Mesh;
+    info.pointer->type = MeshType::k2dMesh;
+    info.pointer->vertex_number = 4;
+    info.pointer->index_number = 4;
+    info.pointer->polygon_number = 2;
+
+    if (!CreateBuffer2d(info.pointer))
+    {
+        assert(info.pointer);
+        return info;
+    }
+
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    Vertex2d* vertex_pointer;
+    info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
+    vertex_pointer[0].position = Vector3(-0.5f, -0.5f, 0.0f);
+    vertex_pointer[1].position = Vector3( 0.5f, -0.5f, 0.0f);
+    vertex_pointer[2].position = Vector3(-0.5f,  0.5f, 0.0f);
+    vertex_pointer[3].position = Vector3( 0.5f,  0.5f, 0.0f);
+    vertex_pointer[0].color = Color::kWhite;
+    vertex_pointer[1].color = Color::kWhite;
+    vertex_pointer[2].color = Color::kWhite;
+    vertex_pointer[3].color = Color::kWhite;
+    vertex_pointer[0].uv = Vector2(0.0f, 0.0f);
+    vertex_pointer[1].uv = Vector2(1.0f, 0.0f);
+    vertex_pointer[2].uv = Vector2(0.0f, 1.0f);
+    vertex_pointer[3].uv = Vector2(1.0f, 1.0f);
+    info.pointer->vertex_buffer->Unlock();
+
+    WORD* index_pointer;
+    info.pointer->index_buffer->Lock(0, 0, (void**)&index_pointer, 0);
+    index_pointer[0] = 0;
+    index_pointer[1] = 1;
+    index_pointer[2] = 2;
+    index_pointer[3] = 3;
+    info.pointer->index_buffer->Unlock();
+#endif
+    return info;
+}
+
+//--------------------------------------------------------------------------------
 //  与えられた頂点とインデックスでメッシュを生成する
 //--------------------------------------------------------------------------------
 MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number)
@@ -876,6 +923,45 @@ MeshManager::MeshInfo MeshManager::CreateMesh(const DrawType& type, const vector
 	info.pointer->index_buffer->Unlock();
 #endif
 	return info;
+}
+
+//--------------------------------------------------------------------------------
+//  バーテックスとインデックスバッファの生成
+//--------------------------------------------------------------------------------
+bool MeshManager::CreateBuffer2d(Mesh* const mesh) const
+{
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    //頂点バッファ
+    HRESULT hr = device_->CreateVertexBuffer(
+        sizeof(Vertex2d) * mesh->vertex_number,
+        D3DUSAGE_WRITEONLY,
+        0,
+        D3DPOOL_MANAGED,
+        &mesh->vertex_buffer,
+        NULL);
+
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, L"MeshManager : CreateBuffer2d ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
+        return false;
+    }
+
+    //インデックスバッファの作成
+    hr = device_->CreateIndexBuffer(
+        sizeof(WORD) * mesh->index_number,
+        D3DUSAGE_WRITEONLY,
+        D3DFMT_INDEX16,
+        D3DPOOL_MANAGED,
+        &mesh->index_buffer,
+        NULL);
+
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, L"MeshManager : Createindex_buffer ERROR!!", L"エラー", MB_OK | MB_ICONWARNING);
+        return false;
+    }
+#endif
+    return true;
 }
 
 //--------------------------------------------------------------------------------

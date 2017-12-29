@@ -6,6 +6,8 @@
 #pragma once
 #include "component.h"
 #include "collision_system.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾

@@ -10,6 +10,7 @@
 #include "material_manager.h"
 #include "mesh_manager.h"
 #include "renderer_manager.h"
+#include "mesh_renderer_2d.h"
 #include "mesh_renderer_3d.h"
 #include "mesh_renderer_3d_skin.h"
 #include "sphere_collider.h"
@@ -197,6 +198,28 @@ GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& po
 	return result;
 }
 
+//--------------------------------------------------------------------------------
+//  BasicPolygon2d生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateBasicPolygon2d(const Vector3& scale, const Layer& layer, const String& material_name, const ShaderType& shader_type, const RenderPriority& render_priority, const float& rotation, const Vector3& position)
+{
+    auto result = MY_NEW GameObject(layer);
+
+    //コンポネント
+    auto renderer = MY_NEW MeshRenderer2d(*result, render_priority, shader_type);
+    renderer->SetMesh(L"polygon2d");
+    renderer->SetMaterial(material_name);
+    result->AddRenderer(renderer);
+
+    //パラメーター
+    auto transform = result->GetTransform();
+    transform->SetScale(scale);
+    transform->SetRotation(Vector3(0.0f, 0.0f, rotation));
+    transform->SetPosition(position);
+
+    result->Init();
+    return result;
+}
 
 //--------------------------------------------------------------------------------
 //  生成処理

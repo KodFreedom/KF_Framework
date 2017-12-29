@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #ifdef _DEBUG
-#include "main.h"
+#include "common_setting.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -31,7 +31,11 @@ public:
 	//--------------------------------------------------------------------------------
 	//  破棄処理
 	//--------------------------------------------------------------------------------
-	void Release(void) { Clear(); }
+	void Release(void) 
+    {
+        Clear();
+        MY_DELETE this;
+    }
 
 	//--------------------------------------------------------------------------------
 	//  更新処理
@@ -76,7 +80,8 @@ private:
 	//--------------------------------------------------------------------------------
 	DebugObserver() : enable_collision_system_window_(false)
 		, enable_camera_window_(false), enable_player_window_(false)
-		, enable_fog_window_(false), player_(nullptr) {}
+		, enable_fog_window_(false), enable_shadow_map_system_window_(false)
+        , enable_log_window_(false), player_(nullptr) {}
 	DebugObserver(const DebugObserver& value) {}
 	DebugObserver& operator=(const DebugObserver& value) {}
 	~DebugObserver() {}
@@ -106,6 +111,16 @@ private:
 	//--------------------------------------------------------------------------------
 	void ShowFogWindow(void);
 
+    //--------------------------------------------------------------------------------
+    //  ShadowMap情報の表示処理
+    //--------------------------------------------------------------------------------
+    void ShowShadowMapWindow(void);
+
+    //--------------------------------------------------------------------------------
+    //  Log情報の表示処理
+    //--------------------------------------------------------------------------------
+    void ShowLogWindow(void);
+
 	//--------------------------------------------------------------------------------
 	//  変数定義
 	//--------------------------------------------------------------------------------
@@ -114,6 +129,8 @@ private:
 	bool enable_camera_window_;
 	bool enable_player_window_;
 	bool enable_fog_window_;
+    bool enable_shadow_map_system_window_;
+    bool enable_log_window_;
 	GameObjectActor* player_;
 };
 #endif

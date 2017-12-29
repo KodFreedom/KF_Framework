@@ -106,7 +106,11 @@ public:
 	//--------------------------------------------------------------------------------
 	//  破棄処理
 	//--------------------------------------------------------------------------------
-	void Release(void) { Uninit(); }
+	void Release(void) 
+    {
+        Uninit();
+        MY_DELETE this;
+    }
 
 	//--------------------------------------------------------------------------------
 	//  与えられた名前のマテリアルを使う
@@ -118,10 +122,28 @@ public:
 	//--------------------------------------------------------------------------------
 	//  与えられた名前のマテリアルを使う
 	//  すでにあるの場合ユーザーを1たす、ないの場合与えられた値で生成する
-	//  material_name : マテリアル名
-	//  material : マテリアル情報
 	//--------------------------------------------------------------------------------
-	void Use(const String& material_name, Material* material);
+	void Use(const String& material_name
+        , const Color& diffuse
+        , const String& color_texture = String()
+        , const Color& ambient = Color::kGray
+        , const Color& specular = Color::kBlack
+        , const Color& emissive = Color::kBlack
+        , const String& diffuse_texture = String()
+        , const String& diffuse_texture_mask = String()
+        , const String& specular_texture = String()
+        , const String& specular_texture_mask = String()
+        , const String& normal_texture = String()
+        , const String& detail_texture = String()
+        , const String& detail_mask = String()
+        , const String& tint_by_base_mask = String()
+        , const String& rim_mask = String()
+        , const String& translucency = String()
+        , const String& metalness_mask = String()
+        , const String& self_illum_mask = String()
+        , const String& fresnel_warp_color = String()
+        , const String& fresnel_warp_rim = String()
+        , const String& fresnel_warp_specular = String());
 
 	//--------------------------------------------------------------------------------
 	//  与えられた名前のマテリアルを使わない
@@ -135,7 +157,7 @@ public:
 	//  material_name : テクスチャ名
 	//  return : const Material*
 	//--------------------------------------------------------------------------------
-	const Material* GetMaterial(const String& material_name) const
+	Material* GetMaterial(const String& material_name) const
 	{
 		auto iterator = materials_.find(material_name);
 		if (materials_.end() == iterator)
@@ -159,7 +181,7 @@ private:
 	//--------------------------------------------------------------------------------
 	//  静的メンバ変数
 	//--------------------------------------------------------------------------------
-	static const Material kDefaultMaterial;
+	static Material kDefaultMaterial;
 
 	//--------------------------------------------------------------------------------
 	//  constructors and destructors
@@ -178,6 +200,16 @@ private:
 	//  終了処理
 	//--------------------------------------------------------------------------------
 	void Uninit(void);
+
+    //--------------------------------------------------------------------------------
+    //  テクスチャの使用
+    //--------------------------------------------------------------------------------
+    void UseTexture(const Material& material);
+
+    //--------------------------------------------------------------------------------
+    //  テクスチャの破棄
+    //--------------------------------------------------------------------------------
+    void DisuseTexture(const Material& material);
 
 	//--------------------------------------------------------------------------------
 	//  ファイルからマテリアルの読み込み

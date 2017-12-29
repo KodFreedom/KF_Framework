@@ -16,6 +16,8 @@ enum RenderPriority
 	kDefaultPriority = 0,
 	kUseAlphaTest,
 	kUseDepthSort,
+    k2d,
+    k2dMask,
 	kPriorityMax
 };
 
@@ -36,14 +38,18 @@ public:
 	//--------------------------------------------------------------------------------
 	static RendererManager* Create(void)
 	{
-		auto instance = MY_NEW RendererManager();
+		auto instance = MY_NEW RendererManager;
 		return instance;
 	}
 
 	//--------------------------------------------------------------------------------
 	//  ”jŠüˆ—
 	//--------------------------------------------------------------------------------
-	void Release(void) { Clear(); }
+	void Release(void) 
+    {
+        Clear();
+        MY_DELETE this;
+    }
 
 	//--------------------------------------------------------------------------------
 	//  XVˆ—

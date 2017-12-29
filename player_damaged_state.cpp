@@ -3,6 +3,7 @@
 //Å@player_damaged_state.h
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "player_damaged_state.h"
 #include "player_neutral_state.h"
 #include "actor_controller.h"

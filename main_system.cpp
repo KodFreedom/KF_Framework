@@ -14,7 +14,6 @@
 #include "input.h"
 #include "fade_system.h"
 #include "camera_manager.h"
-#include "ui_system.h"
 #include "collision_system.h"
 #include "physics_system.h"
 #include "game_object_manager.h"
@@ -82,6 +81,7 @@ void MainSystem::Update(void)
 #ifdef _DEBUG
 	debug_observer_->Update();
 #endif
+    fade_system_->Update();
 	input_->Update();
 	current_mode_->Update();
 	game_object_manager_->Update();
@@ -99,8 +99,6 @@ void MainSystem::LateUpdate(void)
 	game_object_manager_->LateUpdate();
 	camera_manager_->LateUpdate();
 	collision_system_->LateUpdate();
-	ui_system_->Update();
-	fade_system_->Update();
 	renderer_manager_->Update();
 #ifdef _DEBUG
 	debug_observer_->LateUpdate();
@@ -124,10 +122,6 @@ void MainSystem::Render(void)
 		renderer_manager_->Render();
 #ifdef _DEBUG
 		collision_system_->Render();
-#endif
-		ui_system_->Render();
-		fade_system_->Render();
-#ifdef _DEBUG
 		debug_observer_->Render();
 #endif
 #if defined(_DEBUG) || defined(EDITOR)
@@ -190,12 +184,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	debug_observer_ = DebugObserver::Create();
 #endif
 	input_ = Input::Create(hinstance, hwnd);
-	fade_system_ = FadeSystem::Create();
 	camera_manager_ = CameraManager::Create();
-	ui_system_ = UISystem::Create();
 	collision_system_ = CollisionSystem::Create();
 	physics_system_ = PhysicsSystem::Create();
 	game_object_manager_ = GameObjectManager::Create();
+    fade_system_ = FadeSystem::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
@@ -216,7 +209,6 @@ void MainSystem::Uninit(void)
 	SAFE_RELEASE(game_object_manager_);
 	SAFE_RELEASE(physics_system_);
 	SAFE_RELEASE(collision_system_);
-	SAFE_RELEASE(ui_system_);
 	SAFE_RELEASE(camera_manager_);
 	SAFE_RELEASE(fade_system_);
 	SAFE_RELEASE(input_);

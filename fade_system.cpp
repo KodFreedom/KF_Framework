@@ -4,15 +4,38 @@
 //	マテリアル管理者
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
+#include "main.h"
 #include "fade_system.h"
 #include "main_system.h"
 #include "mode.h"
+#include "game_object_spawner.h"
+#include "game_object.h"
+#include "material_manager.h"
 
 //--------------------------------------------------------------------------------
 //
 //  Public
 //
 //--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  生成処理
+//--------------------------------------------------------------------------------
+FadeSystem* FadeSystem::Create(void)
+{
+    auto instance = MY_NEW FadeSystem();
+    instance->Init();
+    return instance;
+}
+
+//--------------------------------------------------------------------------------
+//  破棄処理
+//--------------------------------------------------------------------------------
+void FadeSystem::Release(void)
+{
+    Uninit();
+    MY_DELETE this;
+}
+
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
@@ -34,36 +57,13 @@ void FadeSystem::Update(void)
 }
 
 //--------------------------------------------------------------------------------
-//  描画処理
-//--------------------------------------------------------------------------------
-void FadeSystem::Render(void)
-{
-	//#ifdef USING_DIRECTX
-	//	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	//
-	//	// 頂点バッファをデータストリームに設定
-	//	pDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(VERTEX_2D));
-	//
-	//	// 頂点フォーマットの設定
-	//	pDevice->SetFVF(FVF_VERTEX_2D);
-	//
-	//	// テクスチャの設定
-	//	LPDIRECT3DTEXTURE9 texture = Main::GetManager()->GetTextureManager()->GetTexture("polygon.jpg");
-	//	pDevice->SetTexture(0, texture);
-	//
-	//	// ポリゴンの描画
-	//	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-	//#endif
-}
-
-//--------------------------------------------------------------------------------
 //  次のモードにフェードする
 //--------------------------------------------------------------------------------
 void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 {
 	if (current_state_ == FadeState::kFadeOut)
 	{
-		delete next_mode;
+		MY_DELETE next_mode;
 		return;
 	}
 	current_state_ = FadeState::kFadeOut;
@@ -82,61 +82,9 @@ void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 //--------------------------------------------------------------------------------
 void FadeSystem::Init(void)
 {
-//#ifdef USING_DIRECTX
-//	LPDIRECT3DDEVICE9 pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-//	HRESULT hr;
-//
-//	Main::GetManager()->GetTextureManager()->UseTexture("polygon.jpg");
-//
-//	//頂点バッファ
-//	hr = pDevice->CreateVertexBuffer(
-//		sizeof(VERTEX_2D) * 4,				//作成したい頂点バッファのサイズ
-//		D3DUSAGE_WRITEONLY,					//頂点バッファの使用方法
-//		FVF_VERTEX_2D,						//書かなくても大丈夫
-//		D3DPOOL_MANAGED,					//メモリ管理方法(managed：デバイスにお任せ)
-//		&vertexBuffer,						//頂点バッファのアドレス
-//		NULL);
-//
-//	if (FAILED(hr))
-//	{
-//		MessageBox(NULL, "FadeSystem : CreateVertexBuffer ERROR!!", "エラー", MB_OK | MB_ICONWARNING);
-//	}
-//
-//	// 頂点情報を設定
-//	//仮想アドレスを取得するためのポインタ
-//	VERTEX_2D *pVtx;
-//
-//	//頂点バッファをロックして、仮想アドレスを取得する
-//	vertexBuffer->Lock(0, 0, (void**)&pVtx, 0);
-//
-//	//頂点位置設定
-//	//頂点座標の設定（2D座標、右回り）
-//	pVtx[0].Position = Vector3(0.0f, 0.0f, 0.0f);
-//	pVtx[1].Position = Vector3(SCREEN_WIDTH, 0.0f, 0.0f);
-//	pVtx[2].Position = Vector3(0.0f, SCREEN_HEIGHT, 0.0f);
-//	pVtx[3].Position = Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
-//
-//	//頂点カラー設定
-//	pVtx[0].Color = color;
-//	pVtx[1].Color = color;
-//	pVtx[2].Color = color;
-//	pVtx[3].Color = color;
-//
-//	//頂点UV設定
-//	pVtx[0].UV = Vector2(0.0f, 0.0f);
-//	pVtx[1].UV = Vector2(1.0f, 0.0f);
-//	pVtx[2].UV = Vector2(0.0f, 1.0f);
-//	pVtx[3].UV = Vector2(1.0f, 1.0f);
-//
-//	//rhwの設定(必ず1.0f)
-//	pVtx[0].Rhw = 1.0f;
-//	pVtx[1].Rhw = 1.0f;
-//	pVtx[2].Rhw = 1.0f;
-//	pVtx[3].Rhw = 1.0f;
-//
-//	//仮想アドレス解放
-//	vertexBuffer->Unlock();
-//#endif
+    MainSystem::Instance()->GetMaterialManager()->Use(L"fade", Color::kBlack);
+    material_ = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"fade");
+    GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kUnableAutoDelete, L"fade", kDefault2dShader, k2dMask);
 }
 
 //--------------------------------------------------------------------------------
@@ -144,10 +92,8 @@ void FadeSystem::Init(void)
 //--------------------------------------------------------------------------------
 void FadeSystem::Uninit(void)
 {
-//#ifdef USING_DIRECTX
-//	Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.jpg");
-//	SAFE_RELEASE(vertexBuffer);
-//#endif
+    material_ = nullptr;
+    MainSystem::Instance()->GetMaterialManager()->Disuse(L"fade");
 }
 
 //--------------------------------------------------------------------------------
@@ -161,7 +107,7 @@ void FadeSystem::FadeIn(void)
 		time_counter_ = 0.0f;
 		current_state_ = kFadeNone;
 	}
-	color_.a_ = time_counter_ / fade_time_;
+    material_->diffuse_.a_ = time_counter_ / fade_time_;
 }
 
 //--------------------------------------------------------------------------------
@@ -174,9 +120,8 @@ void FadeSystem::FadeOut(void)
 	{
 		time_counter_ = fade_time_;
 
-		// Todo : Check SE & BGM(fade out effect)
 		current_state_ = kFadeIn;
 		MainSystem::Instance()->Change(next_mode_);
 	}
-	color_.a_ = time_counter_ / fade_time_;
+    material_->diffuse_.a_ = time_counter_ / fade_time_;
 }

@@ -921,14 +921,14 @@ namespace kodfreedom
         static Matrix44 Transform(const Quaternion& rotation, const Vector3& translation, const Vector3& scale = Vector3::kOne);
 
         //--------------------------------------------------------------------------------
-        //  create projection matrix / 射影行列の作成(左手座標系)
+        //  create perspective matrix / パースペクティブ行列の作成(左手座標系)
         //  fov_radian_y：視野角度
         //  aspect_ratio：アスペクト比
         //  near_z：一番近い距離
         //  far_z：一番遠い距離
         //  return：Matrix44
         //--------------------------------------------------------------------------------
-        static Matrix44 ProjectionLeftHand(const float& fov_radian_y, const float& aspect_ratio, const float& near_z, const float& far_z);
+        static Matrix44 PerspectiveLeftHand(const float& fov_radian_y, const float& aspect_ratio, const float& near_z, const float& far_z);
 
         //--------------------------------------------------------------------------------
         //  create orthographic matrix / オルソ行列の作成(左手座標系)

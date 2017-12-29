@@ -6,6 +6,8 @@
 #pragma once
 #include "component.h"
 #include "renderer_manager.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾

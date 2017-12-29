@@ -4,7 +4,7 @@
 //	Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "main.h"
+#include "common_setting.h"
 
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉXêÈåæ
@@ -24,7 +24,7 @@ public:
 	void		 Release(void)
 	{
 		Uninit();
-		delete this;
+		MY_DELETE this;
 	}
 
 protected:

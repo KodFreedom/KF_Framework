@@ -19,6 +19,7 @@ sampler color_texture = sampler_state
 };
 
 // shadowmap
+float bias;
 sampler shadow_map = sampler_state
 {
 	MipFilter = NONE;
@@ -45,9 +46,6 @@ struct PixelIn
 //--------------------------------------------------------------------------------
 float computeShadow(PixelIn pixel)
 {
-	// Set the bias value for fixing the floating point precision issues.
-    float bias = 0.00001f;
-
 	// Calculate the projected texture coordinates.
 	float2 project_uv;
     project_uv.x = pixel.position_light.x / pixel.position_light.w * 0.5f + 0.5f;

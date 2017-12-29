@@ -19,5 +19,6 @@ public:
 	~ModeResult() {}
 
 	void Init(void) override;
+    void Uninit(void) override;
 	void Update(void) override;
 };
