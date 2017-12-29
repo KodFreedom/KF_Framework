@@ -39,6 +39,8 @@ bool Time::CanUpdateFrame(void)
     delta_time_ = static_cast<float>(current_time_.QuadPart - exec_last_time_.QuadPart)
          / static_cast<float>(frequency_.QuadPart);
 
+    scaled_delta_time_ = delta_time_ * time_scale_;
+
     if (delta_time_ >= kTimeInterval)
     {
         exec_last_time_ = current_time_;

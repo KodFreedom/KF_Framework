@@ -25,5 +25,5 @@ bool WindmillController::Init(void)
 void WindmillController::Update(void)
 {
 	if (!fan_) return;
-	fan_->RotateByRoll(rotate_speed_ * Time::Instance()->DeltaTime());
+	fan_->RotateByRoll(rotate_speed_ * Time::Instance()->ScaledDeltaTime());
 }

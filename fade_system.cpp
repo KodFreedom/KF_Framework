@@ -106,6 +106,7 @@ void FadeSystem::FadeIn(void)
 	{
 		time_counter_ = 0.0f;
 		current_state_ = kFadeNone;
+        Time::Instance()->SetTimeScale(1.0f);
 	}
     material_->diffuse_.a_ = time_counter_ / fade_time_;
 }
@@ -119,8 +120,8 @@ void FadeSystem::FadeOut(void)
 	if (time_counter_ >= fade_time_)
 	{
 		time_counter_ = fade_time_;
-
 		current_state_ = kFadeIn;
+        Time::Instance()->SetTimeScale(0.0f);
 		MainSystem::Instance()->Change(next_mode_);
 	}
     material_->diffuse_.a_ = time_counter_ / fade_time_;

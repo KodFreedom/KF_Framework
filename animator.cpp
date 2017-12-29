@@ -82,7 +82,7 @@ void Animator::Update(void)
 {
 	if (avatar_.empty()) return;
 	state_->Update(*this);
-	time_counter_ += Time::Instance()->DeltaTime();
+	time_counter_ += Time::Instance()->ScaledDeltaTime();
 }
 
 //--------------------------------------------------------------------------------

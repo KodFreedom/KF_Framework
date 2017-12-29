@@ -46,10 +46,10 @@ void Rigidbody3D::Update(void)
 	acceleration_ += force_accum_ * inverse_mass_;
 	
 	//速度
-	velocity_ += acceleration_ * Time::Instance()->DeltaTime();
+	velocity_ += acceleration_ * Time::Instance()->ScaledDeltaTime();
 	
 	//位置更新
-	movement_ += velocity_ * Time::Instance()->DeltaTime();
+	movement_ += velocity_ * Time::Instance()->ScaledDeltaTime();
 	transform->SetPosition(transform->GetPosition() + movement_);
 
 	// TODO : 3D回転
@@ -72,7 +72,7 @@ void Rigidbody3D::LateUpdate(void)
 	transform->SetPosition(transform->GetPosition() + fixed_movement_);
 
 	//処理完了
-	velocity_ *= drag_;
+	velocity_ *= drag_ * Time::Instance()->TimeScale();
 	movement_ = Vector3::kZero;
 	fixed_movement_ = Vector3::kZero;
 	force_accum_ = Vector3::kZero;

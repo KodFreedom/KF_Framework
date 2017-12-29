@@ -39,6 +39,21 @@ public:
     float DeltaTime(void) const { return delta_time_; }
 
     //--------------------------------------------------------------------------------
+    //  Time scaleの取得
+    //--------------------------------------------------------------------------------
+    float TimeScale(void) const { return time_scale_; }
+
+    //--------------------------------------------------------------------------------
+    //  Time scaleの設定
+    //--------------------------------------------------------------------------------
+    void SetTimeScale(const float time_scale) { time_scale_ = time_scale; }
+
+    //--------------------------------------------------------------------------------
+    //  Scaled Delta timeの取得
+    //--------------------------------------------------------------------------------
+    float ScaledDeltaTime(void) const { return scaled_delta_time_; }
+
+    //--------------------------------------------------------------------------------
     //  フレーム実行出来るかをチェック
     //--------------------------------------------------------------------------------
     bool CanUpdateFrame(void);
@@ -47,7 +62,7 @@ private:
     //--------------------------------------------------------------------------------
     //  constructors for singleton / シングルトンのコンストラクタ
     //--------------------------------------------------------------------------------
-    Time() : delta_time_(0.0f)
+    Time() : delta_time_(0.0f), time_scale_(0.0f), scaled_delta_time_(0.0f)
     {
         memset(&frequency_, 0x00, sizeof frequency_);
         memset(&current_time_, 0x00, sizeof current_time_);
@@ -68,5 +83,7 @@ private:
     LARGE_INTEGER exec_last_time_;
     LARGE_INTEGER fps_last_time_;
     float delta_time_;
+    float time_scale_;
+    float scaled_delta_time_;
     static Time* instance_; // インスタンス
 };
