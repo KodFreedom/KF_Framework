@@ -199,6 +199,12 @@
     <Filter Include="ソース ファイル\Base\UI\UIObject">
       <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base\Shader\2d">
+      <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\2d">
+      <UniqueIdentifier>{e4a5b11e-4486-4aa8-964f-61c20a70c3c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -474,11 +480,14 @@
     <ClCompile Include="fade_system.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
-    <ClCompile Include="default_2d_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="render_system.cpp">
       <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="default_2d_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="default_2d_texture_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\2d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -804,7 +813,10 @@
       <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="default_2d_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
+      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="default_2d_texture_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

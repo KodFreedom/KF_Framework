@@ -1,11 +1,12 @@
 //--------------------------------------------------------------------------------
-//　default_2d_shader.h
+//　default_2d_texture_shader.h
 //	2dシェーダークラス
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "default_2d_shader.h"
+#include "default_2d_texture_shader.h"
 #include "main_system.h"
 #include "material_manager.h"
+#include "texture_manager.h"
 #include "game_object.h"
 #include "render_system.h"
 
@@ -13,15 +14,15 @@
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void Default2dShader::Init(const LPDIRECT3DDEVICE9 device)
+void Default2dTextureShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"default_2d", device);
+    CompileShaderFrom(L"default_2d_texture", device);
 }
 
 //--------------------------------------------------------------------------------
 //  使用処理
 //--------------------------------------------------------------------------------
-void Default2dShader::Set(const LPDIRECT3DDEVICE9 device)
+void Default2dTextureShader::Set(const LPDIRECT3DDEVICE9 device)
 {
     ShaderDirectX9::Set(device);
 }
@@ -29,7 +30,7 @@ void Default2dShader::Set(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 //  使用完了の後片付け
 //--------------------------------------------------------------------------------
-void Default2dShader::Reset(const LPDIRECT3DDEVICE9 device)
+void Default2dTextureShader::Reset(const LPDIRECT3DDEVICE9 device)
 {
 
 }
@@ -37,7 +38,7 @@ void Default2dShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 //  定数テーブルの設定
 //--------------------------------------------------------------------------------
-void Default2dShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
+void Default2dTextureShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
     // Vertex
     const Matrix44& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
@@ -46,7 +47,10 @@ void Default2dShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mes
     vertex_shader_constant_table_->SetValue(device, "offset", &RenderSystem::kOffset2d, sizeof(RenderSystem::kOffset2d));
 
     // Pixel
-    const auto& material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
+    auto main_system = MainSystem::Instance();
+    const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
     pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+    UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+    device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture_));
 }
 #endif

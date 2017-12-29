@@ -18,6 +18,7 @@ using namespace kodfreedom;
 #include "jugg_skin_shader.h"
 #include "skin_shadow_map_shader.h"
 #include "default_2d_shader.h"
+#include "default_2d_texture_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -106,6 +107,8 @@ void ShaderManager::Init(void)
 	shaders_[kJuggernautSkinShader]->Init(device_);
     shaders_[kDefault2dShader] = MY_NEW Default2dShader();
     shaders_[kDefault2dShader]->Init(device_);
+    shaders_[kDefault2dTextureShader] = MY_NEW Default2dTextureShader();
+    shaders_[kDefault2dTextureShader]->Init(device_);
 	shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader();
 	shadow_map_shaders_[kBasicShadowMapShader]->Init(device_);
 	shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader();
