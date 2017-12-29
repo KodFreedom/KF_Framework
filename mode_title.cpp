@@ -11,6 +11,8 @@
 #include "camera.h"
 #include "fade_system.h"
 #include "light.h"
+#include "material_manager.h"
+#include "game_object_spawner.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -30,7 +32,17 @@ void ModeTitle::Init(void)
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	//UI‚Ì‰Šú‰»
-	//BackgroundUI::Create(L"title.jpg");
+    MainSystem::Instance()->GetMaterialManager()->Use(L"title", Color::kWhite, L"title.jpg");
+    GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kDefaultLayer, L"title", kDefault2dTextureShader, k2d);
+}
+
+//--------------------------------------------------------------------------------
+//  I—¹ˆ—
+//--------------------------------------------------------------------------------
+void ModeTitle::Uninit(void)
+{
+    MainSystem::Instance()->GetMaterialManager()->Disuse(L"title");
+    Mode::Uninit();
 }
 
 //--------------------------------------------------------------------------------

@@ -51,7 +51,9 @@ void ShaderManager::Reset(const ShaderType& type)
 //--------------------------------------------------------------------------------
 void ShaderManager::SetConstantTable(const ShaderType& type, const MeshRenderer& renderer)
 {
-	shaders_[type]->SetConstantTable(device_, renderer);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    shaders_[type]->SetConstantTable(device_, renderer);
+#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -79,7 +81,9 @@ void ShaderManager::Reset(const ShadowMapShaderType& type)
 //--------------------------------------------------------------------------------
 void ShaderManager::SetConstantTable(const ShadowMapShaderType& type, const MeshRenderer& renderer)
 {
-	shadow_map_shaders_[type]->SetConstantTable(device_, renderer);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    shadow_map_shaders_[type]->SetConstantTable(device_, renderer);
+#endif
 }
 
 //--------------------------------------------------------------------------------
