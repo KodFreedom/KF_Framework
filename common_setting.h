@@ -27,18 +27,6 @@
 #define SCREEN_WIDTH    (1280) //ウインドウ幅
 #define SCREEN_HEIGHT   (720)  //ウインドウ高さ
 
-////Cereal
-//#include <cereal/archives/JSON.hpp>
-//#include <cereal/archives/binary.hpp>
-//#include <cereal/types/vector.hpp>
-//#include <cereal/types/string.hpp>
-//using namespace cereal;
-//
-//#include "kf_math.h"
-//#include "kf_utility.h"
-//using namespace kodfreedom;
-
-
 //--------------------------------------------------------------------------------
 //  include / インクルード
 //--------------------------------------------------------------------------------
