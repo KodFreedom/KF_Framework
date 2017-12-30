@@ -20,8 +20,9 @@
 #include "rigidbody3d.h"
 #include "animator.h"
 #include "actor_controller.h"
-#include "player_neutral_state.h"
+#include "player_mutant_idel_state.h"
 #include "jugg_neutral_motion_state.h"
+#include "mutant_idle_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"
@@ -248,7 +249,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//Animator
 	animator->SetAvatar(name);
-	animator->Change(MY_NEW JuggNeutralMotionState(0));
+	animator->Change(MY_NEW MutantIdleMotionState(0));
 
 	//コンポネント
 	auto rigidbody = MY_NEW Rigidbody3D(*result);
@@ -261,7 +262,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	actor_controller->GetParameter().SetJumpSpeed(10.0f);
 	actor_controller->GetParameter().SetMinTurnSpeed(kPi);
 	actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
-	actor_controller->Change(MY_NEW PlayerNeutralState);
+	actor_controller->Change(MY_NEW PlayerMutantIdelState);
 	result->AddBehavior(actor_controller);
 
 	//Collider

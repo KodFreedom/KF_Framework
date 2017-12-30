@@ -61,7 +61,7 @@ void ModeDemo::Init(void)
 	GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 	StageSpawner::LoadStage(L"demo");
 //	//GameObjectSpawner::CreateCube(Vector3(0.0f), Vector3(0.0f), Vector3(1.0f));
-	auto player = GameObjectSpawner::CreatePlayer(L"juggernaut", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
+	auto player = GameObjectSpawner::CreatePlayer(L"mutant", Vector3(10.0f, 15.0f, 0.0f), Vector3::kZero, Vector3::kOne);
 	player->SetName(L"Player");
 	camera->SetFollowTarget(player);
 

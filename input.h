@@ -28,11 +28,13 @@ enum Key
 	kRight,
 	kReset,
 	kLock,
+    kStrongAttack,
+    kSkill,
 	kKeyMax,
 
 	//èdÇÀÇÈÉLÅ[
 	kJump = kSubmit,
-	kAttack = kCancel,
+	kLightAttack = kCancel,
 	kSave = kStart,
 	kExtend = kRight,
 	kShrink = kLeft,

@@ -46,9 +46,6 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 	{
 		bone.transform->SetOffset(iterator->translation_
 			, iterator->rotation_, iterator->scale_);
-		//bone.transform->SetPosition(iterator->translation_);
-		//bone.transform->SetRotation(iterator->rotation_);
-		//bone.transform->SetScale(iterator->scale_);
 		++iterator;
 	}
 
