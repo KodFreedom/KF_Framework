@@ -48,10 +48,11 @@ void MeshRenderer::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer::Update(void)
 {
+    // FrustumCulling
 	auto main_system = MainSystem::Instance();
-	if (main_system->GetCameraManager()->
-		GetMainCamera()->IsInRange(
-		owner_.GetTransform()->GetPosition()))
+    const Vector3& position = Vector3::TransformCoord(bounding_sphere_position_, owner_.GetTransform()->GetWorldMatrix());
+	if (main_system->GetCameraManager()->GetMainCamera()
+        ->FrustumCulling(position, bounding_sphere_radius_))
 	{
 		main_system->GetRendererManager()->Register(this);
 	}

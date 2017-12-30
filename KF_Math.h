@@ -635,6 +635,30 @@ namespace kodfreedom
         //  matrix : 乗算相手
         //--------------------------------------------------------------------------------
         void operator*=(const Matrix44& matrix);
+
+        //--------------------------------------------------------------------------------
+        //  normalize the vector4 as plane / 平面正規化
+        //--------------------------------------------------------------------------------
+        void PlaneNormalize(void)
+        {
+            float inverse_magnitude = Vector3(this->x_, this->y_, this->z_).SquareMagnitude();
+            if (inverse_magnitude)
+            {
+                inverse_magnitude = 1.0f / sqrtf(inverse_magnitude);
+            }
+            this->x_ *= inverse_magnitude;
+            this->y_ *= inverse_magnitude;
+            this->z_ *= inverse_magnitude;
+            this->w_ *= inverse_magnitude;
+        }
+
+        //--------------------------------------------------------------------------------
+        //  dot product of a plane and a 3D vector / 平面と 3D ベクトルの内積
+        //--------------------------------------------------------------------------------
+        float PlaneDotCoord(const Vector3& point) const
+        {
+            return this->x_ * point.x_ + this->y_ * point.y_ + this->z_ * point.z_ + this->w_;
+        }
     };
 
     //--------------------------------------------------------------------------------

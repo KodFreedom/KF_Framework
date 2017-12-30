@@ -46,6 +46,8 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 	renderer->SetMesh(L"skyBox");
 	renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	renderer->SetMaterial(L"sky");
+    renderer->SetBoundingSpherePosition(Vector3::kZero);
+    renderer->SetBoundingSphereRadius(1000.0f);
 	result->AddRenderer(renderer);
 
 	//パラメーター
@@ -71,6 +73,8 @@ GameObject* GameObjectSpawner::CreateField(const String& name)
 	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(field_name + L".mesh");
 	renderer->SetMaterial(field_name);
+    renderer->SetBoundingSpherePosition(Vector3::kZero);
+    renderer->SetBoundingSphereRadius(1000.0f);
 	result->AddRenderer(renderer);
 	result->AddCollider(MY_NEW FieldCollider(*result, field_name));
 
