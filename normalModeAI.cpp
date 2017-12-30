@@ -24,7 +24,7 @@
 //void NormalModeAI::Update(EnemyController& enemy)
 //{
 //	enemy.SetMovement(Vector3::Zero);
-//	enemy.SetAttack(false);
+//	enemy.SetLightAttack(false);
 //
 //	if (enemy.GetTarget())
 //	{

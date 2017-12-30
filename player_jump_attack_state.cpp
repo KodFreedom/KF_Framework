@@ -23,7 +23,7 @@ void PlayerJumpAttackState::Init(ActorController& actor)
 	default_gravity_multiplier_ = rigidbody.GetGravityMultiplier();
 	rigidbody.SetGravityMultiplier(kAttackGravityMultiplier);
 
-	actor.GetAnimator().SetAttack(true);
+	actor.GetAnimator().SetLightAttack(true);
 }
 
 //--------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ void PlayerJumpAttackState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 void PlayerJumpAttackState::Uninit(ActorController& actor)
 {
-	actor.GetAnimator().SetAttack(false);
+	actor.GetAnimator().SetLightAttack(false);
 	actor.GetRigidbody().SetGravityMultiplier(default_gravity_multiplier_);
 }
 

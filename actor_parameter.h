@@ -34,7 +34,7 @@ public:
 	void SetLevel(const int& value) { level_ = value; }
 	void SetMaxLife(const float& value) { max_life_ = value; }
 	void SetCurrentLife(const float& value) { current_life_ = value; }
-	void SetAttack(const float& value) { attack_ = value; }
+	void SetLightAttack(const float& value) { attack_ = value; }
 	void SetDefence(const float& value) { defence_ = value; }
 	void SetMoveSpeed(const float& value) { move_speed_ = value; }
 	void SetJumpSpeed(const float& value) { jump_speed_ = value; }

@@ -90,5 +90,5 @@
 //	}
 //
 //	enemy.SetMovement(direction);
-//	enemy.SetAttack(isAttack);
+//	enemy.SetLightAttack(isAttack);
 //}

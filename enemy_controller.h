@@ -39,7 +39,7 @@
 //	void Change(AI* mode);
 //	auto GetTarget(void) { return target; }
 //	void SetTarget(GameObject* value) { target = value; }
-//	void SetAttack(const bool value) { isAttack = value; }
+//	void SetLightAttack(const bool value) { isAttack = value; }
 //	void SetMovement(const Vector3& value) { movement = value; }
 //
 //private:

@@ -17,7 +17,7 @@ void PlayerAttackState::Init(ActorController& actor)
 {
 	auto& parameter = actor.GetParameter();
 	parameter.SetMovementMultiplier(kMovementMultiplier);
-	actor.GetAnimator().SetAttack(true);
+	actor.GetAnimator().SetLightAttack(true);
 }
 
 //--------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ void PlayerAttackState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 void PlayerAttackState::Uninit(ActorController& actor)
 {
-	actor.GetAnimator().SetAttack(false);
+	actor.GetAnimator().SetLightAttack(false);
 }
 
 //--------------------------------------------------------------------------------
