@@ -34,6 +34,7 @@ Camera::Camera()
 	rig_.rotation = Vector3::kZero;
 	pivot_.position = Vector3::kZero;
 	pivot_.rotation = Vector3::kZero;
+    ZeroMemory(planes_, sizeof(Vector4) * kCameraPlaneMax);
 }
 
 //--------------------------------------------------------------------------------
@@ -49,25 +50,23 @@ void Camera::Init(void)
 //--------------------------------------------------------------------------------
 void Camera::Set(void)
 {
-	// View行列
-	auto& negative_eye = world_eye_position_ * -1.0f;
-	view_transpose_ = Matrix44(
-		world_right_.x_, world_right_.y_, world_right_.z_, world_right_.Dot(negative_eye),
-		world_up_.x_, world_up_.y_, world_up_.z_, world_up_.Dot(negative_eye),
-		world_forward_.x_, world_forward_.y_, world_forward_.z_, world_forward_.Dot(negative_eye),
-		0.0f, 0.0f, 0.0f, 1.0f);
-	view_ = view_transpose_.Transpose();
-
-	// Projection行列
-	projection_ = Matrix44::PerspectiveLeftHand(fov_, (float)SCREEN_WIDTH / SCREEN_HEIGHT, near_, far_);
+    UpdateParameter();
+    ConstructFrustum();
 }
 
 //--------------------------------------------------------------------------------
-//  カメラの範囲内に入ってるかどうか
+//  カメラの範囲内に入ってるかどうか(視錐台カリング)
 //--------------------------------------------------------------------------------
-bool Camera::IsInRange(const Vector3& position, const float& radius)
-{ // Todo : カメラ前後判定、物体の範囲も判定、視野角の判定...
-	return Vector3::SquareDistanceBetween(rig_.position, position) <= radius * radius;
+bool Camera::FrustumCulling(const Vector3& position, const float& radius)
+{ 
+    for (int count = 0; count < kCameraPlaneMax; ++count)
+    {
+        if (planes_[count].PlaneDotCoord(position) < -radius)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -90,4 +89,75 @@ void Camera::UpdateParameter(void)
 	
 	world_eye_position_ = Vector3::TransformCoord(local_eye_position_, world_pivot);
 	world_at_position_ = world_eye_position_ + world_forward_ * distance_;
+
+    // View行列
+    auto& negative_eye = world_eye_position_ * -1.0f;
+    view_transpose_ = Matrix44(
+        world_right_.x_, world_right_.y_, world_right_.z_, world_right_.Dot(negative_eye),
+        world_up_.x_, world_up_.y_, world_up_.z_, world_up_.Dot(negative_eye),
+        world_forward_.x_, world_forward_.y_, world_forward_.z_, world_forward_.Dot(negative_eye),
+        0.0f, 0.0f, 0.0f, 1.0f);
+    view_ = view_transpose_.Transpose();
+
+    // Projection行列
+    projection_ = Matrix44::PerspectiveLeftHand(fov_, (float)SCREEN_WIDTH / SCREEN_HEIGHT, near_, far_);
+}
+
+//--------------------------------------------------------------------------------
+//  視錐台の算出
+//--------------------------------------------------------------------------------
+void Camera::ConstructFrustum(void)
+{
+    Matrix44 fixed_projection = projection_;
+
+    // 視錐台のnearの算出
+    float min_z = -fixed_projection.m33_ / fixed_projection.m23_;
+    float range = far_ / (far_ - min_z);
+    fixed_projection.m23_ = range;
+    fixed_projection.m33_ = -range * min_z;
+
+    // 視錐台行列の算出
+    Matrix44& frustum_matrix = view_ * fixed_projection;
+
+    // Near平面
+    planes_[kCameraNear].x_ = frustum_matrix.m03_ + frustum_matrix.m02_;
+    planes_[kCameraNear].y_ = frustum_matrix.m13_ + frustum_matrix.m12_;
+    planes_[kCameraNear].z_ = frustum_matrix.m23_ + frustum_matrix.m22_;
+    planes_[kCameraNear].w_ = frustum_matrix.m33_ + frustum_matrix.m32_;
+    planes_[kCameraNear].PlaneNormalize();
+
+    // Far平面
+    planes_[kCameraFar].x_ = frustum_matrix.m03_ - frustum_matrix.m02_;
+    planes_[kCameraFar].y_ = frustum_matrix.m13_ - frustum_matrix.m12_;
+    planes_[kCameraFar].z_ = frustum_matrix.m23_ - frustum_matrix.m22_;
+    planes_[kCameraFar].w_ = frustum_matrix.m33_ - frustum_matrix.m32_;
+    planes_[kCameraFar].PlaneNormalize();
+
+    // Left平面
+    planes_[kCameraLeft].x_ = frustum_matrix.m03_ + frustum_matrix.m00_;
+    planes_[kCameraLeft].y_ = frustum_matrix.m13_ + frustum_matrix.m10_;
+    planes_[kCameraLeft].z_ = frustum_matrix.m23_ + frustum_matrix.m20_;
+    planes_[kCameraLeft].w_ = frustum_matrix.m33_ + frustum_matrix.m30_;
+    planes_[kCameraLeft].PlaneNormalize();
+
+    // Right平面
+    planes_[kCameraRight].x_ = frustum_matrix.m03_ - frustum_matrix.m00_;
+    planes_[kCameraRight].y_ = frustum_matrix.m13_ - frustum_matrix.m10_;
+    planes_[kCameraRight].z_ = frustum_matrix.m23_ - frustum_matrix.m20_;
+    planes_[kCameraRight].w_ = frustum_matrix.m33_ - frustum_matrix.m30_;
+    planes_[kCameraRight].PlaneNormalize();
+
+    // Top平面
+    planes_[kCameraTop].x_ = frustum_matrix.m03_ - frustum_matrix.m01_;
+    planes_[kCameraTop].y_ = frustum_matrix.m13_ - frustum_matrix.m11_;
+    planes_[kCameraTop].z_ = frustum_matrix.m23_ - frustum_matrix.m21_;
+    planes_[kCameraTop].w_ = frustum_matrix.m33_ - frustum_matrix.m31_;
+    planes_[kCameraTop].PlaneNormalize();
+
+    // Bottom平面
+    planes_[kCameraBottom].x_ = frustum_matrix.m03_ + frustum_matrix.m01_;
+    planes_[kCameraBottom].y_ = frustum_matrix.m13_ + frustum_matrix.m11_;
+    planes_[kCameraBottom].z_ = frustum_matrix.m23_ + frustum_matrix.m21_;
+    planes_[kCameraBottom].w_ = frustum_matrix.m33_ + frustum_matrix.m31_;
+    planes_[kCameraBottom].PlaneNormalize();
 }

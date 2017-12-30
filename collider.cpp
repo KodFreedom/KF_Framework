@@ -53,7 +53,7 @@ void Collider::Uninit(void)
 void Collider::Update(void)
 {
 	if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
-		->IsInRange(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
+		->FrustumCulling(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
 	{
 		Awake();
 	}
