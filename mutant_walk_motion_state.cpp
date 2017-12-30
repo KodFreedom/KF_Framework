@@ -14,8 +14,14 @@
 #include "mutant_dying_motion_state.h"
 #include "mutant_angry_motion_state.h"
 #include "mutant_fall_motion_state.h"
+#include "mutant_idle_motion_state.h"
 void MutantWalkMotionState::ChangeMotion(Animator& animator)
 {
+    if (animator.GetMovement() == 0.000000f)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantIdleMotionState(0), current_frame_counter_, 5));
+        return;
+    }
 	if(animator.GetMovement() > 0.500000f)
 	{
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantRunMotionState(0), current_frame_counter_, 5));

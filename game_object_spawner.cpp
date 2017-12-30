@@ -22,6 +22,7 @@
 #include "actor_controller.h"
 #include "player_neutral_state.h"
 #include "jugg_neutral_motion_state.h"
+#include "mutant_idle_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"
@@ -248,7 +249,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//Animator
 	animator->SetAvatar(name);
-	animator->Change(MY_NEW JuggNeutralMotionState(0));
+	animator->Change(MY_NEW MutantIdleMotionState(0));
 
 	//コンポネント
 	auto rigidbody = MY_NEW Rigidbody3D(*result);
