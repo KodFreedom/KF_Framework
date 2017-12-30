@@ -100,12 +100,6 @@
     <Filter Include="ソース ファイル\Actor\State">
       <UniqueIdentifier>{b05ec256-cc82-4958-89f2-f3a05ad71e78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Actor\AI">
-      <UniqueIdentifier>{7d5f36c2-d580-4546-adba-b3c2090fc4e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\AI">
-      <UniqueIdentifier>{eeb7216f-8734-4adc-8a3a-2cc234dc187c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Behavior\Actor">
       <UniqueIdentifier>{b3f9ec24-664a-4da9-b7b9-08f6d9947ff8}</UniqueIdentifier>
     </Filter>
@@ -129,12 +123,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Base\Light">
       <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Player">
-      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Player">
-      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Base\Shader">
       <UniqueIdentifier>{e2ae39f9-8234-4fe4-a0b5-1bb9312106e7}</UniqueIdentifier>
@@ -211,6 +199,30 @@
     <Filter Include="ソース ファイル\Base\Motion\MotionState\Mutant">
       <UniqueIdentifier>{769d68d6-7438-4107-b07f-a37fd0541ff0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Mutant">
+      <UniqueIdentifier>{ddba3e13-f895-4da4-a66e-5f820b0c26ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Mutant\Player">
+      <UniqueIdentifier>{e118ed29-7932-4854-a5b6-33394392a177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Jugg">
+      <UniqueIdentifier>{4df7802d-b02e-42f7-8496-0436c2858653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Jugg\Player">
+      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Jugg">
+      <UniqueIdentifier>{63123c56-999a-4bee-ae31-3c1eaf5e7563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Jugg\Player">
+      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Mutant">
+      <UniqueIdentifier>{590e6568-e795-4734-910b-fc4d5f4df258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Mutant\Player">
+      <UniqueIdentifier>{a6ccef48-c119-4f84-8562-54dc4dc1ca49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -233,12 +245,6 @@
     </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>ソース ファイル\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="normalModeAI.cpp">
-      <Filter>ソース ファイル\Actor\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="attackModeAI.cpp">
-      <Filter>ソース ファイル\Actor\AI</Filter>
     </ClCompile>
     <ClCompile Include="kf_math.cpp">
       <Filter>ソース ファイル\Base\KF_Utility</Filter>
@@ -345,24 +351,6 @@
     <ClCompile Include="actor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="player_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jump_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_land_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_neutral_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
     <ClCompile Include="mode_demo.cpp">
       <Filter>ソース ファイル\Base\Mode</Filter>
     </ClCompile>
@@ -456,15 +444,6 @@
     <ClCompile Include="skin_shadow_map_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\Skin</Filter>
     </ClCompile>
-    <ClCompile Include="player_fallen_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jump_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Player</Filter>
-    </ClCompile>
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\Base\Light</Filter>
     </ClCompile>
@@ -534,6 +513,63 @@
     <ClCompile Include="mutant_run_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
+    <ClCompile Include="player_state.cpp">
+      <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_neutral_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_jump_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_fall_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_jugg_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_idel_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_dying_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_fall_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_light_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_skill_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_strong_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_mutant_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -562,15 +598,6 @@
     </ClInclude>
     <ClInclude Include="behavior.h">
       <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="AI.h">
-      <Filter>ヘッダー ファイル\Actor\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="normalModeAI.h">
-      <Filter>ヘッダー ファイル\Actor\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="attackModeAI.h">
-      <Filter>ヘッダー ファイル\Actor\AI</Filter>
     </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
@@ -704,32 +731,8 @@
     <ClInclude Include="actor_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="enemy_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="player_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="actor_state.h">
       <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="player_neutral_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_land_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jump_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
     </ClInclude>
     <ClInclude Include="mode_demo.h">
       <Filter>ヘッダー ファイル\Base\Mode</Filter>
@@ -818,15 +821,6 @@
     <ClInclude Include="skin_shadow_map_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
     </ClInclude>
-    <ClInclude Include="player_fallen_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jump_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Player</Filter>
-    </ClInclude>
     <ClInclude Include="library\ImGui\imconfig.h">
       <Filter>ヘッダー ファイル\Base\Imgui</Filter>
     </ClInclude>
@@ -898,6 +892,63 @@
     </ClInclude>
     <ClInclude Include="mutant_land_motion_state.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="player_state.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_idel_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_dying_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_light_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_strong_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_skill_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_fall_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_jump_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_neutral_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_jugg_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_mutant_fall_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

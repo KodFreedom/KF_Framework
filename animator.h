@@ -129,6 +129,7 @@ public:
     void SetStun(const bool& value) { is_stun_ = value; }
     void SetUltra(const bool& value) { is_ultra_ = value; }
     void SetAngry(const bool& value) { is_angry_ = value; }
+    void SetDead(const bool& value) { is_dead_ = value; }
     void SetMovement(const float& value) { movement_ = value; }
 
     //--------------------------------------------------------------------------------
