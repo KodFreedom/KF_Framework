@@ -23,29 +23,29 @@ enum IKParts
     kHead,
     kNeck,
 
-    // ç∂éË
-    kShoulderLeft,
-    kUpperArmLeft,
-    kLowerArmLeft,
-    kHandLeft,
-
     // âEéË
     kShoulderRight,
     kUpperArmRight,
     kLowerArmRight,
     kHandRight,
 
-    // ç∂ë´
-    kUpperLegLeft,
-    kLowerLegLeft,
-    kFootLeft,
-    kToesLeft,
+    // ç∂éË
+    kShoulderLeft,
+    kUpperArmLeft,
+    kLowerArmLeft,
+    kHandLeft,
 
     // âEë´
     kUpperLegRight,
     kLowerLegRight,
     kFootRight,
     kToesRight,
+
+    // ç∂ë´
+    kUpperLegLeft,
+    kLowerLegLeft,
+    kFootLeft,
+    kToesLeft,
 
     kIKMax
 };
@@ -66,6 +66,9 @@ struct BoneTexture
 //--------------------------------------------------------------------------------
 class Animator : public Component
 {
+#ifdef _DEBUG
+    friend class DebugObserver;
+#endif
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton

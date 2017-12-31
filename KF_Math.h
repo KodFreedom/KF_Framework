@@ -235,19 +235,7 @@ namespace kodfreedom
         //  to：終了ベクトル
         //  return：float
         //--------------------------------------------------------------------------------
-        static float RadianBetween(const Vector2& from, const Vector2& to)
-        {
-            if (from == to) return 0.0f;
-            float square_magnitude_from = from.SquareMagnitude();
-            float square_magnitude_to = to.SquareMagnitude();
-            if (square_magnitude_from * square_magnitude_to <= 0.0f) return 0.0f;
-            float dot = (from * (1.0f / sqrtf(square_magnitude_from))).Dot(to * (1.0f / sqrtf(square_magnitude_to)));
-            dot = Math::Clamp(dot, -1.0f, 1.0f);
-            return acosf(dot);
-            //float cross = from * to;
-            //float sign = cross >= 0.0f ? 1.0f : -1.0f;
-            //return acosf(dot / (sqrtf(square_magnitude_from) * sqrtf(square_magnitude_to)) * sign);
-        }
+        static float RadianBetween(const Vector2& from, const Vector2& to);
     };
 
     //--------------------------------------------------------------------------------
