@@ -241,10 +241,12 @@ namespace kodfreedom
             float square_magnitude_from = from.SquareMagnitude();
             float square_magnitude_to = to.SquareMagnitude();
             if (square_magnitude_from * square_magnitude_to <= 0.0f) return 0.0f;
-            float dot = from.Dot(to);
-            float cross = from * to;
-            float sign = cross >= 0.0f ? 1.0f : -1.0f;
-            return acosf(dot / (sqrtf(square_magnitude_from) * sqrtf(square_magnitude_to)) * sign);
+            float dot = (from * (1.0f / sqrtf(square_magnitude_from))).Dot(to * (1.0f / sqrtf(square_magnitude_to)));
+            dot = Math::Clamp(dot, -1.0f, 1.0f);
+            return acosf(dot);
+            //float cross = from * to;
+            //float sign = cross >= 0.0f ? 1.0f : -1.0f;
+            //return acosf(dot / (sqrtf(square_magnitude_from) * sqrtf(square_magnitude_to)) * sign);
         }
     };
 
@@ -1235,7 +1237,7 @@ namespace kodfreedom
 
         //--------------------------------------------------------------------------------
         //    create a quaternion rotate by axis
-        //    return：Matrix44
+        //    return：quaternion
         //--------------------------------------------------------------------------------
         static Quaternion RotateAxis(const Vector3& axis, const float& radian)
         {
@@ -1244,6 +1246,16 @@ namespace kodfreedom
             float cos = cosf(radian * 0.5f);
             auto& scale = Quaternion(sin, sin, sin, cos);
             return axis_quaternion.MultiplySeparately(scale);
+        }
+
+        //--------------------------------------------------------------------------------
+        //    create a quaternion rotate by axis
+        //    return：quaternion
+        //--------------------------------------------------------------------------------
+        static Quaternion FromToRotation(const Vector3& from, const Vector3& to)
+        {
+            Vector3& euler = Vector3::EulerBetween(from, to);
+            return euler.ToQuaternion();
         }
     };
 

@@ -19,24 +19,34 @@ class Transform;
 //--------------------------------------------------------------------------------
 enum IKParts
 {
+    // 頭
     kHead,
     kNeck,
+
+    // 左手
     kShoulderLeft,
     kUpperArmLeft,
     kLowerArmLeft,
     kHandLeft,
+
+    // 右手
     kShoulderRight,
     kUpperArmRight,
     kLowerArmRight,
     kHandRight,
+
+    // 左足
     kUpperLegLeft,
     kLowerLegLeft,
     kFootLeft,
     kToesLeft,
+
+    // 右足
     kUpperLegRight,
     kLowerLegRight,
     kFootRight,
     kToesRight,
+
     kIKMax
 };
 
@@ -81,10 +91,7 @@ public:
     //--------------------------------------------------------------------------------
     //  後更新処理
     //--------------------------------------------------------------------------------
-    void LateUpdate(void)
-    {
-        UpdateBoneTexture();
-    }
+    void LateUpdate(void);
 
     //--------------------------------------------------------------------------------
     //  今のアニメーションの名前の取得
@@ -130,6 +137,7 @@ public:
     void SetUltra(const bool& value) { is_ultra_ = value; }
     void SetAngry(const bool& value) { is_angry_ = value; }
     void SetDead(const bool& value) { is_dead_ = value; }
+    void SetEnableIK(const bool& value) { enable_ik_ = value; }
     void SetMovement(const float& value) { movement_ = value; }
 
     //--------------------------------------------------------------------------------
@@ -144,6 +152,17 @@ public:
 
 private:
     //--------------------------------------------------------------------------------
+    //  列挙型定義
+    //--------------------------------------------------------------------------------
+    enum IKGoals
+    {
+        kIKGoalLook = 0,
+        kIKGoalLeftFoot,
+        kIKGoalRightFoot,
+        kIKGoalMax
+    };
+
+    //--------------------------------------------------------------------------------
     //  構造体定義
     //--------------------------------------------------------------------------------
     struct Bone
@@ -151,6 +170,21 @@ private:
         Transform*  transform;
         String      name;
         Matrix44    bind_pose_inverse;
+    };
+
+    struct IKController
+    {
+        int index;
+        Vector3 rotation_limit_min;
+        Vector3 rotation_limit_max;
+    };
+
+    struct IKGoal
+    {
+        float position_weight;
+        float rotation_weight;
+        Vector3 position;
+        Quaternion rotation;
     };
 
     //--------------------------------------------------------------------------------
@@ -167,6 +201,26 @@ private:
     //  テクスチャのサーフェイスにボーンマトリクスを書き込む
     //--------------------------------------------------------------------------------
     void UpdateBoneTexture(void);
+
+    //--------------------------------------------------------------------------------
+    //  インバースキネマティクス(IK)の初期化
+    //--------------------------------------------------------------------------------
+    void InitIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  インバースキネマティクス(IK)計算
+    //--------------------------------------------------------------------------------
+    void UpdateIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  foot ikの計算
+    //--------------------------------------------------------------------------------
+    void UpdateFootIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  ik goalの計算
+    //--------------------------------------------------------------------------------
+    void ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal);
 
     //--------------------------------------------------------------------------------
     //  変数定義
@@ -189,5 +243,8 @@ private:
     float          movement_;
     float          time_counter_;
     BoneTexture    bone_texture_;
-    int            ik_controllers_[kIKMax];
+    bool           enable_ik_;
+    float          ik_ray_distance_;
+    IKController   ik_controllers_[kIKMax];
+    IKGoal         ik_goals[kIKGoalMax];
 };

@@ -12,6 +12,8 @@
 #include "motion_manager.h"
 #include "texture_manager.h"
 #include "time.h"
+#include "collision_detector.h"
+#include "collision_system.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -35,14 +37,12 @@ Animator::Animator(GameObject& owner)
 	, is_dead_(false)
 	, is_stun_(false)
 	, is_ultra_(false)
+    , enable_ik_(false)
 	, movement_(0.0f)
 	, time_counter_(0.0f)
+    , ik_ray_distance_(0.5f)
 {
-	for (auto& controller : ik_controllers_)
-	{
-		controller = 0;
-	}
-
+    ZeroMemory(ik_controllers_, sizeof(IKController) * kIKMax);
 	bone_texture_.size = 0;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	bone_texture_.pointer = nullptr;
@@ -54,6 +54,7 @@ Animator::Animator(GameObject& owner)
 //--------------------------------------------------------------------------------
 bool Animator::Init(void)
 {
+    InitIK();
 	return true;
 }
 
@@ -84,6 +85,15 @@ void Animator::Update(void)
 	if (avatar_.empty()) return;
 	state_->Update(*this);
 	time_counter_ += Time::Instance()->ScaledDeltaTime();
+}
+
+//--------------------------------------------------------------------------------
+//  後更新処理
+//--------------------------------------------------------------------------------
+void Animator::LateUpdate(void)
+{
+    UpdateIK();
+    UpdateBoneTexture();
 }
 
 //--------------------------------------------------------------------------------
@@ -164,7 +174,7 @@ void Animator::LoadFromFile(const String& file_name)
 	// IKController
 	for (auto& controller : ik_controllers_)
 	{
-		archive.loadBinary(&controller, sizeof(controller));
+		archive.loadBinary(&controller.index, sizeof(controller.index));
 	}
 
 	// Motion
@@ -216,11 +226,77 @@ void Animator::UpdateBoneTexture(void)
 	int offset = lock_rect.Pitch / sizeof(Matrix44);
 	for (size_t count = 0; count < bone_number; ++count)
 	{
-		Matrix44 bone_world = avatar_[count].bind_pose_inverse * avatar_[count].transform->GetWorldMatrix();
+		const Matrix44& bone_world = avatar_[count].bind_pose_inverse * avatar_[count].transform->GetWorldMatrix();
 		memcpy((Matrix44*)lock_rect.pBits + offset * count, &bone_world, sizeof(bone_world));
 	}
 
 	// サーフェイスアンロック
 	bone_texture_.pointer->UnlockRect(0);
 #endif
+}
+
+//--------------------------------------------------------------------------------
+//  インバースキネマティクス(IK)の初期化
+//--------------------------------------------------------------------------------
+void Animator::InitIK(void)
+{
+    // TODO : 回転制限の設定
+}
+
+//--------------------------------------------------------------------------------
+//  インバースキネマティクス(IK)計算
+//--------------------------------------------------------------------------------
+void Animator::UpdateIK(void)
+{
+    if (!enable_ik_) return;
+    UpdateFootIK();
+}
+
+//--------------------------------------------------------------------------------
+//  foot ikの計算
+//--------------------------------------------------------------------------------
+void Animator::UpdateFootIK(void)
+{
+    ComputeIKGoal(IKParts::kFootLeft, IKGoals::kIKGoalLeftFoot);
+    ComputeIKGoal(IKParts::kFootRight, IKGoals::kIKGoalRightFoot);
+}
+
+//--------------------------------------------------------------------------------
+//  ik goalの計算
+//--------------------------------------------------------------------------------
+void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
+{
+    auto my_transform = owner_.GetTransform();
+    const Vector3& current_position = avatar_[ik_controllers_[goal_part].index].transform->GetCurrentWorldPosition();
+    float ik_weight_interpolation_sign = 0.0f;
+
+    auto collision_system = MainSystem::Instance()->GetCollisionSystem();
+    Ray ray(current_position, Vector3::kDown);
+
+    // 下向きに着地点を判定する
+    RayHitInfo* info = collision_system->RayCast(ray, ik_ray_distance_, &owner_);
+    if (info)
+    {
+        ik_goals[ik_goal].position = info->position;
+        ik_goals[ik_goal].rotation = Quaternion::FromToRotation(my_transform->GetUp(), info->normal) * my_transform->GetRotation();
+        ik_weight_interpolation_sign = 1.0f;
+    }
+
+    // 上向きに着地点を判定する
+    // 下向きで見つからなかったらめり込まないように上向きも判定する
+    //if (ik_weight_interpolation_sign != 1.0f)
+    //{
+    //    ray.direction_ = Vector3::kUp;
+    //    info = collision_system->RayCast(ray, ik_ray_distance_, &owner_);
+    //    if (info)
+    //    {
+    //        ik_goals[ik_goal].position = info->position;
+    //        ik_goals[ik_goal].rotation = Quaternion::FromToRotation(my_transform->GetUp(), info->normal) * my_transform->GetRotation();
+    //        ik_weight_interpolation_sign = 1.0f;
+    //    }
+    //}
+
+    // Weight更新
+    ik_goals[ik_goal].position_weight = ik_weight_interpolation_sign;
+    ik_goals[ik_goal].rotation_weight = ik_weight_interpolation_sign;
 }
