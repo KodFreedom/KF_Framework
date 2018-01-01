@@ -37,7 +37,6 @@ void GameObjectActor::Update(void)
 {
 	if (!is_active_) return;
 	GameObject::Update();
-	animator_->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -46,7 +45,11 @@ void GameObjectActor::Update(void)
 void GameObjectActor::LateUpdate(void)
 {
 	if (!is_active_) return;
-	GameObject::LateUpdate();
+    rigidbody_->LateUpdate();
+    for (auto& pair : behaviors_) { pair.second->LateUpdate(); }
+    animator_->Update();
+    transform_->UpdateMatrix();
+    for (auto renderer : renderers_) { renderer->Update(); }
 	animator_->LateUpdate();
 }
 

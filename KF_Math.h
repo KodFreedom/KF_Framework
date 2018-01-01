@@ -830,15 +830,7 @@ namespace kodfreedom
         {
             Matrix44 result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-            D3DXMATRIX inverse = *this;
-            D3DXMatrixInverse(&inverse, NULL, &inverse);
-            for (int count_y = 0; count_y < 4; ++count_y)
-            {
-                for (int count_x = 0; count_x < 4; ++count_x)
-                {
-                    result.m_[count_y][count_x] = inverse(count_y, count_x);
-                }
-            }
+            D3DXMatrixInverse((D3DXMATRIX*)&result, NULL, (D3DXMATRIX*)this);
 #endif
             return result;
         }
@@ -1011,7 +1003,6 @@ namespace kodfreedom
         //--------------------------------------------------------------------------------
         Quaternion(const float& x, const float& y, const float& z, const float& w) : x_(x), y_(y), z_(z), w_(w) {}
         
-
         float x_; // x component of the Quaternion / クォータニオンのx要素
         float y_; // y component of the Quaternion / クォータニオンのy要素
         float z_; // z component of the Quaternion / クォータニオンのz要素
@@ -1550,14 +1541,7 @@ namespace kodfreedom
             if (time >= 1.0f) { return to; }
             Quaternion result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-            D3DXQUATERNION from_dx = from;
-            D3DXQUATERNION to_dx = to;
-            D3DXQUATERNION result_dx;
-            D3DXQuaternionSlerp(&result_dx, &from_dx, &to_dx, time);
-            result.x_ = result_dx.x;
-            result.y_ = result_dx.y;
-            result.z_ = result_dx.z;
-            result.w_ = result_dx.w;
+            D3DXQuaternionSlerp((D3DXQUATERNION*)&result, (D3DXQUATERNION*)&from, (D3DXQUATERNION*)&to, time);
 #else
             //Quaternion qFromCpy = qFrom;
             //Quaternion qToCpy = qTo;
@@ -1606,6 +1590,20 @@ namespace kodfreedom
         static float Clamp(const float& value, const float& min, const float& max)
         {
             return value < min ? min : value > max ? max : value;
+        }
+
+        //--------------------------------------------------------------------------------
+        //  Vector3をminとmaxの間にする
+        //  value：現在値
+        //  min：最小値
+        //  max：最大値
+        //  return：Vector3
+        //--------------------------------------------------------------------------------
+        static Vector3 Clamp(const Vector3& value, const Vector3& min, const Vector3& max)
+        {
+            return Vector3(Clamp(value.x_, min.x_, max.x_),
+                           Clamp(value.y_, min.y_, max.y_),
+                           Clamp(value.z_, min.z_, max.z_));
         }
 
         //--------------------------------------------------------------------------------

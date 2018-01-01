@@ -44,8 +44,9 @@ void NormalMotionState::UpdateMotion(Animator& animator)
 
 	for (auto& bone : avatar)
 	{
-		bone.transform->SetOffset(iterator->translation_
-			, iterator->rotation_, iterator->scale_);
+		bone.transform->SetPosition(iterator->translation_);
+        bone.transform->SetRotation(iterator->rotation_);
+        bone.transform->SetScale(iterator->scale_);
 		++iterator;
 	}
 
@@ -97,12 +98,9 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 		const auto& blend_translation = Math::Lerp(current_iterator->translation_, next_iterator->translation_, blend_rate);
 		const auto& blend_rotation = Math::Slerp(current_iterator->rotation_, next_iterator->rotation_, blend_rate);
 		const auto& blend_scale = Math::Lerp(current_iterator->scale_, next_iterator->scale_, blend_rate);
-		
-		bone.transform->SetOffset(blend_translation
-			, blend_rotation, blend_scale);
-		//bone.transform->SetPosition(blend_translation);
-		//bone.transform->SetRotation(blend_rotation);
-		//bone.transform->SetScale(blend_scale);
+		bone.transform->SetPosition(blend_translation);
+		bone.transform->SetRotation(blend_rotation);
+		bone.transform->SetScale(blend_scale);
 		++current_iterator;
 		++next_iterator;
 	}

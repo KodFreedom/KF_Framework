@@ -389,7 +389,13 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&rotation, sizeof(rotation));
 	archive.loadBinary(&scale, sizeof(scale));
 	auto transform = result->GetTransform();
-	if (parent) transform->RegisterParent(parent, position, rotation, scale);
+    if (parent)
+    {
+        transform->RegisterParent(parent);
+        transform->SetPosition(position);
+        transform->SetRotation(rotation);
+        transform->SetScale(scale);
+    }
 
 	//Collider
 	int collider_number = 0;

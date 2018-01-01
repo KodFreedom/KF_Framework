@@ -65,6 +65,7 @@ void Animator::Uninit(void)
 {
 	avatar_.clear();
 	SAFE_DELETE(state_);
+
 	auto motion_manager = MainSystem::Instance()->GetMotionManager();
 	size_t motion_number = motion_names_.size();
 	for (size_t count = 0; count < motion_number; ++count)
@@ -85,6 +86,7 @@ void Animator::Update(void)
 	if (avatar_.empty()) return;
 	state_->Update(*this);
 	time_counter_ += Time::Instance()->ScaledDeltaTime();
+    UpdateIK();
 }
 
 //--------------------------------------------------------------------------------
@@ -92,7 +94,6 @@ void Animator::Update(void)
 //--------------------------------------------------------------------------------
 void Animator::LateUpdate(void)
 {
-    UpdateIK();
     UpdateBoneTexture();
 }
 
@@ -110,6 +111,7 @@ const String& Animator::GetCurrentAnimationName(void)
 void Animator::SetAvatar(const String& file_name)
 {
 	if (!avatar_.empty()) return;
+
 	LoadFromFile(file_name);
 	AttachBonesToChildren();
 
@@ -240,7 +242,12 @@ void Animator::UpdateBoneTexture(void)
 //--------------------------------------------------------------------------------
 void Animator::InitIK(void)
 {
-    // TODO : âÒì]êßå¿ÇÃê›íË
+    // TODO : å¬ï ÇÃâÒì]êßå¿ÇÃê›íË
+    for (auto& ik_controller : ik_controllers_)
+    {
+        ik_controller.rotation_limit_min = Vector3(-kPi);
+        ik_controller.rotation_limit_max = Vector3(kPi);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -257,8 +264,13 @@ void Animator::UpdateIK(void)
 //--------------------------------------------------------------------------------
 void Animator::UpdateFootIK(void)
 {
+    // IK goal
     ComputeIKGoal(IKParts::kFootLeft, IKGoals::kIKGoalLeftFoot);
     ComputeIKGoal(IKParts::kFootRight, IKGoals::kIKGoalRightFoot);
+
+    // Compute IK
+    ComputeIK(IKParts::kToesLeft, IKGoals::kIKGoalLeftFoot);
+    ComputeIK(IKParts::kToesRight, IKGoals::kIKGoalRightFoot);
 }
 
 //--------------------------------------------------------------------------------
@@ -299,4 +311,46 @@ void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
     // WeightçXêV
     ik_goals[ik_goal].position_weight = ik_weight_interpolation_sign;
     ik_goals[ik_goal].rotation_weight = ik_weight_interpolation_sign;
+}
+
+//--------------------------------------------------------------------------------
+//  ikåvéZ
+//--------------------------------------------------------------------------------
+void Animator::ComputeIK(const IKParts& end_part, const IKGoals& ik_goal, const int parent_number)
+{
+    if (ik_goals[ik_goal].position_weight == 0.0f) return;
+    Transform* end_part_transform = avatar_[ik_controllers_[end_part].index].transform;
+
+    for (int count = 0, count_parent = 0; count < kIkLoopsMax; ++count)
+    {
+        int current_part = end_part - (count_parent + 1); // 1Ç©ÇÁparent_numberÇ‹Ç≈
+        int current_end = current_part + 1;
+        Transform* current_part_transform = avatar_[ik_controllers_[current_part].index].transform;
+        Transform* current_end_transform = avatar_[ik_controllers_[current_end].index].transform;
+        Matrix44& current_part_world = current_part_transform->GetCurrentWorldMatrix();
+        
+        // é©ï™ÇÃëOï˚å¸Ç∆ñ⁄ïWå¸Ç´ÇÃï˚å¸ÇÃéZèo
+        Vector3& part_to_end = Vector3::TransformNormal(current_end_transform->GetPosition().Normalized(), current_part_world).Normalized();
+        Vector3& part_to_goal = (ik_goals[ik_goal].position - Vector3(current_part_world.m30_, current_part_world.m31_, current_part_world.m32_)).Normalized();
+        
+        // âÒì]äpìxÇÃéZèo
+        Vector3& rotation_euler = Vector3::EulerBetween(part_to_end, part_to_goal);
+        
+        // âÒì]êßå¿
+        rotation_euler = Math::Clamp(rotation_euler, ik_controllers_[current_part].rotation_limit_min, ik_controllers_[current_part].rotation_limit_max);
+
+        // ÉEÉFÉCÉg
+        rotation_euler *= ik_goals[ik_goal].position_weight;
+
+        // âÒì]Ç∑ÇÈ
+        current_part_transform->SetRotation(current_part_transform->GetRotation() * rotation_euler.ToQuaternion());
+
+        // ñ⁄ïWÇ…å¿äEÇ‹Ç≈ãﬂÇ√Ç≠Ç∆ÉãÅ[ÉvÇèIóπÇ∑ÇÈ
+        //if (Vector3::SquareDistanceBetween(end_part_transform->GetCurrentWorldPosition(), ik_goals[ik_goal].position) <= kIkPositionThreshold * kIkPositionThreshold)
+        //{
+        //    break;
+        //}
+        //
+        count_parent = (count_parent + 1) % parent_number; // 0Ç©ÇÁparent_number - 1Ç‹Ç≈
+    }
 }

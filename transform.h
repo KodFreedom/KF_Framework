@@ -57,7 +57,7 @@ public:
 	//--------------------------------------------------------------------------------
 	//  親登録処理
 	//--------------------------------------------------------------------------------
-	void RegisterParent(Transform* value, const Vector3& offset_translation = Vector3::kZero, const Quaternion& offset_rotation = Quaternion::kIdentity, const Vector3& offset_scale = Vector3::kOne);
+	void RegisterParent(Transform* value);
 
 	//--------------------------------------------------------------------------------
 	//  位置の取得
@@ -160,16 +160,6 @@ public:
 	void SetScale(const Vector3& value) { scale_ = value; }
 
 	//--------------------------------------------------------------------------------
-	//  offsetの設定
-	//--------------------------------------------------------------------------------
-	void SetOffset(const Vector3& translation, const Vector3& rotation);
-
-	//--------------------------------------------------------------------------------
-	//  offsetの設定
-	//--------------------------------------------------------------------------------
-	void SetOffset(const Vector3& translation, const Quaternion& rotation, const Vector3& scale);
-
-	//--------------------------------------------------------------------------------
 	//  オーラー角より回転
 	//	euler：オーラー角
 	//--------------------------------------------------------------------------------
@@ -225,5 +215,4 @@ private:
 	Matrix44                          world_; // 世界行列
 	Transform*                        parent_; // 親
 	unordered_map<String, Transform*> children_; // 子供
-	Matrix44                          offset_; // オフセット（親に対する）
 };
