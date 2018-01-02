@@ -88,8 +88,8 @@ void Transform::DeregisterChild(Transform* child)
 //--------------------------------------------------------------------------------
 Vector3 Transform::GetCurrentWorldPosition(void) const
 {
-    auto& current_world = GetCurrentWorldMatrix();
-    return Vector3(current_world.m30_, current_world.m31_, current_world.m32_);
+    Matrix44& current_world = GetCurrentWorldMatrix();
+    return Vector3(current_world.rows_[3]);
 }
 
 //--------------------------------------------------------------------------------
@@ -97,12 +97,22 @@ Vector3 Transform::GetCurrentWorldPosition(void) const
 //--------------------------------------------------------------------------------
 Matrix44 Transform::GetCurrentWorldMatrix(void) const
 {
-	auto& world = Matrix44::Transform(rotation_, position_, scale_);
+    Matrix44& world = Matrix44::Transform(rotation_, position_, scale_);
 	if (parent_)
 	{
 		world *= parent_->GetCurrentWorldMatrix();
 	}
 	return world;
+}
+
+//--------------------------------------------------------------------------------
+//  ÅV‚Ì¢ŠEs—ñ‚Ìæ“¾
+//--------------------------------------------------------------------------------
+Matrix44 Transform::GetCurrentWorldMatrix(const Matrix44& parent) const
+{
+    Matrix44& world = Matrix44::Transform(rotation_, position_, scale_);
+    world *= parent;
+    return world;
 }
 
 //--------------------------------------------------------------------------------

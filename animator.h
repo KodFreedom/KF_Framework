@@ -155,12 +155,6 @@ public:
 
 private:
     //--------------------------------------------------------------------------------
-    //  定数定義
-    //--------------------------------------------------------------------------------
-    static constexpr int kIkLoopsMax = 10;
-    static constexpr float kIkPositionThreshold = 0.2f;
-
-    //--------------------------------------------------------------------------------
     //  列挙型定義
     //--------------------------------------------------------------------------------
     enum IKGoals
@@ -232,9 +226,10 @@ private:
     void ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal);
 
     //--------------------------------------------------------------------------------
-    //  ik計算
+    //  foot ik計算
     //--------------------------------------------------------------------------------
-    void ComputeIK(const IKParts& end_part, const IKGoals& ik_goal, const int parent_number = 3);
+    void ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal);
+    //void ComputeIK(const IKParts& end_part, const IKGoals& ik_goal, const int parent_number = 3);
 
     //--------------------------------------------------------------------------------
     //  変数定義
@@ -258,7 +253,9 @@ private:
     float          time_counter_;
     BoneTexture    bone_texture_;
     bool           enable_ik_;
+    int            ik_loop_max_;
     float          ik_ray_distance_;
+    float          ik_position_threshold_;
     IKController   ik_controllers_[kIKMax];
-    IKGoal         ik_goals[kIKGoalMax];
+    IKGoal         ik_goals_[kIKGoalMax];
 };

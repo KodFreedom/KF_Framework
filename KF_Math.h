@@ -20,11 +20,14 @@ namespace kodfreedom
     class Quaternion;
     class Matrix44;
     class Ray;
+    class Vector4;
 
     //--------------------------------------------------------------------------------
     //  constant variables / 定数
     //--------------------------------------------------------------------------------
-    constexpr float kPi = 3.1415926358979f; // Pi / 円周率
+    static constexpr float kPi = 3.1415926f; // Pi / 円周率
+    static constexpr float kFloatMin = 0.0001f;
+    static constexpr float kDotMin = 0.05f;
 
     //--------------------------------------------------------------------------------
     //  Short2
@@ -258,6 +261,12 @@ namespace kodfreedom
         //  xyzに与えられた値を入れるを入れる
         //--------------------------------------------------------------------------------
         Vector3(const float& x, const float& y, const float& z) : x_(x), y_(y), z_(z) {}
+
+        //--------------------------------------------------------------------------------
+        //  set xyz with given Vector4's xyz
+        //  xyzに与えられたVector4のxyz値を入れるを入れる
+        //--------------------------------------------------------------------------------
+        Vector3(const Vector4& value);
         
         float x_; // x component of the vector2 / ベクトル3のx要素
         float y_; // y component of the vector2 / ベクトル3のy要素
@@ -541,6 +550,14 @@ namespace kodfreedom
         {
             return Vector3(value.x_ * scale.x_, value.y_ * scale.y_, value.z_ * scale.z_);
         }
+
+        //--------------------------------------------------------------------------------
+        //  ベクトル間のradian角の算出
+        //  from : 開始ベクトル
+        //  to：終点ベクトル
+        //  return：float
+        //--------------------------------------------------------------------------------
+        static float RadianBetween(const Vector3& from, const Vector3& to);
         
         //--------------------------------------------------------------------------------
         //  ベクトル間のeuler角の算出
@@ -576,6 +593,14 @@ namespace kodfreedom
         //  return：Vector3
         //--------------------------------------------------------------------------------
         static Vector3 Rotate(const Vector3& direction, const Quaternion& rotation);
+
+        //--------------------------------------------------------------------------------
+        //  回転軸と回転角度でオラー角に変換する
+        //  axis：回転軸
+        //  radian：回転角度で
+        //  return：Vector3
+        //--------------------------------------------------------------------------------
+        static Vector3 AxisRadianToEuler(const Vector3& axis, const float& radian);
     };
 
     //--------------------------------------------------------------------------------
@@ -820,6 +845,25 @@ namespace kodfreedom
                 }
             }
             return result;
+        }
+
+        //--------------------------------------------------------------------------------
+        //  remove the scale value / 行列のスケール要素を無くす
+        //--------------------------------------------------------------------------------
+        void RemoveScale(void)
+        {
+            Vector3& right = Vector3(m00_, m01_, m02_).Normalized();
+            m00_ = right.x_;
+            m01_ = right.y_;
+            m02_ = right.z_;
+            Vector3& up = Vector3(m10_, m11_, m12_).Normalized();
+            m10_ = up.x_;
+            m11_ = up.y_;
+            m12_ = up.z_;
+            Vector3& forward = Vector3(m20_, m21_, m22_).Normalized();
+            m20_ = forward.x_;
+            m21_ = forward.y_;
+            m22_ = forward.z_;
         }
 
         //--------------------------------------------------------------------------------
@@ -1220,10 +1264,10 @@ namespace kodfreedom
         //--------------------------------------------------------------------------------
         static Quaternion RotateAxis(const Vector3& axis, const float& radian)
         {
-            auto& axis_quaternion = Quaternion(axis.x_, axis.y_, axis.z_, 1.0f);
+            Quaternion& axis_quaternion = Quaternion(axis.x_, axis.y_, axis.z_, 1.0f);
             float sin = sinf(radian * 0.5f);
             float cos = cosf(radian * 0.5f);
-            auto& scale = Quaternion(sin, sin, sin, cos);
+            Quaternion& scale = Quaternion(sin, sin, sin, cos);
             return axis_quaternion.MultiplySeparately(scale);
         }
 

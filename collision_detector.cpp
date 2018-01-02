@@ -420,8 +420,8 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
 	{//トリガーだったら物理処理しない
 		for (auto& pair : box_left.GetGameObject().GetBehaviors()) pair.second->OnTrigger(box_left, box_right);
 		for (auto& pair : box_right.GetGameObject().GetBehaviors()) pair.second->OnTrigger(box_right, box_left);
-		if (left_max_penetration_collision) delete left_max_penetration_collision;
-		if (right_max_penetration_collision) delete right_max_penetration_collision;
+		if (left_max_penetration_collision) MY_DELETE left_max_penetration_collision;
+		if (right_max_penetration_collision) MY_DELETE right_max_penetration_collision;
 		return;
 	}
 
@@ -503,7 +503,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 	float penetration = collision->penetration + radius;
 	if (penetration <= 0.0f)
 	{
-		delete collision;
+		MY_DELETE collision;
 		return;
 	}
 
@@ -511,7 +511,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 	{
 		for (auto& pair : sphere.GetGameObject().GetBehaviors()) pair.second->OnTrigger(sphere, field);
 		for (auto& pair : field.GetGameObject().GetBehaviors()) pair.second->OnTrigger(field, sphere);
-		delete collision;
+		MY_DELETE collision;
 		return;
 	}
 
@@ -570,7 +570,7 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 	{
 		for (auto& pair : box.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(box, field); }
 		for (auto& pair : field.GetGameObject().GetBehaviors()) { pair.second->OnTrigger(field, box); }
-		delete max_penetration_collision;
+		MY_DELETE max_penetration_collision;
 		return;
 	}
 
@@ -611,7 +611,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 		result->position = ray.origin_;
 		result->other = &box;
 		result->distance = collision->penetration;
-		delete collision;
+		MY_DELETE collision;
 		return result;
 	}
 	
@@ -624,7 +624,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 		result->position = ray_end;
 		result->other = &box;
 		result->distance = collision->penetration;
-		delete collision;
+		MY_DELETE collision;
 		return result;
 	}
 
@@ -675,15 +675,15 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Fie
 	if (!collision) return nullptr;
 	if (collision->penetration < 0.0f) 
 	{
-		delete collision;
+		MY_DELETE collision;
 		return nullptr;
 	}
 	auto result = MY_NEW RayHitInfo;
 	result->distance = collision->penetration;
 	result->normal = collision->normal;
 	result->other = &field;
-	result->position = ray.origin_ + ray.direction_ * distance;
-	delete collision;
+	result->position = collision->point;
+	MY_DELETE collision;
 	return result;
 }
 
@@ -791,14 +791,14 @@ Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& 
 	//result->point = point;
 	//result->normal = (Vector3::kUp * polygon_info->normal * Vector3::kUp).Normalized();
 	//result->penetration = -real_position.y_;
-	//delete polygon_info;
+	//MY_DELETE polygon_info;
 	//return result;
 
 	result = MY_NEW Collision;
 	result->point = Vector3(point.x_, point_y_on_field, point.z_);
 	result->normal = polygon_info->normal; // 壁スリを判定するため地面法線を返す
 	result->penetration = point_y_on_field - point.y_;
-	delete polygon_info;
+	MY_DELETE polygon_info;
 	return result;
 }
 
@@ -832,7 +832,7 @@ Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end
 	if (line_left.Dot(begin_left_to_result) < 0.0f // 方向チェック
 		|| begin_left_to_result.SquareMagnitude() > line_left.SquareMagnitude()) //長さチェック
 	{
-		delete result;
+		MY_DELETE result;
 		return nullptr;
 	}
 
@@ -841,7 +841,7 @@ Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end
 	if (line_right.Dot(begin_right_to_result) < 0.0f // 方向チェック
 		|| begin_right_to_result.SquareMagnitude() > line_right.SquareMagnitude()) //長さチェック
 	{
-		delete result;
+		MY_DELETE result;
 		return nullptr;
 	}
 	return result;
@@ -876,12 +876,12 @@ Vector3* CollisionDetector::Detect(const Vector3& begin_left, const Vector3& end
 
 	if (z_left != z_right)
 	{
-		delete point_on_xy;
+		MY_DELETE point_on_xy;
 		return nullptr;
 	}
 
 	auto result = MY_NEW Vector3(point_on_xy->x_, point_on_xy->y_, z_left);
-	delete point_on_xy;
+	MY_DELETE point_on_xy;
 	return result;
 }
 
@@ -952,9 +952,9 @@ Collision* CollisionDetector::MaxPenetration(Collision* current, Collision* next
 	if (!current) return next;
 	if (next->penetration > current->penetration)
 	{
-		delete current;
+		MY_DELETE current;
 		return next;
 	}
-	delete next;
+	MY_DELETE next;
 	return current;
 }

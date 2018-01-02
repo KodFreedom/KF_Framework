@@ -243,15 +243,15 @@ void DebugObserver::ShowPlayerWindow(void)
     // Animator
     auto animator = player_->GetAnimator();
     ImGui::TextColored(ImColor(0.0f, 1.0f, 0.0f), "Left foot ik goal");
-    ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals[Animator::kIKGoalLeftFoot].position.x_, animator->ik_goals[Animator::kIKGoalLeftFoot].position.y_, animator->ik_goals[Animator::kIKGoalLeftFoot].position.z_);
-    ImGui::Text("Position weight : %.3f", animator->ik_goals[Animator::kIKGoalLeftFoot].position_weight);
-    ImGui::Text("Rotation : %.3f, %.3f, %.3f, %.3f", animator->ik_goals[Animator::kIKGoalLeftFoot].rotation.x_, animator->ik_goals[Animator::kIKGoalLeftFoot].rotation.y_, animator->ik_goals[Animator::kIKGoalLeftFoot].rotation.z_, animator->ik_goals[Animator::kIKGoalLeftFoot].rotation.w_);
-    ImGui::Text("Rotation weight : %.3f", animator->ik_goals[Animator::kIKGoalLeftFoot].rotation_weight);
+    ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].position.x_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.y_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.z_);
+    ImGui::Text("Position weight : %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].position_weight);
+    ImGui::Text("Rotation : %.3f, %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].rotation.x_, animator->ik_goals_[Animator::kIKGoalLeftFoot].rotation.y_, animator->ik_goals_[Animator::kIKGoalLeftFoot].rotation.z_, animator->ik_goals_[Animator::kIKGoalLeftFoot].rotation.w_);
+    ImGui::Text("Rotation weight : %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].rotation_weight);
     ImGui::TextColored(ImColor(0.0f, 1.0f, 0.0f), "Right foot ik goal");
-    ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals[Animator::kIKGoalRightFoot].position.x_, animator->ik_goals[Animator::kIKGoalRightFoot].position.y_, animator->ik_goals[Animator::kIKGoalRightFoot].position.z_);
-    ImGui::Text("Position weight : %.3f", animator->ik_goals[Animator::kIKGoalRightFoot].position_weight);
-    ImGui::Text("Rotation : %.3f, %.3f, %.3f, %.3f", animator->ik_goals[Animator::kIKGoalRightFoot].rotation.x_, animator->ik_goals[Animator::kIKGoalRightFoot].rotation.y_, animator->ik_goals[Animator::kIKGoalRightFoot].rotation.z_, animator->ik_goals[Animator::kIKGoalRightFoot].rotation.w_);
-    ImGui::Text("Rotation weight : %.3f", animator->ik_goals[Animator::kIKGoalRightFoot].rotation_weight);
+    ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].position.x_, animator->ik_goals_[Animator::kIKGoalRightFoot].position.y_, animator->ik_goals_[Animator::kIKGoalRightFoot].position.z_);
+    ImGui::Text("Position weight : %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].position_weight);
+    ImGui::Text("Rotation : %.3f, %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].rotation.x_, animator->ik_goals_[Animator::kIKGoalRightFoot].rotation.y_, animator->ik_goals_[Animator::kIKGoalRightFoot].rotation.z_, animator->ik_goals_[Animator::kIKGoalRightFoot].rotation.w_);
+    ImGui::Text("Rotation weight : %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].rotation_weight);
 
 	// End
 	ImGui::End();

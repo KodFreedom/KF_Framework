@@ -74,7 +74,10 @@ float Vector2::RadianBetween(const Vector2& from, const Vector2& to)
     if (from == to) return 0.0f;
     float square_magnitude_from = from.SquareMagnitude();
     float square_magnitude_to = to.SquareMagnitude();
-    if (square_magnitude_from * square_magnitude_to <= 0.0f) return 0.0f;
+    if (square_magnitude_from <= kDotMin || square_magnitude_to <= kDotMin)
+    {
+        return 0.0f;
+    }
     float dot = (from * (1.0f / sqrtf(square_magnitude_from))).Dot(to * (1.0f / sqrtf(square_magnitude_to)));
     dot = Math::Clamp(dot, -1.0f, 1.0f);
     return acosf(dot);
@@ -89,6 +92,14 @@ float Vector2::RadianBetween(const Vector2& from, const Vector2& to)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
+//  set xyz with given Vector4's xyz
+//  xyz‚É—^‚¦‚ç‚ê‚½Vector4‚Ìxyz’l‚ð“ü‚ê‚é‚ð“ü‚ê‚é
+//--------------------------------------------------------------------------------
+Vector3::Vector3(const Vector4& value)
+    : x_(value.x_), y_(value.y_), z_(value.z_)
+{}
+
+//--------------------------------------------------------------------------------
 //  change the euler to quaternion / EulerŠp‚ðQuaternion‚É•ÏŠ·
 //--------------------------------------------------------------------------------
 Quaternion Vector3::ToQuaternion(void) const
@@ -96,12 +107,7 @@ Quaternion Vector3::ToQuaternion(void) const
 	// TODO: ŒvŽZŽ®‚ð’²‚×‚é
 	Quaternion result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	D3DXQUATERNION resultDX;
-	D3DXQuaternionRotationYawPitchRoll(&resultDX, y_, x_, z_);
-	result.x_ = resultDX.x;
-	result.y_ = resultDX.y;
-	result.z_ = resultDX.z;
-	result.w_ = resultDX.w;
+	D3DXQuaternionRotationYawPitchRoll((D3DXQUATERNION*)&result, y_, x_, z_);
 #endif
 	return result;
 }
@@ -150,6 +156,16 @@ Vector3 Vector3::TransformInverse(const Vector3& point, const Matrix44& transfor
 }
 
 //--------------------------------------------------------------------------------
+//  ƒxƒNƒgƒ‹ŠÔ‚ÌradianŠp‚ÌŽZo
+//--------------------------------------------------------------------------------
+float Vector3::RadianBetween(const Vector3& from, const Vector3& to)
+{
+    float result = acosf(Math::Clamp(from.Dot(to), -1.0f, 1.0f));
+    if (isnan(result)) return 0.0f;
+    return result;
+}
+
+//--------------------------------------------------------------------------------
 //  ƒxƒNƒgƒ‹‚ð‰ñ“]‚·‚é
 //--------------------------------------------------------------------------------
 Vector3 Vector3::Rotate(const Vector3& direction, const Quaternion& rotation)
@@ -158,6 +174,42 @@ Vector3 Vector3::Rotate(const Vector3& direction, const Quaternion& rotation)
 	Quaternion& result = rotation.Conjugate() * direction_quaternion;
 	result *= rotation;
 	return Vector3(result.x_, result.y_, result.z_);
+}
+
+//--------------------------------------------------------------------------------
+//  ‰ñ“]Ž²‚Æ‰ñ“]Šp“x‚ÅƒIƒ‰[Šp‚É•ÏŠ·‚·‚é
+//--------------------------------------------------------------------------------
+Vector3 Vector3::AxisRadianToEuler(const Vector3& axis, const float& radian)
+{
+    Vector3 euler;
+    float sin = sinf(radian);
+    float cos = cosf(radian);
+
+    // heading y
+    // bank x
+    // attr z
+
+    if ((axis.x_ * axis.y_ * (1.0f - cos) + axis.z_ * sin) > 0.998f)
+    { // north pole singularity detected
+        euler.y_ = 2.0f * atan2f(axis.x_ * sinf(radian * 0.5f), cosf(radian * 0.5f));
+        euler.z_ = kPi * 0.5f;
+        euler.x_ = 0.0f;
+        return euler;
+    }
+
+    if ((axis.x_ * axis.y_ * (1.0f - cos) + axis.z_ * sin) < -0.998f) 
+    { // south pole singularity detected
+        euler.y_ = -2.0f * atan2f(axis.x_ * sinf(radian * 0.5f), cosf(radian * 0.5f));
+        euler.z_ = -kPi * 0.5f;
+        euler.x_ = 0.0f;
+        return euler;
+    }
+
+    euler.y_ = atan2f(axis.y_ * sin - axis.x_ * axis.z_ * (1.0f - cos), 1 - (axis.y_ * axis.y_ + axis.z_ * axis.z_) * (1.0f - cos));
+    euler.z_ = asinf(axis.x_ * axis.y_ * (1.0f - cos) + axis.z_ * sin);
+    euler.x_ = atan2f(axis.x_ * sin - axis.y_ * axis.z_ * (1.0f - cos), 1 - (axis.x_ * axis.x_ + axis.z_ * axis.z_) * (1.0f - cos));
+
+    return euler;
 }
 
 //--------------------------------------------------------------------------------
@@ -428,17 +480,55 @@ Matrix44 Matrix44::PerspectiveLeftHand(const float& fov_radian_y, const float& a
 //--------------------------------------------------------------------------------
 Vector3 Quaternion::ToEuler(void) const
 {
-	Vector3 result;
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	D3DXQUATERNION quaternion = *this;
-	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(1.0f, 0.0f, 0.0f), &result.x_);
-	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(0.0f, 1.0f, 0.0f), &result.y_);
-	D3DXQuaternionToAxisAngle(&quaternion, &D3DXVECTOR3(0.0f, 0.0f, 1.0f), &result.z_);
-#else
-	result.X = atan2f(2.0f * (W * Z + X * Y), 1.0f - 2.0f * (Z * Z + X * X));
-	result.Y = asinf(2.0f * (W * X - Y * Z));
-	result.Z = atan2f(2.0f * (W * Y + Z * X), 1.0f - 2.0f * (X * X + Y * Y));
-#endif
+    Vector3 result;
+    float suare_x = x_ * x_;
+    float suare_y = y_ * y_;
+    float suare_z = z_ * z_;
+    float suare_w = w_ * w_;
+    float unit = suare_x + suare_y + suare_z + suare_w;
+    
+    float test = x_ * y_ + z_ * w_;
+    if (test > 0.499f * unit)
+    { // singularity at north pole
+        result.y_ = 2.0f * atan2f(x_, w_);
+        result.x_ = kPi * 0.5f;
+        result.z_ = 0.0f;
+        return result;
+    }
+    if (test < -0.499f * unit)
+    { // singularity at south pole
+        result.y_ = -2.0f * atan2f(x_, w_);
+        result.x_ = -kPi * 0.5f;
+        result.z_ = 0.0f;
+        return result;
+    }
+    
+    result.y_ = atan2f(2.0f * y_ * w_ - 2.0f * x_ * z_, suare_x - suare_y - suare_z + suare_w);
+    result.x_ = asinf(2.0f * test / unit);
+    result.z_ = atan2f(2.0f * x_ * w_ - 2.0f * y_ * z_, -suare_x + suare_y - suare_z + suare_w);
+
+    //Vector3 vtest;
+    //// roll (x-axis rotation)
+    //float sin_x = 2.0f * (w_ * x_ + y_ * z_);
+    //float cos_x = 1.0f - 2.0f * (x_ * x_ + y_ * y_);
+    //vtest.x_ = atan2f(sin_x, cos_x);
+    //
+    //// pitch (y-axis rotation)
+    //float sin_y = 2.0f * (w_ * y_ - z_ * x_);
+    //if (fabsf(sin_y) >= 1.0f)
+    //{
+    //    vtest.y_ = copysignf(kPi * 0.5f, sin_y); // use 90 degrees if out of range
+    //}
+    //else
+    //{
+    //    vtest.y_ = asinf(sin_y);
+    //}
+    //
+    //// yaw (z-axis rotation)
+    //float sin_z_ = 2.0f * (w_ * z_ + x_ * y_);
+    //float cos_z_ = 1.0f - 2.0f * (y_ * y_ + z_ * z_);
+    //vtest.z_ = atan2f(sin_z_, cos_z_);
+
 	return result;
 }
 
@@ -451,16 +541,16 @@ Vector3 Quaternion::ToEuler(void) const
 Matrix44 Quaternion::ToMatrix(void) const
 {
 	Matrix44 result;
-	static const auto quaternion1110 = Quaternion(1.0f, 1.0f, 1.0f, 0.0f);
-	auto& this_x2 = *this + *this;
-	auto& this_x_this_x2 = this->MultiplySeparately(this_x2);
-	auto& work0 = quaternion1110
+	static const Quaternion& quaternion1110 = Quaternion(1.0f, 1.0f, 1.0f, 0.0f);
+	Quaternion& this_x2 = *this + *this;
+	Quaternion& this_x_this_x2 = this->MultiplySeparately(this_x2);
+	Quaternion& work0 = quaternion1110
 		- Quaternion(this_x_this_x2.y_, this_x_this_x2.x_, this_x_this_x2.x_, quaternion1110.w_)
 		- Quaternion(this_x_this_x2.z_, this_x_this_x2.z_, this_x_this_x2.y_, quaternion1110.w_);
-	auto& work1 = Quaternion(x_, x_, y_, w_).MultiplySeparately(Quaternion(this_x2.z_, this_x2.y_, this_x2.z_, this_x2.w_));
-	auto& work2 = Quaternion(w_, w_, w_, w_).MultiplySeparately(Quaternion(this_x2.y_, this_x2.z_, this_x2.x_, this_x2.w_));
-	auto& one_plus_two = work1 + work2;
-	auto& one_minus_two = work1 - work2;
+	Quaternion& work1 = Quaternion(x_, x_, y_, w_).MultiplySeparately(Quaternion(this_x2.z_, this_x2.y_, this_x2.z_, this_x2.w_));
+	Quaternion& work2 = Quaternion(w_, w_, w_, w_).MultiplySeparately(Quaternion(this_x2.y_, this_x2.z_, this_x2.x_, this_x2.w_));
+	Quaternion& one_plus_two = work1 + work2;
+	Quaternion& one_minus_two = work1 - work2;
 	result.m_[0][0] = work0.x_;
 	result.m_[0][1] = one_plus_two.y_;
 	result.m_[0][2] = one_minus_two.x_;
