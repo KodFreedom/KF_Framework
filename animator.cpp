@@ -41,8 +41,8 @@ Animator::Animator(GameObject& owner)
 	, movement_(0.0f)
 	, time_counter_(0.0f)
     , ik_ray_distance_(0.5f)
-    , ik_loop_max_(10)
-    , ik_position_threshold_(0.1f)
+    , ik_weight_increase_speed_(10.0f)
+    , ik_weight_decrease_speed_(-20.0f)
 {
     ZeroMemory(ik_controllers_, sizeof(IKController) * kIKMax);
     ZeroMemory(ik_goals_, sizeof(IKGoal) * kIKGoalMax);
@@ -245,30 +245,6 @@ void Animator::UpdateBoneTexture(void)
 //--------------------------------------------------------------------------------
 void Animator::InitIK(void)
 {
-    // TODO : 個別の回転制限の設定
-    ik_controllers_[kUpperLegRight].rotation_limit_min = Vector3(-kPi);
-    ik_controllers_[kUpperLegRight].rotation_limit_max = Vector3(kPi);
-
-    ik_controllers_[kLowerLegRight].rotation_limit_min = Vector3(-kPi);
-    ik_controllers_[kLowerLegRight].rotation_limit_max = Vector3(kPi);
-
-    ik_controllers_[kFootRight].rotation_limit_min = Vector3(-kPi);
-    ik_controllers_[kFootRight].rotation_limit_max = Vector3(kPi);
-
-    ik_controllers_[kToesRight].rotation_limit_min = Vector3(-kPi);
-    ik_controllers_[kToesRight].rotation_limit_max = Vector3(kPi);
-
-    ik_controllers_[kUpperLegLeft].rotation_limit_min = Vector3(0.0f, 0.0f, 0.0f);
-    ik_controllers_[kUpperLegLeft].rotation_limit_max = Vector3(kPi, 0.0f, 0.0f);
-
-    ik_controllers_[kLowerLegLeft].rotation_limit_min = Vector3(0.0f, 0.0f, 0.0f);
-    ik_controllers_[kLowerLegLeft].rotation_limit_max = Vector3(kPi, 0.0f, 0.0f);
-
-    ik_controllers_[kFootLeft].rotation_limit_min = Vector3(0.0f, 0.0f, 0.0f);
-    ik_controllers_[kFootLeft].rotation_limit_max = Vector3(kPi, 0.0f, 0.0f);
-
-    ik_controllers_[kToesLeft].rotation_limit_min = Vector3(0.0f, 0.0f, 0.0f);
-    ik_controllers_[kToesLeft].rotation_limit_max = Vector3(kPi, 0.0f, 0.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -301,7 +277,7 @@ void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
 {
     auto my_transform = owner_.GetTransform();
     const Vector3& current_position = avatar_[ik_controllers_[goal_part].index].transform->GetCurrentWorldPosition();
-    float ik_weight_interpolation_sign = 0.0f;
+    float ik_weight_change_speed = ik_weight_decrease_speed_;
 
     auto collision_system = MainSystem::Instance()->GetCollisionSystem();
     Ray ray(current_position, Vector3::kDown);
@@ -312,26 +288,14 @@ void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
     {
         ik_goals_[ik_goal].position = info->position + Vector3::kUp * info->distance * 0.25f;
         ik_goals_[ik_goal].rotation = Quaternion::FromToRotation(my_transform->GetUp(), info->normal) * my_transform->GetRotation();
-        ik_weight_interpolation_sign = 1.0f;
+        ik_weight_change_speed = ik_weight_increase_speed_;
     }
 
-    // 上向きに着地点を判定する
-    // 下向きで見つからなかったらめり込まないように上向きも判定する
-    //if (ik_weight_interpolation_sign != 1.0f)
-    //{
-    //    ray.direction_ = Vector3::kUp;
-    //    info = collision_system->RayCast(ray, ik_ray_distance_, &owner_);
-    //    if (info)
-    //    {
-    //        ik_goals[ik_goal].position = info->position;
-    //        ik_goals[ik_goal].rotation = Quaternion::FromToRotation(my_transform->GetUp(), info->normal) * my_transform->GetRotation();
-    //        ik_weight_interpolation_sign = 1.0f;
-    //    }
-    //}
-
     // Weight更新
-    ik_goals_[ik_goal].position_weight = ik_weight_interpolation_sign;
-    ik_goals_[ik_goal].rotation_weight = ik_weight_interpolation_sign;
+    ik_goals_[ik_goal].position_weight += ik_weight_change_speed * Time::Instance()->DeltaTime();
+    ik_goals_[ik_goal].position_weight = Math::Clamp(ik_goals_[ik_goal].position_weight, 0.0f, 1.0f);
+    ik_goals_[ik_goal].rotation_weight += ik_weight_change_speed * Time::Instance()->DeltaTime();
+    ik_goals_[ik_goal].rotation_weight = Math::Clamp(ik_goals_[ik_goal].rotation_weight, 0.0f, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -343,14 +307,16 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
         || (end_part == kFootRight && ik_goal == kIKGoalRightFoot));
 
     if (ik_goals_[ik_goal].position_weight == 0.0f) return;
+
+    // 位置と方向の算出
     const auto& start_transform = avatar_[ik_controllers_[end_part - 2].index].transform;
     const auto& joint_transform = avatar_[ik_controllers_[end_part - 1].index].transform;
     const auto& end_transform = avatar_[ik_controllers_[end_part].index].transform;
+
     Matrix44& start_world = start_transform->GetCurrentWorldMatrix();
     Matrix44& joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
     Matrix44& end_world = end_transform->GetCurrentWorldMatrix(joint_world);
 
-    // Set up some vectors and positions
     Vector3& start_position = Vector3(start_world.rows_[3]);
     Vector3& joint_position = Vector3(joint_world.rows_[3]);
     Vector3& end_position = Vector3(end_world.rows_[3]);
@@ -382,47 +348,36 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
     Vector3& joint_to_end_direction = joint_to_end.Normalized();
     float current_joint_radian = acosf(joint_to_start_direction.Dot(joint_to_end_direction));
     
-    // 回転する
-    float delta_joint_radian = wanted_joint_radian - current_joint_radian;
+    // 回転する(ウェイトをかける)
+    float delta_joint_radian = (wanted_joint_radian - current_joint_radian) * ik_goals_[ik_goal].position_weight;
     Vector3& joint_rotate_axis = (joint_to_start_direction * joint_to_end_direction).Normalized();
-    Matrix44 to_local = joint_world;
-    to_local.RemoveScale();
-    to_local = to_local.Inverse();
-    joint_rotate_axis = Vector3::TransformNormal(joint_rotate_axis, to_local);
+    Matrix44 joint_matrix_to_local = joint_world;
+    joint_matrix_to_local.RemoveScale();
+    joint_matrix_to_local = joint_matrix_to_local.Inverse();
+    joint_rotate_axis = Vector3::TransformNormal(joint_rotate_axis, joint_matrix_to_local);
     Quaternion& joint_rotation = Quaternion::RotateAxis(joint_rotate_axis, delta_joint_radian);
     joint_transform->SetRotation(joint_transform->GetRotation() * joint_rotation);
 
     // Startを回転する
     // 新しいEndの算出
     joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
-    //joint_world.RemoveScale();
-    //joint_world.rows_[3] = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
-    //Vector3& joint_axis_x_world = Vector3::TransformNormal(Vector3::kAxisX, joint_world);
-    //Matrix44& rotation = Matrix44::RotationAxis(joint_axis_x_world, delta_joint_radian);
-    //Vector3& new_joint_to_end_direction = Vector3::TransformNormal(joint_to_end_direction, rotation);
-    //Vector3& new_end_position = joint_position + new_joint_to_end_direction * joint_to_end_length;
     end_world = end_transform->GetCurrentWorldMatrix(joint_world);
     Vector3& new_end_position = Vector3(end_world.rows_[3]);
 
-    // Calculate start bone rotation
+    // 回転の算出
     Matrix44& start_matrix_to_local = start_world.Inverse();
     Vector3& start_to_new_end_local = Vector3::TransformCoord(new_end_position, start_matrix_to_local).Normalized();
     Vector3& start_to_goal_local = Vector3::TransformCoord(ik_goals_[ik_goal].position, start_matrix_to_local).Normalized();
     Vector3& rotate_axis = start_to_new_end_local * start_to_goal_local;
     if (rotate_axis.SquareMagnitude() <= kFloatMin) return;
     rotate_axis.Normalize();
-    float delta_start_radian = acosf(start_to_new_end_local.Dot(start_to_goal_local));
 
-    // Apply the rotation that makes the bone turn
+    // ウェイトをかける
+    float delta_start_radian = acosf(start_to_new_end_local.Dot(start_to_goal_local)) * ik_goals_[ik_goal].position_weight;
+
+    // 回転する
     Quaternion& start_rotation = Quaternion::RotateAxis(rotate_axis, delta_start_radian);
     start_transform->SetRotation(start_transform->GetRotation() * start_rotation);
-
-    // test
-    start_world = start_transform->GetCurrentWorldMatrix();
-    joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
-    end_world = end_transform->GetCurrentWorldMatrix(joint_world);
-    new_end_position = Vector3(end_world.rows_[3]);
-    int n = 1;
 }
 
 //--------------------------------------------------------------------------------

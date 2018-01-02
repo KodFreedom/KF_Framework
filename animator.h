@@ -178,8 +178,6 @@ private:
     struct IKController
     {
         int index;
-        Vector3 rotation_limit_min;
-        Vector3 rotation_limit_max;
     };
 
     struct IKGoal
@@ -253,9 +251,9 @@ private:
     float          time_counter_;
     BoneTexture    bone_texture_;
     bool           enable_ik_;
-    int            ik_loop_max_;
     float          ik_ray_distance_;
-    float          ik_position_threshold_;
+    float          ik_weight_increase_speed_;
+    float          ik_weight_decrease_speed_;
     IKController   ik_controllers_[kIKMax];
     IKGoal         ik_goals_[kIKGoalMax];
 };

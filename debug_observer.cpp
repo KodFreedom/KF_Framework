@@ -242,6 +242,9 @@ void DebugObserver::ShowPlayerWindow(void)
 
     // Animator
     auto animator = player_->GetAnimator();
+    ImGui::SliderFloat("Ray distance", &animator->ik_ray_distance_, 0.0f, 1.0f);
+    ImGui::InputFloat("Weight increase speed", &animator->ik_weight_increase_speed_);
+    ImGui::InputFloat("Weight decrease speed", &animator->ik_weight_decrease_speed_);
     ImGui::TextColored(ImColor(0.0f, 1.0f, 0.0f), "Left foot ik goal");
     ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].position.x_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.y_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.z_);
     ImGui::Text("Position weight : %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].position_weight);
