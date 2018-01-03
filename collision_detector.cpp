@@ -601,34 +601,75 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
 //--------------------------------------------------------------------------------
 //	レイとボックスの当たり判定
 //--------------------------------------------------------------------------------
-RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, BoxCollider& box)
-{
-	auto collision = Detect(ray.origin_, box);
-	if (collision)
-	{
-		auto result = MY_NEW RayHitInfo;
-		result->normal = collision->normal;
-		result->position = ray.origin_;
-		result->other = &box;
-		result->distance = collision->penetration;
-		MY_DELETE collision;
-		return result;
-	}
-	
-	auto& ray_end = ray.origin_ + ray.direction_ * distance;
-	collision = Detect(ray_end, box);
-	if (collision)
-	{
-		auto result = MY_NEW RayHitInfo;
-		result->normal = collision->normal;
-		result->position = ray_end;
-		result->other = &box;
-		result->distance = collision->penetration;
-		MY_DELETE collision;
-		return result;
-	}
+//RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, BoxCollider& box)
+//{
+//	auto collision = Detect(ray.origin_, box);
+//	if (collision)
+//	{
+//		auto result = MY_NEW RayHitInfo;
+//		result->normal = collision->normal;
+//		result->position = ray.origin_;
+//		result->other = &box;
+//		result->distance = collision->penetration;
+//		MY_DELETE collision;
+//		return result;
+//	}
+//	
+//	auto& ray_end = ray.origin_ + ray.direction_ * distance;
+//	collision = Detect(ray_end, box);
+//	if (collision)
+//	{
+//		auto result = MY_NEW RayHitInfo;
+//		result->normal = collision->normal;
+//		result->position = ray_end;
+//		result->other = &box;
+//		result->distance = collision->penetration;
+//		MY_DELETE collision;
+//		return result;
+//	}
+//
+//	return nullptr;
+//}
 
-	return nullptr;
+//--------------------------------------------------------------------------------
+//	rayとAABBの当たり判定
+//--------------------------------------------------------------------------------
+RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, AabbCollider& aabb)
+{
+    const Vector3& aabb_position = aabb.GetWorldPosition();
+    const Vector3& half_size = aabb.GetHalfSize();
+    Collision* collision = Detect(Ray(ray.origin_ - aabb_position, ray.direction_), distance, half_size);
+    if (!collision) return nullptr;
+    auto result = MY_NEW RayHitInfo;
+    result->normal = collision->normal;
+    result->position = collision->point + aabb_position;
+    result->other = &aabb;
+    result->distance = collision->penetration;
+    MY_DELETE collision;
+    return result;
+}
+
+//--------------------------------------------------------------------------------
+//	rayとobbの当たり判定
+//--------------------------------------------------------------------------------
+RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, ObbCollider& obb)
+{
+    Matrix44 obb_matrix = obb.GetWorldMatrix();
+    const Vector3& half_size = obb.GetHalfSize();
+
+    Ray real_ray = ray;
+    real_ray.origin_ = Vector3::TransformInverse(real_ray.origin_, obb_matrix);
+    real_ray.direction_ = Vector3::TransformNormal(real_ray.direction_, obb_matrix.Transpose()).Normalized();
+
+    Collision* collision = Detect(real_ray, distance, half_size);
+    if (!collision) return nullptr;
+    auto result = MY_NEW RayHitInfo;
+    result->normal = Vector3::TransformNormal(collision->normal, obb_matrix);
+    result->position = Vector3::TransformCoord(collision->point, obb_matrix);
+    result->other = &obb;
+    result->distance = collision->penetration;
+    MY_DELETE collision;
+    return result;
 }
 
 //--------------------------------------------------------------------------------
@@ -636,12 +677,12 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Box
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, SphereCollider& sphere)
 {
-	const auto& sphere_position = sphere.GetWorldPosition();
-	const auto& radius = sphere.GetRadius();
+	const Vector3& sphere_position = sphere.GetWorldPosition();
+	const float& radius = sphere.GetRadius();
 
-	auto& sphereToorigin_ = ray.origin_ - sphere_position;
-	float work_a = 2.0f * ray.direction_.Dot(sphereToorigin_);
-	float work_b = sphereToorigin_.Dot(sphereToorigin_) - radius * radius;
+	Vector3& sphere_to_origin = ray.origin_ - sphere_position;
+	float work_a = 2.0f * ray.direction_.Dot(sphere_to_origin);
+	float work_b = sphere_to_origin.Dot(sphere_to_origin) - radius * radius;
 	
 	float dicriminant = work_a * work_a - 4.0f * work_b;
 	if (dicriminant < 0.0f) return nullptr;
@@ -654,7 +695,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Sph
 	//最短時間を保存
 	time_a = time_a < 0.0f ? time_b : time_a;
 	time_b = time_b < 0.0f ? time_a : time_b;
-	auto min_time = time_a <= time_b ? time_a : time_b;
+    float min_time = time_a <= time_b ? time_a : time_b;
 
 	if (min_time > distance) { return nullptr; }
 
@@ -679,7 +720,7 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Fie
 		return nullptr;
 	}
 	auto result = MY_NEW RayHitInfo;
-	result->distance = collision->penetration;
+	result->distance = ray.origin_.y_ - collision->point.y_;
 	result->normal = collision->normal;
 	result->other = &field;
 	result->position = collision->point;
@@ -733,13 +774,13 @@ Collision* CollisionDetector::Detect(const Vector3& point, const AabbCollider& a
 //--------------------------------------------------------------------------------
 Collision* CollisionDetector::Detect(const Vector3& point, const BoxCollider& box)
 {
-	const auto& boxMatrix = box.GetWorldMatrix();
+	const auto& box_matrix = box.GetWorldMatrix();
 	const auto& half_size = box.GetHalfSize();
-	auto& real_point = Vector3::TransformInverse(point, boxMatrix);
+	auto& real_point = Vector3::TransformInverse(point, box_matrix);
 
 	float min_depth = half_size.x_ - fabsf(real_point.x_);
 	if (min_depth <= 0.0f) return nullptr;
-	auto normal = Vector3(boxMatrix.m00_, boxMatrix.m01_, boxMatrix.m02_)
+	auto normal = Vector3(box_matrix.m00_, box_matrix.m01_, box_matrix.m02_)
 		* (real_point.x_ < 0.0f ? -1.0f : 1.0f);
 
 	float depth = half_size.y_ - fabsf(real_point.y_);
@@ -747,7 +788,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const BoxCollider& bo
 	else if (depth < min_depth)
 	{
 		min_depth = depth;
-		normal = Vector3(boxMatrix.m10_, boxMatrix.m11_, boxMatrix.m12_)
+		normal = Vector3(box_matrix.m10_, box_matrix.m11_, box_matrix.m12_)
 			* (real_point.y_ < 0.0f ? -1.0f : 1.0f);
 	}
 
@@ -756,7 +797,7 @@ Collision* CollisionDetector::Detect(const Vector3& point, const BoxCollider& bo
 	else if (depth < min_depth)
 	{
 		min_depth = depth;
-		normal = Vector3(boxMatrix.m20_, boxMatrix.m21_, boxMatrix.m22_)
+		normal = Vector3(box_matrix.m20_, box_matrix.m21_, box_matrix.m22_)
 			* (real_point.z_ < 0.0f ? -1.0f : 1.0f);
 	}
 
@@ -803,20 +844,85 @@ Collision* CollisionDetector::Detect(const Vector3& point, const FieldCollider& 
 }
 
 //--------------------------------------------------------------------------------
+//	rayとaabbの当たり判定
+//--------------------------------------------------------------------------------
+Collision* CollisionDetector::Detect(const Ray& ray, const float& distance, const Vector3& halfsize)
+{
+    float time_min = -FLT_MAX;
+    float time_max = FLT_MAX;
+    const Vector3& min = halfsize * -1.0f;
+    const Vector3& max = halfsize;
+    Vector3 normal;
+
+    for (int count = 0; count < 3; ++count) 
+    {
+        if (fabsf(ray.direction_.m_[count]) < FLT_EPSILON)
+        {
+            if (ray.origin_.m_[count] < min.m_[count] || ray.origin_.m_[count] > max.m_[count])
+            {// 交差していない
+                return nullptr;
+            }
+        }
+        else 
+        {
+            // 面との距離を算出
+            // t1が近面、t2が遠面との距離
+            float odd = 1.0f / ray.direction_.m_[count];
+            float t1 = (min.m_[count] - ray.origin_.m_[count]) * odd;
+            float t2 = (max.m_[count] - ray.origin_.m_[count]) * odd;
+
+            float sign = -1.0f;
+            if (t1 > t2) 
+            {// 交換する
+                Math::Swap(t1, t2);
+                sign = 1.0f;
+            }
+
+            if (t1 > time_min)
+            {
+                time_min = t1;
+                normal = Vector3::kZero;
+                normal.m_[count] = sign;
+            }
+            if (t2 < time_max) time_max = t2;
+
+            // 面交差チェック
+            if (time_min >= time_max)
+            {// 交差していない
+                return nullptr;
+            }
+        }
+    }
+
+    // Distanceチェック
+    if (distance < time_min || time_max <= 0.0f)
+    {// 交差していない
+        return nullptr;
+    }
+    if (time_min < 0.0f) time_min = 0.0f;
+
+    Collision* result = MY_NEW Collision;
+    result->point = ray.origin_ + ray.direction_ * time_min;
+    result->normal = normal;
+    result->penetration = time_min;
+    return result;
+}
+
+//--------------------------------------------------------------------------------
 //	直線と直線の交差判定(二次元)
 //--------------------------------------------------------------------------------
 Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end_left, const Vector2& begin_right, const Vector2& end_right)
 {
-	auto& line_left = end_left - begin_left;
-	auto& line_right = end_right - begin_right;
+	Vector2& line_left = end_left - begin_left;
+	Vector2& line_right = end_right - begin_right;
 
 	//式： Y = slope * X + add
-	auto slope_left = (begin_left.x_ - end_left.x_) == 0.0f ? 0.0f
+	float slope_left = (begin_left.x_ - end_left.x_) == 0.0f ? 0.0f
 		: (begin_left.y_ - end_left.y_) / (begin_left.x_ - end_left.x_);
-	auto add_left = begin_left.y_ - slope_left * begin_left.x_;
-	auto slope_right = (begin_right.x_ - end_right.x_) == 0.0f ? 0.0f
+    float add_left = begin_left.y_ - slope_left * begin_left.x_;
+    float slope_right = (begin_right.x_ - end_right.x_) == 0.0f ? 0.0f
 		: (begin_right.y_ - end_right.y_) / (begin_right.x_ - end_right.x_);
-	auto add_right = begin_right.y_ - slope_left * begin_right.x_;
+    float add_right = begin_right.y_ - slope_left * begin_right.x_;
 
 	//平行
 	if (slope_left == slope_right) return nullptr;
@@ -828,7 +934,7 @@ Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end
 
 	//交点がラインの範囲内にあるかをチェック
 	//line_left
-	auto begin_left_to_result = *result - begin_left;
+    Vector2& begin_left_to_result = *result - begin_left;
 	if (line_left.Dot(begin_left_to_result) < 0.0f // 方向チェック
 		|| begin_left_to_result.SquareMagnitude() > line_left.SquareMagnitude()) //長さチェック
 	{
@@ -837,7 +943,7 @@ Vector2* CollisionDetector::Detect(const Vector2& begin_left, const Vector2& end
 	}
 
 	//line_right
-	auto begin_right_to_result = *result - begin_right;
+    Vector2& begin_right_to_result = *result - begin_right;
 	if (line_right.Dot(begin_right_to_result) < 0.0f // 方向チェック
 		|| begin_right_to_result.SquareMagnitude() > line_right.SquareMagnitude()) //長さチェック
 	{

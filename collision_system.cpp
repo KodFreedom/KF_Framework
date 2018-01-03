@@ -569,8 +569,12 @@ RayHitInfo* CollisionSystem::RaycastDynamicSphere(const Ray& ray, const float& d
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kDynamic][kSphere])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == ray_owner) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive()
+            || collider->GetGameObject() == ray_owner)
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -585,8 +589,12 @@ RayHitInfo* CollisionSystem::RaycastDynamicAabb(const Ray& ray, const float& dis
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kDynamic][kAabb])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == ray_owner) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive()
+            || collider->GetGameObject() == ray_owner)
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -601,8 +609,12 @@ RayHitInfo* CollisionSystem::RaycastDynamicObb(const Ray& ray, const float& dist
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kDynamic][kObb])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == ray_owner) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive()
+            || collider->GetGameObject() == ray_owner)
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -617,7 +629,11 @@ RayHitInfo* CollisionSystem::RaycastStaticSphere(const Ray& ray, const float& di
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kStatic][kSphere])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive())
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -632,7 +648,11 @@ RayHitInfo* CollisionSystem::RaycastStaticAabb(const Ray& ray, const float& dist
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kStatic][kAabb])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive())
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -647,7 +667,11 @@ RayHitInfo* CollisionSystem::RaycastStaticObb(const Ray& ray, const float& dista
 	RayHitInfo* real_result = nullptr;
 	for (auto collider : colliders_arrays_[kStatic][kObb])
 	{
-		if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->IsTrigger()
+            || !collider->GetGameObject().IsActive())
+        {
+            continue;
+        }
 		auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
 		real_result = GetRealResult(real_result, result);
 	}
@@ -678,9 +702,9 @@ RayHitInfo* CollisionSystem::GetRealResult(RayHitInfo* current, RayHitInfo* next
 	if (!current) return next;
 	if (next->distance < current->distance)
 	{
-		delete current;
+		MY_DELETE current;
 		return next;
 	}
-	delete next;
+    MY_DELETE next;
 	return current;
 }

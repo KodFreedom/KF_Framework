@@ -252,8 +252,10 @@ private:
     BoneTexture    bone_texture_;
     bool           enable_ik_;
     float          ik_ray_distance_;
+    float          ik_grounded_distance_;
     float          ik_weight_increase_speed_;
     float          ik_weight_decrease_speed_;
+    Vector3        ik_foot_offset_;
     IKController   ik_controllers_[kIKMax];
     IKGoal         ik_goals_[kIKGoalMax];
 };

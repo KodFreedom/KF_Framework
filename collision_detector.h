@@ -167,16 +167,26 @@ public:
 	//	戻り値：なし
 	//--------------------------------------------------------------------------------
 	static void Detect(SphereCollider& sphere, FieldCollider& field);
+
+    //--------------------------------------------------------------------------------
+    //	関数名：Detect
+    //  関数説明：レイとAabbの当たり判定
+    //	引数：	ray：レイ
+    //			distance：レイの長さ
+    //			aabb：aabbコライダー
+    //	戻り値：RayHitInfo*
+    //--------------------------------------------------------------------------------
+    static RayHitInfo* Detect(const Ray& ray, const float& distance, AabbCollider& aabb);
 	
 	//--------------------------------------------------------------------------------
 	//	関数名：Detect
-	//  関数説明：レイとボックスの当たり判定
+	//  関数説明：レイとObbの当たり判定
 	//	引数：	ray：レイ
-	//			distancetance：レイの長さ
-	//			box：ボックスコライダー
+	//			distance：レイの長さ
+	//			obb：obbコライダー
 	//	戻り値：RayHitInfo*
 	//--------------------------------------------------------------------------------
-	static RayHitInfo* Detect(const Ray& ray, const float& distance, BoxCollider& box);
+	static RayHitInfo* Detect(const Ray& ray, const float& distance, ObbCollider& obb);
 
 	//--------------------------------------------------------------------------------
 	//	関数名：Detect
@@ -234,7 +244,17 @@ private:
 	//	戻り値：Collision*
 	//--------------------------------------------------------------------------------
 	static Collision* Detect(const Vector3& point, const FieldCollider& field);
-	
+
+    //--------------------------------------------------------------------------------
+    //	関数名：detect
+    //  関数説明：rayとaabbの当たり判定
+    //	引数：	ray：(aabb空間に変換済み)
+    //          distance：rayの距離
+    //			halfsize：AABBのサイズ
+    //	戻り値：Collision*
+    //--------------------------------------------------------------------------------
+    static Collision* Detect(const Ray& ray, const float& distance, const Vector3& halfsize);
+
 	//--------------------------------------------------------------------------------
 	//	関数名：detect
 	//  関数説明：直線と直線の交差判定(二次元)

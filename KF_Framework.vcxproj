@@ -230,7 +230,6 @@
     <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="editor_controller.cpp" />
     <ClCompile Include="editor_camera.cpp" />
-    <ClCompile Include="enemy_controller.cpp" />
     <ClCompile Include="fade_system.cpp" />
     <ClCompile Include="field_collider.cpp" />
     <ClCompile Include="field_editor.cpp" />
@@ -256,7 +255,6 @@
     <ClCompile Include="mode_result.cpp" />
     <ClCompile Include="mode_title.cpp" />
     <ClCompile Include="motion_state.cpp" />
-    <ClCompile Include="player_controller.cpp" />
     <ClCompile Include="player_ui.cpp" />
     <ClCompile Include="render_system_directX9.cpp" />
     <ClCompile Include="renderer_manager.cpp" />

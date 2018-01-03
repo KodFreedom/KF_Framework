@@ -26,7 +26,6 @@ namespace kodfreedom
     //  constant variables / 定数
     //--------------------------------------------------------------------------------
     static constexpr float kPi = 3.1415926f; // Pi / 円周率
-    static constexpr float kFloatMin = 0.0001f;
     static constexpr float kDotMin = 0.05f;
 
     //--------------------------------------------------------------------------------
@@ -268,9 +267,14 @@ namespace kodfreedom
         //--------------------------------------------------------------------------------
         Vector3(const Vector4& value);
         
-        float x_; // x component of the vector2 / ベクトル3のx要素
-        float y_; // y component of the vector2 / ベクトル3のy要素
-        float z_; // z component of the vector2 / ベクトル3のz要素
+        union
+        {
+            float m_[3];
+            struct
+            {
+                float x_, y_, z_;
+            };
+        };
 
         static const Vector3 kZero; // vector3(0, 0, 0)
         static const Vector3 kOne; // vector3(1, 1, 1)
@@ -1658,6 +1662,16 @@ namespace kodfreedom
         static float AbsMax(const float& value_l, const float& value_r)
         {
             return fabsf(value_l) >= fabsf(value_r) ? value_l : value_r;
+        }
+
+        //--------------------------------------------------------------------------------
+        //  swap the value of left and right / 左値と右値を交換する
+        //--------------------------------------------------------------------------------
+        static void Swap(float& left, float& right)
+        {
+            float work = left;
+            left = right;
+            right = work;
         }
     };
 } // namespace KodFreedom

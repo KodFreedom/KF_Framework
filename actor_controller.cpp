@@ -90,7 +90,7 @@ void ActorController::Change(ActorState* state)
 	if (state_)
 	{
 		state_->Uninit(*this);
-		delete state_;
+		MY_DELETE state_;
 	}
 	state_ = state;
 	state_->Init(*this);
@@ -146,7 +146,7 @@ void ActorController::CheckGrounded(void)
 	{
 		current_ground_info_.is_grounded = true;
 		current_ground_info_.normal = ray_hit_info->normal;
-		delete ray_hit_info;
+		MY_DELETE ray_hit_info;
 		return;
 	}
 
