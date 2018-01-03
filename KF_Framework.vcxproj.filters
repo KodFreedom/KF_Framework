@@ -342,12 +342,6 @@
     <ClCompile Include="editor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="player_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="actor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>

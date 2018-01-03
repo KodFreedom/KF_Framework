@@ -39,6 +39,11 @@ bool Time::CanUpdateFrame(void)
     delta_time_ = static_cast<float>(current_time_.QuadPart - exec_last_time_.QuadPart)
          / static_cast<float>(frequency_.QuadPart);
 
+#ifdef _DEBUG
+    // break point‚ÌŽžŽžŠÔ‚ª”ò‚ñ‚¶‚á‚¤‚Ì‚Å§ŒÀ‚·‚é•K—v‚ª‚ ‚é
+    delta_time_ = delta_time_ >= kTimeInterval ? kTimeInterval : delta_time_;
+#endif // _DEBUG
+
     scaled_delta_time_ = delta_time_ * time_scale_;
 
     if (delta_time_ >= kTimeInterval)

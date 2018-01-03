@@ -19,24 +19,34 @@ class Transform;
 //--------------------------------------------------------------------------------
 enum IKParts
 {
+    // 頭
     kHead,
     kNeck,
-    kShoulderLeft,
-    kUpperArmLeft,
-    kLowerArmLeft,
-    kHandLeft,
+
+    // 右手
     kShoulderRight,
     kUpperArmRight,
     kLowerArmRight,
     kHandRight,
-    kUpperLegLeft,
-    kLowerLegLeft,
-    kFootLeft,
-    kToesLeft,
+
+    // 左手
+    kShoulderLeft,
+    kUpperArmLeft,
+    kLowerArmLeft,
+    kHandLeft,
+
+    // 右足
     kUpperLegRight,
     kLowerLegRight,
     kFootRight,
     kToesRight,
+
+    // 左足
+    kUpperLegLeft,
+    kLowerLegLeft,
+    kFootLeft,
+    kToesLeft,
+
     kIKMax
 };
 
@@ -56,6 +66,9 @@ struct BoneTexture
 //--------------------------------------------------------------------------------
 class Animator : public Component
 {
+#ifdef _DEBUG
+    friend class DebugObserver;
+#endif
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
@@ -81,10 +94,7 @@ public:
     //--------------------------------------------------------------------------------
     //  後更新処理
     //--------------------------------------------------------------------------------
-    void LateUpdate(void)
-    {
-        UpdateBoneTexture();
-    }
+    void LateUpdate(void);
 
     //--------------------------------------------------------------------------------
     //  今のアニメーションの名前の取得
@@ -130,6 +140,7 @@ public:
     void SetUltra(const bool& value) { is_ultra_ = value; }
     void SetAngry(const bool& value) { is_angry_ = value; }
     void SetDead(const bool& value) { is_dead_ = value; }
+    void SetEnableIK(const bool& value) { enable_ik_ = value; }
     void SetMovement(const float& value) { movement_ = value; }
 
     //--------------------------------------------------------------------------------
@@ -144,6 +155,17 @@ public:
 
 private:
     //--------------------------------------------------------------------------------
+    //  列挙型定義
+    //--------------------------------------------------------------------------------
+    enum IKGoals
+    {
+        kIKGoalLook = 0,
+        kIKGoalLeftFoot,
+        kIKGoalRightFoot,
+        kIKGoalMax
+    };
+
+    //--------------------------------------------------------------------------------
     //  構造体定義
     //--------------------------------------------------------------------------------
     struct Bone
@@ -151,6 +173,18 @@ private:
         Transform*  transform;
         String      name;
         Matrix44    bind_pose_inverse;
+    };
+
+    struct IKController
+    {
+        int index;
+    };
+
+    struct IKGoal
+    {
+        float weight;
+        Vector3 position;
+        Vector3 up;
     };
 
     //--------------------------------------------------------------------------------
@@ -167,6 +201,32 @@ private:
     //  テクスチャのサーフェイスにボーンマトリクスを書き込む
     //--------------------------------------------------------------------------------
     void UpdateBoneTexture(void);
+
+    //--------------------------------------------------------------------------------
+    //  インバースキネマティクス(IK)の初期化
+    //--------------------------------------------------------------------------------
+    void InitIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  インバースキネマティクス(IK)計算
+    //--------------------------------------------------------------------------------
+    void UpdateIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  foot ikの計算
+    //--------------------------------------------------------------------------------
+    void UpdateFootIK(void);
+
+    //--------------------------------------------------------------------------------
+    //  ik goalの計算
+    //--------------------------------------------------------------------------------
+    void ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal);
+
+    //--------------------------------------------------------------------------------
+    //  foot ik計算
+    //--------------------------------------------------------------------------------
+    void ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal);
+    //void ComputeIK(const IKParts& end_part, const IKGoals& ik_goal, const int parent_number = 3);
 
     //--------------------------------------------------------------------------------
     //  変数定義
@@ -189,5 +249,13 @@ private:
     float          movement_;
     float          time_counter_;
     BoneTexture    bone_texture_;
-    int            ik_controllers_[kIKMax];
+    bool           enable_ik_;
+    float          ik_ray_distance_;
+    float          ik_grounded_distance_;
+    float          ik_weight_increase_speed_;
+    float          ik_weight_decrease_speed_;
+    Vector3        ik_foot_position_offset_;
+    Vector3        ik_foot_rotation_offset_;
+    IKController   ik_controllers_[kIKMax];
+    IKGoal         ik_goals_[kIKGoalMax];
 };

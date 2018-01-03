@@ -267,7 +267,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//Collider
 	auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
-	collider->SetOffset(Vector3(0.0f, 0.6f, 0.0f));
+	collider->SetOffset(Vector3(0.0f, 0.8f, 0.0f));
 	collider->SetTag(L"body");
 	result->AddCollider(collider);
 	
@@ -389,7 +389,13 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 	archive.loadBinary(&rotation, sizeof(rotation));
 	archive.loadBinary(&scale, sizeof(scale));
 	auto transform = result->GetTransform();
-	if (parent) transform->RegisterParent(parent, position, rotation, scale);
+    if (parent)
+    {
+        transform->RegisterParent(parent);
+        transform->SetPosition(position);
+        transform->SetRotation(rotation);
+        transform->SetScale(scale);
+    }
 
 	//Collider
 	int collider_number = 0;

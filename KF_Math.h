@@ -20,11 +20,13 @@ namespace kodfreedom
     class Quaternion;
     class Matrix44;
     class Ray;
+    class Vector4;
 
     //--------------------------------------------------------------------------------
     //  constant variables / 定数
     //--------------------------------------------------------------------------------
-    constexpr float kPi = 3.1415926358979f; // Pi / 円周率
+    static constexpr float kPi = 3.1415926f; // Pi / 円周率
+    static constexpr float kDotMin = 0.05f;
 
     //--------------------------------------------------------------------------------
     //  Short2
@@ -235,17 +237,7 @@ namespace kodfreedom
         //  to：終了ベクトル
         //  return：float
         //--------------------------------------------------------------------------------
-        static float RadianBetween(const Vector2& from, const Vector2& to)
-        {
-            if (from == to) return 0.0f;
-            float square_magnitude_from = from.SquareMagnitude();
-            float square_magnitude_to = to.SquareMagnitude();
-            if (square_magnitude_from * square_magnitude_to <= 0.0f) return 0.0f;
-            float dot = from.Dot(to);
-            float cross = from * to;
-            float sign = cross >= 0.0f ? 1.0f : -1.0f;
-            return acosf(dot / (sqrtf(square_magnitude_from) * sqrtf(square_magnitude_to)) * sign);
-        }
+        static float RadianBetween(const Vector2& from, const Vector2& to);
     };
 
     //--------------------------------------------------------------------------------
@@ -268,10 +260,21 @@ namespace kodfreedom
         //  xyzに与えられた値を入れるを入れる
         //--------------------------------------------------------------------------------
         Vector3(const float& x, const float& y, const float& z) : x_(x), y_(y), z_(z) {}
+
+        //--------------------------------------------------------------------------------
+        //  set xyz with given Vector4's xyz
+        //  xyzに与えられたVector4のxyz値を入れるを入れる
+        //--------------------------------------------------------------------------------
+        Vector3(const Vector4& value);
         
-        float x_; // x component of the vector2 / ベクトル3のx要素
-        float y_; // y component of the vector2 / ベクトル3のy要素
-        float z_; // z component of the vector2 / ベクトル3のz要素
+        union
+        {
+            float m_[3];
+            struct
+            {
+                float x_, y_, z_;
+            };
+        };
 
         static const Vector3 kZero; // vector3(0, 0, 0)
         static const Vector3 kOne; // vector3(1, 1, 1)
@@ -551,6 +554,14 @@ namespace kodfreedom
         {
             return Vector3(value.x_ * scale.x_, value.y_ * scale.y_, value.z_ * scale.z_);
         }
+
+        //--------------------------------------------------------------------------------
+        //  ベクトル間のradian角の算出
+        //  from : 開始ベクトル
+        //  to：終点ベクトル
+        //  return：float
+        //--------------------------------------------------------------------------------
+        static float RadianBetween(const Vector3& from, const Vector3& to);
         
         //--------------------------------------------------------------------------------
         //  ベクトル間のeuler角の算出
@@ -586,6 +597,14 @@ namespace kodfreedom
         //  return：Vector3
         //--------------------------------------------------------------------------------
         static Vector3 Rotate(const Vector3& direction, const Quaternion& rotation);
+
+        //--------------------------------------------------------------------------------
+        //  回転軸と回転角度でオラー角に変換する
+        //  axis：回転軸
+        //  radian：回転角度で
+        //  return：Vector3
+        //--------------------------------------------------------------------------------
+        static Vector3 AxisRadianToEuler(const Vector3& axis, const float& radian);
     };
 
     //--------------------------------------------------------------------------------
@@ -833,6 +852,25 @@ namespace kodfreedom
         }
 
         //--------------------------------------------------------------------------------
+        //  remove the scale value / 行列のスケール要素を無くす
+        //--------------------------------------------------------------------------------
+        void RemoveScale(void)
+        {
+            Vector3& right = Vector3(m00_, m01_, m02_).Normalized();
+            m00_ = right.x_;
+            m01_ = right.y_;
+            m02_ = right.z_;
+            Vector3& up = Vector3(m10_, m11_, m12_).Normalized();
+            m10_ = up.x_;
+            m11_ = up.y_;
+            m12_ = up.z_;
+            Vector3& forward = Vector3(m20_, m21_, m22_).Normalized();
+            m20_ = forward.x_;
+            m21_ = forward.y_;
+            m22_ = forward.z_;
+        }
+
+        //--------------------------------------------------------------------------------
         //  get the inverse matrix / inverse行列に変換して返す
         //  return : Matrix44
         //--------------------------------------------------------------------------------
@@ -840,15 +878,7 @@ namespace kodfreedom
         {
             Matrix44 result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-            D3DXMATRIX inverse = *this;
-            D3DXMatrixInverse(&inverse, NULL, &inverse);
-            for (int count_y = 0; count_y < 4; ++count_y)
-            {
-                for (int count_x = 0; count_x < 4; ++count_x)
-                {
-                    result.m_[count_y][count_x] = inverse(count_y, count_x);
-                }
-            }
+            D3DXMatrixInverse((D3DXMATRIX*)&result, NULL, (D3DXMATRIX*)this);
 #endif
             return result;
         }
@@ -1021,7 +1051,6 @@ namespace kodfreedom
         //--------------------------------------------------------------------------------
         Quaternion(const float& x, const float& y, const float& z, const float& w) : x_(x), y_(y), z_(z), w_(w) {}
         
-
         float x_; // x component of the Quaternion / クォータニオンのx要素
         float y_; // y component of the Quaternion / クォータニオンのy要素
         float z_; // z component of the Quaternion / クォータニオンのz要素
@@ -1235,16 +1264,22 @@ namespace kodfreedom
 
         //--------------------------------------------------------------------------------
         //    create a quaternion rotate by axis
-        //    return：Matrix44
+        //    return：quaternion
         //--------------------------------------------------------------------------------
         static Quaternion RotateAxis(const Vector3& axis, const float& radian)
         {
-            auto& axis_quaternion = Quaternion(axis.x_, axis.y_, axis.z_, 1.0f);
+            Quaternion& axis_quaternion = Quaternion(axis.x_, axis.y_, axis.z_, 1.0f);
             float sin = sinf(radian * 0.5f);
             float cos = cosf(radian * 0.5f);
-            auto& scale = Quaternion(sin, sin, sin, cos);
+            Quaternion& scale = Quaternion(sin, sin, sin, cos);
             return axis_quaternion.MultiplySeparately(scale);
         }
+
+        //--------------------------------------------------------------------------------
+        //    create a quaternion rotate by axis
+        //    return：quaternion
+        //--------------------------------------------------------------------------------
+        static Quaternion FromToRotation(const Vector3& from, const Vector3& to, const float& weight = 1.0f);
     };
 
     //--------------------------------------------------------------------------------
@@ -1550,14 +1585,7 @@ namespace kodfreedom
             if (time >= 1.0f) { return to; }
             Quaternion result;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-            D3DXQUATERNION from_dx = from;
-            D3DXQUATERNION to_dx = to;
-            D3DXQUATERNION result_dx;
-            D3DXQuaternionSlerp(&result_dx, &from_dx, &to_dx, time);
-            result.x_ = result_dx.x;
-            result.y_ = result_dx.y;
-            result.z_ = result_dx.z;
-            result.w_ = result_dx.w;
+            D3DXQuaternionSlerp((D3DXQUATERNION*)&result, (D3DXQUATERNION*)&from, (D3DXQUATERNION*)&to, time);
 #else
             //Quaternion qFromCpy = qFrom;
             //Quaternion qToCpy = qTo;
@@ -1609,6 +1637,20 @@ namespace kodfreedom
         }
 
         //--------------------------------------------------------------------------------
+        //  Vector3をminとmaxの間にする
+        //  value：現在値
+        //  min：最小値
+        //  max：最大値
+        //  return：Vector3
+        //--------------------------------------------------------------------------------
+        static Vector3 Clamp(const Vector3& value, const Vector3& min, const Vector3& max)
+        {
+            return Vector3(Clamp(value.x_, min.x_, max.x_),
+                           Clamp(value.y_, min.y_, max.y_),
+                           Clamp(value.z_, min.z_, max.z_));
+        }
+
+        //--------------------------------------------------------------------------------
         //  return the abs's max value / 絶対値が大きい方を返す
         //    value_l、value_r：比較値
         //    return：float
@@ -1616,6 +1658,16 @@ namespace kodfreedom
         static float AbsMax(const float& value_l, const float& value_r)
         {
             return fabsf(value_l) >= fabsf(value_r) ? value_l : value_r;
+        }
+
+        //--------------------------------------------------------------------------------
+        //  swap the value of left and right / 左値と右値を交換する
+        //--------------------------------------------------------------------------------
+        static void Swap(float& left, float& right)
+        {
+            float work = left;
+            left = right;
+            right = work;
         }
     };
 } // namespace KodFreedom

@@ -24,7 +24,6 @@ Transform::Transform(GameObject& owner) : Component(owner)
 	, rotation_(Quaternion::kIdentity)
 	, world_(Matrix44::kIdentity)
 	, parent_(nullptr)
-	, offset_(Matrix44::kIdentity)
 {}
 
 //--------------------------------------------------------------------------------
@@ -55,7 +54,7 @@ void Transform::UpdateMatrix(const Matrix44& parent)
 //--------------------------------------------------------------------------------
 // 親登録処理
 //--------------------------------------------------------------------------------
-void Transform::RegisterParent(Transform* value, const Vector3& offset_translation, const Quaternion& offset_rotation, const Vector3& offset_scale)
+void Transform::RegisterParent(Transform* value)
 {
 	if (parent_)
 	{//親があるの場合前の親から削除
@@ -63,7 +62,6 @@ void Transform::RegisterParent(Transform* value, const Vector3& offset_translati
 	}
 	parent_ = value;
 	parent_->RegisterChild(this);
-	offset_ = Matrix44::Transform(offset_rotation, offset_translation, offset_scale);
 }
 
 //--------------------------------------------------------------------------------
@@ -86,33 +84,35 @@ void Transform::DeregisterChild(Transform* child)
 }
 
 //--------------------------------------------------------------------------------
+//  現在の世界位置の取得
+//--------------------------------------------------------------------------------
+Vector3 Transform::GetCurrentWorldPosition(void) const
+{
+    Matrix44& current_world = GetCurrentWorldMatrix();
+    return Vector3(current_world.rows_[3]);
+}
+
+//--------------------------------------------------------------------------------
 //  最新の世界行列の取得
 //--------------------------------------------------------------------------------
 Matrix44 Transform::GetCurrentWorldMatrix(void) const
 {
-	auto& world = Matrix44::Transform(rotation_, position_, scale_);
+    Matrix44& world = Matrix44::Transform(rotation_, position_, scale_);
 	if (parent_)
 	{
-		world *= offset_;
 		world *= parent_->GetCurrentWorldMatrix();
 	}
 	return world;
 }
 
 //--------------------------------------------------------------------------------
-//  親に対する相対行列の設定
+//  最新の世界行列の取得
 //--------------------------------------------------------------------------------
-void Transform::SetOffset(const Vector3& translation, const Vector3& rotation)
+Matrix44 Transform::GetCurrentWorldMatrix(const Matrix44& parent) const
 {
-	offset_ = Matrix44::Transform(rotation, translation);
-}
-
-//--------------------------------------------------------------------------------
-//  親に対する相対行列の設定
-//--------------------------------------------------------------------------------
-void Transform::SetOffset(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
-{
-	offset_ = Matrix44::Transform(rotation, translation, scale);
+    Matrix44& world = Matrix44::Transform(rotation_, position_, scale_);
+    world *= parent;
+    return world;
 }
 
 //--------------------------------------------------------------------------------
@@ -192,6 +192,5 @@ void Transform::CalculateWorldMatrix(void)
 void Transform::CalculateWorldMatrix(const Matrix44& parent)
 {
 	CalculateWorldMatrix();
-	world_ *= offset_;
 	world_ *= parent;
 }
