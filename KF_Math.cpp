@@ -567,6 +567,17 @@ Matrix44 Quaternion::ToMatrix(void) const
 }
 
 //--------------------------------------------------------------------------------
+//    create a quaternion rotate by axis
+//    returnÅFquaternion
+//--------------------------------------------------------------------------------
+Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to, const float& weight)
+{
+    float radian = acosf(from.Dot(to)) * weight;
+    Vector3& axis = (from * to).Normalized();
+    return Quaternion::RotateAxis(axis, radian);
+}
+
+//--------------------------------------------------------------------------------
 //
 //  Math
 //

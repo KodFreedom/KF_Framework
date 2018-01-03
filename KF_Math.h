@@ -1279,11 +1279,7 @@ namespace kodfreedom
         //    create a quaternion rotate by axis
         //    return：quaternion
         //--------------------------------------------------------------------------------
-        static Quaternion FromToRotation(const Vector3& from, const Vector3& to)
-        {
-            Vector3& euler = Vector3::EulerBetween(from, to);
-            return euler.ToQuaternion();
-        }
+        static Quaternion FromToRotation(const Vector3& from, const Vector3& to, const float& weight = 1.0f);
     };
 
     //--------------------------------------------------------------------------------

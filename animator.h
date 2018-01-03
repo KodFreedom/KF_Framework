@@ -182,10 +182,9 @@ private:
 
     struct IKGoal
     {
-        float position_weight;
-        float rotation_weight;
+        float weight;
         Vector3 position;
-        Quaternion rotation;
+        Vector3 up;
     };
 
     //--------------------------------------------------------------------------------
@@ -255,7 +254,8 @@ private:
     float          ik_grounded_distance_;
     float          ik_weight_increase_speed_;
     float          ik_weight_decrease_speed_;
-    Vector3        ik_foot_offset_;
+    Vector3        ik_foot_position_offset_;
+    Vector3        ik_foot_rotation_offset_;
     IKController   ik_controllers_[kIKMax];
     IKGoal         ik_goals_[kIKGoalMax];
 };

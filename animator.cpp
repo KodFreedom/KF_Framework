@@ -44,7 +44,8 @@ Animator::Animator(GameObject& owner)
     , ik_grounded_distance_(0.5f)
     , ik_weight_increase_speed_(10.0f)
     , ik_weight_decrease_speed_(-10.0f)
-    , ik_foot_offset_(Vector3(0.0f, 0.2f, 0.0f))
+    , ik_foot_position_offset_(Vector3(0.0f, 0.2f, 0.0f))
+    , ik_foot_rotation_offset_(Vector3(0.0f, 0.0f, 0.0f))
 {
     ZeroMemory(ik_controllers_, sizeof(IKController) * kIKMax);
     ZeroMemory(ik_goals_, sizeof(IKGoal) * kIKGoalMax);
@@ -277,28 +278,24 @@ void Animator::UpdateFootIK(void)
 //--------------------------------------------------------------------------------
 void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
 {
-    auto my_transform = owner_.GetTransform();
-    const Vector3& current_position = avatar_[ik_controllers_[goal_part].index].transform->GetCurrentWorldPosition();
     float ik_weight_change_speed = ik_weight_decrease_speed_;
 
     auto collision_system = MainSystem::Instance()->GetCollisionSystem();
-    Ray ray(current_position, Vector3::kDown);
+    Ray ray(avatar_[ik_controllers_[goal_part].index].transform->GetCurrentWorldPosition(), Vector3::kDown);
 
     // 下向きに着地点を判定する
     RayHitInfo* info = collision_system->RayCast(ray, ik_ray_distance_, &owner_);
     if (info)
     {
-        ik_goals_[ik_goal].position = info->position + ik_foot_offset_;
-        ik_goals_[ik_goal].rotation = Quaternion::FromToRotation(my_transform->GetUp(), info->normal) * my_transform->GetRotation();
+        ik_goals_[ik_goal].position = info->position + ik_foot_position_offset_;
+        ik_goals_[ik_goal].up = info->normal;
         ik_weight_change_speed = ik_grounded_distance_ >= info->distance ? ik_weight_increase_speed_ : ik_weight_change_speed;
         MY_DELETE info;
     }
 
     // Weight更新
-    ik_goals_[ik_goal].position_weight += ik_weight_change_speed * Time::Instance()->ScaledDeltaTime();
-    ik_goals_[ik_goal].position_weight = Math::Clamp(ik_goals_[ik_goal].position_weight, 0.0f, 1.0f);
-    ik_goals_[ik_goal].rotation_weight += ik_weight_change_speed * Time::Instance()->ScaledDeltaTime();
-    ik_goals_[ik_goal].rotation_weight = Math::Clamp(ik_goals_[ik_goal].rotation_weight, 0.0f, 1.0f);
+    ik_goals_[ik_goal].weight += ik_weight_change_speed * Time::Instance()->ScaledDeltaTime();
+    ik_goals_[ik_goal].weight = Math::Clamp(ik_goals_[ik_goal].weight, 0.0f, 1.0f);
 }
 
 //--------------------------------------------------------------------------------
@@ -309,7 +306,7 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
     assert((end_part == kFootLeft && ik_goal == kIKGoalLeftFoot)
         || (end_part == kFootRight && ik_goal == kIKGoalRightFoot));
 
-    if (ik_goals_[ik_goal].position_weight == 0.0f) return;
+    if (ik_goals_[ik_goal].weight == 0.0f) return;
 
     // 位置と方向の算出
     const auto& start_transform = avatar_[ik_controllers_[end_part - 2].index].transform;
@@ -352,7 +349,7 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
     float current_joint_radian = acosf(joint_to_start_direction.Dot(joint_to_end_direction));
     
     // 回転する(ウェイトをかける)
-    float delta_joint_radian = (wanted_joint_radian - current_joint_radian) * ik_goals_[ik_goal].position_weight;
+    float delta_joint_radian = (wanted_joint_radian - current_joint_radian) * ik_goals_[ik_goal].weight;
     Vector3& joint_rotate_axis = (joint_to_start_direction * joint_to_end_direction).Normalized();
     Matrix44 joint_matrix_to_local = joint_world;
     joint_matrix_to_local.RemoveScale();
@@ -371,18 +368,25 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
     Matrix44& start_matrix_to_local = start_world.Inverse();
     Vector3& start_to_new_end_local = Vector3::TransformCoord(new_end_position, start_matrix_to_local).Normalized();
     Vector3& start_to_goal_local = Vector3::TransformCoord(ik_goals_[ik_goal].position, start_matrix_to_local).Normalized();
-    Vector3& rotate_axis = start_to_new_end_local * start_to_goal_local;
-    if (rotate_axis.SquareMagnitude() <= FLT_EPSILON) return;
-    rotate_axis.Normalize();
+    Vector3& rotate_axis = (start_to_new_end_local * start_to_goal_local).Normalized();
 
     // ウェイトをかける
-    float delta_start_radian = acosf(start_to_new_end_local.Dot(start_to_goal_local)) * ik_goals_[ik_goal].position_weight;
+    float delta_start_radian = acosf(start_to_new_end_local.Dot(start_to_goal_local)) * ik_goals_[ik_goal].weight;
 
     // 回転する
     Quaternion& start_rotation = Quaternion::RotateAxis(rotate_axis, delta_start_radian);
     start_transform->SetRotation(start_transform->GetRotation() * start_rotation);
 
-    // TODO : 足元の回転
+    // 足元の回転
+    start_world = start_transform->GetCurrentWorldMatrix();
+    joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
+    end_world = end_transform->GetCurrentWorldMatrix(joint_world);
+    Vector3& goal_up = Vector3::TransformNormal(ik_goals_[ik_goal].up, end_world.Transpose()).Normalized();
+    Vector3& end_up = end_transform->GetUp();
+    Quaternion& rotation = Quaternion::FromToRotation(end_up, goal_up, ik_goals_[ik_goal].weight);
+    end_transform->SetRotation(end_transform->GetRotation()
+        * rotation * (ik_foot_rotation_offset_ * ik_goals_[ik_goal].weight).ToQuaternion());
+    end_up = end_transform->GetUp();
 }
 
 //--------------------------------------------------------------------------------
@@ -390,7 +394,7 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
 //--------------------------------------------------------------------------------
 //void Animator::ComputeIK(const IKParts& end_part, const IKGoals& ik_goal, const int parent_number)
 //{
-//    if (ik_goals[ik_goal].position_weight == 0.0f) return;
+//    if (ik_goals[ik_goal].weight == 0.0f) return;
 //    Transform* end_part_transform = avatar_[ik_controllers_[end_part].index].transform;
 //
 //    for (int count = 0, count_parent = 0; count < ik_loop_max_; ++count)
@@ -443,7 +447,7 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
 //        rotation_euler = Math::Clamp(rotation_euler, ik_controllers_[current_part].rotation_limit_min, ik_controllers_[current_part].rotation_limit_max);
 //
 //        // ウェイト
-//        rotation_euler *= ik_goals[ik_goal].position_weight;
+//        rotation_euler *= ik_goals[ik_goal].weight;
 //
 //        // 回転する
 //        current_part_transform->SetRotation(current_part_transform->GetRotation() * rotation_euler.ToQuaternion());
