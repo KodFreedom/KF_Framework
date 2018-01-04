@@ -394,6 +394,9 @@
     <ClInclude Include="player_jugg_walk_state.h" />
     <ClInclude Include="windmill_controller.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="kf_math.inl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -945,4 +945,9 @@
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="kf_math.inl">
+      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
+    </None>
+  </ItemGroup>
 </Project>
