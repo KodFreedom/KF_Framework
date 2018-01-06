@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	エディタビヘイビアコンポネント
+//  エディタビヘイビアコンポネント
 //　EditorController.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "editor_controller.h"
 #if defined(EDITOR)
@@ -15,32 +15,32 @@
 #include "Model_editor.h"
 #include "transform.h"
 #include "ImGui\imgui.h"
+#include "labels.h"
+#include "debug_observer.h"
 
 //--------------------------------------------------------------------------------
 //
-//	Public
+//  Public
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 EditorController::EditorController(GameObject& owner)
-	: Behavior(owner, L"EditorController")
-	, field_editor_(nullptr)
-	, model_editor_(nullptr)
-	, is_auto_height_(true)
-	, move_speed_(1.0f)
-    , current_language_(kEnglish)
-{
-
-}
+    : Behavior(owner, L"EditorController")
+    , field_editor_(nullptr)
+    , model_editor_(nullptr)
+    , enable_auto_adjust_height_(true)
+    , move_speed_(1.0f)
+    , stage_name_("demo")
+{}
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
 bool EditorController::Init(void)
 {
-	return true;
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -56,12 +56,12 @@ void EditorController::Uninit(void)
 //--------------------------------------------------------------------------------
 void EditorController::Update(void)
 {
-	ShowMainWindow();
+    ShowMainWindow();
 }
 
 //--------------------------------------------------------------------------------
 //
-//	Private
+//  Private
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -70,8 +70,8 @@ void EditorController::Update(void)
 void EditorController::Save(void)
 {
     String stage_name(stage_name_.begin(), stage_name_.end());
-	field_editor_->SaveAsBinary(stage_name + L"Field");
-	model_editor_->SaveAsBinary(stage_name + L"Stage");
+    field_editor_->SaveAsBinary(stage_name + L"Field");
+    model_editor_->SaveAsBinary(stage_name + L"Stage");
 }
 
 //--------------------------------------------------------------------------------
@@ -79,35 +79,55 @@ void EditorController::Save(void)
 //--------------------------------------------------------------------------------
 void EditorController::ShowMainWindow(void)
 {
-	// Begin
-	if (!ImGui::Begin("Editor Window"))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Editor window"))
+    {
+        ImGui::End();
+        return;
+    }
+
+    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
 
     // State name
+    ImGui::InputText(kStageName[current_language], &stage_name_[0], _MAX_PATH);
 
+    // Mode
+    ShowModeWindow();
 
-	// Pos
-	ShowPositonWindow();
+    // Position
+    ShowPositonWindow();
 
-	// Auto Height
-	ImGui::Checkbox("Auto Height", &is_auto_height_);
+    // Save
+    if (ImGui::Button(kSaveStage[current_language])) { Save(); }
 
-	// Mode
-	bool is_model_editor_ = model_editor_->IsActive();
-	bool is_field_editor_ = field_editor_->IsActive();
-	if (ImGui::Button("Model Editor")) { is_model_editor_ ^= 1; }
-	if (ImGui::Button("Field Editor")) { is_field_editor_ ^= 1; }
-	model_editor_->SetActive(is_model_editor_);
-	field_editor_->SetActive(is_field_editor_);
+    // End
+    ImGui::End();
+}
 
-	// Save
-	if (ImGui::Button("Save")) { Save(); }
+//--------------------------------------------------------------------------------
+//  モードウィンドウの表示
+//--------------------------------------------------------------------------------
+void EditorController::ShowModeWindow(void)
+{
+    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
 
-	// End
-	ImGui::End();
+    // model
+    bool enable_model_editor = model_editor_->IsActive();
+    if (ImGui::Button(enable_model_editor ? kCloseModelEditor[current_language]
+        : kOpenModelEditor[current_language]))
+    {
+        enable_model_editor ^= 1;
+    }
+    model_editor_->SetActive(enable_model_editor);
+
+    // field
+    bool enable_field_editor = field_editor_->IsActive();
+    if (ImGui::Button(enable_field_editor ? kCloseFieldEditor[current_language]
+        : kOpenFieldEditor[current_language]))
+    {
+        enable_field_editor ^= 1;
+    }
+    field_editor_->SetActive(enable_field_editor);
 }
 
 //--------------------------------------------------------------------------------
@@ -115,38 +135,48 @@ void EditorController::ShowMainWindow(void)
 //--------------------------------------------------------------------------------
 void EditorController::ShowPositonWindow(void)
 {
-	//標的操作
-	auto input = MainSystem::Instance()->GetInput();
-	auto transform = owner_.GetTransform();
-	Vector3 position = transform->GetPosition();
-	auto& axis = Vector2(input->MoveHorizontal(), input->MoveVertical());
-	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
-	auto& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-	auto& movement = camera->GetWorldRight() * axis.x_ * move_speed_ + camera_forward * axis.y_ * move_speed_;
-	auto height = static_cast<float>(input->GetKeyPress(Key::kLeft) - input->GetKeyPress(Key::kRight));
-	position += movement;
-	position.y_ += height * move_speed_;
+    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
 
-	//Adjust Pos
-	position = field_editor_->AdjustPositionInField(position, is_auto_height_);
+    if (ImGui::CollapsingHeader(kTargetPosition[current_language]))
+    {
+        // 位置の取得
+        auto transform = owner_.GetTransform();
+        const Vector3& previous_position = transform->GetPosition();
+        Vector3 current_position = previous_position;
 
-	//ImGui
-	ImGui::Text("Move : W A S D");
-	ImGui::Text("Raise / Reduce : <- / ->");
-	ImGui::Text("CameraRot : RightClick + MouseMove");
-	ImGui::Text("CameraZoom : RightClick + MouseWheel");
-	ImGui::InputFloat("Move / Raise Speed", &move_speed_);
-	ImGui::InputFloat3("Pos", &position.x_);
+        // 操作更新
+        auto input = MainSystem::Instance()->GetInput();
+        Vector2 axis(input->MoveHorizontal(), input->MoveVertical());
+        auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+        Vector3& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
+        Vector3& movement = camera->GetWorldRight() * axis.x_ * move_speed_ + camera_forward * axis.y_ * move_speed_;
+        float height = static_cast<float>(input->GetKeyPress(Key::kLeft) - input->GetKeyPress(Key::kRight));
+        current_position += movement;
+        current_position.y_ += height * move_speed_;
 
-	//操作位置の更新
-	field_editor_->SetPosition(position);
-	model_editor_->SetPosition(position);
+        // 高さの自動調節モード
+        ImGui::Checkbox(kAutoAdjustHeight[current_language], &enable_auto_adjust_height_);
 
-	//カメラの移動
-	movement = position - transform->GetPosition();
-	camera->Move(movement);
+        // 位置の調節
+        current_position = field_editor_->AdjustPositionInField(current_position, enable_auto_adjust_height_);
 
-	//Pos設定
-	transform->SetPosition(position);
+        // 操作方法
+        ImGui::Text(kExplainMove[current_language]);
+        ImGui::Text(kExplainRaiseReduce[current_language]);
+        ImGui::Text(kExplainCameraRotation[current_language]);
+        ImGui::Text(kExplainCameraZoom[current_language]);
+        ImGui::InputFloat(kMoveRaiseSpeed[current_language], &move_speed_);
+        ImGui::InputFloat3(kTargetPosition[current_language], &current_position.x_);
+
+        // 操作位置の更新
+        field_editor_->SetPosition(current_position);
+        model_editor_->SetPosition(current_position);
+        transform->SetPosition(current_position);
+
+        // カメラの移動
+        movement = current_position - previous_position;
+        camera->Move(movement);
+    }
 }
+
 #endif // EDITOR

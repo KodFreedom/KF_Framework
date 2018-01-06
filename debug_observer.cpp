@@ -99,6 +99,10 @@ void DebugObserver::ShowMainWindow(void)
 		render_system->SetBackgroundColor(background_color);
 	}
 
+    // Select language
+    ImGui::ListBox(kSelectLanguage[current_language_],
+        (int*)&current_language_, kLanguage, kLanguageMax, kLanguageMax);
+
 	// Window
 	if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
 	if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;

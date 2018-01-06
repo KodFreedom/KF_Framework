@@ -11,6 +11,8 @@
 #include "mode.h"
 #include "camera.h"
 #include "ImGui\imgui.h"
+#include "labels.h"
+#include "debug_observer.h"
 #include <cereal/archives/binary.hpp>
 using namespace cereal;
 
@@ -38,7 +40,7 @@ FieldEditor::FieldEditor(GameObject& owner)
 bool FieldEditor::Init(void)
 {
 	// Vertex
-	auto& start = Vector3(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
 	vertexes_.resize((block_number_x_ + 1) * (block_number_z_ + 1));
 	for (int count_z = 0; count_z < block_number_z_ + 1; ++count_z)
 	{
@@ -55,7 +57,7 @@ bool FieldEditor::Init(void)
 		}
 	}
 
-	auto& half_size = Vector3(block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    Vector3 half_size(block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
 	min_position_ = half_size * -1.0f;
 	max_position_ = half_size;
 	
@@ -96,12 +98,13 @@ void FieldEditor::Uninit(void)
 void FieldEditor::Update(void)
 {
 	if (!is_active_) return;
+
 	ShowMainWindow();
 
 	auto input = MainSystem::Instance()->GetInput();
 
 	//ägèk
-	auto input_value = static_cast<float>(input->GetKeyPress(Key::kExtend))
+    float input_value = static_cast<float>(input->GetKeyPress(Key::kExtend))
 		- static_cast<float>(input->GetKeyPress(Key::kShrink));
 	editor_radius_ += input_value * extend_speed_;
 	editor_radius_ = editor_radius_ < 0.0f ? 0.0f : editor_radius_;
@@ -130,7 +133,6 @@ void FieldEditor::Update(void)
 		}
 	}
 	
-
 	auto& choosen_indexes = GetChoosenIndexes();
 	UpdateVertexesBy(choosen_indexes);
 	MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, choosen_indexes);
