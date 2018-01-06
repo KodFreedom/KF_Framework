@@ -944,6 +944,9 @@
     <ClInclude Include="player_mutant_fall_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
+    <ClInclude Include="labels.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="kf_math.inl">

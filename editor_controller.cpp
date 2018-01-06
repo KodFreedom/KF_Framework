@@ -30,6 +30,7 @@ EditorController::EditorController(GameObject& owner)
 	, model_editor_(nullptr)
 	, is_auto_height_(true)
 	, move_speed_(1.0f)
+    , current_language_(kEnglish)
 {
 
 }
@@ -68,8 +69,9 @@ void EditorController::Update(void)
 //--------------------------------------------------------------------------------
 void EditorController::Save(void)
 {
-	field_editor_->SaveAsBinary(L"demoField");
-	model_editor_->SaveAsBinary(L"demoStage");
+    String stage_name(stage_name_.begin(), stage_name_.end());
+	field_editor_->SaveAsBinary(stage_name + L"Field");
+	model_editor_->SaveAsBinary(stage_name + L"Stage");
 }
 
 //--------------------------------------------------------------------------------
@@ -83,6 +85,9 @@ void EditorController::ShowMainWindow(void)
 		ImGui::End();
 		return;
 	}
+
+    // State name
+
 
 	// Pos
 	ShowPositonWindow();

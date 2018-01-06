@@ -112,10 +112,9 @@ bool RenderSystemDirectX9::Init(HWND hwnd, BOOL is_window_mode)
 	InitVertexDeclaration();
 	InitRenderSate();
 #if defined(_DEBUG) || defined(EDITOR)
-	ImGui_ImplDX9_Init(hwnd, device_);
+    ImGui_ImplDX9_Init(hwnd, device_);
 #endif
 	device_->GetRenderTarget(0, &back_buffer_surface_);
-	//// テクスチャへのレンダリングに使う深度バッファの作成
 	device_->CreateDepthStencilSurface(SCREEN_WIDTH, SCREEN_HEIGHT
 		, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, TRUE, &depth_stencil_surface_, NULL);
 	return true;
