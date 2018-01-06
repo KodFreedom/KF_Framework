@@ -106,3 +106,57 @@ static const char* kSaveStage[kLanguageMax] =
     "Save",
     u8"保存"
 };
+
+static const char* kExplainFieldRaiseReduce[kLanguageMax] =
+{
+    "Raise/Reduce : Up/Down",
+    u8"上昇/降下 : 上方向/下方向"
+};
+
+static const char* kRaiseModeRate[kLanguageMax] =
+{
+    "Raise mode rate of average and linear",
+    u8"起伏補間モード平均と線形の比率"
+};
+
+static const char* kFieldRadius[kLanguageMax] =
+{
+    "Choose radius",
+    u8"選択半径"
+};
+
+static const char* kFieldRange[kLanguageMax] =
+{
+    "Choose range",
+    u8"選択範囲"
+};
+
+static const char* kFieldRaiseSpeed[kLanguageMax] =
+{
+    "Raise speed",
+    u8"起伏速度"
+};
+
+static const char* kFieldExtendSpeed[kLanguageMax] =
+{
+    "Extend speed",
+    u8"拡縮速度"
+};
+
+static const char* kFieldChooseMode[kLanguageMax] =
+{
+    "Choose mode",
+    u8"選択モード"
+};
+
+static const char* kFieldChooseModeLabels[kLanguageMax][2] =
+{
+    {
+        "Circle",
+        "Square"
+    },
+    {
+        u8"円形",
+        u8"長方形"
+    }
+};

@@ -137,46 +137,43 @@ void EditorController::ShowPositonWindow(void)
 {
     auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
 
-    if (ImGui::CollapsingHeader(kTargetPosition[current_language]))
-    {
-        // 位置の取得
-        auto transform = owner_.GetTransform();
-        const Vector3& previous_position = transform->GetPosition();
-        Vector3 current_position = previous_position;
+    // 位置の取得
+    auto transform = owner_.GetTransform();
+    const Vector3& previous_position = transform->GetPosition();
+    Vector3 current_position = previous_position;
 
-        // 操作更新
-        auto input = MainSystem::Instance()->GetInput();
-        Vector2 axis(input->MoveHorizontal(), input->MoveVertical());
-        auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
-        Vector3& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-        Vector3& movement = camera->GetWorldRight() * axis.x_ * move_speed_ + camera_forward * axis.y_ * move_speed_;
-        float height = static_cast<float>(input->GetKeyPress(Key::kLeft) - input->GetKeyPress(Key::kRight));
-        current_position += movement;
-        current_position.y_ += height * move_speed_;
+    // 操作更新
+    auto input = MainSystem::Instance()->GetInput();
+    Vector2 axis(input->MoveHorizontal(), input->MoveVertical());
+    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    Vector3& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
+    Vector3& movement = camera->GetWorldRight() * axis.x_ * move_speed_ + camera_forward * axis.y_ * move_speed_;
+    float height = static_cast<float>(input->GetKeyPress(Key::kLeft) - input->GetKeyPress(Key::kRight));
+    current_position += movement;
+    current_position.y_ += height * move_speed_;
 
-        // 高さの自動調節モード
-        ImGui::Checkbox(kAutoAdjustHeight[current_language], &enable_auto_adjust_height_);
+    // 高さの自動調節モード
+    ImGui::Checkbox(kAutoAdjustHeight[current_language], &enable_auto_adjust_height_);
 
-        // 位置の調節
-        current_position = field_editor_->AdjustPositionInField(current_position, enable_auto_adjust_height_);
+    // 位置の調節
+    current_position = field_editor_->AdjustPositionInField(current_position, enable_auto_adjust_height_);
 
-        // 操作方法
-        ImGui::Text(kExplainMove[current_language]);
-        ImGui::Text(kExplainRaiseReduce[current_language]);
-        ImGui::Text(kExplainCameraRotation[current_language]);
-        ImGui::Text(kExplainCameraZoom[current_language]);
-        ImGui::InputFloat(kMoveRaiseSpeed[current_language], &move_speed_);
-        ImGui::InputFloat3(kTargetPosition[current_language], &current_position.x_);
+    // 操作方法
+    ImGui::Text(kExplainMove[current_language]);
+    ImGui::Text(kExplainRaiseReduce[current_language]);
+    ImGui::Text(kExplainCameraRotation[current_language]);
+    ImGui::Text(kExplainCameraZoom[current_language]);
+    ImGui::InputFloat(kMoveRaiseSpeed[current_language], &move_speed_);
+    ImGui::InputFloat3(kTargetPosition[current_language], &current_position.x_);
 
-        // 操作位置の更新
-        field_editor_->SetPosition(current_position);
-        model_editor_->SetPosition(current_position);
-        transform->SetPosition(current_position);
+    // 操作位置の更新
+    field_editor_->SetPosition(current_position);
+    model_editor_->SetPosition(current_position);
+    transform->SetPosition(current_position);
 
-        // カメラの移動
-        movement = current_position - previous_position;
-        camera->Move(movement);
-    }
+    // カメラの移動
+    movement = current_position - previous_position;
+    camera->Move(movement);
 }
 
 #endif // EDITOR
