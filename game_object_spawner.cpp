@@ -338,6 +338,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	auto renderer = MY_NEW MeshRenderer3d(*field);
 	renderer->SetMesh(L"field");
 	renderer->SetMaterial(L"editorField");
+    renderer->SetBoundingSphereRadius(10000.0f);
 	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	field->AddRenderer(renderer);
 	field->Init();

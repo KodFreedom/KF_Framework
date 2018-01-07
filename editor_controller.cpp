@@ -139,7 +139,7 @@ void EditorController::ShowPositonWindow(void)
 
     // ˆÊ’u‚Ìæ“¾
     auto transform = owner_.GetTransform();
-    const Vector3& previous_position = transform->GetPosition();
+    Vector3 previous_position = transform->GetPosition();
     Vector3 current_position = previous_position;
 
     // ‘€ìXV

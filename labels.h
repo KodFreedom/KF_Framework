@@ -160,3 +160,9 @@ static const char* kFieldChooseModeLabels[kLanguageMax][2] =
         u8"長方形"
     }
 };
+
+static const char* kBlockSize[kLanguageMax] =
+{
+    "Block size",
+    u8"ブロックサイズ"
+};

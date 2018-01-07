@@ -17,13 +17,18 @@
 using namespace cereal;
 
 //--------------------------------------------------------------------------------
+//
+//  Public
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 FieldEditor::FieldEditor(GameObject& owner)
 	: Behavior(owner, L"FieldEditor")
 	, block_number_x_(100)
 	, block_number_z_(100)
-	, block_size_(Vector2(3.0f))
+	, block_size_(Vector2(1.0f))
 	, min_position_(Vector3::kZero)
 	, max_position_(Vector3::kZero)
 	, editor_position_(Vector3::kZero)
@@ -41,45 +46,10 @@ FieldEditor::FieldEditor(GameObject& owner)
 bool FieldEditor::Init(void)
 {
 	// Vertex
-    Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
-	vertexes_.resize((block_number_x_ + 1) * (block_number_z_ + 1));
-	for (int count_z = 0; count_z < block_number_z_ + 1; ++count_z)
-	{
-		for (int count_x = 0; count_x < block_number_x_ + 1; ++count_x)
-		{
-			int index = count_z * (block_number_x_ + 1) + count_x;
-			auto& position = start
-				+ Vector3(count_x * block_size_.x_, 0.0f, -count_z * block_size_.y_);
-			vertexes_[index].position = position;
-			vertexes_[index].uv = Vector2(count_x * 1.0f / static_cast<float>(block_number_x_)
-				, count_z * 1.0f / static_cast<float>(block_number_z_));
-			vertexes_[index].color = Color::kWhite;
-			vertexes_[index].normal = Vector3::kUp;
-		}
-	}
-
-    Vector3 half_size(block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
-	min_position_ = half_size * -1.0f;
-	max_position_ = half_size;
+    InitVertexes();
 	
 	// Index
-	vector<int> indexes;
-	int index_number = ((block_number_x_ + 1) * 2 + 2) * block_number_z_ - 1;
-	indexes.resize(index_number);
-	for (int count_z = 0; count_z < block_number_z_; ++count_z)
-	{
-		for (int count_x = 0; count_x < (block_number_x_ + 1) * 2 + 2; ++count_x)
-		{
-			if (count_x < (block_number_x_ + 1) * 2)
-			{
-				indexes[count_z * ((block_number_x_ + 1) * 2 + 2) + count_x] = count_x / 2 + (count_x + 1) % 2 * (block_number_x_ + 1) + count_z * (block_number_x_ + 1);
-			}
-			else if (count_z * ((block_number_x_ + 1) * 2 + 2) + count_x < (((block_number_x_ + 1) * 2 + 2) * block_number_z_ - 1))//縮退ポリゴン
-			{
-				indexes[count_z * ((block_number_x_ + 1) * 2 + 2) + count_x] = (count_x - 1) / 2 % (block_number_x_ + 1) + count_x % 2 * 2 * (block_number_x_ + 1) + count_z * (block_number_x_ + 1);
-			}
-		}
-	}
+    vector<int>& indexes = GetInitMeshIndexes();
 
 	MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
 	return true;
@@ -91,6 +61,7 @@ bool FieldEditor::Init(void)
 void FieldEditor::Uninit(void)
 {
 	vertexes_.clear();
+    MainSystem::Instance()->GetMeshManager()->Disuse(L"field");
 }
 
 //--------------------------------------------------------------------------------
@@ -189,10 +160,67 @@ void FieldEditor::SaveAsBinary(const String& name)
 	}
 
 	file.close();
+
+    MessageBox(NULL, L"セーブしました", path.c_str(), MB_OK | MB_ICONWARNING);
 }
 
 //--------------------------------------------------------------------------------
-//  クラス宣言
+//  フィールド情報を読込関数
+//--------------------------------------------------------------------------------
+void FieldEditor::LoadFrom(const String& name)
+{
+    //フィールドの読込
+    String path = L"data/field/" + name + L".field";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return;
+    }
+    BinaryInputArchive archive(file);
+
+    //今の頂点情報を破棄する
+    MainSystem::Instance()->GetMeshManager()->Disuse(L"field");
+    previous_choosen_indexes_.clear();
+    vertexes_.clear();
+
+    //ブロック数の読込
+    archive.loadBinary(&block_number_x_, sizeof(block_number_x_));
+    archive.loadBinary(&block_number_z_, sizeof(block_number_z_));
+
+    //ブロックSizeの読込
+    archive.loadBinary(&block_size_, sizeof(block_size_));
+
+    //頂点データ数の読込
+    size_t vertex_number;
+    archive.loadBinary(&vertex_number, sizeof(vertex_number));
+
+    //頂点位置の読込
+    InitVertexes();
+    for (size_t count = 0; count < vertex_number; ++count)
+    {
+        archive.loadBinary(&vertexes_[count].position, sizeof(vertexes_[count].position));
+    }
+
+    //法線の更新
+    RecalculateNormal(GetAllIndexes());
+
+    //メッシュインデックス
+    vector<int>& mesh_indexes = GetInitMeshIndexes();
+
+    MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, mesh_indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
+    file.close();
+
+    MessageBox(NULL, L"ロードしました", path.c_str(), MB_OK | MB_ICONWARNING);
+}
+
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  フィールドの高さを取得
 //--------------------------------------------------------------------------------
 float FieldEditor::GetHeight(const Vector3& position)
 {
@@ -252,8 +280,8 @@ list<int> FieldEditor::GetChoosenIndexes(void)
 	int right_down_x = left_up_x + 1;
 	int right_down_z = left_up_z + 1;
 
-    int range_x = static_cast<int>(choose_range_.x_ / block_size_.x_);
-    int range_z = static_cast<int>(choose_range_.y_ / block_size_.y_);
+    int range_x = 1 + static_cast<int>(choose_range_.x_ / block_size_.x_);
+    int range_z = 1 + static_cast<int>(choose_range_.y_ / block_size_.y_);
 	int min_x = left_up_x - range_x;
 	int max_x = right_down_x + range_x;
 	int min_z = left_up_z - range_z;
@@ -286,9 +314,8 @@ list<int> FieldEditor::GetChoosenIndexes(void)
             for (int count_x = min_x; count_x <= max_x; ++count_x)
             {
                 int index = count_z * (block_number_z_ + 1) + count_x;
-                Vector3 position = vertexes_[index].position;
-                float delta_x = position.x_ - editor_position_copy.x_;
-                float delta_z = position.z_ - editor_position_copy.z_;
+                float delta_x = vertexes_[index].position.x_ - editor_position_copy.x_;
+                float delta_z = vertexes_[index].position.z_ - editor_position_copy.z_;
                 if (delta_x * delta_x <= choose_range_.x_ * choose_range_.x_
                     && delta_z * delta_z <= choose_range_.y_ * choose_range_.y_)
                 {
@@ -341,6 +368,15 @@ void FieldEditor::ShowMainWindow(void)
         ImGui::DragFloat2(kFieldRange[current_language], &choose_range_.x_, extend_speed_, 0.0f, FLT_MAX);
     }
 
+    // ブロックサイズ
+    if (ImGui::InputFloat2(kBlockSize[current_language], &block_size_.x_))
+    {
+        list<int>& indexes = GetAllIndexes();
+        RecalculateVertexes();
+        RecalculateNormal(indexes);
+        MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+    }
+
 	// End
 	ImGui::End();
 }
@@ -354,8 +390,8 @@ void FieldEditor::UpdateVertexesBy(const float& raise_amount, const list<int>& c
     for (int index : previous_choosen_indexes_)
     {
         vertexes_[index].color = Color::kWhite;
-        MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, previous_choosen_indexes_);
     }
+    MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, previous_choosen_indexes_);
 
     // 起伏と色の更新
     if (current_choose_mode_ == kCircle)
@@ -403,53 +439,150 @@ void FieldEditor::UpdateVertexesBy(const float& raise_amount, const list<int>& c
     // 法線計算
     if (raise_amount > 0.0f)
     {
-        for (int index : choosen_indexes)
-        {
-            int count_z = index / (block_number_z_ + 1);
-            int count_x = index - count_z * (block_number_z_ + 1);
-            Vector3 normal;
-            Vector3 self = vertexes_[index].position;
-            Vector3 left;
-            Vector3 right;
-            Vector3 top;
-            Vector3 bottom;
-
-            if (count_x == 0)
-            {
-                left = self;
-                right = vertexes_[count_z * (block_number_x_ + 1) + count_x + 1].position;
-            }
-            else if (count_x < block_number_x_)
-            {
-                left = vertexes_[count_z * (block_number_x_ + 1) + count_x - 1].position;
-                right = vertexes_[count_z * (block_number_x_ + 1) + count_x + 1].position;
-            }
-            else
-            {
-                left = vertexes_[count_z * (block_number_x_ + 1) + count_x - 1].position;
-                right = self;
-            }
-
-            if (count_z == 0)
-            {
-                top = self;
-                bottom = vertexes_[(count_z + 1) * (block_number_x_ + 1) + count_x].position;
-            }
-            else if (count_z < block_number_z_)
-            {
-                top = vertexes_[(count_z - 1) * (block_number_x_ + 1) + count_x].position;
-                bottom = vertexes_[(count_z + 1) * (block_number_x_ + 1) + count_x].position;
-            }
-            else
-            {
-                top = vertexes_[(count_z - 1) * (block_number_x_ + 1) + count_x].position;
-                bottom = self;
-            }
-            normal = (right - left) * (bottom - top);
-            vertexes_[index].normal = normal.Normalized();
-        }
+        RecalculateNormal(choosen_indexes);
     }
 
     previous_choosen_indexes_ = choosen_indexes;
 }
+
+//--------------------------------------------------------------------------------
+//  頂点の初期化
+//--------------------------------------------------------------------------------
+void FieldEditor::InitVertexes(void)
+{
+    Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    vertexes_.resize((block_number_x_ + 1) * (block_number_z_ + 1));
+    for (int count_z = 0; count_z < block_number_z_ + 1; ++count_z)
+    {
+        for (int count_x = 0; count_x < block_number_x_ + 1; ++count_x)
+        {
+            int index = count_z * (block_number_x_ + 1) + count_x;
+            Vector3& position = start
+                + Vector3(count_x * block_size_.x_, 0.0f, -count_z * block_size_.y_);
+            vertexes_[index].position = position;
+            vertexes_[index].uv = Vector2(count_x * 1.0f / static_cast<float>(block_number_x_)
+                , count_z * 1.0f / static_cast<float>(block_number_z_));
+            vertexes_[index].color = Color::kWhite;
+            vertexes_[index].normal = Vector3::kUp;
+        }
+    }
+
+    Vector3 half_size(block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    min_position_ = half_size * -1.0f;
+    max_position_ = half_size;
+}
+
+//--------------------------------------------------------------------------------
+//  初期化インデックスの取得
+//--------------------------------------------------------------------------------
+vector<int> FieldEditor::GetInitMeshIndexes(void)
+{
+    vector<int> indexes;
+    int index_number = ((block_number_x_ + 1) * 2 + 2) * block_number_z_ - 1;
+    indexes.resize(index_number);
+    for (int count_z = 0; count_z < block_number_z_; ++count_z)
+    {
+        for (int count_x = 0; count_x < (block_number_x_ + 1) * 2 + 2; ++count_x)
+        {
+            if (count_x < (block_number_x_ + 1) * 2)
+            {
+                indexes[count_z * ((block_number_x_ + 1) * 2 + 2) + count_x] = count_x / 2 + (count_x + 1) % 2 * (block_number_x_ + 1) + count_z * (block_number_x_ + 1);
+            }
+            else if (count_z * ((block_number_x_ + 1) * 2 + 2) + count_x < (((block_number_x_ + 1) * 2 + 2) * block_number_z_ - 1))//縮退ポリゴン
+            {
+                indexes[count_z * ((block_number_x_ + 1) * 2 + 2) + count_x] = (count_x - 1) / 2 % (block_number_x_ + 1) + count_x % 2 * 2 * (block_number_x_ + 1) + count_z * (block_number_x_ + 1);
+            }
+        }
+    }
+    return indexes;
+}
+
+//--------------------------------------------------------------------------------
+//  頂点の再計算
+//--------------------------------------------------------------------------------
+void FieldEditor::RecalculateVertexes(void)
+{
+    Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    for (int count_z = 0; count_z < block_number_z_ + 1; ++count_z)
+    {
+        for (int count_x = 0; count_x < block_number_x_ + 1; ++count_x)
+        {
+            int index = count_z * (block_number_x_ + 1) + count_x;
+            Vector3& position = start
+                + Vector3(count_x * block_size_.x_, vertexes_[index].position.y_, -count_z * block_size_.y_);
+            vertexes_[index].position = position;
+        }
+    }
+
+    Vector3 half_size(block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
+    min_position_ = half_size * -1.0f;
+    max_position_ = half_size;
+}
+
+//--------------------------------------------------------------------------------
+//  法線の計算
+//--------------------------------------------------------------------------------
+void FieldEditor::RecalculateNormal(const list<int>& indexes)
+{
+    for (int index : indexes)
+    {
+        int count_z = index / (block_number_z_ + 1);
+        int count_x = index - count_z * (block_number_z_ + 1);
+        Vector3 normal;
+        Vector3 self = vertexes_[index].position;
+        Vector3 left;
+        Vector3 right;
+        Vector3 top;
+        Vector3 bottom;
+
+        if (count_x == 0)
+        {
+            left = self;
+            right = vertexes_[count_z * (block_number_x_ + 1) + count_x + 1].position;
+        }
+        else if (count_x < block_number_x_)
+        {
+            left = vertexes_[count_z * (block_number_x_ + 1) + count_x - 1].position;
+            right = vertexes_[count_z * (block_number_x_ + 1) + count_x + 1].position;
+        }
+        else
+        {
+            left = vertexes_[count_z * (block_number_x_ + 1) + count_x - 1].position;
+            right = self;
+        }
+
+        if (count_z == 0)
+        {
+            top = self;
+            bottom = vertexes_[(count_z + 1) * (block_number_x_ + 1) + count_x].position;
+        }
+        else if (count_z < block_number_z_)
+        {
+            top = vertexes_[(count_z - 1) * (block_number_x_ + 1) + count_x].position;
+            bottom = vertexes_[(count_z + 1) * (block_number_x_ + 1) + count_x].position;
+        }
+        else
+        {
+            top = vertexes_[(count_z - 1) * (block_number_x_ + 1) + count_x].position;
+            bottom = self;
+        }
+        normal = (right - left) * (bottom - top);
+        vertexes_[index].normal = normal.Normalized();
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  全部のインデックスを取得
+//--------------------------------------------------------------------------------
+list<int> FieldEditor::GetAllIndexes(void)
+{
+    list<int> indexes;
+    int index_max = (block_number_x_ + 1) * (block_number_z_ + 1);
+    for (int count = 0; count < index_max; ++count)
+    {
+        indexes.push_back(count);
+    }
+    return indexes;
+}
+
 #endif // _DEBUG
