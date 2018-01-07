@@ -79,8 +79,8 @@ static const char* kExplainMove[kLanguageMax] =
 
 static const char* kExplainRaiseReduce[kLanguageMax] =
 {
-    "Raise/Reduce : <- / ->",
-    u8"上昇/降下 : <- / ->"
+    "Raise/Reduce : Up/Down",
+    u8"上昇/降下 : 上方向/下方向"
 };
 
 static const char* kExplainCameraRotation[kLanguageMax] =
@@ -105,12 +105,6 @@ static const char* kSaveStage[kLanguageMax] =
 {
     "Save",
     u8"保存"
-};
-
-static const char* kExplainFieldRaiseReduce[kLanguageMax] =
-{
-    "Raise/Reduce : Up/Down",
-    u8"上昇/降下 : 上方向/下方向"
 };
 
 static const char* kRaiseModeRate[kLanguageMax] =
@@ -165,4 +159,10 @@ static const char* kBlockSize[kLanguageMax] =
 {
     "Block size",
     u8"ブロックサイズ"
+};
+
+static const char* kResetHeight[kLanguageMax] =
+{
+    "Set height to 0 in range",
+    u8"範囲内の高さを0にする"
 };

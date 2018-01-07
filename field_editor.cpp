@@ -52,7 +52,7 @@ bool FieldEditor::Init(void)
     vector<int>& indexes = GetInitMeshIndexes();
 
 	MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
-	return true;
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -343,7 +343,7 @@ void FieldEditor::ShowMainWindow(void)
     auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
 
 	// 操作説明
-	ImGui::Text(kExplainFieldRaiseReduce[current_language]);
+	ImGui::Text(kExplainRaiseReduce[current_language]);
 
     // 起伏補間モード平均と線形の比率
     ImGui::SliderFloat(kRaiseModeRate[current_language], &raise_mode_rate_, 0.0f, 1.0f);
@@ -373,6 +373,15 @@ void FieldEditor::ShowMainWindow(void)
     {
         list<int>& indexes = GetAllIndexes();
         RecalculateVertexes();
+        RecalculateNormal(indexes);
+        MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+    }
+
+    // 高さを初期化する
+    if (ImGui::Button(kResetHeight[current_language]))
+    {
+        list<int>& indexes = GetChoosenIndexes();
+        SetHeightTo(0.0f, indexes);
         RecalculateNormal(indexes);
         MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
     }
@@ -409,7 +418,7 @@ void FieldEditor::UpdateVertexesBy(const float& raise_amount, const list<int>& c
             else
             {// 距離によって線形補間
                 vertexes_[index].position.y_ += raise_amount * (rate / raise_mode_rate_);
-                vertexes_[index].color = Color(rate, 0.0f, 0.0f, 1.0f);
+                vertexes_[index].color = Color(rate, 0.0f, 1.0f - rate, 1.0f);
             }
         }
     }
@@ -431,7 +440,7 @@ void FieldEditor::UpdateVertexesBy(const float& raise_amount, const list<int>& c
             else
             {// 距離によって線形補間
                 vertexes_[index].position.y_ += raise_amount * (rate / raise_mode_rate_);
-                vertexes_[index].color = Color(rate, 0.0f, 0.0f, 1.0f);
+                vertexes_[index].color = Color(rate, 0.0f, 1.0f - rate, 1.0f);
             }
         }
     }
@@ -583,6 +592,17 @@ list<int> FieldEditor::GetAllIndexes(void)
         indexes.push_back(count);
     }
     return indexes;
+}
+
+//--------------------------------------------------------------------------------
+//  頂点を一定高さにセットする
+//--------------------------------------------------------------------------------
+void FieldEditor::SetHeightTo(const float& height, const list<int>& indexes)
+{
+    for (int index : indexes)
+    {
+        vertexes_[index].position.y_ = height;
+    }
 }
 
 #endif // _DEBUG
