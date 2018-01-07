@@ -166,3 +166,45 @@ static const char* kResetHeight[kLanguageMax] =
     "Set height to 0 in range",
     u8"範囲内の高さを0にする"
 };
+
+static const char* kPosition[kLanguageMax] =
+{
+    "Position",
+    u8"位置"
+};
+
+static const char* kRotation[kLanguageMax] =
+{
+    "Rotation",
+    u8"回転"
+};
+
+static const char* kScale[kLanguageMax] =
+{
+    "Scale",
+    u8"スケール"
+};
+
+static const char* kCreate[kLanguageMax] =
+{
+    "Create",
+    u8"生成"
+};
+
+static const char* kShowCreatedList[kLanguageMax] =
+{
+    "Show created list",
+    u8"生成リストの表示"
+};
+
+static const char* kModel[kLanguageMax] =
+{
+    "Model",
+    u8"モデル"
+};
+
+static const char* kDelete[kLanguageMax] =
+{
+    "Delete",
+    u8"削除"
+};
