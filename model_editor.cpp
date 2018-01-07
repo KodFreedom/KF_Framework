@@ -73,9 +73,6 @@ bool ModelEditor::Init(void)
         demo_model_infos_[count].my_transform = game_object->GetTransform();
     }
     created_model_infos_.resize(model_number);
-
-    // •W“I‚ð¬‚³‚­‚·‚é
-    owner_.GetTransform()->SetScale(Vector3(0.5f));
     return true;
 }
 

@@ -40,6 +40,8 @@ EditorController::EditorController(GameObject& owner)
 //--------------------------------------------------------------------------------
 bool EditorController::Init(void)
 {
+    // 標的を小さくする
+    owner_.GetTransform()->SetScale(Vector3(0.25f));
     return true;
 }
 
@@ -65,13 +67,25 @@ void EditorController::Update(void)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  save
+//  保存処理
 //--------------------------------------------------------------------------------
 void EditorController::Save(void)
 {
     String stage_name(stage_name_.begin(), stage_name_.end());
     field_editor_->SaveAsBinary(stage_name + L"Field");
     model_editor_->SaveAsBinary(stage_name + L"Stage");
+}
+
+//--------------------------------------------------------------------------------
+//  読込処理
+//--------------------------------------------------------------------------------
+void EditorController::Load(void)
+{
+    UINT id = MessageBox(NULL, L"今のステージを破棄して新しいステージを読み込みますか？", L"確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
+    if (id != IDYES) { return; }
+    String stage_name(stage_name_.begin(), stage_name_.end());
+    field_editor_->LoadFrom(stage_name + L"Field");
+    model_editor_->LoadFrom(stage_name + L"Stage");
 }
 
 //--------------------------------------------------------------------------------
@@ -99,6 +113,9 @@ void EditorController::ShowMainWindow(void)
 
     // Save
     if (ImGui::Button(kSaveStage[current_language])) { Save(); }
+
+    // Load
+    if (ImGui::Button(kLoadStage[current_language])) { Load(); }
 
     // End
     ImGui::End();

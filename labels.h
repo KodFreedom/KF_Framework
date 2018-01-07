@@ -103,8 +103,14 @@ static const char* kMoveRaiseSpeed[kLanguageMax] =
 
 static const char* kSaveStage[kLanguageMax] =
 {
-    "Save",
-    u8"保存"
+    "Save as stage name",
+    u8"ステージ名を名前として保存"
+};
+
+static const char* kLoadStage[kLanguageMax] =
+{
+    "Load from stage name",
+    u8"ステージ名を名前として読込"
 };
 
 static const char* kRaiseModeRate[kLanguageMax] =
