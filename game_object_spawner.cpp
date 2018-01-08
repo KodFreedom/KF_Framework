@@ -124,6 +124,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	//コンポネント
 	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(name);
+    renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
 
 	//パラメーター
@@ -338,6 +339,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	auto renderer = MY_NEW MeshRenderer3d(*field);
 	renderer->SetMesh(L"field");
 	renderer->SetMaterial(L"editorField");
+    renderer->SetBoundingSphereRadius(10000.0f);
 	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	field->AddRenderer(renderer);
 	field->Init();

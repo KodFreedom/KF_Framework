@@ -284,6 +284,7 @@
     <ClInclude Include="jugg_stun_motion_state.h" />
     <ClInclude Include="jugg_ultra_motion_state.h" />
     <ClInclude Include="jugg_walk_motion_state.h" />
+    <ClInclude Include="labels.h" />
     <ClInclude Include="library\ImGui\imconfig.h" />
     <ClInclude Include="library\ImGui\imgui.h" />
     <ClInclude Include="library\ImGui\imgui_impl_dx9.h" />

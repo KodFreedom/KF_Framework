@@ -89,7 +89,7 @@ void MeshManager::Update(const String& mesh_name, const vector<Vertex3d>& vertex
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 	Vertex3d* vertex_pointer;
 	iterator->second.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-	for (auto index : indexes)
+	for (int index : indexes)
 	{
 		vertex_pointer[index] = vertexes[index];
 	}

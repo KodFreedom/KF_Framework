@@ -170,11 +170,16 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	mesh_manager_ = MeshManager::Create(device);
 	shader_manager_ = ShaderManager::Create(device);
 	shadow_map_system_ = ShadowMapSystem::Create(device);
+#endif
+#endif
+
 #if defined(_DEBUG) || defined(EDITOR)
-	ImGui_ImplDX9_Init(hwnd, device);
+    // Imgui font
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+    io.ImeWindowHandle = hwnd;
 #endif
-#endif
-#endif
+
 	material_manager_ = MaterialManager::Create();
 	motion_manager_ = MotionManager::Create();
 	light_manager_ = LightManager::Create();
