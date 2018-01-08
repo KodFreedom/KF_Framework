@@ -137,7 +137,7 @@ void FieldEditor::SaveAsBinary(const String& name)
 	ofstream file(path, ios::binary);
 	if (!file.is_open())
 	{
-		assert(file.is_open());
+        MessageBox(NULL, L"ŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½", path.c_str(), MB_OK | MB_ICONWARNING);
 		return;
 	}
 	BinaryOutputArchive archive(file);
@@ -174,7 +174,7 @@ void FieldEditor::LoadFrom(const String& name)
     ifstream file(path, ios::binary);
     if (!file.is_open())
     {
-        assert(file.is_open());
+        MessageBox(NULL, L"ŠJ‚¯‚Ü‚¹‚ñ‚Å‚µ‚½", path.c_str(), MB_OK | MB_ICONWARNING);
         return;
     }
     BinaryInputArchive archive(file);

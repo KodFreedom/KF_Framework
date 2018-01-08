@@ -10,8 +10,16 @@ using namespace kodfreedom;
 #include "stage_spawner.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
+#include "game_object_actor.h"
 #include "windmill_controller.h"
+#include "main_system.h"
+#include "shadow_map_system.h"
+#include "third_person_camera.h"
+#include "light.h"
 
+#ifdef _DEBUG
+#include "debug_observer.h"
+#endif // _DEBUG
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -19,9 +27,22 @@ using namespace kodfreedom;
 //--------------------------------------------------------------------------------
 void StageSpawner::LoadStage(const String& stage_name)
 {
+    auto main_system = MainSystem::Instance();
+
+    //カメラの作成
+    auto camera = MY_NEW ThirdPersionCamera;
+    camera->Init();
+
+    //ライトの作成
+    auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
+
+    //空の作成
+    GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
+
+    //地面の作成
 	GameObjectSpawner::CreateField(stage_name);
 
-	//フィールドの読込
+	//ステージの読込
 	String path = L"data/stage/" + stage_name + L"Stage.stage";
 	ifstream file(path, ios::binary);
 	if (!file.is_open())
@@ -69,4 +90,26 @@ void StageSpawner::LoadStage(const String& stage_name)
 		}
 	}
 	file.close();
+
+    // Playerの作成
+    path = L"data/stage/" + stage_name + L"Player.player";
+    file = ifstream(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return;
+    }
+    BinaryInputArchive player_archive(file);
+    Vector3 position;
+    player_archive.loadBinary(&position, sizeof(position));
+    auto player = GameObjectSpawner::CreatePlayer(L"mutant", position, Vector3::kZero, Vector3::kOne);
+    player->SetName(L"Player");
+    file.close();
+    
+    //システムにプレイヤーを設定する
+    camera->SetFollowTarget(player);
+    main_system->GetShadowMapSystem()->SetTarget(player->GetTransform());
+#ifdef _DEBUG
+    main_system->GetDebugObserver()->SetPlayer(player);
+#endif // _DEBUG
 }

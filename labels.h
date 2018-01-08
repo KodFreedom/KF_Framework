@@ -214,3 +214,9 @@ static const char* kDelete[kLanguageMax] =
     "Delete",
     u8"削除"
 };
+
+static const char* kSetPlayer[kLanguageMax] =
+{
+    "Set player to here",
+    u8"プレイヤーをここに設置する"
+};

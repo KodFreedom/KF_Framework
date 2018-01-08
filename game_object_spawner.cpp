@@ -124,6 +124,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	//コンポネント
 	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(name);
+    renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	result->AddRenderer(renderer);
 
 	//パラメーター

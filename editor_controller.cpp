@@ -17,6 +17,7 @@
 #include "ImGui\imgui.h"
 #include "labels.h"
 #include "debug_observer.h"
+#include "game_object_spawner.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -30,6 +31,7 @@ EditorController::EditorController(GameObject& owner)
     : Behavior(owner, L"EditorController")
     , field_editor_(nullptr)
     , model_editor_(nullptr)
+    , player_(nullptr)
     , enable_auto_adjust_height_(true)
     , move_speed_(1.0f)
     , stage_name_("demo")
@@ -42,6 +44,9 @@ bool EditorController::Init(void)
 {
     // 標的を小さくする
     owner_.GetTransform()->SetScale(Vector3(0.25f));
+
+    // Playerの生成
+    player_ = GameObjectSpawner::CreateXModel(L"data/model/player.x", Vector3::kZero, Vector3::kZero, Vector3::kOne);
     return true;
 }
 
@@ -74,6 +79,7 @@ void EditorController::Save(void)
     String stage_name(stage_name_.begin(), stage_name_.end());
     field_editor_->SaveAsBinary(stage_name + L"Field");
     model_editor_->SaveAsBinary(stage_name + L"Stage");
+    SaveAsBinary(stage_name + L"Player");
 }
 
 //--------------------------------------------------------------------------------
@@ -86,6 +92,7 @@ void EditorController::Load(void)
     String stage_name(stage_name_.begin(), stage_name_.end());
     field_editor_->LoadFrom(stage_name + L"Field");
     model_editor_->LoadFrom(stage_name + L"Stage");
+    LoadFrom(stage_name + L"Player");
 }
 
 //--------------------------------------------------------------------------------
@@ -191,6 +198,60 @@ void EditorController::ShowPositonWindow(void)
     // カメラの移動
     movement = current_position - previous_position;
     camera->Move(movement);
+
+    // プレイヤー位置の設定
+    if (ImGui::Button(kSetPlayer[current_language]))
+    {
+        player_->GetTransform()->SetPosition(
+            owner_.GetTransform()->GetPosition());
+    }
+}
+
+//--------------------------------------------------------------------------------
+//	フィールド情報を保存する関数
+//--------------------------------------------------------------------------------
+void EditorController::SaveAsBinary(const String& name)
+{
+    //フィールドの保存
+    String path = L"data/stage/" + name + L".player";
+    ofstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        MessageBox(NULL, L"開けませんでした", path.c_str(), MB_OK | MB_ICONWARNING);
+        return;
+    }
+    BinaryOutputArchive archive(file);
+
+    //位置の保存
+    Vector3 position = player_->GetTransform()->GetPosition();
+    archive.saveBinary(&position, sizeof(position));
+
+    file.close();
+    MessageBox(NULL, L"セーブしました", path.c_str(), MB_OK | MB_ICONWARNING);
+}
+
+//--------------------------------------------------------------------------------
+// player情報を読込関数
+//--------------------------------------------------------------------------------
+void EditorController::LoadFrom(const String& name)
+{
+    //フィールドの読込
+    String path = L"data/stage/" + name + L".player";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        MessageBox(NULL, L"開けませんでした", path.c_str(), MB_OK | MB_ICONWARNING);
+        return;
+    }
+    BinaryInputArchive archive(file);
+
+    //位置の読込
+    Vector3 position;
+    archive.loadBinary(&position, sizeof(position));
+    player_->GetTransform()->SetPosition(position);
+    
+    file.close();
+    MessageBox(NULL, L"ロードしました", path.c_str(), MB_OK | MB_ICONWARNING);
 }
 
 #endif // EDITOR
