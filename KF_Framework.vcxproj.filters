@@ -223,6 +223,12 @@
     <Filter Include="ソース ファイル\Actor\State\Mutant\Player">
       <UniqueIdentifier>{a6ccef48-c119-4f84-8562-54dc4dc1ca49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Zombie">
+      <UniqueIdentifier>{c6dd5732-ab78-4b23-ac03-6cb290f2b682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Motion\MotionState\Zombie">
+      <UniqueIdentifier>{035349b7-faf2-44f3-b533-30fb41b6b76f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -563,6 +569,36 @@
     </ClCompile>
     <ClCompile Include="actor_state_player\player_state.cpp">
       <Filter>ソース ファイル\Actor\State</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_idle_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_kicking_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_punching_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_running_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_scream_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_stand_up_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_walking_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_warning_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_damaged_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\zombie_death_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -946,6 +982,36 @@
     </ClInclude>
     <ClInclude Include="actor_state_player\player_jugg_walk_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_damaged_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_death_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_idle_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_kicking_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_punching_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_running_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_scream_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_stand_up_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_walking_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\zombie_warning_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
