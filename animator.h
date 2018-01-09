@@ -7,7 +7,7 @@
 #include "component.h"
 #include "kf_math.h"
 using namespace kodfreedom;
-#include "motion_state.h"
+#include "motion_state\\motion_state.h"
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾

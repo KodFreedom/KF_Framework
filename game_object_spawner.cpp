@@ -20,9 +20,8 @@
 #include "rigidbody3d.h"
 #include "animator.h"
 #include "actor_controller.h"
-#include "player_mutant_idel_state.h"
-#include "jugg_neutral_motion_state.h"
-#include "mutant_idle_motion_state.h"
+#include "actor_state_player\\player_mutant_idel_state.h"
+#include "motion_state\\mutant_idle_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"

@@ -372,47 +372,8 @@
     <ClCompile Include="mesh_renderer_3d_skin.cpp">
       <Filter>ソース ファイル\Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
-    </ClCompile>
     <ClCompile Include="shadow_map_system.cpp">
       <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_attack_left_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_attack_right_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_death_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_flail_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_jump_attack_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_jump_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_neutral_look_around_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_neutral_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_spain_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_stun_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_ultra_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_walk_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
     </ClCompile>
     <ClCompile Include="cull_none_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
@@ -468,101 +429,140 @@
     <ClCompile Include="time.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_skill_motion_state.cpp">
+    <ClCompile Include="motion_state\motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\mutant_angry_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_swiping_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_damaged_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_walk_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_dying_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_angry_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_fall_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_damaged_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_idle_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_dying_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_idle_wake_up_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_fall_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_jump_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_idle_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_land_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_idle_wake_up_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_punch_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_jump_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_run_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_land_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_skill_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_punch_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_swiping_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="mutant_run_motion_state.cpp">
+    <ClCompile Include="motion_state\mutant_walk_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
     </ClCompile>
-    <ClCompile Include="player_state.cpp">
+    <ClCompile Include="motion_state\jugg_attack_left_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_attack_right_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_death_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_flail_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_jump_attack_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_jump_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_neutral_look_around_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_neutral_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_spain_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_stun_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_ultra_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_state\jugg_walk_motion_state.cpp">
+      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_dying_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_fall_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_idel_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_light_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_skill_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_strong_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_fall_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_jump_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_jump_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_land_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_neutral_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_jugg_walk_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_state.cpp">
       <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_neutral_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_land_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_jump_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_jump_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_fall_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_jugg_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_idel_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_dying_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_fall_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_jump_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_land_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_light_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_skill_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_strong_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_mutant_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -595,9 +595,6 @@
     </ClInclude>
     <ClInclude Include="kf_math.h">
       <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
     </ClInclude>
     <ClInclude Include="common_setting.h">
       <Filter>ヘッダー ファイル\Base</Filter>
@@ -755,42 +752,6 @@
     <ClInclude Include="shadow_map_system.h">
       <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
     </ClInclude>
-    <ClInclude Include="jugg_attack_left_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_attack_right_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_death_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_flail_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_jump_attack_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_jump_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_neutral_look_around_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_neutral_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_spain_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_stun_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_ultra_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_walk_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
     <ClInclude Include="cull_none_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
     </ClInclude>
@@ -848,104 +809,143 @@
     <ClInclude Include="time.h">
       <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
-    <ClInclude Include="mutant_punch_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_run_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_skill_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_swiping_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_walk_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_angry_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_damaged_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_dying_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_fall_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_idle_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_idle_wake_up_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_jump_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="mutant_land_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="player_state.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_idel_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_jump_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_land_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_dying_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_light_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_strong_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_skill_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_fall_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_jump_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_jump_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_land_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_neutral_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_jugg_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_mutant_fall_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
     <ClInclude Include="labels.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_angry_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_damaged_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_dying_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_fall_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_idle_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_idle_wake_up_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_land_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_punch_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_run_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_skill_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_swiping_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\mutant_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_attack_left_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_attack_right_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_death_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_flail_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_jump_attack_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_neutral_look_around_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_neutral_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_spain_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_stun_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_ultra_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_state\jugg_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_state.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_dying_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_fall_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_idel_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_light_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_skill_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_strong_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_fall_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_jump_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_jump_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_land_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_neutral_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_jugg_walk_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
