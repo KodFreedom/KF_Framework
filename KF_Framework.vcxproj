@@ -275,6 +275,7 @@
     <ClCompile Include="time.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
+    <ClCompile Include="zombie_skin_shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actor_state_player\player_jugg_attack_state.h" />
@@ -414,6 +415,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="common_setting.h" />
     <ClInclude Include="windmill_controller.h" />
+    <ClInclude Include="zombie_skin_shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="kf_math.inl" />

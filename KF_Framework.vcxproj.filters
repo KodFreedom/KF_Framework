@@ -600,6 +600,9 @@
     <ClCompile Include="motion_state\zombie_death_motion_state.cpp">
       <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
     </ClCompile>
+    <ClCompile Include="zombie_skin_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1012,6 +1015,9 @@
     </ClInclude>
     <ClInclude Include="motion_state\zombie_warning_motion_state.h">
       <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="zombie_skin_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

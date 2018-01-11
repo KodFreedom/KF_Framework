@@ -16,7 +16,7 @@
 //--------------------------------------------------------------------------------
 void Default2dTextureShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"default_2d_texture", device);
+    CompileShaderFrom(L"default_2d_texture_vertex_shader", L"default_2d_texture_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

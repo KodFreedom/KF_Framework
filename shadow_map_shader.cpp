@@ -19,7 +19,7 @@
 //--------------------------------------------------------------------------------
 void ShadowMapShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"basic_shadow_map", device);
+    CompileShaderFrom(L"basic_shadow_map_vertex_shader", L"basic_shadow_map_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

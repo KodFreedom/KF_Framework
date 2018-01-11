@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------------
-//　default_skin_shader.cpp
+//　zombie_skin_shader.cpp
 //	シェーダークラス
 //	Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "default_skin_shader.h"
+#include "zombie_skin_shader.h"
 #include "main_system.h"
 #include "render_system.h"
 #include "camera.h"
@@ -20,23 +20,23 @@
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
+void ZombieSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"default_skin_vertex_shader", L"default_skin_pixel_shader", device);
+    CompileShaderFrom(L"default_skin_vertex_shader", L"zombie_skin_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------
 //  使用処理
 //--------------------------------------------------------------------------------
-void DefaultSkinShader::Set(const LPDIRECT3DDEVICE9 device)
+void ZombieSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 {
-	ShaderDirectX9::Set(device);
+    ShaderDirectX9::Set(device);
 }
 
 //--------------------------------------------------------------------------------
 //  使用完了の後片付け
 //--------------------------------------------------------------------------------
-void DefaultSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
+void ZombieSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 {
 
 }
@@ -44,7 +44,7 @@ void DefaultSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 //  定数テーブルの設定
 //--------------------------------------------------------------------------------
-void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
+void ZombieSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
     auto main_system = MainSystem::Instance();
 

@@ -19,7 +19,7 @@
 //--------------------------------------------------------------------------------
 void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"cull_none", device);
+    CompileShaderFrom(L"cull_none_vertex_shader", L"cull_none_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

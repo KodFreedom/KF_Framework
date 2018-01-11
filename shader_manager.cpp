@@ -19,6 +19,7 @@ using namespace kodfreedom;
 #include "skin_shadow_map_shader.h"
 #include "default_2d_shader.h"
 #include "default_2d_texture_shader.h"
+#include "zombie_skin_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -97,25 +98,27 @@ void ShaderManager::SetConstantTable(const ShadowMapShaderType& type, const Mesh
 void ShaderManager::Init(void)
 {
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	shaders_[kDefaultShader] = MY_NEW DefaultShader();
+	shaders_[kDefaultShader] = MY_NEW DefaultShader;
 	shaders_[kDefaultShader]->Init(device_);
-	shaders_[kNoLightNoFog] = MY_NEW NoLightNoFogShader();
+	shaders_[kNoLightNoFog] = MY_NEW NoLightNoFogShader;
 	shaders_[kNoLightNoFog]->Init(device_);
-	shaders_[kCullNone] = MY_NEW CullNoneShader();
+	shaders_[kCullNone] = MY_NEW CullNoneShader;
 	shaders_[kCullNone]->Init(device_);
-	shaders_[kDefaultSkinShader] = MY_NEW DefaultSkinShader();
+	shaders_[kDefaultSkinShader] = MY_NEW DefaultSkinShader;
 	shaders_[kDefaultSkinShader]->Init(device_);
-	shaders_[kJuggernautMeshShader] = MY_NEW JuggMeshShader();
+	shaders_[kJuggernautMeshShader] = MY_NEW JuggMeshShader;
 	shaders_[kJuggernautMeshShader]->Init(device_);
-	shaders_[kJuggernautSkinShader] = MY_NEW JuggSkinShader();
+	shaders_[kJuggernautSkinShader] = MY_NEW JuggSkinShader;
 	shaders_[kJuggernautSkinShader]->Init(device_);
-    shaders_[kDefault2dShader] = MY_NEW Default2dShader();
+    shaders_[kDefault2dShader] = MY_NEW Default2dShader;
     shaders_[kDefault2dShader]->Init(device_);
-    shaders_[kDefault2dTextureShader] = MY_NEW Default2dTextureShader();
+    shaders_[kDefault2dTextureShader] = MY_NEW Default2dTextureShader;
     shaders_[kDefault2dTextureShader]->Init(device_);
-	shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader();
+    shaders_[kZombieSkinShader] = MY_NEW ZombieSkinShader;
+    shaders_[kZombieSkinShader]->Init(device_);
+	shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader;
 	shadow_map_shaders_[kBasicShadowMapShader]->Init(device_);
-	shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader();
+	shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader;
 	shadow_map_shaders_[kBasicSkinShadowMapShader]->Init(device_);
 #endif
 }

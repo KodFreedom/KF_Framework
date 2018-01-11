@@ -18,7 +18,7 @@
 //--------------------------------------------------------------------------------
 void JuggMeshShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"jugg_mesh", device);
+    CompileShaderFrom(L"jugg_mesh_vertex_shader", L"jugg_mesh_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------
