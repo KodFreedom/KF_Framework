@@ -20,8 +20,10 @@
 #include "rigidbody3d.h"
 #include "animator.h"
 #include "actor_controller.h"
-#include "actor_state_player\\player_mutant_idel_state.h"
-#include "motion_state\\mutant_idle_motion_state.h"
+#include "actor_state_player\player_mutant_idel_state.h"
+#include "actor_state_enemy\enemy_zombie_idle_state.h"
+#include "motion_state\mutant_idle_motion_state.h"
+#include "motion_state\zombie_idle_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"
@@ -293,35 +295,62 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 //--------------------------------------------------------------------------------
 GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale)
 {
-	auto result = MY_NEW GameObjectActor;
+    auto result = MY_NEW GameObjectActor;
+    auto transform = result->GetTransform();
+    auto animator = result->GetAnimator();
 
-	////Tag
-	//result->SetTag(L"Enemy");
-	//
-	////コンポネント
-	//auto rigidbody = MY_NEW Rigidbody3D(result);
-	//result->SetRigidbody(rigidbody);
-	//result->SetAnimator(MY_NEW Animator(result, actorPath));
-	//result->AddBehavior(MY_NEW EnemyController(result, *rigidbody));
-	//
-	////コライダー
-	//auto collider = MY_NEW SphereCollider(result, kDynamic, 0.6f);
-	//collider->SetOffset(Vector3(0.0f, 0.55f, 0.0f));
-	//collider->SetTag("body");
-	//result->AddCollider(collider);
-	//auto detector = MY_NEW SphereCollider(result, kDynamic, 6.0f);
-	//detector->SetTrigger(true);
-	//detector->SetTag("detector");
-	//result->AddCollider(detector);
-	//
-	////パラメーター
-	//auto transform = result->GetTransform();
-	//transform->SetPosition(position);
-	//transform->SetScale(scale);
-	//transform->SetRotation(rotation);
-	//
-	////初期化
-	//result->Init();
+    //Modelファイルの開く
+    String path = L"data/model/actor/" + name + L".model";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return result;
+    }
+    BinaryInputArchive archive(file);
+    CreateChildNode(transform, archive, animator);
+    file.close();
+
+    //Animator
+    animator->SetAvatar(name);
+    animator->Change(MY_NEW ZombieIdleMotionState(0));
+
+    //コンポネント
+    auto rigidbody = MY_NEW Rigidbody3D(*result);
+    rigidbody->SetGravityMultiplier(4.0f);
+    result->SetRigidbody(rigidbody);
+
+    //Actor Controller
+    auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
+    actor_controller->GetParameter().SetMoveSpeed(10.0f);
+    actor_controller->GetParameter().SetJumpSpeed(10.0f);
+    actor_controller->GetParameter().SetMinTurnSpeed(kPi);
+    actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
+    actor_controller->Change(MY_NEW EnemyZombieIdelState);
+    result->AddBehavior(actor_controller);
+
+    //Collider
+    auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
+    collider->SetOffset(Vector3(0.0f, 0.8f, 0.0f));
+    collider->SetTag(L"body");
+    result->AddCollider(collider);
+
+    collider = MY_NEW SphereCollider(*result, kDynamic, 10.0f);
+    collider->SetTag(L"detector");
+    collider->SetTrigger(true);
+    result->AddCollider(collider);
+
+    //Tag
+    result->SetTag(L"Enemy");
+
+    //パラメーター
+    transform->SetPosition(position);
+    transform->SetScale(scale);
+    transform->SetRotation(rotation);
+
+    //初期化
+    result->Init();
+
 	return result;
 }
 

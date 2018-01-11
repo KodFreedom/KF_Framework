@@ -22,7 +22,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ActorController::ActorController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
-	: Behavior(owner, L"ActorController"), state_(nullptr), rigidbody_(rigidbody), animator_(animator)
+	: Behavior(owner, L"ActorController"), state_(nullptr), rigidbody_(rigidbody)
+    , animator_(animator), target_(nullptr)
 {
 	Change(MY_NEW NullActorState);
 }

@@ -229,6 +229,18 @@
     <Filter Include="ソース ファイル\Base\Motion\MotionState\Zombie">
       <UniqueIdentifier>{035349b7-faf2-44f3-b533-30fb41b6b76f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Zombie">
+      <UniqueIdentifier>{5117545c-9a8d-4d51-a740-87e5a6abeec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Actor\State\Zombie\Enemy">
+      <UniqueIdentifier>{1b4070d8-b80b-4337-a9c5-0b9a44e94030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Zombie">
+      <UniqueIdentifier>{01f8c588-27eb-49a5-ba80-0c86427f0ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Actor\State\Zombie\Enemy">
+      <UniqueIdentifier>{651d0f7c-dc15-425f-aff3-66e5c7bd671a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -602,6 +614,9 @@
     </ClCompile>
     <ClCompile Include="zombie_skin_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_idle_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1018,6 +1033,12 @@
     </ClInclude>
     <ClInclude Include="zombie_skin_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_enemy\enemy_state.h">
+      <Filter>ヘッダー ファイル\Actor\State</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_enemy\enemy_zombie_idle_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
