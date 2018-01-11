@@ -313,6 +313,7 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
 
     //Animator
     animator->SetAvatar(name);
+    animator->SetEnableIK(false);
     animator->Change(MY_NEW ZombieIdleMotionState(0));
 
     //コンポネント
