@@ -12,7 +12,7 @@
 #include "player_mutant_strong_attack_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -20,9 +20,9 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::Init(ActorController& actor)
+void PlayerMutantWalkState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
     parameter.SetMovementMultiplier(kMovementMultiplier);
 }
@@ -30,7 +30,7 @@ void PlayerMutantWalkState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::Uninit(ActorController& actor)
+void PlayerMutantWalkState::Uninit(PlayerController& player)
 {
 
 }
@@ -38,53 +38,53 @@ void PlayerMutantWalkState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::Update(ActorController& actor)
+void PlayerMutantWalkState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
-    actor.CheckGrounded();
-    actor.Move();
+    PlayerState::Update(player);
+    player.CheckGrounded();
+    player.Move();
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (actor.GetParameter().GetCurrentLife() <= 0.0f)
+        if (player.GetParameter().GetCurrentLife() <= 0.0f)
         {
-            actor.Change(MY_NEW PlayerMutantDyingState);
+            player.Change(MY_NEW PlayerMutantDyingState);
             return;
         }
 
-        if (actor.GetMovement().SquareMagnitude() == 0.0f)
+        if (player.GetMovement().SquareMagnitude() == 0.0f)
         {
-            actor.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdelState);
             return;
         }
 
-        if (actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+        if (player.GetCurrentGroundInfo().is_grounded && player.IsJump())
         {
-            actor.Change(MY_NEW PlayerMutantJumpState);
+            player.Change(MY_NEW PlayerMutantJumpState);
             return;
         }
 
-        if (!actor.GetCurrentGroundInfo().is_grounded)
+        if (!player.GetCurrentGroundInfo().is_grounded)
         {
-            actor.Change(MY_NEW PlayerMutantFallState);
+            player.Change(MY_NEW PlayerMutantFallState);
             return;
         }
 
-        if (actor.IsLightAttack())
+        if (player.IsLightAttack())
         {
-            actor.Change(MY_NEW PlayerMutantLightAttackState);
+            player.Change(MY_NEW PlayerMutantLightAttackState);
             return;
         }
 
-        if (actor.IsStrongAttack())
+        if (player.IsStrongAttack())
         {
-            actor.Change(MY_NEW PlayerMutantStrongAttackState);
+            player.Change(MY_NEW PlayerMutantStrongAttackState);
             return;
         }
 
-        if (actor.IsSkill())
+        if (player.IsSkill())
         {
-            actor.Change(MY_NEW PlayerMutantSkillState);
+            player.Change(MY_NEW PlayerMutantSkillState);
             return;
         }
     }
@@ -93,14 +93,14 @@ void PlayerMutantWalkState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantWalkState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
     if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
     {//武器チェック
         if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
         {
             // Damage
-            actor.Change(MY_NEW PlayerMutantDamagedState);
+            player.Change(MY_NEW PlayerMutantDamagedState);
             return;
         }
     }
@@ -117,7 +117,7 @@ void PlayerMutantWalkState::OnTrigger(ActorController& actor, Collider& self, Co
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantWalkState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

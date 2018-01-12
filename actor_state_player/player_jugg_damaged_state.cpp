@@ -5,38 +5,38 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_damaged_state.h"
 #include "player_jugg_neutral_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
 //--------------------------------------------------------------------------------
-void PlayerJuggDamagedState::Init(ActorController& actor)
+void PlayerJuggDamagedState::Init(PlayerController& player)
 {
-    actor.GetAnimator().SetDamaged(true);
-    actor.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetDamaged(true);
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------
 //  I—¹ˆ—
 //--------------------------------------------------------------------------------
-void PlayerJuggDamagedState::Uninit(ActorController& actor)
+void PlayerJuggDamagedState::Uninit(PlayerController& player)
 {
-    actor.GetAnimator().SetDamaged(false);
+    player.GetAnimator().SetDamaged(false);
 }
 
 //--------------------------------------------------------------------------------
 //  XVˆ—
 //--------------------------------------------------------------------------------
-void PlayerJuggDamagedState::Update(ActorController& actor)
+void PlayerJuggDamagedState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
     time_counter_ -= Time::Instance()->ScaledDeltaTime();
     if (time_counter_ <= 0.0f 
-        && actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+        && player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        actor.Change(MY_NEW PlayerJuggNeutralState);
+        player.Change(MY_NEW PlayerJuggNeutralState);
         return;
     }
 }

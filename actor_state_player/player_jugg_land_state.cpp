@@ -7,22 +7,22 @@
 #include "player_jugg_neutral_state.h"
 #include "player_jugg_walk_state.h"
 #include "player_jugg_jump_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
 //--------------------------------------------------------------------------------
-void PlayerJuggLandState::Init(ActorController& actor)
+void PlayerJuggLandState::Init(PlayerController& player)
 {
-    actor.GetParameter().SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetGrounded(true);
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
 //  I—¹ˆ—
 //--------------------------------------------------------------------------------
-void PlayerJuggLandState::Uninit(ActorController& actor)
+void PlayerJuggLandState::Uninit(PlayerController& player)
 {
     
 }
@@ -30,21 +30,21 @@ void PlayerJuggLandState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  XVˆ—
 //--------------------------------------------------------------------------------
-void PlayerJuggLandState::Update(ActorController& actor)
+void PlayerJuggLandState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (actor.GetMovement().SquareMagnitude() > 0.0f)
+        if (player.GetMovement().SquareMagnitude() > 0.0f)
         {
-            actor.Change(MY_NEW PlayerJuggWalkState);
+            player.Change(MY_NEW PlayerJuggWalkState);
             return;
         }
 
-        if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"landing"))
+        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"landing"))
         {
-            actor.Change(MY_NEW PlayerJuggNeutralState);
+            player.Change(MY_NEW PlayerJuggNeutralState);
             return;
         }
     }

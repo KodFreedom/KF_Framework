@@ -4,7 +4,7 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_idle_state.h"
-#include "../actor_controller.h"
+#include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -12,16 +12,16 @@
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdelState::Init(ActorController& actor)
+void EnemyZombieIdelState::Init(EnemyController& enemy)
 {
-    actor.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
-    actor.GetAnimator().SetGrounded(true);
+    enemy.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
+    enemy.GetAnimator().SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdelState::Uninit(ActorController& actor)
+void EnemyZombieIdelState::Uninit(EnemyController& enemy)
 {
 
 }
@@ -29,22 +29,22 @@ void EnemyZombieIdelState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdelState::Update(ActorController& actor)
+void EnemyZombieIdelState::Update(EnemyController& enemy)
 {
-    actor.CheckGrounded();
-    actor.Move();
+    enemy.CheckGrounded();
+    enemy.Move();
 }
 
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdelState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void EnemyZombieIdelState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
     if (self.GetTag()._Equal(L"detector"))
     {
         if (other.GetGameObject().GetTag()._Equal(L"Player"))
         {
-            actor.SetTarget(&other.GetGameObject());
+            enemy.SetTarget(&other.GetGameObject());
         }
     }
 }
@@ -52,7 +52,7 @@ void EnemyZombieIdelState::OnTrigger(ActorController& actor, Collider& self, Col
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdelState::OnCollision(ActorController& actor, CollisionInfo& info)
+void EnemyZombieIdelState::OnCollision(EnemyController& enemy, CollisionInfo& info)
 {
 
 }

@@ -178,6 +178,7 @@
     <ClCompile Include="default_2d_texture_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
+    <ClCompile Include="enemy_controller.cpp" />
     <ClCompile Include="jugg_mesh_shader.cpp" />
     <ClCompile Include="jugg_skin_shader.cpp" />
     <ClCompile Include="library\ImGui\imgui.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="motion_state\zombie_warning_motion_state.cpp" />
     <ClCompile Include="no_light_no_fog_shader.cpp" />
     <ClCompile Include="motion_manager.cpp" />
+    <ClCompile Include="player_controller.cpp" />
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
@@ -303,6 +305,7 @@
     <ClInclude Include="default_2d_shader.h" />
     <ClInclude Include="default_2d_texture_shader.h" />
     <ClInclude Include="default_skin_shader.h" />
+    <ClInclude Include="enemy_controller.h" />
     <ClInclude Include="jugg_mesh_shader.h" />
     <ClInclude Include="jugg_skin_shader.h" />
     <ClInclude Include="labels.h" />
@@ -359,6 +362,7 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="motion_manager.h" />
     <ClInclude Include="actor_parameter.h" />
+    <ClInclude Include="player_controller.h" />
     <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />

@@ -618,6 +618,12 @@
     <ClCompile Include="actor_state_enemy\enemy_zombie_idle_state.cpp">
       <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="enemy_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="player_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1039,6 +1045,12 @@
     </ClInclude>
     <ClInclude Include="actor_state_enemy\enemy_zombie_idle_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="player_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

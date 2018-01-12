@@ -6,47 +6,47 @@
 #include "player_mutant_idel_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::Init(ActorController& actor)
+void PlayerMutantSkillState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetSkill(true);
+    player.GetAnimator().SetSkill(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::Uninit(ActorController& actor)
+void PlayerMutantSkillState::Uninit(PlayerController& player)
 {
-    actor.GetAnimator().SetSkill(false);
+    player.GetAnimator().SetSkill(false);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::Update(ActorController& actor)
+void PlayerMutantSkillState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
-    actor.CheckGrounded();
-    actor.Move();
+    PlayerState::Update(player);
+    player.CheckGrounded();
+    player.Move();
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (actor.GetParameter().GetCurrentLife() <= 0.0f)
+        if (player.GetParameter().GetCurrentLife() <= 0.0f)
         {
-            actor.Change(MY_NEW PlayerMutantDyingState);
+            player.Change(MY_NEW PlayerMutantDyingState);
             return;
         }
 
-        if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_skill"))
+        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_skill"))
         {
-            actor.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdelState);
             return;
         }
     }
@@ -55,7 +55,7 @@ void PlayerMutantSkillState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 
 }
@@ -63,7 +63,7 @@ void PlayerMutantSkillState::OnTrigger(ActorController& actor, Collider& self, C
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantSkillState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

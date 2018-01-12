@@ -8,18 +8,20 @@
 #include "../input.h"
 #include "../camera_manager.h"
 #include "../camera.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 
 //--------------------------------------------------------------------------------
 //  ‘€ìXV
 //--------------------------------------------------------------------------------
-void PlayerState::UpdateInput(ActorController& actor)
+void PlayerState::UpdateInput(PlayerController& actor)
 {
 	auto input = MainSystem::Instance()->GetInput();
     Vector2 axis(input->MoveHorizontal(), input->MoveVertical());
+
 	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
     Vector3& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
-    Vector3& movement = (camera->GetWorldRight() * axis.x_ + camera_forward * axis.y_);
+    Vector3& movement = camera->GetWorldRight() * axis.x_ + camera_forward * axis.y_;
+
 	actor.SetMovement(movement);
 	actor.SetIsLightAttack(input->GetKeyTrigger(Key::kLightAttack));
     actor.SetIsStrongAttack(input->GetKeyTrigger(Key::kStrongAttack));

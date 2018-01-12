@@ -19,7 +19,8 @@
 #include "field_collider.h"
 #include "rigidbody3d.h"
 #include "animator.h"
-#include "actor_controller.h"
+#include "player_controller.h"
+#include "enemy_controller.h"
 #include "actor_state_player\player_mutant_idel_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant_idle_motion_state.h"
@@ -259,7 +260,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	result->SetRigidbody(rigidbody);
 
 	//Actor Controller
-	auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
+	auto actor_controller = MY_NEW PlayerController(*result, *rigidbody, *animator);
 	actor_controller->GetParameter().SetMoveSpeed(10.0f);
 	actor_controller->GetParameter().SetJumpSpeed(10.0f);
 	actor_controller->GetParameter().SetMinTurnSpeed(kPi);
@@ -322,7 +323,7 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
     result->SetRigidbody(rigidbody);
 
     //Actor Controller
-    auto actor_controller = MY_NEW ActorController(*result, *rigidbody, *animator);
+    auto actor_controller = MY_NEW EnemyController(*result, *rigidbody, *animator);
     actor_controller->GetParameter().SetMoveSpeed(10.0f);
     actor_controller->GetParameter().SetJumpSpeed(10.0f);
     actor_controller->GetParameter().SetMinTurnSpeed(kPi);

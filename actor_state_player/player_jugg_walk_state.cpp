@@ -9,7 +9,7 @@
 #include "player_jugg_damaged_state.h"
 #include "player_jugg_fall_state.h"
 #include "player_jugg_attack_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -17,9 +17,9 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerJuggWalkState::Init(ActorController& actor)
+void PlayerJuggWalkState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
     parameter.SetMovementMultiplier(kMovementMultiplier);
 }
@@ -27,7 +27,7 @@ void PlayerJuggWalkState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerJuggWalkState::Uninit(ActorController& actor)
+void PlayerJuggWalkState::Uninit(PlayerController& player)
 {
 
 }
@@ -35,34 +35,34 @@ void PlayerJuggWalkState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //    更新処理
 //--------------------------------------------------------------------------------
-void PlayerJuggWalkState::Update(ActorController& actor)
+void PlayerJuggWalkState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
-    actor.CheckGrounded();
-    actor.Move();
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    PlayerState::Update(player);
+    player.CheckGrounded();
+    player.Move();
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if(actor.GetMovement().SquareMagnitude() <= 0.0f)
+        if(player.GetMovement().SquareMagnitude() <= 0.0f)
         {
-            actor.Change(MY_NEW PlayerJuggNeutralState);
+            player.Change(MY_NEW PlayerJuggNeutralState);
             return;
         }
 
-        if(actor.GetCurrentGroundInfo().is_grounded && actor.IsJump())
+        if(player.GetCurrentGroundInfo().is_grounded && player.IsJump())
         {
-            actor.Change(MY_NEW PlayerJuggJumpState);
+            player.Change(MY_NEW PlayerJuggJumpState);
             return;
         }
 
-        if (!actor.GetCurrentGroundInfo().is_grounded)
+        if (!player.GetCurrentGroundInfo().is_grounded)
         {
-            actor.Change(MY_NEW PlayerJuggFallState);
+            player.Change(MY_NEW PlayerJuggFallState);
             return;
         }
 
-        if (actor.IsLightAttack())
+        if (player.IsLightAttack())
         {
-            actor.Change(MY_NEW PlayerJuggAttackState);
+            player.Change(MY_NEW PlayerJuggAttackState);
             return;
         }
     }
@@ -71,14 +71,14 @@ void PlayerJuggWalkState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggWalkState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerJuggWalkState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
     if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
     {//武器チェック
         if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
         {
             // Damage
-            actor.Change(MY_NEW PlayerJuggDamagedState);
+            player.Change(MY_NEW PlayerJuggDamagedState);
             return;
         }
     }
@@ -95,7 +95,7 @@ void PlayerJuggWalkState::OnTrigger(ActorController& actor, Collider& self, Coll
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggWalkState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerJuggWalkState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }
