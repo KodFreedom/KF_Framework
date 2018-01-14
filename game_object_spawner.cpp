@@ -328,18 +328,13 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
     actor_controller->GetParameter().SetJumpSpeed(10.0f);
     actor_controller->GetParameter().SetMinTurnSpeed(kPi);
     actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
-    actor_controller->Change(MY_NEW EnemyZombieIdelState);
+    actor_controller->Change(MY_NEW EnemyZombieIdleState);
     result->AddBehavior(actor_controller);
 
     //Collider
     auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
-    collider->SetOffset(Vector3(0.0f, 0.8f, 0.0f));
+    collider->SetOffset(Vector3(0.0f, 0.6f, 0.0f));
     collider->SetTag(L"body");
-    result->AddCollider(collider);
-
-    collider = MY_NEW SphereCollider(*result, kDynamic, 10.0f);
-    collider->SetTag(L"detector");
-    collider->SetTrigger(true);
     result->AddCollider(collider);
 
     //Tag

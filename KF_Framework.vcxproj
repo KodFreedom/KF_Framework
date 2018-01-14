@@ -152,7 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_follow_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_idle_state.cpp" />
+    <ClCompile Include="actor_state_enemy\enemy_zombie_walk_state.cpp" />
     <ClCompile Include="actor_state_player\player_jugg_attack_state.cpp" />
     <ClCompile Include="actor_state_player\player_jugg_damaged_state.cpp" />
     <ClCompile Include="actor_state_player\player_jugg_fall_state.cpp" />
@@ -282,7 +284,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actor_state_enemy\enemy_state.h" />
+    <ClInclude Include="actor_state_enemy\enemy_zombie_follow_state.h" />
     <ClInclude Include="actor_state_enemy\enemy_zombie_idle_state.h" />
+    <ClInclude Include="actor_state_enemy\enemy_zombie_walk_state.h" />
     <ClInclude Include="actor_state_player\player_jugg_attack_state.h" />
     <ClInclude Include="actor_state_player\player_jugg_damaged_state.h" />
     <ClInclude Include="actor_state_player\player_jugg_fall_state.h" />

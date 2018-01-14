@@ -5,12 +5,16 @@
 //--------------------------------------------------------------------------------
 #include "enemy_controller.h"
 #include "actor_state_enemy\enemy_state.h"
+#include "sphere_collider.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
     : ActorController(owner, rigidbody, animator), target_(nullptr), current_state_(nullptr)
+    , warning_range_(10.0f), patrol_range_(20.0f)
+    , next_position_(Vector3::kZero), born_position_(Vector3::kZero)
 {
     Change(MY_NEW NullEnemyState);
 }
@@ -20,6 +24,12 @@ EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Anim
 //--------------------------------------------------------------------------------
 bool EnemyController::Init(void)
 {
+    auto collider = MY_NEW SphereCollider(owner_, kDynamic, warning_range_);
+    collider->SetTag(L"detector");
+    collider->SetTrigger(true);
+    owner_.AddCollider(collider);
+    next_position_ =
+    born_position_ = owner_.GetTransform()->GetPosition();
     return true;
 }
 

@@ -12,10 +12,6 @@
 class EnemyState;
 
 //--------------------------------------------------------------------------------
-//  構造体定義
-//--------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
 class EnemyController : public ActorController
@@ -66,12 +62,17 @@ public:
     //  セッター
     //--------------------------------------------------------------------------------
     void SetTarget(GameObject* target) { target_ = target; }
+    void SetNextPosition(const Vector3& position) { next_position_ = position; }
 
     //--------------------------------------------------------------------------------
     //  ゲッター
     //--------------------------------------------------------------------------------
     const String& GetCurrentStateName(void) const override;
     const auto&   GetTarget(void) const { return target_; }
+    const float&  GetWarningRange(void) const { return warning_range_; }
+    const float&  GetPatrolRange(void) const { return patrol_range_; }
+    const Vector3& GetNextPosition(void) const { return next_position_; }
+    const Vector3& GetBornPosition(void) const { return born_position_; }
 
 private:
     //--------------------------------------------------------------------------------
@@ -79,4 +80,8 @@ private:
     //--------------------------------------------------------------------------------
     EnemyState* current_state_;
     GameObject* target_;
+    float       warning_range_;
+    float       patrol_range_;
+    Vector3     next_position_;
+    Vector3     born_position_;
 };

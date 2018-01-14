@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  zombie待機ステート
-//　enemy_zombie_idel_state.h
+//  zombie歩くステート
+//　enemy_zombie_walk_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class EnemyZombieIdleState : public EnemyState
+class EnemyZombieWalkState : public EnemyState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    EnemyZombieIdleState() : EnemyState(L"EnemyZombieIdleState"), time_counter_(0.0f) {}
-    ~EnemyZombieIdleState() {}
+    EnemyZombieWalkState() : EnemyState(L"EnemyZombieWalkState") {}
+    ~EnemyZombieWalkState() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理
@@ -53,10 +53,6 @@ private:
     //  定数定義
     //--------------------------------------------------------------------------------
     static constexpr float kGroundCheckDistance = 0.5f;
-    static constexpr float kWaitTime = 20.0f;
-
-    //--------------------------------------------------------------------------------
-    //  変数定義
-    //--------------------------------------------------------------------------------
-    float time_counter_;
+    static constexpr float kMovementMultiplier = 0.1f;
+    static constexpr float kArriveDistance = 1.0f;
 };

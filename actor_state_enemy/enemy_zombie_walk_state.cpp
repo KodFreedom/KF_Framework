@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  zombie待機ステート
-//　enemy_zombie_idel_state.cpp
+//  zombie歩くステート
+//　enemy_zombie_walk_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_idle_state.h"
@@ -10,26 +10,21 @@
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
-#include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Init(EnemyController& enemy)
+void EnemyZombieWalkState::Init(EnemyController& enemy)
 {
-    enemy.SetTarget(nullptr);
-    enemy.GetAnimator().SetGrounded(true);
-    enemy.SetMovement(Vector3::kZero);
-
     auto& parameter = enemy.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
-    parameter.SetMovementMultiplier(0.0f);
+    parameter.SetMovementMultiplier(kMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Uninit(EnemyController& enemy)
+void EnemyZombieWalkState::Uninit(EnemyController& enemy)
 {
 
 }
@@ -37,21 +32,24 @@ void EnemyZombieIdleState::Uninit(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Update(EnemyController& enemy)
+void EnemyZombieWalkState::Update(EnemyController& enemy)
 {
-    time_counter_ += Time::Instance()->DeltaTime();
-    enemy.CheckGrounded();
-    enemy.Move();
-
-    if (time_counter_ >= kWaitTime)
-    {// 次の目的地をランダムで設定
-        const Vector3& born_position = enemy.GetBornPosition();
-        const float& patrol_range = enemy.GetPatrolRange();
-        Vector3& next_position = Random::Range(born_position - Vector3(patrol_range), born_position + Vector3(patrol_range));
-        enemy.SetNextPosition(next_position);
-        enemy.Change(MY_NEW EnemyZombieWalkState);
+    // 次の位置に移動する
+    const Vector3& my_position = enemy.GetGameObject().GetTransform()->GetPosition();
+    Vector3& me_to_next = enemy.GetNextPosition() - my_position;
+    me_to_next.y_ = 0.0f;
+    float square_distance = me_to_next.SquareMagnitude();
+    
+    if (square_distance <= kArriveDistance * kArriveDistance)
+    {// 目標位置にたどり着いた
+        enemy.Change(MY_NEW EnemyZombieIdleState);
         return;
     }
+
+    me_to_next /= sqrtf(square_distance);
+    enemy.SetMovement(me_to_next);
+    enemy.CheckGrounded();
+    enemy.Move();
 
     if (enemy.GetTarget() != nullptr)
     {// ターゲットに追跡
@@ -63,7 +61,7 @@ void EnemyZombieIdleState::Update(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
+void EnemyZombieWalkState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
     if (self.GetTag()._Equal(L"detector"))
     {
@@ -77,7 +75,7 @@ void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Col
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnCollision(EnemyController& enemy, CollisionInfo& info)
+void EnemyZombieWalkState::OnCollision(EnemyController& enemy, CollisionInfo& info)
 {
 
 }

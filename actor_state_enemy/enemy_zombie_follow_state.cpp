@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  zombie待機ステート
-//　enemy_zombie_idel_state.cpp
+//  zombie追跡ステート
+//　enemy_zombie_follow_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_idle_state.h"
@@ -10,26 +10,21 @@
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
-#include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Init(EnemyController& enemy)
+void EnemyZombieFollowState::Init(EnemyController& enemy)
 {
-    enemy.SetTarget(nullptr);
-    enemy.GetAnimator().SetGrounded(true);
-    enemy.SetMovement(Vector3::kZero);
-
     auto& parameter = enemy.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
-    parameter.SetMovementMultiplier(0.0f);
+    parameter.SetMovementMultiplier(kMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Uninit(EnemyController& enemy)
+void EnemyZombieFollowState::Uninit(EnemyController& enemy)
 {
 
 }
@@ -37,47 +32,45 @@ void EnemyZombieIdleState::Uninit(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Update(EnemyController& enemy)
+void EnemyZombieFollowState::Update(EnemyController& enemy)
 {
-    time_counter_ += Time::Instance()->DeltaTime();
-    enemy.CheckGrounded();
-    enemy.Move();
-
-    if (time_counter_ >= kWaitTime)
-    {// 次の目的地をランダムで設定
-        const Vector3& born_position = enemy.GetBornPosition();
-        const float& patrol_range = enemy.GetPatrolRange();
-        Vector3& next_position = Random::Range(born_position - Vector3(patrol_range), born_position + Vector3(patrol_range));
-        enemy.SetNextPosition(next_position);
+    // プレイヤーに追跡
+    const Vector3& player_position = enemy.GetTarget()->GetTransform()->GetPosition();
+    const Vector3& my_position = enemy.GetGameObject().GetTransform()->GetPosition();
+    Vector3& me_to_player = player_position - my_position;
+    float square_distance = me_to_player.SquareMagnitude();
+    float warning_range = enemy.GetWarningRange();
+    
+    if (square_distance > warning_range * warning_range)
+    {// 範囲外になるので追跡中止
         enemy.Change(MY_NEW EnemyZombieWalkState);
         return;
     }
 
-    if (enemy.GetTarget() != nullptr)
-    {// ターゲットに追跡
-        enemy.Change(MY_NEW EnemyZombieFollowState);
+    if (square_distance <= kAttackRange * kAttackRange)
+    {// 攻撃範囲内になるので攻撃する
+        enemy.Change(MY_NEW EnemyZombieIdleState);
         return;
     }
+
+    me_to_player = Vector3::Scale(me_to_player, Vector3(1.0f, 0.0f, 1.0f)).Normalized();
+    enemy.SetMovement(me_to_player);
+    enemy.CheckGrounded();
+    enemy.Move();
 }
 
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
+void EnemyZombieFollowState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
-    if (self.GetTag()._Equal(L"detector"))
-    {
-        if (other.GetGameObject().GetTag()._Equal(L"Player"))
-        {// ターゲット発見
-            enemy.SetTarget(&other.GetGameObject());
-        }
-    }
+
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnCollision(EnemyController& enemy, CollisionInfo& info)
+void EnemyZombieFollowState::OnCollision(EnemyController& enemy, CollisionInfo& info)
 {
 
 }
