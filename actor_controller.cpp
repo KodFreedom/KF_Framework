@@ -20,8 +20,8 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
-	: Behavior(owner, L"ActorController"), rigidbody_(rigidbody)
+ActorController::ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator)
+	: Behavior(owner, name), rigidbody_(rigidbody)
     , animator_(animator)
 {}
 

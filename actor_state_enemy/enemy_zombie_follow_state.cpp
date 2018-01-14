@@ -7,6 +7,7 @@
 #include "enemy_zombie_walk_state.h"
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
+#include "enemy_zombie_dying_state.h"
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
@@ -17,17 +18,7 @@
 //--------------------------------------------------------------------------------
 void EnemyZombieFollowState::Init(EnemyController& enemy)
 {
-    auto& parameter = enemy.GetParameter();
-    parameter.SetGroundCheckDistance(kGroundCheckDistance);
-    parameter.SetMovementMultiplier(kMovementMultiplier);
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void EnemyZombieFollowState::Uninit(EnemyController& enemy)
-{
-
+    enemy.GetParameter().SetMovementMultiplier(kMovementMultiplier);
 }
 
 //--------------------------------------------------------------------------------
@@ -62,17 +53,15 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
 }
 
 //--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void EnemyZombieFollowState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
+void EnemyZombieFollowState::OnDamaged(EnemyController& enemy)
 {
+    if (enemy.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        enemy.Change(MY_NEW EnemyZombieDyingState);
+        return;
+    }
 
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void EnemyZombieFollowState::OnCollision(EnemyController& enemy, CollisionInfo& info)
-{
-
+    enemy.Change(MY_NEW EnemyZombieDamagedState);
 }

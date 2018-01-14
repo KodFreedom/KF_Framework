@@ -15,15 +15,10 @@
 //--------------------------------------------------------------------------------
 void EnemyZombieDamagedState::Init(EnemyController& enemy)
 {
-    enemy.GetAnimator().SetDamaged(true);
+    auto& animator = enemy.GetAnimator();
+    animator.SetMovement(0.0f);
+    animator.SetDamaged(true);
     enemy.SetMovement(Vector3::kZero);
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void EnemyZombieDamagedState::Uninit(EnemyController& enemy)
-{
 }
 
 //--------------------------------------------------------------------------------
@@ -31,11 +26,12 @@ void EnemyZombieDamagedState::Uninit(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieDamagedState::Update(EnemyController& enemy)
 {
-    if (enemy.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    auto& animator = enemy.GetAnimator();
+    if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (!enemy.GetAnimator().GetCurrentAnimationName()._Equal(L"zombie_damaged"))
+        if (!animator.GetCurrentAnimationName()._Equal(L"zombie_damaged"))
         {
-            enemy.GetAnimator().SetDamaged(false);
+            animator.SetDamaged(false);
 
             if (enemy.GetTarget() != nullptr)
             {// ターゲットに追跡
@@ -47,20 +43,4 @@ void EnemyZombieDamagedState::Update(EnemyController& enemy)
             return;
         }
     }
-}
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void EnemyZombieDamagedState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void EnemyZombieDamagedState::OnCollision(EnemyController& enemy, CollisionInfo& info)
-{
-
 }

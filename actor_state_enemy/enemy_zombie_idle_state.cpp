@@ -7,6 +7,7 @@
 #include "enemy_zombie_walk_state.h"
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
+#include "enemy_zombie_dying_state.h"
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
@@ -18,7 +19,9 @@
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::Init(EnemyController& enemy)
 {
-    enemy.GetAnimator().SetGrounded(true);
+    auto& animator = enemy.GetAnimator();
+    animator.SetMovement(0.0f);
+    animator.SetGrounded(true);
     enemy.SetMovement(Vector3::kZero);
 
     auto& parameter = enemy.GetParameter();
@@ -27,20 +30,11 @@ void EnemyZombieIdleState::Init(EnemyController& enemy)
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void EnemyZombieIdleState::Uninit(EnemyController& enemy)
-{
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::Update(EnemyController& enemy)
 {
     time_counter_ += Time::Instance()->DeltaTime();
-    enemy.CheckGrounded();
-    enemy.Move();
 
     if (time_counter_ >= kWaitTime)
     {// 次の目的地をランダムで設定
@@ -74,9 +68,15 @@ void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Col
 }
 
 //--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnCollision(EnemyController& enemy, CollisionInfo& info)
+void EnemyZombieIdleState::OnDamaged(EnemyController& enemy)
 {
+    if (enemy.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        enemy.Change(MY_NEW EnemyZombieDyingState);
+        return;
+    }
 
+    enemy.Change(MY_NEW EnemyZombieDamagedState);
 }

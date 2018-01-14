@@ -5,48 +5,23 @@
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_attack_state.h"
 #include "enemy_zombie_follow_state.h"
+#include "enemy_zombie_damaged_state.h"
+#include "enemy_zombie_dying_state.h"
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../game_object.h"
 #include "../time.h"
+#include "../player_controller.h"
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
 void EnemyZombieAttackState::Init(EnemyController& enemy)
 {
-    enemy.GetAnimator().SetLightAttack(true);
+    auto& animator = enemy.GetAnimator();
+    animator.SetLightAttack(true);
+    animator.SetMovement(0.0f);
     enemy.SetMovement(Vector3::kZero);
-
-    // 攻撃用ColliderをAwakeにする
-    auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
-    if (right_hand)
-    {
-        auto& colliders = right_hand->GetGameObject().GetColliders();
-        for (auto& collider : colliders)
-        {
-            collider->SetTag(L"Weapon");
-            collider->SetMode(ColliderMode::kDynamic);
-            collider->Awake();
-        }
-    }
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void EnemyZombieAttackState::Uninit(EnemyController& enemy)
-{
-    // 攻撃用ColliderをSleepにする
-    auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
-    if (right_hand)
-    {
-        auto& colliders = right_hand->GetGameObject().GetColliders();
-        for (auto& collider : colliders)
-        {
-            collider->Sleep();
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------
@@ -54,11 +29,42 @@ void EnemyZombieAttackState::Uninit(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieAttackState::Update(EnemyController& enemy)
 {
-    if (enemy.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    auto& animator = enemy.GetAnimator();
+    if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (enemy.GetAnimator().GetCurrentAnimationName()._Equal(L"zombie_punching"))
+        if (animator.GetCurrentAnimationName()._Equal(L"zombie_punching"))
         {
-            enemy.GetAnimator().SetLightAttack(false);
+            int current_frame = animator.GetCurrentFrame();
+            if (current_frame == kBeginAttackFrame)
+            {
+                // 攻撃用ColliderをAwakeにする
+                auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
+                if (right_hand)
+                {
+                    auto& colliders = right_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->SetTag(L"Weapon");
+                        collider->SetMode(ColliderMode::kDynamic);
+                        collider->Awake();
+                    }
+                }
+            }
+            else if (current_frame == kEndAttackFrame)
+            {
+                // 攻撃用ColliderをSleepにする
+                auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
+                if (right_hand)
+                {
+                    auto& colliders = right_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->Sleep();
+                    }
+                }
+            }
+
+            animator.SetLightAttack(false);
             return;
         }
 
@@ -84,12 +90,30 @@ void EnemyZombieAttackState::OnTrigger(EnemyController& enemy, Collider& self, C
             enemy.SetTarget(&other.GetGameObject());
         }
     }
+    else if (self.GetTag()._Equal(L"Weapon"))
+    {
+        if (other.GetTag()._Equal(L"Body")
+            && other.GetGameObject().GetTag()._Equal(L"Player"))
+        {// ターゲットに当たった, player controllerを取得
+            auto player_controller = other.GetGameObject().GetBehaviorBy(L"PlayerController");
+            if (player_controller)
+            {
+                static_cast<PlayerController*>(player_controller)->Hit(enemy.GetParameter().GetAttack());
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void EnemyZombieAttackState::OnCollision(EnemyController& enemy, CollisionInfo& info)
+void EnemyZombieAttackState::OnDamaged(EnemyController& enemy)
 {
+    if (enemy.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        enemy.Change(MY_NEW EnemyZombieDyingState);
+        return;
+    }
 
+    enemy.Change(MY_NEW EnemyZombieDamagedState);
 }

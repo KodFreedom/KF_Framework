@@ -35,10 +35,14 @@ const float CollisionDetector::kMaxObbSlopeCos = cosf(CollisionDetector::kMaxObb
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphere_right)
 {
-	const Vector3& sphere_left_position = sphere_left.GetWorldPosition();
-	const float& sphere_left_radius = sphere_left.GetRadius();
-	const Vector3& sphere_right_position = sphere_right.GetWorldPosition();
-	const float& sphere_right_radius = sphere_right.GetRadius();
+    const Matrix44& sphere_left_world = sphere_left.GetWorldMatrix();
+	const Vector3& sphere_left_position = Vector3(sphere_left_world.rows_[3]);
+	const float& sphere_left_radius = sphere_left.GetRadius() * Vector3(sphere_left_world.rows_[0]).Magnitude();
+
+    const Matrix44& sphere_right_world = sphere_right.GetWorldMatrix();
+	const Vector3& sphere_right_position = Vector3(sphere_right_world.rows_[3]);
+	const float& sphere_right_radius = sphere_right.GetRadius() * Vector3(sphere_right_world.rows_[0]).Magnitude();
+
     Vector3& midline = sphere_left_position - sphere_right_position;
 	float min_distance = sphere_left_radius + sphere_right_radius;
 	float square_distance = midline.SquareMagnitude();
@@ -101,8 +105,10 @@ void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphe
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 {
-	const Vector3& sphere_position = sphere.GetWorldPosition();
-	const float& sphere_radius = sphere.GetRadius();
+    const Matrix44& sphere_world = sphere.GetWorldMatrix();
+	const Vector3& sphere_position = Vector3(sphere_world.rows_[3]);
+	const float& sphere_radius = sphere.GetRadius() * Vector3(sphere_world.rows_[0]).Magnitude();
+
 	const Vector3& aabb_half_size = aabb.GetHalfSize();
 	const Vector3& aabb_position = aabb.GetWorldPosition();
     Vector3& real_position = sphere_position - aabb_position;
@@ -201,8 +207,10 @@ void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
 {
-	const Vector3& sphere_position = sphere.GetWorldPosition();
-	const float& sphere_radius = sphere.GetRadius();
+    const Matrix44& sphere_world = sphere.GetWorldMatrix();
+    const Vector3& sphere_position = Vector3(sphere_world.rows_[3]);
+    const float& sphere_radius = sphere.GetRadius() * Vector3(sphere_world.rows_[0]).Magnitude();
+
 	const Vector3& obb_half_size = obb.GetHalfSize();
 	const Matrix44& obb_matrix = obb.GetWorldMatrix();
     Vector3& real_position = Vector3::TransformInverse(sphere_position, obb_matrix);
@@ -494,12 +502,14 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
 //--------------------------------------------------------------------------------
 void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
 {
-	const Vector3& sphere_position = sphere.GetWorldPosition();
-	const float& radius = sphere.GetRadius();
+    const Matrix44& sphere_world = sphere.GetWorldMatrix();
+    const Vector3& sphere_position = Vector3(sphere_world.rows_[3]);
+    const float& sphere_radius = sphere.GetRadius() * Vector3(sphere_world.rows_[0]).Magnitude();
+
 	auto collision = Detect(sphere_position, field);
 	if (!collision) return;
 
-	float penetration = collision->penetration + radius;
+	float penetration = collision->penetration + sphere_radius;
 	if (penetration <= 0.0f)
 	{
 		MY_DELETE collision;
@@ -676,12 +686,13 @@ RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, Obb
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionDetector::Detect(const Ray& ray, const float& distance, SphereCollider& sphere)
 {
-	const Vector3& sphere_position = sphere.GetWorldPosition();
-	const float& radius = sphere.GetRadius();
+    const Matrix44& sphere_world = sphere.GetWorldMatrix();
+    const Vector3& sphere_position = Vector3(sphere_world.rows_[3]);
+    const float& sphere_radius = sphere.GetRadius() * Vector3(sphere_world.rows_[0]).Magnitude();
 
 	Vector3& sphere_to_origin = ray.origin_ - sphere_position;
 	float work_a = 2.0f * ray.direction_.Dot(sphere_to_origin);
-	float work_b = sphere_to_origin.Dot(sphere_to_origin) - radius * radius;
+	float work_b = sphere_to_origin.Dot(sphere_to_origin) - sphere_radius * sphere_radius;
 	
 	float dicriminant = work_a * work_a - 4.0f * work_b;
 	if (dicriminant < 0.0f) return nullptr;

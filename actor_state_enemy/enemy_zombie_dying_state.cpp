@@ -35,17 +35,3 @@ void EnemyZombieDyingState::Update(EnemyController& enemy)
         enemy.GetGameObject().SetAlive(false);
     }
 }
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void EnemyZombieDyingState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
-{
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void EnemyZombieDyingState::OnCollision(EnemyController& enemy, CollisionInfo& info)
-{
-}

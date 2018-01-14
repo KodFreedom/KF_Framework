@@ -12,7 +12,7 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
-    : ActorController(owner, rigidbody, animator), target_(nullptr), current_state_(nullptr)
+    : ActorController(owner, L"EnemyController", rigidbody, animator), target_(nullptr), current_state_(nullptr)
     , warning_range_(10.0f), patrol_range_(20.0f)
     , next_position_(Vector3::kZero), born_position_(Vector3::kZero)
 {
@@ -24,7 +24,13 @@ EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Anim
 //--------------------------------------------------------------------------------
 bool EnemyController::Init(void)
 {
-    auto collider = MY_NEW SphereCollider(owner_, kDynamic, warning_range_);
+    auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.0f);
+    collider->SetOffset(Vector3(0.0f, 1.5f, 0.0f));
+    collider->SetTag(L"Body");
+    collider->SetTrigger(true);
+    owner_.AddCollider(collider);
+
+    collider = MY_NEW SphereCollider(owner_, kDynamic, warning_range_);
     collider->SetTag(L"Detector");
     collider->SetTrigger(true);
     owner_.AddCollider(collider);
@@ -98,4 +104,13 @@ void EnemyController::Change(EnemyState* state)
 const String& EnemyController::GetCurrentStateName(void) const
 {
     return current_state_->GetName();
+}
+
+//--------------------------------------------------------------------------------
+//  ダメージ受けた処理
+//--------------------------------------------------------------------------------
+void EnemyController::Hit(const float& damage)
+{
+    ActorController::Hit(damage);
+    current_state_->OnDamaged(*this);
 }

@@ -5,12 +5,14 @@
 //--------------------------------------------------------------------------------
 #include "player_controller.h"
 #include "actor_state_player\player_state.h"
+#include "sphere_collider.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 PlayerController::PlayerController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
-    : ActorController(owner, rigidbody, animator), current_state_(nullptr)
+    : ActorController(owner, L"PlayerController", rigidbody, animator), current_state_(nullptr)
 {
     Change(MY_NEW NullPlayerState);
 }
@@ -20,6 +22,12 @@ PlayerController::PlayerController(GameObject& owner, Rigidbody3D& rigidbody, An
 //--------------------------------------------------------------------------------
 bool PlayerController::Init(void)
 {
+    auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.0f);
+    collider->SetOffset(Vector3(0.0f, 1.5f, 0.0f));
+    collider->SetTag(L"Body");
+    collider->SetTrigger(true);
+    owner_.AddCollider(collider);
+
     ActorController::Init();
     return true;
 }
@@ -88,4 +96,13 @@ void PlayerController::Change(PlayerState* state)
 const String& PlayerController::GetCurrentStateName(void) const
 {
     return current_state_->GetName();
+}
+
+//--------------------------------------------------------------------------------
+//  ダメージ受けた処理
+//--------------------------------------------------------------------------------
+void PlayerController::Hit(const float& damage)
+{
+    ActorController::Hit(damage);
+    current_state_->OnDamaged(*this);
 }
