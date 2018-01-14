@@ -8,6 +8,7 @@
 #include "player_mutant_strong_attack_state.h"
 #include "player_mutant_dying_state.h"
 #include "../player_controller.h"
+#include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -37,16 +38,42 @@ void PlayerMutantStrongAttackState::Update(PlayerController& player)
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
-
-    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    auto& animator = player.GetAnimator();
+    if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (player.GetParameter().GetCurrentLife() <= 0.0f)
+        if (animator.GetCurrentAnimationName()._Equal(L"mutant_swiping"))
         {
-            player.Change(MY_NEW PlayerMutantDyingState);
-            return;
+            int current_frame = animator.GetCurrentFrame();
+            if (current_frame == kBeginAttackFrame)
+            {
+                // 攻撃用ColliderをAwakeする
+                auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
+                if (left_hand)
+                {
+                    auto& colliders = left_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->SetTag(L"Weapon");
+                        collider->SetMode(ColliderMode::kDynamic);
+                        collider->Awake();
+                    }
+                }
+            }
+            else if (current_frame == kEndAttackFrame)
+            {
+                // 攻撃用ColliderをSleepする
+                auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
+                if (left_hand)
+                {
+                    auto& colliders = left_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->Sleep();
+                    }
+                }
+            }
         }
-
-        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_swiping"))
+        else
         {
             player.Change(MY_NEW PlayerMutantIdelState);
             return;
@@ -59,21 +86,30 @@ void PlayerMutantStrongAttackState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerMutantStrongAttackState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
-    if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
-    {//武器チェック
-        if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
-        {
-            // Damage
-            player.Change(MY_NEW PlayerMutantDamagedState);
-            return;
+    if (self.GetTag()._Equal(L"Weapon"))
+    {
+        if (other.GetTag()._Equal(L"Body")
+            && other.GetGameObject().GetTag()._Equal(L"Enemy"))
+        {// ターゲットに当たった, enemy controllerを取得
+            auto enemy_controller = other.GetGameObject().GetBehaviorBy(L"EnemyController");
+            if (enemy_controller)
+            {
+                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack());
+            }
         }
     }
 }
 
 //--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerMutantStrongAttackState::OnCollision(PlayerController& player, CollisionInfo& info)
+void PlayerMutantStrongAttackState::OnDamaged(PlayerController& player)
 {
+    if (player.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        player.Change(MY_NEW PlayerMutantDyingState);
+        return;
+    }
 
+    player.Change(MY_NEW PlayerMutantDamagedState);
 }

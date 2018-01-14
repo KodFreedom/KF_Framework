@@ -19,14 +19,6 @@ void PlayerMutantFallState::Init(PlayerController& player)
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void PlayerMutantFallState::Uninit(PlayerController& player)
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void PlayerMutantFallState::Update(PlayerController& player)
@@ -43,19 +35,4 @@ void PlayerMutantFallState::Update(PlayerController& player)
             return;
         }
     }
-}
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantFallState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
-{
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantFallState::OnCollision(PlayerController& player, CollisionInfo& info)
-{
-
 }

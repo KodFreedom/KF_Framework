@@ -37,7 +37,7 @@ void EnemyZombieAttackState::Update(EnemyController& enemy)
             int current_frame = animator.GetCurrentFrame();
             if (current_frame == kBeginAttackFrame)
             {
-                // UŒ‚—pCollider‚ðAwake‚É‚·‚é
+                // UŒ‚—pCollider‚ðAwake‚·‚é
                 auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
                 if (right_hand)
                 {
@@ -52,7 +52,7 @@ void EnemyZombieAttackState::Update(EnemyController& enemy)
             }
             else if (current_frame == kEndAttackFrame)
             {
-                // UŒ‚—pCollider‚ðSleep‚É‚·‚é
+                // UŒ‚—pCollider‚ðSleep‚·‚é
                 auto right_hand = enemy.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
                 if (right_hand)
                 {

@@ -57,19 +57,3 @@ void PlayerMutantJumpState::Update(PlayerController& player)
         }
     }
 }
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantJumpState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantJumpState::OnCollision(PlayerController& player, CollisionInfo& info)
-{
-
-}

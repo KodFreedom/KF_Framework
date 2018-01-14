@@ -5,7 +5,6 @@
 //--------------------------------------------------------------------------------
 #include "player_mutant_idel_state.h"
 #include "player_mutant_damaged_state.h"
-#include "player_mutant_dying_state.h"
 #include "../player_controller.h"
 #include "../animator.h"
 
@@ -34,31 +33,10 @@ void PlayerMutantDamagedState::Update(PlayerController& player)
     PlayerState::Update(player);
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (player.GetParameter().GetCurrentLife() <= 0.0f)
-        {
-            player.Change(MY_NEW PlayerMutantDyingState);
-            return;
-        }
-
         if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_damaged"))
         {
             player.Change(MY_NEW PlayerMutantIdelState);
             return;
         }
     }
-}
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantDamagedState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
-{
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantDamagedState::OnCollision(PlayerController& player, CollisionInfo& info)
-{
-
 }
