@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_attack_state.h"
 #include "player_jugg_neutral_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -13,36 +13,36 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerJuggAttackState::Init(ActorController& actor)
+void PlayerJuggAttackState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetLightAttack(true);
+    player.GetAnimator().SetLightAttack(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerJuggAttackState::Uninit(ActorController& actor)
+void PlayerJuggAttackState::Uninit(PlayerController& player)
 {
-    actor.GetAnimator().SetLightAttack(false);
+    player.GetAnimator().SetLightAttack(false);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerJuggAttackState::Update(ActorController& actor)
+void PlayerJuggAttackState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
-    actor.CheckGrounded();
-    actor.Move();
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    PlayerState::Update(player);
+    player.CheckGrounded();
+    player.Move();
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        const auto& current_animation_name = actor.GetAnimator().GetCurrentAnimationName();
+        const auto& current_animation_name = player.GetAnimator().GetCurrentAnimationName();
         if (!current_animation_name._Equal(L"jugg_attack_left")
             && !current_animation_name._Equal(L"jugg_attack_right"))
         {
-            actor.Change(MY_NEW PlayerJuggNeutralState);
+            player.Change(MY_NEW PlayerJuggNeutralState);
             return;
         }
     }
@@ -51,14 +51,14 @@ void PlayerJuggAttackState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggAttackState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerJuggAttackState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggAttackState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerJuggAttackState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

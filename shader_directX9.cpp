@@ -29,12 +29,12 @@ void ShaderDirectX9::Set(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 //  ì«çûèàóù
 //--------------------------------------------------------------------------------
-void ShaderDirectX9::CompileShaderFrom(const String& shader_name, const LPDIRECT3DDEVICE9 device)
+void ShaderDirectX9::CompileShaderFrom(const String& vertex_shader, const String& pixel_shader, const LPDIRECT3DDEVICE9 device)
 {
     // Vertex Shader
     LPD3DXBUFFER error_buffer = nullptr;
     LPD3DXBUFFER code_buffer = nullptr;
-    String& file_path = L"data/shader/" + shader_name + L"_vertex_shader.hlsl";
+    String& file_path = L"data/shader/" + vertex_shader + L".hlsl";
     HRESULT hr = D3DXCompileShaderFromFile(
         file_path.c_str(),
         NULL,
@@ -62,7 +62,7 @@ void ShaderDirectX9::CompileShaderFrom(const String& shader_name, const LPDIRECT
     SAFE_RELEASE(error_buffer);
 
     // Pixel Shader
-    file_path = L"data/shader/" + shader_name + L"_pixel_shader.hlsl";
+    file_path = L"data/shader/" + pixel_shader + L".hlsl";
     hr = D3DXCompileShaderFromFile(
         file_path.c_str(),
         NULL,

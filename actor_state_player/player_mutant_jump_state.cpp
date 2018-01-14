@@ -5,18 +5,18 @@
 //--------------------------------------------------------------------------------
 #include "player_mutant_jump_state.h"
 #include "player_mutant_land_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantJumpState::Init(ActorController& actor)
+void PlayerMutantJumpState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
     parameter.SetMovementMultiplier(kGroundedMovementMultiplier);
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetGrounded(false);
     animator.SetJump(true);
 }
@@ -24,9 +24,9 @@ void PlayerMutantJumpState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantJumpState::Uninit(ActorController& actor)
+void PlayerMutantJumpState::Uninit(PlayerController& player)
 {
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetGrounded(true);
     animator.SetJump(false);
 }
@@ -34,24 +34,24 @@ void PlayerMutantJumpState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantJumpState::Update(ActorController& actor)
+void PlayerMutantJumpState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
     ++frame_counter_;
     if (frame_counter_ == kWaitFrame)
     {
-        actor.Jump();
-        actor.GetParameter().SetMovementMultiplier(kAirborneMovementMultiplier);
+        player.Jump();
+        player.GetParameter().SetMovementMultiplier(kAirborneMovementMultiplier);
     }
     else if (frame_counter_ > kWaitFrame)
     {
-        actor.CheckGrounded();
-        actor.Move();
-        if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+        player.CheckGrounded();
+        player.Move();
+        if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
         {
-            if (actor.GetCurrentGroundInfo().is_grounded)
+            if (player.GetCurrentGroundInfo().is_grounded)
             {
-                actor.Change(MY_NEW PlayerMutantLandState);
+                player.Change(MY_NEW PlayerMutantLandState);
                 return;
             }
         }
@@ -61,7 +61,7 @@ void PlayerMutantJumpState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantJumpState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantJumpState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 
 }
@@ -69,7 +69,7 @@ void PlayerMutantJumpState::OnTrigger(ActorController& actor, Collider& self, Co
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantJumpState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantJumpState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

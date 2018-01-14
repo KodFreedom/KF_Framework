@@ -6,7 +6,7 @@
 #include "player_jugg_jump_state.h"
 #include "player_jugg_land_state.h"
 #include "player_jugg_jump_attack_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -14,12 +14,12 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerJuggJumpState::Init(ActorController& actor)
+void PlayerJuggJumpState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetGrounded(false);
     animator.SetJump(true);
 }
@@ -27,40 +27,40 @@ void PlayerJuggJumpState::Init(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerJuggJumpState::Uninit(ActorController& actor)
+void PlayerJuggJumpState::Uninit(PlayerController& player)
 {
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetJump(false);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerJuggJumpState::Update(ActorController& actor)
+void PlayerJuggJumpState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
     
     ++frame_counter_;
     if (frame_counter_ == kWaitFrame)
     {
-        actor.Jump();
+        player.Jump();
     }
     else if (frame_counter_ > kWaitFrame)
     {
-        actor.CheckGrounded();
-        actor.Move();
+        player.CheckGrounded();
+        player.Move();
 
-        if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+        if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
         {
-            if (actor.GetCurrentGroundInfo().is_grounded)
+            if (player.GetCurrentGroundInfo().is_grounded)
             {
-                actor.Change(MY_NEW PlayerJuggLandState);
+                player.Change(MY_NEW PlayerJuggLandState);
                 return;
             }
 
-            if (actor.IsLightAttack())
+            if (player.IsLightAttack())
             {
-                actor.Change(MY_NEW PlayerJuggJumpAttackState);
+                player.Change(MY_NEW PlayerJuggJumpAttackState);
                 return;
             }
         }
@@ -70,14 +70,14 @@ void PlayerJuggJumpState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggJumpState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerJuggJumpState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggJumpState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerJuggJumpState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

@@ -49,26 +49,14 @@ public:
 	}
 
 	//--------------------------------------------------------------------------------
-	//  今のモーション名を返す
-	//  return：const string&
+	//  ゲッター
 	//--------------------------------------------------------------------------------
-	const String& GetCurrentMotionName(void) const 
-	{
-		return current_motion_name_; 
-	}
+    const String& GetCurrentMotionName(void) const { return current_motion_name_; }
+    const auto&   GetType(void) const { return type_; }
+    const int     GetCurrentFrame(void) const { return current_frame_counter_; }
 
 	//--------------------------------------------------------------------------------
-	//  今のモーションタイプを返す
-	//  return：const MotionStateType&
-	//--------------------------------------------------------------------------------
-	const auto& GetType(void) const
-	{
-		return type_;
-	}
-
-	//--------------------------------------------------------------------------------
-	//  モーションの始めるフレームを設定する
-	//  current_motion_frame_counter：今のモーションのフレームカウンタ / 现在的动作的帧计数器
+	//  セッター
 	//--------------------------------------------------------------------------------
 	void Set(const int current_motion_frame_counter) 
 	{ 

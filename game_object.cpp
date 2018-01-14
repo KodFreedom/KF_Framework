@@ -46,6 +46,23 @@ bool GameObject::Init(void)
 }
 
 //--------------------------------------------------------------------------------
+//  子供のコライダーリストの取得
+//--------------------------------------------------------------------------------
+list<Collider*> GameObject::GetCollidersFromChildren(void) const
+{
+    list<Collider*> colliders = colliders_;
+
+    // 子供からcollidersを取得
+    for (auto& pair : transform_->GetChildren())
+    {
+        list<Collider*>& child_colliders = pair.second->GetGameObject().GetCollidersFromChildren();
+        colliders.splice(colliders.end(), child_colliders);
+    }
+
+    return colliders;
+}
+
+//--------------------------------------------------------------------------------
 //  SetActive
 //--------------------------------------------------------------------------------
 void GameObject::SetActive(const bool& value)

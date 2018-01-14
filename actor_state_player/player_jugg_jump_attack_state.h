@@ -21,32 +21,32 @@ public:
     //--------------------------------------------------------------------------------
     //  初期化処理
     //--------------------------------------------------------------------------------
-    void Init(ActorController& actor) override;
+    void Init(PlayerController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    void Uninit(ActorController& actor) override;
+    void Uninit(PlayerController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  更新処理
     //--------------------------------------------------------------------------------
-    void Update(ActorController& actor) override;
+    void Update(PlayerController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  後更新処理
     //--------------------------------------------------------------------------------
-    void LateUpdate(ActorController& actor) override {}
+    void LateUpdate(PlayerController& actor) override {}
 
     //--------------------------------------------------------------------------------
     //  コライダートリガーの時呼ばれる
     //--------------------------------------------------------------------------------
-    void OnTrigger(ActorController& actor, Collider& self, Collider& other);
+    void OnTrigger(PlayerController& actor, Collider& self, Collider& other);
 
     //--------------------------------------------------------------------------------
     //  コライダー衝突の時呼ばれる
     //--------------------------------------------------------------------------------
-    void OnCollision(ActorController& actor, CollisionInfo& info);
+    void OnCollision(PlayerController& actor, CollisionInfo& info);
 
 private:
     //--------------------------------------------------------------------------------

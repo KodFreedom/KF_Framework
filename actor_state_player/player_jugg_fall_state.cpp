@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_fall_state.h"
 #include "player_jugg_land_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -13,39 +13,39 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerJuggFallState::Init(ActorController& actor)
+void PlayerJuggFallState::Init(PlayerController& player)
 {
-    auto& parameter = actor.GetParameter();
+    auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetGrounded(false);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerJuggFallState::Uninit(ActorController& actor)
+void PlayerJuggFallState::Uninit(PlayerController& player)
 {
-    auto& animator = actor.GetAnimator();
+    auto& animator = player.GetAnimator();
     animator.SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerJuggFallState::Update(ActorController& actor)
+void PlayerJuggFallState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
 
-    actor.CheckGrounded();
-    actor.Move();
+    player.CheckGrounded();
+    player.Move();
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (actor.GetCurrentGroundInfo().is_grounded)
+        if (player.GetCurrentGroundInfo().is_grounded)
         {
-            actor.Change(MY_NEW PlayerJuggLandState);
+            player.Change(MY_NEW PlayerJuggLandState);
             return;
         }
     }
@@ -54,14 +54,14 @@ void PlayerJuggFallState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggFallState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerJuggFallState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerJuggFallState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerJuggFallState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

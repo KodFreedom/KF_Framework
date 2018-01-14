@@ -32,7 +32,9 @@ Collider::Collider(GameObject& owner, const ColliderType& type, const ColliderMo
 //--------------------------------------------------------------------------------
 bool Collider::Init(void)
 {
-	world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
+    is_registered_ = true;
+    MainSystem::Instance()->GetCollisionSystem()->Register(this);
+    world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
 	return true;
 }
 
@@ -45,6 +47,7 @@ void Collider::Uninit(void)
 	{
 		MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
 	}
+    observers_.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -52,16 +55,17 @@ void Collider::Uninit(void)
 //--------------------------------------------------------------------------------
 void Collider::Update(void)
 {
-	if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
-		->FrustumCulling(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
-	{
-		Awake();
-	}
-	else
-	{
-		Sleep();
-		return;
-	}
+    // Todo : ある範囲内の当たり判定だけ効かれる
+	//if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
+	//	->FrustumCulling(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
+	//{
+	//	Awake();
+	//}
+	//else
+	//{
+	//	Sleep();
+	//	return;
+	//}
 
 	if (mode_ == kDynamic)
 	{
@@ -98,4 +102,64 @@ void Collider::Awake(void)
 	if (is_registered_) return;
 	is_registered_ = true;
 	MainSystem::Instance()->GetCollisionSystem()->Register(this);
+}
+
+//--------------------------------------------------------------------------------
+//	modeの設定
+//--------------------------------------------------------------------------------
+void Collider::SetMode(const ColliderMode& mode)
+{
+    if (mode_ == mode) return;
+
+    if (is_registered_)
+    {
+        auto collision_system = MainSystem::Instance()->GetCollisionSystem();
+        collision_system->Deregister(this);
+        mode_ = mode;
+        collision_system->Register(this);
+    }
+    else
+    {
+        mode_ = mode;
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  コライダートリガーの時呼ばれる
+//--------------------------------------------------------------------------------
+void Collider::OnTrigger(Collider& other)
+{
+    for (auto observer : observers_)
+    {
+        observer->OnTrigger(*this, other);
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  コライダー衝突の時呼ばれる
+//--------------------------------------------------------------------------------
+void Collider::OnCollision(CollisionInfo& info)
+{
+    for (auto observer : observers_)
+    {
+        observer->OnCollision(info);
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  observer登録関数
+//--------------------------------------------------------------------------------
+void Collider::Register(Behavior* observer)
+{
+    assert(observer);
+    observers_.push_back(observer);
+}
+
+//--------------------------------------------------------------------------------
+//  observer削除関数
+//--------------------------------------------------------------------------------
+void Collider::Deregister(Behavior* observer)
+{
+    assert(observer);
+    observers_.remove(observer);
 }

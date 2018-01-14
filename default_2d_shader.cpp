@@ -15,7 +15,7 @@
 //--------------------------------------------------------------------------------
 void Default2dShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"default_2d", device);
+    CompileShaderFrom(L"default_2d_vertex_shader", L"default_2d_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

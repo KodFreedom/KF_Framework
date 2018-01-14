@@ -4,7 +4,7 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_mutant_dying_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 #include "../time.h"
 #include "../game_object.h"
@@ -12,43 +12,43 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantDyingState::Init(ActorController& actor)
+void PlayerMutantDyingState::Init(PlayerController& player)
 {
-    actor.GetParameter().SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetDead(true);
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetDead(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantDyingState::Uninit(ActorController& actor)
+void PlayerMutantDyingState::Uninit(PlayerController& player)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantDyingState::Update(ActorController& actor)
+void PlayerMutantDyingState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
     time_counter_ -= Time::Instance()->ScaledDeltaTime();
     if (time_counter_ <= 0.0f)
     {
-        actor.GetGameObject().SetAlive(false);
+        player.GetGameObject().SetAlive(false);
     }
 }
 
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantDyingState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantDyingState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantDyingState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantDyingState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

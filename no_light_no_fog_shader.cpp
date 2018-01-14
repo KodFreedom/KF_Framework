@@ -18,7 +18,7 @@
 //--------------------------------------------------------------------------------
 void NoLightNoFogShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"no_light_no_fog", device);
+    CompileShaderFrom(L"no_light_no_fog_vertex_shader", L"no_light_no_fog_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

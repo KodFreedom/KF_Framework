@@ -109,21 +109,22 @@ public:
     //--------------------------------------------------------------------------------
     //  ゲッター
     //--------------------------------------------------------------------------------
-    const auto& GetAvatar(void) const { return avatar_; }
-    const bool& GetIsGrounded(void) const { return is_grounded_; }
-    const bool& GetIsDead(void) const { return is_dead_; }
-    const bool& GetIsDamaged(void) const { return is_damaged_; }
-    const bool& GetIsJump(void) const { return is_jump_; }
-    const bool& GetIsRiseUp(void) const { return is_rise_up_; }
-    const bool& GetIsLightAttack(void) const { return is_light_attack_; }
-    const bool& GetIsStrongAttack(void) const { return is_strong_attack_; }
-    const bool& GetIsSkill(void) const { return is_skill_; }
-    const bool& GetIsSkillOver(void) const { return is_skill_over_; }
-    const bool& GetIsStun(void) const { return is_stun_; }
-    const bool& GetIsUltra(void) const { return is_ultra_; }
-    const bool& GetIsAngry(void) const { return is_angry_; }
+    const auto&  GetAvatar(void) const { return avatar_; }
+    const bool&  GetIsGrounded(void) const { return is_grounded_; }
+    const bool&  GetIsDead(void) const { return is_dead_; }
+    const bool&  GetIsDamaged(void) const { return is_damaged_; }
+    const bool&  GetIsJump(void) const { return is_jump_; }
+    const bool&  GetIsRiseUp(void) const { return is_rise_up_; }
+    const bool&  GetIsLightAttack(void) const { return is_light_attack_; }
+    const bool&  GetIsStrongAttack(void) const { return is_strong_attack_; }
+    const bool&  GetIsSkill(void) const { return is_skill_; }
+    const bool&  GetIsSkillOver(void) const { return is_skill_over_; }
+    const bool&  GetIsStun(void) const { return is_stun_; }
+    const bool&  GetIsUltra(void) const { return is_ultra_; }
+    const bool&  GetIsAngry(void) const { return is_angry_; }
     const float& GetMovement(void) const { return movement_; }
     const float& GetTimeCounter(void) const { return time_counter_; }
+    const int    GetCurrentFrame(void) const;
 
     //--------------------------------------------------------------------------------
     //  セッター

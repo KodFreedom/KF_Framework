@@ -112,4 +112,7 @@ void StageSpawner::LoadStage(const String& stage_name)
 #ifdef _DEBUG
     main_system->GetDebugObserver()->SetPlayer(player);
 #endif // _DEBUG
+
+    // Enemy
+    GameObjectSpawner::CreateEnemy(L"derrick", Vector3(10.0f, 10.0f, 10.0f), Vector3::kZero, Vector3::kOne);
 }

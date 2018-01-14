@@ -5,22 +5,22 @@
 //--------------------------------------------------------------------------------
 #include "player_mutant_idel_state.h"
 #include "player_mutant_land_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantLandState::Init(ActorController& actor)
+void PlayerMutantLandState::Init(PlayerController& player)
 {
-    actor.GetParameter().SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetGrounded(true);
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetGrounded(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantLandState::Uninit(ActorController& actor)
+void PlayerMutantLandState::Uninit(PlayerController& player)
 {
 
 }
@@ -28,15 +28,15 @@ void PlayerMutantLandState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantLandState::Update(ActorController& actor)
+void PlayerMutantLandState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
+    PlayerState::Update(player);
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (!actor.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_land"))
+        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_land"))
         {
-            actor.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdelState);
             return;
         }
     }
@@ -45,7 +45,7 @@ void PlayerMutantLandState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantLandState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantLandState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 
 }
@@ -53,7 +53,7 @@ void PlayerMutantLandState::OnTrigger(ActorController& actor, Collider& self, Co
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantLandState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantLandState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

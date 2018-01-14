@@ -5,23 +5,23 @@
 //--------------------------------------------------------------------------------
 #include "player_mutant_fall_state.h"
 #include "player_mutant_land_state.h"
-#include "../actor_controller.h"
+#include "../player_controller.h"
 #include "../animator.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantFallState::Init(ActorController& actor)
+void PlayerMutantFallState::Init(PlayerController& player)
 {
-    actor.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
-    actor.GetParameter().SetMovementMultiplier(kMovementMultiplier);
-    actor.GetAnimator().SetGrounded(false);
+    player.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetGrounded(false);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerMutantFallState::Uninit(ActorController& actor)
+void PlayerMutantFallState::Uninit(PlayerController& player)
 {
 
 }
@@ -29,17 +29,17 @@ void PlayerMutantFallState::Uninit(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantFallState::Update(ActorController& actor)
+void PlayerMutantFallState::Update(PlayerController& player)
 {
-    PlayerState::Update(actor);
-    actor.CheckGrounded();
-    actor.Move();
+    PlayerState::Update(player);
+    player.CheckGrounded();
+    player.Move();
 
-    if (actor.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (actor.GetCurrentGroundInfo().is_grounded)
+        if (player.GetCurrentGroundInfo().is_grounded)
         {
-            actor.Change(MY_NEW PlayerMutantLandState);
+            player.Change(MY_NEW PlayerMutantLandState);
             return;
         }
     }
@@ -48,14 +48,14 @@ void PlayerMutantFallState::Update(ActorController& actor)
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantFallState::OnTrigger(ActorController& actor, Collider& self, Collider& other)
+void PlayerMutantFallState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  コライダー衝突の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerMutantFallState::OnCollision(ActorController& actor, CollisionInfo& info)
+void PlayerMutantFallState::OnCollision(PlayerController& player, CollisionInfo& info)
 {
 
 }

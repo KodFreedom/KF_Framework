@@ -5,7 +5,6 @@
 //--------------------------------------------------------------------------------
 #include "actor_controller.h"
 #include "game_object.h"
-#include "actor_state.h"
 #include "animator.h"
 #include "rigidbody3d.h"
 #include "main_system.h"
@@ -21,79 +20,22 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ActorController::ActorController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator)
-	: Behavior(owner, L"ActorController"), state_(nullptr), rigidbody_(rigidbody), animator_(animator)
-{
-	Change(MY_NEW NullActorState);
-}
+ActorController::ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator)
+	: Behavior(owner, name), rigidbody_(rigidbody)
+    , animator_(animator)
+{}
 
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
 bool ActorController::Init(void)
 {
-	return true;
-}
-
-//--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void ActorController::Uninit(void)
-{
-	if (state_)
-	{
-		state_->Uninit(*this);
-		delete state_;
-	}
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void ActorController::Update(void)
-{
-	state_->Update(*this);
-}
-
-//--------------------------------------------------------------------------------
-//  後更新処理
-//--------------------------------------------------------------------------------
-void ActorController::LateUpdate(void)
-{
-	state_->LateUpdate(*this);
-}
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void ActorController::OnTrigger(Collider& self, Collider& other)
-{
-	state_->OnTrigger(*this, self, other);
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void ActorController::OnCollision(CollisionInfo& info)
-{
-	state_->OnCollision(*this, info);
-}
-
-//--------------------------------------------------------------------------------
-//	関数名：Change
-//  関数説明：ステートの切り替え
-//	引数：	state：最新のステート
-//	戻り値：なし
-//--------------------------------------------------------------------------------
-void ActorController::Change(ActorState* state)
-{
-	if (state_)
-	{
-		state_->Uninit(*this);
-		MY_DELETE state_;
-	}
-	state_ = state;
-	state_->Init(*this);
+    list<Collider*>& colliders = owner_.GetCollidersFromChildren();
+    for (auto collider : colliders)
+    {
+        collider->Register(this);
+    }
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -155,9 +97,10 @@ void ActorController::CheckGrounded(void)
 }
 
 //--------------------------------------------------------------------------------
-//  今のステート名前を返す
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-const String& ActorController::GetCurrentStateName(void) const
+void ActorController::Hit(const float& damage)
 {
-	return state_->GetName();
+    float current_life = parameter_.GetCurrentLife();
+    current_life = max(0.0f, current_life - damage);
 }

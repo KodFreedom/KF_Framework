@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 void JuggSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"jugg_skin", device);
+    CompileShaderFrom(L"default_skin_vertex_shader", L"jugg_skin_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

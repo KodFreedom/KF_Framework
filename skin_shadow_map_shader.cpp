@@ -21,7 +21,7 @@
 //--------------------------------------------------------------------------------
 void SkinShadowMapShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"basic_skin_shadow_map", device);
+    CompileShaderFrom(L"basic_skin_shadow_map_vertex_shader", L"basic_skin_shadow_map_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------

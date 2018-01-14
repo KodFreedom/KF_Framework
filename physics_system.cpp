@@ -25,7 +25,7 @@ void PhysicsSystem::Update(void)
 	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
 	{
 		Resolve(**iterator);
-		delete *iterator;
+		MY_DELETE *iterator;
 		iterator = collisions_.erase(iterator);
 	}
 }
@@ -38,7 +38,7 @@ void PhysicsSystem::Clear(void)
 {
 	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
 	{
-		delete *iterator;
+		MY_DELETE *iterator;
 		iterator = collisions_.erase(iterator);
 	}
 }
@@ -118,7 +118,7 @@ void PhysicsSystem::ResolveVelocity(Collision& collision)
 	collision.rigidbody_one->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
 	if (collision.rigidbody_two)
 	{
-		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
+		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
 	}
 }
 
@@ -147,7 +147,7 @@ void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 	collision.rigidbody_one->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
 	if (collision.rigidbody_two)
 	{
-		collision.rigidbody_two->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_two->GetInverseMass());
+		collision.rigidbody_two->AddFixedMovement(movement_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
 	}
 }
 
@@ -156,7 +156,7 @@ void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 //--------------------------------------------------------------------------------
 float PhysicsSystem::CalculateSeparatingVelocity(Collision& collision)
 {
-	auto relative_velocity = collision.rigidbody_one->GetVelocity();
+	Vector3 relative_velocity = collision.rigidbody_one->GetVelocity();
 	if (collision.rigidbody_two) relative_velocity -= collision.rigidbody_two->GetVelocity();
 	return relative_velocity.Dot(collision.normal);
 }

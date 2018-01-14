@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 {
-    CompileShaderFrom(L"default_skin", device);
+    CompileShaderFrom(L"default_skin_vertex_shader", L"default_skin_pixel_shader", device);
 }
 
 //--------------------------------------------------------------------------------
