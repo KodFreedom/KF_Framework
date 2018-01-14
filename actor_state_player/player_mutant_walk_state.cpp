@@ -28,14 +28,6 @@ void PlayerMutantWalkState::Init(PlayerController& player)
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void PlayerMutantWalkState::Uninit(PlayerController& player)
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void PlayerMutantWalkState::Update(PlayerController& player)
@@ -46,12 +38,6 @@ void PlayerMutantWalkState::Update(PlayerController& player)
 
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (player.GetParameter().GetCurrentLife() <= 0.0f)
-        {
-            player.Change(MY_NEW PlayerMutantDyingState);
-            return;
-        }
-
         if (player.GetMovement().SquareMagnitude() == 0.0f)
         {
             player.Change(MY_NEW PlayerMutantIdelState);
@@ -91,33 +77,15 @@ void PlayerMutantWalkState::Update(PlayerController& player)
 }
 
 //--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerMutantWalkState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
+void PlayerMutantWalkState::OnDamaged(PlayerController& player)
 {
-    if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
-    {//武器チェック
-        if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
-        {
-            // Damage
-            player.Change(MY_NEW PlayerMutantDamagedState);
-            return;
-        }
-    }
-
-    if (other.GetGameObject().GetTag()._Equal(L"Goal"))
+    if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        if (self.GetTag()._Equal(L"body"))
-        {
-            // Game Clear
-        }
+        player.Change(MY_NEW PlayerMutantDyingState);
+        return;
     }
-}
 
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantWalkState::OnCollision(PlayerController& player, CollisionInfo& info)
-{
-
+    player.Change(MY_NEW PlayerMutantDamagedState);
 }

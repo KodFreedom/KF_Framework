@@ -18,14 +18,6 @@ void PlayerMutantLandState::Init(PlayerController& player)
 }
 
 //--------------------------------------------------------------------------------
-//  終了処理
-//--------------------------------------------------------------------------------
-void PlayerMutantLandState::Uninit(PlayerController& player)
-{
-
-}
-
-//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void PlayerMutantLandState::Update(PlayerController& player)
@@ -40,20 +32,4 @@ void PlayerMutantLandState::Update(PlayerController& player)
             return;
         }
     }
-}
-
-//--------------------------------------------------------------------------------
-//  コライダートリガーの時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantLandState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
-{
-
-}
-
-//--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
-//--------------------------------------------------------------------------------
-void PlayerMutantLandState::OnCollision(PlayerController& player, CollisionInfo& info)
-{
-
 }

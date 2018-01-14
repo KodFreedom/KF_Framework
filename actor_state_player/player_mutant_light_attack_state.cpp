@@ -8,6 +8,7 @@
 #include "player_mutant_light_attack_state.h"
 #include "player_mutant_dying_state.h"
 #include "../player_controller.h"
+#include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
@@ -20,6 +21,19 @@ void PlayerMutantLightAttackState::Init(PlayerController& player)
     auto& parameter = player.GetParameter();
     parameter.SetMovementMultiplier(kMovementMultiplier);
     player.GetAnimator().SetLightAttack(true);
+
+    // 攻撃用ColliderをAwakeする
+    auto right_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:RightHand");
+    if (right_hand)
+    {
+        auto& colliders = right_hand->GetGameObject().GetColliders();
+        for (auto& collider : colliders)
+        {
+            collider->SetTag(L"Weapon");
+            collider->SetMode(ColliderMode::kDynamic);
+            collider->Awake();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -28,6 +42,17 @@ void PlayerMutantLightAttackState::Init(PlayerController& player)
 void PlayerMutantLightAttackState::Uninit(PlayerController& player)
 {
     player.GetAnimator().SetLightAttack(false);
+
+    // 攻撃用ColliderをSleepする
+    auto right_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:RightHand");
+    if (right_hand)
+    {
+        auto& colliders = right_hand->GetGameObject().GetColliders();
+        for (auto& collider : colliders)
+        {
+            collider->Sleep();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -41,12 +66,6 @@ void PlayerMutantLightAttackState::Update(PlayerController& player)
 
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (player.GetParameter().GetCurrentLife() <= 0.0f)
-        {
-            player.Change(MY_NEW PlayerMutantDyingState);
-            return;
-        }
-
         if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_punch"))
         {
             player.Change(MY_NEW PlayerMutantIdelState);
@@ -60,21 +79,30 @@ void PlayerMutantLightAttackState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerMutantLightAttackState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
-    if (other.GetGameObject().GetTag()._Equal(L"Enemy"))
-    {//武器チェック
-        if (other.GetTag()._Equal(L"weapon") && self.GetTag()._Equal(L"body"))
-        {
-            // Damage
-            player.Change(MY_NEW PlayerMutantDamagedState);
-            return;
+    if (self.GetTag()._Equal(L"Weapon"))
+    {
+        if (other.GetTag()._Equal(L"Body")
+            && other.GetGameObject().GetTag()._Equal(L"Enemy"))
+        {// ターゲットに当たった, enemy controllerを取得
+            auto enemy_controller = other.GetGameObject().GetBehaviorBy(L"EnemyController");
+            if (enemy_controller)
+            {
+                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack());
+            }
         }
     }
 }
 
 //--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerMutantLightAttackState::OnCollision(PlayerController& player, CollisionInfo& info)
+void PlayerMutantLightAttackState::OnDamaged(PlayerController& player)
 {
+    if (player.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        player.Change(MY_NEW PlayerMutantDyingState);
+        return;
+    }
 
+    player.Change(MY_NEW PlayerMutantDamagedState);
 }

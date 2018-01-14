@@ -103,4 +103,5 @@ void ActorController::Hit(const float& damage)
 {
     float current_life = parameter_.GetCurrentLife();
     current_life = max(0.0f, current_life - damage);
+    parameter_.SetCurrentLife(current_life);
 }

@@ -38,12 +38,6 @@ void PlayerMutantSkillState::Update(PlayerController& player)
 
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (player.GetParameter().GetCurrentLife() <= 0.0f)
-        {
-            player.Change(MY_NEW PlayerMutantDyingState);
-            return;
-        }
-
         if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_skill"))
         {
             player.Change(MY_NEW PlayerMutantIdelState);
@@ -61,9 +55,13 @@ void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self,
 }
 
 //--------------------------------------------------------------------------------
-//  コライダー衝突の時呼ばれる
+//  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerMutantSkillState::OnCollision(PlayerController& player, CollisionInfo& info)
+void PlayerMutantSkillState::OnDamaged(PlayerController& player)
 {
-
+    if (player.GetParameter().GetCurrentLife() <= 0.0f)
+    {
+        player.Change(MY_NEW PlayerMutantDyingState);
+        return;
+    }
 }
