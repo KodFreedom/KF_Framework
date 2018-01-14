@@ -3,9 +3,10 @@
 //@enemy_zombie_follow_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "enemy_zombie_idle_state.h"
+#include "enemy_zombie_attack_state.h"
 #include "enemy_zombie_walk_state.h"
 #include "enemy_zombie_follow_state.h"
+#include "enemy_zombie_damaged_state.h"
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
@@ -43,13 +44,14 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
     
     if (square_distance > warning_range * warning_range)
     {// ”ÍˆÍŠO‚É‚È‚é‚Ì‚Å’ÇÕ’†~
+        enemy.SetTarget(nullptr);
         enemy.Change(MY_NEW EnemyZombieWalkState);
         return;
     }
 
     if (square_distance <= kAttackRange * kAttackRange)
     {// UŒ‚”ÍˆÍ“à‚É‚È‚é‚Ì‚ÅUŒ‚‚·‚é
-        enemy.Change(MY_NEW EnemyZombieIdleState);
+        enemy.Change(MY_NEW EnemyZombieAttackState);
         return;
     }
 

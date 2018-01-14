@@ -630,6 +630,15 @@
     <ClCompile Include="actor_state_enemy\enemy_zombie_follow_state.cpp">
       <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_attack_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_damaged_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_dying_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1062,6 +1071,15 @@
       <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="actor_state_enemy\enemy_zombie_follow_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_enemy\enemy_zombie_attack_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_enemy\enemy_zombie_damaged_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_enemy\enemy_zombie_dying_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

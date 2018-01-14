@@ -63,7 +63,7 @@ void EnemyZombieWalkState::Update(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieWalkState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
-    if (self.GetTag()._Equal(L"detector"))
+    if (self.GetTag()._Equal(L"Detector"))
     {
         if (other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲット発見

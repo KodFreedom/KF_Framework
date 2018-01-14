@@ -25,11 +25,12 @@ EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Anim
 bool EnemyController::Init(void)
 {
     auto collider = MY_NEW SphereCollider(owner_, kDynamic, warning_range_);
-    collider->SetTag(L"detector");
+    collider->SetTag(L"Detector");
     collider->SetTrigger(true);
     owner_.AddCollider(collider);
     next_position_ =
     born_position_ = owner_.GetTransform()->GetPosition();
+    ActorController::Init();
     return true;
 }
 

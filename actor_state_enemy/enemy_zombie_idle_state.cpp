@@ -6,6 +6,7 @@
 #include "enemy_zombie_idle_state.h"
 #include "enemy_zombie_walk_state.h"
 #include "enemy_zombie_follow_state.h"
+#include "enemy_zombie_damaged_state.h"
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../collider.h"
@@ -17,7 +18,6 @@
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::Init(EnemyController& enemy)
 {
-    enemy.SetTarget(nullptr);
     enemy.GetAnimator().SetGrounded(true);
     enemy.SetMovement(Vector3::kZero);
 
@@ -31,7 +31,6 @@ void EnemyZombieIdleState::Init(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::Uninit(EnemyController& enemy)
 {
-
 }
 
 //--------------------------------------------------------------------------------
@@ -65,7 +64,7 @@ void EnemyZombieIdleState::Update(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
-    if (self.GetTag()._Equal(L"detector"))
+    if (self.GetTag()._Equal(L"Detector"))
     {
         if (other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲット発見

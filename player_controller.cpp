@@ -20,6 +20,7 @@ PlayerController::PlayerController(GameObject& owner, Rigidbody3D& rigidbody, An
 //--------------------------------------------------------------------------------
 bool PlayerController::Init(void)
 {
+    ActorController::Init();
     return true;
 }
 

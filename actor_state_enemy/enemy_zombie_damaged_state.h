@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  zombie追跡ステート
-//　enemy_zombie_follow_state.h
+//  zombieダメージ受けたステート
+//　enemy_zombie_damaged_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class EnemyZombieFollowState : public EnemyState
+class EnemyZombieDamagedState : public EnemyState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    EnemyZombieFollowState() : EnemyState(L"EnemyZombieFollowState") {}
-    ~EnemyZombieFollowState() {}
+    EnemyZombieDamagedState() : EnemyState(L"EnemyZombieDamagedState") {}
+    ~EnemyZombieDamagedState() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理
@@ -47,12 +47,4 @@ public:
     //  コライダー衝突の時呼ばれる
     //--------------------------------------------------------------------------------
     void OnCollision(EnemyController& actor, CollisionInfo& info);
-
-private:
-    //--------------------------------------------------------------------------------
-    //  定数定義
-    //--------------------------------------------------------------------------------
-    static constexpr float kGroundCheckDistance = 0.5f;
-    static constexpr float kMovementMultiplier = 0.1f;
-    static constexpr float kAttackRange = 2.0f;
 };

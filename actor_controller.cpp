@@ -26,6 +26,19 @@ ActorController::ActorController(GameObject& owner, Rigidbody3D& rigidbody, Anim
 {}
 
 //--------------------------------------------------------------------------------
+//  ‰Šú‰»ˆ—
+//--------------------------------------------------------------------------------
+bool ActorController::Init(void)
+{
+    list<Collider*>& colliders = owner_.GetCollidersFromChildren();
+    for (auto collider : colliders)
+    {
+        collider->Register(this);
+    }
+    return true;
+}
+
+//--------------------------------------------------------------------------------
 //  ˆÚ“®ˆ—
 //--------------------------------------------------------------------------------
 void ActorController::Move(void)
@@ -81,4 +94,13 @@ void ActorController::CheckGrounded(void)
 
 	current_ground_info_.is_grounded = false;
 	current_ground_info_.normal = Vector3::kUp;
+}
+
+//--------------------------------------------------------------------------------
+//  ƒ_ƒ[ƒWó‚¯‚½ˆ—
+//--------------------------------------------------------------------------------
+void ActorController::Hit(const float& damage)
+{
+    float current_life = parameter_.GetCurrentLife();
+    current_life = max(0.0f, current_life - damage);
 }

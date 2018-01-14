@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actor_state_enemy\enemy_zombie_attack_state.cpp" />
+    <ClCompile Include="actor_state_enemy\enemy_zombie_damaged_state.cpp" />
+    <ClCompile Include="actor_state_enemy\enemy_zombie_dying_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_follow_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_idle_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_walk_state.cpp" />
@@ -284,6 +287,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actor_state_enemy\enemy_state.h" />
+    <ClInclude Include="actor_state_enemy\enemy_zombie_attack_state.h" />
+    <ClInclude Include="actor_state_enemy\enemy_zombie_damaged_state.h" />
+    <ClInclude Include="actor_state_enemy\enemy_zombie_dying_state.h" />
     <ClInclude Include="actor_state_enemy\enemy_zombie_follow_state.h" />
     <ClInclude Include="actor_state_enemy\enemy_zombie_idle_state.h" />
     <ClInclude Include="actor_state_enemy\enemy_zombie_walk_state.h" />

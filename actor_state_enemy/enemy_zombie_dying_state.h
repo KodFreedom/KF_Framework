@@ -1,87 +1,61 @@
 //--------------------------------------------------------------------------------
-//  エネミーコントローラ
-//　enemy controller.h
+//  zombie死亡ステート
+//　enemy_zombie_dying_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "actor_controller.h"
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class EnemyState;
+#include "enemy_state.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class EnemyController : public ActorController
+class EnemyZombieDyingState : public EnemyState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Animator& animator);
-    ~EnemyController() {}
+    EnemyZombieDyingState() : EnemyState(L"EnemyZombieDyingState"), time_counter_(0.0f) {}
+    ~EnemyZombieDyingState() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理
     //--------------------------------------------------------------------------------
-    bool Init(void) override;
+    void Init(EnemyController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    void Uninit(void) override;
+    void Uninit(EnemyController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  更新処理
     //--------------------------------------------------------------------------------
-    void Update(void) override;
+    void Update(EnemyController& actor) override;
 
     //--------------------------------------------------------------------------------
     //  後更新処理
     //--------------------------------------------------------------------------------
-    void LateUpdate(void) override;
+    void LateUpdate(EnemyController& actor) override {}
 
     //--------------------------------------------------------------------------------
     //  コライダートリガーの時呼ばれる
     //--------------------------------------------------------------------------------
-    void OnTrigger(Collider& self, Collider& other) override;
+    void OnTrigger(EnemyController& actor, Collider& self, Collider& other);
 
     //--------------------------------------------------------------------------------
     //  コライダー衝突の時呼ばれる
     //--------------------------------------------------------------------------------
-    void OnCollision(CollisionInfo& info) override;
-
-    //--------------------------------------------------------------------------------
-    //  ステートの変換
-    //--------------------------------------------------------------------------------
-    void Change(EnemyState* state);
-
-    //--------------------------------------------------------------------------------
-    //  セッター
-    //--------------------------------------------------------------------------------
-    void SetTarget(GameObject* target) { target_ = target; }
-    void SetNextPosition(const Vector3& position) { next_position_ = position; }
-
-    //--------------------------------------------------------------------------------
-    //  ゲッター
-    //--------------------------------------------------------------------------------
-    const String&  GetCurrentStateName(void) const override;
-    const auto&    GetTarget(void) const { return target_; }
-    const float&   GetWarningRange(void) const { return warning_range_; }
-    const float&   GetPatrolRange(void) const { return patrol_range_; }
-    const Vector3& GetNextPosition(void) const { return next_position_; }
-    const Vector3& GetBornPosition(void) const { return born_position_; }
+    void OnCollision(EnemyController& actor, CollisionInfo& info);
 
 private:
     //--------------------------------------------------------------------------------
+    //  定数定義
+    //--------------------------------------------------------------------------------
+    static constexpr float kWaitTime = 10.0f;
+
+    //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    EnemyState* current_state_;
-    GameObject* target_;
-    float       warning_range_;
-    float       patrol_range_;
-    Vector3     next_position_;
-    Vector3     born_position_;
+    float time_counter_;
 };
