@@ -20,19 +20,6 @@ void PlayerMutantStrongAttackState::Init(PlayerController& player)
 {
     player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
     player.GetAnimator().SetStrongAttack(true);
-
-    // UŒ‚—pCollider‚ðAwake‚·‚é
-    auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
-    if (left_hand)
-    {
-        auto& colliders = left_hand->GetGameObject().GetColliders();
-        for (auto& collider : colliders)
-        {
-            collider->SetTag(L"Weapon");
-            collider->SetMode(ColliderMode::kDynamic);
-            collider->Awake();
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------
@@ -41,17 +28,6 @@ void PlayerMutantStrongAttackState::Init(PlayerController& player)
 void PlayerMutantStrongAttackState::Uninit(PlayerController& player)
 {
     player.GetAnimator().SetStrongAttack(false);
-
-    // UŒ‚—pCollider‚ðSleep‚·‚é
-    auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
-    if (left_hand)
-    {
-        auto& colliders = left_hand->GetGameObject().GetColliders();
-        for (auto& collider : colliders)
-        {
-            collider->Sleep();
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------
@@ -62,10 +38,42 @@ void PlayerMutantStrongAttackState::Update(PlayerController& player)
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
-
-    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    auto& animator = player.GetAnimator();
+    if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_swiping"))
+        if (animator.GetCurrentAnimationName()._Equal(L"mutant_swiping"))
+        {
+            int current_frame = animator.GetCurrentFrame();
+            if (current_frame == kBeginAttackFrame)
+            {
+                // UŒ‚—pCollider‚ðAwake‚·‚é
+                auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
+                if (left_hand)
+                {
+                    auto& colliders = left_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->SetTag(L"Weapon");
+                        collider->SetMode(ColliderMode::kDynamic);
+                        collider->Awake();
+                    }
+                }
+            }
+            else if (current_frame == kEndAttackFrame)
+            {
+                // UŒ‚—pCollider‚ðSleep‚·‚é
+                auto left_hand = player.GetGameObject().GetTransform()->FindChildBy(L"Mutant:LeftHand");
+                if (left_hand)
+                {
+                    auto& colliders = left_hand->GetGameObject().GetColliders();
+                    for (auto& collider : colliders)
+                    {
+                        collider->Sleep();
+                    }
+                }
+            }
+        }
+        else
         {
             player.Change(MY_NEW PlayerMutantIdelState);
             return;

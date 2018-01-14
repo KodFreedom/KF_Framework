@@ -48,4 +48,6 @@ private:
     //  ’è”’è‹`
     //--------------------------------------------------------------------------------
     static constexpr float kMovementMultiplier = 0.0f;
+    static constexpr int   kBeginAttackFrame = 46;
+    static constexpr int   kEndAttackFrame = 100;
 };
