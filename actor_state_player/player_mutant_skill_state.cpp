@@ -59,7 +59,8 @@ void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self,
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::OnDamaged(PlayerController& player, const float& damage)
 {
-    player.ReceiveDamage(damage);
+    // TODO : add cool down
+    //player.ReceiveDamage(damage);
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {

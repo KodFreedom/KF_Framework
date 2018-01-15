@@ -13,7 +13,6 @@ using namespace kodfreedom;
 #include "game_object_actor.h"
 #include "windmill_controller.h"
 #include "main_system.h"
-#include "shadow_map_system.h"
 #include "third_person_camera.h"
 #include "light.h"
 
@@ -102,10 +101,6 @@ void StageSpawner::LoadStage(const String& stage_name)
     auto player = GameObjectSpawner::CreatePlayer(L"mutant", position, Vector3::kZero, Vector3::kOne);
     player->SetName(L"Player");
     file.close();
-    
-    //システムにプレイヤーを設定する
-    camera->SetFollowTarget(player);
-    main_system->GetShadowMapSystem()->SetTarget(player->GetTransform());
 
     // Enemy
     GameObjectSpawner::CreateEnemy(L"derrick", Vector3(10.0f, 10.0f, 10.0f), Vector3::kZero, Vector3::kOne);

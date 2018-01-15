@@ -7,6 +7,8 @@
 #include "main_system.h"
 #include "input.h"
 #include "game_object.h"
+#include "actor_observer.h"
+#include "player_controller.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -17,7 +19,6 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ThirdPersionCamera::ThirdPersionCamera() : Camera()
-	, follow_target_(nullptr)
 	, pitch_speed_(0.0f)
 	, yaw_speed_(0.0f)
 {}
@@ -65,9 +66,10 @@ void ThirdPersionCamera::Update(void)
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::LateUpdate(void)
 {
-	if (follow_target_)
+    auto follow_target = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+	if (follow_target)
 	{
-		rig_.position = Math::Lerp(rig_.position, follow_target_->GetTransform()->GetPosition(), kMoveLerpTime);
+		rig_.position = Math::Lerp(rig_.position, follow_target->GetGameObject().GetTransform()->GetPosition(), kMoveLerpTime);
 	}
 	Camera::LateUpdate();
 }
