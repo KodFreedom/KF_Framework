@@ -8,6 +8,7 @@
 #include "player_mutant_dying_state.h"
 #include "../player_controller.h"
 #include "../animator.h"
+#include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -59,8 +60,14 @@ void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self,
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::OnDamaged(PlayerController& player, const float& damage)
 {
-    // TODO : add cool down
-    //player.ReceiveDamage(damage);
+    if (time_counter_ > 0.0f)
+    {
+        time_counter_ -= Time::Instance()->ScaledDeltaTime();
+        return;
+    }
+
+    time_counter_ = kNoDamageTime;
+    player.ReceiveDamage(damage);
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
