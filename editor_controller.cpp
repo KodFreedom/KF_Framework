@@ -15,8 +15,6 @@
 #include "Model_editor.h"
 #include "transform.h"
 #include "ImGui\imgui.h"
-#include "labels.h"
-#include "debug_observer.h"
 #include "game_object_spawner.h"
 
 //--------------------------------------------------------------------------------
@@ -35,6 +33,7 @@ EditorController::EditorController(GameObject& owner)
     , enable_auto_adjust_height_(true)
     , move_speed_(1.0f)
     , stage_name_("demo")
+    , current_language_(kEnglish)
 {}
 
 //--------------------------------------------------------------------------------
@@ -107,10 +106,16 @@ void EditorController::ShowMainWindow(void)
         return;
     }
 
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
+    // Select language
+    if (ImGui::ListBox(kSelectLanguage[current_language_],
+        (int*)&current_language_, kLanguage, kLanguageMax, kLanguageMax))
+    {
+        field_editor_->SetLanguage(current_language_);
+        model_editor_->SetLanguage(current_language_);
+    }
 
     // State name
-    ImGui::InputText(kStageName[current_language], &stage_name_[0], _MAX_PATH);
+    ImGui::InputText(kStageName[current_language_], &stage_name_[0], _MAX_PATH);
 
     // Mode
     ShowModeWindow();
@@ -119,10 +124,10 @@ void EditorController::ShowMainWindow(void)
     ShowPositonWindow();
 
     // Save
-    if (ImGui::Button(kSaveStage[current_language])) { Save(); }
+    if (ImGui::Button(kSaveStage[current_language_])) { Save(); }
 
     // Load
-    if (ImGui::Button(kLoadStage[current_language])) { Load(); }
+    if (ImGui::Button(kLoadStage[current_language_])) { Load(); }
 
     // End
     ImGui::End();
@@ -133,12 +138,10 @@ void EditorController::ShowMainWindow(void)
 //--------------------------------------------------------------------------------
 void EditorController::ShowModeWindow(void)
 {
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
     // model
     bool enable_model_editor = model_editor_->IsActive();
-    if (ImGui::Button(enable_model_editor ? kCloseModelEditor[current_language]
-        : kOpenModelEditor[current_language]))
+    if (ImGui::Button(enable_model_editor ? kCloseModelEditor[current_language_]
+        : kOpenModelEditor[current_language_]))
     {
         enable_model_editor ^= 1;
     }
@@ -146,8 +149,8 @@ void EditorController::ShowModeWindow(void)
 
     // field
     bool enable_field_editor = field_editor_->IsActive();
-    if (ImGui::Button(enable_field_editor ? kCloseFieldEditor[current_language]
-        : kOpenFieldEditor[current_language]))
+    if (ImGui::Button(enable_field_editor ? kCloseFieldEditor[current_language_]
+        : kOpenFieldEditor[current_language_]))
     {
         enable_field_editor ^= 1;
     }
@@ -159,8 +162,6 @@ void EditorController::ShowModeWindow(void)
 //--------------------------------------------------------------------------------
 void EditorController::ShowPositonWindow(void)
 {
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
     // 位置の取得
     auto transform = owner_.GetTransform();
     Vector3 previous_position = transform->GetPosition();
@@ -177,18 +178,18 @@ void EditorController::ShowPositonWindow(void)
     current_position.y_ += height * move_speed_;
 
     // 高さの自動調節モード
-    ImGui::Checkbox(kAutoAdjustHeight[current_language], &enable_auto_adjust_height_);
+    ImGui::Checkbox(kAutoAdjustHeight[current_language_], &enable_auto_adjust_height_);
 
     // 位置の調節
     current_position = field_editor_->AdjustPositionInField(current_position, enable_auto_adjust_height_);
 
     // 操作方法
-    ImGui::Text(kExplainMove[current_language]);
-    ImGui::Text(kExplainRaiseReduce[current_language]);
-    ImGui::Text(kExplainCameraRotation[current_language]);
-    ImGui::Text(kExplainCameraZoom[current_language]);
-    ImGui::InputFloat(kMoveRaiseSpeed[current_language], &move_speed_);
-    ImGui::InputFloat3(kTargetPosition[current_language], &current_position.x_);
+    ImGui::Text(kExplainMove[current_language_]);
+    ImGui::Text(kExplainRaiseReduce[current_language_]);
+    ImGui::Text(kExplainCameraRotation[current_language_]);
+    ImGui::Text(kExplainCameraZoom[current_language_]);
+    ImGui::InputFloat(kMoveRaiseSpeed[current_language_], &move_speed_);
+    ImGui::InputFloat3(kTargetPosition[current_language_], &current_position.x_);
 
     // 操作位置の更新
     field_editor_->SetPosition(current_position);
@@ -200,7 +201,7 @@ void EditorController::ShowPositonWindow(void)
     camera->Move(movement);
 
     // プレイヤー位置の設定
-    if (ImGui::Button(kSetPlayer[current_language]))
+    if (ImGui::Button(kSetPlayer[current_language_]))
     {
         player_->GetTransform()->SetPosition(
             owner_.GetTransform()->GetPosition());

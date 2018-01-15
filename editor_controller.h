@@ -7,6 +7,7 @@
 #include "common_setting.h"
 #if defined(EDITOR)
 #include "behavior.h"
+#include "labels.h"
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾
@@ -101,5 +102,6 @@ private:
     GameObject*  player_;
     float        move_speed_;
     string       stage_name_;
+    Language     current_language_;
 };
 #endif // _DEBUG

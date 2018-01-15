@@ -6,7 +6,6 @@
 #pragma once
 #ifdef _DEBUG
 #include "common_setting.h"
-#include "labels.h"
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾
@@ -75,11 +74,6 @@ public:
 		log_.clear();
 	}
 
-    //--------------------------------------------------------------------------------
-    //  ¡‚ÌŒ¾Œê‚ğæ“¾‚·‚é
-    //--------------------------------------------------------------------------------
-    const Language& GetCurrentLanguage(void) const { return current_language_; }
-
 private:
 	//--------------------------------------------------------------------------------
 	//  constructors and destructors
@@ -87,8 +81,7 @@ private:
 	DebugObserver() : enable_collision_system_window_(false)
 		, enable_camera_window_(false), enable_player_window_(false)
 		, enable_fog_window_(false), enable_shadow_map_system_window_(false)
-        , enable_log_window_(false), player_(nullptr)
-        , current_language_(kEnglish) {}
+        , enable_log_window_(false), player_(nullptr) {}
 	DebugObserver(const DebugObserver& value) {}
 	DebugObserver& operator=(const DebugObserver& value) {}
 	~DebugObserver() {}
@@ -139,6 +132,5 @@ private:
     bool enable_shadow_map_system_window_;
     bool enable_log_window_;
 	GameObjectActor* player_;
-    Language current_language_;
 };
 #endif
