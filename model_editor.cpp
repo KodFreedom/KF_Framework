@@ -11,7 +11,6 @@
 #include "ImGui\imgui.h"
 #include "main_system.h"
 #include "labels.h"
-#include "debug_observer.h"
 
 namespace ImGui
 {
@@ -52,6 +51,7 @@ ModelEditor::ModelEditor(GameObject& owner)
     , current_model_no_(0)
     , is_active_(false)
     , is_show_created_list_(false)
+    , current_language_(kEnglish)
 {}
 
 //--------------------------------------------------------------------------------
@@ -267,8 +267,6 @@ void ModelEditor::ShowMainWindow(void)
         return;
     }
 
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
     // Model Type
     ShowTypeListBox();
 
@@ -278,20 +276,20 @@ void ModelEditor::ShowMainWindow(void)
         auto& current_info = demo_model_infos_[current_model_no_];
 
         //モデル回転
-        if (ImGui::SliderFloat3(kRotation[current_language], &current_info.rotation.x_, 0.0f, kPi * 2.0f))
+        if (ImGui::SliderFloat3(kRotation[current_language_], &current_info.rotation.x_, 0.0f, kPi * 2.0f))
         {
             current_info.my_transform->SetRotation(current_info.rotation);
         }
 
         //モデルスケール
         Vector3 scale = current_info.my_transform->GetScale();
-        if (ImGui::InputFloat3(kScale[current_language], &scale.x_))
+        if (ImGui::InputFloat3(kScale[current_language_], &scale.x_))
         {
             current_info.my_transform->SetScale(scale);
         }
 
         //モデルの作成
-        if (ImGui::Button(kCreate[current_language])) { Create(); }
+        if (ImGui::Button(kCreate[current_language_])) { Create(); }
     }
 
     //モデルリスト
@@ -301,7 +299,7 @@ void ModelEditor::ShowMainWindow(void)
         ImGui::Text("%s : %d", string(model_names_[count].begin(), model_names_[count].end()).c_str()
             , static_cast<int>(created_model_infos_[count].size()));
     }
-    if (ImGui::Button(kShowCreatedList[current_language])) { is_show_created_list_ ^= 1; }
+    if (ImGui::Button(kShowCreatedList[current_language_])) { is_show_created_list_ ^= 1; }
 
     // End
     ImGui::End();
@@ -312,8 +310,6 @@ void ModelEditor::ShowMainWindow(void)
 //--------------------------------------------------------------------------------
 void ModelEditor::ShowTypeListBox(void)
 {
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
     // copy name
     size_t model_number = model_names_.size();
     vector<string> labels;
@@ -324,7 +320,7 @@ void ModelEditor::ShowTypeListBox(void)
     }
 
     //Type
-    if (ImGui::Combo(kModel[current_language], (int*)&current_model_no_, labels))
+    if (ImGui::Combo(kModel[current_language_], (int*)&current_model_no_, labels))
     {
         //モデルアクティブの設定
         for (size_t count = 0; count < model_number; ++count)
@@ -349,8 +345,6 @@ void ModelEditor::ShowCreatedList(void)
         return;
     }
 
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
     size_t model_number = model_names_.size();
     for (size_t count = 0; count < model_number; ++count)
     {
@@ -368,21 +362,21 @@ void ModelEditor::ShowCreatedList(void)
                     Vector3 scale = iterator->my_transform->GetScale();
 
                     //Offset
-                    if (ImGui::InputFloat3(kPosition[current_language], &position.x_))
+                    if (ImGui::InputFloat3(kPosition[current_language_], &position.x_))
                     {
                         iterator->my_transform->SetPosition(position);
                     }
-                    if (ImGui::InputFloat3(kRotation[current_language], &iterator->rotation.x_))
+                    if (ImGui::InputFloat3(kRotation[current_language_], &iterator->rotation.x_))
                     {
                         iterator->my_transform->SetRotation(iterator->rotation);
                     }
-                    if (ImGui::InputFloat3(kScale[current_language], &scale.x_))
+                    if (ImGui::InputFloat3(kScale[current_language_], &scale.x_))
                     {
                         iterator->my_transform->SetScale(scale);
                     }
 
                     //Delete
-                    is_delete = ImGui::Button(kDelete[current_language]);
+                    is_delete = ImGui::Button(kDelete[current_language_]);
                     ImGui::TreePop();
                 }
 

@@ -12,7 +12,6 @@
 #include "camera.h"
 #include "ImGui\imgui.h"
 #include "labels.h"
-#include "debug_observer.h"
 #include <cereal/archives/binary.hpp>
 using namespace cereal;
 
@@ -38,6 +37,7 @@ FieldEditor::FieldEditor(GameObject& owner)
 	, raise_mode_rate_(0.0f)
     , is_active_(true)
     , current_choose_mode_(kCircle)
+    , current_language_(kEnglish)
 {}
 
 //--------------------------------------------------------------------------------
@@ -340,36 +340,34 @@ void FieldEditor::ShowMainWindow(void)
 		return;
 	}
 
-    auto& current_language = MainSystem::Instance()->GetDebugObserver()->GetCurrentLanguage();
-
 	// 操作説明
-	ImGui::Text(kExplainRaiseReduce[current_language]);
+	ImGui::Text(kExplainRaiseReduce[current_language_]);
 
     // 起伏補間モード平均と線形の比率
-    ImGui::SliderFloat(kRaiseModeRate[current_language], &raise_mode_rate_, 0.0f, 1.0f);
+    ImGui::SliderFloat(kRaiseModeRate[current_language_], &raise_mode_rate_, 0.0f, 1.0f);
 
 	// 起伏速度
-	ImGui::InputFloat(kFieldRaiseSpeed[current_language], &raise_speed_);
+	ImGui::InputFloat(kFieldRaiseSpeed[current_language_], &raise_speed_);
 
     // 拡縮選択モード
-    ImGui::ListBox(kFieldChooseMode[current_language], (int*)(&current_choose_mode_), kFieldChooseModeLabels[current_language], kChooseModeMax);
+    ImGui::ListBox(kFieldChooseMode[current_language_], (int*)(&current_choose_mode_), kFieldChooseModeLabels[current_language_], kChooseModeMax);
 
     // 拡縮速度
-    ImGui::InputFloat(kFieldExtendSpeed[current_language], &extend_speed_);
+    ImGui::InputFloat(kFieldExtendSpeed[current_language_], &extend_speed_);
 
     // 拡縮範囲
     if (current_choose_mode_ == kCircle)
     {
-        ImGui::DragFloat(kFieldRadius[current_language], &choose_range_.x_, extend_speed_, 0.0f, FLT_MAX);
+        ImGui::DragFloat(kFieldRadius[current_language_], &choose_range_.x_, extend_speed_, 0.0f, FLT_MAX);
         choose_range_.y_ = choose_range_.x_;
     }
     else
     {
-        ImGui::DragFloat2(kFieldRange[current_language], &choose_range_.x_, extend_speed_, 0.0f, FLT_MAX);
+        ImGui::DragFloat2(kFieldRange[current_language_], &choose_range_.x_, extend_speed_, 0.0f, FLT_MAX);
     }
 
     // ブロックサイズ
-    if (ImGui::InputFloat2(kBlockSize[current_language], &block_size_.x_))
+    if (ImGui::InputFloat2(kBlockSize[current_language_], &block_size_.x_))
     {
         list<int>& indexes = GetAllIndexes();
         RecalculateVertexes();
@@ -378,7 +376,7 @@ void FieldEditor::ShowMainWindow(void)
     }
 
     // 高さを初期化する
-    if (ImGui::Button(kResetHeight[current_language]))
+    if (ImGui::Button(kResetHeight[current_language_]))
     {
         list<int>& indexes = GetChoosenIndexes();
         SetHeightTo(0.0f, indexes);

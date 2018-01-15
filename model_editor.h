@@ -7,6 +7,7 @@
 #include "common_setting.h"
 #if defined(EDITOR)
 #include "behavior.h"
+#include "labels.h"
 #include "kf_math.h"
 using namespace kodfreedom;
 
@@ -63,6 +64,11 @@ public:
     void SetPosition(const Vector3& position);
 
     //--------------------------------------------------------------------------------
+    //  åæåÍÇÃê›íË
+    //--------------------------------------------------------------------------------
+    void SetLanguage(const Language& language) { current_language_ = language; }
+
+    //--------------------------------------------------------------------------------
     //  ÉtÉ@ÉCÉãÇ…ï€ë∂
     //--------------------------------------------------------------------------------
     void SaveAsBinary(const String& name);
@@ -101,5 +107,6 @@ private:
     int                current_model_no_;
     bool               is_active_;
     bool               is_show_created_list_;
+    Language           current_language_;
 };
 #endif // EDITOR

@@ -8,6 +8,7 @@
 #if defined(EDITOR)
 #include "behavior.h"
 #include "render_system.h"
+#include "labels.h"
 #include "kf_math.h"
 using namespace kodfreedom;
 
@@ -62,6 +63,11 @@ public:
     //  位置の設定
     //--------------------------------------------------------------------------------
     void SetPosition(const Vector3& value) { editor_position_ = value; }
+
+    //--------------------------------------------------------------------------------
+    //  言語の設定
+    //--------------------------------------------------------------------------------
+    void SetLanguage(const Language& language) { current_language_ = language; }
 
     //--------------------------------------------------------------------------------
     //  フィールド情報を保存する関数
@@ -151,5 +157,6 @@ private:
     vector<Vertex3d> vertexes_;
     list<int>        previous_choosen_indexes_;
     ChooseMode       current_choose_mode_;
+    Language         current_language_;
 };
 #endif // _DEBUG
