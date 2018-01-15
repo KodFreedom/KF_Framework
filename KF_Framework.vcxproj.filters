@@ -639,6 +639,9 @@
     <ClCompile Include="actor_state_enemy\enemy_zombie_dying_state.cpp">
       <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="actor_observer.cpp">
+      <Filter>ソース ファイル\Base\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1081,6 +1084,9 @@
     </ClInclude>
     <ClInclude Include="actor_state_enemy\enemy_zombie_dying_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_observer.h">
+      <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

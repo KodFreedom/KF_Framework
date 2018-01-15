@@ -26,7 +26,7 @@ class MeshManager;
 class LightManager;
 class ShaderManager;
 class ShadowMapSystem;
-
+class ActorObserver;
 #if defined(_DEBUG)
 class DebugObserver;
 #endif
@@ -77,108 +77,28 @@ public:
 	void Change(Mode* next_mode);
 
 	//--------------------------------------------------------------------------------
-	//  レンダーシステムを返す
-	//  return : RenderSystem* const
+	//  ゲッター
 	//--------------------------------------------------------------------------------
 	const auto GetRenderSystem(void) const { return render_system_; }
-
-	//--------------------------------------------------------------------------------
-	//  テクスチャ管理者を返す
-	//  return : TextureManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetTextureManager(void) const { return texture_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  メッシュ管理者を返す
-	//  return : MeshManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetMeshManager(void) const { return mesh_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  マテリアル管理者を返す
-	//  return : MaterialManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetMaterialManager(void) const { return material_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  モーション管理者を返す
-	//  return : MotionManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetMotionManager(void) const { return motion_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  ライト管理者を返す
-	//  return : LightManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetLightManager(void) const { return light_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  サウンド管理者を返す
-	//  return : SoundManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetSoundManager(void) const { return sound_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  レンダラー管理者を返す
-	//  return : RendererManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetRendererManager(void) const { return renderer_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  シェーダ管理者を返す
-	//  return : GetShaderManager* const
-	//--------------------------------------------------------------------------------
 	const auto GetShaderManager(void) const { return shader_manager_; }
-
+    const auto GetInput(void) const { return input_; }
+    const auto GetFadeSystem(void) const { return fade_system_; }
+    const auto GetCameraManager(void) const { return camera_manager_; }
+    const auto GetCollisionSystem(void) const { return collision_system_; }
+    const auto GetPhysicsSystem(void) const { return physics_system_; }
+    const auto GetGameObjectManager(void) const { return game_object_manager_; }
+    const auto GetShadowMapSystem(void) const { return shadow_map_system_; }
+    const auto GetActorObserver(void) const { return actor_observer_; }
 #ifdef _DEBUG
-	//--------------------------------------------------------------------------------
-	//  デバッグ観察者を返す
-	//  return : DebugObserver* const
-	//--------------------------------------------------------------------------------
 	const auto GetDebugObserver(void) const { return debug_observer_; }
 #endif
-
-	//--------------------------------------------------------------------------------
-	//  インプットを返す
-	//  return : Input* const
-	//--------------------------------------------------------------------------------
-	const auto GetInput(void) const { return input_; }
-
-	//--------------------------------------------------------------------------------
-	//  フェイドシステムを返す
-	//  return : FadeSystem* const
-	//--------------------------------------------------------------------------------
-	const auto GetFadeSystem(void) const { return fade_system_; }
-
-	//--------------------------------------------------------------------------------
-	//  カメラ管理者を返す
-	//  return : CameraManager* const
-	//--------------------------------------------------------------------------------
-	const auto GetCameraManager(void) const { return camera_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  衝突処理システムを返す
-	//  return : CollisionSystem* const
-	//--------------------------------------------------------------------------------
-	const auto GetCollisionSystem(void) const { return collision_system_; }
-
-	//--------------------------------------------------------------------------------
-	//  物理システムを返す
-	//  return : PhysicsSystem* const
-	//--------------------------------------------------------------------------------
-	const auto GetPhysicsSystem(void) const { return physics_system_; }
-
-	//--------------------------------------------------------------------------------
-	//  ゲームオブジェクト管理者を返す
-	//  return : GameObjectManager* const
-	//--------------------------------------------------------------------------------
-	const auto GetGameObjectManager(void) const { return game_object_manager_; }
-
-	//--------------------------------------------------------------------------------
-	//  シャドウマップシステムを返す
-	//  return : ShadowMapSystem* const
-	//--------------------------------------------------------------------------------
-	const auto GetShadowMapSystem(void) const { return shadow_map_system_; }
 
 private:
 	//--------------------------------------------------------------------------------
@@ -193,8 +113,9 @@ private:
 		, debug_observer_(nullptr)
 #endif
 		, fade_system_(nullptr), camera_manager_(nullptr)
-		, collision_system_(nullptr), physics_system_(nullptr), game_object_manager_(nullptr)
-		, shader_manager_(nullptr), shadow_map_system_(nullptr) {}
+		, collision_system_(nullptr), physics_system_(nullptr)
+        , game_object_manager_(nullptr), shader_manager_(nullptr)
+        , shadow_map_system_(nullptr), actor_observer_(nullptr) {}
 	MainSystem(const MainSystem& value) {}
 	MainSystem& operator=(const MainSystem& value) {}
 	~MainSystem() {}
@@ -237,6 +158,7 @@ private:
 	PhysicsSystem*     physics_system_; // 物理システム
 	GameObjectManager* game_object_manager_; // ゲームオブジェクト管理者
 	ShadowMapSystem*   shadow_map_system_; // シャドウマップシステム
+    ActorObserver*     actor_observer_;// アクター観察者
 
 	static MainSystem* instance_; // インスタンス
 };

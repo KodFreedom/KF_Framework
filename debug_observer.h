@@ -8,11 +8,6 @@
 #include "common_setting.h"
 
 //--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class GameObjectActor;
-
-//--------------------------------------------------------------------------------
 //  クラス定義
 //--------------------------------------------------------------------------------
 class DebugObserver
@@ -59,18 +54,11 @@ public:
 	void Display(const String& log);
 
 	//--------------------------------------------------------------------------------
-	//  プレイヤーの設定
-	//	value : プレイヤーのオブジェクト
-	//--------------------------------------------------------------------------------
-	void SetPlayer(GameObjectActor* value) { player_ = value; }
-
-	//--------------------------------------------------------------------------------
 	//  DebugLogに表示したい文字列を追加する
 	//	log : 表示したい文字列
 	//--------------------------------------------------------------------------------
 	void Clear(void)
 	{
-		player_ = nullptr;
 		log_.clear();
 	}
 
@@ -81,7 +69,7 @@ private:
 	DebugObserver() : enable_collision_system_window_(false)
 		, enable_camera_window_(false), enable_player_window_(false)
 		, enable_fog_window_(false), enable_shadow_map_system_window_(false)
-        , enable_log_window_(false), player_(nullptr) {}
+        , enable_log_window_(false) {}
 	DebugObserver(const DebugObserver& value) {}
 	DebugObserver& operator=(const DebugObserver& value) {}
 	~DebugObserver() {}
@@ -131,6 +119,5 @@ private:
 	bool enable_fog_window_;
     bool enable_shadow_map_system_window_;
     bool enable_log_window_;
-	GameObjectActor* player_;
 };
 #endif

@@ -19,6 +19,7 @@
 #include "game_object_manager.h"
 #include "shader_manager.h"
 #include "shadow_map_system.h"
+#include "actor_observer.h"
 #include "mode_title.h"
 #include "mode_demo.h"
 
@@ -194,6 +195,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 	physics_system_ = PhysicsSystem::Create();
 	game_object_manager_ = GameObjectManager::Create();
     fade_system_ = FadeSystem::Create();
+    actor_observer_ = ActorObserver::Create();
 
 	//èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
@@ -211,6 +213,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 void MainSystem::Uninit(void)
 {
 	SAFE_RELEASE(current_mode_);
+    SAFE_RELEASE(actor_observer_);
 	SAFE_RELEASE(game_object_manager_);
 	SAFE_RELEASE(physics_system_);
 	SAFE_RELEASE(collision_system_);

@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actor_observer.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_attack_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_damaged_state.cpp" />
     <ClCompile Include="actor_state_enemy\enemy_zombie_dying_state.cpp" />
@@ -316,6 +317,7 @@
     <ClInclude Include="default_2d_texture_shader.h" />
     <ClInclude Include="default_skin_shader.h" />
     <ClInclude Include="enemy_controller.h" />
+    <ClInclude Include="actor_observer.h" />
     <ClInclude Include="jugg_mesh_shader.h" />
     <ClInclude Include="jugg_skin_shader.h" />
     <ClInclude Include="labels.h" />

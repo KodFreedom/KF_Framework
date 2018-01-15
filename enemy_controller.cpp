@@ -7,6 +7,8 @@
 #include "actor_state_enemy\enemy_state.h"
 #include "sphere_collider.h"
 #include "game_object.h"
+#include "main_system.h"
+#include "actor_observer.h"
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
@@ -36,7 +38,9 @@ bool EnemyController::Init(void)
     owner_.AddCollider(collider);
     next_position_ =
     born_position_ = owner_.GetTransform()->GetPosition();
+
     ActorController::Init();
+    MainSystem::Instance()->GetActorObserver()->Register(this);
     return true;
 }
 
@@ -50,6 +54,7 @@ void EnemyController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
+    MainSystem::Instance()->GetActorObserver()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------

@@ -17,9 +17,6 @@ using namespace kodfreedom;
 #include "third_person_camera.h"
 #include "light.h"
 
-#ifdef _DEBUG
-#include "debug_observer.h"
-#endif // _DEBUG
 //--------------------------------------------------------------------------------
 //
 //  Public
@@ -109,9 +106,6 @@ void StageSpawner::LoadStage(const String& stage_name)
     //システムにプレイヤーを設定する
     camera->SetFollowTarget(player);
     main_system->GetShadowMapSystem()->SetTarget(player->GetTransform());
-#ifdef _DEBUG
-    main_system->GetDebugObserver()->SetPlayer(player);
-#endif // _DEBUG
 
     // Enemy
     GameObjectSpawner::CreateEnemy(L"derrick", Vector3(10.0f, 10.0f, 10.0f), Vector3::kZero, Vector3::kOne);

@@ -19,9 +19,10 @@
 #include "light.h"
 
 // player
-#include "game_object_actor.h"
+#include "actor_observer.h"
+#include "game_object.h"
 #include "transform.h"
-#include "actor_controller.h"
+#include "player_controller.h"
 #include "rigidbody3D.h"
 #include "animator.h"
 
@@ -194,7 +195,8 @@ void DebugObserver::ShowCameraWindow(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowPlayerWindow(void)
 {
-	if (!enable_player_window_ || !player_) return;
+    auto player = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+	if (!enable_player_window_ || !player) return;
 
 	// Begin
 	if (!ImGui::Begin("Player Window", &enable_player_window_))
@@ -205,7 +207,7 @@ void DebugObserver::ShowPlayerWindow(void)
 
     if (ImGui::TreeNode("Transform"))
     {// Trans
-        auto transform = player_->GetTransform();
+        auto transform = player->GetGameObject().GetTransform();
         Vector3 position = transform->GetPosition();
         Quaternion rotation = transform->GetRotation();
         Vector3 scale = transform->GetScale();
@@ -215,27 +217,24 @@ void DebugObserver::ShowPlayerWindow(void)
         ImGui::TreePop();
     }
 
-    auto behavior = player_->GetBehaviorBy(L"ActorController");
-    if (behavior)
+    if (player)
     {
         if (ImGui::TreeNode("Parameter"))
         {// Parameter
-            auto controller = static_cast<ActorController*>(behavior);
-
             // State
-            auto& state_name = controller->GetCurrentStateName();
+            auto& state_name = player->GetCurrentStateName();
             ImGui::Text("State : %s", string(state_name.begin(), state_name.end()).c_str());
 
             // Animation
-            auto& animation_name = controller->GetAnimator().GetCurrentAnimationName();
+            auto& animation_name = player->GetAnimator().GetCurrentAnimationName();
             ImGui::Text("Animation : %s", string(animation_name.begin(), animation_name.end()).c_str());
 
             // Rigidbody
-            const auto& rigidbody = controller->GetRigidbody();
+            const auto& rigidbody = player->GetRigidbody();
             ImGui::Text("Gravity multiplier : %.3f", rigidbody.GetGravityMultiplier());
 
             // Parameter
-            auto& parameter = controller->GetParameter();
+            auto& parameter = player->GetParameter();
             ImGui::Text("Ground check distance : %.3f", parameter.ground_check_distance_);
             ImGui::Text("Movement multiplier : %.3f", parameter.movement_multiplier_);
             ImGui::InputFloat("Move speed", &parameter.move_speed_);
@@ -248,21 +247,21 @@ void DebugObserver::ShowPlayerWindow(void)
 
     if (ImGui::TreeNode("Inverse kinematics"))
     {// IK
-        auto animator = player_->GetAnimator();
-        ImGui::SliderFloat("Ray distance", &animator->ik_ray_distance_, 0.0f, 2.0f);
-        ImGui::SliderFloat("Grounded distance", &animator->ik_grounded_distance_, 0.0f, 1.0f);
-        ImGui::InputFloat("Weight increase speed", &animator->ik_weight_increase_speed_);
-        ImGui::InputFloat("Weight decrease speed", &animator->ik_weight_decrease_speed_);
-        ImGui::InputFloat3("Foot position offset", &animator->ik_foot_position_offset_.x_);
-        ImGui::InputFloat3("Foot rotation offset", &animator->ik_foot_rotation_offset_.x_);
+        auto& animator = player->GetAnimator();
+        ImGui::SliderFloat("Ray distance", &animator.ik_ray_distance_, 0.0f, 2.0f);
+        ImGui::SliderFloat("Grounded distance", &animator.ik_grounded_distance_, 0.0f, 1.0f);
+        ImGui::InputFloat("Weight increase speed", &animator.ik_weight_increase_speed_);
+        ImGui::InputFloat("Weight decrease speed", &animator.ik_weight_decrease_speed_);
+        ImGui::InputFloat3("Foot position offset", &animator.ik_foot_position_offset_.x_);
+        ImGui::InputFloat3("Foot rotation offset", &animator.ik_foot_rotation_offset_.x_);
         ImGui::TextColored(ImColor(0.0f, 1.0f, 0.0f), "Left foot ik goal");
-        ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].position.x_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.y_, animator->ik_goals_[Animator::kIKGoalLeftFoot].position.z_);
-        ImGui::Text("Up : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].up.x_, animator->ik_goals_[Animator::kIKGoalLeftFoot].up.y_, animator->ik_goals_[Animator::kIKGoalLeftFoot].up.z_);
-        ImGui::Text("Weight : %.3f", animator->ik_goals_[Animator::kIKGoalLeftFoot].weight);
+        ImGui::Text("Position : %.3f, %.3f, %.3f", animator.ik_goals_[Animator::kIKGoalLeftFoot].position.x_, animator.ik_goals_[Animator::kIKGoalLeftFoot].position.y_, animator.ik_goals_[Animator::kIKGoalLeftFoot].position.z_);
+        ImGui::Text("Up : %.3f, %.3f, %.3f", animator.ik_goals_[Animator::kIKGoalLeftFoot].up.x_, animator.ik_goals_[Animator::kIKGoalLeftFoot].up.y_, animator.ik_goals_[Animator::kIKGoalLeftFoot].up.z_);
+        ImGui::Text("Weight : %.3f", animator.ik_goals_[Animator::kIKGoalLeftFoot].weight);
         ImGui::TextColored(ImColor(0.0f, 1.0f, 0.0f), "Right foot ik goal");
-        ImGui::Text("Position : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].position.x_, animator->ik_goals_[Animator::kIKGoalRightFoot].position.y_, animator->ik_goals_[Animator::kIKGoalRightFoot].position.z_);
-        ImGui::Text("Up : %.3f, %.3f, %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].up.x_, animator->ik_goals_[Animator::kIKGoalRightFoot].up.y_, animator->ik_goals_[Animator::kIKGoalRightFoot].up.z_);
-        ImGui::Text("Weight : %.3f", animator->ik_goals_[Animator::kIKGoalRightFoot].weight);
+        ImGui::Text("Position : %.3f, %.3f, %.3f", animator.ik_goals_[Animator::kIKGoalRightFoot].position.x_, animator.ik_goals_[Animator::kIKGoalRightFoot].position.y_, animator.ik_goals_[Animator::kIKGoalRightFoot].position.z_);
+        ImGui::Text("Up : %.3f, %.3f, %.3f", animator.ik_goals_[Animator::kIKGoalRightFoot].up.x_, animator.ik_goals_[Animator::kIKGoalRightFoot].up.y_, animator.ik_goals_[Animator::kIKGoalRightFoot].up.z_);
+        ImGui::Text("Weight : %.3f", animator.ik_goals_[Animator::kIKGoalRightFoot].weight);
         ImGui::TreePop();
     }
    
