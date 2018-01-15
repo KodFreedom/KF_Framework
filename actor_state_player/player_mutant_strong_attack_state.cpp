@@ -103,8 +103,10 @@ void PlayerMutantStrongAttackState::OnTrigger(PlayerController& player, Collider
 //--------------------------------------------------------------------------------
 //  ƒ_ƒ[ƒWó‚¯‚½ˆ—
 //--------------------------------------------------------------------------------
-void PlayerMutantStrongAttackState::OnDamaged(PlayerController& player)
+void PlayerMutantStrongAttackState::OnDamaged(PlayerController& player, const float& damage)
 {
+    player.ReceiveDamage(damage);
+
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
         player.Change(MY_NEW PlayerMutantDyingState);

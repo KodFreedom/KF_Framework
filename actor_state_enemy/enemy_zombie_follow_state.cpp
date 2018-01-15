@@ -55,8 +55,10 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 //  ƒ_ƒ[ƒWó‚¯‚½ˆ—
 //--------------------------------------------------------------------------------
-void EnemyZombieFollowState::OnDamaged(EnemyController& enemy)
+void EnemyZombieFollowState::OnDamaged(EnemyController& enemy, const float& damage)
 {
+    enemy.ReceiveDamage(damage);
+
     if (enemy.GetParameter().GetCurrentLife() <= 0.0f)
     {
         enemy.Change(MY_NEW EnemyZombieDyingState);

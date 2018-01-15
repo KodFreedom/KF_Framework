@@ -78,8 +78,10 @@ void PlayerMutantIdelState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  ƒ_ƒ[ƒWó‚¯‚½ˆ—
 //--------------------------------------------------------------------------------
-void PlayerMutantIdelState::OnDamaged(PlayerController& player)
+void PlayerMutantIdelState::OnDamaged(PlayerController& player, const float& damage)
 {
+    player.ReceiveDamage(damage);
+
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
         player.Change(MY_NEW PlayerMutantDyingState);

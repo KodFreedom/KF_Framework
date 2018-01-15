@@ -97,9 +97,9 @@ void ActorController::CheckGrounded(void)
 }
 
 //--------------------------------------------------------------------------------
-//  ダメージ受けた処理
+//  ダメージ計算処理
 //--------------------------------------------------------------------------------
-void ActorController::Hit(const float& damage)
+void ActorController::ReceiveDamage(const float& damage)
 {
     float current_life = parameter_.GetCurrentLife();
     current_life = max(0.0f, current_life - damage);

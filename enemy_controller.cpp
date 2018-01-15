@@ -111,6 +111,5 @@ const String& EnemyController::GetCurrentStateName(void) const
 //--------------------------------------------------------------------------------
 void EnemyController::Hit(const float& damage)
 {
-    ActorController::Hit(damage);
-    current_state_->OnDamaged(*this);
+    current_state_->OnDamaged(*this, damage);
 }
