@@ -70,8 +70,10 @@ void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Col
 //--------------------------------------------------------------------------------
 //  ƒ_ƒ[ƒWó‚¯‚½ˆ—
 //--------------------------------------------------------------------------------
-void EnemyZombieIdleState::OnDamaged(EnemyController& enemy)
+void EnemyZombieIdleState::OnDamaged(EnemyController& enemy, const float& damage)
 {
+    enemy.ReceiveDamage(damage);
+
     if (enemy.GetParameter().GetCurrentLife() <= 0.0f)
     {
         enemy.Change(MY_NEW EnemyZombieDyingState);

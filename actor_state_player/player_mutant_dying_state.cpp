@@ -16,6 +16,7 @@ void PlayerMutantDyingState::Init(PlayerController& player)
 {
     player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
     player.GetAnimator().SetDead(true);
+    player.GetAnimator().SetEnableIK(false);
 }
 
 //--------------------------------------------------------------------------------
