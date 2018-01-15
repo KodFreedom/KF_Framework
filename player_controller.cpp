@@ -7,6 +7,8 @@
 #include "actor_state_player\player_state.h"
 #include "sphere_collider.h"
 #include "game_object.h"
+#include "main_system.h"
+#include "actor_observer.h"
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ
@@ -27,8 +29,8 @@ bool PlayerController::Init(void)
     collider->SetTag(L"Body");
     collider->SetTrigger(true);
     owner_.AddCollider(collider);
-
     ActorController::Init();
+    MainSystem::Instance()->GetActorObserver()->Register(this);
     return true;
 }
 
@@ -42,6 +44,7 @@ void PlayerController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
+    MainSystem::Instance()->GetActorObserver()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------

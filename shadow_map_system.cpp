@@ -12,6 +12,9 @@
 #include "mesh_renderer_3d_skin.h"
 #include "transform.h"
 #include "kf_utility.h"
+#include "actor_observer.h"
+#include "game_object.h"
+#include "player_controller.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -39,6 +42,13 @@ void ShadowMapSystem::Register(MeshRenderer3dSkin* renderer)
 //--------------------------------------------------------------------------------
 void ShadowMapSystem::Render(void)
 {
+    // Set Target
+    auto player = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+    if (player)
+    {
+        target_ = player->GetGameObject().GetTransform();
+    }
+
 	// Set light
     // ˆÚ“®
     Vector3 look_at = target_ ? target_->GetPosition() : Vector3::kZero;
