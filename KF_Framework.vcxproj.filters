@@ -241,6 +241,12 @@
     <Filter Include="ソース ファイル\Actor\State\Zombie\Enemy">
       <UniqueIdentifier>{651d0f7c-dc15-425f-aff3-66e5c7bd671a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\UI">
+      <UniqueIdentifier>{ac8d5ce7-230a-4f92-9262-1b522c3b2fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\UI">
+      <UniqueIdentifier>{c90b9c02-ed09-4f5d-8b3d-b306de860a9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -641,6 +647,9 @@
     </ClCompile>
     <ClCompile Include="actor_state_player\player_mutant_idle_state.cpp">
       <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ui_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1087,6 +1096,9 @@
     </ClInclude>
     <ClInclude Include="actor_state_player\player_mutant_idle_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ui_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -46,6 +46,8 @@ void ZombieSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void ZombieSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
+    assert(renderer.GetType() == kMeshRenderer3dSkin);
+
     auto main_system = MainSystem::Instance();
 
     // Camera
@@ -80,6 +82,7 @@ void ZombieSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Me
     vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)shadow_map_system->GetLightView());
     vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)shadow_map_system->GetLightProjection());
     pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system->GetBias());
+    pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system->GetFar());
     UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
     device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
 }

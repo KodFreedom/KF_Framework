@@ -26,6 +26,7 @@
 
 #define SCREEN_WIDTH    (1280) //ウインドウ幅
 #define SCREEN_HEIGHT   (720)  //ウインドウ高さ
+#define SCREEN_RATE     (SCREEN_WIDTH / 1920.0f)
 
 //--------------------------------------------------------------------------------
 //  include / インクルード

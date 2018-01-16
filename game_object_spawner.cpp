@@ -20,6 +20,7 @@
 #include "rigidbody3d.h"
 #include "animator.h"
 #include "player_controller.h"
+#include "player_ui_controller.h"
 #include "enemy_controller.h"
 #include "actor_state_player\player_mutant_idle_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
@@ -262,7 +263,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	//Actor Controller
 	auto actor_controller = MY_NEW PlayerController(*result, *rigidbody, *animator);
 	actor_controller->GetParameter().SetMoveSpeed(10.0f);
-	actor_controller->GetParameter().SetJumpSpeed(10.0f);
+	actor_controller->GetParameter().SetJumpSpeed(20.0f);
 	actor_controller->GetParameter().SetMinTurnSpeed(kPi);
 	actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
 	actor_controller->Change(MY_NEW PlayerMutantIdleState);
@@ -286,7 +287,9 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	result->Init();
 
 	//UI
-	//PlayerUI::Create(pPb);
+    auto ui = MY_NEW GameObject;
+    ui->AddBehavior(MY_NEW PlayerUiController(*ui));
+    ui->Init();
 
 	return result;
 }

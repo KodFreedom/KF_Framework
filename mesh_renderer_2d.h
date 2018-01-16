@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mesh_renderer.h"
+#include "KF_Math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -18,7 +20,7 @@ public:
 	MeshRenderer2d(GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
 		, const ShaderType& shader_type = kDefaultShader)
-		: MeshRenderer(owner, priority, shader_type) {}
+		: MeshRenderer(owner, priority, shader_type, kMeshRenderer2d), uv_scale_(Vector2::kOne) {}
 	~MeshRenderer2d() {}
 
     //--------------------------------------------------------------------------------
@@ -30,4 +32,20 @@ public:
 	//  描画処理
 	//--------------------------------------------------------------------------------
 	void RenderBy(const RenderSystem& render_system) override;
+
+    //--------------------------------------------------------------------------------
+    //  ゲッター
+    //--------------------------------------------------------------------------------
+    const Vector2& GetUvScale(void) const { return uv_scale_; }
+
+    //--------------------------------------------------------------------------------
+    //  セッター
+    //--------------------------------------------------------------------------------
+    void SetUvScale(const Vector2& scale) { uv_scale_ = scale; }
+
+private:
+    //--------------------------------------------------------------------------------
+    //  変数定義
+    //--------------------------------------------------------------------------------
+    Vector2 uv_scale_;
 };

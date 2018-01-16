@@ -30,11 +30,11 @@ GameObject::GameObject(const Layer& layer)
 //--------------------------------------------------------------------------------
 bool GameObject::Init(void)
 {
-	if (!transform_->Init()) { assert("init transform_ error!!"); return false; }
-	for (auto& pair : behaviors_) { if (!pair.second->Init()) { assert("init behavior error!!"); return false; } }
-	if (!rigidbody_->Init()) { assert("init rigidbody error!!");  return false; }
-	for (auto collider : colliders_) { if (!collider->Init()) { assert("init collider error!!");  return false; } }
-	for (auto renderer : renderers_) { if (!renderer->Init()) { assert("init render error!!");  return false; } }
+	if (!transform_->Init()) { return false; }
+	for (auto& pair : behaviors_) { if (!pair.second->Init()) { return false; } }
+	if (!rigidbody_->Init()) { return false; }
+	for (auto collider : colliders_) { if (!collider->Init()) { return false; } }
+	for (auto& pair : renderers_) { if (!pair.second->Init()) { return false; } }
 
 	// q‹Ÿ‚Ì‰Šú‰»ˆ—
 	for (auto& pair : transform_->GetChildren())
@@ -72,18 +72,18 @@ void GameObject::SetActive(const bool& value)
 	if (is_active_)
 	{
 		transform_->Awake();
-		for (auto& pair : behaviors_) pair.second->Awake();
+        for (auto& pair : behaviors_) { pair.second->Awake(); }
 		rigidbody_->Awake();
-		for (auto collider : colliders_) collider->Awake();
-		for (auto renderer : renderers_) renderer->Awake();
+        for (auto collider : colliders_) { collider->Awake(); }
+        for (auto& pair : renderers_) { pair.second->Awake(); }
 	}
 	else
 	{
 		transform_->Sleep();
-		for (auto& pair : behaviors_) pair.second->Sleep();
+        for (auto& pair : behaviors_) { pair.second->Sleep(); }
 		rigidbody_->Sleep();
-		for (auto collider : colliders_) collider->Sleep();
-		for (auto renderer : renderers_) renderer->Sleep();
+        for (auto collider : colliders_) { collider->Sleep(); }
+        for (auto& pair : renderers_) { pair.second->Sleep(); }
 	}
 
 	for (auto& pair : transform_->GetChildren())

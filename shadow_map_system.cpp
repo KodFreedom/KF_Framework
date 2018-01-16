@@ -116,7 +116,7 @@ void ShadowMapSystem::Init(void)
 	// シャドウマップとして使用するテクスチャの作成
 	HRESULT hr = device_->CreateTexture(static_cast<UINT>(kShadowMapWidth)
 		, static_cast<UINT>(kShadowMapHeight)
-		, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &shadow_map_,NULL);
+		, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R32F, D3DPOOL_DEFAULT, &shadow_map_,NULL);
 	assert(hr == S_OK);
 
 	// テクスチャからレンダリングターゲットにするサーフェースの取得

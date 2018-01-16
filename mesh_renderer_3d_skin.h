@@ -23,7 +23,7 @@ public:
 	MeshRenderer3dSkin(const Animator& animator, GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
 		, const ShaderType& shader_type = kDefaultSkinShader)
-		: MeshRenderer(owner, priority, shader_type)
+		: MeshRenderer(owner, priority, shader_type, kMeshRenderer3dSkin)
 		, animator_(animator) {}
 	~MeshRenderer3dSkin() {}
 

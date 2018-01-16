@@ -18,7 +18,7 @@ public:
 	MeshRenderer3d(GameObject& owner
 		, const RenderPriority& priority = kDefaultPriority
 		, const ShaderType& shader_type = kDefaultShader)
-		: MeshRenderer(owner, priority, shader_type) {}
+		: MeshRenderer(owner, priority, shader_type, kMeshRenderer3d) {}
 	~MeshRenderer3d() {}
 
 	//--------------------------------------------------------------------------------

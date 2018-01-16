@@ -13,6 +13,7 @@ sampler normal_texture = sampler_state
 
 // shadowmap
 float bias;
+float light_far;
 sampler shadow_map = sampler_state
 {
 	MipFilter = NONE;
