@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "camera_manager.h"
 #include "kf_utility.h"
+#include "time.h"
 
 // shadowmap
 #include "shadow_map_system.h"
@@ -69,7 +70,8 @@ void DebugObserver::Render(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::Display(const String& log)
 {
-	log_.append(log + L"\n");
+    if (log_.size() >= kMaxLogSize) { log_.clear(); }
+	log_.append(Time::Instance()->GetCurrentFileTime() + L" : " + log + L"\n");
 }
 
 //--------------------------------------------------------------------------------

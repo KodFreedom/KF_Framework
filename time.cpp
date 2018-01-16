@@ -53,3 +53,17 @@ bool Time::CanUpdateFrame(void)
     }
     return false;
 }
+
+
+//--------------------------------------------------------------------------------
+//  ç°ÇÃéûä‘Çï‘Ç∑
+//--------------------------------------------------------------------------------
+String Time::GetCurrentFileTime(void) const
+{
+    SYSTEMTIME local_time = { 0 };
+    GetLocalTime(&local_time);
+    String& result = to_wstring(local_time.wHour) + L":"
+        + to_wstring(local_time.wMinute) + L":"
+        + to_wstring(local_time.wSecond);
+    return result;
+}
