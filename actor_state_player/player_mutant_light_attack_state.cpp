@@ -3,7 +3,7 @@
 //Å@player_mutant_light_attack_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_damaged_state.h"
 #include "player_mutant_light_attack_state.h"
 #include "player_mutant_dying_state.h"
@@ -68,7 +68,7 @@ void PlayerMutantLightAttackState::Update(PlayerController& player)
     {
         if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_punch"))
         {
-            player.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdleState);
             return;
         }
     }

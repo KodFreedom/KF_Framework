@@ -21,7 +21,7 @@
 #include "animator.h"
 #include "player_controller.h"
 #include "enemy_controller.h"
-#include "actor_state_player\player_mutant_idel_state.h"
+#include "actor_state_player\player_mutant_idle_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant_idle_motion_state.h"
 #include "motion_state\zombie_idle_motion_state.h"
@@ -265,7 +265,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	actor_controller->GetParameter().SetJumpSpeed(10.0f);
 	actor_controller->GetParameter().SetMinTurnSpeed(kPi);
 	actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
-	actor_controller->Change(MY_NEW PlayerMutantIdelState);
+	actor_controller->Change(MY_NEW PlayerMutantIdleState);
 	result->AddBehavior(actor_controller);
 
 	//Collider

@@ -170,7 +170,7 @@
     <ClCompile Include="actor_state_player\player_mutant_damaged_state.cpp" />
     <ClCompile Include="actor_state_player\player_mutant_dying_state.cpp" />
     <ClCompile Include="actor_state_player\player_mutant_fall_state.cpp" />
-    <ClCompile Include="actor_state_player\player_mutant_idel_state.cpp" />
+    <ClCompile Include="actor_state_player\player_mutant_idle_state.cpp" />
     <ClCompile Include="actor_state_player\player_mutant_jump_state.cpp" />
     <ClCompile Include="actor_state_player\player_mutant_land_state.cpp" />
     <ClCompile Include="actor_state_player\player_mutant_light_attack_state.cpp" />
@@ -305,7 +305,7 @@
     <ClInclude Include="actor_state_player\player_mutant_damaged_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_dying_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_fall_state.h" />
-    <ClInclude Include="actor_state_player\player_mutant_idel_state.h" />
+    <ClInclude Include="actor_state_player\player_mutant_idle_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_jump_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_land_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_light_attack_state.h" />

@@ -29,7 +29,7 @@ void EnemyZombieDamagedState::Update(EnemyController& enemy)
     auto& animator = enemy.GetAnimator();
     if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (!animator.GetCurrentAnimationName()._Equal(L"zombie_damaged"))
+        if (animator.GetCurrentAnimationName()._Equal(L"zombie_idle"))
         {
             animator.SetDamaged(false);
 

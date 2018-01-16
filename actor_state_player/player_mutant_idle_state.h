@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //  mutant待機ステート
-//　player_mutant_idel_state.h
+//　player_mutant_idle_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class PlayerMutantIdelState : public PlayerState
+class PlayerMutantIdleState : public PlayerState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    PlayerMutantIdelState() : PlayerState(L"PlayerMutantIdelState") {}
-    ~PlayerMutantIdelState() {}
+    PlayerMutantIdleState() : PlayerState(L"PlayerMutantIdleState") {}
+    ~PlayerMutantIdleState() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理

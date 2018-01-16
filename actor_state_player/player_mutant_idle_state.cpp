@@ -3,7 +3,7 @@
 //　player_mutant_idel_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_walk_state.h"
 #include "player_mutant_jump_state.h"
 #include "player_mutant_damaged_state.h"
@@ -20,7 +20,7 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerMutantIdelState::Init(PlayerController& player)
+void PlayerMutantIdleState::Init(PlayerController& player)
 {
     player.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
     player.GetAnimator().SetGrounded(true);
@@ -29,7 +29,7 @@ void PlayerMutantIdelState::Init(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerMutantIdelState::Update(PlayerController& player)
+void PlayerMutantIdleState::Update(PlayerController& player)
 {
     PlayerState::Update(player);
     player.CheckGrounded();
@@ -78,7 +78,7 @@ void PlayerMutantIdelState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerMutantIdelState::OnDamaged(PlayerController& player, const float& damage)
+void PlayerMutantIdleState::OnDamaged(PlayerController& player, const float& damage)
 {
     player.ReceiveDamage(damage);
 

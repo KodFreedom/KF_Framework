@@ -3,7 +3,7 @@
 //Å@player_mutant_damaged_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_damaged_state.h"
 #include "../player_controller.h"
 #include "../animator.h"
@@ -33,9 +33,9 @@ void PlayerMutantDamagedState::Update(PlayerController& player)
     PlayerState::Update(player);
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_damaged"))
+        if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_idle"))
         {
-            player.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdleState);
             return;
         }
     }
