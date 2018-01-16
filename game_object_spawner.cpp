@@ -273,7 +273,8 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	collider->SetOffset(Vector3(0.0f, 0.8f, 0.0f));
 	result->AddCollider(collider);
 	
-	//Tag
+	//Name and Tag
+    result->SetName(name);
 	result->SetTag(L"Player");
 
 	//パラメーター
@@ -335,7 +336,8 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
     collider->SetOffset(Vector3(0.0f, 0.6f, 0.0f));
     result->AddCollider(collider);
 
-    //Tag
+    //Name and Tag
+    result->SetName(name);
     result->SetTag(L"Enemy");
 
     //パラメーター

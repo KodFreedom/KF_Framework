@@ -12,6 +12,10 @@
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
+#ifdef _DEBUG
+#include "../main_system.h"
+#include "../debug_observer.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -31,10 +35,14 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
     const Vector3& my_position = enemy.GetGameObject().GetTransform()->GetPosition();
     Vector3& me_to_player = player_position - my_position;
     float square_distance = me_to_player.SquareMagnitude();
-    float warning_range = enemy.GetWarningRange();
+    float warning_range = enemy.GetWarningRange() * kWarningRangeMultiplier;
     
     if (square_distance > warning_range * warning_range)
     {// ”ÍˆÍŠO‚É‚È‚é‚Ì‚Å’ÇÕ’†~
+#ifdef _DEBUG
+        MainSystem::Instance()->GetDebugObserver()->Display(
+            enemy.GetGameObject().GetName() + L" ‚ª" + enemy.GetTarget()->GetName() + L"‚ğŒ©¸‚Á‚½I ");
+#endif
         enemy.SetTarget(nullptr);
         enemy.Change(MY_NEW EnemyZombieWalkState);
         return;

@@ -185,25 +185,17 @@ String Utility::GetProjectPath(void)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：FindChildBy
-//  関数説明：子供から名前対応のオブジェクトを探し出す
-//	引数：	name：探したいオブジェクトの名前
-//			parent：親のオブジェクト
-//	戻り値：FileInfo
+//  テキストをu8に変更
+//  return : string
 //--------------------------------------------------------------------------------
-//GameObject* Utility::FindChildBy(const String& name, GameObject* const parent)
-//{
-//	assert(!name.empty());
-//	auto& children = parent->GetTransform()->GetChildren();
-//	for (auto child : children)
-//	{
-//		auto childObject = child->GetGameObject();
-//		if (childObject->GetName() == name) { return childObject; }
-//		else
-//		{
-//			auto result = FindChildBy(name, childObject);
-//			if (result) return result;
-//		}
-//	}
-//	return nullptr;
-//}
+string Utility::ToUtf8(const String& text)
+{
+    string result;
+    int length = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), text.length(), NULL, 0, NULL, NULL);
+    if (length > 0)
+    {
+        result.resize(length);
+        WideCharToMultiByte(CP_UTF8, 0, text.c_str(), text.length(), &result[0], length, NULL, NULL);
+    }
+    return result;
+}

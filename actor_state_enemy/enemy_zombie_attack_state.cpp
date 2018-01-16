@@ -83,14 +83,7 @@ void EnemyZombieAttackState::Update(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieAttackState::OnTrigger(EnemyController& enemy, Collider& self, Collider& other)
 {
-    if (self.GetTag()._Equal(L"Body"))
-    {
-        if (other.GetGameObject().GetTag()._Equal(L"Player"))
-        {// ターゲット発見
-            enemy.SetTarget(&other.GetGameObject());
-        }
-    }
-    else if (self.GetTag()._Equal(L"Weapon"))
+    if (self.GetTag()._Equal(L"Weapon"))
     {
         if (other.GetTag()._Equal(L"Body")
             && other.GetGameObject().GetTag()._Equal(L"Player"))
