@@ -98,8 +98,7 @@ void StageSpawner::LoadStage(const String& stage_name)
     BinaryInputArchive player_archive(file);
     Vector3 position;
     player_archive.loadBinary(&position, sizeof(position));
-    auto player = GameObjectSpawner::CreatePlayer(L"mutant", position, Vector3::kZero, Vector3::kOne);
-    player->SetName(L"Player");
+    auto player = GameObjectSpawner::CreatePlayer(L"mutant", position, Vector3::kZero, Vector3::kOne);;
     file.close();
 
     // Enemy

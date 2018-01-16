@@ -11,6 +11,10 @@
 #include "collision_detector.h"
 #include "collision_system.h"
 #include "time.h"
+#ifdef _DEBUG
+#include "../main_system.h"
+#include "../debug_observer.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //
@@ -104,4 +108,10 @@ void ActorController::ReceiveDamage(const float& damage)
     float current_life = parameter_.GetCurrentLife();
     current_life = max(0.0f, current_life - damage);
     parameter_.SetCurrentLife(current_life);
+
+#ifdef _DEBUG
+    MainSystem::Instance()->GetDebugObserver()->Display(
+        owner_.GetName() + L" が" + to_wstring(damage) + L"ダメージを受けた！\n"
+    "残りライフ：" + to_wstring(current_life));
+#endif
 }

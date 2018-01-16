@@ -26,7 +26,7 @@ EnemyController::EnemyController(GameObject& owner, Rigidbody3D& rigidbody, Anim
 //--------------------------------------------------------------------------------
 bool EnemyController::Init(void)
 {
-    auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.0f);
+    auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.2f);
     collider->SetOffset(Vector3(0.0f, 1.5f, 0.0f));
     collider->SetTag(L"Body");
     collider->SetTrigger(true);

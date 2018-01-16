@@ -12,6 +12,10 @@
 #include "../animator.h"
 #include "../collider.h"
 #include "../game_object.h"
+#ifdef _DEBUG
+#include "../main_system.h"
+#include "../debug_observer.h"
+#endif
 
 //--------------------------------------------------------------------------------
 //  初期化処理
@@ -59,8 +63,13 @@ void EnemyZombieWalkState::OnTrigger(EnemyController& enemy, Collider& self, Col
 {
     if (self.GetTag()._Equal(L"Detector"))
     {
-        if (other.GetGameObject().GetTag()._Equal(L"Player"))
+        if (other.GetTag()._Equal(L"Body")
+            && other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲット発見
+#ifdef _DEBUG
+            MainSystem::Instance()->GetDebugObserver()->Display(
+                enemy.GetGameObject().GetName() + L" が" + other.GetGameObject().GetName() + L"を発見した！ ");
+#endif
             enemy.SetTarget(&other.GetGameObject());
         }
     }

@@ -39,4 +39,5 @@ private:
     //--------------------------------------------------------------------------------
     static constexpr float kMovementMultiplier = 0.1f;
     static constexpr float kAttackRange = 2.0f;
+    static constexpr float kWarningRangeMultiplier = 1.5f;
 };

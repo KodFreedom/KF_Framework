@@ -12,6 +12,7 @@
 #include "mode.h"
 #include "camera.h"
 #include "camera_manager.h"
+#include "kf_utility.h"
 
 // shadowmap
 #include "shadow_map_system.h"
@@ -101,7 +102,7 @@ void DebugObserver::ShowMainWindow(void)
 	}
 
 	// Window
-	if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
+	//if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
 	if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;
 	if (ImGui::Button(enable_player_window_ ? "Close Player Window" : "Open Player Window")) enable_player_window_ ^= 1;
     if (ImGui::Button(enable_shadow_map_system_window_ ? "Close Shadow Map Window" : "Open Shadow Map Window")) enable_shadow_map_system_window_ ^= 1;
@@ -383,7 +384,10 @@ void DebugObserver::ShowLogWindow(void)
         return;
     }
 
-    string log(log_.begin(), log_.end());
+    if (ImGui::Button("Clear")) { log_.clear(); }
+
+    string& log = kodfreedom::Utility::ToUtf8(log_);
+
     ImGui::Text(log.c_str());
 
     // End

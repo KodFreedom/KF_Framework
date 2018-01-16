@@ -33,6 +33,7 @@ void PlayerMutantSkillState::Uninit(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::Update(PlayerController& player)
 {
+    time_counter_ -= Time::Instance()->ScaledDeltaTime();
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
@@ -52,7 +53,7 @@ void PlayerMutantSkillState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
-
+    // Todo : UŒ‚‚Ì“–‚½‚è”»’è
 }
 
 //--------------------------------------------------------------------------------
@@ -60,12 +61,7 @@ void PlayerMutantSkillState::OnTrigger(PlayerController& player, Collider& self,
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::OnDamaged(PlayerController& player, const float& damage)
 {
-    if (time_counter_ > 0.0f)
-    {
-        time_counter_ -= Time::Instance()->ScaledDeltaTime();
-        return;
-    }
-
+    if (time_counter_ > 0.0f) { return; }
     time_counter_ = kNoDamageTime;
     player.ReceiveDamage(damage);
 
