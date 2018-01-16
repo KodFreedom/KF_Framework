@@ -3,7 +3,7 @@
 //Å@player_mutant_strong_attack_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_damaged_state.h"
 #include "player_mutant_strong_attack_state.h"
 #include "player_mutant_dying_state.h"
@@ -75,7 +75,7 @@ void PlayerMutantStrongAttackState::Update(PlayerController& player)
         }
         else
         {
-            player.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdleState);
             return;
         }
     }

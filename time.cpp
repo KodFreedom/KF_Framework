@@ -58,7 +58,7 @@ bool Time::CanUpdateFrame(void)
 //--------------------------------------------------------------------------------
 //  ç°ÇÃéûä‘Çï‘Ç∑
 //--------------------------------------------------------------------------------
-String Time::GetCurrentFileTime(void) const
+String Time::GetCurrentLocalTime(void) const
 {
     SYSTEMTIME local_time = { 0 };
     GetLocalTime(&local_time);

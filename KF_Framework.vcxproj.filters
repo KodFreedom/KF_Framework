@@ -534,9 +534,6 @@
     <ClCompile Include="actor_state_player\player_mutant_fall_state.cpp">
       <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
     </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_idel_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
     <ClCompile Include="actor_state_player\player_mutant_jump_state.cpp">
       <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
     </ClCompile>
@@ -641,6 +638,9 @@
     </ClCompile>
     <ClCompile Include="actor_observer.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
+    </ClCompile>
+    <ClCompile Include="actor_state_player\player_mutant_idle_state.cpp">
+      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -980,9 +980,6 @@
     <ClInclude Include="actor_state_player\player_mutant_fall_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_idel_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
     <ClInclude Include="actor_state_player\player_mutant_jump_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
@@ -1087,6 +1084,9 @@
     </ClInclude>
     <ClInclude Include="actor_observer.h">
       <Filter>ヘッダー ファイル\Base\System</Filter>
+    </ClInclude>
+    <ClInclude Include="actor_state_player\player_mutant_idle_state.h">
+      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

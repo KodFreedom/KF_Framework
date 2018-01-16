@@ -111,7 +111,7 @@ void ActorController::ReceiveDamage(const float& damage)
 
 #ifdef _DEBUG
     MainSystem::Instance()->GetDebugObserver()->Display(
-        owner_.GetName() + L" が" + to_wstring(damage) + L"ダメージを受けた！\n"
+        owner_.GetName() + L" が" + to_wstring(damage) + L"ダメージを受けた！ "
     "残りライフ：" + to_wstring(current_life));
 #endif
 }

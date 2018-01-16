@@ -3,7 +3,7 @@
 //Å@player_mutant_walk_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_walk_state.h"
 #include "player_mutant_jump_state.h"
 #include "player_mutant_damaged_state.h"
@@ -40,7 +40,7 @@ void PlayerMutantWalkState::Update(PlayerController& player)
     {
         if (player.GetMovement().SquareMagnitude() == 0.0f)
         {
-            player.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdleState);
             return;
         }
 

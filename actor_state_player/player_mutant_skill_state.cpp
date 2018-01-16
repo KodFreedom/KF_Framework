@@ -3,7 +3,7 @@
 //Å@player_mutant_skill_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_mutant_idel_state.h"
+#include "player_mutant_idle_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
 #include "../player_controller.h"
@@ -42,7 +42,7 @@ void PlayerMutantSkillState::Update(PlayerController& player)
     {
         if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_skill"))
         {
-            player.Change(MY_NEW PlayerMutantIdelState);
+            player.Change(MY_NEW PlayerMutantIdleState);
             return;
         }
     }

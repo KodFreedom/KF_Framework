@@ -71,7 +71,7 @@ void DebugObserver::Render(void)
 void DebugObserver::Display(const String& log)
 {
     if (log_.size() >= kMaxLogSize) { log_.clear(); }
-	log_.append(Time::Instance()->GetCurrentFileTime() + L" : " + log + L"\n");
+	log_.append(Time::Instance()->GetCurrentLocalTime() + L" : " + log + L"\n");
 }
 
 //--------------------------------------------------------------------------------
