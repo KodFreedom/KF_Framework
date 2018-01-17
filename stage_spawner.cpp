@@ -102,5 +102,5 @@ void StageSpawner::LoadStage(const String& stage_name)
     file.close();
 
     // Enemy
-    GameObjectSpawner::CreateEnemy(L"derrick", Vector3(10.0f, 10.0f, 10.0f), Vector3::kZero, Vector3::kOne);
+    GameObjectSpawner::CreateEnemy(L"derrick", Vector3(23.0f, 10.0f, 37.0f), Vector3::kZero, Vector3::kOne);
 }
