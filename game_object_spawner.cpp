@@ -22,6 +22,7 @@
 #include "player_controller.h"
 #include "player_ui_controller.h"
 #include "enemy_controller.h"
+#include "flash_button_controller.h"
 #include "actor_state_player\player_mutant_idle_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant_idle_motion_state.h"
@@ -219,6 +220,30 @@ GameObject* GameObjectSpawner::CreateBasicPolygon2d(const Vector3& scale, const 
     renderer->SetMesh(L"polygon2d");
     renderer->SetMaterial(material_name);
     result->AddRenderer(renderer);
+
+    //パラメーター
+    auto transform = result->GetTransform();
+    transform->SetScale(scale);
+    transform->SetRotation(Vector3(0.0f, 0.0f, rotation));
+    transform->SetPosition(position);
+
+    result->Init();
+    return result;
+}
+
+//--------------------------------------------------------------------------------
+//  FlashButton2d生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateFlashButton2d(const float flash_speed, const Vector3& scale, const Layer& layer, const String& material_name, const ShaderType& shader_type, const RenderPriority& render_priority, const float& rotation, const Vector3& position)
+{
+    auto result = MY_NEW GameObject(layer);
+
+    //コンポネント
+    auto renderer = MY_NEW MeshRenderer2d(*result, render_priority, shader_type);
+    renderer->SetMesh(L"polygon2d");
+    renderer->SetMaterial(material_name);
+    result->AddRenderer(renderer);
+    result->AddBehavior(MY_NEW FlashButtonController(*result, flash_speed));
 
     //パラメーター
     auto transform = result->GetTransform();

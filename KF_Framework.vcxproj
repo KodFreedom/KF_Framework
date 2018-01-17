@@ -185,6 +185,7 @@
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
     <ClCompile Include="enemy_controller.cpp" />
+    <ClCompile Include="flash_button_controller.cpp" />
     <ClCompile Include="jugg_mesh_shader.cpp" />
     <ClCompile Include="jugg_skin_shader.cpp" />
     <ClCompile Include="library\ImGui\imgui.cpp" />
@@ -318,6 +319,7 @@
     <ClInclude Include="default_skin_shader.h" />
     <ClInclude Include="enemy_controller.h" />
     <ClInclude Include="actor_observer.h" />
+    <ClInclude Include="flash_button_controller.h" />
     <ClInclude Include="jugg_mesh_shader.h" />
     <ClInclude Include="jugg_skin_shader.h" />
     <ClInclude Include="labels.h" />

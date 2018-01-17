@@ -642,6 +642,9 @@
     <ClCompile Include="player_ui_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
+    <ClCompile Include="flash_button_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1089,6 +1092,9 @@
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
     </ClInclude>
     <ClInclude Include="player_ui_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="flash_button_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
   </ItemGroup>
