@@ -14,6 +14,7 @@
 #include "actor_observer.h"
 #include "player_controller.h"
 #include "game_object.h"
+#include "time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -24,9 +25,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ModeDemo::ModeDemo() : Mode(L"Demo")
-{
-
-}
+    , time_counter_(0.0f)
+{}
 
 //--------------------------------------------------------------------------------
 //  デストラクタ
@@ -63,31 +63,37 @@ void ModeDemo::Update(void)
 void ModeDemo::LateUpdate(void)
 {
 	Mode::LateUpdate();
-
     auto main_system = MainSystem::Instance();
-    auto player = main_system->GetActorObserver()->GetPlayer();
-    if (player)
-    {// プレイヤーが死んだらリザルトにいく
-        if (player->GetCurrentStateName().find(L"Dying") != String::npos)
+
+    if (time_counter_ > 0.0f)
+    {// リザルトにいくまでカウントする
+        time_counter_ -= Time::Instance()->ScaledDeltaTime();
+
+        if (time_counter_ <= 0.0f)
         {
             main_system->GetShadowMapSystem()->SetTarget(nullptr);
             main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
-            return;
         }
+        return;
+    }
+   
+    auto player = main_system->GetActorObserver()->GetPlayer();
+    if (player && player->GetCurrentStateName().find(L"Dying") != String::npos)
+    {// プレイヤーが死んだらリザルトにいく
+        time_counter_ = kWaitTime;
+        return;
     }
 
     if (main_system->GetActorObserver()->GetEnemys().empty())
     {// エネミーが死んだらリザルトにいく
-        main_system->GetShadowMapSystem()->SetTarget(nullptr);
-        main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
+        time_counter_ = Time::kTimeInterval;
         return;
     }
 
 #ifdef _DEBUG
     if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
     {
-        main_system->GetShadowMapSystem()->SetTarget(nullptr);
-        main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
+        time_counter_ = Time::kTimeInterval;
         return;
     }
 #endif // _DEBUG
