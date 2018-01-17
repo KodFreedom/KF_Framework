@@ -13,6 +13,7 @@ using namespace kodfreedom;
 //--------------------------------------------------------------------------------
 class Transform;
 class Material;
+class ActorParameter;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -52,13 +53,24 @@ private:
     //--------------------------------------------------------------------------------
     static const Vector3 kLifeGaugeSize;
     static const Vector3 kLifeGaugeLeftTop;
-    static const Color   kLifeGaugeMaxColor;
-    static const Color   kLifeGaugeMinColor;
     static const Vector3 kCoverSize;
     static const Vector3 kCoverLeftTop;
 
     //--------------------------------------------------------------------------------
+    //  ワーニングゲージの更新
+    //--------------------------------------------------------------------------------
+    void UpdateWarningGauge(const ActorParameter& parameter);
+
+    //--------------------------------------------------------------------------------
+    //  ライフゲージの更新
+    //--------------------------------------------------------------------------------
+    void UpdateLifeGauge(const ActorParameter& parameter);
+
+    //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
+    Transform* warning_gauge_;
     Transform* life_gauge_;
+    float      warning_flash_speed_;
+    float      life_flash_speed_;
 };

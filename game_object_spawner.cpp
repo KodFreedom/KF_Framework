@@ -269,6 +269,9 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 	actor_controller->Change(MY_NEW PlayerMutantIdleState);
 	result->AddBehavior(actor_controller);
 
+    //UI
+    result->AddBehavior(MY_NEW PlayerUiController(*result));
+
 	//Collider
 	auto collider = MY_NEW SphereCollider(*result, kDynamic, 0.6f);
 	collider->SetOffset(Vector3(0.0f, 0.8f, 0.0f));
@@ -285,11 +288,6 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
 	//‰Šú‰»
 	result->Init();
-
-	//UI
-    auto ui = MY_NEW GameObject;
-    ui->AddBehavior(MY_NEW PlayerUiController(*ui));
-    ui->Init();
 
 	return result;
 }

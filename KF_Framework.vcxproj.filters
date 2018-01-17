@@ -175,12 +175,6 @@
     <Filter Include="ソース ファイル\Base\Mode">
       <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\UI">
-      <UniqueIdentifier>{e61b84ce-404a-4320-a362-afe7fb577d74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\UI\UIObject">
-      <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Base\Shader\2d">
       <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
     </Filter>
@@ -314,9 +308,6 @@
     </ClCompile>
     <ClCompile Include="third_person_camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="player_ui.cpp">
-      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="collision_detector.cpp">
       <Filter>ソース ファイル\Base\Physics</Filter>
