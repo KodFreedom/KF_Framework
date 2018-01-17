@@ -201,7 +201,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #ifdef EDITOR
 	Change(MY_NEW ModeDemo);
 #else
-	Change(MY_NEW ModeDemo);
+	Change(MY_NEW ModeTitle);
 #endif // EDITOR
 
 	return true;
