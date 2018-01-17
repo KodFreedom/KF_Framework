@@ -175,12 +175,6 @@
     <Filter Include="ソース ファイル\Base\Mode">
       <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\UI">
-      <UniqueIdentifier>{e61b84ce-404a-4320-a362-afe7fb577d74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\UI\UIObject">
-      <UniqueIdentifier>{5bf20966-ea4f-4ca6-82cc-4ecfb0c2e0de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Base\Shader\2d">
       <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
     </Filter>
@@ -240,6 +234,12 @@
     </Filter>
     <Filter Include="ソース ファイル\Actor\State\Zombie\Enemy">
       <UniqueIdentifier>{651d0f7c-dc15-425f-aff3-66e5c7bd671a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\UI">
+      <UniqueIdentifier>{ac8d5ce7-230a-4f92-9262-1b522c3b2fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\UI">
+      <UniqueIdentifier>{c90b9c02-ed09-4f5d-8b3d-b306de860a9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +308,6 @@
     </ClCompile>
     <ClCompile Include="third_person_camera.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="player_ui.cpp">
-      <Filter>ソース ファイル\Base\UI\UIObject</Filter>
     </ClCompile>
     <ClCompile Include="collision_detector.cpp">
       <Filter>ソース ファイル\Base\Physics</Filter>
@@ -641,6 +638,9 @@
     </ClCompile>
     <ClCompile Include="actor_state_player\player_mutant_idle_state.cpp">
       <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="player_ui_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1087,6 +1087,9 @@
     </ClInclude>
     <ClInclude Include="actor_state_player\player_mutant_idle_state.h">
       <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="player_ui_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,9 +19,8 @@ public:
     //  関数定義
     //--------------------------------------------------------------------------------
     ActorParameter()
-        : level_(1)
-        , max_life_(2.0f)
-        , current_life_(2.0f)
+        : max_life_(10.0f)
+        , current_life_(10.0f)
         , attack_(1.0f)
         , defence_(1.0f)
         , move_speed_(1.0f)
@@ -36,7 +35,6 @@ public:
     //--------------------------------------------------------------------------------
     //  セッター
     //--------------------------------------------------------------------------------
-    void SetLevel(const int& value) { level_ = value; }
     void SetMaxLife(const float& value) { max_life_ = value; }
     void SetCurrentLife(const float& value) { current_life_ = value; }
     void SetLightAttack(const float& value) { attack_ = value; }
@@ -65,7 +63,6 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    int   level_;
     float max_life_;
     float current_life_;
     float attack_;

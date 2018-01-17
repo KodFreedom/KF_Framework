@@ -75,6 +75,7 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
     const Matrix44& world_view_projection_light = world * shadow_map_system->GetLightView() * shadow_map_system->GetLightProjection();
     vertex_shader_constant_table_->SetValue(device, "world_view_projection_light", &world_view_projection_light, sizeof(world_view_projection_light));
     pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system->GetBias());
+    pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system->GetFar());
     UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
     device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
 }

@@ -49,7 +49,7 @@ void GameObjectActor::LateUpdate(void)
     for (auto& pair : behaviors_) { pair.second->LateUpdate(); }
     animator_->Update();
     transform_->UpdateMatrix();
-    for (auto renderer : renderers_) { renderer->Update(); }
+    for (auto& pair : renderers_) { pair.second->Update(); }
 	animator_->LateUpdate();
 }
 

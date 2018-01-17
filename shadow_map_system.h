@@ -89,6 +89,7 @@ public:
     const Matrix44& GetLightView(void) const { return view_; }
     const Matrix44& GetLightProjection(void) const { return projection_; }
     const float& GetBias(void) const { return bias_; }
+    const float& GetFar(void) const { return far_; }
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     //--------------------------------------------------------------------------------

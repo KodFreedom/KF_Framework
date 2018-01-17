@@ -47,5 +47,6 @@ void ShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mes
 	auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
     D3DXMATRIX world_view_projection_light = world * shadow_map_system->GetLightView() * shadow_map_system->GetLightProjection();
 	vertex_shader_constant_table_->SetMatrix(device, "world_view_projection_light", &world_view_projection_light);
+    pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system->GetFar());
 }
 #endif

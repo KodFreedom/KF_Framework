@@ -234,6 +234,7 @@
     <ClCompile Include="no_light_no_fog_shader.cpp" />
     <ClCompile Include="motion_manager.cpp" />
     <ClCompile Include="player_controller.cpp" />
+    <ClCompile Include="player_ui_controller.cpp" />
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
@@ -275,7 +276,6 @@
     <ClCompile Include="model_editor.cpp" />
     <ClCompile Include="mode_result.cpp" />
     <ClCompile Include="mode_title.cpp" />
-    <ClCompile Include="player_ui.cpp" />
     <ClCompile Include="render_system_directX9.cpp" />
     <ClCompile Include="renderer_manager.cpp" />
     <ClCompile Include="sound_manager.cpp" />
@@ -375,6 +375,7 @@
     <ClInclude Include="motion_manager.h" />
     <ClInclude Include="actor_parameter.h" />
     <ClInclude Include="player_controller.h" />
+    <ClInclude Include="player_ui_controller.h" />
     <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />

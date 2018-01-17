@@ -9,6 +9,7 @@
 #include "texture_manager.h"
 #include "game_object.h"
 #include "render_system.h"
+#include "mesh_renderer_2d.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
@@ -40,11 +41,15 @@ void Default2dTextureShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void Default2dTextureShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
+    assert(renderer.GetType() == kMeshRenderer2d);
+
     // Vertex
     const Matrix44& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
     vertex_shader_constant_table_->SetValue(device, "world", &world, sizeof(world));
     vertex_shader_constant_table_->SetValue(device, "projection", &RenderSystem::kProjection2d, sizeof(RenderSystem::kProjection2d));
     vertex_shader_constant_table_->SetValue(device, "offset", &RenderSystem::kOffset2d, sizeof(RenderSystem::kOffset2d));
+    const Vector2& uv_scale = ((MeshRenderer2d*)&renderer)->GetUvScale();
+    vertex_shader_constant_table_->SetValue(device, "uv_scale", &uv_scale, sizeof(uv_scale));
 
     // Pixel
     auto main_system = MainSystem::Instance();
