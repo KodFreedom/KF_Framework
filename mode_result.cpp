@@ -31,8 +31,22 @@ void ModeResult::Init(void)
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
 	//UI‚Ì‰Šú‰»
-    MainSystem::Instance()->GetMaterialManager()->Use(L"result", Color::kWhite, L"endingGood.jpg");
-    GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kDefaultLayer, L"result", kDefault2dTextureShader, k2d);
+    GameObjectSpawner::CreateBasicPolygon2d(
+        Vector3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f)
+        , kDefaultLayer
+        , L"result"
+        , kDefault2dTextureShader
+        , k2d);
+
+    GameObjectSpawner::CreateFlashButton2d(
+        1.0f
+        , Vector3(475.0f, 73.0f, 0.0f)
+        , kDefaultLayer
+        , L"press_space"
+        , kDefault2dTextureShader
+        , k2d
+        , 0.0f
+        , Vector3(0.0f, SCREEN_HEIGHT * 0.25f, 0.0f));
 }
 
 //--------------------------------------------------------------------------------
