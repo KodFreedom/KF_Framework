@@ -61,10 +61,7 @@ float4x4 GetBoneMatrixBy(const uint index)
 	for (int count_y = 0; count_y < 4; ++count_y)
 	{
 		float4 row = tex2Dlod(bone_texture, float4(uv.x * count_y, uv.y, 0.0f, 0.0f));
-		result[count_y][0] = row.x;
-		result[count_y][1] = row.y;
-		result[count_y][2] = row.z;
-		result[count_y][3] = row.w;
+		result[count_y] = row;
 	}
 	return result;
 }
