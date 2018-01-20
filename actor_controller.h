@@ -99,6 +99,7 @@ public:
     void SetIsLightAttack(const bool& value) { is_light_attack_ = value; }
     void SetIsStrongAttack(const bool& value) { is_strong_attack_ = value; }
     void SetIsSkill(const bool& value) { is_skill_ = value; }
+    void SetParameter(const ActorParameter& parameter) { parameter_ = parameter; }
 
     //--------------------------------------------------------------------------------
     //  ÉQÉbÉ^Å[

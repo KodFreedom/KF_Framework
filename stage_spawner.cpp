@@ -15,6 +15,7 @@ using namespace kodfreedom;
 #include "main_system.h"
 #include "third_person_camera.h"
 #include "light.h"
+#include "enemy_controller.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -38,58 +39,83 @@ void StageSpawner::LoadStage(const String& stage_name)
     //地面の作成
 	GameObjectSpawner::CreateField(stage_name);
 
-	//ステージの読込
-	String path = L"data/stage/" + stage_name + L".stage";
-	ifstream file(path, ios::binary);
-	if (!file.is_open())
-	{
-		assert(file.is_open());
-		return;
-	}
-	BinaryInputArchive archive(file);
+    // 環境の読込
+    LoadEnvironment(stage_name);
 
-	//Model数の読込
-	size_t model_number;
-	archive.loadBinary(&model_number, sizeof model_number);
-	for (size_t count = 0; count < model_number; ++count)
-	{
-		//ファイル名読込
-		size_t name_size;
-		archive.loadBinary(&name_size, sizeof(name_size));
-		string name;
-		name.resize(name_size);
-		archive.loadBinary(&name[0], name_size);
-		String model_name = String(name.begin(), name.end());
+    // Playerの読込
+    LoadPlayer(stage_name);
 
-		//作ったモデル数の読込
-		size_t created_model_number;
-		archive.loadBinary(&created_model_number, sizeof(created_model_number));
+    // Enemy
+    LoadEnemy(stage_name);
+}
 
-		//位置回転スケールの読込
-		for (size_t count_model = 0; count_model < created_model_number; ++count_model)
-		{
-			Vector3 position;
-			archive.loadBinary(&position, sizeof(position));
-			Quaternion rotation;
-			archive.loadBinary(&rotation, sizeof(rotation));
-			Vector3 scale;
-			archive.loadBinary(&scale, sizeof(scale));
+//--------------------------------------------------------------------------------
+//
+//  Private
+//
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//  環境の読込
+//--------------------------------------------------------------------------------
+void StageSpawner::LoadEnvironment(const String& stage_name)
+{
+    //ステージの読込
+    String& path = L"data/stage/" + stage_name + L".stage";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return;
+    }
+    BinaryInputArchive archive(file);
 
-			// 作成
-			auto model = GameObjectSpawner::CreateModel(model_name, position, rotation, scale);
-			//if (modelName == "Medieval_Windmill.model")
-			//{
-			//	auto behavior = MY_NEW WindmillController(gameObject);
-			//	behavior->Init();
-			//	gameObject->AddBehavior(behavior);
-			//}
-		}
-	}
-	file.close();
+    //Model数の読込
+    size_t model_number;
+    archive.loadBinary(&model_number, sizeof model_number);
+    for (size_t count = 0; count < model_number; ++count)
+    {
+        //ファイル名読込
+        size_t name_size;
+        archive.loadBinary(&name_size, sizeof(name_size));
+        string name;
+        name.resize(name_size);
+        archive.loadBinary(&name[0], name_size);
+        String model_name = String(name.begin(), name.end());
 
-    // Playerの作成
-    path = L"data/stage/" + stage_name + L".player";
-    file = ifstream(path, ios::binary);
+        //作ったモデル数の読込
+        size_t created_model_number;
+        archive.loadBinary(&created_model_number, sizeof(created_model_number));
+
+        //位置回転スケールの読込
+        for (size_t count_model = 0; count_model < created_model_number; ++count_model)
+        {
+            Vector3 position;
+            archive.loadBinary(&position, sizeof(position));
+            Quaternion rotation;
+            archive.loadBinary(&rotation, sizeof(rotation));
+            Vector3 scale;
+            archive.loadBinary(&scale, sizeof(scale));
+
+            // 作成
+            auto model = GameObjectSpawner::CreateModel(model_name, position, rotation, scale);
+            if (model_name == L"Medieval_Windmill.model")
+            {
+            	auto behavior = MY_NEW WindmillController(*model);
+            	behavior->Init();
+                model->AddBehavior(behavior);
+            }
+        }
+    }
+    file.close();
+}
+
+//--------------------------------------------------------------------------------
+//  プレイヤーの読込
+//--------------------------------------------------------------------------------
+void StageSpawner::LoadPlayer(const String& stage_name)
+{
+    String& path = L"data/stage/" + stage_name + L".player";
+    ifstream file = ifstream(path, ios::binary);
     if (!file.is_open())
     {
         assert(file.is_open());
@@ -100,7 +126,53 @@ void StageSpawner::LoadStage(const String& stage_name)
     player_archive.loadBinary(&position, sizeof(position));
     auto player = GameObjectSpawner::CreatePlayer(L"mutant", position, Vector3::kZero, Vector3::kOne);;
     file.close();
+}
 
-    // Enemy
-    GameObjectSpawner::CreateEnemy(L"derrick", Vector3(23.0f, 10.0f, 37.0f), Vector3::kZero, Vector3::kOne);
+//--------------------------------------------------------------------------------
+//  エネミーの読込
+//--------------------------------------------------------------------------------
+void StageSpawner::LoadEnemy(const String& stage_name)
+{
+    String& path = L"data/stage/" + stage_name + L".enemy";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return;
+    }
+    BinaryInputArchive archive(file);
+
+    // enemy数の読込
+    size_t enemy_number;
+    archive.loadBinary(&enemy_number, sizeof enemy_number);
+
+    // 情報の読込
+    for (size_t count = 0; count < enemy_number; ++count)
+    {
+        // 位置
+        Vector3 position;
+        archive.loadBinary(&position, sizeof(position));
+
+        auto enemy = GameObjectSpawner::CreateEnemy(L"derrick", position, Vector3::kZero, Vector3::kOne);
+        auto behavior = enemy->GetBehaviorBy(L"EnemyController");
+        assert(behavior);
+        auto enemy_controller = static_cast<EnemyController*>(behavior);
+
+        // 警戒範囲
+        float warning_range;
+        archive.loadBinary(&warning_range, sizeof(warning_range));
+        enemy_controller->SetWarningRange(warning_range);
+
+        // 巡回範囲
+        float patrol_range;
+        archive.loadBinary(&patrol_range, sizeof(patrol_range));
+        enemy_controller->SetPatrolRange(patrol_range);
+
+        // パラメーター
+        ActorParameter parameter;
+        archive.loadBinary(&parameter, sizeof(parameter));
+        enemy_controller->SetParameter(parameter);
+    }
+
+    file.close();
 }

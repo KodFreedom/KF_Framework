@@ -13,4 +13,9 @@ class StageSpawner
 {
 public:
 	static void LoadStage(const String& stage_name);
+
+private:
+    static void LoadEnvironment(const String& stage_name);
+    static void LoadPlayer(const String& stage_name);
+    static void LoadEnemy(const String& stage_name);
 };
