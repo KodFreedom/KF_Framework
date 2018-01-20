@@ -24,7 +24,7 @@ using namespace cereal;
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 FieldEditor::FieldEditor(GameObject& owner)
-	: Behavior(owner, L"FieldEditor")
+	: Editor(owner, L"FieldEditor")
 	, block_number_x_(100)
 	, block_number_z_(100)
 	, block_size_(Vector2(1.0f))
@@ -35,9 +35,7 @@ FieldEditor::FieldEditor(GameObject& owner)
 	, raise_speed_(1.0f)
 	, extend_speed_(1.0f)
 	, raise_mode_rate_(0.0f)
-    , is_active_(true)
     , current_choose_mode_(kCircle)
-    , current_language_(kEnglish)
 {}
 
 //--------------------------------------------------------------------------------

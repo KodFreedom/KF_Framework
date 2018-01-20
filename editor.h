@@ -1,86 +1,80 @@
 //--------------------------------------------------------------------------------
-//  モデルエディタビヘイビアコンポネント
-//　ModelEditor.h
+//  エネミーエディタ
+//　enemy_editor.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "editor.h"
+#include "common_setting.h"
 #if defined(EDITOR)
-
-//--------------------------------------------------------------------------------
-//  前方宣言
-//--------------------------------------------------------------------------------
-class Transform;
+#include "behavior.h"
+#include "labels.h"
+#include "kf_math.h"
+using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class ModelEditor : public Editor
+class Editor : public Behavior
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    ModelEditor(GameObject& owner);
-    ~ModelEditor() {}
+    Editor(GameObject& owner, const String& name) : Behavior(owner, name)
+        , is_active_(false), current_language_(kEnglish) {}
+    ~Editor() {}
 
     //--------------------------------------------------------------------------------
     //  初期化
     //--------------------------------------------------------------------------------
-    bool Init(void) override;
+    virtual bool Init(void) override = 0;
 
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    void Uninit(void) override;
+    virtual void Uninit(void) override = 0;
 
     //--------------------------------------------------------------------------------
     //  更新処理
     //--------------------------------------------------------------------------------
-    void Update(void) override;
+    virtual void Update(void) override = 0;
+
+    //--------------------------------------------------------------------------------
+    //  後更新処理
+    //--------------------------------------------------------------------------------
+    virtual void LateUpdate(void) override {}
+
+    //--------------------------------------------------------------------------------
+    //  アクティブフラグ関数
+    //--------------------------------------------------------------------------------
+    const bool&  IsActive(void) const { return is_active_; }
+    virtual void SetActive(const bool& value) { is_active_ = value; }
 
     //--------------------------------------------------------------------------------
     //  位置の設定
     //--------------------------------------------------------------------------------
-    void SetPosition(const Vector3& position) override;
+    virtual void SetPosition(const Vector3& position) = 0;
 
     //--------------------------------------------------------------------------------
     //  ファイルに保存
     //--------------------------------------------------------------------------------
-    void SaveAsBinary(const String& name) override;
+    virtual void SaveAsBinary(const String& name) = 0;
 
     //--------------------------------------------------------------------------------
     //  情報を読込関数
     //--------------------------------------------------------------------------------
-    void LoadFrom(const String& name) override;
-
-private:
-    //--------------------------------------------------------------------------------
-    //  構造体定義
-    //--------------------------------------------------------------------------------
-    struct Info
-    {
-        Info() : my_transform(nullptr), rotation(Vector3::kZero) {}
-        Transform* my_transform;
-        Vector3    rotation;
-    };
+    virtual void LoadFrom(const String& name) = 0;
 
     //--------------------------------------------------------------------------------
-    //  関数定義
+    //  言語の設定
     //--------------------------------------------------------------------------------
-    void Create(void);
-    void ShowMainWindow(void);
-    void ShowTypeListBox(void);
-    void ShowCreatedList(void);
-    void ClearList(void);
+    void SetLanguage(const Language& language) { current_language_ = language; }
 
+protected:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    vector<String>     model_names_;
-    vector<Info>       demo_model_infos_;
-    vector<list<Info>> created_model_infos_;
-    int                current_model_no_;
-    bool               is_show_created_list_;
+    bool     is_active_;
+    Language current_language_;
 };
 #endif // EDITOR

@@ -31,6 +31,7 @@
 #if defined(EDITOR)
 #include "field_editor.h"
 #include "model_editor.h"
+#include "enemy_editor.h"
 #include "editor_controller.h"
 #endif // EDITOR
 
@@ -72,16 +73,16 @@ GameObject* GameObjectSpawner::CreateSkyBox(const Vector3& position, const Vecto
 GameObject* GameObjectSpawner::CreateField(const String& name)
 {
 	auto result = MY_NEW GameObject;
-	String field_name = name + L"Field";
 
 	//コンポネント
+    String& field_name = name + L"Field";
 	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(field_name + L".mesh");
 	renderer->SetMaterial(field_name);
     renderer->SetBoundingSpherePosition(Vector3::kZero);
     renderer->SetBoundingSphereRadius(1000.0f);
 	result->AddRenderer(renderer);
-	result->AddCollider(MY_NEW FieldCollider(*result, field_name));
+	result->AddCollider(MY_NEW FieldCollider(*result, name));
 
 	//初期化
 	result->Init();
@@ -115,9 +116,9 @@ GameObject* GameObjectSpawner::CreateCube(const Vector3& position, const Vector3
 }
 
 //--------------------------------------------------------------------------------
-//  Cube生成処理
+//  XModel生成処理
 //--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& position, const Vector3& rotation, const Vector3& scale)
+GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& position, const Vector3& rotation, const Vector3& scale, const RenderPriority& render_priority)
 {
 	auto result = MY_NEW GameObject;
 
@@ -129,6 +130,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 	auto renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(name);
     renderer->SetShaderType(ShaderType::kNoLightNoFog);
+    renderer->SetRenderPriority(render_priority);
 	result->AddRenderer(renderer);
 
 	//パラメーター
@@ -143,7 +145,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 }
 
 //--------------------------------------------------------------------------------
-//  Cube生成処理
+//  Goal生成処理
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 {
@@ -168,13 +170,7 @@ GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
 }
 
 //--------------------------------------------------------------------------------
-//	関数名：CreateModel
-//  関数説明：モデルファイルからゲームオブジェクト作成
-//	引数：	filePath：ファイルの名前 
-//			Position
-//			rotation
-//			scale
-//	戻り値：GameObject*
+//	Model生成処理
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
 {
@@ -256,7 +252,7 @@ GameObject* GameObjectSpawner::CreateFlashButton2d(const float flash_speed, cons
 }
 
 //--------------------------------------------------------------------------------
-//  生成処理
+//  Player生成処理
 //--------------------------------------------------------------------------------
 GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale)
 {
@@ -318,7 +314,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 }
 
 //--------------------------------------------------------------------------------
-//  生成処理
+//  Enemy生成処理
 //--------------------------------------------------------------------------------
 GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale)
 {
@@ -391,7 +387,6 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	renderer->SetMesh(L"field");
 	renderer->SetMaterial(L"editorField");
     renderer->SetBoundingSphereRadius(10000.0f);
-	//renderer->SetShaderType(ShaderType::kNoLightNoFog);
 	field->AddRenderer(renderer);
 	field->Init();
 
@@ -399,9 +394,12 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 	auto result = MY_NEW GameObject;
 	auto model_editor = MY_NEW ModelEditor(*result);
 	result->AddBehavior(model_editor);
+    auto enemy_editor = MY_NEW EnemyEditor(*result);
+    result->AddBehavior(enemy_editor);
 	auto editor_controller = MY_NEW EditorController(*result);
 	editor_controller->SetFieldEditor(field_editor);
 	editor_controller->SetModelEditor(model_editor);
+    editor_controller->SetEnemyEditor(enemy_editor);
 	result->AddBehavior(editor_controller);
 	renderer = MY_NEW MeshRenderer3d(*result);
 	renderer->SetMesh(L"data/model/target.x");

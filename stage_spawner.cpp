@@ -39,7 +39,7 @@ void StageSpawner::LoadStage(const String& stage_name)
 	GameObjectSpawner::CreateField(stage_name);
 
 	//ステージの読込
-	String path = L"data/stage/" + stage_name + L"Stage.stage";
+	String path = L"data/stage/" + stage_name + L".stage";
 	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
@@ -88,7 +88,7 @@ void StageSpawner::LoadStage(const String& stage_name)
 	file.close();
 
     // Playerの作成
-    path = L"data/stage/" + stage_name + L"Player.player";
+    path = L"data/stage/" + stage_name + L".player";
     file = ifstream(path, ios::binary);
     if (!file.is_open())
     {

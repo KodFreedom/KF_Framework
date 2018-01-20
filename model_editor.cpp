@@ -16,20 +16,20 @@ namespace ImGui
 {
     static auto vector_getter = [](void* vec, int idx, const char** out_text)
     {
-        auto& vector = *static_cast<std::vector<std::string>*>(vec);
-        if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
-        *out_text = vector.at(idx).c_str();
+        auto& values = *static_cast<vector<string>*>(vec);
+        if (idx < 0 || idx >= static_cast<int>(values.size())) { return false; }
+        *out_text = values.at(idx).c_str();
         return true;
     };
 
-    bool Combo(const char* label, int* currIndex, std::vector<std::string>& values)
+    bool Combo(const char* label, int* currIndex, vector<string>& values)
     {
         if (values.empty()) { return false; }
         return Combo(label, currIndex, vector_getter,
             static_cast<void*>(&values), values.size());
     }
 
-    bool ListBox(const char* label, int* currIndex, std::vector<std::string>& values)
+    bool ListBox(const char* label, int* currIndex, vector<string>& values)
     {
         if (values.empty()) { return false; }
         return ListBox(label, currIndex, vector_getter,
@@ -47,11 +47,9 @@ namespace ImGui
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ModelEditor::ModelEditor(GameObject& owner)
-    : Behavior(owner, L"ModelEditor")
+    : Editor(owner, L"ModelEditor")
     , current_model_no_(0)
-    , is_active_(false)
     , is_show_created_list_(false)
-    , current_language_(kEnglish)
 {}
 
 //--------------------------------------------------------------------------------
@@ -83,10 +81,6 @@ void ModelEditor::Uninit(void)
 {
     ClearList();
     model_names_.clear();
-    for (auto& info : demo_model_infos_)
-    {
-        info.my_transform->GetGameObject().SetActive(false);
-    }
     demo_model_infos_.clear();
     current_model_no_ = 0;
     is_show_created_list_ = false;
@@ -107,17 +101,6 @@ void ModelEditor::Update(void)
     }
     ShowMainWindow();
     ShowCreatedList();
-}
-
-//--------------------------------------------------------------------------------
-//  更新処理
-//--------------------------------------------------------------------------------
-void ModelEditor::LateUpdate(void)
-{
-    if (!is_active_)
-    {
-        return;
-    }
 }
 
 //--------------------------------------------------------------------------------

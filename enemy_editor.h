@@ -1,11 +1,12 @@
 //--------------------------------------------------------------------------------
-//  モデルエディタビヘイビアコンポネント
-//　ModelEditor.h
+//  エネミーエディタ
+//　enemy_editor.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "editor.h"
 #if defined(EDITOR)
+#include "actor_parameter.h"
 
 //--------------------------------------------------------------------------------
 //  前方宣言
@@ -15,14 +16,14 @@ class Transform;
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class ModelEditor : public Editor
+class EnemyEditor : public Editor
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    ModelEditor(GameObject& owner);
-    ~ModelEditor() {}
+    EnemyEditor(GameObject& owner);
+    ~EnemyEditor() {}
 
     //--------------------------------------------------------------------------------
     //  初期化
@@ -38,6 +39,11 @@ public:
     //  更新処理
     //--------------------------------------------------------------------------------
     void Update(void) override;
+
+    //--------------------------------------------------------------------------------
+    //  アクティブフラグ関数
+    //--------------------------------------------------------------------------------
+    void SetActive(const bool& value) override;
 
     //--------------------------------------------------------------------------------
     //  位置の設定
@@ -58,11 +64,14 @@ private:
     //--------------------------------------------------------------------------------
     //  構造体定義
     //--------------------------------------------------------------------------------
-    struct Info
+    struct EnemyInfo
     {
-        Info() : my_transform(nullptr), rotation(Vector3::kZero) {}
-        Transform* my_transform;
-        Vector3    rotation;
+        EnemyInfo()
+            : warning_transform(nullptr)
+            , patrol_transform(nullptr) {}
+        Transform*      warning_transform;
+        Transform*      patrol_transform;
+        ActorParameter  parameter;
     };
 
     //--------------------------------------------------------------------------------
@@ -70,17 +79,13 @@ private:
     //--------------------------------------------------------------------------------
     void Create(void);
     void ShowMainWindow(void);
-    void ShowTypeListBox(void);
-    void ShowCreatedList(void);
+    void EditEnemyInfo(EnemyInfo& info);
     void ClearList(void);
 
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    vector<String>     model_names_;
-    vector<Info>       demo_model_infos_;
-    vector<list<Info>> created_model_infos_;
-    int                current_model_no_;
-    bool               is_show_created_list_;
+    EnemyInfo         current_info_;
+    list<EnemyInfo>   created_infos_;
 };
 #endif // EDITOR

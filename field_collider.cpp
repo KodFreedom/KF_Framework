@@ -117,7 +117,7 @@ void FieldCollider::Load(const String& field_name)
 	ifstream file(path, ios::binary);
 	if (!file.is_open())
 	{
-		assert("load error");
+		assert(file.is_open());
 		return;
 	}
 	BinaryInputArchive archive(file);
