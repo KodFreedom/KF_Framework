@@ -38,6 +38,7 @@ public:
         , priority_(priority)
         , shader_type_(shader_type)
         , is_cast_shadow_(false)
+        , is_registered_(false)
         , bounding_sphere_radius_(0.0f)
         , type_(type) {}
     ~MeshRenderer() {}
@@ -91,6 +92,7 @@ protected:
     RenderPriority   priority_;
     ShaderType       shader_type_;
     bool             is_cast_shadow_;
+    bool             is_registered_;
     Vector3          bounding_sphere_position_;
     float            bounding_sphere_radius_;
     MeshRendererType type_;

@@ -55,7 +55,11 @@ void MeshRenderer::Update(void)
         ->FrustumCulling(position, bounding_sphere_radius_))
 	{
 		main_system->GetRendererManager()->Register(this);
+        is_registered_ = true;
+        return;
 	}
+
+    is_registered_ = false;
 }
 
 //--------------------------------------------------------------------------------
