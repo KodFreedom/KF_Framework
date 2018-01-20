@@ -59,6 +59,18 @@ static const char* kCloseFieldEditor[kLanguageMax] =
     u8"フィールドエディタを閉じる"
 };
 
+static const char* kOpenEnemyEditor[kLanguageMax] =
+{
+    "Open enemy editor",
+    u8"エネミーエディタを開く"
+};
+
+static const char* kCloseEnemyEditor[kLanguageMax] =
+{
+    "Close enemy editor",
+    u8"エネミーエディタを閉じる"
+};
+
 static const char* kTargetPosition[kLanguageMax] =
 {
     "Target position",
@@ -219,4 +231,58 @@ static const char* kSetPlayer[kLanguageMax] =
 {
     "Set player to here",
     u8"プレイヤーをここに設置する"
+};
+
+static const char* kWarningRange[kLanguageMax] =
+{
+    "Warning range",
+    u8"警戒範囲"
+};
+
+static const char* kPatrolRange[kLanguageMax] =
+{
+    "Patrol range",
+    u8"巡回範囲"
+};
+
+static const char* kDemo[kLanguageMax] =
+{
+    "Demo",
+    u8"デモ"
+};
+
+static const char* kLife[kLanguageMax] =
+{
+    "Life",
+    u8"生命値"
+};
+
+static const char* kAttack[kLanguageMax] =
+{
+    "Attack",
+    u8"攻撃力"
+};
+
+static const char* kDefence[kLanguageMax] =
+{
+    "Defence",
+    u8"防衛力"
+};
+
+static const char* kMoveSpeed[kLanguageMax] =
+{
+    "Move speed",
+    u8"移動速度"
+};
+
+static const char* kMinTurnSpeed[kLanguageMax] =
+{
+    "Min turn speed",
+    u8"最小回転速度"
+};
+
+static const char* kMaxTurnSpeed[kLanguageMax] =
+{
+    "Max turn speed",
+    u8"最大回転速度"
 };

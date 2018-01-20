@@ -645,6 +645,9 @@
     <ClCompile Include="flash_button_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
+    <ClCompile Include="enemy_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1096,6 +1099,12 @@
     </ClInclude>
     <ClInclude Include="flash_button_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

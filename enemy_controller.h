@@ -68,6 +68,8 @@ public:
     //--------------------------------------------------------------------------------
     void SetTarget(GameObject* target) { target_ = target; }
     void SetNextPosition(const Vector3& position) { next_position_ = position; }
+    void SetWarningRange(const float& value) { warning_range_ = value; }
+    void SetPatrolRange(const float& value) { patrol_range_ = value; }
 
     //--------------------------------------------------------------------------------
     //  ÉQÉbÉ^Å[

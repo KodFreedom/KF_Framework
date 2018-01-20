@@ -14,6 +14,7 @@
 //--------------------------------------------------------------------------------
 class FieldEditor;
 class ModelEditor;
+class EnemyEditor;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
@@ -57,6 +58,11 @@ public:
     //--------------------------------------------------------------------------------
     void SetModelEditor(ModelEditor* value) { model_editor_ = value; }
 
+    //--------------------------------------------------------------------------------
+    //  エネミーエディタの設定
+    //--------------------------------------------------------------------------------
+    void SetEnemyEditor(EnemyEditor* value) { enemy_editor_ = value; }
+
 private:
     //--------------------------------------------------------------------------------
     //  保存処理
@@ -99,6 +105,7 @@ private:
     bool         enable_auto_adjust_height_;
     FieldEditor* field_editor_;
     ModelEditor* model_editor_;
+    EnemyEditor* enemy_editor_;
     GameObject*  player_;
     float        move_speed_;
     string       stage_name_;

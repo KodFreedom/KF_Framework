@@ -1,21 +1,17 @@
 //--------------------------------------------------------------------------------
-//    プレイヤービヘイビアコンポネント
+//  プレイヤービヘイビアコンポネント
 //　FieldEditor.h
-//    Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "editor.h"
 #if defined(EDITOR)
-#include "behavior.h"
 #include "render_system.h"
-#include "labels.h"
-#include "kf_math.h"
-using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class FieldEditor : public Behavior
+class FieldEditor : public Editor
 {
 public:
     //--------------------------------------------------------------------------------
@@ -40,44 +36,29 @@ public:
     void Update(void) override;
 
     //--------------------------------------------------------------------------------
-    //  後更新処理
-    //--------------------------------------------------------------------------------
-    void LateUpdate(void) override {}
-
-    //--------------------------------------------------------------------------------
     //  フィールドによって位置を調節する
     //--------------------------------------------------------------------------------
     Vector3 AdjustPositionInField(const Vector3& position, const bool& is_adjust_height);
-    
-    //--------------------------------------------------------------------------------
-    //  アクティブフラグの取得
-    //--------------------------------------------------------------------------------
-    bool IsActive(void) const { return is_active_; }
-
-    //--------------------------------------------------------------------------------
-    //  アクティブフラグの設定
-    //--------------------------------------------------------------------------------
-    void SetActive(const bool& value);
 
     //--------------------------------------------------------------------------------
     //  位置の設定
     //--------------------------------------------------------------------------------
-    void SetPosition(const Vector3& value) { editor_position_ = value; }
+    void SetPosition(const Vector3& value) override { editor_position_ = value; }
 
     //--------------------------------------------------------------------------------
-    //  言語の設定
+    //  アクティブフラグ関数
     //--------------------------------------------------------------------------------
-    void SetLanguage(const Language& language) { current_language_ = language; }
+    void SetActive(const bool& value) override;
 
     //--------------------------------------------------------------------------------
     //  フィールド情報を保存する関数
     //--------------------------------------------------------------------------------
-    void SaveAsBinary(const String& name);
+    void SaveAsBinary(const String& name) override;
 
     //--------------------------------------------------------------------------------
     //  フィールド情報を読込関数
     //--------------------------------------------------------------------------------
-    void LoadFrom(const String& name);
+    void LoadFrom(const String& name) override;
 
 private:
     //--------------------------------------------------------------------------------
@@ -153,10 +134,8 @@ private:
     float            raise_speed_;
     float            extend_speed_;
     float            raise_mode_rate_; // average / linearの比率
-    bool             is_active_;
     vector<Vertex3d> vertexes_;
     list<int>        previous_choosen_indexes_;
     ChooseMode       current_choose_mode_;
-    Language         current_language_;
 };
 #endif // _DEBUG

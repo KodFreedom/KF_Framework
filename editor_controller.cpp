@@ -13,6 +13,7 @@
 #include "game_object.h"
 #include "field_editor.h"
 #include "Model_editor.h"
+#include "enemy_editor.h"
 #include "transform.h"
 #include "ImGui\imgui.h"
 #include "game_object_spawner.h"
@@ -29,6 +30,7 @@ EditorController::EditorController(GameObject& owner)
     : Behavior(owner, L"EditorController")
     , field_editor_(nullptr)
     , model_editor_(nullptr)
+    , enemy_editor_(nullptr)
     , player_(nullptr)
     , enable_auto_adjust_height_(true)
     , move_speed_(1.0f)
@@ -76,9 +78,10 @@ void EditorController::Update(void)
 void EditorController::Save(void)
 {
     String stage_name(stage_name_.begin(), stage_name_.end());
-    field_editor_->SaveAsBinary(stage_name + L"Field");
-    model_editor_->SaveAsBinary(stage_name + L"Stage");
-    SaveAsBinary(stage_name + L"Player");
+    field_editor_->SaveAsBinary(stage_name);
+    model_editor_->SaveAsBinary(stage_name);
+    enemy_editor_->SaveAsBinary(stage_name);
+    SaveAsBinary(stage_name);
 }
 
 //--------------------------------------------------------------------------------
@@ -89,9 +92,10 @@ void EditorController::Load(void)
     UINT id = MessageBox(NULL, L"今のステージを破棄して新しいステージを読み込みますか？", L"確認", MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2);
     if (id != IDYES) { return; }
     String stage_name(stage_name_.begin(), stage_name_.end());
-    field_editor_->LoadFrom(stage_name + L"Field");
-    model_editor_->LoadFrom(stage_name + L"Stage");
-    LoadFrom(stage_name + L"Player");
+    field_editor_->LoadFrom(stage_name);
+    model_editor_->LoadFrom(stage_name);
+    enemy_editor_->LoadFrom(stage_name);
+    LoadFrom(stage_name);
 }
 
 //--------------------------------------------------------------------------------
@@ -112,6 +116,7 @@ void EditorController::ShowMainWindow(void)
     {
         field_editor_->SetLanguage(current_language_);
         model_editor_->SetLanguage(current_language_);
+        enemy_editor_->SetLanguage(current_language_);
     }
 
     // State name
@@ -155,6 +160,15 @@ void EditorController::ShowModeWindow(void)
         enable_field_editor ^= 1;
     }
     field_editor_->SetActive(enable_field_editor);
+
+    // enemy
+    bool enable_enemy_editor = enemy_editor_->IsActive();
+    if (ImGui::Button(enable_enemy_editor ? kCloseEnemyEditor[current_language_]
+        : kOpenEnemyEditor[current_language_]))
+    {
+        enable_enemy_editor ^= 1;
+    }
+    enemy_editor_->SetActive(enable_enemy_editor);
 }
 
 //--------------------------------------------------------------------------------
@@ -194,6 +208,7 @@ void EditorController::ShowPositonWindow(void)
     // 操作位置の更新
     field_editor_->SetPosition(current_position);
     model_editor_->SetPosition(current_position);
+    enemy_editor_->SetPosition(current_position);
     transform->SetPosition(current_position);
 
     // カメラの移動

@@ -13,6 +13,7 @@ class ActorParameter
 #ifdef _DEBUG
     friend class DebugObserver;
 #endif
+    friend class EnemyEditor;
 
 public:
     //--------------------------------------------------------------------------------
@@ -31,6 +32,15 @@ public:
         , ground_check_distance_(0.0f)
     {}
     ~ActorParameter() {}
+
+    //--------------------------------------------------------------------------------
+    //  代入処理
+    //--------------------------------------------------------------------------------
+    ActorParameter& operator=(const ActorParameter& value)
+    {
+        memcpy_s(this, sizeof(ActorParameter), &value, sizeof(ActorParameter));
+        return *this;
+    }
 
     //--------------------------------------------------------------------------------
     //  セッター
