@@ -23,7 +23,7 @@ public:
 	//--------------------------------------------------------------------------------
 	WindmillController(GameObject& owner)
 		: Behavior(owner, L"WindmillController")
-		, rotate_speed_(0.01f)
+		, rotate_speed_(0.1f)
 		, fan_(nullptr)
 	{}
 	~WindmillController() {}

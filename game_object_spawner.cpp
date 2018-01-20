@@ -346,10 +346,6 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
 
     //Actor Controller
     auto actor_controller = MY_NEW EnemyController(*result, *rigidbody, *animator);
-    actor_controller->GetParameter().SetMoveSpeed(10.0f);
-    actor_controller->GetParameter().SetJumpSpeed(10.0f);
-    actor_controller->GetParameter().SetMinTurnSpeed(kPi);
-    actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
     actor_controller->Change(MY_NEW EnemyZombieIdleState);
     result->AddBehavior(actor_controller);
 
