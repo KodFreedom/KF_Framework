@@ -7,6 +7,7 @@
 #include "player_mutant_damaged_state.h"
 #include "../player_controller.h"
 #include "../animator.h"
+#include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -31,6 +32,10 @@ void PlayerMutantDamagedState::Uninit(PlayerController& player)
 void PlayerMutantDamagedState::Update(PlayerController& player)
 {
     PlayerState::Update(player);
+
+    time_counter_ += Time::Instance()->ScaledDeltaTime();
+    if (time_counter_ < kWaitTime) return;
+
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
         if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"mutant_idle"))

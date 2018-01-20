@@ -15,7 +15,7 @@ public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    PlayerMutantDamagedState() : PlayerState(L"PlayerMutantDamagedState") {}
+    PlayerMutantDamagedState() : PlayerState(L"PlayerMutantDamagedState"), time_counter_(0.0f) {}
     ~PlayerMutantDamagedState() {}
 
     //--------------------------------------------------------------------------------
@@ -38,4 +38,10 @@ private:
     //  ’è”’è‹`
     //--------------------------------------------------------------------------------
     static constexpr float kMovementMultiplier = 0.0f;
+    static constexpr float kWaitTime = 0.5f;
+
+    //--------------------------------------------------------------------------------
+    //  •Ï”’è‹`
+    //--------------------------------------------------------------------------------
+    float time_counter_;
 };

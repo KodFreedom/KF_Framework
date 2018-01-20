@@ -18,12 +18,12 @@ void MutantPunchMotionState::ChangeMotion(Animator& animator)
 	}
 	if(animator.GetIsDead() == true)
 	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantDyingMotionState(0), current_frame_counter_, 10));
+		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantDyingMotionState(0), current_frame_counter_, 5));
 		return;
 	}
 	if(animator.GetIsDamaged() == true)
 	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantDamagedMotionState(0), current_frame_counter_, 10));
+		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW MutantDamagedMotionState(0), current_frame_counter_, 5));
 		return;
 	}
 }
