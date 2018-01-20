@@ -9,6 +9,7 @@
 #include "../enemy_controller.h"
 #include "../animator.h"
 #include "../game_object.h"
+#include "../time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -26,6 +27,9 @@ void EnemyZombieDamagedState::Init(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieDamagedState::Update(EnemyController& enemy)
 {
+    time_counter_ += Time::Instance()->ScaledDeltaTime();
+    if (time_counter_ < kWaitTime) return;
+
     auto& animator = enemy.GetAnimator();
     if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
