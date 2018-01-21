@@ -53,5 +53,6 @@ void NoLightNoFogShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const 
 	const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
 	UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
 	device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture_));
+    pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
 }
 #endif

@@ -175,4 +175,7 @@ void StageSpawner::LoadEnemy(const String& stage_name)
     }
 
     file.close();
+
+    // UI
+    GameObjectSpawner::CreateEnemyUiController();
 }

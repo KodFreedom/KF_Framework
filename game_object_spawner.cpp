@@ -23,6 +23,7 @@
 #include "player_ui_controller.h"
 #include "enemy_controller.h"
 #include "flash_button_controller.h"
+#include "enemy_ui_controller.h"
 #include "actor_state_player\player_mutant_idle_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant_idle_motion_state.h"
@@ -145,31 +146,6 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
 }
 
 //--------------------------------------------------------------------------------
-//  Goal生成処理
-//--------------------------------------------------------------------------------
-GameObject* GameObjectSpawner::CreateGoal(const Vector3& position)
-{
-	auto result = MY_NEW GameObject;
-
-	//Tag
-	result->SetTag(L"Goal");
-
-	//コライダー
-	auto collider = MY_NEW SphereCollider(*result, kStatic, 2.0f);
-	collider->SetTrigger(true);
-	collider->SetTag(L"Goal");
-	result->AddCollider(collider);
-
-	//パラメーター
-	auto transform = result->GetTransform();
-	transform->SetPosition(position);
-
-	//初期化
-	result->Init();
-	return result;
-}
-
-//--------------------------------------------------------------------------------
 //	Model生成処理
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateModel(const String& name, const Vector3& position, const Quaternion& rotation, const Vector3& scale)
@@ -247,6 +223,35 @@ GameObject* GameObjectSpawner::CreateFlashButton2d(const float flash_speed, cons
     transform->SetRotation(Vector3(0.0f, 0.0f, rotation));
     transform->SetPosition(position);
 
+    result->Init();
+    return result;
+}
+
+//--------------------------------------------------------------------------------
+//  3dGauge生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateGauge3d(const String& material_name, const ShaderType& shader_type)
+{
+    auto result = MY_NEW GameObject();
+
+    //コンポネント
+    auto renderer = MY_NEW MeshRenderer3d(*result);
+    renderer->SetMesh(L"polygon3d");
+    renderer->SetMaterial(material_name);
+    renderer->SetShaderType(shader_type);
+    result->AddRenderer(renderer);
+
+    result->Init();
+    return result;
+}
+
+//--------------------------------------------------------------------------------
+//  EnemyUiController生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateEnemyUiController(void)
+{
+    auto result = MY_NEW GameObject();
+    result->AddBehavior(MY_NEW EnemyUiController(*result));
     result->Init();
     return result;
 }
@@ -571,7 +576,5 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
 		auto child = CreateChildNode(transform, archive, animator);
 	}
 
-	//初期化
-	//result->Init();
 	return result;
 }

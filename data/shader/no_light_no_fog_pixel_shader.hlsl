@@ -6,6 +6,7 @@ sampler color_texture = sampler_state
 	AddressU = WRAP;
 	AddressV = WRAP;
 };
+float4 material_diffuse;
 
 struct PixelIn
 {
@@ -15,5 +16,5 @@ struct PixelIn
 
 float4 main(PixelIn pixel) : COLOR0
 {
-	return tex2D(color_texture, pixel.uv) * pixel.color;
+	return tex2D(color_texture, pixel.uv) * pixel.color * material_diffuse;
 }
