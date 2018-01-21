@@ -98,6 +98,10 @@ void Camera::UpdateParameter(void)
         world_forward_.x_, world_forward_.y_, world_forward_.z_, world_forward_.Dot(negative_eye),
         0.0f, 0.0f, 0.0f, 1.0f);
     view_ = view_transpose_.Transpose();
+    view_transpose_.m03_ = 0.0f;
+    view_transpose_.m13_ = 0.0f;
+    view_transpose_.m23_ = 0.0f;
+    view_transpose_.m33_ = 1.0f;
 
     // ProjectionçsóÒ
     projection_ = Matrix44::PerspectiveLeftHand(fov_, (float)SCREEN_WIDTH / SCREEN_HEIGHT, near_, far_);

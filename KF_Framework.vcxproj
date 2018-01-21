@@ -182,10 +182,12 @@
     <ClCompile Include="cull_none_shader.cpp" />
     <ClCompile Include="default_2d_shader.cpp" />
     <ClCompile Include="default_2d_texture_shader.cpp" />
+    <ClCompile Include="default_billboard_shader.cpp" />
     <ClCompile Include="default_shader.cpp" />
     <ClCompile Include="default_skin_shader.cpp" />
     <ClCompile Include="enemy_controller.cpp" />
     <ClCompile Include="enemy_editor.cpp" />
+    <ClCompile Include="enemy_ui_controller.cpp" />
     <ClCompile Include="flash_button_controller.cpp" />
     <ClCompile Include="jugg_mesh_shader.cpp" />
     <ClCompile Include="jugg_skin_shader.cpp" />
@@ -315,6 +317,7 @@
     <ClInclude Include="actor_state_player\player_mutant_strong_attack_state.h" />
     <ClInclude Include="actor_state_player\player_mutant_walk_state.h" />
     <ClInclude Include="actor_state_player\player_state.h" />
+    <ClInclude Include="default_billboard_shader.h" />
     <ClInclude Include="default_2d_shader.h" />
     <ClInclude Include="default_2d_texture_shader.h" />
     <ClInclude Include="default_skin_shader.h" />
@@ -322,6 +325,7 @@
     <ClInclude Include="enemy_controller.h" />
     <ClInclude Include="actor_observer.h" />
     <ClInclude Include="enemy_editor.h" />
+    <ClInclude Include="enemy_ui_controller.h" />
     <ClInclude Include="flash_button_controller.h" />
     <ClInclude Include="jugg_mesh_shader.h" />
     <ClInclude Include="jugg_skin_shader.h" />

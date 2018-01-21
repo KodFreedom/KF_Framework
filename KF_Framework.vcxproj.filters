@@ -241,6 +241,12 @@
     <Filter Include="ヘッダー ファイル\Component\Behavior\UI">
       <UniqueIdentifier>{c90b9c02-ed09-4f5d-8b3d-b306de860a9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\Shader\Billboard">
+      <UniqueIdentifier>{b6edad2d-6a51-473b-ae4c-c650d18758a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Shader\Billboard">
+      <UniqueIdentifier>{a339079c-c29c-4290-bcfe-eb30e0df8f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -647,6 +653,12 @@
     </ClCompile>
     <ClCompile Include="enemy_editor.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_ui_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="default_billboard_shader.cpp">
+      <Filter>ソース ファイル\Base\Shader\Billboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1105,6 +1117,12 @@
     </ClInclude>
     <ClInclude Include="editor.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_ui_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="default_billboard_shader.h">
+      <Filter>ヘッダー ファイル\Base\Shader\Billboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

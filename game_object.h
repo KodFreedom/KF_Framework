@@ -20,7 +20,7 @@ class GameObject
 {
 public:
     //--------------------------------------------------------------------------------
-    //  constructors for singleton
+    //  constructors and destructors
     //--------------------------------------------------------------------------------
     GameObject(const Layer& layer = kDefaultLayer);
     ~GameObject() {}
