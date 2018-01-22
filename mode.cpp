@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //@mode.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode.h"
 #include "main_system.h"
@@ -17,11 +16,11 @@
 //--------------------------------------------------------------------------------
 void Mode::Uninit(void)
 {
-	auto main_system = MainSystem::Instance();
-	main_system->GetPhysicsSystem()->Clear();
-	main_system->GetGameObjectManager()->Clear();
-	main_system->GetRendererManager()->Clear();
-	main_system->GetLightManager()->Clear();
-	main_system->GetCameraManager()->Clear();
+    auto main_system = MainSystem::Instance();
+    main_system->GetPhysicsSystem()->Clear();
+    main_system->GetGameObjectManager()->Clear();
+    main_system->GetRendererManager()->Clear();
+    main_system->GetLightManager()->Clear();
+    main_system->GetCameraManager()->Clear();
     main_system->GetShadowMapSystem()->Clear();
 }

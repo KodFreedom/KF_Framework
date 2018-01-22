@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　shadow_map_shader
-//	シェーダークラス
-//	Author : 徐文杰(KodFreedom)
+//  シェーダークラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "skin_shadow_map_shader.h"
 #include "main_system.h"
@@ -29,7 +29,7 @@ void SkinShadowMapShader::Init(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void SkinShadowMapShader::Set(const LPDIRECT3DDEVICE9 device)
 {
-	ShaderDirectX9::Set(device);
+    ShaderDirectX9::Set(device);
 }
 
 //--------------------------------------------------------------------------------
@@ -48,17 +48,17 @@ void SkinShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const
     assert(renderer.GetType() == kMeshRenderer3dSkin);
 
     auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
-	vertex_shader_constant_table_->SetMatrix(device, "view_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightView()));
-	vertex_shader_constant_table_->SetMatrix(device, "projection_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightProjection()));
+    vertex_shader_constant_table_->SetMatrix(device, "view_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightView()));
+    vertex_shader_constant_table_->SetMatrix(device, "projection_light", &static_cast<D3DXMATRIX>(shadow_map_system->GetLightProjection()));
     pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system->GetFar());
 
-	// bone
-	auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
-	const auto& bone_texture = skin_mesh_renderer->GetAnimator().GetBoneTexture();
-	assert(bone_texture.pointer);
-	assert(bone_texture.size);
-	vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
-	UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
-	device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
+    // bone
+    auto skin_mesh_renderer = (MeshRenderer3dSkin*)(&renderer);
+    const auto& bone_texture = skin_mesh_renderer->GetAnimator().GetBoneTexture();
+    assert(bone_texture.pointer);
+    assert(bone_texture.size);
+    vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
+    UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
+    device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 }
 #endif

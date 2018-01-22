@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	3dスキンメッシュ描画コンポネント
+//  3dスキンメッシュ描画コンポネント
 //　mesh_renderer_3d_skin.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mesh_renderer_3d_skin.h"
 #include "render_system.h"
@@ -14,11 +14,11 @@
 //--------------------------------------------------------------------------------
 void MeshRenderer3dSkin::Update(void)
 {
-	MeshRenderer::Update();
-	if (is_cast_shadow_ && is_registered_)
-	{
-		MainSystem::Instance()->GetShadowMapSystem()->Register(this);
-	}
+    MeshRenderer::Update();
+    if (is_cast_shadow_ && is_registered_)
+    {
+        MainSystem::Instance()->GetShadowMapSystem()->Register(this);
+    }
 }
 
 
@@ -27,5 +27,5 @@ void MeshRenderer3dSkin::Update(void)
 //--------------------------------------------------------------------------------
 void MeshRenderer3dSkin::RenderBy(const RenderSystem& render_system)
 {
-	render_system.Render3dSkin(mesh_name_);
+    render_system.Render3dSkin(mesh_name_);
 }

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	プレイヤーUIコントローラ
-//　player_ui_controller.h
-//	Author : Xu Wenjie
+//  プレイヤーUIコントローラ
+//  player_ui_controller.h
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_ui_controller.h"
 #include "game_object_spawner.h"

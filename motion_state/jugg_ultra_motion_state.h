@@ -8,10 +8,10 @@
 class JuggUltraMotionState : public NormalMotionState
 {
 public:
-	JuggUltraMotionState(const int start_frame) : NormalMotionState(L"jugg_ultra", start_frame) {}
-	~JuggUltraMotionState() {}
+    JuggUltraMotionState(const int start_frame) : NormalMotionState(L"jugg_ultra", start_frame) {}
+    ~JuggUltraMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 41;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 41;
 };

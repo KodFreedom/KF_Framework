@@ -1,7 +1,7 @@
 //　kf_math.inl
 //  classes and methods for math
-//	演算用のクラスとメソッド
-//	Author : 徐文杰(KodFreedom)
+//  演算用のクラスとメソッド
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 
@@ -1086,7 +1086,7 @@ inline Quaternion Quaternion::MultiplySeparately(const Quaternion& value) const
 }
 
 //--------------------------------------------------------------------------------
-//	euler角に変換
+//    euler角に変換
 //--------------------------------------------------------------------------------
 inline Vector3 Quaternion::ToEuler(void) const
 {
@@ -1143,7 +1143,7 @@ inline Vector3 Quaternion::ToEuler(void) const
 }
 
 //--------------------------------------------------------------------------------
-//	行列に変換
+//    行列に変換
 //--------------------------------------------------------------------------------
 inline Matrix44 Quaternion::ToMatrix(void) const
 {
@@ -1421,24 +1421,24 @@ inline void Math::Swap(float& left, float& right)
 }
 
 ////--------------------------------------------------------------------------------
-////	関数名：ToPickingRay
+////    関数名：ToPickingRay
 ////  関数説明：スクリーン座標からレイの算出
-////	引数：	viewportSize：viewportの副幅
-////			projectMatrix00：射影行列の00番
-////			projectMatrix11：射影行列の11番
-////			viewInverse：view行列の逆行列
-////	戻り値：Ray
+////    引数：    viewportSize：viewportの副幅
+////            projectMatrix00：射影行列の00番
+////            projectMatrix11：射影行列の11番
+////            viewInverse：view行列の逆行列
+////    戻り値：Ray
 ////--------------------------------------------------------------------------------
 //Ray Vector2::ToPickingRay(const Vector2& viewportSize, const float& projectMatrix00, const float& projectMatrix11, const Matrix44& viewInverse)
 //{
-//	auto& position3D = Vector2(
-//		(((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
-//		(((-2.0f * Y) / viewportSize.Y) + 1.0f) / projectMatrix11);
-//	Ray result;
-//	result.Origin = Vector3::Zero;
-//	result.Direction = Vector3(position3D.X, position3D.Y, 1.0f);
-//	result.Transform(viewInverse);
-//	return result;
+//    auto& position3D = Vector2(
+//        (((2.0f * X) / viewportSize.X) - 1.0f) / projectMatrix00,
+//        (((-2.0f * Y) / viewportSize.Y) + 1.0f) / projectMatrix11);
+//    Ray result;
+//    result.Origin = Vector3::Zero;
+//    result.Direction = Vector3(position3D.X, position3D.Y, 1.0f);
+//    result.Transform(viewInverse);
+//    return result;
 //}
 
 
@@ -1448,7 +1448,7 @@ inline void Math::Swap(float& left, float& right)
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //  NormalizeRotInTwoPi(float)
-//	回転を-2Piから2Piの間にする
+//    回転を-2Piから2Piの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInTwoPi(float& fRot)
 {
@@ -1465,7 +1465,7 @@ fRot += KF_PI * 2.0f;
 
 //--------------------------------------------------------------------------------
 //  NormalizeRotInTwoPi(Vec3)
-//	回転を-2Piから2Piの間にする
+//    回転を-2Piから2Piの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInTwoPi(Vector3& vRot)
 {
@@ -1476,7 +1476,7 @@ NormalizeRotInTwoPi(vRot.Z);
 
 //--------------------------------------------------------------------------------
 //  NormalizeRotInPi(float)
-//	回転を-PiからPiの間にする
+//    回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInPi(float& fRot)
 {
@@ -1492,7 +1492,7 @@ fRot += KF_PI * 2.0f;
 
 //--------------------------------------------------------------------------------
 //  NormalizeRotInPi(Vec3)
-//	回転を-PiからPiの間にする
+//    回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInPi(Vector3& vRot)
 {
@@ -1503,7 +1503,7 @@ NormalizeRotInPi(vRot.Z);
 
 //--------------------------------------------------------------------------------
 //  NormalizeRotInPi(Vec3)
-//	回転を-PiからPiの間にする
+//    回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInZeroToTwoPi(float& fRot)
 {
@@ -1520,7 +1520,7 @@ fRot += KF_PI * 2.0f;
 
 //--------------------------------------------------------------------------------
 //  NormalizeRotInPi(Vec3)
-//	回転を-PiからPiの間にする
+//    回転を-PiからPiの間にする
 //--------------------------------------------------------------------------------
 void CKFMath::NormalizeRotInZeroToTwoPi(Vector3& vRot)
 {
@@ -1531,7 +1531,7 @@ NormalizeRotInZeroToTwoPi(vRot.Z);
 
 //--------------------------------------------------------------------------------
 //  CalculateZDepth
-//	Z深度情報算出
+//    Z深度情報算出
 //--------------------------------------------------------------------------------
 float CKFMath::CalculateZDepth(const Vector3& Position, const Vector3& vCameraEye, const Vector3& vCameraAt)
 {

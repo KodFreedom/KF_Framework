@@ -8,9 +8,9 @@
 class JuggFlailMotionState : public NormalMotionState
 {
 public:
-	JuggFlailMotionState(const int start_frame) : NormalMotionState(L"jugg_flail", start_frame) {}
-	~JuggFlailMotionState() {}
+    JuggFlailMotionState(const int start_frame) : NormalMotionState(L"jugg_flail", start_frame) {}
+    ~JuggFlailMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

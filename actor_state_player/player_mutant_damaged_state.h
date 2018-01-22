@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	mutantダメージ受けたステート
-//　player_mutant_damaged_state.h
-//	Author : Xu Wenjie
+//  mutantダメージ受けたステート
+//  player_mutant_damaged_state.h
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "player_state.h"

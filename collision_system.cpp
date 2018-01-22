@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　collision_system.cpp
-//	衝突判定システム
-//	Author : 徐文杰(KodFreedom)
+//  衝突判定システム
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "collision_system.h"
 #include "rigidbody3D.h"
@@ -29,47 +29,47 @@
 //--------------------------------------------------------------------------------
 void CollisionSystem::Update(void)
 {
-	//kDynamic層のコリジョンごとにまずFStatic層と当たり判定して
-	//kDynamic層の他のコリジョンと当たり判定して
-	//最後にFieldと当たり判定する
-	//Sphere
-	for (auto iterator = colliders_arrays_[kDynamic][kSphere].begin(); iterator != colliders_arrays_[kDynamic][kSphere].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		auto& sphere = *static_cast<SphereCollider*>(*iterator);
-		CheckWithDynamicSphere(iterator, sphere);
-		CheckWithDynamicAabb(sphere);
-		CheckWithDynamicObb(sphere);
-		CheckWithStaticSphere(sphere);
-		CheckWithStaticAabb(sphere);
-		CheckWithStaticObb(sphere);
-		CheckWithField(sphere);
-	}
+    //kDynamic層のコリジョンごとにまずFStatic層と当たり判定して
+    //kDynamic層の他のコリジョンと当たり判定して
+    //最後にFieldと当たり判定する
+    //Sphere
+    for (auto iterator = colliders_arrays_[kDynamic][kSphere].begin(); iterator != colliders_arrays_[kDynamic][kSphere].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        auto& sphere = *static_cast<SphereCollider*>(*iterator);
+        CheckWithDynamicSphere(iterator, sphere);
+        CheckWithDynamicAabb(sphere);
+        CheckWithDynamicObb(sphere);
+        CheckWithStaticSphere(sphere);
+        CheckWithStaticAabb(sphere);
+        CheckWithStaticObb(sphere);
+        CheckWithField(sphere);
+    }
 
-	//aabb
-	for (auto iterator = colliders_arrays_[kDynamic][kAabb].begin(); iterator != colliders_arrays_[kDynamic][kAabb].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		auto& aabb = *static_cast<AabbCollider*>(*iterator);
-		CheckWithDynamicAabb(iterator, aabb);
-		CheckWithDynamicObb(aabb);
-		CheckWithStaticSphere(aabb);
-		CheckWithStaticAabb(aabb);
-		CheckWithStaticObb(aabb);
-		CheckWithField(aabb);
-	}
+    //aabb
+    for (auto iterator = colliders_arrays_[kDynamic][kAabb].begin(); iterator != colliders_arrays_[kDynamic][kAabb].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        auto& aabb = *static_cast<AabbCollider*>(*iterator);
+        CheckWithDynamicAabb(iterator, aabb);
+        CheckWithDynamicObb(aabb);
+        CheckWithStaticSphere(aabb);
+        CheckWithStaticAabb(aabb);
+        CheckWithStaticObb(aabb);
+        CheckWithField(aabb);
+    }
 
-	//obb
-	for (auto iterator = colliders_arrays_[kDynamic][kObb].begin(); iterator != colliders_arrays_[kDynamic][kObb].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		auto& obb = *static_cast<ObbCollider*>(*iterator);
-		CheckWithDynamicObb(iterator, obb);
-		CheckWithStaticSphere(obb);
-		CheckWithStaticAabb(obb);
-		CheckWithStaticObb(obb);
-		CheckWithField(obb);
-	}
+    //obb
+    for (auto iterator = colliders_arrays_[kDynamic][kObb].begin(); iterator != colliders_arrays_[kDynamic][kObb].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        auto& obb = *static_cast<ObbCollider*>(*iterator);
+        CheckWithDynamicObb(iterator, obb);
+        CheckWithStaticSphere(obb);
+        CheckWithStaticAabb(obb);
+        CheckWithStaticObb(obb);
+        CheckWithField(obb);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -84,14 +84,14 @@ void CollisionSystem::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::Clear(void)
 {
-	for (auto& colliders_array : colliders_arrays_)
-	{
-		for (auto& colliders : colliders_array)
-		{
-			colliders.clear();
-		}
-	}
-	fields_.clear();
+    for (auto& colliders_array : colliders_arrays_)
+    {
+        for (auto& colliders : colliders_array)
+        {
+            colliders.clear();
+        }
+    }
+    fields_.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -99,20 +99,20 @@ void CollisionSystem::Clear(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::Register(Collider* collider)
 {
-	if (collider->GetType() < kColliderTypeMax)
-	{
-		colliders_arrays_[collider->GetMode()][collider->GetType()].push_back(collider);
-		return;
-	}
-	switch (collider->GetType())
-	{
-	case kField:
-		fields_.push_back(collider);
-		break;
-	default:
-		assert("error type!!!");
-		break;
-	}
+    if (collider->GetType() < kColliderTypeMax)
+    {
+        colliders_arrays_[collider->GetMode()][collider->GetType()].push_back(collider);
+        return;
+    }
+    switch (collider->GetType())
+    {
+    case kField:
+        fields_.push_back(collider);
+        break;
+    default:
+        assert("error type!!!");
+        break;
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -120,22 +120,22 @@ void CollisionSystem::Register(Collider* collider)
 //--------------------------------------------------------------------------------
 void CollisionSystem::Deregister(Collider* collider)
 {
-	if (collider->GetType() < kColliderTypeMax)
-	{
-		colliders_arrays_[collider->GetMode()][collider->GetType()].remove(collider);
-		return;
-	}
-	switch (collider->GetType())
-	{
-	case kField:
-	{
-		fields_.remove(collider);
-		break;
-	}
-	default:
-		assert("error type!!!");
-		break;
-	}
+    if (collider->GetType() < kColliderTypeMax)
+    {
+        colliders_arrays_[collider->GetMode()][collider->GetType()].remove(collider);
+        return;
+    }
+    switch (collider->GetType())
+    {
+    case kField:
+    {
+        fields_.remove(collider);
+        break;
+    }
+    default:
+        assert("error type!!!");
+        break;
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -143,22 +143,22 @@ void CollisionSystem::Deregister(Collider* collider)
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RayCast(const Ray& ray, const float& distance, const GameObject* const ray_owner)
 {
-	RayHitInfo* real_result = nullptr;
-	auto result = RaycastDynamicSphere(ray, distance, *ray_owner);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastDynamicAabb(ray, distance, *ray_owner);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastDynamicObb(ray, distance, *ray_owner);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastStaticSphere(ray, distance);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastStaticAabb(ray, distance);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastStaticObb(ray, distance);
-	real_result = GetRealResult(real_result, result);
-	result = RaycastField(ray, distance);
-	real_result = GetRealResult(real_result, result);
-	return real_result;
+    RayHitInfo* real_result = nullptr;
+    auto result = RaycastDynamicSphere(ray, distance, *ray_owner);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastDynamicAabb(ray, distance, *ray_owner);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastDynamicObb(ray, distance, *ray_owner);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastStaticSphere(ray, distance);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastStaticAabb(ray, distance);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastStaticObb(ray, distance);
+    real_result = GetRealResult(real_result, result);
+    result = RaycastField(ray, distance);
+    real_result = GetRealResult(real_result, result);
+    return real_result;
 }
 
 #if defined(_DEBUG) || defined(EDITOR)
@@ -167,106 +167,106 @@ RayHitInfo* CollisionSystem::RayCast(const Ray& ray, const float& distance, cons
 //--------------------------------------------------------------------------------
 void CollisionSystem::Render(void)
 {
-	//if (!m_bDrawCollider) { return; }
+    //if (!m_bDrawCollider) { return; }
 
-	//auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	//LPDIRECT3DTEXTURE9 texturePointer = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
-	//pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	//pDevice->SetTexture(0, texturePointer);
+    //auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+    //LPDIRECT3DTEXTURE9 texturePointer = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
+    //pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+    //pDevice->SetTexture(0, texturePointer);
 
-	////sphere
-	//for (auto pCol : colliders[kDynamic][Sphere])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	D3DXVECTOR3 Position = pCol->GetNextWorldPosition();
-	//	float fRadius = ((SphereCollider*)pCol)->GetRadius();
-	//	D3DXMATRIX mtx,mtxPos,mtxScale;
-	//	D3DXMatrixIdentity(&mtx);
-	//	D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
-	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, Position.x, Position.y, Position.z);
-	//	mtx *= mtxPos;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshSphere->DrawSubset(0);
-	//}
+    ////sphere
+    //for (auto pCol : colliders[kDynamic][Sphere])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    D3DXVECTOR3 Position = pCol->GetNextWorldPosition();
+    //    float fRadius = ((SphereCollider*)pCol)->GetRadius();
+    //    D3DXMATRIX mtx,mtxPos,mtxScale;
+    //    D3DXMatrixIdentity(&mtx);
+    //    D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+    //    mtx *= mtxScale;
+    //    D3DXMatrixTranslation(&mtxPos, Position.x, Position.y, Position.z);
+    //    mtx *= mtxPos;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshSphere->DrawSubset(0);
+    //}
 
-	//for (auto pCol : colliders[Static][Sphere])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	auto Position = pCol->GetNextWorldPosition();
-	//	float fRadius = ((SphereCollider*)pCol)->GetRadius();
-	//	D3DXMATRIX mtx, mtxPos, mtxScale;
-	//	D3DXMatrixIdentity(&mtx);
-	//	D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
-	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-	//	mtx *= mtxPos;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshSphere->DrawSubset(0);
-	//}
+    //for (auto pCol : colliders[Static][Sphere])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    auto Position = pCol->GetNextWorldPosition();
+    //    float fRadius = ((SphereCollider*)pCol)->GetRadius();
+    //    D3DXMATRIX mtx, mtxPos, mtxScale;
+    //    D3DXMatrixIdentity(&mtx);
+    //    D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
+    //    mtx *= mtxScale;
+    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
+    //    mtx *= mtxPos;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshSphere->DrawSubset(0);
+    //}
 
-	////AABB
-	//for (auto pCol : colliders[kDynamic][AABB])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	auto Position = pCol->GetNextWorldPosition();
-	//	auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
-	//	D3DXMATRIX mtx, mtxPos, mtxScale;
-	//	D3DXMatrixIdentity(&mtx);
-	//	D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-	//	mtx *= mtxPos;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshCube->DrawSubset(0);
-	//}
+    ////AABB
+    //for (auto pCol : colliders[kDynamic][AABB])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    auto Position = pCol->GetNextWorldPosition();
+    //    auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
+    //    D3DXMATRIX mtx, mtxPos, mtxScale;
+    //    D3DXMatrixIdentity(&mtx);
+    //    D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
+    //    mtx *= mtxScale;
+    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
+    //    mtx *= mtxPos;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshCube->DrawSubset(0);
+    //}
 
-	//for (auto pCol : colliders[Static][AABB])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	auto Position = pCol->GetNextWorldPosition();
-	//	auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
-	//	D3DXMATRIX mtx, mtxPos, mtxScale;
-	//	D3DXMatrixIdentity(&mtx);
-	//	D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-	//	mtx *= mtxScale;
-	//	D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-	//	mtx *= mtxPos;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshCube->DrawSubset(0);
-	//}
+    //for (auto pCol : colliders[Static][AABB])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    auto Position = pCol->GetNextWorldPosition();
+    //    auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
+    //    D3DXMATRIX mtx, mtxPos, mtxScale;
+    //    D3DXMatrixIdentity(&mtx);
+    //    D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
+    //    mtx *= mtxScale;
+    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
+    //    mtx *= mtxPos;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshCube->DrawSubset(0);
+    //}
 
-	////OBB
-	//for (auto pCol : colliders[kDynamic][OBB])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
-	//	D3DXMATRIX mtx;
-	//	D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-	//	D3DXMATRIX mtxOff = pCol->GetOffset();
-	//	mtx *= mtxOff;
-	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
-	//	mtx *= mtxObj;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshCube->DrawSubset(0);
-	//}
+    ////OBB
+    //for (auto pCol : colliders[kDynamic][OBB])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
+    //    D3DXMATRIX mtx;
+    //    D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
+    //    D3DXMATRIX mtxOff = pCol->GetOffset();
+    //    mtx *= mtxOff;
+    //    D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
+    //    mtx *= mtxObj;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshCube->DrawSubset(0);
+    //}
 
-	//for (auto pCol : colliders[Static][OBB])
-	//{
-	//	if (!pCol->GetGameObject().IsActive()) continue;
-	//	auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
-	//	D3DXMATRIX mtx;
-	//	D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-	//	D3DXMATRIX mtxOff = pCol->GetOffset();
-	//	mtx *= mtxOff;
-	//	D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
-	//	mtx *= mtxObj;
-	//	pDevice->SetTransform(D3DTS_WORLD, &mtx);
-	//	m_meshCube->DrawSubset(0);
-	//}
+    //for (auto pCol : colliders[Static][OBB])
+    //{
+    //    if (!pCol->GetGameObject().IsActive()) continue;
+    //    auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
+    //    D3DXMATRIX mtx;
+    //    D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
+    //    D3DXMATRIX mtxOff = pCol->GetOffset();
+    //    mtx *= mtxOff;
+    //    D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
+    //    mtx *= mtxObj;
+    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
+    //    m_meshCube->DrawSubset(0);
+    //}
 
 
-	//pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+    //pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 }
 #endif
 
@@ -292,10 +292,10 @@ CollisionSystem::CollisionSystem()
 void CollisionSystem::Init(void)
 {
 #if defined(_DEBUG) || defined(EDITOR)
-	//auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-	//Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
-	//D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_meshSphere, nullptr);
-	//D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_meshCube, nullptr);
+    //auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
+    //Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
+    //D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_meshSphere, nullptr);
+    //D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_meshCube, nullptr);
 #endif
 }
 
@@ -304,12 +304,12 @@ void CollisionSystem::Init(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::Uninit(void)
 {
-	Clear();
+    Clear();
 
 #if defined(_DEBUG) || defined(EDITOR)
-	//SAFE_RELEASE(m_meshSphere);
-	//SAFE_RELEASE(m_meshCube);
-	//Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
+    //SAFE_RELEASE(m_meshSphere);
+    //SAFE_RELEASE(m_meshCube);
+    //Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
 #endif
 }
 
@@ -323,12 +323,12 @@ void CollisionSystem::Uninit(void)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicSphere(const Iterator& begin, SphereCollider& sphere)
 {
-	for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kSphere].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		if ((*iterator)->GetGameObject() == sphere.GetGameObject()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<SphereCollider*>(*iterator));
-	}
+    for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kSphere].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        if ((*iterator)->GetGameObject() == sphere.GetGameObject()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<SphereCollider*>(*iterator));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -336,12 +336,12 @@ void CollisionSystem::CheckWithDynamicSphere(const Iterator& begin, SphereCollid
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicAabb(SphereCollider& sphere)
 {
-	for (auto collider : colliders_arrays_[kDynamic][kAabb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == sphere.GetGameObject()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<AabbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kDynamic][kAabb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->GetGameObject() == sphere.GetGameObject()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<AabbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -349,12 +349,12 @@ void CollisionSystem::CheckWithDynamicAabb(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicAabb(const Iterator& begin, AabbCollider& aabb)
 {
-	for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kAabb].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		if ((*iterator)->GetGameObject() == aabb.GetGameObject()) continue;
-		CollisionDetector::Detect(aabb, *static_cast<AabbCollider*>(*iterator));
-	}
+    for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kAabb].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        if ((*iterator)->GetGameObject() == aabb.GetGameObject()) continue;
+        CollisionDetector::Detect(aabb, *static_cast<AabbCollider*>(*iterator));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -362,12 +362,12 @@ void CollisionSystem::CheckWithDynamicAabb(const Iterator& begin, AabbCollider& 
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicObb(SphereCollider& sphere)
 {
-	for (auto collider : colliders_arrays_[kDynamic][kObb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == sphere.GetGameObject()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<ObbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kDynamic][kObb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->GetGameObject() == sphere.GetGameObject()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<ObbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -375,12 +375,12 @@ void CollisionSystem::CheckWithDynamicObb(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicObb(AabbCollider& aabb)
 {
-	for (auto collider : colliders_arrays_[kDynamic][kObb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		if (collider->GetGameObject() == aabb.GetGameObject()) continue;
-		CollisionDetector::Detect(aabb, *static_cast<ObbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kDynamic][kObb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        if (collider->GetGameObject() == aabb.GetGameObject()) continue;
+        CollisionDetector::Detect(aabb, *static_cast<ObbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -388,12 +388,12 @@ void CollisionSystem::CheckWithDynamicObb(AabbCollider& aabb)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithDynamicObb(const Iterator& begin, ObbCollider& obb)
 {
-	for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kObb].end(); ++iterator)
-	{
-		if (!(*iterator)->GetGameObject().IsActive()) continue;
-		if ((*iterator)->GetGameObject() == obb.GetGameObject()) continue;
-		CollisionDetector::Detect(obb, *static_cast<ObbCollider*>(*iterator));
-	}
+    for (auto iterator = begin; iterator != colliders_arrays_[kDynamic][kObb].end(); ++iterator)
+    {
+        if (!(*iterator)->GetGameObject().IsActive()) continue;
+        if ((*iterator)->GetGameObject() == obb.GetGameObject()) continue;
+        CollisionDetector::Detect(obb, *static_cast<ObbCollider*>(*iterator));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -401,11 +401,11 @@ void CollisionSystem::CheckWithDynamicObb(const Iterator& begin, ObbCollider& ob
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticSphere(SphereCollider& sphere)
 {
-	for (auto collider : colliders_arrays_[kStatic][kSphere])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<SphereCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kSphere])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<SphereCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -413,11 +413,11 @@ void CollisionSystem::CheckWithStaticSphere(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticSphere(AabbCollider& aabb)
 {
-	for (auto collider : colliders_arrays_[kStatic][kSphere])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(*static_cast<SphereCollider*>(collider), aabb);
-	}
+    for (auto collider : colliders_arrays_[kStatic][kSphere])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(*static_cast<SphereCollider*>(collider), aabb);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -425,11 +425,11 @@ void CollisionSystem::CheckWithStaticSphere(AabbCollider& aabb)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticSphere(ObbCollider& obb)
 {
-	for (auto collider : colliders_arrays_[kStatic][kSphere])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(*static_cast<SphereCollider*>(collider), obb);
-	}
+    for (auto collider : colliders_arrays_[kStatic][kSphere])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(*static_cast<SphereCollider*>(collider), obb);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -437,11 +437,11 @@ void CollisionSystem::CheckWithStaticSphere(ObbCollider& obb)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticAabb(SphereCollider& sphere)
 {
-	for (auto collider : colliders_arrays_[kStatic][kAabb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<AabbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kAabb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<AabbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -449,11 +449,11 @@ void CollisionSystem::CheckWithStaticAabb(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticAabb(AabbCollider& aabb)
 {
-	for (auto collider : colliders_arrays_[kStatic][kAabb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(aabb, *static_cast<AabbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kAabb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(aabb, *static_cast<AabbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -461,11 +461,11 @@ void CollisionSystem::CheckWithStaticAabb(AabbCollider& aabb)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticAabb(ObbCollider& obb)
 {
-	for (auto collider : colliders_arrays_[kStatic][kAabb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(obb, *static_cast<AabbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kAabb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(obb, *static_cast<AabbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -473,11 +473,11 @@ void CollisionSystem::CheckWithStaticAabb(ObbCollider& obb)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticObb(SphereCollider& sphere)
 {
-	for (auto collider : colliders_arrays_[kStatic][kObb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<ObbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kObb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<ObbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -485,11 +485,11 @@ void CollisionSystem::CheckWithStaticObb(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithStaticObb(BoxCollider& box)
 {
-	for (auto collider : colliders_arrays_[kStatic][kObb])
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(box, *static_cast<ObbCollider*>(collider));
-	}
+    for (auto collider : colliders_arrays_[kStatic][kObb])
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(box, *static_cast<ObbCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -497,11 +497,11 @@ void CollisionSystem::CheckWithStaticObb(BoxCollider& box)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithField(SphereCollider& sphere)
 {
-	for (auto collider : fields_)
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(sphere, *static_cast<FieldCollider*>(collider));
-	}
+    for (auto collider : fields_)
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(sphere, *static_cast<FieldCollider*>(collider));
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -509,50 +509,50 @@ void CollisionSystem::CheckWithField(SphereCollider& sphere)
 //--------------------------------------------------------------------------------
 void CollisionSystem::CheckWithField(BoxCollider& box)
 {
-	for (auto collider : fields_)
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		CollisionDetector::Detect(box, *static_cast<FieldCollider*>(collider));
-	}
+    for (auto collider : fields_)
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        CollisionDetector::Detect(box, *static_cast<FieldCollider*>(collider));
+    }
 }
 
 #if defined(_DEBUG) || defined(EDITOR)
 //--------------------------------------------------------------------------------
-//	モードのenumをstringに変換
+//  モードのenumをstringに変換
 //--------------------------------------------------------------------------------
 String CollisionSystem::ModeToString(const ColliderMode& mode)
 {
-	switch (mode)
-	{
-	case kStatic:
-		return L"Static";
-	case kDynamic:
-		return L"kDynamic";
-	default:
-		return L"ErrorMode";
-	}
+    switch (mode)
+    {
+    case kStatic:
+        return L"Static";
+    case kDynamic:
+        return L"kDynamic";
+    default:
+        return L"ErrorMode";
+    }
 }
 
 //--------------------------------------------------------------------------------
-//	タイプのenumをstringに変換
+//  タイプのenumをstringに変換
 //--------------------------------------------------------------------------------
 String CollisionSystem::TypeToString(const ColliderType& type)
 {
-	switch (type)
-	{
-	case kSphere:
-		return L"Sphere";
-	case kAabb:
-		return L"AABB";
-	case kObb:
-		return L"OBB";
-	case kPlane:
-		return L"Plane";
-	case kCylinder:
-		return L"Cylinder";
-	default:
-		return L"ErrorType";
-	}
+    switch (type)
+    {
+    case kSphere:
+        return L"Sphere";
+    case kAabb:
+        return L"AABB";
+    case kObb:
+        return L"OBB";
+    case kPlane:
+        return L"Plane";
+    case kCylinder:
+        return L"Cylinder";
+    default:
+        return L"ErrorType";
+    }
 }
 #endif
 
@@ -562,149 +562,149 @@ String CollisionSystem::TypeToString(const ColliderType& type)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	DynamicSphereとのraycast
+//  DynamicSphereとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastDynamicSphere(const Ray& ray, const float& distance, const GameObject& ray_owner)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kDynamic][kSphere])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kDynamic][kSphere])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive()
             || collider->GetGameObject() == ray_owner)
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	DynamicAABBとのraycast
+//  DynamicAABBとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastDynamicAabb(const Ray& ray, const float& distance, const GameObject& ray_owner)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kDynamic][kAabb])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kDynamic][kAabb])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive()
             || collider->GetGameObject() == ray_owner)
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	DynamicOBBとのraycast
+//  DynamicOBBとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastDynamicObb(const Ray& ray, const float& distance, const GameObject& ray_owner)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kDynamic][kObb])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kDynamic][kObb])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive()
             || collider->GetGameObject() == ray_owner)
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	StaticSphereとのraycast
+//  StaticSphereとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastStaticSphere(const Ray& ray, const float& distance)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kStatic][kSphere])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kStatic][kSphere])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive())
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<SphereCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	StaticAABBとのraycast
+//  StaticAABBとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastStaticAabb(const Ray& ray, const float& distance)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kStatic][kAabb])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kStatic][kAabb])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive())
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<AabbCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	StaticOBBとのraycast
+//  StaticOBBとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastStaticObb(const Ray& ray, const float& distance)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : colliders_arrays_[kStatic][kObb])
-	{
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : colliders_arrays_[kStatic][kObb])
+    {
         if (collider->IsTrigger()
             || !collider->GetGameObject().IsActive())
         {
             continue;
         }
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<ObbCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	StaticOBBとのraycast
+//  StaticOBBとのraycast
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::RaycastField(const Ray& ray, const float& distance)
 {
-	RayHitInfo* real_result = nullptr;
-	for (auto collider : fields_)
-	{
-		if (!collider->GetGameObject().IsActive()) continue;
-		auto result = CollisionDetector::Detect(ray, distance, *static_cast<FieldCollider*>(collider));
-		real_result = GetRealResult(real_result, result);
-	}
-	return real_result;
+    RayHitInfo* real_result = nullptr;
+    for (auto collider : fields_)
+    {
+        if (!collider->GetGameObject().IsActive()) continue;
+        auto result = CollisionDetector::Detect(ray, distance, *static_cast<FieldCollider*>(collider));
+        real_result = GetRealResult(real_result, result);
+    }
+    return real_result;
 }
 
 //--------------------------------------------------------------------------------
-//	レイとの距離が近いの情報を返す、残りのは破棄する
+//  レイとの距離が近いの情報を返す、残りのは破棄する
 //--------------------------------------------------------------------------------
 RayHitInfo* CollisionSystem::GetRealResult(RayHitInfo* current, RayHitInfo* next)
 {
-	if (!next) return current;
-	if (!current) return next;
-	if (next->distance < current->distance)
-	{
-		MY_DELETE current;
-		return next;
-	}
+    if (!next) return current;
+    if (!current) return next;
+    if (next->distance < current->distance)
+    {
+        MY_DELETE current;
+        return next;
+    }
     MY_DELETE next;
-	return current;
+    return current;
 }

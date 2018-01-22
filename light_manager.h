@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
 //@light_manager.h
 //  manage the lights' save, load
-//	ƒ‰ƒCƒgŠÇ—Ò
-//	Author : ™•¶^(KodFreedom)
+//  ƒ‰ƒCƒgŠÇ—Ò
+//  Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 #include "light.h"
@@ -13,36 +13,36 @@
 class LightManager
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  ¶¬ˆ—
-	//  return : MaterialManager*
-	//--------------------------------------------------------------------------------
-	static LightManager* Create(void)
-	{
-		auto instance = MY_NEW LightManager();
-		return instance;
-	}
+    //--------------------------------------------------------------------------------
+    //  ¶¬ˆ—
+    //  return : MaterialManager*
+    //--------------------------------------------------------------------------------
+    static LightManager* Create(void)
+    {
+        auto instance = MY_NEW LightManager();
+        return instance;
+    }
 
-	//--------------------------------------------------------------------------------
-	//  ”jŠüˆ—
-	//--------------------------------------------------------------------------------
-	void Release(void) 
+    //--------------------------------------------------------------------------------
+    //  ”jŠüˆ—
+    //--------------------------------------------------------------------------------
+    void Release(void) 
     {
         Clear();
         MY_DELETE this;
     }
 
-	//--------------------------------------------------------------------------------
-	//  ƒ‰ƒCƒg‚Ìíœ
-	//--------------------------------------------------------------------------------
-	void Clear(void)
-	{
+    //--------------------------------------------------------------------------------
+    //  ƒ‰ƒCƒg‚Ìíœ
+    //--------------------------------------------------------------------------------
+    void Clear(void)
+    {
         for (auto iterator = directional_lights_.begin(); iterator != directional_lights_.end();)
         {
             MY_DELETE (*iterator);
             iterator = directional_lights_.erase(iterator);
         }
-	}
+    }
 
     //--------------------------------------------------------------------------------
     //  “o˜^ŠÖ”
@@ -55,13 +55,13 @@ public:
     const auto& GetDirectionalLights(void) const { return directional_lights_; }
 
 private:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	LightManager() {}
-	LightManager(const LightManager& value) {}
-	LightManager& operator=(const LightManager& value) {}
-	~LightManager() {}
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    LightManager() {}
+    LightManager(const LightManager& value) {}
+    LightManager& operator=(const LightManager& value) {}
+    ~LightManager() {}
 
     list<DirectionalLight*> directional_lights_;
 };

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	sphereColliderコンポネント
+//  sphereColliderコンポネント
 //　sphereCollider.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "collider.h"
@@ -12,20 +12,20 @@
 class SphereCollider : public Collider
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  関数定義
-	//--------------------------------------------------------------------------------
-	SphereCollider(GameObject& owner, const ColliderMode& mode, const float& radius)
-		: Collider(owner, kSphere, mode)
-		, radius_(radius) {}
-	~SphereCollider() {}
+    //--------------------------------------------------------------------------------
+    //  関数定義
+    //--------------------------------------------------------------------------------
+    SphereCollider(GameObject& owner, const ColliderMode& mode, const float& radius)
+        : Collider(owner, kSphere, mode)
+        , radius_(radius) {}
+    ~SphereCollider() {}
 
-	//Get関数
-	const float& GetRadius(void) const { return radius_; }
+    //Get関数
+    const float& GetRadius(void) const { return radius_; }
 
 private:
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	float radius_;
+    //--------------------------------------------------------------------------------
+    //  変数定義
+    //--------------------------------------------------------------------------------
+    float radius_;
 };

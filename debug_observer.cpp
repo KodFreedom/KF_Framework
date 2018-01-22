@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //@debug_observer.cpp
-//	debugŠÏŽ@ŽÒ
-//	Author : ™•¶ž^(KodFreedom)
+//  debugŠÏŽ@ŽÒ
+//  Author : ™•¶ž^(KodFreedom)
 //--------------------------------------------------------------------------------
 #ifdef _DEBUG
 #include "debug_observer.h"
@@ -49,11 +49,11 @@ void DebugObserver::Update(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::LateUpdate(void)
 {
-	ShowMainWindow();
-	ShowCollisionSystemWindow();
-	ShowCameraWindow();
-	ShowPlayerWindow();
-	ShowFogWindow();
+    ShowMainWindow();
+    ShowCollisionSystemWindow();
+    ShowCameraWindow();
+    ShowPlayerWindow();
+    ShowFogWindow();
     ShowShadowMapWindow();
     ShowLogWindow();
 }
@@ -71,7 +71,7 @@ void DebugObserver::Render(void)
 void DebugObserver::Display(const String& log)
 {
     if (log_.size() >= kMaxLogSize) { log_.clear(); }
-	log_.append(Time::Instance()->GetCurrentLocalTime() + L" : " + log + L"\n");
+    log_.append(Time::Instance()->GetCurrentLocalTime() + L" : " + log + L"\n");
 }
 
 //--------------------------------------------------------------------------------
@@ -84,35 +84,35 @@ void DebugObserver::Display(const String& log)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowMainWindow(void)
 {
-	auto render_system = MainSystem::Instance()->GetRenderSystem();
-	auto background_color = render_system->GetBackgroundColor();
+    auto render_system = MainSystem::Instance()->GetRenderSystem();
+    auto background_color = render_system->GetBackgroundColor();
 
-	// Begin
-	if (!ImGui::Begin("Main Debug Window"))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Main Debug Window"))
+    {
+        ImGui::End();
+        return;
+    }
 
-	// FPS
-	ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	
-	// BG Color
-	if (ImGui::ColorEdit3("Background color", (float*)&background_color))
-	{
-		render_system->SetBackgroundColor(background_color);
-	}
+    // FPS
+    ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    
+    // BG Color
+    if (ImGui::ColorEdit3("Background color", (float*)&background_color))
+    {
+        render_system->SetBackgroundColor(background_color);
+    }
 
-	// Window
-	//if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
-	if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;
-	if (ImGui::Button(enable_player_window_ ? "Close Player Window" : "Open Player Window")) enable_player_window_ ^= 1;
+    // Window
+    //if (ImGui::Button(enable_collision_system_window_ ? "Close Collision System Window" : "Open Collision System Window")) enable_collision_system_window_ ^= 1;
+    if (ImGui::Button(enable_camera_window_ ? "Close Camera Window" : "Open Camera Window")) enable_camera_window_ ^= 1;
+    if (ImGui::Button(enable_player_window_ ? "Close Player Window" : "Open Player Window")) enable_player_window_ ^= 1;
     if (ImGui::Button(enable_shadow_map_system_window_ ? "Close Shadow Map Window" : "Open Shadow Map Window")) enable_shadow_map_system_window_ ^= 1;
     if (ImGui::Button(enable_log_window_ ? "Close Log Window" : "Open Log Window")) enable_log_window_ ^= 1;
-	//if (ImGui::Button(enable_fog_window_ ? "Close Fog Window" : "Open Fog Window")) enable_fog_window_ ^= 1;
+    //if (ImGui::Button(enable_fog_window_ ? "Close Fog Window" : "Open Fog Window")) enable_fog_window_ ^= 1;
 
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------
@@ -120,35 +120,35 @@ void DebugObserver::ShowMainWindow(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowCollisionSystemWindow(void)
 {
-	if (!enable_collision_system_window_) return;
-	//auto colliderSystem = CollisionSystem::Instance();
+    if (!enable_collision_system_window_) return;
+    //auto colliderSystem = CollisionSystem::Instance();
 
-	// Begin
-	if (!ImGui::Begin("Collision System Debug Window", &enable_collision_system_window_))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Collision System Debug Window", &enable_collision_system_window_))
+    {
+        ImGui::End();
+        return;
+    }
 
-	//// Draw Collider
-	//ImGui::Checkbox("Show Collider", &pCS->m_bDrawCollider);
+    //// Draw Collider
+    //ImGui::Checkbox("Show Collider", &pCS->m_bDrawCollider);
 
-	//// Num Collider
-	//if (ImGui::CollapsingHeader("Static"))
-	//{
-	//	ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[STATIC][Sphere].size());
-	//	ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[STATIC][AABB].size());
-	//	ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[STATIC][OBB].size());
-	//}
-	//if (ImGui::CollapsingHeader("CM_Dynamic"))
-	//{
-	//	ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CM_Dynamic][Sphere].size());
-	//	ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CM_Dynamic][AABB].size());
-	//	ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CM_Dynamic][OBB].size());
-	//}
+    //// Num Collider
+    //if (ImGui::CollapsingHeader("Static"))
+    //{
+    //    ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[STATIC][Sphere].size());
+    //    ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[STATIC][AABB].size());
+    //    ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[STATIC][OBB].size());
+    //}
+    //if (ImGui::CollapsingHeader("CM_Dynamic"))
+    //{
+    //    ImGui::Text("Sphere : %d", (int)pCS->m_alistCollider[CM_Dynamic][Sphere].size());
+    //    ImGui::Text("AABB : %d", (int)pCS->m_alistCollider[CM_Dynamic][AABB].size());
+    //    ImGui::Text("OBB : %d", (int)pCS->m_alistCollider[CM_Dynamic][OBB].size());
+    //}
 
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------
@@ -156,41 +156,41 @@ void DebugObserver::ShowCollisionSystemWindow(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowCameraWindow(void)
 {
-	if (!enable_camera_window_) return;
+    if (!enable_camera_window_) return;
 
-	auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
 
-	// Begin
-	if (!ImGui::Begin("Camera Window", &enable_camera_window_))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Camera Window", &enable_camera_window_))
+    {
+        ImGui::End();
+        return;
+    }
 
-	// Rig
-	ImGui::Text("Rig position : %.3f, %.3f, %.3f", camera->rig_.position.x_, camera->rig_.position.y_, camera->rig_.position.z_);
-	ImGui::Text("Rig rotation : %.3f, %.3f, %.3f", camera->rig_.rotation.x_, camera->rig_.rotation.y_, camera->rig_.rotation.z_);
+    // Rig
+    ImGui::Text("Rig position : %.3f, %.3f, %.3f", camera->rig_.position.x_, camera->rig_.position.y_, camera->rig_.position.z_);
+    ImGui::Text("Rig rotation : %.3f, %.3f, %.3f", camera->rig_.rotation.x_, camera->rig_.rotation.y_, camera->rig_.rotation.z_);
 
-	// Pivot
-	ImGui::Text("Pivot position : %.3f, %.3f, %.3f", camera->pivot_.position.x_, camera->pivot_.position.y_, camera->pivot_.position.z_);
-	ImGui::Text("Pivot rotation : %.3f, %.3f, %.3f", camera->pivot_.rotation.x_, camera->pivot_.rotation.y_, camera->pivot_.rotation.z_);
-	
-	// Eye,At
-	ImGui::Text("World eye : %.3f, %.3f, %.3f", camera->world_eye_position_.x_, camera->world_eye_position_.y_, camera->world_eye_position_.z_);
-	ImGui::Text("World at : %.3f, %.3f, %.3f", camera->world_at_position_.x_, camera->world_at_position_.y_, camera->world_at_position_.z_);
+    // Pivot
+    ImGui::Text("Pivot position : %.3f, %.3f, %.3f", camera->pivot_.position.x_, camera->pivot_.position.y_, camera->pivot_.position.z_);
+    ImGui::Text("Pivot rotation : %.3f, %.3f, %.3f", camera->pivot_.rotation.x_, camera->pivot_.rotation.y_, camera->pivot_.rotation.z_);
+    
+    // Eye,At
+    ImGui::Text("World eye : %.3f, %.3f, %.3f", camera->world_eye_position_.x_, camera->world_eye_position_.y_, camera->world_eye_position_.z_);
+    ImGui::Text("World at : %.3f, %.3f, %.3f", camera->world_at_position_.x_, camera->world_at_position_.y_, camera->world_at_position_.z_);
 
-	// Right, Up, Forward
-	ImGui::Text("World right : %.3f, %.3f, %.3f", camera->world_right_.x_, camera->world_right_.y_, camera->world_right_.z_);
-	ImGui::Text("World up : %.3f, %.3f, %.3f", camera->world_up_.x_, camera->world_up_.y_, camera->world_up_.z_);
-	ImGui::Text("World forward : %.3f, %.3f, %.3f", camera->world_forward_.x_, camera->world_forward_.y_, camera->world_forward_.z_);
+    // Right, Up, Forward
+    ImGui::Text("World right : %.3f, %.3f, %.3f", camera->world_right_.x_, camera->world_right_.y_, camera->world_right_.z_);
+    ImGui::Text("World up : %.3f, %.3f, %.3f", camera->world_up_.x_, camera->world_up_.y_, camera->world_up_.z_);
+    ImGui::Text("World forward : %.3f, %.3f, %.3f", camera->world_forward_.x_, camera->world_forward_.y_, camera->world_forward_.z_);
 
-	// Far, Near, Fov
-	ImGui::InputFloat("Far", &camera->far_);
-	ImGui::InputFloat("Near", &camera->near_);
-	ImGui::InputFloat("Fov", &camera->fov_);
+    // Far, Near, Fov
+    ImGui::InputFloat("Far", &camera->far_);
+    ImGui::InputFloat("Near", &camera->near_);
+    ImGui::InputFloat("Fov", &camera->fov_);
 
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------
@@ -199,14 +199,14 @@ void DebugObserver::ShowCameraWindow(void)
 void DebugObserver::ShowPlayerWindow(void)
 {
     auto player = MainSystem::Instance()->GetActorObserver()->GetPlayer();
-	if (!enable_player_window_ || !player) return;
+    if (!enable_player_window_ || !player) return;
 
-	// Begin
-	if (!ImGui::Begin("Player Window", &enable_player_window_))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Player Window", &enable_player_window_))
+    {
+        ImGui::End();
+        return;
+    }
 
     if (ImGui::TreeNode("Transform"))
     {// Trans
@@ -268,8 +268,8 @@ void DebugObserver::ShowPlayerWindow(void)
         ImGui::TreePop();
     }
    
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------
@@ -277,60 +277,60 @@ void DebugObserver::ShowPlayerWindow(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowFogWindow(void)
 {
-	if (!enable_fog_window_) return;
-	//auto pFog = Main::GetManager()->GetFog();
+    if (!enable_fog_window_) return;
+    //auto pFog = Main::GetManager()->GetFog();
 
-	// Begin
-	if (!ImGui::Begin("Fog Window", &enable_fog_window_))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Fog Window", &enable_fog_window_))
+    {
+        ImGui::End();
+        return;
+    }
 
-	//// Enable
-	//auto bEnable = pFog->GetEnable();
-	//if (ImGui::Checkbox("Enable", &bEnable))
-	//{
-	//	pFog->SetEnable(bEnable);
-	//}
+    //// Enable
+    //auto bEnable = pFog->GetEnable();
+    //if (ImGui::Checkbox("Enable", &bEnable))
+    //{
+    //    pFog->SetEnable(bEnable);
+    //}
 
-	//// Enable RangeFog
-	//auto bRangeFog = pFog->GetEnableRangeFog();
-	//if (ImGui::Checkbox("RangeFog", &bRangeFog))
-	//{
-	//	pFog->SetEnableRangeFog(bRangeFog);
-	//}
+    //// Enable RangeFog
+    //auto bRangeFog = pFog->GetEnableRangeFog();
+    //if (ImGui::Checkbox("RangeFog", &bRangeFog))
+    //{
+    //    pFog->SetEnableRangeFog(bRangeFog);
+    //}
 
-	//// Start
-	//auto fStart = pFog->GetStart();
-	//if (ImGui::InputFloat("Start", &fStart))
-	//{
-	//	pFog->SetStart(fStart);
-	//}
+    //// Start
+    //auto fStart = pFog->GetStart();
+    //if (ImGui::InputFloat("Start", &fStart))
+    //{
+    //    pFog->SetStart(fStart);
+    //}
 
-	//// End
-	//auto fEnd = pFog->GetEnd();
-	//if (ImGui::InputFloat("End", &fEnd))
-	//{
-	//	pFog->SetEnd(fEnd);
-	//}
+    //// End
+    //auto fEnd = pFog->GetEnd();
+    //if (ImGui::InputFloat("End", &fEnd))
+    //{
+    //    pFog->SetEnd(fEnd);
+    //}
 
-	//// Density
-	//auto fDensity = pFog->GetDensity();
-	//if (ImGui::InputFloat("Density", &fDensity))
-	//{
-	//	pFog->SetDensity(fDensity);
-	//}
+    //// Density
+    //auto fDensity = pFog->GetDensity();
+    //if (ImGui::InputFloat("Density", &fDensity))
+    //{
+    //    pFog->SetDensity(fDensity);
+    //}
 
-	//// Color
-	//auto cColor = pFog->GetColor();
-	//if (ImGui::ColorEdit4("Color", (float*)&cColor))
-	//{
-	//	pFog->SetColor(cColor);
-	//}
+    //// Color
+    //auto cColor = pFog->GetColor();
+    //if (ImGui::ColorEdit4("Color", (float*)&cColor))
+    //{
+    //    pFog->SetColor(cColor);
+    //}
 
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------

@@ -9,14 +9,14 @@
 #include "jugg_death_motion_state.h"
 void JuggStunMotionState::ChangeMotion(Animator& animator)
 {
-	if(animator.GetIsStun() == false)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggStunMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsDead() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
-		return;
-	}
+    if(animator.GetIsStun() == false)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggStunMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsDead() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
+        return;
+    }
 }

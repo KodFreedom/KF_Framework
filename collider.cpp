@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	colliderコンポネント
+//  colliderコンポネント
 //　collider.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "collider.h"
 #include "game_object.h"
@@ -18,13 +18,13 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 Collider::Collider(GameObject& owner, const ColliderType& type, const ColliderMode& mode)
-	: Component(owner)
-	, type_(type)
-	, mode_(mode)
-	, is_trigger_(false)
-	, is_registered_(false)
-	, world_(Matrix44::kIdentity)
-	, offset_(Matrix44::kIdentity)
+    : Component(owner)
+    , type_(type)
+    , mode_(mode)
+    , is_trigger_(false)
+    , is_registered_(false)
+    , world_(Matrix44::kIdentity)
+    , offset_(Matrix44::kIdentity)
 {}
 
 //--------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ bool Collider::Init(void)
     is_registered_ = true;
     MainSystem::Instance()->GetCollisionSystem()->Register(this);
     world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
-	return true;
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -43,10 +43,10 @@ bool Collider::Init(void)
 //--------------------------------------------------------------------------------
 void Collider::Uninit(void)
 {
-	if (is_registered_)
-	{
-		MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
-	}
+    if (is_registered_)
+    {
+        MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
+    }
     observers_.clear();
 }
 
@@ -56,56 +56,56 @@ void Collider::Uninit(void)
 void Collider::Update(void)
 {
     // Todo : ある範囲内の当たり判定だけ効かれる
-	//if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
-	//	->FrustumCulling(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
-	//{
-	//	Awake();
-	//}
-	//else
-	//{
-	//	Sleep();
-	//	return;
-	//}
+    //if (MainSystem::Instance()->GetCameraManager()->GetMainCamera()
+    //    ->FrustumCulling(owner_.GetTransform()->GetPosition(), CollisionSystem::kMaxCollisionCheckRange))
+    //{
+    //    Awake();
+    //}
+    //else
+    //{
+    //    Sleep();
+    //    return;
+    //}
 
-	if (mode_ == kDynamic)
-	{
-		world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
-	}
+    if (mode_ == kDynamic)
+    {
+        world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
+    }
 }
 
 //--------------------------------------------------------------------------------
-//	相対位置の設定
+//    相対位置の設定
 //--------------------------------------------------------------------------------
 void Collider::SetOffset(const Vector3& position, const Vector3& rotation)
 {
-	offset_ = Matrix44::RotationYawPitchRoll(rotation);
-	offset_.m30_ = position.x_;
-	offset_.m31_ = position.y_;
-	offset_.m32_ = position.z_;
+    offset_ = Matrix44::RotationYawPitchRoll(rotation);
+    offset_.m30_ = position.x_;
+    offset_.m31_ = position.y_;
+    offset_.m32_ = position.z_;
 }
 
 //--------------------------------------------------------------------------------
-//	一時的に当たり判定処理から抜ける
+//  一時的に当たり判定処理から抜ける
 //--------------------------------------------------------------------------------
 void Collider::Sleep(void)
 {
-	if (!is_registered_) return;
-	is_registered_ = false;
-	MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
+    if (!is_registered_) return;
+    is_registered_ = false;
+    MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
 }
 
 //--------------------------------------------------------------------------------
-//	当たり判定処理に登録する
+//  当たり判定処理に登録する
 //--------------------------------------------------------------------------------
 void Collider::Awake(void)
 {
-	if (is_registered_) return;
-	is_registered_ = true;
-	MainSystem::Instance()->GetCollisionSystem()->Register(this);
+    if (is_registered_) return;
+    is_registered_ = true;
+    MainSystem::Instance()->GetCollisionSystem()->Register(this);
 }
 
 //--------------------------------------------------------------------------------
-//	modeの設定
+//  modeの設定
 //--------------------------------------------------------------------------------
 void Collider::SetMode(const ColliderMode& mode)
 {

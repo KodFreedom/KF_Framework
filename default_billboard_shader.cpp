@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　default_billboard_shader.h
-//	シェーダークラス
-//	Author : 徐文杰(KodFreedom)
+//  シェーダークラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_billboard_shader.h"
 #include "main_system.h"

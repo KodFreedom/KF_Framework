@@ -1,7 +1,6 @@
 ﻿//--------------------------------------------------------------------------------
-//
-//　animatorComponent.cpp
-//	Author : Xu Wenjie
+//　animator.cpp
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "animator.h"
 #include "game_object.h"
@@ -24,22 +23,22 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 Animator::Animator(GameObject& owner)
-	: Component(owner)
-	, state_(nullptr)
-	, is_grounded_(false)
-	, is_light_attack_(false)
+    : Component(owner)
+    , state_(nullptr)
+    , is_grounded_(false)
+    , is_light_attack_(false)
     , is_strong_attack_(false)
-	, is_jump_(false)
-	, is_damaged_(false)
-	, is_rise_up_(false)
-	, is_skill_(false)
-	, is_skill_over_(false)
-	, is_dead_(false)
-	, is_stun_(false)
-	, is_ultra_(false)
+    , is_jump_(false)
+    , is_damaged_(false)
+    , is_rise_up_(false)
+    , is_skill_(false)
+    , is_skill_over_(false)
+    , is_dead_(false)
+    , is_stun_(false)
+    , is_ultra_(false)
     , enable_ik_(true)
-	, movement_(0.0f)
-	, time_counter_(0.0f)
+    , movement_(0.0f)
+    , time_counter_(0.0f)
     , ik_ray_distance_(2.0f)
     , ik_grounded_distance_(0.5f)
     , ik_weight_increase_speed_(10.0f)
@@ -49,9 +48,9 @@ Animator::Animator(GameObject& owner)
 {
     ZeroMemory(ik_controllers_, sizeof(IKController) * kIKMax);
     ZeroMemory(ik_goals_, sizeof(IKGoal) * kIKGoalMax);
-	bone_texture_.size = 0;
+    bone_texture_.size = 0;
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	bone_texture_.pointer = nullptr;
+    bone_texture_.pointer = nullptr;
 #endif
 }
 
@@ -61,7 +60,7 @@ Animator::Animator(GameObject& owner)
 bool Animator::Init(void)
 {
     InitIK();
-	return true;
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -69,18 +68,18 @@ bool Animator::Init(void)
 //--------------------------------------------------------------------------------
 void Animator::Uninit(void)
 {
-	avatar_.clear();
-	SAFE_DELETE(state_);
+    avatar_.clear();
+    SAFE_DELETE(state_);
 
-	auto motion_manager = MainSystem::Instance()->GetMotionManager();
-	size_t motion_number = motion_names_.size();
-	for (size_t count = 0; count < motion_number; ++count)
-	{
-		motion_manager->Disuse(motion_names_[count]);
-	}
-	motion_names_.clear();
+    auto motion_manager = MainSystem::Instance()->GetMotionManager();
+    size_t motion_number = motion_names_.size();
+    for (size_t count = 0; count < motion_number; ++count)
+    {
+        motion_manager->Disuse(motion_names_[count]);
+    }
+    motion_names_.clear();
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	SAFE_RELEASE(bone_texture_.pointer);
+    SAFE_RELEASE(bone_texture_.pointer);
 #endif
 }
 
@@ -89,9 +88,9 @@ void Animator::Uninit(void)
 //--------------------------------------------------------------------------------
 void Animator::Update(void)
 {
-	if (avatar_.empty()) return;
-	state_->Update(*this);
-	time_counter_ += Time::Instance()->ScaledDeltaTime();
+    if (avatar_.empty()) return;
+    state_->Update(*this);
+    time_counter_ += Time::Instance()->ScaledDeltaTime();
     UpdateIK();
 }
 
@@ -104,11 +103,11 @@ void Animator::LateUpdate(void)
 }
 
 //--------------------------------------------------------------------------------
-//	今のアニメーション名を返す
+//  今のアニメーション名を返す
 //--------------------------------------------------------------------------------
 const String& Animator::GetCurrentAnimationName(void)
 {
-	return state_->GetCurrentMotionName();
+    return state_->GetCurrentMotionName();
 }
 
 //--------------------------------------------------------------------------------
@@ -116,37 +115,37 @@ const String& Animator::GetCurrentAnimationName(void)
 //--------------------------------------------------------------------------------
 void Animator::SetAvatar(const String& file_name)
 {
-	if (!avatar_.empty()) return;
+    if (!avatar_.empty()) return;
 
-	LoadFromFile(file_name);
-	AttachBonesToChildren();
+    LoadFromFile(file_name);
+    AttachBonesToChildren();
 
-	// textureのサイズの算出（2の冪乗）
-	int bone_number = static_cast<int>(avatar_.size());
-	bone_texture_.size = 2;
-	while (bone_texture_.size < bone_number)
-	{
-		bone_texture_.size *= 2;
-	}
+    // textureのサイズの算出（2の冪乗）
+    int bone_number = static_cast<int>(avatar_.size());
+    bone_texture_.size = 2;
+    while (bone_texture_.size < bone_number)
+    {
+        bone_texture_.size *= 2;
+    }
 
-	// textureの生成
+    // textureの生成
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	bone_texture_.pointer = MainSystem::Instance()->GetTextureManager()->CreateEmptyTexture(bone_texture_.size);
+    bone_texture_.pointer = MainSystem::Instance()->GetTextureManager()->CreateEmptyTexture(bone_texture_.size);
 #endif
 }
 
 //--------------------------------------------------------------------------------
-//	モーションステータスの切り替え
+//  モーションステータスの切り替え
 //--------------------------------------------------------------------------------
 void Animator::Change(MotionState* new_motion_state)
 {
-	SAFE_DELETE(state_);
-	state_ = new_motion_state;
-	time_counter_ = 0.0f;
+    SAFE_DELETE(state_);
+    state_ = new_motion_state;
+    time_counter_ = 0.0f;
 }
 
 //--------------------------------------------------------------------------------
-//	今のフレームを取得
+//  今のフレームを取得
 //--------------------------------------------------------------------------------
 const int Animator::GetCurrentFrame(void) const
 {
@@ -163,52 +162,52 @@ const int Animator::GetCurrentFrame(void) const
 //--------------------------------------------------------------------------------
 void Animator::LoadFromFile(const String& file_name)
 {
-	String& path = L"data/avatar/" + file_name + L".avatar";
-	ifstream file(path, ios::binary);
-	if (!file.is_open())
-	{
-		assert(file.is_open());
-		return;
-	}
-	BinaryInputArchive archive(file);
+    String& path = L"data/avatar/" + file_name + L".avatar";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return;
+    }
+    BinaryInputArchive archive(file);
 
-	// Avatar
-	size_t bone_number;
-	archive.loadBinary(&bone_number, sizeof(bone_number));
-	avatar_.resize(bone_number);
-	for (size_t count = 0; count < bone_number; ++count)
-	{
-		size_t name_size;
-		archive.loadBinary(&name_size, sizeof(name_size));
-		string name;
-		name.resize(name_size);
-		archive.loadBinary(&name[0], name_size);
-		avatar_[count].name = String(name.begin(), name.end());
-		archive.loadBinary(&avatar_[count].bind_pose_inverse, sizeof(avatar_[count].bind_pose_inverse));
-	}
+    // Avatar
+    size_t bone_number;
+    archive.loadBinary(&bone_number, sizeof(bone_number));
+    avatar_.resize(bone_number);
+    for (size_t count = 0; count < bone_number; ++count)
+    {
+        size_t name_size;
+        archive.loadBinary(&name_size, sizeof(name_size));
+        string name;
+        name.resize(name_size);
+        archive.loadBinary(&name[0], name_size);
+        avatar_[count].name = String(name.begin(), name.end());
+        archive.loadBinary(&avatar_[count].bind_pose_inverse, sizeof(avatar_[count].bind_pose_inverse));
+    }
 
-	// IKController
-	for (auto& controller : ik_controllers_)
-	{
-		archive.loadBinary(&controller.index, sizeof(controller.index));
-	}
+    // IKController
+    for (auto& controller : ik_controllers_)
+    {
+        archive.loadBinary(&controller.index, sizeof(controller.index));
+    }
 
-	// Motion
-	auto motion_manager = MainSystem::Instance()->GetMotionManager();
-	size_t motion_number;
-	archive.loadBinary(&motion_number, sizeof(motion_number));
-	motion_names_.resize(motion_number);
-	for (size_t count = 0; count < motion_number; ++count)
-	{
-		size_t name_size;
-		archive.loadBinary(&name_size, sizeof(name_size));
-		string name;
-		name.resize(name_size);
-		archive.loadBinary(&name[0], name_size);
-		motion_names_[count] = String(name.begin(), name.end());
-		motion_manager->Use(motion_names_[count]);
-	}
-	file.close();
+    // Motion
+    auto motion_manager = MainSystem::Instance()->GetMotionManager();
+    size_t motion_number;
+    archive.loadBinary(&motion_number, sizeof(motion_number));
+    motion_names_.resize(motion_number);
+    for (size_t count = 0; count < motion_number; ++count)
+    {
+        size_t name_size;
+        archive.loadBinary(&name_size, sizeof(name_size));
+        string name;
+        name.resize(name_size);
+        archive.loadBinary(&name[0], name_size);
+        motion_names_[count] = String(name.begin(), name.end());
+        motion_manager->Use(motion_names_[count]);
+    }
+    file.close();
 }
 
 //--------------------------------------------------------------------------------
@@ -216,10 +215,10 @@ void Animator::LoadFromFile(const String& file_name)
 //--------------------------------------------------------------------------------
 void Animator::AttachBonesToChildren(void)
 {
-	for (auto& bone : avatar_)
-	{
-		bone.transform = owner_.GetTransform()->FindChildBy(bone.name);
-	}
+    for (auto& bone : avatar_)
+    {
+        bone.transform = owner_.GetTransform()->FindChildBy(bone.name);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -227,27 +226,27 @@ void Animator::AttachBonesToChildren(void)
 //--------------------------------------------------------------------------------
 void Animator::UpdateBoneTexture(void)
 {
-	if (!bone_texture_.pointer) return;
+    if (!bone_texture_.pointer) return;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-	// サーフェイスロック
-	D3DLOCKED_RECT lock_rect;
-	bone_texture_.pointer->LockRect(0, &lock_rect, NULL, D3DLOCK_DISCARD);
+    // サーフェイスロック
+    D3DLOCKED_RECT lock_rect;
+    bone_texture_.pointer->LockRect(0, &lock_rect, NULL, D3DLOCK_DISCARD);
 
-	// テクスチャサーフェイスの初期化
-	FillMemory(lock_rect.pBits, lock_rect.Pitch * bone_texture_.size, 0);
+    // テクスチャサーフェイスの初期化
+    FillMemory(lock_rect.pBits, lock_rect.Pitch * bone_texture_.size, 0);
 
-	// 骨情報の書き込み、一行ずつ
-	size_t bone_number = avatar_.size();
-	int offset = lock_rect.Pitch / sizeof(Matrix44);
-	for (size_t count = 0; count < bone_number; ++count)
-	{
-		const Matrix44& bone_world = avatar_[count].bind_pose_inverse * avatar_[count].transform->GetWorldMatrix();
-		memcpy((Matrix44*)lock_rect.pBits + offset * count, &bone_world, sizeof(bone_world));
-	}
+    // 骨情報の書き込み、一行ずつ
+    size_t bone_number = avatar_.size();
+    int offset = lock_rect.Pitch / sizeof(Matrix44);
+    for (size_t count = 0; count < bone_number; ++count)
+    {
+        const Matrix44& bone_world = avatar_[count].bind_pose_inverse * avatar_[count].transform->GetWorldMatrix();
+        memcpy((Matrix44*)lock_rect.pBits + offset * count, &bone_world, sizeof(bone_world));
+    }
 
-	// サーフェイスアンロック
-	bone_texture_.pointer->UnlockRect(0);
+    // サーフェイスアンロック
+    bone_texture_.pointer->UnlockRect(0);
 #endif
 }
 

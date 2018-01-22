@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	3dメッシュ描画コンポネント
+//  3dメッシュ描画コンポネント
 //　mesh_renderer_3d.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mesh_renderer.h"
@@ -12,22 +12,22 @@
 class MeshRenderer3d : public MeshRenderer
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	MeshRenderer3d(GameObject& owner
-		, const RenderPriority& priority = kDefaultPriority
-		, const ShaderType& shader_type = kDefaultShader)
-		: MeshRenderer(owner, priority, shader_type, kMeshRenderer3d) {}
-	~MeshRenderer3d() {}
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    MeshRenderer3d(GameObject& owner
+        , const RenderPriority& priority = kDefaultPriority
+        , const ShaderType& shader_type = kDefaultShader)
+        : MeshRenderer(owner, priority, shader_type, kMeshRenderer3d) {}
+    ~MeshRenderer3d() {}
 
-	//--------------------------------------------------------------------------------
-	//  更新処理
-	//--------------------------------------------------------------------------------
-	void Update(void) override;
+    //--------------------------------------------------------------------------------
+    //  更新処理
+    //--------------------------------------------------------------------------------
+    void Update(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  描画処理
-	//--------------------------------------------------------------------------------
-	void RenderBy(const RenderSystem& render_system) override;
+    //--------------------------------------------------------------------------------
+    //  描画処理
+    //--------------------------------------------------------------------------------
+    void RenderBy(const RenderSystem& render_system) override;
 };

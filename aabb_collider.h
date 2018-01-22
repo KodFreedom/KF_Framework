@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	AabbColliderコンポネント
+//  AabbColliderコンポネント
 //　AabbCollider.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "box_collider.h"
@@ -12,15 +12,15 @@
 class AabbCollider : public BoxCollider
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	AabbCollider(GameObject& owner, const ColliderMode& mode, const Vector3& half_size)
-		: BoxCollider(owner, kAabb, mode, half_size) {}
-	~AabbCollider() {}
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    AabbCollider(GameObject& owner, const ColliderMode& mode, const Vector3& half_size)
+        : BoxCollider(owner, kAabb, mode, half_size) {}
+    ~AabbCollider() {}
 
-	//--------------------------------------------------------------------------------
-	//  更新処理
-	//--------------------------------------------------------------------------------
-	void Update(void) override;
+    //--------------------------------------------------------------------------------
+    //  更新処理
+    //--------------------------------------------------------------------------------
+    void Update(void) override;
 };

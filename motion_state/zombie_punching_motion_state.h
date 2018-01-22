@@ -8,10 +8,10 @@
 class ZombiePunchingMotionState : public NormalMotionState
 {
 public:
-	ZombiePunchingMotionState(const int start_frame) : NormalMotionState(L"zombie_punching", start_frame) {}
-	~ZombiePunchingMotionState() {}
+    ZombiePunchingMotionState(const int start_frame) : NormalMotionState(L"zombie_punching", start_frame) {}
+    ~ZombiePunchingMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 218;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 218;
 };

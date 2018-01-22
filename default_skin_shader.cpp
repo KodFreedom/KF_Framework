@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　default_skin_shader.cpp
-//	シェーダークラス
-//	Author : 徐文杰(KodFreedom)
+//  シェーダークラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_skin_shader.h"
 #include "main_system.h"
@@ -30,7 +30,7 @@ void DefaultSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void DefaultSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 {
-	ShaderDirectX9::Set(device);
+    ShaderDirectX9::Set(device);
 }
 
 //--------------------------------------------------------------------------------

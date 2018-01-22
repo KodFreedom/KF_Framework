@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //Å@modeResult.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mode.h"
@@ -17,15 +16,15 @@ class FlashButtonController;
 class ModeResult : public Mode
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  ä÷êîêÈåæ
-	//--------------------------------------------------------------------------------
-	ModeResult() : Mode(L"Result"), time_counter_(0.0f), flash_button_controller_(nullptr) {}
-	~ModeResult() {}
+    //--------------------------------------------------------------------------------
+    //  ä÷êîêÈåæ
+    //--------------------------------------------------------------------------------
+    ModeResult() : Mode(L"Result"), time_counter_(0.0f), flash_button_controller_(nullptr) {}
+    ~ModeResult() {}
 
-	void Init(void) override;
+    void Init(void) override;
     void Uninit(void) override;
-	void Update(void) override;
+    void Update(void) override;
 
 private:
     //--------------------------------------------------------------------------------

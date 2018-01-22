@@ -4451,7 +4451,7 @@ bool ImGui::Begin(const char* name, bool* p_open, const ImVec2& size_on_first_us
     // Note that if our window is collapsed we will end up with a null clipping rectangle which is the correct behavior.
     const ImRect title_bar_rect = window->TitleBarRect();
     const float border_size = window->BorderSize;
-	// Force round to ensure that e.g. (int)(max.x-min.x) in user's render code produce correct result.
+    // Force round to ensure that e.g. (int)(max.x-min.x) in user's render code produce correct result.
     ImRect clip_rect;
     clip_rect.Min.x = ImFloor(0.5f + title_bar_rect.Min.x + ImMax(border_size, ImFloor(window->WindowPadding.x*0.5f)));
     clip_rect.Min.y = ImFloor(0.5f + title_bar_rect.Max.y + window->MenuBarHeight() + border_size);

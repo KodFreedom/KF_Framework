@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //@rigidbody3d.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "rigidbody.h"
@@ -13,111 +13,111 @@ using namespace kodfreedom;
 class Rigidbody3D : public Rigidbody
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	Rigidbody3D(GameObject& owner);
-	~Rigidbody3D() {}
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    Rigidbody3D(GameObject& owner);
+    ~Rigidbody3D() {}
 
-	//--------------------------------------------------------------------------------
-	//  ‰Šú‰»
-	//--------------------------------------------------------------------------------
-	bool Init(void) override { return true; }
+    //--------------------------------------------------------------------------------
+    //  ‰Šú‰»
+    //--------------------------------------------------------------------------------
+    bool Init(void) override { return true; }
 
-	//--------------------------------------------------------------------------------
-	//  I—¹ˆ—
-	//--------------------------------------------------------------------------------
-	void Uninit(void) override {}
+    //--------------------------------------------------------------------------------
+    //  I—¹ˆ—
+    //--------------------------------------------------------------------------------
+    void Uninit(void) override {}
 
-	//--------------------------------------------------------------------------------
-	//  XVˆ—
-	//--------------------------------------------------------------------------------
-	void Update(void) override;
+    //--------------------------------------------------------------------------------
+    //  XVˆ—
+    //--------------------------------------------------------------------------------
+    void Update(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  ŒãXVˆ—
-	//--------------------------------------------------------------------------------
-	void LateUpdate(void) override;
+    //--------------------------------------------------------------------------------
+    //  ŒãXVˆ—
+    //--------------------------------------------------------------------------------
+    void LateUpdate(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  —Í‚ğ—^‚¦‚é
-	//--------------------------------------------------------------------------------
-	void AddForce(const Vector3& force) { force_accum_ += force; }
+    //--------------------------------------------------------------------------------
+    //  —Í‚ğ—^‚¦‚é
+    //--------------------------------------------------------------------------------
+    void AddForce(const Vector3& force) { force_accum_ += force; }
 
-	//--------------------------------------------------------------------------------
-	//  ‘¬“x‚ğ—^‚¦‚é
-	//--------------------------------------------------------------------------------
-	void AddVelocity(const Vector3& value) { velocity_ += value; }
+    //--------------------------------------------------------------------------------
+    //  ‘¬“x‚ğ—^‚¦‚é
+    //--------------------------------------------------------------------------------
+    void AddVelocity(const Vector3& value) { velocity_ += value; }
 
-	//--------------------------------------------------------------------------------
-	//  ˆÚ“®—Ê‚ğ—^‚¦‚éi¿—Ê–³‹j
-	//--------------------------------------------------------------------------------
-	void Move(const Vector3& value) { movement_ += value; }
+    //--------------------------------------------------------------------------------
+    //  ˆÚ“®—Ê‚ğ—^‚¦‚éi¿—Ê–³‹j
+    //--------------------------------------------------------------------------------
+    void Move(const Vector3& value) { movement_ += value; }
 
-	//--------------------------------------------------------------------------------
-	//  ˆÚ“®—Ê‚ğ—^‚¦‚éi•¨—‰‰Z—pj
-	//--------------------------------------------------------------------------------
-	void AddFixedMovement(const Vector3& value) { fixed_movement_ += value; }
+    //--------------------------------------------------------------------------------
+    //  ˆÚ“®—Ê‚ğ—^‚¦‚éi•¨—‰‰Z—pj
+    //--------------------------------------------------------------------------------
+    void AddFixedMovement(const Vector3& value) { fixed_movement_ += value; }
 
-	//--------------------------------------------------------------------------------
-	//  GetŠÖ”
-	//--------------------------------------------------------------------------------
-	const auto& GetMass(void) const { return mass_; }
-	const auto& GetInverseMass(void) const { return inverse_mass_; }
-	const auto& GetDrag(void) const { return drag_; }
-	const auto& GetFriction(void) const { return friction_; }
-	const auto& GetBounciness(void) const { return bounciness_; }
-	const auto& GetVelocity(void) const { return velocity_; }
-	const auto& GetAcceleration(void) const { return acceleration_; }
-	const auto& GetMovement(void) const { return movement_; }
-	const auto& GetGravityMultiplier(void) const { return gravity_multiplier_; }
+    //--------------------------------------------------------------------------------
+    //  GetŠÖ”
+    //--------------------------------------------------------------------------------
+    const auto& GetMass(void) const { return mass_; }
+    const auto& GetInverseMass(void) const { return inverse_mass_; }
+    const auto& GetDrag(void) const { return drag_; }
+    const auto& GetFriction(void) const { return friction_; }
+    const auto& GetBounciness(void) const { return bounciness_; }
+    const auto& GetVelocity(void) const { return velocity_; }
+    const auto& GetAcceleration(void) const { return acceleration_; }
+    const auto& GetMovement(void) const { return movement_; }
+    const auto& GetGravityMultiplier(void) const { return gravity_multiplier_; }
 
-	//--------------------------------------------------------------------------------
-	//  SetŠÖ”
-	//--------------------------------------------------------------------------------
-	void SetMass(const float& value);
-	void SetDrag(const float& value) { drag_ = value; }
-	void SetFriction(const float& value) { friction_ = value; }
-	void SetBounciness(const float& value) { bounciness_ = value; }
-	void SetGravityMultiplier(const float& value) { gravity_multiplier_ = value; }
-	void SetVelocity(const Vector3& value) { velocity_ = value; }
-	void SetMovement(const Vector3& value) { movement_ = value; }
-	//void	SetInertiaTensor(Collider* pCollider);
+    //--------------------------------------------------------------------------------
+    //  SetŠÖ”
+    //--------------------------------------------------------------------------------
+    void SetMass(const float& value);
+    void SetDrag(const float& value) { drag_ = value; }
+    void SetFriction(const float& value) { friction_ = value; }
+    void SetBounciness(const float& value) { bounciness_ = value; }
+    void SetGravityMultiplier(const float& value) { gravity_multiplier_ = value; }
+    void SetVelocity(const Vector3& value) { velocity_ = value; }
+    void SetMovement(const Vector3& value) { movement_ = value; }
+    //void    SetInertiaTensor(Collider* pCollider);
 
 private:
-	//--------------------------------------------------------------------------------
-	//  ’è”’è‹`
-	//--------------------------------------------------------------------------------
-	//enum AXIS
-	//{
-	//	X = 0x01,
-	//	Y = 0x02,
-	//	Z = 0x04,
-	//	XYZ = 0x07
-	//};
+    //--------------------------------------------------------------------------------
+    //  ’è”’è‹`
+    //--------------------------------------------------------------------------------
+    //enum AXIS
+    //{
+    //    X = 0x01,
+    //    Y = 0x02,
+    //    Z = 0x04,
+    //    XYZ = 0x07
+    //};
 
-	//--------------------------------------------------------------------------------
-	//  ŠÖ”’è‹`
-	//--------------------------------------------------------------------------------
-	//void		calculateInertiaTensorWorld(Matrix44& mtxIitWorld);
+    //--------------------------------------------------------------------------------
+    //  ŠÖ”’è‹`
+    //--------------------------------------------------------------------------------
+    //void        calculateInertiaTensorWorld(Matrix44& mtxIitWorld);
 
-	//--------------------------------------------------------------------------------
-	//  •Ï”’è‹`
-	//--------------------------------------------------------------------------------
-	float   mass_; // ¿—Ê
-	float   inverse_mass_; // ¿—Ê‚Ì‹t”
-	float   drag_; // ’ïRŒW”(‹ó‹C’ïR)
-	float   friction_; // –€CŒW”
-	float   bounciness_; // ’µ‚Ë•Ô‚èŒW”
-	float   gravity_multiplier_; //d—ÍŒW”
-	Vector3 movement_; // ˆÚ“®—Ê
-	Vector3 fixed_movement_; // •¨—‰‰Z‚É‚æ‚é•â³
-	Vector3 velocity_; // ‘¬“x
-	Vector3 acceleration_; // ‰Á‘¬“x
-	Vector3 force_accum_; // ‡‚í‚¹‚½ì—p—Í
-	//Vector3 angular_velocity_; // ‰ñ“]‘¬“x
-	//float angular_drag_; //‰ñ“]’ïRŒW”
-	//Vector3 torque_accum_; // ‰ñ“]—Í
-	//Matrix44 inertis_tensor_; //Šµ«ƒeƒ“ƒ\ƒ‹‚Ìs—ñ
-	//BYTE rotation_lock_; //‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO
+    //--------------------------------------------------------------------------------
+    //  •Ï”’è‹`
+    //--------------------------------------------------------------------------------
+    float   mass_; // ¿—Ê
+    float   inverse_mass_; // ¿—Ê‚Ì‹t”
+    float   drag_; // ’ïRŒW”(‹ó‹C’ïR)
+    float   friction_; // –€CŒW”
+    float   bounciness_; // ’µ‚Ë•Ô‚èŒW”
+    float   gravity_multiplier_; //d—ÍŒW”
+    Vector3 movement_; // ˆÚ“®—Ê
+    Vector3 fixed_movement_; // •¨—‰‰Z‚É‚æ‚é•â³
+    Vector3 velocity_; // ‘¬“x
+    Vector3 acceleration_; // ‰Á‘¬“x
+    Vector3 force_accum_; // ‡‚í‚¹‚½ì—p—Í
+    //Vector3 angular_velocity_; // ‰ñ“]‘¬“x
+    //float angular_drag_; //‰ñ“]’ïRŒW”
+    //Vector3 torque_accum_; // ‰ñ“]—Í
+    //Matrix44 inertis_tensor_; //Šµ«ƒeƒ“ƒ\ƒ‹‚Ìs—ñ
+    //BYTE rotation_lock_; //‰ñ“]§ŒÀ‚Ìƒtƒ‰ƒO
 };

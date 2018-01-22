@@ -13,34 +13,34 @@
 #include "zombie_death_motion_state.h"
 void ZombieWalkingMotionState::ChangeMotion(Animator& animator)
 {
-	if(animator.GetMovement() == 0.000000f)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieIdleMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetMovement() > 0.500000f)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieRunningMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsLightAttack() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombiePunchingMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsStrongAttack() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieKickingMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsDamaged() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDamagedMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsDead() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDeathMotionState(0), current_frame_counter_, 10));
-		return;
-	}
+    if(animator.GetMovement() == 0.000000f)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieIdleMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetMovement() > 0.500000f)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieRunningMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsLightAttack() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombiePunchingMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsStrongAttack() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieKickingMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsDamaged() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDamagedMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsDead() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDeathMotionState(0), current_frame_counter_, 10));
+        return;
+    }
 }

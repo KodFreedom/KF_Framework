@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //　modeEditor.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode_editor.h"
 #if defined(EDITOR)
@@ -23,19 +22,19 @@
 //--------------------------------------------------------------------------------
 void ModeEditor::Init(void)
 {
-	auto main_system = MainSystem::Instance();
+    auto main_system = MainSystem::Instance();
 
-	//カメラの初期化
-	auto camera = MY_NEW EditorCamera;
-	camera->Init();
+    //カメラの初期化
+    auto camera = MY_NEW EditorCamera;
+    camera->Init();
 
     //ライトの初期化
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
-	main_system->GetInput()->SetEditorMode(true);
+    main_system->GetInput()->SetEditorMode(true);
 
-	//ゲームオブジェクトの初期化
-	GameObjectSpawner::CreateEditor();
+    //ゲームオブジェクトの初期化
+    GameObjectSpawner::CreateEditor();
 }
 
 //--------------------------------------------------------------------------------
@@ -43,7 +42,7 @@ void ModeEditor::Init(void)
 //--------------------------------------------------------------------------------
 void ModeEditor::LateUpdate(void)
 {
-	Mode::LateUpdate();
+    Mode::LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
@@ -56,8 +55,8 @@ void ModeEditor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void ModeEditor::Uninit(void)
 {
-	Mode::Uninit();
-	MainSystem::Instance()->GetInput()->SetEditorMode(false);
+    Mode::Uninit();
+    MainSystem::Instance()->GetInput()->SetEditorMode(false);
 }
 #endif // _DEBUG
 

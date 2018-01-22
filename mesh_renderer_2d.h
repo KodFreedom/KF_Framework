@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	2dメッシュ描画コンポネント
+//  2dメッシュ描画コンポネント
 //　mesh_renderer_2d.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mesh_renderer.h"
@@ -14,24 +14,24 @@ using namespace kodfreedom;
 class MeshRenderer2d : public MeshRenderer
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	MeshRenderer2d(GameObject& owner
-		, const RenderPriority& priority = kDefaultPriority
-		, const ShaderType& shader_type = kDefaultShader)
-		: MeshRenderer(owner, priority, shader_type, kMeshRenderer2d), uv_scale_(Vector2::kOne) {}
-	~MeshRenderer2d() {}
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    MeshRenderer2d(GameObject& owner
+        , const RenderPriority& priority = kDefaultPriority
+        , const ShaderType& shader_type = kDefaultShader)
+        : MeshRenderer(owner, priority, shader_type, kMeshRenderer2d), uv_scale_(Vector2::kOne) {}
+    ~MeshRenderer2d() {}
 
     //--------------------------------------------------------------------------------
     //  更新処理
     //--------------------------------------------------------------------------------
     void Update(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  描画処理
-	//--------------------------------------------------------------------------------
-	void RenderBy(const RenderSystem& render_system) override;
+    //--------------------------------------------------------------------------------
+    //  描画処理
+    //--------------------------------------------------------------------------------
+    void RenderBy(const RenderSystem& render_system) override;
 
     //--------------------------------------------------------------------------------
     //  ゲッター

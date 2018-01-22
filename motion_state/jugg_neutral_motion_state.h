@@ -8,9 +8,9 @@
 class JuggNeutralMotionState : public NormalMotionState
 {
 public:
-	JuggNeutralMotionState(const int start_frame) : NormalMotionState(L"jugg_neutral", start_frame) {}
-	~JuggNeutralMotionState() {}
+    JuggNeutralMotionState(const int start_frame) : NormalMotionState(L"jugg_neutral", start_frame) {}
+    ~JuggNeutralMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

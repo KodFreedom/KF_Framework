@@ -8,10 +8,10 @@
 class MutantSkillMotionState : public NormalMotionState
 {
 public:
-	MutantSkillMotionState(const int start_frame) : NormalMotionState(L"mutant_skill", start_frame) {}
-	~MutantSkillMotionState() {}
+    MutantSkillMotionState(const int start_frame) : NormalMotionState(L"mutant_skill", start_frame) {}
+    ~MutantSkillMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 311;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 311;
 };

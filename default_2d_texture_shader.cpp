@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　default_2d_texture_shader.h
-//	2dシェーダークラス
-//	Author : 徐文杰(KodFreedom)
+//  2dシェーダークラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_2d_texture_shader.h"
 #include "main_system.h"

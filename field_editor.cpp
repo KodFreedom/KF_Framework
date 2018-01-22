@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	プレイヤービヘイビアコンポネント
+//  プレイヤービヘイビアコンポネント
 //　FieldEditor.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "field_editor.h"
 #if defined(_DEBUG) || defined(EDITOR)
@@ -24,17 +24,17 @@ using namespace cereal;
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 FieldEditor::FieldEditor(GameObject& owner)
-	: Editor(owner, L"FieldEditor")
-	, block_number_x_(100)
-	, block_number_z_(100)
-	, block_size_(Vector2(1.0f))
-	, min_position_(Vector3::kZero)
-	, max_position_(Vector3::kZero)
-	, editor_position_(Vector3::kZero)
-	, choose_range_(Vector2::kZero)
-	, raise_speed_(1.0f)
-	, extend_speed_(1.0f)
-	, raise_mode_rate_(0.0f)
+    : Editor(owner, L"FieldEditor")
+    , block_number_x_(100)
+    , block_number_z_(100)
+    , block_size_(Vector2(1.0f))
+    , min_position_(Vector3::kZero)
+    , max_position_(Vector3::kZero)
+    , editor_position_(Vector3::kZero)
+    , choose_range_(Vector2::kZero)
+    , raise_speed_(1.0f)
+    , extend_speed_(1.0f)
+    , raise_mode_rate_(0.0f)
     , current_choose_mode_(kCircle)
 {}
 
@@ -43,13 +43,13 @@ FieldEditor::FieldEditor(GameObject& owner)
 //--------------------------------------------------------------------------------
 bool FieldEditor::Init(void)
 {
-	// Vertex
+    // Vertex
     InitVertexes();
-	
-	// Index
+    
+    // Index
     vector<int>& indexes = GetInitMeshIndexes();
 
-	MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
+    MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
     return true;
 }
 
@@ -58,7 +58,7 @@ bool FieldEditor::Init(void)
 //--------------------------------------------------------------------------------
 void FieldEditor::Uninit(void)
 {
-	vertexes_.clear();
+    vertexes_.clear();
     MainSystem::Instance()->GetMeshManager()->Disuse(L"field");
 }
 
@@ -67,23 +67,23 @@ void FieldEditor::Uninit(void)
 //--------------------------------------------------------------------------------
 void FieldEditor::Update(void)
 {
-	if (!is_active_) return;
+    if (!is_active_) return;
 
-	ShowMainWindow();
+    ShowMainWindow();
 
-	auto input = MainSystem::Instance()->GetInput();
+    auto input = MainSystem::Instance()->GetInput();
 
     // 選択範囲内のインデックスの取得
-	auto& indexes = GetChoosenIndexes();
+    auto& indexes = GetChoosenIndexes();
 
-	// 升降
+    // 升降
     float input_value = static_cast<float>(input->GetKeyPress(Key::kRaise))
-		- static_cast<float>(input->GetKeyPress(Key::kReduce));
-	float raise_amount = input_value * raise_speed_;
+        - static_cast<float>(input->GetKeyPress(Key::kReduce));
+    float raise_amount = input_value * raise_speed_;
 
     // 頂点の更新
     UpdateVertexesBy(raise_amount, indexes);
-	MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+    MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
 }
 
 //--------------------------------------------------------------------------------
@@ -91,73 +91,73 @@ void FieldEditor::Update(void)
 //--------------------------------------------------------------------------------
 Vector3 FieldEditor::AdjustPositionInField(const Vector3& position, const bool& is_adjust_height)
 {
-	Vector3 result;
+    Vector3 result;
 
-	//範囲内にする
-	result.x_ = Math::Clamp(position.x_, min_position_.x_, max_position_.x_);
-	result.y_ = position.y_;
-	result.z_ = Math::Clamp(position.z_, min_position_.z_, max_position_.z_);
+    //範囲内にする
+    result.x_ = Math::Clamp(position.x_, min_position_.x_, max_position_.x_);
+    result.y_ = position.y_;
+    result.z_ = Math::Clamp(position.z_, min_position_.z_, max_position_.z_);
 
-	//高さの調節
-	if (is_adjust_height)
-	{
-		result.y_ = GetHeight(result);
-	}
+    //高さの調節
+    if (is_adjust_height)
+    {
+        result.y_ = GetHeight(result);
+    }
 
-	return result;
+    return result;
 }
 
 //--------------------------------------------------------------------------------
-//	アクティブフラグの設定
+//    アクティブフラグの設定
 //--------------------------------------------------------------------------------
 void FieldEditor::SetActive(const bool& value)
 {
-	is_active_ = value;
-	if (!is_active_)
-	{// 前フレーム選択された頂点の色を戻す
+    is_active_ = value;
+    if (!is_active_)
+    {// 前フレーム選択された頂点の色を戻す
         UpdateVertexesBy(0.0f, list<int>());
-	}
+    }
 }
 
 //--------------------------------------------------------------------------------
-//	フィールド情報を保存する関数
+//    フィールド情報を保存する関数
 //--------------------------------------------------------------------------------
 void FieldEditor::SaveAsBinary(const String& name)
 {
     // 前フレーム選択された頂点の色を戻す
     UpdateVertexesBy(0.0f, list<int>());
 
-	//フィールドメッシュの保存
-	MainSystem::Instance()->GetMeshManager()->SaveMeshToFile(L"field", name);
+    //フィールドメッシュの保存
+    MainSystem::Instance()->GetMeshManager()->SaveMeshToFile(L"field", name);
 
-	//フィールドの保存
-	String path = L"data/field/" + name + L".field";
-	ofstream file(path, ios::binary);
-	if (!file.is_open())
-	{
+    //フィールドの保存
+    String path = L"data/field/" + name + L".field";
+    ofstream file(path, ios::binary);
+    if (!file.is_open())
+    {
         MessageBox(NULL, L"開けませんでした", path.c_str(), MB_OK | MB_ICONWARNING);
-		return;
-	}
-	BinaryOutputArchive archive(file);
+        return;
+    }
+    BinaryOutputArchive archive(file);
 
-	//ブロック数の保存
-	archive.saveBinary(&block_number_x_, sizeof(block_number_x_));
-	archive.saveBinary(&block_number_z_, sizeof(block_number_z_));
+    //ブロック数の保存
+    archive.saveBinary(&block_number_x_, sizeof(block_number_x_));
+    archive.saveBinary(&block_number_z_, sizeof(block_number_z_));
 
-	//ブロックSizeの保存
-	archive.saveBinary(&block_size_, sizeof(block_size_));
+    //ブロックSizeの保存
+    archive.saveBinary(&block_size_, sizeof(block_size_));
 
-	//頂点データ数の保存
-	size_t vertex_number = vertexes_.size();
-	archive.saveBinary(&vertex_number, sizeof(vertex_number));
+    //頂点データ数の保存
+    size_t vertex_number = vertexes_.size();
+    archive.saveBinary(&vertex_number, sizeof(vertex_number));
 
-	//頂点データの保存
-	for (size_t count = 0; count < vertex_number; ++count)
-	{
-		archive.saveBinary(&vertexes_[count].position, sizeof(vertexes_[count].position));
-	}
+    //頂点データの保存
+    for (size_t count = 0; count < vertex_number; ++count)
+    {
+        archive.saveBinary(&vertexes_[count].position, sizeof(vertexes_[count].position));
+    }
 
-	file.close();
+    file.close();
 
     MessageBox(NULL, L"セーブしました", path.c_str(), MB_OK | MB_ICONWARNING);
 }
@@ -223,45 +223,45 @@ void FieldEditor::LoadFrom(const String& name)
 float FieldEditor::GetHeight(const Vector3& position)
 {
     Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
-	int left_up_x = static_cast<int>(((position.x_ - start.x_) / (block_size_.x_ * static_cast<float>(block_number_x_))) * static_cast<float>(block_number_x_));
-	int left_up_z = -static_cast<int>(((position.z_ - start.z_) / (block_size_.y_ * static_cast<float>(block_number_z_))) * static_cast<float>(block_number_z_));
+    int left_up_x = static_cast<int>(((position.x_ - start.x_) / (block_size_.x_ * static_cast<float>(block_number_x_))) * static_cast<float>(block_number_x_));
+    int left_up_z = -static_cast<int>(((position.z_ - start.z_) / (block_size_.y_ * static_cast<float>(block_number_z_))) * static_cast<float>(block_number_z_));
 
-	//フィールドの範囲外だったら処理終了
-	if (left_up_x < 0 || left_up_x >= block_number_x_ || left_up_z < 0 || left_up_z >= block_number_z_)
-	{
-		return 0.0f;
-	}
+    //フィールドの範囲外だったら処理終了
+    if (left_up_x < 0 || left_up_x >= block_number_x_ || left_up_z < 0 || left_up_z >= block_number_z_)
+    {
+        return 0.0f;
+    }
 
-	int right_down_x = left_up_x + 1;
-	int right_down_z = left_up_z + 1;
+    int right_down_x = left_up_x + 1;
+    int right_down_z = left_up_z + 1;
 
     Vector3 target_position(position.x_, 0.0f, position.z_);
-	Vector3& left_up_position = vertexes_[left_up_z * (block_number_x_ + 1) + left_up_x].position;
-	Vector3& right_down_position = vertexes_[right_down_z * (block_number_x_ + 1) + right_down_x].position;
+    Vector3& left_up_position = vertexes_[left_up_z * (block_number_x_ + 1) + left_up_x].position;
+    Vector3& right_down_position = vertexes_[right_down_z * (block_number_x_ + 1) + right_down_x].position;
 
-	//Check Side
-	Vector3& midline = right_down_position - left_up_position;
-	Vector3& left_up_to_target = target_position - left_up_position;
-	Vector3& cross = left_up_to_target * midline;
-	int side_x, side_z;
-	float sign = 0.0f;
-	if (cross.y_ >= 0.0f)
-	{//LeftSide
-		side_x = left_up_x + 1;
-		side_z = left_up_z;
-		sign = -1.0f;
-	}
-	else
-	{//RightSide
-		side_x = left_up_x;
-		side_z = left_up_z + 1;
-		sign = 1.0f;
-	}
-	Vector3& side_position = vertexes_[side_z * (block_number_x_ + 1) + side_x].position;
-	Vector3& side_to_left_up = left_up_position - side_position;
-	Vector3& side_to_right_down = right_down_position - side_position;
-	Vector3& normal = ((side_to_left_up * side_to_right_down) * sign).Normalized();
-	return side_position.y_ - ((position.x_ - side_position.x_) * normal.x_ + (position.z_ - side_position.z_) * normal.z_) / normal.y_;
+    //Check Side
+    Vector3& midline = right_down_position - left_up_position;
+    Vector3& left_up_to_target = target_position - left_up_position;
+    Vector3& cross = left_up_to_target * midline;
+    int side_x, side_z;
+    float sign = 0.0f;
+    if (cross.y_ >= 0.0f)
+    {//LeftSide
+        side_x = left_up_x + 1;
+        side_z = left_up_z;
+        sign = -1.0f;
+    }
+    else
+    {//RightSide
+        side_x = left_up_x;
+        side_z = left_up_z + 1;
+        sign = 1.0f;
+    }
+    Vector3& side_position = vertexes_[side_z * (block_number_x_ + 1) + side_x].position;
+    Vector3& side_to_left_up = left_up_position - side_position;
+    Vector3& side_to_right_down = right_down_position - side_position;
+    Vector3& normal = ((side_to_left_up * side_to_right_down) * sign).Normalized();
+    return side_position.y_ - ((position.x_ - side_position.x_) * normal.x_ + (position.z_ - side_position.z_) * normal.z_) / normal.y_;
 }
 
 //--------------------------------------------------------------------------------
@@ -269,25 +269,25 @@ float FieldEditor::GetHeight(const Vector3& position)
 //--------------------------------------------------------------------------------
 list<int> FieldEditor::GetChoosenIndexes(void)
 {
-	list<int> indexes;
-	Vector3 editor_position_copy = editor_position_;
-	editor_position_copy.y_ = 0.0f;
+    list<int> indexes;
+    Vector3 editor_position_copy = editor_position_;
+    editor_position_copy.y_ = 0.0f;
     Vector3 start(-block_number_x_ * 0.5f * block_size_.x_, 0.0f, block_number_z_ * 0.5f * block_size_.y_);
-	int left_up_x = static_cast<int>(((editor_position_.x_ - start.x_) / (block_size_.x_ * static_cast<float>(block_number_x_))) * static_cast<float>(block_number_x_));
-	int left_up_z = -static_cast<int>(((editor_position_.z_ - start.z_) / (block_size_.y_ * static_cast<float>(block_number_z_))) * static_cast<float>(block_number_z_));
-	int right_down_x = left_up_x + 1;
-	int right_down_z = left_up_z + 1;
+    int left_up_x = static_cast<int>(((editor_position_.x_ - start.x_) / (block_size_.x_ * static_cast<float>(block_number_x_))) * static_cast<float>(block_number_x_));
+    int left_up_z = -static_cast<int>(((editor_position_.z_ - start.z_) / (block_size_.y_ * static_cast<float>(block_number_z_))) * static_cast<float>(block_number_z_));
+    int right_down_x = left_up_x + 1;
+    int right_down_z = left_up_z + 1;
 
     int range_x = 1 + static_cast<int>(choose_range_.x_ / block_size_.x_);
     int range_z = 1 + static_cast<int>(choose_range_.y_ / block_size_.y_);
-	int min_x = left_up_x - range_x;
-	int max_x = right_down_x + range_x;
-	int min_z = left_up_z - range_z;
-	int max_z = right_down_z + range_z;
-	min_x = min_x < 0 ? 0 : min_x;
-	min_z = min_z < 0 ? 0 : min_z;
-	max_x = max_x > block_number_x_ ? block_number_x_ : max_x;
-	max_z = max_z > block_number_z_ ? block_number_z_ : max_z;
+    int min_x = left_up_x - range_x;
+    int max_x = right_down_x + range_x;
+    int min_z = left_up_z - range_z;
+    int max_z = right_down_z + range_z;
+    min_x = min_x < 0 ? 0 : min_x;
+    min_z = min_z < 0 ? 0 : min_z;
+    max_x = max_x > block_number_x_ ? block_number_x_ : max_x;
+    max_z = max_z > block_number_z_ ? block_number_z_ : max_z;
 
     if (current_choose_mode_ == kCircle)
     {// 円形
@@ -322,8 +322,8 @@ list<int> FieldEditor::GetChoosenIndexes(void)
             }
         }
     }
-	
-	return indexes;
+    
+    return indexes;
 }
 
 //--------------------------------------------------------------------------------
@@ -331,21 +331,21 @@ list<int> FieldEditor::GetChoosenIndexes(void)
 //--------------------------------------------------------------------------------
 void FieldEditor::ShowMainWindow(void)
 {
-	// Begin
-	if (!ImGui::Begin("Field editor window"))
-	{
-		ImGui::End();
-		return;
-	}
+    // Begin
+    if (!ImGui::Begin("Field editor window"))
+    {
+        ImGui::End();
+        return;
+    }
 
-	// 操作説明
-	ImGui::Text(kExplainRaiseReduce[current_language_]);
+    // 操作説明
+    ImGui::Text(kExplainRaiseReduce[current_language_]);
 
     // 起伏補間モード平均と線形の比率
     ImGui::SliderFloat(kRaiseModeRate[current_language_], &raise_mode_rate_, 0.0f, 1.0f);
 
-	// 起伏速度
-	ImGui::InputFloat(kFieldRaiseSpeed[current_language_], &raise_speed_);
+    // 起伏速度
+    ImGui::InputFloat(kFieldRaiseSpeed[current_language_], &raise_speed_);
 
     // 拡縮選択モード
     ImGui::ListBox(kFieldChooseMode[current_language_], (int*)(&current_choose_mode_), kFieldChooseModeLabels[current_language_], kChooseModeMax);
@@ -382,8 +382,8 @@ void FieldEditor::ShowMainWindow(void)
         MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
     }
 
-	// End
-	ImGui::End();
+    // End
+    ImGui::End();
 }
 
 //--------------------------------------------------------------------------------

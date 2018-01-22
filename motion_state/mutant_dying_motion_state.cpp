@@ -7,8 +7,8 @@
 #include "../motion_data.h"
 void MutantDyingMotionState::ChangeMotion(Animator& animator)
 {
-	if (current_frame_counter_ >= static_cast<int>(current_motion_data_->frames_.size()))
-	{
-		--current_frame_counter_;
-	}
+    if (current_frame_counter_ >= static_cast<int>(current_motion_data_->frames_.size()))
+    {
+        --current_frame_counter_;
+    }
 }
