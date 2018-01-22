@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　stage_spawner.h
-//	ステージ生成処理
-//	Author : 徐文杰(KodFreedom)
+//  ステージ生成処理
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include <cereal/archives/binary.hpp>
 using namespace cereal;
@@ -37,7 +37,7 @@ void StageSpawner::LoadStage(const String& stage_name)
     GameObjectSpawner::CreateSkyBox(Vector3::kZero, Vector3::kZero, Vector3::kOne);
 
     //地面の作成
-	GameObjectSpawner::CreateField(stage_name);
+    GameObjectSpawner::CreateField(stage_name);
 
     // 環境の読込
     LoadEnvironment(stage_name);
@@ -100,8 +100,8 @@ void StageSpawner::LoadEnvironment(const String& stage_name)
             auto model = GameObjectSpawner::CreateModel(model_name, position, rotation, scale);
             if (model_name == L"Medieval_Windmill.model")
             {
-            	auto behavior = MY_NEW WindmillController(*model);
-            	behavior->Init();
+                auto behavior = MY_NEW WindmillController(*model);
+                behavior->Init();
                 model->AddBehavior(behavior);
             }
         }

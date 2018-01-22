@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
 //@camera_manager.cpp
 //  manage the cameras
-//	ƒJƒƒ‰ŠÇ—ŽÒ
-//	Author : ™•¶ž^(KodFreedom)
+//  ƒJƒƒ‰ŠÇ—ŽÒ
+//  Author : ™•¶ž^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "camera_manager.h"
 #include "camera.h"
@@ -17,7 +17,7 @@
 //--------------------------------------------------------------------------------
 void CameraManager::Update(void)
 {
-	for (auto camera : cameras_) camera->Update();
+    for (auto camera : cameras_) camera->Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ void CameraManager::Update(void)
 //--------------------------------------------------------------------------------
 void CameraManager::LateUpdate(void)
 {
-	for (auto camera : cameras_) camera->LateUpdate();
+    for (auto camera : cameras_) camera->LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ void CameraManager::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void CameraManager::SetCamera(void)
 {
-	for (auto camera : cameras_) camera->Set();
+    for (auto camera : cameras_) camera->Set();
 }
 
 //--------------------------------------------------------------------------------
@@ -41,9 +41,9 @@ void CameraManager::SetCamera(void)
 //--------------------------------------------------------------------------------
 void CameraManager::Clear(void)
 {
-	for (auto iterator = cameras_.begin(); iterator != cameras_.end();)
-	{
-		(*iterator)->Release();
-		iterator = cameras_.erase(iterator);
-	}
+    for (auto iterator = cameras_.begin(); iterator != cameras_.end();)
+    {
+        (*iterator)->Release();
+        iterator = cameras_.erase(iterator);
+    }
 }

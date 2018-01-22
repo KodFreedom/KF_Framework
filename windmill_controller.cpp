@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
-//	風車ビヘイビアコンポネント
+//  風車ビヘイビアコンポネント
 //　windmillBehaviorComponent.h
-//	Author : Xu Wenjie
-//	Date   : 2017-09-12
+//  Author : Xu Wenjie
+//  Date   : 2017-09-12
 //--------------------------------------------------------------------------------
 #include "windmill_controller.h"
 #include "game_object.h"
@@ -14,9 +14,9 @@
 //--------------------------------------------------------------------------------
 bool WindmillController::Init(void)
 {
-	fan_ = owner_.GetTransform()->FindChildBy(L"Fan");
+    fan_ = owner_.GetTransform()->FindChildBy(L"Fan");
     assert(fan_);
-	return true;
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -24,6 +24,5 @@ bool WindmillController::Init(void)
 //--------------------------------------------------------------------------------
 void WindmillController::Update(void)
 {
-	if (!fan_) return;
-	fan_->RotateByRoll(rotate_speed_ * Time::Instance()->ScaledDeltaTime());
+    fan_->RotateByRoll(rotate_speed_ * Time::Instance()->ScaledDeltaTime());
 }

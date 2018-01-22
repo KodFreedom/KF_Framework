@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　third_person_camera.h
-//	三人称カメラクラス
-//	Author : 徐文杰(KodFreedom)
+//  三人称カメラクラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "third_person_camera.h"
 #include "main_system.h"
@@ -19,8 +19,8 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ThirdPersionCamera::ThirdPersionCamera() : Camera()
-	, pitch_speed_(0.0f)
-	, yaw_speed_(0.0f)
+    , pitch_speed_(0.0f)
+    , yaw_speed_(0.0f)
 {}
 
 //--------------------------------------------------------------------------------
@@ -28,10 +28,10 @@ ThirdPersionCamera::ThirdPersionCamera() : Camera()
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::Init(void)
 {
-	Camera::Init();
-	SetOffsetY(kOffsetY);
-	SetDistance(kDistanceDefault);
-	SetPitch(kPitchDefault);
+    Camera::Init();
+    SetOffsetY(kOffsetY);
+    SetDistance(kDistanceDefault);
+    SetPitch(kPitchDefault);
 }
 
 //--------------------------------------------------------------------------------
@@ -39,26 +39,26 @@ void ThirdPersionCamera::Init(void)
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::Update(void)
 {
-	auto input = MainSystem::Instance()->GetInput();
-	float rotation_x = input->RotationHorizontal();
-	float rotation_y = input->RotationVertical();
+    auto input = MainSystem::Instance()->GetInput();
+    float rotation_x = input->RotationHorizontal();
+    float rotation_y = input->RotationVertical();
 
-	float pitch_amount = 0.0f;
-	float yaw_amount = 0.0f;
+    float pitch_amount = 0.0f;
+    float yaw_amount = 0.0f;
 
-	if (fabsf(rotation_x) > kStartRotationMin)
-	{//Y軸回転
-		yaw_amount = kRotationSpeed * rotation_x;
-	}
-	if (fabsf(rotation_y) > kStartRotationMin)
-	{//X軸回転
-		pitch_amount = kRotationSpeed * rotation_y;
-	}
+    if (fabsf(rotation_x) > kStartRotationMin)
+    {//Y軸回転
+        yaw_amount = kRotationSpeed * rotation_x;
+    }
+    if (fabsf(rotation_y) > kStartRotationMin)
+    {//X軸回転
+        pitch_amount = kRotationSpeed * rotation_y;
+    }
 
-	pitch_speed_ = Math::Lerp(pitch_speed_, pitch_amount, kRotationLerpTime);
-	yaw_speed_ = Math::Lerp(yaw_speed_, yaw_amount, kRotationLerpTime);
-	Pitch(pitch_speed_);
-	Yaw(yaw_speed_);
+    pitch_speed_ = Math::Lerp(pitch_speed_, pitch_amount, kRotationLerpTime);
+    yaw_speed_ = Math::Lerp(yaw_speed_, yaw_amount, kRotationLerpTime);
+    Pitch(pitch_speed_);
+    Yaw(yaw_speed_);
 }
 
 //--------------------------------------------------------------------------------
@@ -67,11 +67,11 @@ void ThirdPersionCamera::Update(void)
 void ThirdPersionCamera::LateUpdate(void)
 {
     auto follow_target = MainSystem::Instance()->GetActorObserver()->GetPlayer();
-	if (follow_target)
-	{
-		rig_.position = Math::Lerp(rig_.position, follow_target->GetGameObject().GetTransform()->GetPosition(), kMoveLerpTime);
-	}
-	Camera::LateUpdate();
+    if (follow_target)
+    {
+        rig_.position = Math::Lerp(rig_.position, follow_target->GetGameObject().GetTransform()->GetPosition(), kMoveLerpTime);
+    }
+    Camera::LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
@@ -79,6 +79,6 @@ void ThirdPersionCamera::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::Pitch(const float& radian)
 {
-	Camera::Pitch(radian);
-	pivot_.rotation.x_ = Math::Clamp(pivot_.rotation.x_, kPitchMin, kPitchMax);
+    Camera::Pitch(radian);
+    pivot_.rotation.x_ = Math::Clamp(pivot_.rotation.x_, kPitchMin, kPitchMax);
 }

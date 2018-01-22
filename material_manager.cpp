@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
 //　material_manager.cpp
 //  manage the materials_' save, load
-//	マテリアル管理者
-//	Author : 徐文杰(KodFreedom)
+//  マテリアル管理者
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include <cereal/archives/binary.hpp>
 using namespace cereal;
@@ -46,24 +46,24 @@ void MaterialManager::Release(void)
 //--------------------------------------------------------------------------------
 void MaterialManager::Use(const String& material_name)
 {
-	auto iterator = materials_.find(material_name);
-	if (iterator != materials_.end())
-	{// すでに存在してる
-		++iterator->second.user_number;
-		return;
-	}
-	MaterialInfo info;
-	info.pointer = LoadFromFile(material_name);
-	if (!info.pointer)
-	{// 読込できないの場合真っ赤で保存する
-		info.pointer = MY_NEW Material(L"polygon.jpg"
-			, String(), String(), String(), String(), String()
-			, String(), String(), String(), String(), String()
-			, String(), String(), String(), String(), String()
-			, Color::kRed, Color::kRed, Color::kRed, Color::kRed);
-	}
+    auto iterator = materials_.find(material_name);
+    if (iterator != materials_.end())
+    {// すでに存在してる
+        ++iterator->second.user_number;
+        return;
+    }
+    MaterialInfo info;
+    info.pointer = LoadFromFile(material_name);
+    if (!info.pointer)
+    {// 読込できないの場合真っ赤で保存する
+        info.pointer = MY_NEW Material(L"polygon.jpg"
+            , String(), String(), String(), String(), String()
+            , String(), String(), String(), String(), String()
+            , String(), String(), String(), String(), String()
+            , Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+    }
     UseTexture(*info.pointer);
-	materials_.emplace(material_name, info);
+    materials_.emplace(material_name, info);
 }
 
 //--------------------------------------------------------------------------------
@@ -80,23 +80,23 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
     , const String& self_illum_mask, const String& fresnel_warp_color
     , const String& fresnel_warp_rim, const String& fresnel_warp_specular)
 {
-	auto iterator = materials_.find(material_name);
-	if (iterator != materials_.end())
-	{// すでに存在してる
-		++iterator->second.user_number;
-		return;
-	}
+    auto iterator = materials_.find(material_name);
+    if (iterator != materials_.end())
+    {// すでに存在してる
+        ++iterator->second.user_number;
+        return;
+    }
 
-	MaterialInfo info;
+    MaterialInfo info;
     info.pointer = MY_NEW Material(color_texture, diffuse_texture, diffuse_texture_mask
         , specular_texture, specular_texture_mask, normal_texture, detail_texture
         , detail_mask, tint_by_base_mask, rim_mask, translucency
         , metalness_mask, self_illum_mask, fresnel_warp_color, fresnel_warp_rim, fresnel_warp_specular
         , ambient, diffuse, specular, emissive);
 
-	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+    auto texture_manager = MainSystem::Instance()->GetTextureManager();
     UseTexture(*info.pointer);
-	materials_.emplace(material_name, info);
+    materials_.emplace(material_name, info);
 }
 
 //--------------------------------------------------------------------------------
@@ -104,14 +104,14 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
 //--------------------------------------------------------------------------------
 void MaterialManager::Disuse(const String& material_name)
 {
-	auto iterator = materials_.find(material_name);
-	if (materials_.end() == iterator) return;
-	if (--iterator->second.user_number <= 0)
-	{// 誰も使ってないので破棄する
+    auto iterator = materials_.find(material_name);
+    if (materials_.end() == iterator) return;
+    if (--iterator->second.user_number <= 0)
+    {// 誰も使ってないので破棄する
         DisuseTexture(*iterator->second.pointer);
-		MY_DELETE iterator->second.pointer;
-		materials_.erase(iterator);
-	}
+        MY_DELETE iterator->second.pointer;
+        materials_.erase(iterator);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -124,8 +124,8 @@ void MaterialManager::Disuse(const String& material_name)
 //--------------------------------------------------------------------------------
 void MaterialManager::Init(void)
 {
-	// default material
-	auto texture_manager = MainSystem::Instance()->GetTextureManager();
+    // default material
+    auto texture_manager = MainSystem::Instance()->GetTextureManager();
     UseTexture(kDefaultMaterial);
 }
 
@@ -134,14 +134,14 @@ void MaterialManager::Init(void)
 //--------------------------------------------------------------------------------
 void MaterialManager::Uninit(void)
 {
-	for (auto iterator = materials_.begin(); iterator != materials_.end();)
-	{
+    for (auto iterator = materials_.begin(); iterator != materials_.end();)
+    {
         DisuseTexture(*iterator->second.pointer);
         MY_DELETE iterator->second.pointer;
-		iterator = materials_.erase(iterator);
-	}
+        iterator = materials_.erase(iterator);
+    }
 
-	// default material
+    // default material
     DisuseTexture(kDefaultMaterial);
 }
 
@@ -198,103 +198,103 @@ void MaterialManager::DisuseTexture(const Material& material)
 //--------------------------------------------------------------------------------
 Material* MaterialManager::LoadFromFile(const String& material_name)
 {
-	String path = L"data/material/" + material_name + L".material";
-	ifstream file(path, ios::binary);
-	if (!file.is_open())
-	{
-		assert(file.is_open());
-		return nullptr;
-	}
-	BinaryInputArchive archive(file);
-	auto result = MY_NEW Material;
-	int buffer_size;
-	string buffer;
+    String path = L"data/material/" + material_name + L".material";
+    ifstream file(path, ios::binary);
+    if (!file.is_open())
+    {
+        assert(file.is_open());
+        return nullptr;
+    }
+    BinaryInputArchive archive(file);
+    auto result = MY_NEW Material;
+    int buffer_size;
+    string buffer;
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->color_texture_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->color_texture_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->diffuse_texture_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->diffuse_texture_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->diffuse_texture_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->diffuse_texture_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->specular_texture_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->specular_texture_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->specular_texture_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->specular_texture_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->normal_texture_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->normal_texture_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->detail_texture_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->detail_texture_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->detail_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->detail_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->tint_by_base_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->tint_by_base_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->rim_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->rim_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->translucency_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->translucency_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->metalness_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->metalness_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->self_illum_mask_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->self_illum_mask_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->fresnel_warp_color_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->fresnel_warp_color_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->fresnel_warp_rim_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->fresnel_warp_rim_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&buffer_size, sizeof(buffer_size));
-	buffer.resize(buffer_size);
-	archive.loadBinary(&buffer[0], buffer_size);
-	result->fresnel_warp_specular_ = String(buffer.begin(), buffer.end());
+    archive.loadBinary(&buffer_size, sizeof(buffer_size));
+    buffer.resize(buffer_size);
+    archive.loadBinary(&buffer[0], buffer_size);
+    result->fresnel_warp_specular_ = String(buffer.begin(), buffer.end());
 
-	archive.loadBinary(&result->ambient_, sizeof(result->ambient_));
-	archive.loadBinary(&result->diffuse_, sizeof(result->diffuse_));
-	archive.loadBinary(&result->specular_, sizeof(result->specular_));
-	archive.loadBinary(&result->emissive_, sizeof(result->emissive_));
-	archive.loadBinary(&result->power_, sizeof(result->power_));
-	file.close();
-	return result;
+    archive.loadBinary(&result->ambient_, sizeof(result->ambient_));
+    archive.loadBinary(&result->diffuse_, sizeof(result->diffuse_));
+    archive.loadBinary(&result->specular_, sizeof(result->specular_));
+    archive.loadBinary(&result->emissive_, sizeof(result->emissive_));
+    archive.loadBinary(&result->power_, sizeof(result->power_));
+    file.close();
+    return result;
 }

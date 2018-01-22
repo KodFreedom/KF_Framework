@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　stage_spawner.h
-//	ステージ生成処理
-//	Author : 徐文杰(KodFreedom)
+//  ステージ生成処理
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 #include "common_setting.h"
@@ -12,7 +12,7 @@
 class StageSpawner
 {
 public:
-	static void LoadStage(const String& stage_name);
+    static void LoadStage(const String& stage_name);
 
 private:
     static void LoadEnvironment(const String& stage_name);
