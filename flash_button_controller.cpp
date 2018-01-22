@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	点滅ボタンコントローラ
-//　flash_button_controller.cpp
-//	Author : Xu Wenjie
+//  点滅ボタンコントローラ
+//  flash_button_controller.cpp
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "flash_button_controller.h"
 #include "mesh_renderer_2d.h"

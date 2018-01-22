@@ -8,10 +8,10 @@
 class MutantDamagedMotionState : public NormalMotionState
 {
 public:
-	MutantDamagedMotionState(const int start_frame) : NormalMotionState(L"mutant_damaged", start_frame) {}
-	~MutantDamagedMotionState() {}
+    MutantDamagedMotionState(const int start_frame) : NormalMotionState(L"mutant_damaged", start_frame) {}
+    ~MutantDamagedMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 93;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 93;
 };

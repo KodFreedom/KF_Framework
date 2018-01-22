@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	mutant歩くステート
-//　player_mutant_walk_state.h
-//	Author : Xu Wenjie
+//  mutant歩くステート
+//  player_mutant_walk_state.h
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "player_state.h"

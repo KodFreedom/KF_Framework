@@ -8,10 +8,10 @@
 class MutantIdleWakeUpMotionState : public NormalMotionState
 {
 public:
-	MutantIdleWakeUpMotionState(const int start_frame) : NormalMotionState(L"mutant_idle_wake_up", start_frame) {}
-	~MutantIdleWakeUpMotionState() {}
+    MutantIdleWakeUpMotionState(const int start_frame) : NormalMotionState(L"mutant_idle_wake_up", start_frame) {}
+    ~MutantIdleWakeUpMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 306;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 306;
 };

@@ -16,49 +16,49 @@
 #include "jugg_neutral_look_around_motion_state.h"
 void JuggNeutralMotionState::ChangeMotion(Animator& animator)
 {
-	if(animator.GetMovement() > 0.000000f)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggWalkMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsJump() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggJumpMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsLightAttack() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggAttackLeftMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsGrounded() == false)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggFlailMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsSkill() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggSpainMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsDead() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsStun() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggStunMotionState(0), current_frame_counter_, 5));
-		return;
-	}
-	if(animator.GetIsUltra() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggUltraMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetTimeCounter() > 10.000000f)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggNeutralLookAroundMotionState(0), current_frame_counter_, 10));
-		return;
-	}
+    if(animator.GetMovement() > 0.000000f)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggWalkMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsJump() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggJumpMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsLightAttack() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggAttackLeftMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsGrounded() == false)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggFlailMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsSkill() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggSpainMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsDead() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsStun() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggStunMotionState(0), current_frame_counter_, 5));
+        return;
+    }
+    if(animator.GetIsUltra() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggUltraMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetTimeCounter() > 10.000000f)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggNeutralLookAroundMotionState(0), current_frame_counter_, 10));
+        return;
+    }
 }

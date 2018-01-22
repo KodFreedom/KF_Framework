@@ -8,9 +8,9 @@
 class MutantIdleMotionState : public NormalMotionState
 {
 public:
-	MutantIdleMotionState(const int start_frame) : NormalMotionState(L"mutant_idle", start_frame) {}
-	~MutantIdleMotionState() {}
+    MutantIdleMotionState(const int start_frame) : NormalMotionState(L"mutant_idle", start_frame) {}
+    ~MutantIdleMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

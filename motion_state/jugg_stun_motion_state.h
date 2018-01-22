@@ -8,9 +8,9 @@
 class JuggStunMotionState : public NormalMotionState
 {
 public:
-	JuggStunMotionState(const int start_frame) : NormalMotionState(L"jugg_stun", start_frame) {}
-	~JuggStunMotionState() {}
+    JuggStunMotionState(const int start_frame) : NormalMotionState(L"jugg_stun", start_frame) {}
+    ~JuggStunMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　shader_directX9.cpp
-//	シェーダークラス
-//	Author : 徐文杰(KodFreedom)
+//  シェーダークラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "shader_directX9.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -11,10 +11,10 @@
 //--------------------------------------------------------------------------------
 void ShaderDirectX9::Uninit(void)
 {
-	SAFE_RELEASE(vertex_shader_);
-	SAFE_RELEASE(vertex_shader_constant_table_);
-	SAFE_RELEASE(pixel_shader_);
-	SAFE_RELEASE(pixel_shader_constant_table_);
+    SAFE_RELEASE(vertex_shader_);
+    SAFE_RELEASE(vertex_shader_constant_table_);
+    SAFE_RELEASE(pixel_shader_);
+    SAFE_RELEASE(pixel_shader_constant_table_);
 }
 
 //--------------------------------------------------------------------------------
@@ -22,8 +22,8 @@ void ShaderDirectX9::Uninit(void)
 //--------------------------------------------------------------------------------
 void ShaderDirectX9::Set(const LPDIRECT3DDEVICE9 device)
 {
-	device->SetVertexShader(vertex_shader_);
-	device->SetPixelShader(pixel_shader_);
+    device->SetVertexShader(vertex_shader_);
+    device->SetPixelShader(pixel_shader_);
 }
 
 //--------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ void ShaderDirectX9::CompileShaderFrom(const String& vertex_shader, const String
         file_path.c_str(),
         NULL,
         NULL,
-        "main",	// FunctionNameエントリー関数名
+        "main",    // FunctionNameエントリー関数名
         "vs_3_0", // シェーダーモデル
         0,
         &code_buffer, // バイナリコード
@@ -67,7 +67,7 @@ void ShaderDirectX9::CompileShaderFrom(const String& vertex_shader, const String
         file_path.c_str(),
         NULL,
         NULL,
-        "main",	// FunctionNameエントリー関数名
+        "main",    // FunctionNameエントリー関数名
         "ps_3_0", // シェーダーモデル
         0,
         &code_buffer, // バイナリコード

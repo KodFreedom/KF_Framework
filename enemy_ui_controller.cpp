@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	エネミーUIコントローラ
-//　enemy_ui_controller.cpp
-//	Author : Xu Wenjie
+//  エネミーUIコントローラ
+//  enemy_ui_controller.cpp
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_ui_controller.h"
 #include "main_system.h"

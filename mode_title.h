@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //Å@modeTitle.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mode.h"
@@ -17,15 +16,15 @@ class FlashButtonController;
 class ModeTitle : public Mode
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  ä÷êîêÈåæ
-	//--------------------------------------------------------------------------------
-	ModeTitle() : Mode(L"Title"), time_counter_(0.0f), flash_button_controller_(nullptr) {}
-	~ModeTitle() {}
+    //--------------------------------------------------------------------------------
+    //  ä÷êîêÈåæ
+    //--------------------------------------------------------------------------------
+    ModeTitle() : Mode(L"Title"), time_counter_(0.0f), flash_button_controller_(nullptr) {}
+    ~ModeTitle() {}
 
-	void Init(void) override;
+    void Init(void) override;
     void Uninit(void) override;
-	void Update(void) override;
+    void Update(void) override;
 
 private:
     //--------------------------------------------------------------------------------

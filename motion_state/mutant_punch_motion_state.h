@@ -8,10 +8,10 @@
 class MutantPunchMotionState : public NormalMotionState
 {
 public:
-	MutantPunchMotionState(const int start_frame) : NormalMotionState(L"mutant_punch", start_frame) {}
-	~MutantPunchMotionState() {}
+    MutantPunchMotionState(const int start_frame) : NormalMotionState(L"mutant_punch", start_frame) {}
+    ~MutantPunchMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 59;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 59;
 };

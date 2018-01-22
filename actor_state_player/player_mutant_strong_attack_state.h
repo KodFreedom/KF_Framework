@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	mutant重攻撃ステート
-//　player_mutant_strong_attack_state.h
-//	Author : Xu Wenjie
+//  mutant重攻撃ステート
+//  player_mutant_strong_attack_state.h
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "player_state.h"

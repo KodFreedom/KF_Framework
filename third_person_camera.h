@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　third_person_camera.h
-//	三人称カメラクラス
-//	Author : 徐文杰(KodFreedom)
+//  三人称カメラクラス
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
 #include "camera.h"
@@ -12,52 +12,52 @@
 class ThirdPersionCamera : public Camera
 {
 public:
-	//--------------------------------------------------------------------------------
-	//  constructors and destructors
-	//--------------------------------------------------------------------------------
-	ThirdPersionCamera();
-	~ThirdPersionCamera() {}
-	
-	//--------------------------------------------------------------------------------
-	//  初期化処理
-	//--------------------------------------------------------------------------------
-	void Init(void) override;
+    //--------------------------------------------------------------------------------
+    //  constructors and destructors
+    //--------------------------------------------------------------------------------
+    ThirdPersionCamera();
+    ~ThirdPersionCamera() {}
+    
+    //--------------------------------------------------------------------------------
+    //  初期化処理
+    //--------------------------------------------------------------------------------
+    void Init(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  更新処理
-	//--------------------------------------------------------------------------------
-	void Update(void) override;
+    //--------------------------------------------------------------------------------
+    //  更新処理
+    //--------------------------------------------------------------------------------
+    void Update(void) override;
 
-	//--------------------------------------------------------------------------------
-	//  後更新処理
-	//--------------------------------------------------------------------------------
-	void LateUpdate(void) override;
+    //--------------------------------------------------------------------------------
+    //  後更新処理
+    //--------------------------------------------------------------------------------
+    void LateUpdate(void) override;
 
 private:
-	//--------------------------------------------------------------------------------
-	//  定数定義
-	//--------------------------------------------------------------------------------
-	static constexpr float kRotationSpeed = 0.05f;
-	static constexpr float kStartRotationMin = 0.2f;
-	static constexpr float kRotationLerpTime = 0.1f;
-	static constexpr float kDistanceDefault = 5.0f;
-	static constexpr float kDistanceMin = 3.0f;
-	static constexpr float kDistanceMax = 10.0f;
-	static constexpr float kMoveLerpTime = 0.075f;
-	static constexpr float kPitchDefault = 15.0f / 180.0f * kPi;
-	static constexpr float kPitchMin = -10.0f / 180.0f * kPi;
-	static constexpr float kPitchMax = 60.0f / 180.0f * kPi;
-	static constexpr float kCollisionRadius = 0.1f;
-	static constexpr float kOffsetY = 1.0f;
+    //--------------------------------------------------------------------------------
+    //  定数定義
+    //--------------------------------------------------------------------------------
+    static constexpr float kRotationSpeed = 0.05f;
+    static constexpr float kStartRotationMin = 0.2f;
+    static constexpr float kRotationLerpTime = 0.1f;
+    static constexpr float kDistanceDefault = 5.0f;
+    static constexpr float kDistanceMin = 3.0f;
+    static constexpr float kDistanceMax = 10.0f;
+    static constexpr float kMoveLerpTime = 0.075f;
+    static constexpr float kPitchDefault = 15.0f / 180.0f * kPi;
+    static constexpr float kPitchMin = -10.0f / 180.0f * kPi;
+    static constexpr float kPitchMax = 60.0f / 180.0f * kPi;
+    static constexpr float kCollisionRadius = 0.1f;
+    static constexpr float kOffsetY = 1.0f;
 
-	//--------------------------------------------------------------------------------
-	//  x軸回転
-	//--------------------------------------------------------------------------------
-	void Pitch(const float& radian) override;
+    //--------------------------------------------------------------------------------
+    //  x軸回転
+    //--------------------------------------------------------------------------------
+    void Pitch(const float& radian) override;
 
-	//--------------------------------------------------------------------------------
-	//  変数定義
-	//--------------------------------------------------------------------------------
-	float       pitch_speed_;
-	float       yaw_speed_;
+    //--------------------------------------------------------------------------------
+    //  変数定義
+    //--------------------------------------------------------------------------------
+    float       pitch_speed_;
+    float       yaw_speed_;
 };

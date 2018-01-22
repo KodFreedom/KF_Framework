@@ -8,10 +8,10 @@
 class MutantLandMotionState : public NormalMotionState
 {
 public:
-	MutantLandMotionState(const int start_frame) : NormalMotionState(L"mutant_land", start_frame) {}
-	~MutantLandMotionState() {}
+    MutantLandMotionState(const int start_frame) : NormalMotionState(L"mutant_land", start_frame) {}
+    ~MutantLandMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 72;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 72;
 };

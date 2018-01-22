@@ -1,11 +1,7 @@
 //--------------------------------------------------------------------------------
-//	トランスフォームコンポネント
+//  トランスフォームコンポネント
 //　transform.h
-//	Author : Xu Wenjie
-//	Date   : 2017-07-05
-//--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-//  インクルードファイル
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "transform.h"
 #include "game_object.h"
@@ -19,11 +15,11 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 Transform::Transform(GameObject& owner) : Component(owner)
-	, position_(Vector3::kZero)
-	, scale_(Vector3::kOne)
-	, rotation_(Quaternion::kIdentity)
-	, world_(Matrix44::kIdentity)
-	, parent_(nullptr)
+    , position_(Vector3::kZero)
+    , scale_(Vector3::kOne)
+    , rotation_(Quaternion::kIdentity)
+    , world_(Matrix44::kIdentity)
+    , parent_(nullptr)
 {}
 
 //--------------------------------------------------------------------------------
@@ -31,12 +27,12 @@ Transform::Transform(GameObject& owner) : Component(owner)
 //--------------------------------------------------------------------------------
 void Transform::UpdateMatrix(void)
 {
-	if (parent_) return;
-	CalculateWorldMatrix();
-	for (auto& pair : children_) 
-	{
-		pair.second->UpdateMatrix(world_);
-	}
+    if (parent_) return;
+    CalculateWorldMatrix();
+    for (auto& pair : children_) 
+    {
+        pair.second->UpdateMatrix(world_);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -44,11 +40,11 @@ void Transform::UpdateMatrix(void)
 //--------------------------------------------------------------------------------
 void Transform::UpdateMatrix(const Matrix44& parent)
 {
-	CalculateWorldMatrix(parent);
-	for (auto& pair : children_)
-	{
-		pair.second->UpdateMatrix(world_);
-	}
+    CalculateWorldMatrix(parent);
+    for (auto& pair : children_)
+    {
+        pair.second->UpdateMatrix(world_);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -56,12 +52,12 @@ void Transform::UpdateMatrix(const Matrix44& parent)
 //--------------------------------------------------------------------------------
 void Transform::RegisterParent(Transform* value)
 {
-	if (parent_)
-	{//親があるの場合前の親から削除
-		parent_->DeregisterChild(this);
-	}
-	parent_ = value;
-	parent_->RegisterChild(this);
+    if (parent_)
+    {//親があるの場合前の親から削除
+        parent_->DeregisterChild(this);
+    }
+    parent_ = value;
+    parent_->RegisterChild(this);
 }
 
 //--------------------------------------------------------------------------------
@@ -69,8 +65,8 @@ void Transform::RegisterParent(Transform* value)
 //--------------------------------------------------------------------------------
 void Transform::RegisterChild(Transform* child)
 {
-	if (!child) return;
-	children_.emplace(child->GetGameObject().GetName(), child);
+    if (!child) return;
+    children_.emplace(child->GetGameObject().GetName(), child);
 }
 
 //--------------------------------------------------------------------------------
@@ -78,9 +74,9 @@ void Transform::RegisterChild(Transform* child)
 //--------------------------------------------------------------------------------
 void Transform::DeregisterChild(Transform* child)
 {
-	auto iterator = children_.find(child->GetGameObject().GetName());
-	if (children_.end() == iterator) return;
-	children_.erase(iterator);
+    auto iterator = children_.find(child->GetGameObject().GetName());
+    if (children_.end() == iterator) return;
+    children_.erase(iterator);
 }
 
 //--------------------------------------------------------------------------------
@@ -98,11 +94,11 @@ Vector3 Transform::GetCurrentWorldPosition(void) const
 Matrix44 Transform::GetCurrentWorldMatrix(void) const
 {
     Matrix44& world = Matrix44::Transform(rotation_, position_, scale_);
-	if (parent_)
-	{
-		world *= parent_->GetCurrentWorldMatrix();
-	}
-	return world;
+    if (parent_)
+    {
+        world *= parent_->GetCurrentWorldMatrix();
+    }
+    return world;
 }
 
 //--------------------------------------------------------------------------------
@@ -120,9 +116,9 @@ Matrix44 Transform::GetCurrentWorldMatrix(const Matrix44& parent) const
 //--------------------------------------------------------------------------------
 void Transform::RotateByPitch(const float& radian)
 {
-	auto& right = GetRight();
-	auto& rotation = Quaternion::RotateAxis(right, radian);
-	rotation_ *= rotation;
+    auto& right = GetRight();
+    auto& rotation = Quaternion::RotateAxis(right, radian);
+    rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
@@ -130,9 +126,9 @@ void Transform::RotateByPitch(const float& radian)
 //--------------------------------------------------------------------------------
 void Transform::RotateByYaw(const float& radian)
 {
-	auto& up = GetUp();
-	auto& rotation = Quaternion::RotateAxis(up, radian);
-	rotation_ *= rotation;
+    auto& up = GetUp();
+    auto& rotation = Quaternion::RotateAxis(up, radian);
+    rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
@@ -140,18 +136,18 @@ void Transform::RotateByYaw(const float& radian)
 //--------------------------------------------------------------------------------
 void Transform::RotateByRoll(const float& radian)
 {
-	auto& forward = GetForward();
-	auto& rotation = Quaternion::RotateAxis(forward, radian);
-	rotation_ *= rotation;
+    auto& forward = GetForward();
+    auto& rotation = Quaternion::RotateAxis(forward, radian);
+    rotation_ *= rotation;
 }
 
 //--------------------------------------------------------------------------------
-//	世界軸の方向ベクトルを自分の軸に変換する
+//    世界軸の方向ベクトルを自分の軸に変換する
 //--------------------------------------------------------------------------------
 Vector3 Transform::TransformDirectionToLocal(const Vector3& direction)
 {
-	auto& transpose = world_.Transpose();
-	return Vector3::TransformNormal(direction, transpose);
+    auto& transpose = world_.Transpose();
+    return Vector3::TransformNormal(direction, transpose);
 }
 
 //--------------------------------------------------------------------------------
@@ -159,18 +155,18 @@ Vector3 Transform::TransformDirectionToLocal(const Vector3& direction)
 //--------------------------------------------------------------------------------
 Transform* Transform::FindChildBy(const String& name)
 {
-	if (owner_.GetName()._Equal(name)) return this;
-	auto iterator = children_.find(name);
-	if (children_.end() == iterator)
-	{
-		for (auto& pair : children_)
-		{
-			auto result = pair.second->FindChildBy(name);
-			if (result) return result;
-		}
-		return nullptr;
-	}
-	return iterator->second;
+    if (owner_.GetName()._Equal(name)) return this;
+    auto iterator = children_.find(name);
+    if (children_.end() == iterator)
+    {
+        for (auto& pair : children_)
+        {
+            auto result = pair.second->FindChildBy(name);
+            if (result) return result;
+        }
+        return nullptr;
+    }
+    return iterator->second;
 }
 
 //--------------------------------------------------------------------------------
@@ -179,18 +175,18 @@ Transform* Transform::FindChildBy(const String& name)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//	行列の算出(親なし)
+//    行列の算出(親なし)
 //--------------------------------------------------------------------------------
 void Transform::CalculateWorldMatrix(void)
 {
-	world_ = Matrix44::Transform(rotation_, position_, scale_);
+    world_ = Matrix44::Transform(rotation_, position_, scale_);
 }
 
 //--------------------------------------------------------------------------------
-//	行列の算出(親あり)
+//    行列の算出(親あり)
 //--------------------------------------------------------------------------------
 void Transform::CalculateWorldMatrix(const Matrix44& parent)
 {
-	CalculateWorldMatrix();
-	world_ *= parent;
+    CalculateWorldMatrix();
+    world_ *= parent;
 }

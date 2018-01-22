@@ -8,9 +8,9 @@
 class ZombieRunningMotionState : public NormalMotionState
 {
 public:
-	ZombieRunningMotionState(const int start_frame) : NormalMotionState(L"zombie_running", start_frame) {}
-	~ZombieRunningMotionState() {}
+    ZombieRunningMotionState(const int start_frame) : NormalMotionState(L"zombie_running", start_frame) {}
+    ~ZombieRunningMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

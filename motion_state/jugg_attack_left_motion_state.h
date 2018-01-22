@@ -8,10 +8,10 @@
 class JuggAttackLeftMotionState : public NormalMotionState
 {
 public:
-	JuggAttackLeftMotionState(const int start_frame) : NormalMotionState(L"jugg_attack_left", start_frame) {}
-	~JuggAttackLeftMotionState() {}
+    JuggAttackLeftMotionState(const int start_frame) : NormalMotionState(L"jugg_attack_left", start_frame) {}
+    ~JuggAttackLeftMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 45;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 45;
 };

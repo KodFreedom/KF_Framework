@@ -9,14 +9,14 @@
 #include "jugg_death_motion_state.h"
 void JuggSpainMotionState::ChangeMotion(Animator& animator)
 {
-	if(animator.GetIsSkillOver() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggNeutralMotionState(0), current_frame_counter_, 10));
-		return;
-	}
-	if(animator.GetIsDead() == true)
-	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
-		return;
-	}
+    if(animator.GetIsSkillOver() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggNeutralMotionState(0), current_frame_counter_, 10));
+        return;
+    }
+    if(animator.GetIsDead() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW JuggDeathMotionState(0), current_frame_counter_, 10));
+        return;
+    }
 }

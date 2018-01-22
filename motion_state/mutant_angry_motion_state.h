@@ -8,10 +8,10 @@
 class MutantAngryMotionState : public NormalMotionState
 {
 public:
-	MutantAngryMotionState(const int start_frame) : NormalMotionState(L"mutant_angry", start_frame) {}
-	~MutantAngryMotionState() {}
+    MutantAngryMotionState(const int start_frame) : NormalMotionState(L"mutant_angry", start_frame) {}
+    ~MutantAngryMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 268;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 268;
 };

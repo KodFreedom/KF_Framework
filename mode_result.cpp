@@ -1,7 +1,6 @@
 //--------------------------------------------------------------------------------
-//
 //　modeDemo.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode_result.h"
 #include "main_system.h"
@@ -26,14 +25,14 @@
 //--------------------------------------------------------------------------------
 void ModeResult::Init(void)
 {
-	//カメラの初期化
-	auto camera = MY_NEW Camera;
-	camera->Init();
+    //カメラの初期化
+    auto camera = MY_NEW Camera;
+    camera->Init();
 
     //ライトの初期化
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
-	//UIの初期化
+    //UIの初期化
     GameObjectSpawner::CreateBasicPolygon2d(
         Vector3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f)
         , kDefaultLayer
@@ -69,7 +68,7 @@ void ModeResult::Uninit(void)
 //--------------------------------------------------------------------------------
 void ModeResult::Update(void)
 {
-	Mode::Update();
+    Mode::Update();
 
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
@@ -82,9 +81,9 @@ void ModeResult::Update(void)
         return;
     }
 
-	if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
-	{
+    if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
+    {
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
-	}
+    }
 }

@@ -8,9 +8,9 @@
 class JuggDeathMotionState : public NormalMotionState
 {
 public:
-	JuggDeathMotionState(const int start_frame) : NormalMotionState(L"jugg_death", start_frame) {}
-	~JuggDeathMotionState() {}
+    JuggDeathMotionState(const int start_frame) : NormalMotionState(L"jugg_death", start_frame) {}
+    ~JuggDeathMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
+    void ChangeMotion(Animator& animator) override;
 };

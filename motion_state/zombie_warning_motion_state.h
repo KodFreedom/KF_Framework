@@ -8,10 +8,10 @@
 class ZombieWarningMotionState : public NormalMotionState
 {
 public:
-	ZombieWarningMotionState(const int start_frame) : NormalMotionState(L"zombie_warning", start_frame) {}
-	~ZombieWarningMotionState() {}
+    ZombieWarningMotionState(const int start_frame) : NormalMotionState(L"zombie_warning", start_frame) {}
+    ~ZombieWarningMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 229;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 229;
 };

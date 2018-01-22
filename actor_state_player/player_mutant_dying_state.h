@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	mutant死亡ステート
-//　player_mutant_dying_state.h
-//	Author : Xu Wenjie
+//  mutant死亡ステート
+//  player_mutant_dying_state.h
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
 #include "player_state.h"

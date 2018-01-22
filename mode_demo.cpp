@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
 //@modeDemo.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode_demo.h"
 #include "main_system.h"
@@ -39,8 +39,8 @@ ModeDemo::~ModeDemo()
 //  ‰Šú‰»ˆ—
 //--------------------------------------------------------------------------------
 void ModeDemo::Init(void)
-{	
-	StageSpawner::LoadStage(L"demo");
+{    
+    StageSpawner::LoadStage(L"demo");
 
     auto main_system = MainSystem::Instance();
     auto player = main_system->GetActorObserver()->GetPlayer();
@@ -53,7 +53,7 @@ void ModeDemo::Init(void)
 //--------------------------------------------------------------------------------
 void ModeDemo::Update(void)
 {
-	Mode::Update();
+    Mode::Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void ModeDemo::Update(void)
 //--------------------------------------------------------------------------------
 void ModeDemo::LateUpdate(void)
 {
-	Mode::LateUpdate();
+    Mode::LateUpdate();
     auto main_system = MainSystem::Instance();
 
     if (time_counter_ > 0.0f)

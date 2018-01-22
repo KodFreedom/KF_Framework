@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	ï®óùââéZÉVÉXÉeÉÄ
+//  ï®óùââéZÉVÉXÉeÉÄ
 //Å@physics_system.cpp
-//	Author : èôï∂û^(KodFreedom)
+//  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "physics_system.h"
 #include "collision_detector.h"
@@ -22,25 +22,24 @@ const Vector3 PhysicsSystem::kGravity = Vector3(0.0f, -9.8f, 0.0f);
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Update(void)
 {
-	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
-	{
-		Resolve(**iterator);
-		MY_DELETE *iterator;
-		iterator = collisions_.erase(iterator);
-	}
+    for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
+    {
+        Resolve(**iterator);
+        MY_DELETE *iterator;
+        iterator = collisions_.erase(iterator);
+    }
 }
 
 //--------------------------------------------------------------------------------
-//	ä÷êîñºÅFClear
-//  ä÷êîê‡ñæÅFè’ìÀèÓïÒÇëSïîîjä¸Ç∑ÇÈ
+//  è’ìÀèÓïÒÇëSïîîjä¸Ç∑ÇÈ
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Clear(void)
 {
-	for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
-	{
-		MY_DELETE *iterator;
-		iterator = collisions_.erase(iterator);
-	}
+    for (auto iterator = collisions_.begin(); iterator != collisions_.end();)
+    {
+        MY_DELETE *iterator;
+        iterator = collisions_.erase(iterator);
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -53,8 +52,8 @@ void PhysicsSystem::Clear(void)
 //--------------------------------------------------------------------------------
 void PhysicsSystem::Resolve(Collision& collision)
 {
-	ResolveVelocity(collision);
-	ResolveInterpenetration(collision);
+    ResolveVelocity(collision);
+    ResolveInterpenetration(collision);
 }
 
 //--------------------------------------------------------------------------------
@@ -62,64 +61,64 @@ void PhysicsSystem::Resolve(Collision& collision)
 //--------------------------------------------------------------------------------
 void PhysicsSystem::ResolveVelocity(Collision& collision)
 {
-	//ï™ó£ë¨ìxåvéZ
-	float separating_velocity = CalculateSeparatingVelocity(collision);
+    //ï™ó£ë¨ìxåvéZ
+    float separating_velocity = CalculateSeparatingVelocity(collision);
 
-	//ï™ó£ë¨ìxÉ`ÉFÉbÉN
-	//è’ìÀñ@ê¸ÇÃãtï˚å¸Ç…Ç»ÇÍÇŒåvéZÇµÇ»Ç¢
-	if (separating_velocity > 0.0f) return;
+    //ï™ó£ë¨ìxÉ`ÉFÉbÉN
+    //è’ìÀñ@ê¸ÇÃãtï˚å¸Ç…Ç»ÇÍÇŒåvéZÇµÇ»Ç¢
+    if (separating_velocity > 0.0f) return;
 
-	//íµÇÀï‘ÇËåWêîÇÃéZèo
-	float bounciness = collision.rigidbody_one->GetBounciness();
-	if (collision.rigidbody_two)
-	{
-		bounciness += collision.rigidbody_two->GetBounciness();
-		bounciness *= 0.5f;
-	}
+    //íµÇÀï‘ÇËåWêîÇÃéZèo
+    float bounciness = collision.rigidbody_one->GetBounciness();
+    if (collision.rigidbody_two)
+    {
+        bounciness += collision.rigidbody_two->GetBounciness();
+        bounciness *= 0.5f;
+    }
 
-	//íµÇÀï‘ÇËë¨ìxÇÃéZèo
-	float bounciness_velocity = -separating_velocity * bounciness;
+    //íµÇÀï‘ÇËë¨ìxÇÃéZèo
+    float bounciness_velocity = -separating_velocity * bounciness;
 
-	//è’ìÀï˚å¸Ç…çÏópóÕÇåvéZÇ∑ÇÈ
-	Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
-	if (collision.rigidbody_two)
-	{
-		acceleration -= collision.rigidbody_two->GetAcceleration();
-	}
-	float separating_acceleration = acceleration.Dot(collision.normal);
-	
-	//è’ìÀñ@ê¸ÇÃãtï˚å¸Ç…Ç»ÇÍÇŒ
-	if (separating_acceleration < 0.0f)
-	{
-		bounciness_velocity = max(bounciness_velocity + separating_acceleration * bounciness, 0.0f);
-	}
+    //è’ìÀï˚å¸Ç…çÏópóÕÇåvéZÇ∑ÇÈ
+    Vector3 acceleration = collision.rigidbody_one->GetAcceleration();
+    if (collision.rigidbody_two)
+    {
+        acceleration -= collision.rigidbody_two->GetAcceleration();
+    }
+    float separating_acceleration = acceleration.Dot(collision.normal);
+    
+    //è’ìÀñ@ê¸ÇÃãtï˚å¸Ç…Ç»ÇÍÇŒ
+    if (separating_acceleration < 0.0f)
+    {
+        bounciness_velocity = max(bounciness_velocity + separating_acceleration * bounciness, 0.0f);
+    }
 
-	//ë¨ìxç∑ï™åvéZ
-	float delta_velocity = bounciness_velocity - separating_velocity;
+    //ë¨ìxç∑ï™åvéZ
+    float delta_velocity = bounciness_velocity - separating_velocity;
 
-	//ãtéøó éÊìæ
-	float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
-	if (collision.rigidbody_two)
-	{
-		total_inverse_mass += collision.rigidbody_two->GetInverseMass();
-	}
+    //ãtéøó éÊìæ
+    float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
+    if (collision.rigidbody_two)
+    {
+        total_inverse_mass += collision.rigidbody_two->GetInverseMass();
+    }
 
-	//éøó Ç™ñ≥å¿ëÂÇÃèÍçáåvéZÇµÇ»Ç¢
-	if (total_inverse_mass <= 0.0f) return;
+    //éøó Ç™ñ≥å¿ëÂÇÃèÍçáåvéZÇµÇ»Ç¢
+    if (total_inverse_mass <= 0.0f) return;
 
-	//è’ìÀóÕåvéZ
-	float impulse = delta_velocity / total_inverse_mass;
+    //è’ìÀóÕåvéZ
+    float impulse = delta_velocity / total_inverse_mass;
 
-	//íPà ãtéøó ÇÃè’ìÀóÕ
-	const Vector3& impulse_per_inverse_mass = collision.normal * impulse;
-	
-	//ë¨ìxåvéZ
-	//3DâÒì]Ç™é¿ëïÇµÇƒÇ»Ç¢ÇÃÇ≈ÅAâÒì]ë¨ìxÇÉJÉbÉgÇ∑ÇÈ
-	collision.rigidbody_one->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
-	if (collision.rigidbody_two)
-	{
-		collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
-	}
+    //íPà ãtéøó ÇÃè’ìÀóÕ
+    const Vector3& impulse_per_inverse_mass = collision.normal * impulse;
+    
+    //ë¨ìxåvéZ
+    //3DâÒì]Ç™é¿ëïÇµÇƒÇ»Ç¢ÇÃÇ≈ÅAâÒì]ë¨ìxÇÉJÉbÉgÇ∑ÇÈ
+    collision.rigidbody_one->AddVelocity(impulse_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
+    if (collision.rigidbody_two)
+    {
+        collision.rigidbody_two->AddVelocity(impulse_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -127,28 +126,28 @@ void PhysicsSystem::ResolveVelocity(Collision& collision)
 //--------------------------------------------------------------------------------
 void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 {
-	//è’ìÀÇµÇ»Ç¢
-	if (collision.penetration <= 0.0f) return;
+    //è’ìÀÇµÇ»Ç¢
+    if (collision.penetration <= 0.0f) return;
 
-	//ãtéøó åvéZ
-	float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
-	if (collision.rigidbody_two)
-	{
-		total_inverse_mass += collision.rigidbody_two->GetInverseMass();
-	}
+    //ãtéøó åvéZ
+    float total_inverse_mass = collision.rigidbody_one->GetInverseMass();
+    if (collision.rigidbody_two)
+    {
+        total_inverse_mass += collision.rigidbody_two->GetInverseMass();
+    }
 
-	//éøó Ç™ñ≥å¿ëÂÇÃèÍçáåvéZÇµÇ»Ç¢
-	if (total_inverse_mass <= 0.0f) return;
+    //éøó Ç™ñ≥å¿ëÂÇÃèÍçáåvéZÇµÇ»Ç¢
+    if (total_inverse_mass <= 0.0f) return;
 
-	//éøó íPà ñﬂÇËó åvéZ
-	const Vector3& movement_per_inverse_mass = collision.normal * collision.penetration / total_inverse_mass;
+    //éøó íPà ñﬂÇËó åvéZ
+    const Vector3& movement_per_inverse_mass = collision.normal * collision.penetration / total_inverse_mass;
 
-	//äeRigidbodyñﬂÇËà íuåvéZ
-	collision.rigidbody_one->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
-	if (collision.rigidbody_two)
-	{
-		collision.rigidbody_two->AddFixedMovement(movement_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
-	}
+    //äeRigidbodyñﬂÇËà íuåvéZ
+    collision.rigidbody_one->AddFixedMovement(movement_per_inverse_mass * collision.rigidbody_one->GetInverseMass());
+    if (collision.rigidbody_two)
+    {
+        collision.rigidbody_two->AddFixedMovement(movement_per_inverse_mass * -1.0f * collision.rigidbody_two->GetInverseMass());
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -156,9 +155,9 @@ void PhysicsSystem::ResolveInterpenetration(Collision& collision)
 //--------------------------------------------------------------------------------
 float PhysicsSystem::CalculateSeparatingVelocity(Collision& collision)
 {
-	Vector3 relative_velocity = collision.rigidbody_one->GetVelocity();
-	if (collision.rigidbody_two) relative_velocity -= collision.rigidbody_two->GetVelocity();
-	return relative_velocity.Dot(collision.normal);
+    Vector3 relative_velocity = collision.rigidbody_one->GetVelocity();
+    if (collision.rigidbody_two) relative_velocity -= collision.rigidbody_two->GetVelocity();
+    return relative_velocity.Dot(collision.normal);
 }
 
 /*//--------------------------------------------------------------------------------
@@ -166,45 +165,45 @@ float PhysicsSystem::CalculateSeparatingVelocity(Collision& collision)
 //--------------------------------------------------------------------------------
 void PhysicsSystem::calculateCollisionBasis(Collision& collision)
 {
-	Vector3 vAxisY, vAxisZ;
+    Vector3 vAxisY, vAxisZ;
 
-	//è’ìÀñ@ê¸Ç™ê¢äEXé≤Ç∆ê¢äEYé≤Ç«Ç¡ÇøÇ∆ÇÃäpìxÇ™ãﬂÇ¢
-	if (fabsf(collision.Normal.X) > fabsf(collision.Normal.Y))
-	{//Y
-		float fScale = 1.0f / sqrtf(collision.Normal.X * collision.Normal.X
-			+ collision.Normal.Z * collision.Normal.Z);
+    //è’ìÀñ@ê¸Ç™ê¢äEXé≤Ç∆ê¢äEYé≤Ç«Ç¡ÇøÇ∆ÇÃäpìxÇ™ãﬂÇ¢
+    if (fabsf(collision.Normal.X) > fabsf(collision.Normal.Y))
+    {//Y
+        float fScale = 1.0f / sqrtf(collision.Normal.X * collision.Normal.X
+            + collision.Normal.Z * collision.Normal.Z);
 
-		vAxisZ.X = collision.Normal.Z * fScale;
-		vAxisZ.Y = 0.0f;
-		vAxisZ.Z = collision.Normal.X * fScale;
+        vAxisZ.X = collision.Normal.Z * fScale;
+        vAxisZ.Y = 0.0f;
+        vAxisZ.Z = collision.Normal.X * fScale;
 
-		vAxisY.X = collision.Normal.Y * vAxisZ.X;
-		vAxisY.Y = collision.Normal.Z * vAxisZ.X
-			- collision.Normal.X * vAxisZ.Z;
-		vAxisY.Z = -collision.Normal.Y * vAxisZ.X;
-	}
-	else
-	{//X
-		float fScale = 1.0f / sqrtf(collision.Normal.Y * collision.Normal.Y
-			+ collision.Normal.Z * collision.Normal.Z);
+        vAxisY.X = collision.Normal.Y * vAxisZ.X;
+        vAxisY.Y = collision.Normal.Z * vAxisZ.X
+            - collision.Normal.X * vAxisZ.Z;
+        vAxisY.Z = -collision.Normal.Y * vAxisZ.X;
+    }
+    else
+    {//X
+        float fScale = 1.0f / sqrtf(collision.Normal.Y * collision.Normal.Y
+            + collision.Normal.Z * collision.Normal.Z);
 
-		vAxisZ.X = 0.0f;
-		vAxisZ.Y = -collision.Normal.Z * fScale;
-		vAxisZ.Z = collision.Normal.Y * fScale;
+        vAxisZ.X = 0.0f;
+        vAxisZ.Y = -collision.Normal.Z * fScale;
+        vAxisZ.Z = collision.Normal.Y * fScale;
 
-		vAxisY.X = collision.Normal.Y * vAxisZ.Z
-			- collision.Normal.Z * vAxisZ.Y;
-		vAxisY.Y = -collision.Normal.X * vAxisZ.Z;
-		vAxisY.Z = collision.Normal.X * vAxisZ.Y;
-	}
+        vAxisY.X = collision.Normal.Y * vAxisZ.Z
+            - collision.Normal.Z * vAxisZ.Y;
+        vAxisY.Y = -collision.Normal.X * vAxisZ.Z;
+        vAxisY.Z = collision.Normal.X * vAxisZ.Y;
+    }
 
-	collision.m_mtxToWorld.Elements[0][0] = collision.Normal.X;
-	collision.m_mtxToWorld.Elements[0][1] = collision.Normal.Y;
-	collision.m_mtxToWorld.Elements[0][2] = collision.Normal.Z;
-	collision.m_mtxToWorld.Elements[1][0] = vAxisY.X;
-	collision.m_mtxToWorld.Elements[1][1] = vAxisY.Y;
-	collision.m_mtxToWorld.Elements[1][2] = vAxisY.Z;
-	collision.m_mtxToWorld.Elements[2][0] = vAxisZ.X;
-	collision.m_mtxToWorld.Elements[2][1] = vAxisZ.Y;
-	collision.m_mtxToWorld.Elements[2][2] = vAxisZ.Z;
+    collision.m_mtxToWorld.Elements[0][0] = collision.Normal.X;
+    collision.m_mtxToWorld.Elements[0][1] = collision.Normal.Y;
+    collision.m_mtxToWorld.Elements[0][2] = collision.Normal.Z;
+    collision.m_mtxToWorld.Elements[1][0] = vAxisY.X;
+    collision.m_mtxToWorld.Elements[1][1] = vAxisY.Y;
+    collision.m_mtxToWorld.Elements[1][2] = vAxisY.Z;
+    collision.m_mtxToWorld.Elements[2][0] = vAxisZ.X;
+    collision.m_mtxToWorld.Elements[2][1] = vAxisZ.Y;
+    collision.m_mtxToWorld.Elements[2][2] = vAxisZ.Z;
 }*/

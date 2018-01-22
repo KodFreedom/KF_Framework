@@ -8,10 +8,10 @@
 class JuggNeutralLookAroundMotionState : public NormalMotionState
 {
 public:
-	JuggNeutralLookAroundMotionState(const int start_frame) : NormalMotionState(L"jugg_neutral_look_around", start_frame) {}
-	~JuggNeutralLookAroundMotionState() {}
+    JuggNeutralLookAroundMotionState(const int start_frame) : NormalMotionState(L"jugg_neutral_look_around", start_frame) {}
+    ~JuggNeutralLookAroundMotionState() {}
 
 private:
-	void ChangeMotion(Animator& animator) override;
-	const int frame_to_exit_ = 187;
+    void ChangeMotion(Animator& animator) override;
+    const int frame_to_exit_ = 187;
 };
