@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	生き物コントローラ
+//  生き物コントローラ
 //　ActorController.cpp
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "actor_controller.h"
 #include "game_object.h"
@@ -25,7 +25,7 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 ActorController::ActorController(GameObject& owner, const String& name, Rigidbody3D& rigidbody, Animator& animator)
-	: Behavior(owner, name), rigidbody_(rigidbody)
+    : Behavior(owner, name), rigidbody_(rigidbody)
     , animator_(animator)
 {}
 
@@ -47,26 +47,26 @@ bool ActorController::Init(void)
 //--------------------------------------------------------------------------------
 void ActorController::Move(void)
 {
-	float move_amount = movement_.Magnitude();
-	move_amount = min(move_amount, 1.0f) * parameter_.GetMovementMultiplier();
-	if (move_amount > 0.0f)
-	{
-		auto transform = owner_.GetTransform();
+    float move_amount = movement_.Magnitude();
+    move_amount = min(move_amount, 1.0f) * parameter_.GetMovementMultiplier();
+    if (move_amount > 0.0f)
+    {
+        auto transform = owner_.GetTransform();
 
-		// 回転
-		Vector3& turn_direction = movement_ / move_amount;
-		turn_direction = transform->TransformDirectionToLocal(turn_direction).Normalized();
-		float rotation_y = atan2f(turn_direction.x_, turn_direction.z_);
-		float turn_speed = Math::Lerp(parameter_.GetMaxTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
-		transform->RotateByYaw(rotation_y * turn_speed * Time::Instance()->ScaledDeltaTime());
+        // 回転
+        Vector3& turn_direction = movement_ / move_amount;
+        turn_direction = transform->TransformDirectionToLocal(turn_direction).Normalized();
+        float rotation_y = atan2f(turn_direction.x_, turn_direction.z_);
+        float turn_speed = Math::Lerp(parameter_.GetMinTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
+        transform->RotateByYaw(rotation_y * turn_speed * Time::Instance()->ScaledDeltaTime());
 
-		//移動
-		Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos
-			? Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized()
-			: transform->GetForward();
-		rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * Time::Instance()->ScaledDeltaTime());
-	}
-	animator_.SetMovement(move_amount);
+        //移動
+        Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos
+            ? Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized()
+            : transform->GetForward();
+        rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * Time::Instance()->ScaledDeltaTime());
+    }
+    animator_.SetMovement(move_amount);
 }
 
 //--------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ void ActorController::Move(void)
 //--------------------------------------------------------------------------------
 void ActorController::Jump(void)
 {
-	Vector3 velocity = rigidbody_.GetVelocity();
-	velocity.y_ = parameter_.GetJumpSpeed();
-	rigidbody_.SetVelocity(velocity);
+    Vector3 velocity = rigidbody_.GetVelocity();
+    velocity.y_ = parameter_.GetJumpSpeed();
+    rigidbody_.SetVelocity(velocity);
 }
 
 //--------------------------------------------------------------------------------
@@ -84,20 +84,20 @@ void ActorController::Jump(void)
 //--------------------------------------------------------------------------------
 void ActorController::CheckGrounded(void)
 {
-	auto& position = owner_.GetTransform()->GetPosition();
-	auto ray_hit_info = MainSystem::Instance()->GetCollisionSystem()->
-		RayCast(Ray(position, Vector3::kDown), parameter_.GetGroundCheckDistance(), &owner_);
+    auto& position = owner_.GetTransform()->GetPosition();
+    auto ray_hit_info = MainSystem::Instance()->GetCollisionSystem()->
+        RayCast(Ray(position, Vector3::kDown), parameter_.GetGroundCheckDistance(), &owner_);
 
-	if (ray_hit_info)
-	{
-		current_ground_info_.is_grounded = true;
-		current_ground_info_.normal = ray_hit_info->normal;
-		MY_DELETE ray_hit_info;
-		return;
-	}
+    if (ray_hit_info)
+    {
+        current_ground_info_.is_grounded = true;
+        current_ground_info_.normal = ray_hit_info->normal;
+        MY_DELETE ray_hit_info;
+        return;
+    }
 
-	current_ground_info_.is_grounded = false;
-	current_ground_info_.normal = Vector3::kUp;
+    current_ground_info_.is_grounded = false;
+    current_ground_info_.normal = Vector3::kUp;
 }
 
 //--------------------------------------------------------------------------------
