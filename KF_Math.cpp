@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------
 //　kf_math.cpp
 //  classes and methods for math
-//	演算用のクラスとメソッド
-//	Author : 徐文杰(KodFreedom)
+//  演算用のクラスとメソッド
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "kf_math.h"
 using namespace kodfreedom;
@@ -13,14 +13,14 @@ using namespace kodfreedom;
 const Vector2 Vector2::kZero = Vector2(0.0f);
 const Vector2 Vector2::kOne = Vector2(1.0f);
 
-const Vector3 Vector3::kZero = Vector3(0.0f);				
-const Vector3 Vector3::kOne = Vector3(1.0f);				
-const Vector3 Vector3::kUp = Vector3(0.0f, 1.0f, 0.0f);	
-const Vector3 Vector3::kDown = Vector3(0.0f, -1.0f, 0.0f);	
-const Vector3 Vector3::kLeft = Vector3(-1.0f, 0.0f, 0.0f);	
-const Vector3 Vector3::kRight = Vector3(1.0f, 0.0f, 0.0f);	
+const Vector3 Vector3::kZero = Vector3(0.0f);                
+const Vector3 Vector3::kOne = Vector3(1.0f);                
+const Vector3 Vector3::kUp = Vector3(0.0f, 1.0f, 0.0f);    
+const Vector3 Vector3::kDown = Vector3(0.0f, -1.0f, 0.0f);    
+const Vector3 Vector3::kLeft = Vector3(-1.0f, 0.0f, 0.0f);    
+const Vector3 Vector3::kRight = Vector3(1.0f, 0.0f, 0.0f);    
 const Vector3 Vector3::kForward = Vector3(0.0f, 0.0f, 1.0f);
-const Vector3 Vector3::kBack = Vector3(0.0f, 0.0f, -1.0f);	
+const Vector3 Vector3::kBack = Vector3(0.0f, 0.0f, -1.0f);    
 const Vector3 Vector3::kAxisX = Vector3::kRight;
 const Vector3 Vector3::kAxisY = Vector3::kUp;
 const Vector3 Vector3::kAxisZ = Vector3::kForward;

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
 //　game_object_manager.h
-//	ゲームオブジェクト管理者
-//	Author : 徐文杰(KodFreedom)
+//  ゲームオブジェクト管理者
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "game_object_manager.h"
 #include "game_object.h"
@@ -31,27 +31,27 @@ void GameObjectManager::Clear(void)
 //--------------------------------------------------------------------------------
 void GameObjectManager::Update(void)
 {
-	// 生きてないオブジェクトを削除する
-	for (auto& game_objects : game_objects_array_)
-	{
-		for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
-		{
-			if (!(*iterator)->IsAlive())
-			{
-				(*iterator)->Release();
-				iterator = game_objects.erase(iterator);
-			}
-			else { ++iterator; }
-		}
-	}
+    // 生きてないオブジェクトを削除する
+    for (auto& game_objects : game_objects_array_)
+    {
+        for (auto iterator = game_objects.begin(); iterator != game_objects.end();)
+        {
+            if (!(*iterator)->IsAlive())
+            {
+                (*iterator)->Release();
+                iterator = game_objects.erase(iterator);
+            }
+            else { ++iterator; }
+        }
+    }
 
-	for (auto& game_objects : game_objects_array_)
-	{
-		for (auto game_object : game_objects)
-		{
-			game_object->Update();
-		}
-	}
+    for (auto& game_objects : game_objects_array_)
+    {
+        for (auto game_object : game_objects)
+        {
+            game_object->Update();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -59,13 +59,13 @@ void GameObjectManager::Update(void)
 //--------------------------------------------------------------------------------
 void GameObjectManager::LateUpdate(void)
 {
-	for (auto& game_objects : game_objects_array_)
-	{
-		for (auto game_object : game_objects)
-		{
-			game_object->LateUpdate();
-		}
-	}
+    for (auto& game_objects : game_objects_array_)
+    {
+        for (auto game_object : game_objects)
+        {
+            game_object->LateUpdate();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------

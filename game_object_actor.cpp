@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------
-//	アクター
+//  アクター
 //　gameObjectActor.h
-//	Author : Xu Wenjie
+//  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "game_object_actor.h"
 #include "animator.h"
@@ -15,9 +15,9 @@
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 GameObjectActor::GameObjectActor(const Layer& layer)
-	: GameObject(layer)
+    : GameObject(layer)
 {
-	animator_ = MY_NEW Animator(*this);
+    animator_ = MY_NEW Animator(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -25,9 +25,9 @@ GameObjectActor::GameObjectActor(const Layer& layer)
 //--------------------------------------------------------------------------------
 bool GameObjectActor::Init(void)
 {
-	GameObject::Init();
-	animator_->Init();
-	return true;
+    GameObject::Init();
+    animator_->Init();
+    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -35,8 +35,8 @@ bool GameObjectActor::Init(void)
 //--------------------------------------------------------------------------------
 void GameObjectActor::Update(void)
 {
-	if (!is_active_) return;
-	GameObject::Update();
+    if (!is_active_) return;
+    GameObject::Update();
 }
 
 //--------------------------------------------------------------------------------
@@ -44,13 +44,13 @@ void GameObjectActor::Update(void)
 //--------------------------------------------------------------------------------
 void GameObjectActor::LateUpdate(void)
 {
-	if (!is_active_) return;
+    if (!is_active_) return;
     rigidbody_->LateUpdate();
     for (auto& pair : behaviors_) { pair.second->LateUpdate(); }
     animator_->Update();
     transform_->UpdateMatrix();
     for (auto& pair : renderers_) { pair.second->Update(); }
-	animator_->LateUpdate();
+    animator_->LateUpdate();
 }
 
 //--------------------------------------------------------------------------------
@@ -63,6 +63,6 @@ void GameObjectActor::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void GameObjectActor::Uninit(void)
 {
-	GameObject::Uninit();
-	SAFE_RELEASE(animator_);
+    GameObject::Uninit();
+    SAFE_RELEASE(animator_);
 }
