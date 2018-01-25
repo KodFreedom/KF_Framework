@@ -184,11 +184,11 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
     material_manager_ = MaterialManager::Create();
     motion_manager_ = MotionManager::Create();
     light_manager_ = LightManager::Create();
-    sound_manager_ = SoundManager::Create();
     renderer_manager_ = RendererManager::Create();
 #ifdef _DEBUG
     debug_observer_ = DebugObserver::Create();
 #endif
+    sound_manager_ = SoundManager::Create();
     input_ = Input::Create(hinstance, hwnd);
     camera_manager_ = CameraManager::Create();
     collision_system_ = CollisionSystem::Create();
@@ -220,13 +220,13 @@ void MainSystem::Uninit(void)
     SAFE_RELEASE(camera_manager_);
     SAFE_RELEASE(fade_system_);
     SAFE_RELEASE(input_);
+    SAFE_RELEASE(sound_manager_);
 #ifdef _DEBUG
     SAFE_RELEASE(debug_observer_);
 #endif
     SAFE_RELEASE(shadow_map_system_);
     SAFE_RELEASE(shader_manager_);
     SAFE_RELEASE(renderer_manager_);
-    SAFE_RELEASE(sound_manager_);
     SAFE_RELEASE(light_manager_);
     SAFE_RELEASE(motion_manager_);
     SAFE_RELEASE(material_manager_);

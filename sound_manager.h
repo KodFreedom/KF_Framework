@@ -20,7 +20,7 @@ enum SoundLabel
 //--------------------------------------------------------------------------------
 //  サウンド管理者クラス
 //--------------------------------------------------------------------------------
-class SoundManager
+class SoundManager final
 {
 public:
     //--------------------------------------------------------------------------------
@@ -37,11 +37,7 @@ public:
     //--------------------------------------------------------------------------------
     //  破棄処理
     //--------------------------------------------------------------------------------
-    void Release(void) 
-    {
-        Uninit();
-        MY_DELETE this;
-    }
+    void Release(void);
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドを鳴らす
@@ -79,21 +75,13 @@ private:
     struct Paramater
     {
         String    file_path;
-        int        count_loop;
+        int       count_loop;
     };
 
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    SoundManager() : instance_xaudio2_(nullptr), mastering_voice_(nullptr)
-    {
-        for (int count = 0; count < static_cast<int>(eSoundMax); ++count)
-        {
-            source_voices_[count] = nullptr;
-            audio_datas_[count] = nullptr;
-            audio_sizes_[count] = 0;
-        }
-    }
+    SoundManager();
     SoundManager(const SoundManager& value) {}
     SoundManager& operator=(const SoundManager& value) {}
     ~SoundManager() {}
@@ -109,6 +97,11 @@ private:
     void Uninit(void);
 
     //--------------------------------------------------------------------------------
+    //  マルチスレッド処理
+    //--------------------------------------------------------------------------------
+    void Run(void);
+
+    //--------------------------------------------------------------------------------
     //  チャンクのチェック
     //--------------------------------------------------------------------------------
     bool CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position);
@@ -121,10 +114,12 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    IXAudio2*                instance_xaudio2_;
-    IXAudio2MasteringVoice*    mastering_voice_;
-    IXAudio2SourceVoice*    source_voices_[eSoundMax];
-    BYTE*                    audio_datas_[eSoundMax];
-    DWORD                    audio_sizes_[eSoundMax];
+    thread*                  thread_ = nullptr;
+    IXAudio2*                instance_xaudio2_ = nullptr;
+    IXAudio2MasteringVoice*  mastering_voice_ = nullptr;
+    IXAudio2SourceVoice*     source_voices_[eSoundMax] = { 0 };
+    BYTE*                    audio_datas_[eSoundMax] = { 0 };
+    DWORD                    audio_sizes_[eSoundMax] = { 0 };
+    bool                     is_running_ = true;
     static Paramater         paramaters_[eSoundMax];
 };
