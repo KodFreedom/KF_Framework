@@ -314,6 +314,11 @@ void SoundManager::PlaySe(void)
 
     // 再生
     se_source_voices_[current_task]->Start(0);
+
+#ifdef _DEBUG
+    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
+#endif // _DEBUG
+
 }
 
 //--------------------------------------------------------------------------------
@@ -337,6 +342,10 @@ void SoundManager::StopSe(void)
         // オーディオバッファの削除
         se_source_voices_[current_task]->FlushSourceBuffers();
     }
+
+#ifdef _DEBUG
+    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
+#endif // _DEBUG
 }
 
 //--------------------------------------------------------------------------------
