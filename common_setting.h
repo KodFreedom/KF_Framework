@@ -40,6 +40,8 @@
 #include <sstream>
 #include <fstream>
 #include <assert.h>
+#include <thread>
+#include <queue>
 using namespace std;
 
 //--------------------------------------------------------------------------------

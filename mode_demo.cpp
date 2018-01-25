@@ -92,6 +92,7 @@ void ModeDemo::LateUpdate(void)
 #ifdef _DEBUG
     if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
     {
+        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
         time_counter_ = Time::kTimeInterval;
         return;
     }

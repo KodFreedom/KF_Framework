@@ -11,16 +11,16 @@
 //--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
-enum SoundLabel
+enum SoundEffectLabel
 {
-    eGameBGM,
-    eSoundMax,
+    kSubmitSoundEffect,
+    kSoundEffectMax,
 };
 
 //--------------------------------------------------------------------------------
 //  サウンド管理者クラス
 //--------------------------------------------------------------------------------
-class SoundManager
+class SoundManager final
 {
 public:
     //--------------------------------------------------------------------------------
@@ -37,35 +37,37 @@ public:
     //--------------------------------------------------------------------------------
     //  破棄処理
     //--------------------------------------------------------------------------------
-    void Release(void) 
-    {
-        Uninit();
-        MY_DELETE this;
-    }
+    void Release(void);
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドを鳴らす
-    //  label : soundのラベル
+    //  label : sound effectのラベル
     //--------------------------------------------------------------------------------
-    void Play(const SoundLabel label);
+    void Play(const SoundEffectLabel label)
+    {
+        se_play_tasks_.push(label);
+    }
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドを止める
-    //  label : soundのラベル
+    //  label : sound effectのラベル
     //--------------------------------------------------------------------------------
-    void Stop(const SoundLabel label);
+    void Stop(const SoundEffectLabel label)
+    {
+        se_stop_tasks_.push(label);
+    }
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドが終わってるかをチェック
-    //  label : soundのラベル
+    //  label : sound effectのラベル
     //--------------------------------------------------------------------------------
-    bool IsOver(const SoundLabel label);
+    bool IsOver(const SoundEffectLabel label) const;
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドがなってるかをチェック
-    //  label : soundのラベル
+    //  label : sound effectのラベル
     //--------------------------------------------------------------------------------
-    bool IsPlaying(const SoundLabel label);
+    bool IsPlaying(const SoundEffectLabel label) const;
 
     //--------------------------------------------------------------------------------
     //  全てのサウンドを止まる
@@ -76,24 +78,16 @@ private:
     //--------------------------------------------------------------------------------
     //　構造体定義
     //--------------------------------------------------------------------------------
-    struct Paramater
+    struct SoundEffectInfo
     {
-        String    file_path;
-        int        count_loop;
+        String file_path;
+        int    count_loop;
     };
 
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    SoundManager() : instance_xaudio2_(nullptr), mastering_voice_(nullptr)
-    {
-        for (int count = 0; count < static_cast<int>(eSoundMax); ++count)
-        {
-            source_voices_[count] = nullptr;
-            audio_datas_[count] = nullptr;
-            audio_sizes_[count] = 0;
-        }
-    }
+    SoundManager();
     SoundManager(const SoundManager& value) {}
     SoundManager& operator=(const SoundManager& value) {}
     ~SoundManager() {}
@@ -101,12 +95,37 @@ private:
     //--------------------------------------------------------------------------------
     //  初期化処理
     //--------------------------------------------------------------------------------
-    bool Init(void);
+    void Init(void);
+
+    //--------------------------------------------------------------------------------
+    //  初期化処理
+    //--------------------------------------------------------------------------------
+    bool InitXAudio(void);
+
+    //--------------------------------------------------------------------------------
+    //  サウンドデータファイルの読込
+    //--------------------------------------------------------------------------------
+    void LoadSoundEffectData(void);
 
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
     void Uninit(void);
+
+    //--------------------------------------------------------------------------------
+    //  マルチスレッド処理
+    //--------------------------------------------------------------------------------
+    void Run(void);
+
+    //--------------------------------------------------------------------------------
+    //  SEの鳴らす処理
+    //--------------------------------------------------------------------------------
+    void PlaySe(void);
+
+    //--------------------------------------------------------------------------------
+    //  SEの止める処理
+    //--------------------------------------------------------------------------------
+    void StopSe(void);
 
     //--------------------------------------------------------------------------------
     //  チャンクのチェック
@@ -121,10 +140,14 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    IXAudio2*                instance_xaudio2_;
-    IXAudio2MasteringVoice*    mastering_voice_;
-    IXAudio2SourceVoice*    source_voices_[eSoundMax];
-    BYTE*                    audio_datas_[eSoundMax];
-    DWORD                    audio_sizes_[eSoundMax];
-    static Paramater         paramaters_[eSoundMax];
+    bool                     is_running_ = true;
+    thread*                  thread_ = nullptr;
+    IXAudio2*                xaudio2_instance_ = nullptr;
+    IXAudio2MasteringVoice*  mastering_voice_ = nullptr;
+    IXAudio2SourceVoice*     se_source_voices_[kSoundEffectMax] = { 0 };
+    BYTE*                    se_datas_[kSoundEffectMax] = { 0 };
+    DWORD                    se_sizes_[kSoundEffectMax] = { 0 };
+    queue<SoundEffectLabel>  se_play_tasks_;
+    queue<SoundEffectLabel>  se_stop_tasks_;
+    static SoundEffectInfo   se_infos_[kSoundEffectMax];
 };
