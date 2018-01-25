@@ -14,6 +14,7 @@
 #include "game_object.h"
 #include "flash_button_controller.h"
 #include "time.h"
+#include "sound_manager.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -69,7 +70,7 @@ void ModeTitle::Uninit(void)
 void ModeTitle::Update(void)
 {
     Mode::Update();
-
+    
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
         time_counter_ -= Time::Instance()->ScaledDeltaTime();
@@ -83,6 +84,7 @@ void ModeTitle::Update(void)
 
     if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
     {
+        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }

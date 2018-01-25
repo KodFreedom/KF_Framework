@@ -14,9 +14,9 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-SoundManager::Paramater SoundManager::paramaters_[eSoundMax] =
+SoundManager::SoundEffectInfo SoundManager::se_infos_[kSoundEffectMax] =
 {
-    { L"data/bgm/game.wav", -1 },    // BGM
+    { L"data/se/submit.wav", 0 },    // kSubmitSoundEffect
 };
 
 //--------------------------------------------------------------------------------
@@ -43,89 +43,23 @@ void SoundManager::Release(void)
 }
 
 //--------------------------------------------------------------------------------
-//  指定したサウンドを鳴らす
-//--------------------------------------------------------------------------------
-void SoundManager::Play(const SoundLabel label)
-{
-    XAUDIO2_VOICE_STATE xa2state;
-    XAUDIO2_BUFFER buffer;
-
-    // バッファの値設定
-    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-    buffer.AudioBytes = audio_sizes_[label];
-    buffer.pAudioData = audio_datas_[label];
-    buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.LoopCount = paramaters_[label].count_loop;
-
-    // 状態取得
-    source_voices_[label]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {// 再生中
-     // 一時停止
-        source_voices_[label]->Stop(0);
-
-        // オーディオバッファの削除
-        source_voices_[label]->FlushSourceBuffers();
-    }
-
-    // オーディオバッファの登録
-    source_voices_[label]->SubmitSourceBuffer(&buffer);
-
-    // 再生
-    source_voices_[label]->Start(0);
-}
-
-//--------------------------------------------------------------------------------
-//  指定したサウンドを止める
-//--------------------------------------------------------------------------------
-void SoundManager::Stop(const SoundLabel label)
-{
-    XAUDIO2_VOICE_STATE xa2state;
-
-    // 状態取得
-    source_voices_[label]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {// 再生中
-     // 一時停止
-        source_voices_[label]->Stop(0);
-
-        // オーディオバッファの削除
-        source_voices_[label]->FlushSourceBuffers();
-    }
-}
-
-//--------------------------------------------------------------------------------
 //  指定したサウンドが終わってるかをチェック
 //--------------------------------------------------------------------------------
-bool SoundManager::IsOver(const SoundLabel label)
+bool SoundManager::IsOver(const SoundEffectLabel label) const
 {
     XAUDIO2_VOICE_STATE xa2state;
-
-    // 状態取得
-    source_voices_[label]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {
-        return false;
-    }
-
-    return true;
+    se_source_voices_[label]->GetState(&xa2state);
+    return xa2state.BuffersQueued == 0;
 }
 
 //--------------------------------------------------------------------------------
 //  指定したサウンドがなってるかをチェック
 //--------------------------------------------------------------------------------
-bool SoundManager::IsPlaying(const SoundLabel label)
+bool SoundManager::IsPlaying(const SoundEffectLabel label) const
 {
     XAUDIO2_VOICE_STATE xa2state;
-
-    // 状態取得
-    source_voices_[label]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {
-        return true;
-    }
-
-    return false;
+    se_source_voices_[label]->GetState(&xa2state);
+    return xa2state.BuffersQueued != 0;
 }
 
 //--------------------------------------------------------------------------------
@@ -133,12 +67,12 @@ bool SoundManager::IsPlaying(const SoundLabel label)
 //--------------------------------------------------------------------------------
 void SoundManager::StopAll(void)
 {
-    for (int count = 0; count < eSoundMax; count++)
+    for (int count = 0; count < kSoundEffectMax; count++)
     {
-        if (source_voices_[count])
+        if (se_source_voices_[count])
         {
             // 一時停止
-            source_voices_[count]->Stop(0);
+            se_source_voices_[count]->Stop(0);
         }
     }
 }
@@ -159,42 +93,49 @@ SoundManager::SoundManager()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-bool SoundManager::Init(void)
+void SoundManager::Init(void)
+{
+    // スレッドの生成
+    thread_ = MY_NEW thread(&SoundManager::Run, this);
+}
+
+//--------------------------------------------------------------------------------
+//  XAudio初期化処理
+//--------------------------------------------------------------------------------
+bool SoundManager::InitXAudio(void)
 {
     // COMライブラリの初期化
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     // XAudio2オブジェクトの作成
-    HRESULT hr = XAudio2Create(&instance_xaudio2_, 0);
+    HRESULT hr = XAudio2Create(&xaudio2_instance_, 0);
     if (FAILED(hr))
     {
         MessageBox(NULL, L"XAudio2オブジェクトの作成に失敗！", L"警告！", MB_ICONWARNING);
-
-        // COMライブラリの終了処理
-        CoUninitialize();
-
+        CoUninitialize(); // COMライブラリの終了処理
         return false;
     }
 
     // マスターボイスの生成
-    hr = instance_xaudio2_->CreateMasteringVoice(&mastering_voice_);
+    hr = xaudio2_instance_->CreateMasteringVoice(&mastering_voice_);
     if (FAILED(hr))
     {
         MessageBox(NULL, L"マスターボイスの生成に失敗！", L"警告！", MB_ICONWARNING);
-
-        SAFE_RELEASE(instance_xaudio2_);
-
-        // COMライブラリの終了処理
-        CoUninitialize();
-
+        SAFE_RELEASE(xaudio2_instance_);
+        CoUninitialize(); // COMライブラリの終了処理
         return false;
     }
 
-    // スレッドの生成
-    thread_ = MY_NEW thread(&SoundManager::Run, this);
+    return true;
+}
 
+//--------------------------------------------------------------------------------
+//  サウンドデータファイルの読込
+//--------------------------------------------------------------------------------
+void SoundManager::LoadSoundEffectData(void)
+{
     // サウンドデータの初期化
-    for (int count = 0; count < eSoundMax; ++count)
+    for (int count = 0; count < kSoundEffectMax; ++count)
     {
         HANDLE file;
         DWORD chunk_size = 0;
@@ -208,82 +149,82 @@ bool SoundManager::Init(void)
         memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
 
         // サウンドデータファイルの生成
-        file = CreateFile(paramaters_[count].file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+        file = CreateFile(se_infos_[count].file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
         if (file == INVALID_HANDLE_VALUE)
         {
-            //MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(1)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CreateFile失敗！", MB_ICONWARNING);
+            continue;
         }
+
         if (SetFilePointer(file, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
         {// ファイルポインタを先頭に移動
-            //MessageBox(NULL, L"サウンドデータファイルの生成に失敗！(2)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"SetFilePointer失敗！", MB_ICONWARNING);
+            continue;
         }
 
         // WAVEファイルのチェック
         if (!CheckChunk(file, 'FFIR', chunk_size, chunk_position))
         {
-            //MessageBox(NULL, L"WAVEファイルのチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk FFIR失敗！", MB_ICONWARNING);
+            continue;
         }
 
         if (!ReadChunkData(file, &file_type, sizeof(DWORD), chunk_position))
         {
-            //MessageBox(NULL, L"WAVEファイルのチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
+            continue;
         }
+
         if (file_type != 'EVAW')
         {
-            //MessageBox(NULL, L"WAVEファイルのチェックに失敗！(3)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"file_type != 'EVAW'！", MB_ICONWARNING);
+            continue;
         }
 
         // フォーマットチェック
         if (!CheckChunk(file, ' tmf', chunk_size, chunk_position))
         {
-            //MessageBox(NULL, L"フォーマットチェックに失敗！(1)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk tmf失敗！", MB_ICONWARNING);
+            continue;
         }
 
         if (!ReadChunkData(file, &wfx, chunk_size, chunk_position))
         {
-            //MessageBox(NULL, L"フォーマットチェックに失敗！(2)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
+            continue;
         }
 
         // オーディオデータ読み込み
-        if (!CheckChunk(file, 'atad', audio_sizes_[count], chunk_position))
+        if (!CheckChunk(file, 'atad', se_sizes_[count], chunk_position))
         {
-            //MessageBox(NULL, L"オーディオデータ読み込みに失敗！(1)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk atad失敗！", MB_ICONWARNING);
+            continue;
         }
 
-        audio_datas_[count] = (BYTE*)malloc(audio_sizes_[count]);
-        if (!ReadChunkData(file, audio_datas_[count], audio_sizes_[count], chunk_position))
+        se_datas_[count] = (BYTE*)malloc(se_sizes_[count]);
+        if (!ReadChunkData(file, se_datas_[count], se_sizes_[count], chunk_position))
         {
-            //MessageBox(NULL, L"オーディオデータ読み込みに失敗！(2)", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
+            continue;
         }
 
         // ソースボイスの生成
-        if (!instance_xaudio2_->CreateSourceVoice(&source_voices_[count], &(wfx.Format)))
+        if (FAILED(xaudio2_instance_->CreateSourceVoice(&se_source_voices_[count], &(wfx.Format))))
         {
-            //MessageBox(NULL, L"ソースボイスの生成に失敗！", L"警告！", MB_ICONWARNING);
-            return false;
+            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CreateSourceVoice失敗！", MB_ICONWARNING);
+            continue;
         }
 
         // バッファの値設定
         memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-        buffer.AudioBytes = audio_sizes_[count];
-        buffer.pAudioData = audio_datas_[count];
+        buffer.AudioBytes = se_sizes_[count];
+        buffer.pAudioData = se_datas_[count];
         buffer.Flags = XAUDIO2_END_OF_STREAM;
-        buffer.LoopCount = paramaters_[count].count_loop;
+        buffer.LoopCount = se_infos_[count].count_loop;
 
         // オーディオバッファの登録
-        source_voices_[count]->SubmitSourceBuffer(&buffer);
+        se_source_voices_[count]->SubmitSourceBuffer(&buffer);
     }
-
-    return true;
 }
 
 //--------------------------------------------------------------------------------
@@ -291,20 +232,20 @@ bool SoundManager::Init(void)
 //--------------------------------------------------------------------------------
 void SoundManager::Uninit(void)
 {
-    for (int count = 0; count < eSoundMax; ++count)
+    for (int count = 0; count < kSoundEffectMax; ++count)
     {
-        if (source_voices_[count])
+        if (se_source_voices_[count])
         {
             // 一時停止
-            source_voices_[count]->Stop(0);
+            se_source_voices_[count]->Stop(0);
 
             // ソースボイスの破棄
-            source_voices_[count]->DestroyVoice();
-            source_voices_[count] = nullptr;
+            se_source_voices_[count]->DestroyVoice();
+            se_source_voices_[count] = nullptr;
 
             // オーディオデータの開放
-            free(audio_datas_[count]);
-            audio_datas_[count] = nullptr;
+            free(se_datas_[count]);
+            se_datas_[count] = nullptr;
         }
     }
 
@@ -313,7 +254,7 @@ void SoundManager::Uninit(void)
     mastering_voice_ = nullptr;
 
     // XAudio2オブジェクトの解放
-    SAFE_RELEASE(instance_xaudio2_);
+    SAFE_RELEASE(xaudio2_instance_);
 
     // COMライブラリの終了処理
     CoUninitialize();
@@ -324,14 +265,78 @@ void SoundManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void SoundManager::Run(void)
 {
-    //if (!Init()) return;
+    // 初期化
+    if (!InitXAudio()) return;
+    LoadSoundEffectData();
 
     while (is_running_)
     {
-        MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Test");
+        PlaySe();
+        StopSe();
     }
 
+    // 終了処理
     Uninit();
+}
+
+//--------------------------------------------------------------------------------
+//  SEの鳴らす処理
+//--------------------------------------------------------------------------------
+void SoundManager::PlaySe(void)
+{
+    if (se_play_tasks_.empty()) return;
+
+    // 一番目のタスクを実行する
+    SoundEffectLabel current_task = se_play_tasks_.front();
+    se_play_tasks_.pop();
+
+    // バッファの値設定
+    XAUDIO2_BUFFER buffer;
+    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
+    buffer.AudioBytes = se_sizes_[current_task];
+    buffer.pAudioData = se_datas_[current_task];
+    buffer.Flags = XAUDIO2_END_OF_STREAM;
+    buffer.LoopCount = se_infos_[current_task].count_loop;
+
+    // 状態取得
+    XAUDIO2_VOICE_STATE xa2state;
+    se_source_voices_[current_task]->GetState(&xa2state);
+    if (xa2state.BuffersQueued != 0)
+    {// 再生中なら一時停止
+        se_source_voices_[current_task]->Stop(0);
+
+        // オーディオバッファの削除
+        se_source_voices_[current_task]->FlushSourceBuffers();
+    }
+
+    // オーディオバッファの登録
+    se_source_voices_[current_task]->SubmitSourceBuffer(&buffer);
+
+    // 再生
+    se_source_voices_[current_task]->Start(0);
+}
+
+//--------------------------------------------------------------------------------
+//  SEの止める処理
+//--------------------------------------------------------------------------------
+void SoundManager::StopSe(void)
+{
+    if (se_stop_tasks_.empty()) return;
+
+    // 一番目のタスクを実行する
+    SoundEffectLabel current_task = se_stop_tasks_.front();
+    se_stop_tasks_.pop();
+
+    // 状態取得
+    XAUDIO2_VOICE_STATE xa2state;
+    se_source_voices_[current_task]->GetState(&xa2state);
+    if (xa2state.BuffersQueued != 0)
+    {// 再生中なら一時停止
+        se_source_voices_[current_task]->Stop(0);
+
+        // オーディオバッファの削除
+        se_source_voices_[current_task]->FlushSourceBuffers();
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -410,13 +415,13 @@ bool SoundManager::ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, D
 
     if (SetFilePointer(file, buffer_offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
     {// ファイルポインタを指定位置まで移動
-        return HRESULT_FROM_WIN32(GetLastError());
+        return false;
     }
 
     if (ReadFile(file, buffer, buffer_size, &read, NULL) == 0)
     {// データの読み込み
-        return HRESULT_FROM_WIN32(GetLastError());
+        return false;
     }
 
-    return S_OK;
+    return true;
 }
