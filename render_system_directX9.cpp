@@ -157,18 +157,18 @@ bool RenderSystemDirectX9::CreateDevice(HWND hwnd, BOOL is_window_mode)
     }
 
     // デバイスのプレゼンテーションパラメータの設定
-    ZeroMemory(&present_parameters, sizeof(present_parameters));                    // ワークをゼロクリア
-    present_parameters.BackBufferCount                = 1;                            // バックバッファの数
-    present_parameters.BackBufferWidth                = SCREEN_WIDTH;                    // ゲーム画面サイズ(幅)
-    present_parameters.BackBufferHeight                = SCREEN_HEIGHT;                // ゲーム画面サイズ(高さ)
-    present_parameters.BackBufferFormat                = display_mode.Format;            // カラーモードの指定
-    present_parameters.SwapEffect                    = D3DSWAPEFFECT_DISCARD;        // 映像信号に同期してフリップする
-    present_parameters.EnableAutoDepthStencil        = TRUE;                            // デプスバッファ（Ｚバッファ）とステンシルバッファを作成
-    present_parameters.AutoDepthStencilFormat        = D3DFMT_D24S8;                    // デプスバッファとして16bitを使う
-    present_parameters.Windowed                        = is_window_mode;                // ウィンドウモード
-    present_parameters.FullScreen_RefreshRateInHz    = D3DPRESENT_RATE_DEFAULT;        // リフレッシュレート
-    present_parameters.PresentationInterval            = D3DPRESENT_INTERVAL_DEFAULT;    // インターバル
-    //present_parameters.MultiSampleType                = D3DMULTISAMPLE_8_SAMPLES;        // 抗劇歯アンチエイジングの使用
+    ZeroMemory(&present_parameters, sizeof(present_parameters));                 // ワークをゼロクリア
+    present_parameters.BackBufferCount            = 1;                           // バックバッファの数
+    present_parameters.BackBufferWidth            = SCREEN_WIDTH;                // ゲーム画面サイズ(幅)
+    present_parameters.BackBufferHeight           = SCREEN_HEIGHT;               // ゲーム画面サイズ(高さ)
+    present_parameters.BackBufferFormat           = display_mode.Format;         // カラーモードの指定
+    present_parameters.SwapEffect                 = D3DSWAPEFFECT_DISCARD;       // 映像信号に同期してフリップする
+    present_parameters.EnableAutoDepthStencil     = TRUE;                        // デプスバッファ（Ｚバッファ）とステンシルバッファを作成
+    present_parameters.AutoDepthStencilFormat     = D3DFMT_D24S8;                // デプスバッファとして16bitを使う
+    present_parameters.Windowed                   = is_window_mode;              // ウィンドウモード
+    present_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;     // リフレッシュレート
+    present_parameters.PresentationInterval       = D3DPRESENT_INTERVAL_DEFAULT; // インターバル
+    //present_parameters.MultiSampleType          = D3DMULTISAMPLE_8_SAMPLES;    // 抗劇歯アンチエイジングの使用
 
     // デバイスの生成
     // ディスプレイアダプタを表すためのデバイスを作成
@@ -176,7 +176,7 @@ bool RenderSystemDirectX9::CreateDevice(HWND hwnd, BOOL is_window_mode)
     if (FAILED(instance_->CreateDevice(D3DADAPTER_DEFAULT,
         D3DDEVTYPE_HAL,
         hwnd,
-        D3DCREATE_HARDWARE_VERTEXPROCESSING,
+        D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,
         &present_parameters, &device_)))
     {
         // 上記の設定が失敗したら
@@ -184,14 +184,14 @@ bool RenderSystemDirectX9::CreateDevice(HWND hwnd, BOOL is_window_mode)
         if (FAILED(instance_->CreateDevice(D3DADAPTER_DEFAULT,
             D3DDEVTYPE_HAL,
             hwnd,
-            D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+            D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,
             &present_parameters, &device_)))
         {
             // 上記の設定が失敗したら
             // 描画と頂点処理をCPUで行なう
             if (FAILED(instance_->CreateDevice(D3DADAPTER_DEFAULT,
                 D3DDEVTYPE_REF, hwnd,
-                D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+                D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,
                 &present_parameters, &device_)))
             {
                 // 生成失敗
