@@ -110,12 +110,12 @@ public:
 
     //--------------------------------------------------------------------------------
     //  レイキャスト関数、レイと衝突したの最近点を算出する
-    //    ray：レイ
-    //    distance：レイの長さ
-    //    rayOwner：自分のゲームオブジェクト
-    //    return：RayHitInfo*
+    //  ray：レイ
+    //  distance：レイの長さ
+    //  rayOwner：自分のゲームオブジェクト
+    //  return：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RayCast(const Ray& ray, const float& distance, const GameObject* const ray_owner = nullptr);
+    RayHitInfo* RayCast(const Ray& ray, const float& distance, const GameObject* const ray_owner = nullptr);
 
 private:
     //--------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ private:
     //            rayOwner：レイの所有者
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastDynamicSphere(const Ray& ray, const float& distance, const GameObject& ray_owner);
+    RayHitInfo* RaycastDynamicSphere(const Ray& ray, const float& distance, const GameObject& ray_owner);
 
     //--------------------------------------------------------------------------------
     //  関数名：RaycastDynamicAabb
@@ -251,7 +251,7 @@ private:
     //            ray_owner：レイの所有者
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastDynamicAabb(const Ray& ray, const float& distance, const GameObject& ray_owner);
+    RayHitInfo* RaycastDynamicAabb(const Ray& ray, const float& distance, const GameObject& ray_owner);
     
     //--------------------------------------------------------------------------------
     //  関数名：RaycastDynamicObb
@@ -261,7 +261,7 @@ private:
     //            ray_owner：レイの所有者
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastDynamicObb(const Ray& ray, const float& distance, const GameObject& ray_owner);
+    RayHitInfo* RaycastDynamicObb(const Ray& ray, const float& distance, const GameObject& ray_owner);
     
     //--------------------------------------------------------------------------------
     //  関数名：RaycastStaticSphere
@@ -270,7 +270,7 @@ private:
     //            distance：レイの距離
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastStaticSphere(const Ray& ray, const float& distance);
+    RayHitInfo* RaycastStaticSphere(const Ray& ray, const float& distance);
     
     //--------------------------------------------------------------------------------
     //  関数名：RaycastStaticAabb
@@ -279,7 +279,7 @@ private:
     //            distance：レイの距離
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastStaticAabb(const Ray& ray, const float& distance);
+    RayHitInfo* RaycastStaticAabb(const Ray& ray, const float& distance);
     
     //--------------------------------------------------------------------------------
     //  関数名：RaycastStaticObb
@@ -288,7 +288,7 @@ private:
     //            distance：レイの距離
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastStaticObb(const Ray& ray, const float& distance);
+    RayHitInfo* RaycastStaticObb(const Ray& ray, const float& distance);
     
     //--------------------------------------------------------------------------------
     //  関数名：RaycastField
@@ -297,7 +297,7 @@ private:
     //            distance：レイの距離
     //  戻り値：RayHitInfo*
     //--------------------------------------------------------------------------------
-    RayHitInfo*    RaycastField(const Ray& ray, const float& distance);
+    RayHitInfo* RaycastField(const Ray& ray, const float& distance);
     
     //--------------------------------------------------------------------------------
     //  関数名：GetRealResult

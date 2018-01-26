@@ -247,6 +247,12 @@
     <Filter Include="ソース ファイル\Base\Shader\Billboard">
       <UniqueIdentifier>{a339079c-c29c-4290-bcfe-eb30e0df8f73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\System\ResourceManager">
+      <UniqueIdentifier>{b4aba4cf-5da0-490c-ad06-38df6eca8762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\System\ResourceManager">
+      <UniqueIdentifier>{48a40c3a-9560-4326-a2b6-b68f751fe5e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -282,18 +288,6 @@
     <ClCompile Include="render_system_directX9.cpp">
       <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="sound_manager.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_manager.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="material_manager.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
     <ClCompile Include="debug_observer.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
@@ -302,9 +296,6 @@
     </ClCompile>
     <ClCompile Include="input_device_directX.cpp">
       <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_manager.cpp">
-      <Filter>ソース ファイル\Base\Motion</Filter>
     </ClCompile>
     <ClCompile Include="camera_manager.cpp">
       <Filter>ソース ファイル\Base\Camera</Filter>
@@ -660,6 +651,21 @@
     <ClCompile Include="default_billboard_shader.cpp">
       <Filter>ソース ファイル\Base\Shader\Billboard</Filter>
     </ClCompile>
+    <ClCompile Include="mesh_manager.cpp">
+      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="material_manager.cpp">
+      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_manager.cpp">
+      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_system.cpp">
+      <Filter>ソース ファイル\Base\System</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_manager.cpp">
+      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -713,18 +719,6 @@
     <ClInclude Include="shader_enum.h">
       <Filter>ヘッダー ファイル\Base\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="sound_manager.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_manager.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="material_manager.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
     <ClInclude Include="light_manager.h">
       <Filter>ヘッダー ファイル\Base\Light</Filter>
     </ClInclude>
@@ -741,9 +735,6 @@
       <Filter>ヘッダー ファイル\Base\Input</Filter>
     </ClInclude>
     <ClInclude Include="motion_data.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_manager.h">
       <Filter>ヘッダー ファイル\Base\Motion</Filter>
     </ClInclude>
     <ClInclude Include="camera_manager.h">
@@ -1123,6 +1114,21 @@
     </ClInclude>
     <ClInclude Include="default_billboard_shader.h">
       <Filter>ヘッダー ファイル\Base\Shader\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="material_manager.h">
+      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_manager.h">
+      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_manager.h">
+      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_system.h">
+      <Filter>ヘッダー ファイル\Base\System</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_manager.h">
+      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ class MaterialManager;
 class CollisionSystem;
 class PhysicsSystem;
 class GameObjectManager;
-class SoundManager;
+class SoundSystem;
 class FadeSystem;
 class CameraManager;
 class MotionManager;
@@ -85,7 +85,7 @@ public:
     const auto GetMaterialManager(void) const { return material_manager_; }
     const auto GetMotionManager(void) const { return motion_manager_; }
     const auto GetLightManager(void) const { return light_manager_; }
-    const auto GetSoundManager(void) const { return sound_manager_; }
+    const auto GetSoundSystem(void) const { return sound_system_; }
     const auto GetRendererManager(void) const { return renderer_manager_; }
     const auto GetShaderManager(void) const { return shader_manager_; }
     const auto GetInput(void) const { return input_; }
@@ -104,18 +104,7 @@ private:
     //--------------------------------------------------------------------------------
     //  constructors for singleton / シングルトンのコンストラクタ
     //--------------------------------------------------------------------------------
-    MainSystem() : current_mode_(nullptr), render_system_(nullptr)
-        , texture_manager_(nullptr), mesh_manager_(nullptr)
-        , material_manager_(nullptr), motion_manager_(nullptr)
-        , light_manager_(nullptr), sound_manager_(nullptr)
-        , renderer_manager_(nullptr), input_(nullptr)
-#ifdef _DEBUG
-        , debug_observer_(nullptr)
-#endif
-        , fade_system_(nullptr), camera_manager_(nullptr)
-        , collision_system_(nullptr), physics_system_(nullptr)
-        , game_object_manager_(nullptr), shader_manager_(nullptr)
-        , shadow_map_system_(nullptr), actor_observer_(nullptr) {}
+    MainSystem() {}
     MainSystem(const MainSystem& value) {}
     MainSystem& operator=(const MainSystem& value) {}
     ~MainSystem() {}
@@ -138,27 +127,27 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    Mode*              current_mode_; // 今のモード
-    RenderSystem*      render_system_; // レンダーシステム
-    TextureManager*    texture_manager_; // テクスチャ管理者
-    MeshManager*       mesh_manager_; // メッシュ管理者
-    MaterialManager*   material_manager_; // マテリアル管理者
-    MotionManager*     motion_manager_; // モーション管理者
-    LightManager*      light_manager_; // ライトの管理者
-    SoundManager*      sound_manager_; // サウンド管理者
-    RendererManager*   renderer_manager_; // レンダラー管理者
-    ShaderManager*     shader_manager_; // シェーダ管理者
+    Mode*              current_mode_ = nullptr; // 今のモード
+    RenderSystem*      render_system_ = nullptr; // レンダーシステム
+    SoundSystem*       sound_system_ = nullptr; // サウンドシステム
+    TextureManager*    texture_manager_ = nullptr; // テクスチャ管理者
+    MeshManager*       mesh_manager_ = nullptr; // メッシュ管理者
+    MaterialManager*   material_manager_ = nullptr; // マテリアル管理者
+    MotionManager*     motion_manager_ = nullptr; // モーション管理者
+    LightManager*      light_manager_ = nullptr; // ライトの管理者
+    RendererManager*   renderer_manager_ = nullptr; // レンダラー管理者
+    ShaderManager*     shader_manager_ = nullptr; // シェーダ管理者
 #ifdef _DEBUG
-    DebugObserver*     debug_observer_; // デバッグ観察者
+    DebugObserver*     debug_observer_ = nullptr; // デバッグ観察者
 #endif
-    Input*             input_; // 入力管理者
-    FadeSystem*        fade_system_; // フェイドシステム
-    CameraManager*     camera_manager_; // カメラ管理者
-    CollisionSystem*   collision_system_; // 衝突処理システム
-    PhysicsSystem*     physics_system_; // 物理システム
-    GameObjectManager* game_object_manager_; // ゲームオブジェクト管理者
-    ShadowMapSystem*   shadow_map_system_; // シャドウマップシステム
-    ActorObserver*     actor_observer_;// アクター観察者
+    Input*             input_ = nullptr; // 入力管理者
+    FadeSystem*        fade_system_ = nullptr; // フェイドシステム
+    CameraManager*     camera_manager_ = nullptr; // カメラ管理者
+    CollisionSystem*   collision_system_ = nullptr; // 衝突処理システム
+    PhysicsSystem*     physics_system_ = nullptr; // 物理システム
+    GameObjectManager* game_object_manager_ = nullptr; // ゲームオブジェクト管理者
+    ShadowMapSystem*   shadow_map_system_ = nullptr; // シャドウマップシステム
+    ActorObserver*     actor_observer_ = nullptr;// アクター観察者
 
     static MainSystem* instance_; // インスタンス
 };

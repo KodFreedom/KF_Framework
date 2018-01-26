@@ -14,7 +14,7 @@
 #include "game_object.h"
 #include "flash_button_controller.h"
 #include "time.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -84,7 +84,7 @@ void ModeTitle::Update(void)
 
     if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
     {
-        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
+        MainSystem::Instance()->GetSoundSystem()->Play(kSubmitSoundEffect);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }

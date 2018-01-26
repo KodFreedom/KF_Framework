@@ -9,7 +9,7 @@
 #include "material_manager.h"
 #include "motion_manager.h"
 #include "light_manager.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 #include "renderer_manager.h"
 #include "input.h"
 #include "fade_system.h"
@@ -188,7 +188,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 #ifdef _DEBUG
     debug_observer_ = DebugObserver::Create();
 #endif
-    sound_manager_ = SoundManager::Create();
+    sound_system_ = SoundSystem::Create();
     input_ = Input::Create(hinstance, hwnd);
     camera_manager_ = CameraManager::Create();
     collision_system_ = CollisionSystem::Create();
@@ -220,7 +220,7 @@ void MainSystem::Uninit(void)
     SAFE_RELEASE(camera_manager_);
     SAFE_RELEASE(fade_system_);
     SAFE_RELEASE(input_);
-    SAFE_RELEASE(sound_manager_);
+    SAFE_RELEASE(sound_system_);
 #ifdef _DEBUG
     SAFE_RELEASE(debug_observer_);
 #endif

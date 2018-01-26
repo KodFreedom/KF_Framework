@@ -5,7 +5,7 @@
 #include "mode_demo.h"
 #include "main_system.h"
 #include "input.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 #include "mode_result.h"
 #include "fade_system.h"
 #include "shadow_map_system.h"
@@ -92,7 +92,7 @@ void ModeDemo::LateUpdate(void)
 #ifdef _DEBUG
     if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
     {
-        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
+        MainSystem::Instance()->GetSoundSystem()->Play(kSubmitSoundEffect);
         time_counter_ = Time::kTimeInterval;
         return;
     }
