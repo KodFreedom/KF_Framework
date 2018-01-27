@@ -16,11 +16,11 @@
 //--------------------------------------------------------------------------------
 void Mode::Uninit(void)
 {
-    auto main_system = MainSystem::Instance();
-    main_system->GetPhysicsSystem()->Clear();
-    main_system->GetGameObjectManager()->Clear();
-    main_system->GetRendererManager()->Clear();
-    main_system->GetLightManager()->Clear();
-    main_system->GetCameraManager()->Clear();
-    main_system->GetShadowMapSystem()->Clear();
+    auto& main_system = MainSystem::Instance();
+    main_system.GetPhysicsSystem().Clear();
+    main_system.GetGameObjectManager().Clear();
+    main_system.GetRendererManager().Clear();
+    main_system.GetLightManager().Clear();
+    main_system.GetCameraManager().Clear();
+    main_system.GetShadowMapSystem().Clear();
 }

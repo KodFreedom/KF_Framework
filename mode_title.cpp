@@ -9,12 +9,13 @@
 #include "camera.h"
 #include "fade_system.h"
 #include "light.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
 #include "flash_button_controller.h"
 #include "time.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -60,7 +61,7 @@ void ModeTitle::Init(void)
 //--------------------------------------------------------------------------------
 void ModeTitle::Uninit(void)
 {
-    MainSystem::Instance()->GetMaterialManager()->Disuse(L"title");
+    MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"title");
     Mode::Uninit();
 }
 
@@ -71,20 +72,21 @@ void ModeTitle::Update(void)
 {
     Mode::Update();
     
+    auto& main_system = MainSystem::Instance();
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
         time_counter_ -= Time::Instance()->ScaledDeltaTime();
 
         if (time_counter_ <= 0.0f)
         {
-            MainSystem::Instance()->GetFadeSystem()->FadeTo(MY_NEW ModeDemo);
+            main_system.GetFadeSystem().FadeTo(MY_NEW ModeDemo);
         }
         return;
     }
 
-    if (MainSystem::Instance()->GetInput()->GetKeyTrigger(Key::kSubmit))
+    if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
     {
-        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }

@@ -85,7 +85,7 @@ void ActorController::Jump(void)
 void ActorController::CheckGrounded(void)
 {
     auto& position = owner_.GetTransform()->GetPosition();
-    auto ray_hit_info = MainSystem::Instance()->GetCollisionSystem()->
+    auto ray_hit_info = MainSystem::Instance().GetCollisionSystem().
         RayCast(Ray(position, Vector3::kDown), parameter_.GetGroundCheckDistance(), &owner_);
 
     if (ray_hit_info)
@@ -110,7 +110,7 @@ void ActorController::ReceiveDamage(const float& damage)
     parameter_.SetCurrentLife(current_life);
 
 #ifdef _DEBUG
-    MainSystem::Instance()->GetDebugObserver()->Display(
+    MainSystem::Instance().GetDebugObserver().Display(
         owner_.GetName() + L" が" + to_wstring(damage) + L"ダメージを受けた！ "
     "残りライフ：" + to_wstring(current_life));
 #endif

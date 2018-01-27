@@ -13,5 +13,5 @@
 DirectionalLight::DirectionalLight(const Vector3& direction)
     : Light(kDirectionalLight, Color(0.8f, 0.8f, 0.8f, 1.0f), Color::kGray, Color::kWhite, direction)
 {
-    MainSystem::Instance()->GetLightManager()->Register(this);
+    MainSystem::Instance().GetLightManager().Register(this);
 }

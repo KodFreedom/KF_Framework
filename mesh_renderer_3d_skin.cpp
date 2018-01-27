@@ -17,7 +17,7 @@ void MeshRenderer3dSkin::Update(void)
     MeshRenderer::Update();
     if (is_cast_shadow_ && is_registered_)
     {
-        MainSystem::Instance()->GetShadowMapSystem()->Register(this);
+        MainSystem::Instance().GetShadowMapSystem().Register(this);
     }
 }
 

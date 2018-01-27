@@ -7,6 +7,7 @@
 #include "mode.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "time.h"
 
@@ -80,8 +81,9 @@ void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 //--------------------------------------------------------------------------------
 void FadeSystem::Init(void)
 {
-    MainSystem::Instance()->GetMaterialManager()->Use(L"fade", Color::kBlack);
-    material_ = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"fade");
+    auto& material_manager = MainSystem::Instance().GetResources().GetMaterialManager();
+    material_manager.Use(L"fade", Color::kBlack);
+    material_ = material_manager.Get(L"fade");
     GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kUnableAutoDelete, L"fade", kDefault2dShader, k2dMask);
 }
 
@@ -91,7 +93,7 @@ void FadeSystem::Init(void)
 void FadeSystem::Uninit(void)
 {
     material_ = nullptr;
-    MainSystem::Instance()->GetMaterialManager()->Disuse(L"fade");
+    MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"fade");
 }
 
 //--------------------------------------------------------------------------------
@@ -120,7 +122,7 @@ void FadeSystem::FadeOut(void)
         time_counter_ = fade_time_;
         current_state_ = kFadeIn;
         Time::Instance()->SetTimeScale(0.0f);
-        MainSystem::Instance()->Change(next_mode_);
+        MainSystem::Instance().Change(next_mode_);
     }
     material_->diffuse_.a_ = time_counter_ / fade_time_;
 }

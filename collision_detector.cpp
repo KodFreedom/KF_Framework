@@ -86,7 +86,7 @@ void CollisionDetector::Detect(SphereCollider& sphere_left, SphereCollider& sphe
     }
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(collision);
 
     //OnCollision
     CollisionInfo info;
@@ -188,7 +188,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, AabbCollider& aabb)
     }
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(collision);
 
     //OnCollision
     CollisionInfo info;
@@ -296,7 +296,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, ObbCollider& obb)
     }
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(collision);
 
     //OnCollision
     CollisionInfo info;
@@ -377,7 +377,7 @@ void CollisionDetector::Detect(AabbCollider& aabb_left, AabbCollider& aabb_right
     }
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(collision);
 
     //OnCollision
     CollisionInfo info;
@@ -456,7 +456,7 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
         }
 
         //物理演算システムにレジストリ
-        MainSystem::Instance()->GetPhysicsSystem()->Register(left_max_penetration_collision);
+        MainSystem::Instance().GetPhysicsSystem().Register(left_max_penetration_collision);
         info.collisions.push_back(left_max_penetration_collision);
     }
 
@@ -478,7 +478,7 @@ void CollisionDetector::Detect(BoxCollider& box_left, BoxCollider& box_right)
         }
 
         //物理演算システムにレジストリ
-        MainSystem::Instance()->GetPhysicsSystem()->Register(right_max_penetration_collision);
+        MainSystem::Instance().GetPhysicsSystem().Register(right_max_penetration_collision);
         info.collisions.push_back(right_max_penetration_collision);
     }
 
@@ -546,7 +546,7 @@ void CollisionDetector::Detect(SphereCollider& sphere, FieldCollider& field)
     }
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(collision);
 
     //OnCollision
     CollisionInfo info;
@@ -588,7 +588,7 @@ void CollisionDetector::Detect(BoxCollider& box, FieldCollider& field)
     max_penetration_collision->rigidbody_two = nullptr;
 
     //物理演算システムにレジストリ
-    MainSystem::Instance()->GetPhysicsSystem()->Register(max_penetration_collision);
+    MainSystem::Instance().GetPhysicsSystem().Register(max_penetration_collision);
 
     //OnCollision
     CollisionInfo info;

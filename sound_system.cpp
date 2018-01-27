@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------
-//　sound_manager.cpp
+//　sound_system.cpp
 //  manage the se,bgm's save, load
 //  サウンド管理者
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "sound_manager.h"
+#include "sound_system.h"
 #include "kf_utility.h"
 #ifdef _DEBUG
 #include "main_system.h"
@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-SoundManager::SoundEffectInfo SoundManager::se_infos_[kSoundEffectMax] =
+SoundSystem::SoundEffectInfo SoundSystem::se_infos_[kSoundEffectMax] =
 {
     { L"data/se/submit.wav", 0 },    // kSubmitSoundEffect
 };
@@ -27,7 +27,7 @@ SoundManager::SoundEffectInfo SoundManager::se_infos_[kSoundEffectMax] =
 //--------------------------------------------------------------------------------
 //  破棄処理
 //--------------------------------------------------------------------------------
-void SoundManager::Release(void)
+void SoundSystem::Release(void)
 {
     is_running_ = false;
 
@@ -45,7 +45,7 @@ void SoundManager::Release(void)
 //--------------------------------------------------------------------------------
 //  指定したサウンドが終わってるかをチェック
 //--------------------------------------------------------------------------------
-bool SoundManager::IsOver(const SoundEffectLabel label) const
+bool SoundSystem::IsOver(const SoundEffectLabel label) const
 {
     XAUDIO2_VOICE_STATE xa2state;
     se_source_voices_[label]->GetState(&xa2state);
@@ -55,7 +55,7 @@ bool SoundManager::IsOver(const SoundEffectLabel label) const
 //--------------------------------------------------------------------------------
 //  指定したサウンドがなってるかをチェック
 //--------------------------------------------------------------------------------
-bool SoundManager::IsPlaying(const SoundEffectLabel label) const
+bool SoundSystem::IsPlaying(const SoundEffectLabel label) const
 {
     XAUDIO2_VOICE_STATE xa2state;
     se_source_voices_[label]->GetState(&xa2state);
@@ -65,7 +65,7 @@ bool SoundManager::IsPlaying(const SoundEffectLabel label) const
 //--------------------------------------------------------------------------------
 //  全てのサウンドを止まる
 //--------------------------------------------------------------------------------
-void SoundManager::StopAll(void)
+void SoundSystem::StopAll(void)
 {
     for (int count = 0; count < kSoundEffectMax; count++)
     {
@@ -85,7 +85,7 @@ void SoundManager::StopAll(void)
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-SoundManager::SoundManager()
+SoundSystem::SoundSystem()
 {
     
 }
@@ -93,16 +93,16 @@ SoundManager::SoundManager()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void SoundManager::Init(void)
+void SoundSystem::Init(void)
 {
     // スレッドの生成
-    thread_ = MY_NEW thread(&SoundManager::Run, this);
+    thread_ = MY_NEW thread(&SoundSystem::Run, this);
 }
 
 //--------------------------------------------------------------------------------
 //  XAudio初期化処理
 //--------------------------------------------------------------------------------
-bool SoundManager::InitXAudio(void)
+bool SoundSystem::InitXAudio(void)
 {
     // COMライブラリの初期化
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -132,7 +132,7 @@ bool SoundManager::InitXAudio(void)
 //--------------------------------------------------------------------------------
 //  サウンドデータファイルの読込
 //--------------------------------------------------------------------------------
-void SoundManager::LoadSoundEffectData(void)
+void SoundSystem::LoadSoundEffectData(void)
 {
     // サウンドデータの初期化
     for (int count = 0; count < kSoundEffectMax; ++count)
@@ -230,7 +230,7 @@ void SoundManager::LoadSoundEffectData(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void SoundManager::Uninit(void)
+void SoundSystem::Uninit(void)
 {
     for (int count = 0; count < kSoundEffectMax; ++count)
     {
@@ -263,7 +263,7 @@ void SoundManager::Uninit(void)
 //--------------------------------------------------------------------------------
 //  マルチスレッド処理
 //--------------------------------------------------------------------------------
-void SoundManager::Run(void)
+void SoundSystem::Run(void)
 {
     // 初期化
     if (!InitXAudio()) return;
@@ -282,7 +282,7 @@ void SoundManager::Run(void)
 //--------------------------------------------------------------------------------
 //  SEの鳴らす処理
 //--------------------------------------------------------------------------------
-void SoundManager::PlaySe(void)
+void SoundSystem::PlaySe(void)
 {
     if (se_play_tasks_.empty()) return;
 
@@ -316,7 +316,7 @@ void SoundManager::PlaySe(void)
     se_source_voices_[current_task]->Start(0);
 
 #ifdef _DEBUG
-    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
+    MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
 #endif // _DEBUG
 
 }
@@ -324,7 +324,7 @@ void SoundManager::PlaySe(void)
 //--------------------------------------------------------------------------------
 //  SEの止める処理
 //--------------------------------------------------------------------------------
-void SoundManager::StopSe(void)
+void SoundSystem::StopSe(void)
 {
     if (se_stop_tasks_.empty()) return;
 
@@ -344,14 +344,14 @@ void SoundManager::StopSe(void)
     }
 
 #ifdef _DEBUG
-    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
+    MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
 #endif // _DEBUG
 }
 
 //--------------------------------------------------------------------------------
 // チャンクのチェック
 //--------------------------------------------------------------------------------
-bool SoundManager::CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position)
+bool SoundSystem::CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position)
 {
     bool result = true;
     DWORD read;
@@ -418,7 +418,7 @@ bool SoundManager::CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWOR
 //--------------------------------------------------------------------------------
 // チャンクデータの読み込み
 //--------------------------------------------------------------------------------
-bool SoundManager::ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, DWORD buffer_offset)
+bool SoundSystem::ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, DWORD buffer_offset)
 {
     DWORD read;
 

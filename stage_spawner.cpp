@@ -24,7 +24,7 @@ using namespace kodfreedom;
 //--------------------------------------------------------------------------------
 void StageSpawner::LoadStage(const String& stage_name)
 {
-    auto main_system = MainSystem::Instance();
+    auto& main_system = MainSystem::Instance();
 
     //ƒJƒƒ‰‚Ìì¬
     auto camera = MY_NEW ThirdPersionCamera;

@@ -42,7 +42,7 @@ Camera::Camera()
 //--------------------------------------------------------------------------------
 void Camera::Init(void)
 {
-    MainSystem::Instance()->GetCameraManager()->RegisterAsMain(this);
+    MainSystem::Instance().GetCameraManager().RegisterAsMain(this);
 }
 
 //--------------------------------------------------------------------------------

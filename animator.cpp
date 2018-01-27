@@ -8,6 +8,7 @@
 #include "transform.h"
 #include "motion_data.h"
 #include "main_system.h"
+#include "resources.h"
 #include "motion_manager.h"
 #include "texture_manager.h"
 #include "time.h"
@@ -71,13 +72,13 @@ void Animator::Uninit(void)
     avatar_.clear();
     SAFE_DELETE(state_);
 
-    auto motion_manager = MainSystem::Instance()->GetMotionManager();
-    size_t motion_number = motion_names_.size();
-    for (size_t count = 0; count < motion_number; ++count)
+    auto& motion_manager = MainSystem::Instance().GetResources().GetMotionManager();
+    for (auto& motion_name : motion_names_)
     {
-        motion_manager->Disuse(motion_names_[count]);
+        motion_manager.Disuse(motion_name);
     }
     motion_names_.clear();
+
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     SAFE_RELEASE(bone_texture_.pointer);
 #endif
@@ -130,7 +131,7 @@ void Animator::SetAvatar(const String& file_name)
 
     // textureの生成
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-    bone_texture_.pointer = MainSystem::Instance()->GetTextureManager()->CreateEmptyTexture(bone_texture_.size);
+    bone_texture_.pointer = MainSystem::Instance().GetResources().GetTextureManager().CreateEmptyTexture(bone_texture_.size);
 #endif
 }
 
@@ -193,19 +194,22 @@ void Animator::LoadFromFile(const String& file_name)
     }
 
     // Motion
-    auto motion_manager = MainSystem::Instance()->GetMotionManager();
     size_t motion_number;
     archive.loadBinary(&motion_number, sizeof(motion_number));
     motion_names_.resize(motion_number);
+
+    auto& motion_manager = MainSystem::Instance().GetResources().GetMotionManager();
     for (size_t count = 0; count < motion_number; ++count)
     {
         size_t name_size;
         archive.loadBinary(&name_size, sizeof(name_size));
+
         string name;
         name.resize(name_size);
         archive.loadBinary(&name[0], name_size);
+
         motion_names_[count] = String(name.begin(), name.end());
-        motion_manager->Use(motion_names_[count]);
+        motion_manager.Use(motion_names_[count]);
     }
     file.close();
 }
@@ -287,11 +291,11 @@ void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
 {
     float ik_weight_change_speed = ik_weight_decrease_speed_;
 
-    auto collision_system = MainSystem::Instance()->GetCollisionSystem();
+    auto& collision_system = MainSystem::Instance().GetCollisionSystem();
     Ray ray(avatar_[ik_controllers_[goal_part].index].transform->GetCurrentWorldPosition(), Vector3::kDown);
 
     // 下向きに着地点を判定する
-    RayHitInfo* info = collision_system->RayCast(ray, ik_ray_distance_, &owner_);
+    RayHitInfo* info = collision_system.RayCast(ray, ik_ray_distance_, &owner_);
     if (info)
     {
         ik_goals_[ik_goal].position = info->position + ik_foot_position_offset_;

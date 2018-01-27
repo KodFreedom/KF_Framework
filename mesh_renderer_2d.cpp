@@ -12,7 +12,7 @@
 //--------------------------------------------------------------------------------
 void MeshRenderer2d::Update(void)
 {
-    MainSystem::Instance()->GetRendererManager()->Register(this);
+    MainSystem::Instance().GetRendererManager().Register(this);
 }
 
 //--------------------------------------------------------------------------------

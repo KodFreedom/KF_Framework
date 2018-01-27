@@ -8,6 +8,7 @@
 #include "render_system.h"
 #include "camera.h"
 #include "camera_manager.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
@@ -43,8 +44,8 @@ void DefaultBillboardShader::Reset(const LPDIRECT3DDEVICE9 device)
 void DefaultBillboardShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
     // Vertex
-    auto main_system = MainSystem::Instance();
-    auto camera = main_system->GetCameraManager()->GetMainCamera();
+    auto& main_system = MainSystem::Instance();
+    auto camera = main_system.GetCameraManager().GetMainCamera();
     auto transform = renderer.GetGameObject().GetTransform();
 
     // ƒJƒƒ‰‚ÉŒü‚­
@@ -58,9 +59,12 @@ void DefaultBillboardShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, co
     vertex_shader_constant_table_->SetValue(device, "scale", &scale, sizeof(scale));
 
     // Pixel
-    const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-    UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-    device->SetTexture(color_texture_index, main_system->GetTextureManager()->Get(material->color_texture_));
-    pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+    auto material = main_system.GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
+    if (material)
+    {
+        UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetTexture(color_texture_index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
+        pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+    }
 }
 #endif

@@ -6,6 +6,7 @@
 #include "field_editor.h"
 #if defined(_DEBUG) || defined(EDITOR)
 #include "main_system.h"
+#include "resources.h"
 #include "mesh_manager.h"
 #include "input.h"
 #include "mode.h"
@@ -49,7 +50,8 @@ bool FieldEditor::Init(void)
     // Index
     vector<int>& indexes = GetInitMeshIndexes();
 
-    MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
+    MainSystem::Instance().GetResources().GetMeshManager().
+        Use(L"field", DrawType::kTriangleStrip, vertexes_, indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
     return true;
 }
 
@@ -59,7 +61,7 @@ bool FieldEditor::Init(void)
 void FieldEditor::Uninit(void)
 {
     vertexes_.clear();
-    MainSystem::Instance()->GetMeshManager()->Disuse(L"field");
+    MainSystem::Instance().GetResources().GetMeshManager().Disuse(L"field");
 }
 
 //--------------------------------------------------------------------------------
@@ -71,19 +73,19 @@ void FieldEditor::Update(void)
 
     ShowMainWindow();
 
-    auto input = MainSystem::Instance()->GetInput();
+    auto& input = MainSystem::Instance().GetInput();
 
     // 選択範囲内のインデックスの取得
     auto& indexes = GetChoosenIndexes();
 
     // 升降
-    float input_value = static_cast<float>(input->GetKeyPress(Key::kRaise))
-        - static_cast<float>(input->GetKeyPress(Key::kReduce));
+    float input_value = static_cast<float>(input.GetKeyPress(Key::kRaise))
+        - static_cast<float>(input.GetKeyPress(Key::kReduce));
     float raise_amount = input_value * raise_speed_;
 
     // 頂点の更新
     UpdateVertexesBy(raise_amount, indexes);
-    MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+    MainSystem::Instance().GetResources().GetMeshManager().Update(L"field", vertexes_, indexes);
 }
 
 //--------------------------------------------------------------------------------
@@ -128,7 +130,7 @@ void FieldEditor::SaveAsBinary(const String& name)
     UpdateVertexesBy(0.0f, list<int>());
 
     //フィールドメッシュの保存
-    MainSystem::Instance()->GetMeshManager()->SaveMeshToFile(L"field", name);
+    MainSystem::Instance().GetResources().GetMeshManager().SaveMeshToFile(L"field", name);
 
     //フィールドの保存
     String path = L"data/field/" + name + L".field";
@@ -178,7 +180,7 @@ void FieldEditor::LoadFrom(const String& name)
     BinaryInputArchive archive(file);
 
     //今の頂点情報を破棄する
-    MainSystem::Instance()->GetMeshManager()->Disuse(L"field");
+    MainSystem::Instance().GetResources().GetMeshManager().Disuse(L"field");
     previous_choosen_indexes_.clear();
     vertexes_.clear();
 
@@ -206,7 +208,7 @@ void FieldEditor::LoadFrom(const String& name)
     //メッシュインデックス
     vector<int>& mesh_indexes = GetInitMeshIndexes();
 
-    MainSystem::Instance()->GetMeshManager()->Use(L"field", DrawType::kTriangleStrip, vertexes_, mesh_indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
+    MainSystem::Instance().GetResources().GetMeshManager().Use(L"field", DrawType::kTriangleStrip, vertexes_, mesh_indexes, (block_number_x_ + 2) * 2 * block_number_z_ - 4);
     file.close();
 
     MessageBox(NULL, L"ロードしました", path.c_str(), MB_OK | MB_ICONWARNING);
@@ -370,7 +372,7 @@ void FieldEditor::ShowMainWindow(void)
         list<int>& indexes = GetAllIndexes();
         RecalculateVertexes();
         RecalculateNormal(indexes);
-        MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+        MainSystem::Instance().GetResources().GetMeshManager().Update(L"field", vertexes_, indexes);
     }
 
     // 高さを初期化する
@@ -379,7 +381,7 @@ void FieldEditor::ShowMainWindow(void)
         list<int>& indexes = GetChoosenIndexes();
         SetHeightTo(0.0f, indexes);
         RecalculateNormal(indexes);
-        MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, indexes);
+        MainSystem::Instance().GetResources().GetMeshManager().Update(L"field", vertexes_, indexes);
     }
 
     // End
@@ -396,7 +398,8 @@ void FieldEditor::UpdateVertexesBy(const float& raise_amount, const list<int>& c
     {
         vertexes_[index].color = Color::kWhite;
     }
-    MainSystem::Instance()->GetMeshManager()->Update(L"field", vertexes_, previous_choosen_indexes_);
+    MainSystem::Instance().GetResources().GetMeshManager().
+        Update(L"field", vertexes_, previous_choosen_indexes_);
 
     // 起伏と色の更新
     if (current_choose_mode_ == kCircle)

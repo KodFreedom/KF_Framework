@@ -130,6 +130,7 @@ GameObject* GameObjectSpawner::CreateXModel(const String& name, const Vector3& p
     //コンポネント
     auto renderer = MY_NEW MeshRenderer3d(*result);
     renderer->SetMesh(name);
+    renderer->SetMaterial(L"default");
     renderer->SetShaderType(ShaderType::kNoLightNoFog);
     renderer->SetRenderPriority(render_priority);
     result->AddRenderer(renderer);
@@ -404,6 +405,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
     result->AddBehavior(editor_controller);
     renderer = MY_NEW MeshRenderer3d(*result);
     renderer->SetMesh(L"data/model/target.x");
+    renderer->SetMaterial(L"default");
     renderer->SetShaderType(ShaderType::kNoLightNoFog);
     result->AddRenderer(renderer);
 

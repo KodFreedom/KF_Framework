@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "camera_manager.h"
 #include "light_manager.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
@@ -28,7 +29,7 @@ void CullNoneShader::Init(const LPDIRECT3DDEVICE9 device)
 void CullNoneShader::Set(const LPDIRECT3DDEVICE9 device)
 {
     ShaderDirectX9::Set(device);
-    MainSystem::Instance()->GetRenderSystem()->SetRenderState(CullMode::KCullNone);
+    MainSystem::Instance().GetRenderSystem().SetRenderState(CullMode::KCullNone);
 }
 
 //--------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ void CullNoneShader::Set(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void CullNoneShader::Reset(const LPDIRECT3DDEVICE9 device)
 {
-    MainSystem::Instance()->GetRenderSystem()->SetRenderState(CullMode::kCcw);
+    MainSystem::Instance().GetRenderSystem().SetRenderState(CullMode::kCcw);
 }
 
 //--------------------------------------------------------------------------------
@@ -44,31 +45,36 @@ void CullNoneShader::Reset(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void CullNoneShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshRenderer& renderer)
 {
-    auto main_system = MainSystem::Instance();
-    auto camera = main_system->GetCameraManager()->GetMainCamera();
+    auto& main_system = MainSystem::Instance();
+    auto camera = main_system.GetCameraManager().GetMainCamera();
     auto& world = renderer.GetGameObject().GetTransform()->GetWorldMatrix();
     auto& world_inverse = world.Inverse();
 
+    // Vertex
     D3DXMATRIX world_view_projection = world * camera->GetView() * camera->GetProjection();
     vertex_shader_constant_table_->SetMatrix(device, "world_view_projection", &world_view_projection);
 
+    // Pixel
     auto& camera_position_local = Vector3::TransformCoord(camera->GetWorldEyePosition(), world_inverse);
     pixel_shader_constant_table_->SetValue(device, "camera_position_local", &camera_position_local, sizeof(camera_position_local));
 
-    auto& light = main_system->GetLightManager()->GetDirectionalLights().front();
+    auto& light = main_system.GetLightManager().GetDirectionalLights().front();
     auto& light_direction_local = Vector3::TransformNormal(light->direction_, world_inverse);
     pixel_shader_constant_table_->SetValue(device, "light_direction_local", &light_direction_local, sizeof(light_direction_local));
     pixel_shader_constant_table_->SetValue(device, "light_diffuse", &light->diffuse_, sizeof(light->diffuse_));
     pixel_shader_constant_table_->SetValue(device, "light_ambient", &light->ambient_, sizeof(light->ambient_));
 
-    const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-    auto texture_manager = main_system->GetTextureManager();
-    UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-    device->SetTexture(color_texture_index, texture_manager->Get(material->color_texture_));
-    pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
-    pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient_, sizeof(material->ambient_));
-    pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive_, sizeof(material->emissive_));
-    pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular_, sizeof(material->specular_));
-    pixel_shader_constant_table_->SetValue(device, "material_power", &material->power_, sizeof(material->power_));
+    // Material
+    auto material = main_system.GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
+    if (material)
+    {
+        UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetTexture(color_texture_index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
+        pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+        pixel_shader_constant_table_->SetValue(device, "material_ambient", &material->ambient_, sizeof(material->ambient_));
+        pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive_, sizeof(material->emissive_));
+        pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular_, sizeof(material->specular_));
+        pixel_shader_constant_table_->SetValue(device, "material_power", &material->power_, sizeof(material->power_));
+    }
 }
 #endif

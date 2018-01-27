@@ -5,7 +5,7 @@
 #include "mode_demo.h"
 #include "main_system.h"
 #include "input.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 #include "mode_result.h"
 #include "fade_system.h"
 #include "shadow_map_system.h"
@@ -42,10 +42,10 @@ void ModeDemo::Init(void)
 {    
     StageSpawner::LoadStage(L"demo");
 
-    auto main_system = MainSystem::Instance();
-    auto player = main_system->GetActorObserver()->GetPlayer();
+    auto& main_system = MainSystem::Instance();
+    auto player = main_system.GetActorObserver().GetPlayer();
     assert(player);
-    main_system->GetShadowMapSystem()->SetTarget(player->GetGameObject().GetTransform());
+    main_system.GetShadowMapSystem().SetTarget(player->GetGameObject().GetTransform());
 }
 
 //--------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ void ModeDemo::Update(void)
 void ModeDemo::LateUpdate(void)
 {
     Mode::LateUpdate();
-    auto main_system = MainSystem::Instance();
+    auto& main_system = MainSystem::Instance();
 
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
@@ -70,29 +70,29 @@ void ModeDemo::LateUpdate(void)
 
         if (time_counter_ <= 0.0f)
         {
-            main_system->GetShadowMapSystem()->SetTarget(nullptr);
-            main_system->GetFadeSystem()->FadeTo(MY_NEW ModeResult);
+            main_system.GetShadowMapSystem().SetTarget(nullptr);
+            main_system.GetFadeSystem().FadeTo(MY_NEW ModeResult);
         }
         return;
     }
    
-    auto player = main_system->GetActorObserver()->GetPlayer();
+    auto player = main_system.GetActorObserver().GetPlayer();
     if (player && player->GetCurrentStateName().find(L"Dying") != String::npos)
     {// プレイヤーが死んだらリザルトにいく
         time_counter_ = kWaitTime;
         return;
     }
 
-    if (main_system->GetActorObserver()->GetEnemys().empty())
+    if (main_system.GetActorObserver().GetEnemys().empty())
     {// エネミーが死んだらリザルトにいく
         time_counter_ = Time::kTimeInterval;
         return;
     }
 
 #ifdef _DEBUG
-    if (main_system->GetInput()->GetKeyTrigger(Key::kStart))
+    if (main_system.GetInput().GetKeyTrigger(Key::kStart))
     {
-        MainSystem::Instance()->GetSoundManager()->Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
         time_counter_ = Time::kTimeInterval;
         return;
     }

@@ -30,7 +30,7 @@ bool PlayerController::Init(void)
     collider->SetTrigger(true);
     owner_.AddCollider(collider);
     ActorController::Init();
-    MainSystem::Instance()->GetActorObserver()->Register(this);
+    MainSystem::Instance().GetActorObserver().Register(this);
     return true;
 }
 
@@ -44,7 +44,7 @@ void PlayerController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
-    MainSystem::Instance()->GetActorObserver()->Deregister(this);
+    MainSystem::Instance().GetActorObserver().Deregister(this);
 }
 
 //--------------------------------------------------------------------------------

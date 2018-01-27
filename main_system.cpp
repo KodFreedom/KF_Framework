@@ -4,12 +4,9 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main_system.h"
-#include "texture_manager.h"
-#include "mesh_manager.h"
-#include "material_manager.h"
-#include "motion_manager.h"
+#include "resources.h"
 #include "light_manager.h"
-#include "sound_manager.h"
+#include "sound_system.h"
 #include "renderer_manager.h"
 #include "input.h"
 #include "fade_system.h"
@@ -62,7 +59,7 @@ MainSystem* MainSystem::Create(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mo
 }
 
 //--------------------------------------------------------------------------------
-//    îjä¸èàóù
+//  îjä¸èàóù
 //--------------------------------------------------------------------------------
 void MainSystem::Release(void)
 {
@@ -159,7 +156,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 {
     Random::Init();
 
-    // render apiÇ…ÇÊÇ¡Çƒrender system, texture manager, mesh managerÇÃê∂ê¨
+    // render apiÇ…ÇÊÇ¡Çƒrender system, resourcesÇÃê∂ê¨
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
     auto render_system_directX9 = RenderSystemDirectX9::Create(hwnd, is_window_mode);
@@ -167,8 +164,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
     render_system_ = render_system_directX9;
     const auto device = render_system_directX9->GetDevice();
 
-    texture_manager_ = TextureManager::Create(device);
-    mesh_manager_ = MeshManager::Create(device);
+    resources_ = Resources::Create(device);
     shader_manager_ = ShaderManager::Create(device);
     shadow_map_system_ = ShadowMapSystem::Create(device);
 #endif
@@ -181,14 +177,12 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
     io.ImeWindowHandle = hwnd;
 #endif
 
-    material_manager_ = MaterialManager::Create();
-    motion_manager_ = MotionManager::Create();
     light_manager_ = LightManager::Create();
     renderer_manager_ = RendererManager::Create();
 #ifdef _DEBUG
     debug_observer_ = DebugObserver::Create();
 #endif
-    sound_manager_ = SoundManager::Create();
+    sound_system_ = SoundSystem::Create();
     input_ = Input::Create(hinstance, hwnd);
     camera_manager_ = CameraManager::Create();
     collision_system_ = CollisionSystem::Create();
@@ -199,7 +193,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 
     //èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
-    Change(MY_NEW ModeTitle);
+    Change(MY_NEW ModeEditor);
 #else
     Change(MY_NEW ModeTitle);
 #endif // EDITOR
@@ -220,7 +214,7 @@ void MainSystem::Uninit(void)
     SAFE_RELEASE(camera_manager_);
     SAFE_RELEASE(fade_system_);
     SAFE_RELEASE(input_);
-    SAFE_RELEASE(sound_manager_);
+    SAFE_RELEASE(sound_system_);
 #ifdef _DEBUG
     SAFE_RELEASE(debug_observer_);
 #endif
@@ -228,9 +222,6 @@ void MainSystem::Uninit(void)
     SAFE_RELEASE(shader_manager_);
     SAFE_RELEASE(renderer_manager_);
     SAFE_RELEASE(light_manager_);
-    SAFE_RELEASE(motion_manager_);
-    SAFE_RELEASE(material_manager_);
-    SAFE_RELEASE(mesh_manager_);
-    SAFE_RELEASE(texture_manager_);
+    SAFE_RELEASE(resources_);
     SAFE_RELEASE(render_system_);
 }

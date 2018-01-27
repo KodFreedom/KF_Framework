@@ -68,7 +68,7 @@ void EnemyZombieIdleState::OnTrigger(EnemyController& enemy, Collider& self, Col
             && other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲット発見
 #ifdef _DEBUG
-            MainSystem::Instance()->GetDebugObserver()->Display(
+            MainSystem::Instance().GetDebugObserver().Display(
                 enemy.GetGameObject().GetName() + L" が" + other.GetGameObject().GetName() + L"を発見した！ ");
 #endif
             enemy.SetTarget(&other.GetGameObject());

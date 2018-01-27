@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------------
-//　sound_manager.h
+//　sound_system.h
 //  manage the se,bgm's save, load
 //  サウンド管理者
 //  Author : 徐文杰(KodFreedom)
@@ -20,16 +20,16 @@ enum SoundEffectLabel
 //--------------------------------------------------------------------------------
 //  サウンド管理者クラス
 //--------------------------------------------------------------------------------
-class SoundManager final
+class SoundSystem final
 {
 public:
     //--------------------------------------------------------------------------------
     //  生成処理
-    //  return : SoundManager*
+    //  return : SoundSystem*
     //--------------------------------------------------------------------------------
-    static SoundManager* Create(void)
+    static SoundSystem* Create(void)
     {
-        auto instance = MY_NEW SoundManager();
+        auto instance = MY_NEW SoundSystem();
         instance->Init();
         return instance;
     }
@@ -87,10 +87,10 @@ private:
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    SoundManager();
-    SoundManager(const SoundManager& value) {}
-    SoundManager& operator=(const SoundManager& value) {}
-    ~SoundManager() {}
+    SoundSystem();
+    SoundSystem(const SoundSystem& value) {}
+    SoundSystem& operator=(const SoundSystem& value) {}
+    ~SoundSystem() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理

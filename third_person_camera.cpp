@@ -39,9 +39,9 @@ void ThirdPersionCamera::Init(void)
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::Update(void)
 {
-    auto input = MainSystem::Instance()->GetInput();
-    float rotation_x = input->RotationHorizontal();
-    float rotation_y = input->RotationVertical();
+    auto& input = MainSystem::Instance().GetInput();
+    float rotation_x = input.RotationHorizontal();
+    float rotation_y = input.RotationVertical();
 
     float pitch_amount = 0.0f;
     float yaw_amount = 0.0f;
@@ -66,7 +66,7 @@ void ThirdPersionCamera::Update(void)
 //--------------------------------------------------------------------------------
 void ThirdPersionCamera::LateUpdate(void)
 {
-    auto follow_target = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+    auto follow_target = MainSystem::Instance().GetActorObserver().GetPlayer();
     if (follow_target)
     {
         rig_.position = Math::Lerp(rig_.position, follow_target->GetGameObject().GetTransform()->GetPosition(), kMoveLerpTime);

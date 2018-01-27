@@ -36,6 +36,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 void CloseApp(HWND hwnd);
 
 //--------------------------------------------------------------------------------
+//  変数定義
+//--------------------------------------------------------------------------------
+MainSystem* main_system_ = nullptr;
+
+//--------------------------------------------------------------------------------
 //  関数名：WinMain
 //  関数説明：メイン関数
 //  引数：instance
@@ -50,23 +55,20 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     UNREFERENCED_PARAMETER(cmd_line);
 
     WNDCLASSEX wcex;
+    wcex.cbSize = sizeof(WNDCLASSEX);                //WNDCLASSEXのメモリサイズを指定
+    wcex.style = CS_CLASSDC;                         //表示するウインドウのスタイルを設定
+    wcex.lpfnWndProc = WndProc;                      //関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
+    wcex.cbClsExtra = 0;                             //通常は使用しないので０を指定
+    wcex.cbWndExtra = 0;                             //通常は使用しないので０を指定
+    wcex.hInstance = instance;                       //WinMainのパラメータのインスタンスハンドル
+    wcex.hIcon = NULL;                               //自作icon出す、使用するアイコンを指定（Windowsがもっている）
+    wcex.hCursor = LoadCursor(NULL, IDC_ARROW);      //マウスカーソルを指定
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1); //ウインドウのクライアント領域の背景色を設定
+    wcex.lpszMenuName = NULL;                        //Windowにつけるメニューを設定（つけると重い）
+    wcex.lpszClassName = CLASS_NAME;                 //ウインドウクラスの名前
+    wcex.hIconSm = NULL;                             //拡張された部分（ミニicon）、小さいアイコンが設定された場合の情報を記述
+    RegisterClassEx(&wcex);                          //ウインドウクラスの登録
 
-    wcex.cbSize = sizeof(WNDCLASSEX);                    //WNDCLASSEXのメモリサイズを指定
-    wcex.style = CS_CLASSDC;                            //表示するウインドウのスタイルを設定
-    wcex.lpfnWndProc = WndProc;                            //関数ポインタ、ウインドウプロシージャのアドレス（関数名）を指定
-    wcex.cbClsExtra = 0;                                //通常は使用しないので０を指定
-    wcex.cbWndExtra = 0;                                //通常は使用しないので０を指定
-    wcex.hInstance = instance;                            //WinMainのパラメータのインスタンスハンドル
-    wcex.hIcon = NULL;                                    //自作icon出す、使用するアイコンを指定（Windowsがもっている）
-    wcex.hCursor = LoadCursor(NULL, IDC_ARROW);            //マウスカーソルを指定
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);    //ウインドウのクライアント領域の背景色を設定
-    wcex.lpszMenuName = NULL;                            //Windowにつけるメニューを設定（つけると重い）
-    wcex.lpszClassName = CLASS_NAME;                    //ウインドウクラスの名前
-    wcex.hIconSm = NULL;                                //拡張された部分（ミニicon）、小さいアイコンが設定された場合の情報を記述
-    RegisterClassEx(&wcex);                                //ウインドウクラスの登録
-
-    HWND hwnd;
-    MSG message;
     DWORD style = WS_OVERLAPPEDWINDOW ^ (WS_MAXIMIZEBOX | WS_THICKFRAME);
     RECT rect = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
     RECT real_rect;
@@ -86,19 +88,19 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     int window_y = height > real_height ? 0 : (real_height - height) / 2;
 
     //ウインドウを作成
-    hwnd = CreateWindowEx(
-        0,                //拡張ウインドウスタイル
-        CLASS_NAME,        //クラスの名前
-        WINDOW_NAME,    //ウインドウの名前
-        style,            //**important**window type,ウインドウのスタイル
-        window_x,        //ウインドウ左上座標X
-        window_y,        //ウインドウ左上座標Y
-        width,            //幅（ウインドウ全体）
-        height,            //高さ（ウインドウ全体）
-        NULL,            //親ウィンドウのハンドル
-        NULL,            //メニューハンドルまたは子ウインドウID
-        instance,        //インスタンスハンドル
-        NULL);            //ウインドウ作成データ
+    HWND hwnd = CreateWindowEx(
+        0,           //拡張ウインドウスタイル
+        CLASS_NAME,  //クラスの名前
+        WINDOW_NAME, //ウインドウの名前
+        style,       //**important**window type,ウインドウのスタイル
+        window_x,    //ウインドウ左上座標X
+        window_y,    //ウインドウ左上座標Y
+        width,       //幅（ウインドウ全体）
+        height,      //高さ（ウインドウ全体）
+        NULL,        //親ウィンドウのハンドル
+        NULL,        //メニューハンドルまたは子ウインドウID
+        instance,    //インスタンスハンドル
+        NULL);       //ウインドウ作成データ
 
     //フルスクリーン
 #ifdef _DEBUG
@@ -118,8 +120,8 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     }
 
     //MainSystem生成
-    MainSystem* main_system = MainSystem::Create(instance, hwnd, is_window_mode);
-    if (!main_system)
+    main_system_ = MainSystem::Create(instance, hwnd, is_window_mode);
+    if (!main_system_)
     {
         Time::Release();
         UnregisterClass(CLASS_NAME, wcex.hInstance);
@@ -131,6 +133,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     UpdateWindow(hwnd);
 
     //メッセージループ
+    MSG message;
     for (;;)
     {
         if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE) != 0)
@@ -148,14 +151,15 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
         }
         else if(time->CanUpdateFrame())
         {
-            main_system->Update();
-            main_system->LateUpdate();
-            main_system->Render();
+            main_system_->Update();
+            main_system_->LateUpdate();
+            main_system_->Render();
         }
     }
 
     // 終了処理
     MainSystem::Release();
+    main_system_ = nullptr;
     Time::Release();
 
     //ウインドウクラスの登録お解除
@@ -193,18 +197,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
         break;
     case WM_ACTIVATEAPP:
     {
-        if (!MainSystem::Instance()) break;
-        auto input = MainSystem::Instance()->GetInput();
-        if (input)
+        if (!main_system_) break;
+        auto& input = main_system_->GetInput();
+        if (GetActiveWindow())
         {
-            if (GetActiveWindow())
-            {
-                input->Acquire();
-            }
-            else
-            {
-                input->Unacquire();
-            }
+            input.Acquire();
+        }
+        else
+        {
+            input.Unacquire();
         }
         break;
     }
