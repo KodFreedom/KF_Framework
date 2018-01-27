@@ -4,6 +4,7 @@
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
+#include "resource_manager.h"
 #include "render_system.h"
 #include "kf_utility.h"
 
@@ -65,7 +66,7 @@ struct Mesh
     int index_number;
     int polygon_number;
     LPDIRECT3DVERTEXBUFFER9 vertex_buffer;
-    LPDIRECT3DINDEXBUFFER9    index_buffer;
+    LPDIRECT3DINDEXBUFFER9  index_buffer;
 };
 #else
 struct Mesh
@@ -87,36 +88,16 @@ struct Mesh
 //--------------------------------------------------------------------------------
 //  クラス
 //--------------------------------------------------------------------------------
-class MeshManager
+class MeshManager final : public ResourceManager
 {
 public:
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     //--------------------------------------------------------------------------------
     //  生成処理
     //  return : MeshManager*
     //--------------------------------------------------------------------------------
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-    static MeshManager* Create(const LPDIRECT3DDEVICE9 device)
-    {
-        auto instance = MY_NEW MeshManager(device);
-        return instance;
-    }
+    static MeshManager* Create(const LPDIRECT3DDEVICE9 device);
 #endif
-
-    //--------------------------------------------------------------------------------
-    //  破棄処理
-    //--------------------------------------------------------------------------------
-    void Release(void) 
-    {
-        Uninit();
-        MY_DELETE this;
-    }
-    
-    //--------------------------------------------------------------------------------
-    //  与えられた名前のメッシュを使う
-    //  すでにあるの場合ユーザーを1たす、ないの場合ファイルから読み込む
-    //  mesh_name : メッシュ名
-    //--------------------------------------------------------------------------------
-    void Use(const String& mesh_name);
 
     //--------------------------------------------------------------------------------
     //  与えられた名前のメッシュを使う
@@ -127,13 +108,6 @@ public:
     //  indexes : インデックスデータ
     //--------------------------------------------------------------------------------
     void Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number = -1);
-
-    //--------------------------------------------------------------------------------
-    //  与えられた名前のメッシュを使わない
-    //  ユーザーが-1になる、0になった場合メモリから破棄する
-    //  mesh_name : メッシュ名
-    //--------------------------------------------------------------------------------
-    void Disuse(const String& mesh_name);
 
     //--------------------------------------------------------------------------------
     //  与えられた名前のメッシュを与えられた頂点とインデックスで更新する
@@ -155,12 +129,7 @@ public:
     //  mesh_name : メッシュ名
     //  return : Mesh*
     //--------------------------------------------------------------------------------
-    Mesh* GetMesh(const String& mesh_name) const
-    {
-        auto iterator = meshes_.find(mesh_name);
-        if (meshes_.end() == iterator) return nullptr;
-        return iterator->second.pointer;
-    }
+    Mesh* Get(const String& mesh_name) const;
 
 private:
     //--------------------------------------------------------------------------------
@@ -196,7 +165,17 @@ private:
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    void Uninit(void);
+    void Uninit(void) override;
+
+    //--------------------------------------------------------------------------------
+    //  リソースの読込処理
+    //--------------------------------------------------------------------------------
+    void LoadResource(void) override;
+
+    //--------------------------------------------------------------------------------
+    //  リソースのリリース処理
+    //--------------------------------------------------------------------------------
+    void ReleaseResource(void) override;
 
     //--------------------------------------------------------------------------------
     //  meshファイルからデータを読み込む
@@ -288,8 +267,8 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    unordered_map<String, MeshInfo> meshes_; // メッシュを保存するところ
+    unordered_map<size_t, MeshInfo> meshes_; // メッシュを保存するところ
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-    const LPDIRECT3DDEVICE9 device_; // directx9のディバイス
+    const LPDIRECT3DDEVICE9         device_; // directx9のディバイス
 #endif
 };

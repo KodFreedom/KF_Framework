@@ -33,7 +33,7 @@ Collider::Collider(GameObject& owner, const ColliderType& type, const ColliderMo
 bool Collider::Init(void)
 {
     is_registered_ = true;
-    MainSystem::Instance()->GetCollisionSystem()->Register(this);
+    MainSystem::Instance().GetCollisionSystem().Register(this);
     world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
     return true;
 }
@@ -45,7 +45,7 @@ void Collider::Uninit(void)
 {
     if (is_registered_)
     {
-        MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
+        MainSystem::Instance().GetCollisionSystem().Deregister(this);
     }
     observers_.clear();
 }
@@ -91,7 +91,7 @@ void Collider::Sleep(void)
 {
     if (!is_registered_) return;
     is_registered_ = false;
-    MainSystem::Instance()->GetCollisionSystem()->Deregister(this);
+    MainSystem::Instance().GetCollisionSystem().Deregister(this);
 }
 
 //--------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ void Collider::Awake(void)
 {
     if (is_registered_) return;
     is_registered_ = true;
-    MainSystem::Instance()->GetCollisionSystem()->Register(this);
+    MainSystem::Instance().GetCollisionSystem().Register(this);
 }
 
 //--------------------------------------------------------------------------------
@@ -113,10 +113,10 @@ void Collider::SetMode(const ColliderMode& mode)
 
     if (is_registered_)
     {
-        auto collision_system = MainSystem::Instance()->GetCollisionSystem();
-        collision_system->Deregister(this);
+        auto& collision_system = MainSystem::Instance().GetCollisionSystem();
+        collision_system.Deregister(this);
         mode_ = mode;
-        collision_system->Register(this);
+        collision_system.Register(this);
     }
     else
     {

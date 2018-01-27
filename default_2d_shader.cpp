@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "default_2d_shader.h"
 #include "main_system.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "game_object.h"
 #include "render_system.h"
@@ -46,7 +47,10 @@ void Default2dShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const Mes
     vertex_shader_constant_table_->SetValue(device, "offset", &RenderSystem::kOffset2d, sizeof(RenderSystem::kOffset2d));
 
     // Pixel
-    const auto& material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-    pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+    auto material = MainSystem::Instance().GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
+    if (material)
+    {
+        pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
+    }
 }
 #endif

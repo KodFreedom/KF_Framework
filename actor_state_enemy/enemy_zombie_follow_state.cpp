@@ -40,7 +40,7 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
     if (square_distance > warning_range * warning_range)
     {// ”ÍˆÍŠO‚É‚È‚é‚Ì‚Å’ÇÕ’†~
 #ifdef _DEBUG
-        MainSystem::Instance()->GetDebugObserver()->Display(
+        MainSystem::Instance().GetDebugObserver().Display(
             enemy.GetGameObject().GetName() + L" ‚ª" + enemy.GetTarget()->GetName() + L"‚ğŒ©¸‚Á‚½I ");
 #endif
         enemy.SetTarget(nullptr);

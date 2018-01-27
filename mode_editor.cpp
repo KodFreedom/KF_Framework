@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------
 void ModeEditor::Init(void)
 {
-    auto main_system = MainSystem::Instance();
+    auto& main_system = MainSystem::Instance();
 
     //カメラの初期化
     auto camera = MY_NEW EditorCamera;
@@ -31,7 +31,7 @@ void ModeEditor::Init(void)
     //ライトの初期化
     auto directional_light = MY_NEW DirectionalLight(Vector3(-1.0f, -4.0f, 1.0f).Normalized());
 
-    main_system->GetInput()->SetEditorMode(true);
+    main_system.GetInput().SetEditorMode(true);
 
     //ゲームオブジェクトの初期化
     GameObjectSpawner::CreateEditor();
@@ -56,7 +56,7 @@ void ModeEditor::LateUpdate(void)
 void ModeEditor::Uninit(void)
 {
     Mode::Uninit();
-    MainSystem::Instance()->GetInput()->SetEditorMode(false);
+    MainSystem::Instance().GetInput().SetEditorMode(false);
 }
 #endif // _DEBUG
 

@@ -247,10 +247,10 @@
     <Filter Include="ソース ファイル\Base\Shader\Billboard">
       <UniqueIdentifier>{a339079c-c29c-4290-bcfe-eb30e0df8f73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\ResourceManager">
+    <Filter Include="ヘッダー ファイル\Base\System\Resources">
       <UniqueIdentifier>{b4aba4cf-5da0-490c-ad06-38df6eca8762}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\System\ResourceManager">
+    <Filter Include="ソース ファイル\Base\System\Resources">
       <UniqueIdentifier>{48a40c3a-9560-4326-a2b6-b68f751fe5e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -652,19 +652,25 @@
       <Filter>ソース ファイル\Base\Shader\Billboard</Filter>
     </ClCompile>
     <ClCompile Include="mesh_manager.cpp">
-      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
     <ClCompile Include="material_manager.cpp">
-      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
     <ClCompile Include="texture_manager.cpp">
-      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
     <ClCompile Include="sound_system.cpp">
       <Filter>ソース ファイル\Base\System</Filter>
     </ClCompile>
     <ClCompile Include="motion_manager.cpp">
-      <Filter>ソース ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_manager.cpp">
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources.cpp">
+      <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1116,19 +1122,25 @@
       <Filter>ヘッダー ファイル\Base\Shader\Billboard</Filter>
     </ClInclude>
     <ClInclude Include="material_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
     <ClInclude Include="mesh_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
     <ClInclude Include="texture_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
     <ClInclude Include="sound_system.h">
       <Filter>ヘッダー ファイル\Base\System</Filter>
     </ClInclude>
     <ClInclude Include="motion_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\ResourceManager</Filter>
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_manager.h">
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources.h">
+      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

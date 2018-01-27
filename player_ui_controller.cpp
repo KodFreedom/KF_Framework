@@ -9,6 +9,7 @@
 #include "main_system.h"
 #include "actor_observer.h"
 #include "player_controller.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "mesh_renderer_2d.h"
 #include "time.h"
@@ -42,6 +43,8 @@ PlayerUiController::PlayerUiController(GameObject& owner)
 //--------------------------------------------------------------------------------
 bool PlayerUiController::Init(void)
 {
+    auto& material_manager = MainSystem::Instance().GetResources().GetMaterialManager();
+
     // Warning Gauge
     auto warning_gauge = GameObjectSpawner::CreateBasicPolygon2d(
         kLifeGaugeSize,
@@ -52,8 +55,12 @@ bool PlayerUiController::Init(void)
         0.0f,
         kLifeGaugeLeftTop + kLifeGaugeSize * 0.5f);
     warning_gauge_ = warning_gauge->GetTransform();
-    auto warning_gauge_material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"warning_gauge");
-    warning_gauge_material->diffuse_ = Color(0.5f, 0.2f, 0.2f, 0.0f);
+    auto warning_gauge_material = material_manager.Get(L"warning_gauge");
+    if (warning_gauge_material)
+    {
+        warning_gauge_material->diffuse_ = Color(0.5f, 0.2f, 0.2f, 0.0f);
+    }
+    
 
     // Life Gauge
     auto life_gauge = GameObjectSpawner::CreateBasicPolygon2d(
@@ -65,8 +72,11 @@ bool PlayerUiController::Init(void)
         0.0f,
         kLifeGaugeLeftTop + kLifeGaugeSize * 0.5f);
     life_gauge_ = life_gauge->GetTransform();
-    auto life_gauge_material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"life_gauge");
-    life_gauge_material->diffuse_ = Color::kGreen;
+    auto life_gauge_material = material_manager.Get(L"life_gauge");
+    if (life_gauge_material)
+    {
+        life_gauge_material->diffuse_ = Color::kGreen;
+    }
     
     // Cover
     GameObjectSpawner::CreateBasicPolygon2d(
@@ -94,7 +104,7 @@ void PlayerUiController::Uninit(void)
 //--------------------------------------------------------------------------------
 void PlayerUiController::Update(void)
 {
-    auto player = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+    auto player = MainSystem::Instance().GetActorObserver().GetPlayer();
     if (!player) return;
     const auto& parameter = player->GetParameter();
     UpdateWarningGauge(parameter);
@@ -119,7 +129,9 @@ void PlayerUiController::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void PlayerUiController::UpdateWarningGauge(const ActorParameter& parameter)
 {
-    auto warning_gauge_material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"warning_gauge");
+    auto warning_gauge_material = MainSystem::Instance().GetResources().GetMaterialManager().Get(L"warning_gauge");
+    if (!warning_gauge_material) return;
+
     if (parameter.GetCurrentLife() >= parameter.GetMaxLife() * 0.5f)
     {
         warning_gauge_material->diffuse_.a_ = 0.0f;
@@ -145,6 +157,9 @@ void PlayerUiController::UpdateWarningGauge(const ActorParameter& parameter)
 //--------------------------------------------------------------------------------
 void PlayerUiController::UpdateLifeGauge(const ActorParameter& parameter)
 {
+    auto life_gauge_material = MainSystem::Instance().GetResources().GetMaterialManager().Get(L"life_gauge");
+    if (!life_gauge_material) return;
+
     // Size
     float life_rate = parameter.GetCurrentLife() / parameter.GetMaxLife();
     Vector3 current_size = kLifeGaugeSize;
@@ -159,7 +174,6 @@ void PlayerUiController::UpdateLifeGauge(const ActorParameter& parameter)
     ((MeshRenderer2d*)renderer)->SetUvScale(Vector2(life_rate, 1.0f));
 
     // “_–Å‚·‚é
-    auto life_gauge_material = MainSystem::Instance()->GetMaterialManager()->GetMaterial(L"life_gauge");
     life_gauge_material->diffuse_.r_ += life_flash_speed_ * Time::Instance()->DeltaTime();
     if (life_gauge_material->diffuse_.r_ >= 0.3f)
     {

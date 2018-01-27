@@ -84,8 +84,8 @@ void DebugObserver::Display(const String& log)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowMainWindow(void)
 {
-    auto render_system = MainSystem::Instance()->GetRenderSystem();
-    auto background_color = render_system->GetBackgroundColor();
+    auto& render_system = MainSystem::Instance().GetRenderSystem();
+    auto background_color = render_system.GetBackgroundColor();
 
     // Begin
     if (!ImGui::Begin("Main Debug Window"))
@@ -100,7 +100,7 @@ void DebugObserver::ShowMainWindow(void)
     // BG Color
     if (ImGui::ColorEdit3("Background color", (float*)&background_color))
     {
-        render_system->SetBackgroundColor(background_color);
+        render_system.SetBackgroundColor(background_color);
     }
 
     // Window
@@ -158,7 +158,7 @@ void DebugObserver::ShowCameraWindow(void)
 {
     if (!enable_camera_window_) return;
 
-    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    auto camera = MainSystem::Instance().GetCameraManager().GetMainCamera();
 
     // Begin
     if (!ImGui::Begin("Camera Window", &enable_camera_window_))
@@ -198,7 +198,7 @@ void DebugObserver::ShowCameraWindow(void)
 //--------------------------------------------------------------------------------
 void DebugObserver::ShowPlayerWindow(void)
 {
-    auto player = MainSystem::Instance()->GetActorObserver()->GetPlayer();
+    auto player = MainSystem::Instance().GetActorObserver().GetPlayer();
     if (!enable_player_window_ || !player) return;
 
     // Begin
@@ -347,25 +347,25 @@ void DebugObserver::ShowShadowMapWindow(void)
         return;
     }
 
-    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
+    auto& shadow_map_system = MainSystem::Instance().GetShadowMapSystem();
 
     // Bias
-    ImGui::InputFloat("Bias", &shadow_map_system->bias_);
+    ImGui::InputFloat("Bias", &shadow_map_system.bias_);
     
     // Range
-    ImGui::SliderFloat("Range", &shadow_map_system->range_, 0.0f, 50.0f);
+    ImGui::SliderFloat("Range", &shadow_map_system.range_, 0.0f, 50.0f);
 
     // Near
-    ImGui::SliderFloat("Near", &shadow_map_system->near_, 0.0f, 10.0f);
+    ImGui::SliderFloat("Near", &shadow_map_system.near_, 0.0f, 10.0f);
 
     // Far
-    ImGui::SliderFloat("Far", &shadow_map_system->far_, 50.0f, 500.0f);
+    ImGui::SliderFloat("Far", &shadow_map_system.far_, 50.0f, 500.0f);
 
     // Offset
-    ImGui::InputFloat3("Offset", (float*)&shadow_map_system->offset_.x_);
+    ImGui::InputFloat3("Offset", (float*)&shadow_map_system.offset_.x_);
 
     // Image
-    ImGui::Image((void*)shadow_map_system->GetShadowMap(), ImVec2(128, 128)
+    ImGui::Image((void*)shadow_map_system.GetShadowMap(), ImVec2(128, 128)
         , ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 1));
 
     // End

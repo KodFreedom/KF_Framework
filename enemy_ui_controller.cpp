@@ -13,6 +13,7 @@
 #include "camera_manager.h"
 #include "camera.h"
 #include "game_object_spawner.h"
+#include "resources.h"
 #include "material_manager.h"
 
 //--------------------------------------------------------------------------------
@@ -40,8 +41,8 @@ EnemyUiController::EnemyUiController(GameObject& owner)
 bool EnemyUiController::Init(void)
 {
     // ƒ}ƒeƒŠƒAƒ‹‚Ìì¬
-    MainSystem::Instance()->GetMaterialManager()
-        ->Use(L"enemy_life", Color::kRed, L"polygon.jpg");
+    MainSystem::Instance().GetResources().GetMaterialManager()
+        .Use(L"enemy_life", Color::kRed, L"polygon.jpg");
     return true;
 }
 
@@ -50,8 +51,8 @@ bool EnemyUiController::Init(void)
 //--------------------------------------------------------------------------------
 void EnemyUiController::Uninit(void)
 {
-    MainSystem::Instance()->GetMaterialManager()
-        ->Disuse(L"enemy_life");
+    MainSystem::Instance().GetResources().GetMaterialManager()
+        .Disuse(L"enemy_life");
 }
 
 //--------------------------------------------------------------------------------
@@ -59,12 +60,12 @@ void EnemyUiController::Uninit(void)
 //--------------------------------------------------------------------------------
 void EnemyUiController::Update(void)
 {
-    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    auto camera = MainSystem::Instance().GetCameraManager().GetMainCamera();
     assert(camera);
     const Vector3& camera_position = camera->GetWorldEyePosition();
 
     // UI‚Ì”‚ð“G‚É‡‚í‚¹‚é
-    auto& enemys = MainSystem::Instance()->GetActorObserver()->GetEnemys();
+    auto& enemys = MainSystem::Instance().GetActorObserver().GetEnemys();
     AdjustUiNumbers(static_cast<int>(enemys.size()) - static_cast<int>(enemy_uis_.size()));
 
     auto ui_iterator = enemy_uis_.begin();

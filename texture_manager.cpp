@@ -6,38 +6,48 @@
 //--------------------------------------------------------------------------------
 #include "texture_manager.h"
 #include "kf_utility.h"
+#ifdef _DEBUG
+#include "main_system.h"
+#include "debug_observer.h"
+#endif // _DEBUG
 
 //--------------------------------------------------------------------------------
 //    
 //  Public
 //
 //--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
-//  破棄処理
+//  生成処理
 //--------------------------------------------------------------------------------
-void TextureManager::Release(void)
+TextureManager* TextureManager::Create(const LPDIRECT3DDEVICE9 device)
 {
-    Uninit();
-    MY_DELETE this;
+    auto instance = MY_NEW TextureManager(device);
+    instance->Init();
+    return instance;
 }
 
 //--------------------------------------------------------------------------------
-//  与えられた名前のテクスチャを使う
+//  与えられた名前のテクスチャのポインタを取得
 //--------------------------------------------------------------------------------
-void TextureManager::Use(const String& texture_name)
+LPDIRECT3DTEXTURE9 TextureManager::Get(const String& texture_name)
 {
-    if (texture_name.empty()) return;
-    load_tasks_.push(texture_name);
+    auto iterator = textures_.find(hash<String>()(texture_name));
+    if (textures_.end() == iterator) return nullptr;
+    return iterator->second.pointer;
 }
 
 //--------------------------------------------------------------------------------
-//  与えられた名前のテクスチャを使わない
+//  空のテクスチャの作成
 //--------------------------------------------------------------------------------
-void TextureManager::Disuse(const String& texture_name)
+LPDIRECT3DTEXTURE9 TextureManager::CreateEmptyTexture(const UINT size)
 {
-    if (texture_name.empty()) return;
-    release_tasks_.push(texture_name);
+    LPDIRECT3DTEXTURE9 texture = nullptr;
+    device_->CreateTexture(size, size, 1, D3DUSAGE_DYNAMIC
+        , D3DFMT_A32B32G32R32F, D3DPOOL_DEFAULT, &texture, NULL);
+    return texture;
 }
+#endif
 
 //--------------------------------------------------------------------------------
 //    
@@ -45,29 +55,10 @@ void TextureManager::Disuse(const String& texture_name)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  初期化処理
-//--------------------------------------------------------------------------------
-void TextureManager::Init(void)
-{
-    // スレッドの生成
-    thread_ = MY_NEW thread(&TextureManager::Run, this);
-}
-
-//--------------------------------------------------------------------------------
 //  全てのテクスチャを破棄する
 //--------------------------------------------------------------------------------
 void TextureManager::Uninit(void)
 {
-    is_running_ = false;
-
-    // スレッドの破棄
-    if (thread_ && thread_->joinable())
-    {
-        thread_->join();
-        MY_DELETE thread_;
-        thread_ = nullptr;
-    }
-
     for (auto iterator = textures_.begin(); iterator != textures_.end();)
     {
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -78,29 +69,15 @@ void TextureManager::Uninit(void)
 }
 
 //--------------------------------------------------------------------------------
-//  マルチスレッド処理
-//--------------------------------------------------------------------------------
-void TextureManager::Run(void)
-{
-    while (is_running_)
-    {
-        LoadTexture();
-        ReleaseTexture();
-    }
-}
-
-//--------------------------------------------------------------------------------
 //  テクスチャ読込処理
 //--------------------------------------------------------------------------------
-void TextureManager::LoadTexture(void)
+void TextureManager::LoadResource(void)
 {
-    if (load_tasks_.empty()) return;
-    String texture_name = load_tasks_.front();
-    load_tasks_.pop();
-
+    const String& texture_name = load_tasks_.front();
+    size_t key = hash<String>()(texture_name);
 
     //すでに読み込んだら処理終了
-    auto iterator = textures_.find(texture_name);
+    auto iterator = textures_.find(key);
     if (textures_.end() != iterator)
     {
         ++iterator->second.user_number;
@@ -113,24 +90,21 @@ void TextureManager::LoadTexture(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     if (FAILED(D3DXCreateTextureFromFile(device_, path.c_str(), &info.pointer)))
     {
-        String buffer = path + L"が見つからない！！！";
-        MessageBox(NULL, buffer.c_str(), L"エラー", MB_OK | MB_ICONWARNING);
+#ifdef _DEBUG
+        MainSystem::Instance().GetDebugObserver().Display(L"TextureManager::LoadResource : " + path + L"が見つからない！！！");
+#endif // _DEBUG
         info.pointer = nullptr;
     }
 #endif
-    textures_.emplace(texture_name, info);
+    textures_.emplace(key, info);
 }
 
 //--------------------------------------------------------------------------------
 //  テクスチャリリース処理
 //--------------------------------------------------------------------------------
-void TextureManager::ReleaseTexture(void)
+void TextureManager::ReleaseResource(void)
 {
-    if (release_tasks_.empty()) return;
-    String texture_name = release_tasks_.front();
-    release_tasks_.pop();
-
-    auto iterator = textures_.find(texture_name);
+    auto iterator = textures_.find(release_tasks_.front());
     if (textures_.end() == iterator) return;
 
     if (--iterator->second.user_number <= 0)

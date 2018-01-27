@@ -6,6 +6,7 @@
 //--------------------------------------------------------------------------------
 #include "motion_state.h"
 #include "../main_system.h"
+#include "../resources.h"
 #include "../motion_manager.h"
 #include "../animator.h"
 #include "../motion_data.h"
@@ -22,7 +23,7 @@
 MotionState::MotionState(const String& motion_name, const int start_frame, const MotionStateType& type)
     : current_motion_name_(motion_name), current_frame_counter_(start_frame), type_(type)
 {
-    current_motion_data_ = MainSystem::Instance()->GetMotionManager()->GetMotionDataBy(current_motion_name_);
+    current_motion_data_ = MainSystem::Instance().GetResources().GetMotionManager().Get(current_motion_name_);
 }
 
 //--------------------------------------------------------------------------------
@@ -35,7 +36,12 @@ MotionState::MotionState(const String& motion_name, const int start_frame, const
 //--------------------------------------------------------------------------------
 void NormalMotionState::UpdateMotion(Animator& animator)
 {
-    assert(current_motion_data_);
+    if (!current_motion_data_)
+    {
+        current_motion_data_ = MainSystem::Instance().GetResources().GetMotionManager().Get(current_motion_name_);
+        return;
+    }
+
     const auto& avatar = animator.GetAvatar();
     assert(avatar.size() <= current_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
     
@@ -72,7 +78,7 @@ BlendMotionState::BlendMotionState(const String& current_motion_name, NormalMoti
     , blend_frame_counter_(0)
     , blend_frame_number_(blend_frame_number)
 {
-    next_motion_data_ = MainSystem::Instance()->GetMotionManager()->GetMotionDataBy(next_motion_pointer_->GetCurrentMotionName());
+    next_motion_data_ = MainSystem::Instance().GetResources().GetMotionManager().Get(next_motion_pointer_->GetCurrentMotionName());
 }
 
 //--------------------------------------------------------------------------------
@@ -80,8 +86,18 @@ BlendMotionState::BlendMotionState(const String& current_motion_name, NormalMoti
 //--------------------------------------------------------------------------------
 void BlendMotionState::UpdateMotion(Animator& animator)
 {
-    assert(current_motion_data_);
-    assert(next_motion_data_);
+    if (!current_motion_data_)
+    {
+        current_motion_data_ = MainSystem::Instance().GetResources().GetMotionManager().Get(current_motion_name_);
+        return;
+    }
+
+    if (!next_motion_data_)
+    {
+        next_motion_data_ = MainSystem::Instance().GetResources().GetMotionManager().Get(next_motion_pointer_->GetCurrentMotionName());
+        return;
+    }
+
     const auto& avatar = animator.GetAvatar();
     assert(avatar.size() <= current_motion_data_->frames_[current_frame_counter_].bone_transforms_.size());
     assert(avatar.size() <= next_motion_data_->frames_[next_frame_counter_].bone_transforms_.size());

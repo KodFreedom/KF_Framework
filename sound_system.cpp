@@ -316,7 +316,7 @@ void SoundSystem::PlaySe(void)
     se_source_voices_[current_task]->Start(0);
 
 #ifdef _DEBUG
-    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
+    MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
 #endif // _DEBUG
 
 }
@@ -344,7 +344,7 @@ void SoundSystem::StopSe(void)
     }
 
 #ifdef _DEBUG
-    MainSystem::Instance()->GetDebugObserver()->Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
+    MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
 #endif // _DEBUG
 }
 

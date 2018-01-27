@@ -40,7 +40,7 @@ bool EnemyController::Init(void)
     born_position_ = owner_.GetTransform()->GetPosition();
 
     ActorController::Init();
-    MainSystem::Instance()->GetActorObserver()->Register(this);
+    MainSystem::Instance().GetActorObserver().Register(this);
     return true;
 }
 
@@ -54,7 +54,7 @@ void EnemyController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
-    MainSystem::Instance()->GetActorObserver()->Deregister(this);
+    MainSystem::Instance().GetActorObserver().Deregister(this);
 }
 
 //--------------------------------------------------------------------------------

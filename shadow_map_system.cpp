@@ -67,20 +67,20 @@ void ShadowMapSystem::Render(void)
     device_->Clear(0, NULL, (D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL), D3DCOLOR_RGBA(255, 255, 255, 255), 1.0f, 0);
     if (device_->BeginScene() >= 0)
     {
-        const auto render_system = MainSystem::Instance()->GetRenderSystem();
-        const auto shader_manager = MainSystem::Instance()->GetShaderManager();
+        auto& render_system = MainSystem::Instance().GetRenderSystem();
+        auto& shader_manager = MainSystem::Instance().GetShaderManager();
         for (int count = 0; count < static_cast<int>(kShadowMapShaderMax); ++count)
         {
             if (renderers_array_[count].empty()) continue;
             const auto& current_type = static_cast<ShadowMapShaderType>(count);
-            shader_manager->Set(current_type);
+            shader_manager.Set(current_type);
             for (auto iterator = renderers_array_[count].begin(); iterator != renderers_array_[count].end();)
             {
-                shader_manager->SetConstantTable(current_type, **iterator);
-                (*iterator)->RenderBy(*render_system);
+                shader_manager.SetConstantTable(current_type, **iterator);
+                (*iterator)->RenderBy(render_system);
                 iterator = renderers_array_[count].erase(iterator);
             }
-            shader_manager->Reset(current_type);
+            shader_manager.Reset(current_type);
         }
         device_->EndScene();
     }

@@ -20,7 +20,7 @@ GameObject::GameObject(const Layer& layer)
 {
     transform_ = MY_NEW Transform(*this);
     rigidbody_ = MY_NEW RigidbodyNull(*this);
-    MainSystem::Instance()->GetGameObjectManager()->Register(this, layer);
+    MainSystem::Instance().GetGameObjectManager().Register(this, layer);
 }
 
 //--------------------------------------------------------------------------------

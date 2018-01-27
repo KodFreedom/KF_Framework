@@ -240,6 +240,8 @@
     <ClCompile Include="player_controller.cpp" />
     <ClCompile Include="player_ui_controller.cpp" />
     <ClCompile Include="render_system.cpp" />
+    <ClCompile Include="resources.cpp" />
+    <ClCompile Include="resource_manager.cpp" />
     <ClCompile Include="shader_directX9.cpp" />
     <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="shadow_map_shader.cpp" />
@@ -385,6 +387,8 @@
     <ClInclude Include="actor_parameter.h" />
     <ClInclude Include="player_controller.h" />
     <ClInclude Include="player_ui_controller.h" />
+    <ClInclude Include="resources.h" />
+    <ClInclude Include="resource_manager.h" />
     <ClInclude Include="shader_directX9.h" />
     <ClInclude Include="shader_enum.h" />
     <ClInclude Include="shader_manager.h" />

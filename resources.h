@@ -1,75 +1,87 @@
 //--------------------------------------------------------------------------------
-//　motion_manager.h
-//  manage the motion datas' save, load
-//  モーション管理者
+//　resources.h
+//  リソース統括者
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "resource_manager.h"
+#include "common_setting.h"
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+#include <d3dx9.h>
+#endif
 
 //--------------------------------------------------------------------------------
 //  前方宣言
 //--------------------------------------------------------------------------------
-class MotionData;
+class TextureManager;
+class MaterialManager;
+class MotionManager;
+class MeshManager;
 
 //--------------------------------------------------------------------------------
-//  モーションマネージャクラス
+//  リソース統括者クラス
 //--------------------------------------------------------------------------------
-class MotionManager final : public ResourceManager
+class Resources final
 {
 public:
     //--------------------------------------------------------------------------------
     //  生成処理
-    //  return : MaterialManager*
+    //  return : Resources*
     //--------------------------------------------------------------------------------
-    static MotionManager* Create(void);
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    static Resources* Create(const LPDIRECT3DDEVICE9 device)
+    {
+        auto instance = MY_NEW Resources;
+        instance->Init(device);
+        return instance;
+    }
+#endif
 
     //--------------------------------------------------------------------------------
-    //  モーションデータを取得
+    //  破棄処理
     //--------------------------------------------------------------------------------
-    MotionData* Get(const String& motion_name);
+    void Release(void);
+
+    //--------------------------------------------------------------------------------
+    //  ゲッター
+    //--------------------------------------------------------------------------------
+    auto& GetTextureManager(void) const { return *texture_manager_; }
+    auto& GetMeshManager(void) const { return *mesh_manager_; }
+    auto& GetMaterialManager(void) const { return *material_manager_; }
+    auto& GetMotionManager(void) const { return *motion_manager_; }
 
 private:
     //--------------------------------------------------------------------------------
-    //  構造体定義
-    //--------------------------------------------------------------------------------
-    struct MotionInfo
-    {
-        MotionInfo() : user_number(1), pointer(nullptr) {}
-        int            user_number;
-        MotionData*    pointer;
-    };
-
-    //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    MotionManager() {}
-    MotionManager(const MotionManager& value) {}
-    MotionManager& operator=(const MotionManager& value) {}
-    ~MotionManager() {}
+    Resources() {}
+    Resources(const Resources& value) {}
+    Resources& operator=(const Resources& value) {}
+    ~Resources() {}
+
+    //--------------------------------------------------------------------------------
+    //  初期化処理
+    //--------------------------------------------------------------------------------
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+    void Init(const LPDIRECT3DDEVICE9 device);
+#endif
 
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    void Uninit(void) override;
+    void Uninit(void);
 
     //--------------------------------------------------------------------------------
-    //  リソースの読込処理
+    //  マルチスレッド処理
     //--------------------------------------------------------------------------------
-    void LoadResource(void) override;
-
-    //--------------------------------------------------------------------------------
-    //  リソースのリリース処理
-    //--------------------------------------------------------------------------------
-    void ReleaseResource(void) override;
-
-    //--------------------------------------------------------------------------------
-    //  ファイルから読み込む
-    //--------------------------------------------------------------------------------
-    MotionData* LoadFromFile(const String& motion_name);
+    void Run(void);
 
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    unordered_map<size_t, MotionInfo> motions_;
+    bool             is_running_ = true;
+    thread*          thread_ = nullptr;
+    TextureManager*  texture_manager_ = nullptr;
+    MaterialManager* material_manager_ = nullptr;
+    MotionManager*   motion_manager_ = nullptr;
+    MeshManager*     mesh_manager_ = nullptr;
 };

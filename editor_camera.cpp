@@ -28,13 +28,13 @@ void EditorCamera::Init(void)
 //--------------------------------------------------------------------------------
 void EditorCamera::Update(void)
 {
-    auto input = MainSystem::Instance()->GetInput();
-    if (!input->GetKeyPress(Key::kLock)) return;
+    auto& input = MainSystem::Instance().GetInput();
+    if (!input.GetKeyPress(Key::kLock)) return;
     
     Vector3 rotation;
-    float rotation_x = input->RotationHorizontal();
-    float rotation_y = input->RotationVertical();
-    float zoom = input->Zoom();
+    float rotation_x = input.RotationHorizontal();
+    float rotation_y = input.RotationVertical();
+    float zoom = input.Zoom();
 
     if (fabsf(rotation_x) > kStartRotationMin)
     {//YŽ²‰ñ“]

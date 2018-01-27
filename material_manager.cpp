@@ -7,13 +7,13 @@
 #include <cereal/archives/binary.hpp>
 using namespace cereal;
 #include "material_manager.h"
-#include "main_system.h"
 #include "texture_manager.h"
-
-//--------------------------------------------------------------------------------
-//  静的メンバ変数
-//--------------------------------------------------------------------------------
-Material MaterialManager::kDefaultMaterial = Material(L"polygon.jpg");
+#include "main_system.h"
+#include "resources.h"
+#ifdef _DEBUG
+#include "main_system.h"
+#include "debug_observer.h"
+#endif // _DEBUG
 
 //--------------------------------------------------------------------------------
 //
@@ -32,41 +32,6 @@ MaterialManager* MaterialManager::Create(void)
 }
 
 //--------------------------------------------------------------------------------
-//  破棄処理
-//--------------------------------------------------------------------------------
-void MaterialManager::Release(void)
-{
-    Uninit();
-    MY_DELETE this;
-}
-
-
-//--------------------------------------------------------------------------------
-//  与えられた名前のマテリアルを使う
-//--------------------------------------------------------------------------------
-void MaterialManager::Use(const String& material_name)
-{
-    auto iterator = materials_.find(material_name);
-    if (iterator != materials_.end())
-    {// すでに存在してる
-        ++iterator->second.user_number;
-        return;
-    }
-    MaterialInfo info;
-    info.pointer = LoadFromFile(material_name);
-    if (!info.pointer)
-    {// 読込できないの場合真っ赤で保存する
-        info.pointer = MY_NEW Material(L"polygon.jpg"
-            , String(), String(), String(), String(), String()
-            , String(), String(), String(), String(), String()
-            , String(), String(), String(), String(), String()
-            , Color::kRed, Color::kRed, Color::kRed, Color::kRed);
-    }
-    UseTexture(*info.pointer);
-    materials_.emplace(material_name, info);
-}
-
-//--------------------------------------------------------------------------------
 //  与えられた名前のマテリアルを使う
 //--------------------------------------------------------------------------------
 void MaterialManager::Use(const String& material_name, const Color& diffuse
@@ -80,7 +45,8 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
     , const String& self_illum_mask, const String& fresnel_warp_color
     , const String& fresnel_warp_rim, const String& fresnel_warp_specular)
 {
-    auto iterator = materials_.find(material_name);
+    size_t key = hash<String>()(material_name);
+    auto iterator = materials_.find(key);
     if (iterator != materials_.end())
     {// すでに存在してる
         ++iterator->second.user_number;
@@ -94,24 +60,21 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
         , metalness_mask, self_illum_mask, fresnel_warp_color, fresnel_warp_rim, fresnel_warp_specular
         , ambient, diffuse, specular, emissive);
 
-    auto texture_manager = MainSystem::Instance()->GetTextureManager();
     UseTexture(*info.pointer);
-    materials_.emplace(material_name, info);
+    materials_.emplace(key, info);
 }
 
 //--------------------------------------------------------------------------------
-//  与えられた名前のマテリアルを使わない
+//  与えられた名前のマテリアルの取得
 //--------------------------------------------------------------------------------
-void MaterialManager::Disuse(const String& material_name)
+Material* MaterialManager::Get(const String& material_name) const
 {
-    auto iterator = materials_.find(material_name);
-    if (materials_.end() == iterator) return;
-    if (--iterator->second.user_number <= 0)
-    {// 誰も使ってないので破棄する
-        DisuseTexture(*iterator->second.pointer);
-        MY_DELETE iterator->second.pointer;
-        materials_.erase(iterator);
+    auto iterator = materials_.find(hash<String>()(material_name));
+    if (materials_.end() == iterator)
+    {// ないの場合デフォルトのマテリアルを返す
+        return nullptr;
     }
+    return iterator->second.pointer;
 }
 
 //--------------------------------------------------------------------------------
@@ -124,9 +87,7 @@ void MaterialManager::Disuse(const String& material_name)
 //--------------------------------------------------------------------------------
 void MaterialManager::Init(void)
 {
-    // default material
-    auto texture_manager = MainSystem::Instance()->GetTextureManager();
-    UseTexture(kDefaultMaterial);
+
 }
 
 //--------------------------------------------------------------------------------
@@ -140,9 +101,56 @@ void MaterialManager::Uninit(void)
         MY_DELETE iterator->second.pointer;
         iterator = materials_.erase(iterator);
     }
+}
 
-    // default material
-    DisuseTexture(kDefaultMaterial);
+//--------------------------------------------------------------------------------
+//  マテリアル読込処理
+//--------------------------------------------------------------------------------
+void MaterialManager::LoadResource(void)
+{
+    const String& material_name = load_tasks_.front();
+    size_t key = hash<String>()(material_name);
+
+    auto iterator = materials_.find(key);
+    if (iterator != materials_.end())
+    {// すでに存在してる
+        ++iterator->second.user_number;
+        return;
+    }
+
+    MaterialInfo info;
+    info.pointer = LoadFromFile(material_name);
+    if (!info.pointer)
+    {// 読込できないの場合真っ赤で保存する
+#ifdef _DEBUG
+        MainSystem::Instance().GetDebugObserver().Display(L"MaterialManager::LoadResource : " + material_name + L"が見つからない！！！");
+#endif // _DEBUG
+
+        info.pointer = MY_NEW Material(L"polygon.jpg"
+            , String(), String(), String(), String(), String()
+            , String(), String(), String(), String(), String()
+            , String(), String(), String(), String(), String()
+            , Color::kRed, Color::kRed, Color::kRed, Color::kRed);
+    }
+    UseTexture(*info.pointer);
+    materials_.emplace(key, info);
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアルリリース処理
+//--------------------------------------------------------------------------------
+void MaterialManager::ReleaseResource(void)
+{
+    auto iterator = materials_.find(release_tasks_.front());
+    if (materials_.end() == iterator) return;
+
+    if (--iterator->second.user_number <= 0)
+    {// 誰も使ってないので破棄する
+        auto pointer = iterator->second.pointer;
+        materials_.erase(iterator);
+        DisuseTexture(*pointer);
+        MY_DELETE pointer;
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -150,23 +158,23 @@ void MaterialManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void MaterialManager::UseTexture(const Material& material)
 {
-    auto texture_manager = MainSystem::Instance()->GetTextureManager();
-    texture_manager->Use(material.color_texture_);
-    texture_manager->Use(material.diffuse_texture_);
-    texture_manager->Use(material.diffuse_texture_mask_);
-    texture_manager->Use(material.specular_texture_);
-    texture_manager->Use(material.specular_texture_mask_);
-    texture_manager->Use(material.normal_texture_);
-    texture_manager->Use(material.detail_texture_);
-    texture_manager->Use(material.detail_mask_);
-    texture_manager->Use(material.tint_by_base_mask_);
-    texture_manager->Use(material.rim_mask_);
-    texture_manager->Use(material.translucency_);
-    texture_manager->Use(material.metalness_mask_);
-    texture_manager->Use(material.self_illum_mask_);
-    texture_manager->Use(material.fresnel_warp_color_);
-    texture_manager->Use(material.fresnel_warp_rim_);
-    texture_manager->Use(material.fresnel_warp_specular_);
+    auto& texture_manager = MainSystem::Instance().GetResources().GetTextureManager();
+    texture_manager.Use(material.color_texture_);
+    texture_manager.Use(material.diffuse_texture_);
+    texture_manager.Use(material.diffuse_texture_mask_);
+    texture_manager.Use(material.specular_texture_);
+    texture_manager.Use(material.specular_texture_mask_);
+    texture_manager.Use(material.normal_texture_);
+    texture_manager.Use(material.detail_texture_);
+    texture_manager.Use(material.detail_mask_);
+    texture_manager.Use(material.tint_by_base_mask_);
+    texture_manager.Use(material.rim_mask_);
+    texture_manager.Use(material.translucency_);
+    texture_manager.Use(material.metalness_mask_);
+    texture_manager.Use(material.self_illum_mask_);
+    texture_manager.Use(material.fresnel_warp_color_);
+    texture_manager.Use(material.fresnel_warp_rim_);
+    texture_manager.Use(material.fresnel_warp_specular_);
 }
 
 //--------------------------------------------------------------------------------
@@ -174,23 +182,23 @@ void MaterialManager::UseTexture(const Material& material)
 //--------------------------------------------------------------------------------
 void MaterialManager::DisuseTexture(const Material& material)
 {
-    auto texture_manager = MainSystem::Instance()->GetTextureManager();
-    texture_manager->Disuse(material.color_texture_);
-    texture_manager->Disuse(material.diffuse_texture_);
-    texture_manager->Disuse(material.diffuse_texture_mask_);
-    texture_manager->Disuse(material.specular_texture_);
-    texture_manager->Disuse(material.specular_texture_mask_);
-    texture_manager->Disuse(material.normal_texture_);
-    texture_manager->Disuse(material.detail_texture_);
-    texture_manager->Disuse(material.detail_mask_);
-    texture_manager->Disuse(material.tint_by_base_mask_);
-    texture_manager->Disuse(material.rim_mask_);
-    texture_manager->Disuse(material.translucency_);
-    texture_manager->Disuse(material.metalness_mask_);
-    texture_manager->Disuse(material.self_illum_mask_);
-    texture_manager->Disuse(material.fresnel_warp_color_);
-    texture_manager->Disuse(material.fresnel_warp_rim_);
-    texture_manager->Disuse(material.fresnel_warp_specular_);
+    auto& texture_manager = MainSystem::Instance().GetResources().GetTextureManager();
+    texture_manager.Disuse(material.color_texture_);
+    texture_manager.Disuse(material.diffuse_texture_);
+    texture_manager.Disuse(material.diffuse_texture_mask_);
+    texture_manager.Disuse(material.specular_texture_);
+    texture_manager.Disuse(material.specular_texture_mask_);
+    texture_manager.Disuse(material.normal_texture_);
+    texture_manager.Disuse(material.detail_texture_);
+    texture_manager.Disuse(material.detail_mask_);
+    texture_manager.Disuse(material.tint_by_base_mask_);
+    texture_manager.Disuse(material.rim_mask_);
+    texture_manager.Disuse(material.translucency_);
+    texture_manager.Disuse(material.metalness_mask_);
+    texture_manager.Disuse(material.self_illum_mask_);
+    texture_manager.Disuse(material.fresnel_warp_color_);
+    texture_manager.Disuse(material.fresnel_warp_rim_);
+    texture_manager.Disuse(material.fresnel_warp_specular_);
 }
 
 //--------------------------------------------------------------------------------

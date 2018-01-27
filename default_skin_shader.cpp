@@ -8,6 +8,7 @@
 #include "render_system.h"
 #include "camera.h"
 #include "camera_manager.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "texture_manager.h"
 #include "game_object.h"
@@ -48,16 +49,16 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
 {
     assert(renderer.GetType() == kMeshRenderer3dSkin);
 
-    auto main_system = MainSystem::Instance();
+    auto& main_system = MainSystem::Instance();
 
     // Camera
-    auto camera = main_system->GetCameraManager()->GetMainCamera();
-    vertex_shader_constant_table_->SetMatrix(device, "view", &static_cast<D3DXMATRIX>(camera->GetView()));
-    vertex_shader_constant_table_->SetMatrix(device, "projection", &static_cast<D3DXMATRIX>(camera->GetProjection()));
+    auto camera = main_system.GetCameraManager().GetMainCamera();
+    vertex_shader_constant_table_->SetMatrix(device, "view", (D3DXMATRIX*)&camera->GetView());
+    vertex_shader_constant_table_->SetMatrix(device, "projection", (D3DXMATRIX*)&camera->GetProjection());
     vertex_shader_constant_table_->SetValue(device, "camera_position_world", &camera->GetWorldEyePosition(), sizeof(Vector3));
 
     // Light
-    auto& light = main_system->GetLightManager()->GetDirectionalLights().front();
+    auto& light = main_system.GetLightManager().GetDirectionalLights().front();
     vertex_shader_constant_table_->SetValue(device, "light_direction_world", &light->direction_, sizeof(light->direction_));
 
     // Skin Bone Data
@@ -70,20 +71,23 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
     device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
     // Material
-    const auto& material = main_system->GetMaterialManager()->GetMaterial(renderer.GetMaterialName());
-    auto texture_manager = main_system->GetTextureManager();
-    UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-    device->SetTexture(index, texture_manager->Get(material->color_texture_));
-    index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
-    device->SetTexture(index, texture_manager->Get(material->normal_texture_));
+    auto material = main_system.GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
+    if (material)
+    {
+        auto& texture_manager = main_system.GetResources().GetTextureManager();
+        UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetTexture(index, texture_manager.Get(material->color_texture_));
+        index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
+        device->SetTexture(index, texture_manager.Get(material->normal_texture_));
+    }
 
     // Shadow Map
-    auto shadow_map_system = MainSystem::Instance()->GetShadowMapSystem();
-    vertex_shader_constant_table_->SetMatrix(device, "view_light", &(D3DXMATRIX)shadow_map_system->GetLightView());
-    vertex_shader_constant_table_->SetMatrix(device, "projection_light", &(D3DXMATRIX)shadow_map_system->GetLightProjection());
-    pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system->GetBias());
-    pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system->GetFar());
+    auto& shadow_map_system = MainSystem::Instance().GetShadowMapSystem();
+    vertex_shader_constant_table_->SetMatrix(device, "view_light", (D3DXMATRIX*)&shadow_map_system.GetLightView());
+    vertex_shader_constant_table_->SetMatrix(device, "projection_light", (D3DXMATRIX*)&shadow_map_system.GetLightProjection());
+    pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system.GetBias());
+    pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system.GetFar());
     UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
-    device->SetTexture(shadow_map_index, main_system->GetShadowMapSystem()->GetShadowMap());
+    device->SetTexture(shadow_map_index, shadow_map_system.GetShadowMap());
 }
 #endif

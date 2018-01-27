@@ -182,12 +182,12 @@ void EditorController::ShowPositonWindow(void)
     Vector3 current_position = previous_position;
 
     // ‘€ìXV
-    auto input = MainSystem::Instance()->GetInput();
-    Vector2 axis(input->MoveHorizontal(), input->MoveVertical());
-    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    auto& input = MainSystem::Instance().GetInput();
+    Vector2 axis(input.MoveHorizontal(), input.MoveVertical());
+    auto camera = MainSystem::Instance().GetCameraManager().GetMainCamera();
     Vector3& camera_forward = Vector3::Scale(camera->GetWorldForward(), Vector3(1.0f, 0.0f, 1.0f)).Normalized();
     Vector3& movement = camera->GetWorldRight() * axis.x_ * move_speed_ + camera_forward * axis.y_ * move_speed_;
-    float height = static_cast<float>(input->GetKeyPress(Key::kRaise) - input->GetKeyPress(Key::kReduce));
+    float height = static_cast<float>(input.GetKeyPress(Key::kRaise) - input.GetKeyPress(Key::kReduce));
     current_position += movement;
     current_position.y_ += height * move_speed_;
 

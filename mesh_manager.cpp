@@ -19,41 +19,24 @@ using namespace cereal;
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  与えられた名前のメッシュを使う
+//  生成処理
 //--------------------------------------------------------------------------------
-void MeshManager::Use(const String& mesh_name)
+#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
+MeshManager* MeshManager::Create(const LPDIRECT3DDEVICE9 device)
 {
-    auto iterator = meshes_.find(mesh_name);
-    if (meshes_.end() != iterator)
-    {// すでに存在してる
-        ++iterator->second.user_number;
-        return;
-    }
-
-    // メッシュの作成
-    MeshInfo info;
-    if (mesh_name.find(L".mesh") != String::npos) info = LoadFromMesh(mesh_name);
-    else if (mesh_name.find(L".skin") != String::npos) info = LoadFromSkin(mesh_name);
-    else if (mesh_name.find(L".x") != String::npos) info = LoadFromXFile(mesh_name);
-    else if (mesh_name._Equal(L"cube")) info = CreateCube();
-    else if (mesh_name._Equal(L"sphere")) info = CreateSphere();
-    else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
-    else if (mesh_name._Equal(L"polygon2d")) info = CreatePolygon2d();
-    else if (mesh_name._Equal(L"polygon3d")) info = CreatePolygon3d();
-    else
-    {
-        //throw::runtime_error("unsupport file type!!");
-        return;
-    }
-    meshes_.emplace(mesh_name, info);
+    auto instance = MY_NEW MeshManager(device);
+    instance->Init();
+    return instance;
 }
+#endif
 
 //--------------------------------------------------------------------------------
 //  与えられた名前のメッシュを使う
 //--------------------------------------------------------------------------------
 void MeshManager::Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number)
 {
-    auto iterator = meshes_.find(mesh_name);
+    size_t key = hash<String>()(mesh_name);
+    auto iterator = meshes_.find(key);
     if (iterator != meshes_.end())
     {// すでに存在してる
         ++iterator->second.user_number;
@@ -62,21 +45,7 @@ void MeshManager::Use(const String& mesh_name, const DrawType& type, const vecto
 
     // メッシュの作成
     MeshInfo info = CreateMesh(type, vertexes, indexes, polygon_number);
-    meshes_.emplace(mesh_name, info);
-}
-
-//--------------------------------------------------------------------------------
-//  与えられた名前のメッシュを使わない
-//--------------------------------------------------------------------------------
-void MeshManager::Disuse(const String& mesh_name)
-{
-    auto iterator = meshes_.find(mesh_name);
-    if (meshes_.end() == iterator) return;
-    if (--iterator->second.user_number <= 0)
-    {// 誰も使ってないので破棄する
-        SAFE_DELETE(iterator->second.pointer);
-        meshes_.erase(iterator);
-    }
+    meshes_.emplace(key, info);
 }
 
 //--------------------------------------------------------------------------------
@@ -84,7 +53,7 @@ void MeshManager::Disuse(const String& mesh_name)
 //--------------------------------------------------------------------------------
 void MeshManager::Update(const String& mesh_name, const vector<Vertex3d>& vertexes, const list<int>& indexes)
 {
-    auto iterator = meshes_.find(mesh_name);
+    auto iterator = meshes_.find(hash<String>()(mesh_name));
     if (meshes_.end() == iterator) return;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -103,7 +72,8 @@ void MeshManager::Update(const String& mesh_name, const vector<Vertex3d>& vertex
 //--------------------------------------------------------------------------------
 void MeshManager::SaveMeshToFile(const String& mesh_name, const String& file_name)
 {
-    auto iterator = meshes_.find(mesh_name);
+    size_t key = hash<String>()(mesh_name);
+    auto iterator = meshes_.find(key);
     if (meshes_.end() == iterator) return;
 
     auto pointer = iterator->second.pointer;
@@ -135,6 +105,16 @@ void MeshManager::SaveMeshToFile(const String& mesh_name, const String& file_nam
 }
 
 //--------------------------------------------------------------------------------
+//  与えられた名前のメッシュのポインタを取得
+//--------------------------------------------------------------------------------
+Mesh* MeshManager::Get(const String& mesh_name) const
+{
+    auto iterator = meshes_.find(hash<String>()(mesh_name));
+    if (meshes_.end() == iterator) return nullptr;
+    return iterator->second.pointer;
+}
+
+//--------------------------------------------------------------------------------
 //
 //  Private
 //
@@ -148,6 +128,55 @@ void MeshManager::Uninit(void)
     {
         SAFE_DELETE(iterator->second.pointer);
         iterator = meshes_.erase(iterator);
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  メッシュ読込処理
+//--------------------------------------------------------------------------------
+void MeshManager::LoadResource(void)
+{
+    const String& mesh_name = load_tasks_.front();
+    size_t key = hash<String>()(mesh_name);
+
+    auto iterator = meshes_.find(key);
+    if (meshes_.end() != iterator)
+    {// すでに存在してる
+        ++iterator->second.user_number;
+        return;
+    }
+
+    // メッシュの作成
+    MeshInfo info;
+    if (mesh_name.find(L".mesh") != String::npos) info = LoadFromMesh(mesh_name);
+    else if (mesh_name.find(L".skin") != String::npos) info = LoadFromSkin(mesh_name);
+    else if (mesh_name.find(L".x") != String::npos) info = LoadFromXFile(mesh_name);
+    else if (mesh_name._Equal(L"cube")) info = CreateCube();
+    else if (mesh_name._Equal(L"sphere")) info = CreateSphere();
+    else if (mesh_name._Equal(L"skyBox")) info = CreateSkyBox();
+    else if (mesh_name._Equal(L"polygon2d")) info = CreatePolygon2d();
+    else if (mesh_name._Equal(L"polygon3d")) info = CreatePolygon3d();
+    else
+    {
+        //throw::runtime_error("unsupport file type!!");
+        return;
+    }
+    meshes_.emplace(key, info);
+}
+
+//--------------------------------------------------------------------------------
+//  メッシュリリース処理
+//--------------------------------------------------------------------------------
+void MeshManager::ReleaseResource(void)
+{
+    auto iterator = meshes_.find(release_tasks_.front());
+    if (meshes_.end() == iterator) return;
+
+    if (--iterator->second.user_number <= 0)
+    {// 誰も使ってないので破棄する
+        auto pointer = iterator->second.pointer;
+        meshes_.erase(iterator);
+        SAFE_DELETE(pointer);
     }
 }
 
@@ -260,13 +289,13 @@ MeshManager::MeshInfo MeshManager::LoadFromXFile(const String& mesh_name)
 
     info.pointer = MY_NEW Mesh;
     info.pointer->draw_type = DrawType::kTriangleList;
-    vector<Vector3>    vertexes;
-    vector<Vector3>    normals;
-    vector<Vector2>    uvs;
-    vector<Color>    colors;
-    vector<int>        vertex_indexes;
-    vector<int>        normal_indexes;
-    vector<int>        color_indexes;
+    vector<Vector3> vertexes;
+    vector<Vector3> normals;
+    vector<Vector2> uvs;
+    vector<Color>   colors;
+    vector<int>     vertex_indexes;
+    vector<int>     normal_indexes;
+    vector<int>     color_indexes;
 
     string buffer;
     while (Utility::GetStringUntilToken(filepointer, "\n", buffer) >= 0)
@@ -727,7 +756,7 @@ MeshManager::MeshInfo MeshManager::CreateSkyBox(void)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
     Vertex3d *vertex_pointer;
     info.pointer->vertex_buffer->Lock(0, 0, (void**)&vertex_pointer, 0);
-    auto camera = MainSystem::Instance()->GetCameraManager()->GetMainCamera();
+    auto camera = MainSystem::Instance().GetCameraManager().GetMainCamera();
     float length = camera ? camera->GetFar() * 0.5f : 500.0f;
     int count_vertex = 0;
     float uv_tweens = 1.0f / 1024.0f; //隙間を無くすためにuvを1px縮める

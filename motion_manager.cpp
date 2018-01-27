@@ -16,40 +16,23 @@ using namespace cereal;
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  与えられた名前のモーションを使う
+//  生成処理
 //--------------------------------------------------------------------------------
-void MotionManager::Use(const String& motion_name)
+MotionManager* MotionManager::Create(void)
 {
-    if (motion_name.empty()) return;
-
-    //すでに読み込んだら処理終了
-    auto iterator = motions.find(motion_name);
-    if (iterator != motions.end())
-    {
-        ++iterator->second.user_number;
-        return;
-    }
-
-    //モーションの読み込み
-    MotionInfo info;
-    info.pointer = LoadFromFile(motion_name);
-    motions.emplace(motion_name, info);
+    auto instance = MY_NEW MotionManager;
+    instance->Init();
+    return instance;
 }
 
 //--------------------------------------------------------------------------------
-//  与えられた名前のモーションを使わない
+//  モーションデータを取得
 //--------------------------------------------------------------------------------
-void MotionManager::Disuse(const String& motion_name)
+MotionData* MotionManager::Get(const String& motion_name)
 {
-    if (motion_name.empty()) return;
-    auto iterator = motions.find(motion_name);
-    if (iterator == motions.end()) return;
-    --iterator->second.user_number;
-    if (iterator->second.user_number == 0)
-    {// 誰も使ってないので破棄する
-        SAFE_DELETE(iterator->second.pointer);
-        motions.erase(iterator);
-    }
+    auto iterator = motions_.find(hash<String>()(motion_name));
+    if (motions_.end() == iterator) return nullptr;
+    return iterator->second.pointer;
 }
 
 //--------------------------------------------------------------------------------
@@ -58,14 +41,52 @@ void MotionManager::Disuse(const String& motion_name)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//  クリア処理
+//  終了処理
 //--------------------------------------------------------------------------------
-void MotionManager::Clear(void)
+void MotionManager::Uninit(void)
 {
-    for (auto iterator = motions.begin(); iterator != motions.end();)
+    for (auto iterator = motions_.begin(); iterator != motions_.end();)
     {
         SAFE_DELETE(iterator->second.pointer);
-        iterator = motions.erase(iterator);
+        iterator = motions_.erase(iterator);
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアル読込処理
+//--------------------------------------------------------------------------------
+void MotionManager::LoadResource(void)
+{
+    const String& motion_name = load_tasks_.front();
+    size_t key = hash<String>()(motion_name);
+
+    //すでに読み込んだら処理終了
+    auto iterator = motions_.find(key);
+    if (iterator != motions_.end())
+    {
+        ++iterator->second.user_number;
+        return;
+    }
+
+    //モーションの読み込み
+    MotionInfo info;
+    info.pointer = LoadFromFile(motion_name);
+    motions_.emplace(key, info);
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアルリリース処理
+//--------------------------------------------------------------------------------
+void MotionManager::ReleaseResource(void)
+{
+    auto iterator = motions_.find(release_tasks_.front());
+    if (iterator == motions_.end()) return;
+    --iterator->second.user_number;
+    if (iterator->second.user_number == 0)
+    {// 誰も使ってないので破棄する
+        auto pointer = iterator->second.pointer;
+        motions_.erase(iterator);
+        SAFE_DELETE(pointer);
     }
 }
 
@@ -77,11 +98,15 @@ MotionData* MotionManager::LoadFromFile(const String& motion_name)
     auto& path = L"data/motion/" + motion_name + L".motion";
     ifstream file(path, ios::binary);
     if (!file.is_open()) return nullptr;
+
     auto data = MY_NEW MotionData;
     BinaryInputArchive archive(file);
+
     archive.loadBinary(&data->is_loop_, sizeof(data->is_loop_));
+
     int frame_number = 0;
     archive.loadBinary(&frame_number, sizeof(frame_number));
+
     data->frames_.resize(frame_number);
     for (auto& frame : data->frames_)
     {
@@ -95,6 +120,7 @@ MotionData* MotionManager::LoadFromFile(const String& motion_name)
             archive.loadBinary(&bone_transform.scale_, sizeof(bone_transform.scale_));
         }
     }
+
     file.close();
     return data;
 }

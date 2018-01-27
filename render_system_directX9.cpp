@@ -7,6 +7,7 @@
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "render_system_directX9.h"
 #include "main_system.h"
+#include "resources.h"
 #include "mesh_manager.h"
 #if defined(_DEBUG) || defined(EDITOR)
 #include "ImGui\imgui_impl_dx9.h"
@@ -28,7 +29,9 @@
 //--------------------------------------------------------------------------------
 void RenderSystemDirectX9::Render2dMesh(const String& mesh_name) const
 {
-    auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(mesh_name);
+    auto mesh = MainSystem::Instance().GetResources().GetMeshManager().Get(mesh_name);
+    if (!mesh) return;
+
     device_->SetVertexDeclaration(vertex_declaration_2d_);
     device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex2d));
     device_->SetIndices(mesh->index_buffer);
@@ -41,7 +44,9 @@ void RenderSystemDirectX9::Render2dMesh(const String& mesh_name) const
 //--------------------------------------------------------------------------------
 void RenderSystemDirectX9::Render3dMesh(const String& mesh_name) const
 {
-    auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(mesh_name);
+    auto mesh = MainSystem::Instance().GetResources().GetMeshManager().Get(mesh_name);
+    if (!mesh) return;
+
     device_->SetVertexDeclaration(vertex_declaration_3d_);
     device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3d));
     device_->SetIndices(mesh->index_buffer);
@@ -54,7 +59,9 @@ void RenderSystemDirectX9::Render3dMesh(const String& mesh_name) const
 //--------------------------------------------------------------------------------
 void RenderSystemDirectX9::Render3dSkin(const String& skin_name) const
 {
-    auto mesh = MainSystem::Instance()->GetMeshManager()->GetMesh(skin_name);
+    auto mesh = MainSystem::Instance().GetResources().GetMeshManager().Get(skin_name);
+    if (!mesh) return;
+
     device_->SetVertexDeclaration(vertex_declaration_3d_skin_);
     device_->SetStreamSource(0, mesh->vertex_buffer, 0, sizeof(Vertex3dSkin));
     device_->SetIndices(mesh->index_buffer);

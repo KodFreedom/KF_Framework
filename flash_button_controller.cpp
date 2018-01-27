@@ -7,6 +7,7 @@
 #include "mesh_renderer_2d.h"
 #include "game_object.h"
 #include "main_system.h"
+#include "resources.h"
 #include "material_manager.h"
 #include "time.h"
 
@@ -21,7 +22,6 @@
 FlashButtonController::FlashButtonController(GameObject& owner, const float& flash_speed)
     : Behavior(owner, L"FlashButtonController")
     , flash_speed_(flash_speed)
-    , material_(nullptr)
 {}
 
 //--------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ bool FlashButtonController::Init(void)
 {
     auto renderer = owner_.GetRendererBy(kMeshRenderer2d);
     assert(renderer);
-    material_ = MainSystem::Instance()->GetMaterialManager()->GetMaterial(renderer->GetMaterialName());
+    material_ = MainSystem::Instance().GetResources().GetMaterialManager().Get(renderer->GetMaterialName());
     return true;
 }
 
@@ -40,6 +40,14 @@ bool FlashButtonController::Init(void)
 //--------------------------------------------------------------------------------
 void FlashButtonController::Update(void)
 {
+    if (!material_)
+    {
+        auto renderer = owner_.GetRendererBy(kMeshRenderer2d);
+        assert(renderer);
+        material_ = MainSystem::Instance().GetResources().GetMaterialManager().Get(renderer->GetMaterialName());
+        return;
+    }
+
     // “_–Å‚·‚é
     material_->diffuse_.a_ += flash_speed_ * Time::Instance()->DeltaTime();
     if (material_->diffuse_.a_ >= 1.0f)
