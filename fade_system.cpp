@@ -53,6 +53,12 @@ void FadeSystem::Update(void)
     case FadeState::kFadeWait:
         FadeWait();
         break;
+    case FadeState::kFadeWaitIn:
+        FadeWaitIn();
+        break;
+    case FadeState::kFadeWaitOut:
+        FadeWaitOut();
+        break;
     default:
         break;
     }
@@ -122,7 +128,8 @@ void FadeSystem::FadeIn(void)
         current_state_ = kFadeNone;
         Time::Instance()->SetTimeScale(1.0f);
     }
-    UpdateMaterial();
+    
+    UpdateAlpha(L"fade", time_counter_ / fade_time_);
 }
 
 //--------------------------------------------------------------------------------
@@ -134,11 +141,12 @@ void FadeSystem::FadeOut(void)
     if (time_counter_ >= fade_time_)
     {
         time_counter_ = fade_time_;
-        current_state_ = kFadeWait;
+        current_state_ = kFadeWaitOut;
         Time::Instance()->SetTimeScale(0.0f);
         MainSystem::Instance().Change(next_mode_);
     }
-    UpdateMaterial();
+
+    UpdateAlpha(L"fade", time_counter_ / fade_time_);
 }
 
 //--------------------------------------------------------------------------------
@@ -148,26 +156,48 @@ void FadeSystem::FadeWait(void)
 {
     if (MainSystem::Instance().GetResources().IsCompleteLoading())
     {
-        current_state_ = kFadeIn;
+        current_state_ = kFadeWaitIn;
     }
 }
 
 //--------------------------------------------------------------------------------
-//  マテリアル更新処理
+//  フェード待ち入る処理
 //--------------------------------------------------------------------------------
-void FadeSystem::UpdateMaterial(void)
+void FadeSystem::FadeWaitIn(void)
 {
-    auto& material_manager = MainSystem::Instance().GetResources().GetMaterialManager();
-    
-    auto fade_material = material_manager.Get(L"fade");
-    if (fade_material)
+    wait_time_counter_ -= Time::Instance()->DeltaTime();
+    if (wait_time_counter_ <= 0.0f)
     {
-        fade_material->diffuse_.a_ = time_counter_ / fade_time_;
+        wait_time_counter_ = 0.0f;
+        current_state_ = kFadeIn;
     }
 
-    auto loading_material = material_manager.Get(L"loading");
-    if (loading_material)
+    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
+}
+
+//--------------------------------------------------------------------------------
+//  フェード待ち出る処理
+//--------------------------------------------------------------------------------
+void FadeSystem::FadeWaitOut(void)
+{
+    wait_time_counter_ += Time::Instance()->DeltaTime();
+    if (wait_time_counter_ >= wait_fade_time_)
     {
-        loading_material->diffuse_.a_ = time_counter_ / fade_time_;
+        wait_time_counter_ = wait_fade_time_;
+        current_state_ = kFadeWait;
+    }
+
+    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアルのアルファ値更新処理
+//--------------------------------------------------------------------------------
+void FadeSystem::UpdateAlpha(const String& material_name, const float& alpha)
+{
+    auto material = MainSystem::Instance().GetResources().GetMaterialManager().Get(material_name);
+    if (material)
+    {
+        material->diffuse_.a_ = alpha;
     }
 }
