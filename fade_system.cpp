@@ -50,6 +50,9 @@ void FadeSystem::Update(void)
     case FadeState::kFadeOut:
         FadeOut();
         break;
+    case FadeState::kFadeWait:
+        FadeWait();
+        break;
     default:
         break;
     }
@@ -81,10 +84,23 @@ void FadeSystem::FadeTo(Mode* next_mode, const float fade_time)
 //--------------------------------------------------------------------------------
 void FadeSystem::Init(void)
 {
-    auto& material_manager = MainSystem::Instance().GetResources().GetMaterialManager();
-    material_manager.Use(L"fade", Color::kBlack);
-    material_ = material_manager.Get(L"fade");
-    GameObjectSpawner::CreateBasicPolygon2d(Vector3(SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f), kUnableAutoDelete, L"fade", kDefault2dShader, k2dMask);
+    GameObjectSpawner::CreateBasicPolygon2d(
+        Vector3(static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f),
+        kUnableAutoDelete,
+        L"fade",
+        kDefault2dShader,
+        k2dMask);
+
+    GameObjectSpawner::CreateScrollPolygon2d(
+        Short2(2, 15),
+        2,
+        Vector3(412.0f, 64.0f, 0.0f),
+        kUnableAutoDelete,
+        L"loading",
+        kDefault2dTextureShader,
+        k2dMask,
+        0.0f,
+        Vector3(408.0f, 276.0f, 0.0f));
 }
 
 //--------------------------------------------------------------------------------
@@ -92,8 +108,6 @@ void FadeSystem::Init(void)
 //--------------------------------------------------------------------------------
 void FadeSystem::Uninit(void)
 {
-    material_ = nullptr;
-    MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"fade");
 }
 
 //--------------------------------------------------------------------------------
@@ -108,7 +122,7 @@ void FadeSystem::FadeIn(void)
         current_state_ = kFadeNone;
         Time::Instance()->SetTimeScale(1.0f);
     }
-    material_->diffuse_.a_ = time_counter_ / fade_time_;
+    UpdateMaterial();
 }
 
 //--------------------------------------------------------------------------------
@@ -120,9 +134,40 @@ void FadeSystem::FadeOut(void)
     if (time_counter_ >= fade_time_)
     {
         time_counter_ = fade_time_;
-        current_state_ = kFadeIn;
+        current_state_ = kFadeWait;
         Time::Instance()->SetTimeScale(0.0f);
         MainSystem::Instance().Change(next_mode_);
     }
-    material_->diffuse_.a_ = time_counter_ / fade_time_;
+    UpdateMaterial();
+}
+
+//--------------------------------------------------------------------------------
+//  フェード待ち処理
+//--------------------------------------------------------------------------------
+void FadeSystem::FadeWait(void)
+{
+    if (MainSystem::Instance().GetResources().IsCompleteLoading())
+    {
+        current_state_ = kFadeIn;
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  マテリアル更新処理
+//--------------------------------------------------------------------------------
+void FadeSystem::UpdateMaterial(void)
+{
+    auto& material_manager = MainSystem::Instance().GetResources().GetMaterialManager();
+    
+    auto fade_material = material_manager.Get(L"fade");
+    if (fade_material)
+    {
+        fade_material->diffuse_.a_ = time_counter_ / fade_time_;
+    }
+
+    auto loading_material = material_manager.Get(L"loading");
+    if (loading_material)
+    {
+        loading_material->diffuse_.a_ = time_counter_ / fade_time_;
+    }
 }

@@ -24,6 +24,7 @@
 #include "enemy_controller.h"
 #include "flash_button_controller.h"
 #include "enemy_ui_controller.h"
+#include "scroll_2d_controller.h"
 #include "actor_state_player\player_mutant_idle_state.h"
 #include "actor_state_enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant_idle_motion_state.h"
@@ -193,6 +194,30 @@ GameObject* GameObjectSpawner::CreateBasicPolygon2d(const Vector3& scale, const 
     renderer->SetMesh(L"polygon2d");
     renderer->SetMaterial(material_name);
     result->AddRenderer(renderer);
+
+    //パラメーター
+    auto transform = result->GetTransform();
+    transform->SetScale(scale);
+    transform->SetRotation(Vector3(0.0f, 0.0f, rotation));
+    transform->SetPosition(position);
+
+    result->Init();
+    return result;
+}
+
+//--------------------------------------------------------------------------------
+//  ScrollPolygon2d生成処理
+//--------------------------------------------------------------------------------
+GameObject* GameObjectSpawner::CreateScrollPolygon2d(const Short2& pattern, const short frame_per_pattern, const Vector3& scale, const Layer& layer, const String& material_name, const ShaderType& shader_type, const RenderPriority& render_priority, const float& rotation, const Vector3& position)
+{
+    auto result = MY_NEW GameObject(layer);
+
+    //コンポネント
+    auto renderer = MY_NEW MeshRenderer2d(*result, render_priority, shader_type);
+    renderer->SetMesh(L"polygon2d");
+    renderer->SetMaterial(material_name);
+    result->AddRenderer(renderer);
+    result->AddBehavior(MY_NEW Scroll2dController(*result, pattern, frame_per_pattern));
 
     //パラメーター
     auto transform = result->GetTransform();
@@ -377,7 +402,7 @@ GameObjectActor* GameObjectSpawner::CreateEnemy(const String &name, const Vector
 
 #if defined(EDITOR)
 //--------------------------------------------------------------------------------
-//  クラス
+//  エディタの作成
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateEditor(void)
 {
@@ -421,7 +446,7 @@ GameObject* GameObjectSpawner::CreateEditor(void)
 //
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-//    モデルファイルからゲームオブジェクト作成
+//  モデルファイルからゲームオブジェクト作成
 //--------------------------------------------------------------------------------
 GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArchive& archive, Animator* animator)
 {

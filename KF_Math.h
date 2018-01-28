@@ -34,6 +34,7 @@ namespace kodfreedom
     class Short2
     {
     public:
+        Short2(const short x, const short y) : x_(x), y_(y) {}
         Short2() : x_(0), y_(0) {}
         ~Short2() {}
 

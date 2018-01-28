@@ -8,7 +8,6 @@
 //  前方宣言
 //--------------------------------------------------------------------------------
 class Mode;
-class Material;
 
 //--------------------------------------------------------------------------------
 //  フェイドシステムクラス
@@ -47,15 +46,14 @@ private:
     {
         kFadeNone = 0,
         kFadeIn,
-        kFadeOut
+        kFadeOut,
+        kFadeWait,
     };
 
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
-    FadeSystem()
-        : current_state_(kFadeIn), next_mode_(nullptr), material_(nullptr)
-        , fade_time_(1.0f), time_counter_(1.0f) {}
+    FadeSystem() {}
     FadeSystem(const FadeSystem& value) {}
     FadeSystem& operator=(const FadeSystem& value) {}
     ~FadeSystem() {}
@@ -81,11 +79,20 @@ private:
     void FadeOut(void);
 
     //--------------------------------------------------------------------------------
+    //  フェード待ち処理
+    //--------------------------------------------------------------------------------
+    void FadeWait(void);
+
+    //--------------------------------------------------------------------------------
+    //  マテリアル更新処理
+    //--------------------------------------------------------------------------------
+    void UpdateMaterial(void);
+
+    //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    Material*   material_;
-    FadeState   current_state_;
-    Mode*       next_mode_;
-    float       fade_time_;
-    float       time_counter_;
+    FadeState current_state_ = kFadeWait;
+    Mode*     next_mode_ = nullptr;
+    float     fade_time_ = 1.0f;
+    float     time_counter_ = 1.0f;
 };

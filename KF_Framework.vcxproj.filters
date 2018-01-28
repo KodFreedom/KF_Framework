@@ -672,6 +672,9 @@
     <ClCompile Include="resources.cpp">
       <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="scroll_2d_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mode.h">
@@ -1141,6 +1144,9 @@
     </ClInclude>
     <ClInclude Include="resources.h">
       <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="scroll_2d_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
