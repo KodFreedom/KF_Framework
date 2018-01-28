@@ -24,6 +24,17 @@ void Resources::Release(void)
 }
 
 //--------------------------------------------------------------------------------
+//  ƒ[ƒh‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©‚Ì”»’èˆ—
+//--------------------------------------------------------------------------------
+bool Resources::IsCompleteLoading(void) const
+{
+    return texture_manager_->load_tasks_.empty()
+        && material_manager_->load_tasks_.empty()
+        && motion_manager_->load_tasks_.empty()
+        && mesh_manager_->load_tasks_.empty();
+}
+
+//--------------------------------------------------------------------------------
 //
 //  Private
 //

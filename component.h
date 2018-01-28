@@ -21,7 +21,7 @@ public:
     //  constructors and destructors
     //--------------------------------------------------------------------------------
     Component(GameObject& owner) : owner_(owner) {}
-    ~Component() {}
+    virtual ~Component() {}
 
     //--------------------------------------------------------------------------------
     //  ‰Šú‰»ˆ—

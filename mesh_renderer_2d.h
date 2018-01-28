@@ -20,7 +20,7 @@ public:
     MeshRenderer2d(GameObject& owner
         , const RenderPriority& priority = kDefaultPriority
         , const ShaderType& shader_type = kDefaultShader)
-        : MeshRenderer(owner, priority, shader_type, kMeshRenderer2d), uv_scale_(Vector2::kOne) {}
+        : MeshRenderer(owner, priority, shader_type, kMeshRenderer2d) {}
     ~MeshRenderer2d() {}
 
     //--------------------------------------------------------------------------------
@@ -37,15 +37,18 @@ public:
     //  ゲッター
     //--------------------------------------------------------------------------------
     const Vector2& GetUvScale(void) const { return uv_scale_; }
+    const Vector2& GetUvOffset(void) const { return uv_offset_; }
 
     //--------------------------------------------------------------------------------
     //  セッター
     //--------------------------------------------------------------------------------
     void SetUvScale(const Vector2& scale) { uv_scale_ = scale; }
+    void SetUvOffset(const Vector2& offset) { uv_offset_ = offset; }
 
 private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    Vector2 uv_scale_;
+    Vector2 uv_offset_ = Vector2::kZero;
+    Vector2 uv_scale_ = Vector2::kOne;
 };

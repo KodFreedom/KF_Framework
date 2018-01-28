@@ -49,8 +49,12 @@ void Default2dTextureShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, co
     vertex_shader_constant_table_->SetValue(device, "world", &world, sizeof(world));
     vertex_shader_constant_table_->SetValue(device, "projection", &RenderSystem::kProjection2d, sizeof(RenderSystem::kProjection2d));
     vertex_shader_constant_table_->SetValue(device, "offset", &RenderSystem::kOffset2d, sizeof(RenderSystem::kOffset2d));
-    const Vector2& uv_scale = ((MeshRenderer2d*)&renderer)->GetUvScale();
+    
+    auto mesh_renderer_2d = (MeshRenderer2d*)&renderer;
+    const Vector2& uv_scale = mesh_renderer_2d->GetUvScale();
+    const Vector2& uv_offset = mesh_renderer_2d->GetUvOffset();
     vertex_shader_constant_table_->SetValue(device, "uv_scale", &uv_scale, sizeof(uv_scale));
+    vertex_shader_constant_table_->SetValue(device, "uv_offset", &uv_offset, sizeof(uv_offset));
 
     // Pixel
     auto& main_system = MainSystem::Instance();

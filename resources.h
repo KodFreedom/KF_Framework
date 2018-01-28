@@ -48,6 +48,7 @@ public:
     auto& GetMeshManager(void) const { return *mesh_manager_; }
     auto& GetMaterialManager(void) const { return *material_manager_; }
     auto& GetMotionManager(void) const { return *motion_manager_; }
+    bool  IsCompleteLoading(void) const;
 
 private:
     //--------------------------------------------------------------------------------
