@@ -90,6 +90,7 @@ public:
     auto& GetGameObjectManager(void) const { return *game_object_manager_; }
     auto& GetShadowMapSystem(void) const { return *shadow_map_system_; }
     auto& GetActorObserver(void) const { return *actor_observer_; }
+    auto& GetCurrentMode(void) const { return *current_mode_; }
 #ifdef _DEBUG
     auto& GetDebugObserver(void) const { return *debug_observer_; }
 #endif

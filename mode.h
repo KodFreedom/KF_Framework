@@ -20,6 +20,7 @@ public:
     virtual void Init(void) = 0;
     virtual void Update(void) {}
     virtual void LateUpdate(void) {}
+    virtual void OnCompleteLoading(void) {}
     void         Release(void)
     {
         Uninit();

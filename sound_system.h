@@ -9,12 +9,25 @@
 #include "common_setting.h"
 
 //--------------------------------------------------------------------------------
+//  前方宣言
+//--------------------------------------------------------------------------------
+class WaveSe;
+class WaveBgm;
+
+//--------------------------------------------------------------------------------
 //  列挙型定義
 //--------------------------------------------------------------------------------
 enum SoundEffectLabel
 {
-    kSubmitSoundEffect,
-    kSoundEffectMax,
+    kSubmitSe,
+    kSeMax,
+};
+
+enum BackgroundMusicLabel
+{
+    kTitleBgm,
+    kGameBgm,
+    kBgmMax
 };
 
 //--------------------------------------------------------------------------------
@@ -41,11 +54,14 @@ public:
 
     //--------------------------------------------------------------------------------
     //  指定したサウンドを鳴らす
-    //  label : sound effectのラベル
     //--------------------------------------------------------------------------------
     void Play(const SoundEffectLabel label)
     {
         se_play_tasks_.push(label);
+    }
+    void Play(const BackgroundMusicLabel label)
+    {
+        bgm_play_tasks_.push(label);
     }
 
     //--------------------------------------------------------------------------------
@@ -55,6 +71,10 @@ public:
     void Stop(const SoundEffectLabel label)
     {
         se_stop_tasks_.push(label);
+    }
+    void Stop(const BackgroundMusicLabel label)
+    {
+        bgm_stop_tasks_.push(label);
     }
 
     //--------------------------------------------------------------------------------
@@ -78,11 +98,27 @@ private:
     //--------------------------------------------------------------------------------
     //　構造体定義
     //--------------------------------------------------------------------------------
-    struct SoundEffectInfo
+    struct SoundInfo
     {
         String file_path;
         int    count_loop;
     };
+
+    //struct SoundEffect
+    //{
+    //    IXAudio2SourceVoice* source_voice;
+    //    BYTE*                data;
+    //    DWORD                size;
+    //};
+    //
+    //struct BackgroundMusic
+    //{
+    //    IXAudio2SourceVoice* source_voice = nullptr;
+    //    vector<BYTE>         datas[2];
+    //    int                  primary = 0;      // 現在再生中のバッファ
+    //    int                  secondary = 1;    // 新しいデータの書き込み可能なバッファ
+    //    DWORD                write_cursor = 0; // 書き込みカーソル
+    //};
 
     //--------------------------------------------------------------------------------
     //  constructors and destructors
@@ -105,7 +141,7 @@ private:
     //--------------------------------------------------------------------------------
     //  サウンドデータファイルの読込
     //--------------------------------------------------------------------------------
-    void LoadSoundEffectData(void);
+    void LoadSoundData(void);
 
     //--------------------------------------------------------------------------------
     //  終了処理
@@ -128,14 +164,14 @@ private:
     void StopSe(void);
 
     //--------------------------------------------------------------------------------
-    //  チャンクのチェック
+    //  Bgmの鳴らす処理
     //--------------------------------------------------------------------------------
-    bool CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position);
+    void PlayBgm(void);
 
     //--------------------------------------------------------------------------------
-    //  チャンクデータの読み込み
+    //  Bgmの止める処理
     //--------------------------------------------------------------------------------
-    bool ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, DWORD buffer_offset);
+    void StopBgm(void);
 
     //--------------------------------------------------------------------------------
     //  変数定義
@@ -144,10 +180,15 @@ private:
     thread*                  thread_ = nullptr;
     IXAudio2*                xaudio2_instance_ = nullptr;
     IXAudio2MasteringVoice*  mastering_voice_ = nullptr;
-    IXAudio2SourceVoice*     se_source_voices_[kSoundEffectMax] = { 0 };
-    BYTE*                    se_datas_[kSoundEffectMax] = { 0 };
-    DWORD                    se_sizes_[kSoundEffectMax] = { 0 };
+
+    WaveSe*                  sound_effects_[kSeMax] = { 0 };
     queue<SoundEffectLabel>  se_play_tasks_;
     queue<SoundEffectLabel>  se_stop_tasks_;
-    static SoundEffectInfo   se_infos_[kSoundEffectMax];
+    static SoundInfo         se_infos_[kSeMax];
+
+    WaveBgm*                     background_musics_[kBgmMax];
+    BackgroundMusicLabel         current_bgm_ = kBgmMax;
+    queue<BackgroundMusicLabel>  bgm_play_tasks_;
+    queue<BackgroundMusicLabel>  bgm_stop_tasks_;
+    static SoundInfo             bgm_infos_[kBgmMax];
 };

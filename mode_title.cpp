@@ -62,6 +62,7 @@ void ModeTitle::Init(void)
 void ModeTitle::Uninit(void)
 {
     MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"title");
+    MainSystem::Instance().GetSoundSystem().Stop(kTitleBgm);
     Mode::Uninit();
 }
 
@@ -86,8 +87,16 @@ void ModeTitle::Update(void)
 
     if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
     {
-        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }
+}
+
+//--------------------------------------------------------------------------------
+//  ローディング終了の通知
+//--------------------------------------------------------------------------------
+void ModeTitle::OnCompleteLoading(void)
+{
+    MainSystem::Instance().GetSoundSystem().Play(kTitleBgm);
 }

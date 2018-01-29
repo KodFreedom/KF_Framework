@@ -5,6 +5,7 @@
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "sound_system.h"
+#include "wave_file.h"
 #include "kf_utility.h"
 #ifdef _DEBUG
 #include "main_system.h"
@@ -14,9 +15,15 @@
 //--------------------------------------------------------------------------------
 //  静的メンバ変数
 //--------------------------------------------------------------------------------
-SoundSystem::SoundEffectInfo SoundSystem::se_infos_[kSoundEffectMax] =
+SoundSystem::SoundInfo SoundSystem::se_infos_[kSeMax] =
 {
-    { L"data/se/submit.wav", 0 },    // kSubmitSoundEffect
+    { L"data/se/submit.wav", 0 }, // kSubmitSe
+};
+
+SoundSystem::SoundInfo SoundSystem::bgm_infos_[kBgmMax] =
+{
+    { L"data/bgm/title.wav", -1 }, // kTitleBgm
+    { L"data/bgm/game.wav", -1 }, // kGameBgm
 };
 
 //--------------------------------------------------------------------------------
@@ -47,9 +54,7 @@ void SoundSystem::Release(void)
 //--------------------------------------------------------------------------------
 bool SoundSystem::IsOver(const SoundEffectLabel label) const
 {
-    XAUDIO2_VOICE_STATE xa2state;
-    se_source_voices_[label]->GetState(&xa2state);
-    return xa2state.BuffersQueued == 0;
+    return sound_effects_[label]->IsOver();
 }
 
 //--------------------------------------------------------------------------------
@@ -57,9 +62,7 @@ bool SoundSystem::IsOver(const SoundEffectLabel label) const
 //--------------------------------------------------------------------------------
 bool SoundSystem::IsPlaying(const SoundEffectLabel label) const
 {
-    XAUDIO2_VOICE_STATE xa2state;
-    se_source_voices_[label]->GetState(&xa2state);
-    return xa2state.BuffersQueued != 0;
+    return sound_effects_[label]->IsPlaying();
 }
 
 //--------------------------------------------------------------------------------
@@ -67,14 +70,16 @@ bool SoundSystem::IsPlaying(const SoundEffectLabel label) const
 //--------------------------------------------------------------------------------
 void SoundSystem::StopAll(void)
 {
-    for (int count = 0; count < kSoundEffectMax; count++)
+    for (auto& sound_effect : sound_effects_)
     {
-        if (se_source_voices_[count])
-        {
-            // 一時停止
-            se_source_voices_[count]->Stop(0);
-        }
+        sound_effect->Stop();
     }
+
+    for (auto& background_music : background_musics_)
+    {
+        background_music->Stop();
+    }
+    current_bgm_ = kBgmMax;
 }
 
 //--------------------------------------------------------------------------------
@@ -132,98 +137,18 @@ bool SoundSystem::InitXAudio(void)
 //--------------------------------------------------------------------------------
 //  サウンドデータファイルの読込
 //--------------------------------------------------------------------------------
-void SoundSystem::LoadSoundEffectData(void)
+void SoundSystem::LoadSoundData(void)
 {
-    // サウンドデータの初期化
-    for (int count = 0; count < kSoundEffectMax; ++count)
+    for (int count = 0; count < kSeMax; ++count)
     {
-        HANDLE file;
-        DWORD chunk_size = 0;
-        DWORD chunk_position = 0;
-        DWORD file_type;
-        WAVEFORMATEXTENSIBLE wfx;
-        XAUDIO2_BUFFER buffer;
+        sound_effects_[count] = WaveSe::Create(*xaudio2_instance_, se_infos_[count].file_path, se_infos_[count].count_loop);
+        assert(sound_effects_[count]);
+    }
 
-        // バッファのクリア
-        memset(&wfx, 0, sizeof(WAVEFORMATEXTENSIBLE));
-        memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-
-        // サウンドデータファイルの生成
-        file = CreateFile(se_infos_[count].file_path.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-        if (file == INVALID_HANDLE_VALUE)
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CreateFile失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        if (SetFilePointer(file, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-        {// ファイルポインタを先頭に移動
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"SetFilePointer失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        // WAVEファイルのチェック
-        if (!CheckChunk(file, 'FFIR', chunk_size, chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk FFIR失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        if (!ReadChunkData(file, &file_type, sizeof(DWORD), chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        if (file_type != 'EVAW')
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"file_type != 'EVAW'！", MB_ICONWARNING);
-            continue;
-        }
-
-        // フォーマットチェック
-        if (!CheckChunk(file, ' tmf', chunk_size, chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk tmf失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        if (!ReadChunkData(file, &wfx, chunk_size, chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        // オーディオデータ読み込み
-        if (!CheckChunk(file, 'atad', se_sizes_[count], chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CheckChunk atad失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        se_datas_[count] = (BYTE*)malloc(se_sizes_[count]);
-        if (!ReadChunkData(file, se_datas_[count], se_sizes_[count], chunk_position))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"ReadChunkData失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        // ソースボイスの生成
-        if (FAILED(xaudio2_instance_->CreateSourceVoice(&se_source_voices_[count], &(wfx.Format))))
-        {
-            MessageBox(NULL, se_infos_[count].file_path.c_str(), L"CreateSourceVoice失敗！", MB_ICONWARNING);
-            continue;
-        }
-
-        // バッファの値設定
-        memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-        buffer.AudioBytes = se_sizes_[count];
-        buffer.pAudioData = se_datas_[count];
-        buffer.Flags = XAUDIO2_END_OF_STREAM;
-        buffer.LoopCount = se_infos_[count].count_loop;
-
-        // オーディオバッファの登録
-        se_source_voices_[count]->SubmitSourceBuffer(&buffer);
+    for (int count = 0; count < kBgmMax; ++count)
+    {
+        background_musics_[count] = WaveBgm::Create(*xaudio2_instance_, bgm_infos_[count].file_path, bgm_infos_[count].count_loop);
+        assert(background_musics_[count]);
     }
 }
 
@@ -232,21 +157,14 @@ void SoundSystem::LoadSoundEffectData(void)
 //--------------------------------------------------------------------------------
 void SoundSystem::Uninit(void)
 {
-    for (int count = 0; count < kSoundEffectMax; ++count)
+    for (auto& sound_effect : sound_effects_)
     {
-        if (se_source_voices_[count])
-        {
-            // 一時停止
-            se_source_voices_[count]->Stop(0);
+        SAFE_RELEASE(sound_effect);
+    }
 
-            // ソースボイスの破棄
-            se_source_voices_[count]->DestroyVoice();
-            se_source_voices_[count] = nullptr;
-
-            // オーディオデータの開放
-            free(se_datas_[count]);
-            se_datas_[count] = nullptr;
-        }
+    for (auto& background_music : background_musics_)
+    {
+        SAFE_RELEASE(background_music);
     }
 
     // マスターボイスの破棄
@@ -267,12 +185,14 @@ void SoundSystem::Run(void)
 {
     // 初期化
     if (!InitXAudio()) return;
-    LoadSoundEffectData();
+    LoadSoundData();
 
     while (is_running_)
     {
         PlaySe();
         StopSe();
+        PlayBgm();
+        StopBgm();
     }
 
     // 終了処理
@@ -290,30 +210,7 @@ void SoundSystem::PlaySe(void)
     SoundEffectLabel current_task = se_play_tasks_.front();
     se_play_tasks_.pop();
 
-    // バッファの値設定
-    XAUDIO2_BUFFER buffer;
-    memset(&buffer, 0, sizeof(XAUDIO2_BUFFER));
-    buffer.AudioBytes = se_sizes_[current_task];
-    buffer.pAudioData = se_datas_[current_task];
-    buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.LoopCount = se_infos_[current_task].count_loop;
-
-    // 状態取得
-    XAUDIO2_VOICE_STATE xa2state;
-    se_source_voices_[current_task]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {// 再生中なら一時停止
-        se_source_voices_[current_task]->Stop(0);
-
-        // オーディオバッファの削除
-        se_source_voices_[current_task]->FlushSourceBuffers();
-    }
-
-    // オーディオバッファの登録
-    se_source_voices_[current_task]->SubmitSourceBuffer(&buffer);
-
-    // 再生
-    se_source_voices_[current_task]->Start(0);
+    sound_effects_[current_task]->Start();
 
 #ifdef _DEBUG
     MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Play " + se_infos_[current_task].file_path);
@@ -332,16 +229,7 @@ void SoundSystem::StopSe(void)
     SoundEffectLabel current_task = se_stop_tasks_.front();
     se_stop_tasks_.pop();
 
-    // 状態取得
-    XAUDIO2_VOICE_STATE xa2state;
-    se_source_voices_[current_task]->GetState(&xa2state);
-    if (xa2state.BuffersQueued != 0)
-    {// 再生中なら一時停止
-        se_source_voices_[current_task]->Stop(0);
-
-        // オーディオバッファの削除
-        se_source_voices_[current_task]->FlushSourceBuffers();
-    }
+    sound_effects_[current_task]->Stop();
 
 #ifdef _DEBUG
     MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Stop " + se_infos_[current_task].file_path);
@@ -349,88 +237,55 @@ void SoundSystem::StopSe(void)
 }
 
 //--------------------------------------------------------------------------------
-// チャンクのチェック
+//  Bgmの鳴らす処理
 //--------------------------------------------------------------------------------
-bool SoundSystem::CheckChunk(HANDLE file, DWORD format, DWORD& chunk_size, DWORD& chunk_data_position)
+void SoundSystem::PlayBgm(void)
 {
-    bool result = true;
-    DWORD read;
-    DWORD chunk_type;
-    DWORD chunk_data_size;
-    DWORD ffir_data_size = 0;
-    DWORD file_type;
-    DWORD bytesRead = 0;
-    DWORD offset = 0;
-
-    if (SetFilePointer(file, 0, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {// ファイルポインタを先頭に移動
-        return false;
-    }
-
-    while (result)
+    // 今のbgmをポーリングする
+    if (current_bgm_ != kBgmMax)
     {
-        if (ReadFile(file, &chunk_type, sizeof(DWORD), &read, NULL) == 0)
-        {// チャンクの読み込み
-            result = false;
-        }
-
-        if (ReadFile(file, &chunk_data_size, sizeof(DWORD), &read, NULL) == 0)
-        {// チャンクデータの読み込み
-            result = false;
-        }
-
-        switch (chunk_type)
-        {
-        case 'FFIR':
-            ffir_data_size = chunk_data_size;
-            chunk_data_size = 4;
-            if (ReadFile(file, &file_type, sizeof(DWORD), &read, NULL) == 0)
-            {// ファイルタイプの読み込み
-                result = false;
-            }
-            break;
-
-        default:
-            if (SetFilePointer(file, chunk_data_size, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER)
-            {// ファイルポインタをチャンクデータ分移動
-                return false;
-            }
-        }
-
-        offset += sizeof(DWORD) * 2;
-        if (chunk_type == format)
-        {
-            chunk_size = chunk_data_size;
-            chunk_data_position = offset;
-            return true;
-        }
-
-        offset += chunk_data_size;
-        if (bytesRead >= ffir_data_size)
-        {
-            return false;
-        }
+        background_musics_[current_bgm_]->Polling();
     }
 
-    return true;
+    // bgmの切り替え
+    if (bgm_play_tasks_.empty()) return;
+
+    // 一番目のタスクを実行する
+    BackgroundMusicLabel current_task = bgm_play_tasks_.front();
+    bgm_play_tasks_.pop();
+
+    // 今のbgmと同じなら処理しない
+    if (current_bgm_ == current_task) return;
+
+    // 今のbgmを止める
+    if (current_bgm_ != kBgmMax)
+    {
+        background_musics_[current_bgm_]->Stop();
+    }
+
+    current_bgm_ = current_task;
+    background_musics_[current_bgm_]->Start();
 }
 
 //--------------------------------------------------------------------------------
-// チャンクデータの読み込み
+//  Bgmの止める処理
 //--------------------------------------------------------------------------------
-bool SoundSystem::ReadChunkData(HANDLE file, void *buffer, DWORD buffer_size, DWORD buffer_offset)
+void SoundSystem::StopBgm(void)
 {
-    DWORD read;
+    if (bgm_stop_tasks_.empty()) return;
 
-    if (SetFilePointer(file, buffer_offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER)
-    {// ファイルポインタを指定位置まで移動
-        return false;
+    // 一番目のタスクを実行する
+    BackgroundMusicLabel current_task = bgm_stop_tasks_.front();
+    bgm_stop_tasks_.pop();
+
+    if (current_bgm_ == current_task)
+    {
+        current_bgm_ = kBgmMax;
     }
+    background_musics_[current_task]->Stop();
+    
 
-    if (ReadFile(file, buffer, buffer_size, &read, NULL) == 0)
-    {// データの読み込み
-        return false;
-    }
-
-    return true;
+#ifdef _DEBUG
+    MainSystem::Instance().GetDebugObserver().Display(L"Sound Thread : Stop " + bgm_infos_[current_task].file_path);
+#endif // _DEBUG
 }

@@ -49,6 +49,14 @@ void ModeDemo::Init(void)
 }
 
 //--------------------------------------------------------------------------------
+//  終了処理
+//--------------------------------------------------------------------------------
+void ModeDemo::Uninit(void)
+{
+    MainSystem::Instance().GetSoundSystem().Stop(kGameBgm);
+}
+
+//--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
 void ModeDemo::Update(void)
@@ -92,9 +100,17 @@ void ModeDemo::LateUpdate(void)
 #ifdef _DEBUG
     if (main_system.GetInput().GetKeyTrigger(Key::kStart))
     {
-        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = Time::kTimeInterval;
         return;
     }
 #endif // _DEBUG
+}
+
+//--------------------------------------------------------------------------------
+//  ローディング終了の通知
+//--------------------------------------------------------------------------------
+void ModeDemo::OnCompleteLoading(void)
+{
+    MainSystem::Instance().GetSoundSystem().Play(kGameBgm);
 }

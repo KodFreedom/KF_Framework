@@ -207,8 +207,8 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 void MainSystem::Uninit(void)
 {
     SAFE_RELEASE(current_mode_);
-    SAFE_RELEASE(actor_observer_);
     SAFE_RELEASE(game_object_manager_);
+    SAFE_RELEASE(actor_observer_);
     SAFE_RELEASE(physics_system_);
     SAFE_RELEASE(collision_system_);
     SAFE_RELEASE(camera_manager_);

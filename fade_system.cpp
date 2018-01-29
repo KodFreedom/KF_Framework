@@ -157,6 +157,7 @@ void FadeSystem::FadeWait(void)
     if (MainSystem::Instance().GetResources().IsCompleteLoading())
     {
         current_state_ = kFadeWaitIn;
+        MainSystem::Instance().GetCurrentMode().OnCompleteLoading();
     }
 }
 
