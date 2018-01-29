@@ -26,6 +26,7 @@ enum SoundEffectLabel
 enum BackgroundMusicLabel
 {
     kTitleBgm,
+    kGameBgm,
     kBgmMax
 };
 

@@ -54,9 +54,6 @@ void ModeTitle::Init(void)
     auto behavior = button->GetBehaviorBy(L"FlashButtonController");
     assert(behavior);
     flash_button_controller_ = static_cast<FlashButtonController*>(behavior);
-
-    // Bgm
-    MainSystem::Instance().GetSoundSystem().Play(kTitleBgm);
 }
 
 //--------------------------------------------------------------------------------
@@ -94,4 +91,12 @@ void ModeTitle::Update(void)
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }
+}
+
+//--------------------------------------------------------------------------------
+//  ローディング終了の通知
+//--------------------------------------------------------------------------------
+void ModeTitle::OnCompleteLoading(void)
+{
+    MainSystem::Instance().GetSoundSystem().Play(kTitleBgm);
 }
