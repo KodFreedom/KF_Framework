@@ -253,6 +253,12 @@
     <Filter Include="ソース ファイル\Base\System\Resources">
       <UniqueIdentifier>{48a40c3a-9560-4326-a2b6-b68f751fe5e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Base\System\Sound">
+      <UniqueIdentifier>{54d004a9-a5e5-4085-b5a7-02be237e063d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\System\Sound">
+      <UniqueIdentifier>{f61e5dea-502b-4bb4-926e-d4250fa7cf04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -660,9 +666,6 @@
     <ClCompile Include="texture_manager.cpp">
       <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="sound_system.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
     <ClCompile Include="motion_manager.cpp">
       <Filter>ソース ファイル\Base\System\Resources</Filter>
     </ClCompile>
@@ -674,6 +677,12 @@
     </ClCompile>
     <ClCompile Include="scroll_2d_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_system.cpp">
+      <Filter>ソース ファイル\Base\System\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="wave_file.cpp">
+      <Filter>ソース ファイル\Base\System\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1133,9 +1142,6 @@
     <ClInclude Include="texture_manager.h">
       <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="sound_system.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
     <ClInclude Include="motion_manager.h">
       <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
     </ClInclude>
@@ -1147,6 +1153,12 @@
     </ClInclude>
     <ClInclude Include="scroll_2d_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_system.h">
+      <Filter>ヘッダー ファイル\Base\System\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="wave_file.h">
+      <Filter>ヘッダー ファイル\Base\System\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

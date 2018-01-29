@@ -54,6 +54,9 @@ void ModeTitle::Init(void)
     auto behavior = button->GetBehaviorBy(L"FlashButtonController");
     assert(behavior);
     flash_button_controller_ = static_cast<FlashButtonController*>(behavior);
+
+    // Bgm
+    MainSystem::Instance().GetSoundSystem().Play(kTitleBgm);
 }
 
 //--------------------------------------------------------------------------------
@@ -62,6 +65,7 @@ void ModeTitle::Init(void)
 void ModeTitle::Uninit(void)
 {
     MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"title");
+    MainSystem::Instance().GetSoundSystem().Stop(kTitleBgm);
     Mode::Uninit();
 }
 
@@ -86,7 +90,7 @@ void ModeTitle::Update(void)
 
     if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
     {
-        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }

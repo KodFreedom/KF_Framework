@@ -92,7 +92,7 @@ void ModeDemo::LateUpdate(void)
 #ifdef _DEBUG
     if (main_system.GetInput().GetKeyTrigger(Key::kStart))
     {
-        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = Time::kTimeInterval;
         return;
     }

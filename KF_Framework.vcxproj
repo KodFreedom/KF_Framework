@@ -290,6 +290,7 @@
     <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="transform.cpp" />
+    <ClCompile Include="wave_file.cpp" />
     <ClCompile Include="windmill_controller.cpp" />
     <ClCompile Include="zombie_skin_shader.cpp" />
   </ItemGroup>
@@ -449,6 +450,7 @@
     <ClInclude Include="time.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="common_setting.h" />
+    <ClInclude Include="wave_file.h" />
     <ClInclude Include="windmill_controller.h" />
     <ClInclude Include="zombie_skin_shader.h" />
   </ItemGroup>

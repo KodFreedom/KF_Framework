@@ -86,7 +86,7 @@ void ModeResult::Update(void)
 
     if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
     {
-        main_system.GetSoundSystem().Play(kSubmitSoundEffect);
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }
