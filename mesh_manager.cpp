@@ -49,6 +49,20 @@ void MeshManager::Use(const String& mesh_name, const DrawType& type, const vecto
 }
 
 //--------------------------------------------------------------------------------
+//  スレッドじゃなくすぐ消す処理（エディタ用）
+//--------------------------------------------------------------------------------
+void MeshManager::DisuseImmediately(const String& mesh_name)
+{
+    size_t key = hash<String>()(mesh_name);
+    auto iterator = meshes_.find(key);
+    if (meshes_.end() == iterator) return;
+
+    auto pointer = iterator->second.pointer;
+    meshes_.erase(iterator);
+    SAFE_DELETE(pointer);
+}
+
+//--------------------------------------------------------------------------------
 //  与えられた名前のメッシュを与えられた頂点とインデックスで更新する
 //--------------------------------------------------------------------------------
 void MeshManager::Update(const String& mesh_name, const vector<Vertex3d>& vertexes, const list<int>& indexes)
