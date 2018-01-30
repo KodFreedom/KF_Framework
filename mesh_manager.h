@@ -110,6 +110,11 @@ public:
     void Use(const String& mesh_name, const DrawType& type, const vector<Vertex3d>& vertexes, const vector<int>& indexes, const int& polygon_number = -1);
 
     //--------------------------------------------------------------------------------
+    //  スレッドじゃなくすぐ消す処理（エディタ用）
+    //--------------------------------------------------------------------------------
+    void DisuseImmediately(const String& mesh_name);
+
+    //--------------------------------------------------------------------------------
     //  与えられた名前のメッシュを与えられた頂点とインデックスで更新する
     //  mesh_name : メッシュ名
     //  vertexes : 頂点データ

@@ -180,7 +180,7 @@ void FieldEditor::LoadFrom(const String& name)
     BinaryInputArchive archive(file);
 
     //¡‚Ì’¸“_î•ñ‚ğ”jŠü‚·‚é
-    MainSystem::Instance().GetResources().GetMeshManager().Disuse(L"field");
+    MainSystem::Instance().GetResources().GetMeshManager().DisuseImmediately(L"field");
     previous_choosen_indexes_.clear();
     vertexes_.clear();
 
