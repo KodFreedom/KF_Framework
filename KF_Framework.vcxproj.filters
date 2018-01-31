@@ -13,23 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base">
-      <UniqueIdentifier>{371bb56d-2b93-4600-941a-6e9be8bf1ff8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base">
-      <UniqueIdentifier>{cf4c7665-b793-4e59-a24f-e354e36825a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component">
       <UniqueIdentifier>{a70a77b0-02ec-4196-8bd7-93426085f543}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Component\Physics">
-      <UniqueIdentifier>{4dfeab76-87b5-4f7f-9bdb-4dcd6105f1c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component">
       <UniqueIdentifier>{db3c6369-d237-4a86-b146-db91a518b1b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Component\Physics">
-      <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Component\Collider">
       <UniqueIdentifier>{ea32dd07-68f8-4c62-af8b-4eb1bf160764}</UniqueIdentifier>
@@ -39,12 +27,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Component\Transform">
       <UniqueIdentifier>{050bec36-49d9-4b74-b5ee-4d35e1238d05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Camera">
-      <UniqueIdentifier>{f546005a-d83c-4e4c-92bf-fdc1a32fe586}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Camera">
-      <UniqueIdentifier>{98aa7b80-43e9-410b-8b93-021c210129d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Component\Transform">
       <UniqueIdentifier>{7b78cae0-6569-487a-9041-e517daf4519a}</UniqueIdentifier>
@@ -67,39 +49,6 @@
     <Filter Include="ソース ファイル\Component\Behavior\Editor">
       <UniqueIdentifier>{06ee83df-d177-4aae-bcba-0f0d5327dbc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Input">
-      <UniqueIdentifier>{c686e9e9-2cb4-4634-acaf-007e2ea2169b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Input">
-      <UniqueIdentifier>{ed1fdc03-55fa-436b-a8b2-86689938f012}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Physics">
-      <UniqueIdentifier>{dc96726a-86c2-44bf-a293-73ea5034bd78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Physics">
-      <UniqueIdentifier>{ad354fd5-add1-4ac6-b9da-2e1d0c3e4d08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion">
-      <UniqueIdentifier>{dea147e3-4109-4939-8ad4-ddf15a8bf6a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState">
-      <UniqueIdentifier>{0de9bcf7-879d-4160-93b3-5eb11895ad03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Motion">
-      <UniqueIdentifier>{cb274add-2675-4099-97a6-dc2c9e1bb78c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor">
-      <UniqueIdentifier>{cb2fb40f-e818-4231-85d2-14bd1ae340db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State">
-      <UniqueIdentifier>{86c9c7ef-9fea-43ec-8d32-f5d6621b5dd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor">
-      <UniqueIdentifier>{f7b9e1ea-602e-482b-a7b4-64cc3b34ab40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State">
-      <UniqueIdentifier>{b05ec256-cc82-4958-89f2-f3a05ad71e78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Component\Behavior\Actor">
       <UniqueIdentifier>{b3f9ec24-664a-4da9-b7b9-08f6d9947ff8}</UniqueIdentifier>
     </Filter>
@@ -112,1058 +61,1103 @@
     <Filter Include="ソース ファイル\Component\Renderer">
       <UniqueIdentifier>{3f649fe6-2e9f-4e33-b9e5-a582923d636b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\GameObject">
-      <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\GameObject">
-      <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader">
-      <UniqueIdentifier>{079332a2-ae93-4425-aeef-e90381f97d7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Light">
-      <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Shader">
-      <UniqueIdentifier>{e2ae39f9-8234-4fe4-a0b5-1bb9312106e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Motion\MotionState">
-      <UniqueIdentifier>{097be50f-f66e-4c11-b094-087cc9489341}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Shader\Mesh">
-      <UniqueIdentifier>{27ddd998-1b99-4e17-9865-ba71a0bde8b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Shader\Skin">
-      <UniqueIdentifier>{67677291-0591-4db7-ae14-ec080fcca19e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\Mesh">
-      <UniqueIdentifier>{e62bd730-c545-48ae-abaa-0651891273b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\Skin">
-      <UniqueIdentifier>{22384b21-ef6d-41e6-afa6-49abc5047d4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Light">
-      <UniqueIdentifier>{d7c8e2af-4b7c-44ef-aa73-23f76a32bb0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\System">
-      <UniqueIdentifier>{a72cad8e-b70a-4729-a70a-78d50f9dbc5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\System\RenderSystem">
-      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System">
-      <UniqueIdentifier>{cdbbfe2e-e186-4cde-909d-65f75121e5db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\RenderSystem">
-      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Imgui">
-      <UniqueIdentifier>{16d7b0f9-1474-4f82-a631-578069a87426}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\KF_Utility">
-      <UniqueIdentifier>{f54e67db-2928-4e7c-84e3-af7ed0f61f83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Mode">
-      <UniqueIdentifier>{1cfef04b-6b22-4cc5-bb53-1947b9c22e4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Imgui">
-      <UniqueIdentifier>{e3020380-88c7-4e4b-88c5-e1cb386c035d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\KF_Utility">
-      <UniqueIdentifier>{05fccfed-a36c-486b-ad47-f486f528dab1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Mode">
-      <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Shader\2d">
-      <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\2d">
-      <UniqueIdentifier>{e4a5b11e-4486-4aa8-964f-61c20a70c3c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Jugg">
-      <UniqueIdentifier>{e839a2c1-c343-401c-b8b1-aa6185f4c779}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Mutant">
-      <UniqueIdentifier>{5fb40a91-e005-45aa-af8e-66b0522d8944}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Motion\MotionState\Jugg">
-      <UniqueIdentifier>{6f58992f-1bdb-40b1-bda0-843e012e7a97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Motion\MotionState\Mutant">
-      <UniqueIdentifier>{769d68d6-7438-4107-b07f-a37fd0541ff0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Mutant">
-      <UniqueIdentifier>{ddba3e13-f895-4da4-a66e-5f820b0c26ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Mutant\Player">
-      <UniqueIdentifier>{e118ed29-7932-4854-a5b6-33394392a177}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Jugg">
-      <UniqueIdentifier>{4df7802d-b02e-42f7-8496-0436c2858653}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Jugg\Player">
-      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Jugg">
-      <UniqueIdentifier>{63123c56-999a-4bee-ae31-3c1eaf5e7563}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Jugg\Player">
-      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Mutant">
-      <UniqueIdentifier>{590e6568-e795-4734-910b-fc4d5f4df258}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Mutant\Player">
-      <UniqueIdentifier>{a6ccef48-c119-4f84-8562-54dc4dc1ca49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Motion\MotionState\Zombie">
-      <UniqueIdentifier>{c6dd5732-ab78-4b23-ac03-6cb290f2b682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\Motion\MotionState\Zombie">
-      <UniqueIdentifier>{035349b7-faf2-44f3-b533-30fb41b6b76f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Zombie">
-      <UniqueIdentifier>{5117545c-9a8d-4d51-a740-87e5a6abeec2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Actor\State\Zombie\Enemy">
-      <UniqueIdentifier>{1b4070d8-b80b-4337-a9c5-0b9a44e94030}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Zombie">
-      <UniqueIdentifier>{01f8c588-27eb-49a5-ba80-0c86427f0ff1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Actor\State\Zombie\Enemy">
-      <UniqueIdentifier>{651d0f7c-dc15-425f-aff3-66e5c7bd671a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Component\Behavior\UI">
       <UniqueIdentifier>{ac8d5ce7-230a-4f92-9262-1b522c3b2fcc}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Component\Behavior\UI">
       <UniqueIdentifier>{c90b9c02-ed09-4f5d-8b3d-b306de860a9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\Shader\Billboard">
+    <Filter Include="ソース ファイル\Component\Rigidbody">
+      <UniqueIdentifier>{d3ea09ce-3f98-4992-9105-f0f26534a371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Rigidbody">
+      <UniqueIdentifier>{4dfeab76-87b5-4f7f-9bdb-4dcd6105f1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State">
+      <UniqueIdentifier>{86c9c7ef-9fea-43ec-8d32-f5d6621b5dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Mutant">
+      <UniqueIdentifier>{ddba3e13-f895-4da4-a66e-5f820b0c26ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player">
+      <UniqueIdentifier>{e118ed29-7932-4854-a5b6-33394392a177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Jugg">
+      <UniqueIdentifier>{4df7802d-b02e-42f7-8496-0436c2858653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player">
+      <UniqueIdentifier>{6681cf4f-58ad-43d9-809f-d89136fdd2b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Zombie">
+      <UniqueIdentifier>{5117545c-9a8d-4d51-a740-87e5a6abeec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy">
+      <UniqueIdentifier>{1b4070d8-b80b-4337-a9c5-0b9a44e94030}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State">
+      <UniqueIdentifier>{b05ec256-cc82-4958-89f2-f3a05ad71e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Jugg">
+      <UniqueIdentifier>{63123c56-999a-4bee-ae31-3c1eaf5e7563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Jugg\Player">
+      <UniqueIdentifier>{11821510-f192-4327-b6f8-6939dd7befe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Mutant">
+      <UniqueIdentifier>{590e6568-e795-4734-910b-fc4d5f4df258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Mutant\Player">
+      <UniqueIdentifier>{a6ccef48-c119-4f84-8562-54dc4dc1ca49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Zombie">
+      <UniqueIdentifier>{01f8c588-27eb-49a5-ba80-0c86427f0ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy">
+      <UniqueIdentifier>{651d0f7c-dc15-425f-aff3-66e5c7bd671a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Other">
+      <UniqueIdentifier>{78115bda-fb38-4800-876d-a78f3c96576a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Other">
+      <UniqueIdentifier>{b32bf830-305e-4660-ab4b-4408f9f220c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameObject">
+      <UniqueIdentifier>{1df26afa-4176-4d87-9896-bfcae145a580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader">
+      <UniqueIdentifier>{079332a2-ae93-4425-aeef-e90381f97d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader\Mesh">
+      <UniqueIdentifier>{e62bd730-c545-48ae-abaa-0651891273b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader\Skin">
+      <UniqueIdentifier>{22384b21-ef6d-41e6-afa6-49abc5047d4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader\2d">
+      <UniqueIdentifier>{e4a5b11e-4486-4aa8-964f-61c20a70c3c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader\Billboard">
       <UniqueIdentifier>{b6edad2d-6a51-473b-ae4c-c650d18758a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\Shader\Billboard">
-      <UniqueIdentifier>{a339079c-c29c-4290-bcfe-eb30e0df8f73}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\KF_Utility">
+      <UniqueIdentifier>{f54e67db-2928-4e7c-84e3-af7ed0f61f83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\Resources">
+    <Filter Include="ヘッダー ファイル\System">
+      <UniqueIdentifier>{cdbbfe2e-e186-4cde-909d-65f75121e5db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\RenderSystem">
+      <UniqueIdentifier>{b01196d9-4846-4b72-bc2d-4b35137506ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Resources">
       <UniqueIdentifier>{b4aba4cf-5da0-490c-ad06-38df6eca8762}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Base\System\Resources">
+    <Filter Include="ヘッダー ファイル\System\Physics">
+      <UniqueIdentifier>{dc96726a-86c2-44bf-a293-73ea5034bd78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Imgui">
+      <UniqueIdentifier>{16d7b0f9-1474-4f82-a631-578069a87426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Input">
+      <UniqueIdentifier>{c686e9e9-2cb4-4634-acaf-007e2ea2169b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Light">
+      <UniqueIdentifier>{24d53e95-0b3a-4868-91e1-40ae22c3b830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Camera">
+      <UniqueIdentifier>{f546005a-d83c-4e4c-92bf-fdc1a32fe586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Mode">
+      <UniqueIdentifier>{1cfef04b-6b22-4cc5-bb53-1947b9c22e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Animator\MotionState">
+      <UniqueIdentifier>{0de9bcf7-879d-4160-93b3-5eb11895ad03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Animator\MotionState\Jugg">
+      <UniqueIdentifier>{e839a2c1-c343-401c-b8b1-aa6185f4c779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Animator\MotionState\Mutant">
+      <UniqueIdentifier>{5fb40a91-e005-45aa-af8e-66b0522d8944}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Animator\MotionState\Zombie">
+      <UniqueIdentifier>{c6dd5732-ab78-4b23-ac03-6cb290f2b682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Animator\MotionState">
+      <UniqueIdentifier>{097be50f-f66e-4c11-b094-087cc9489341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Animator\MotionState\Jugg">
+      <UniqueIdentifier>{6f58992f-1bdb-40b1-bda0-843e012e7a97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Animator\MotionState\Mutant">
+      <UniqueIdentifier>{769d68d6-7438-4107-b07f-a37fd0541ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Animator\MotionState\Zombie">
+      <UniqueIdentifier>{035349b7-faf2-44f3-b533-30fb41b6b76f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject">
+      <UniqueIdentifier>{957a95d0-05f9-45f5-b69d-325d70971e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader">
+      <UniqueIdentifier>{e2ae39f9-8234-4fe4-a0b5-1bb9312106e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader\Mesh">
+      <UniqueIdentifier>{27ddd998-1b99-4e17-9865-ba71a0bde8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader\Skin">
+      <UniqueIdentifier>{67677291-0591-4db7-ae14-ec080fcca19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader\2d">
+      <UniqueIdentifier>{36fbe32a-232b-4c4a-9203-b62289639f6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader\Billboard">
+      <UniqueIdentifier>{a339079c-c29c-4290-bcfe-eb30e0df8f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\KF_Utility">
+      <UniqueIdentifier>{05fccfed-a36c-486b-ad47-f486f528dab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System">
+      <UniqueIdentifier>{a72cad8e-b70a-4729-a70a-78d50f9dbc5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\RenderSystem">
+      <UniqueIdentifier>{ef891bc6-bd3e-4c3c-a11d-55c3993fb564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Resources">
       <UniqueIdentifier>{48a40c3a-9560-4326-a2b6-b68f751fe5e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Base\System\Sound">
-      <UniqueIdentifier>{54d004a9-a5e5-4085-b5a7-02be237e063d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Base\System\Sound">
+    <Filter Include="ソース ファイル\System\Sound">
       <UniqueIdentifier>{f61e5dea-502b-4bb4-926e-d4250fa7cf04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\System\Physics">
+      <UniqueIdentifier>{ad354fd5-add1-4ac6-b9da-2e1d0c3e4d08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Mode">
+      <UniqueIdentifier>{1bbe178e-2e2b-490f-8a2b-b7de77718b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Light">
+      <UniqueIdentifier>{d7c8e2af-4b7c-44ef-aa73-23f76a32bb0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Input">
+      <UniqueIdentifier>{ed1fdc03-55fa-436b-a8b2-86689938f012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Imgui">
+      <UniqueIdentifier>{e3020380-88c7-4e4b-88c5-e1cb386c035d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Camera">
+      <UniqueIdentifier>{98aa7b80-43e9-410b-8b93-021c210129d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Sound">
+      <UniqueIdentifier>{6b7a207b-ca87-48d8-b055-3e00ba1ea819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Observer">
+      <UniqueIdentifier>{aab0523f-fb64-4ae4-9490-407b93123c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Observer">
+      <UniqueIdentifier>{c4dc0a81-1565-44b5-9a01-d9a0d400844e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="mode.cpp">
-      <Filter>ソース ファイル\Base\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="collider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="transform.cpp">
-      <Filter>ソース ファイル\Component\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="animator.cpp">
-      <Filter>ソース ファイル\Component\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="kf_math.cpp">
-      <Filter>ソース ファイル\Base\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="kf_utility.cpp">
-      <Filter>ソース ファイル\Base\KF_Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="main_system.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="render_system_directX9.cpp">
-      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="debug_observer.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer_manager.cpp">
-      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="input_device_directX.cpp">
-      <Filter>ソース ファイル\Base\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="camera_manager.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="editor_camera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="third_person_camera.cpp">
-      <Filter>ソース ファイル\Base\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_detector.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="collision_system.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_system.cpp">
-      <Filter>ソース ファイル\Base\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="stage_spawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object_manager.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object_actor.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object_spawner.cpp">
-      <Filter>ソース ファイル\Base\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_renderer.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="rigidbody3d.cpp">
-      <Filter>ソース ファイル\Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="field_collider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="aabb_collider.cpp">
-      <Filter>ソース ファイル\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="windmill_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="model_editor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="field_editor.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="editor_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="mode_demo.cpp">
-      <Filter>ソース ファイル\Base\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="mode_editor.cpp">
-      <Filter>ソース ファイル\Base\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="mode_result.cpp">
-      <Filter>ソース ファイル\Base\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="mode_title.cpp">
-      <Filter>ソース ファイル\Base\Mode</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_manager.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_directX9.cpp">
-      <Filter>ソース ファイル\Base\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_renderer_2d.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_renderer_3d.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_renderer_3d_skin.cpp">
-      <Filter>ソース ファイル\Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow_map_system.cpp">
-      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="cull_none_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="default_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_mesh_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="no_light_no_fog_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="default_skin_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="jugg_skin_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow_map_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="skin_shadow_map_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>ソース ファイル\Base\Light</Filter>
-    </ClCompile>
     <ClCompile Include="library\ImGui\imgui_demo.cpp">
-      <Filter>ソース ファイル\Base\Imgui</Filter>
+      <Filter>ソース ファイル\System\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui_draw.cpp">
-      <Filter>ソース ファイル\Base\Imgui</Filter>
+      <Filter>ソース ファイル\System\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui_impl_dx9.cpp">
-      <Filter>ソース ファイル\Base\Imgui</Filter>
+      <Filter>ソース ファイル\System\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="library\ImGui\imgui.cpp">
-      <Filter>ソース ファイル\Base\Imgui</Filter>
+      <Filter>ソース ファイル\System\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="fade_system.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
+    <ClCompile Include="source_code\component\animator\animator.cpp">
+      <Filter>ソース ファイル\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="render_system.cpp">
-      <Filter>ソース ファイル\Base\System\RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="default_2d_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="default_2d_texture_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\2d</Filter>
-    </ClCompile>
-    <ClCompile Include="time.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_angry_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_damaged_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_dying_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_fall_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_idle_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_idle_wake_up_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_jump_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_land_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_punch_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_run_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_skill_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_swiping_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\mutant_walk_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_attack_left_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_attack_right_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_death_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_flail_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_jump_attack_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_jump_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_neutral_look_around_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_neutral_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_spain_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_stun_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_ultra_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\jugg_walk_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_dying_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_fall_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_jump_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_land_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_light_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_skill_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_strong_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_fall_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_jump_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_jump_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_land_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_neutral_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_jugg_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Jugg\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_state.cpp">
-      <Filter>ソース ファイル\Actor\State</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_idle_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_kicking_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_punching_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_running_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_scream_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_stand_up_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_walking_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_warning_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_damaged_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="motion_state\zombie_death_motion_state.cpp">
-      <Filter>ソース ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClCompile>
-    <ClCompile Include="zombie_skin_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_idle_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="enemy_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="player_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_walk_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_follow_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_attack_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_damaged_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_enemy\enemy_zombie_dying_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_observer.cpp">
-      <Filter>ソース ファイル\Base\System</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_state_player\player_mutant_idle_state.cpp">
-      <Filter>ソース ファイル\Actor\State\Mutant\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="player_ui_controller.cpp">
+    <ClCompile Include="source_code\component\behavior\ui\enemy_ui_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="flash_button_controller.cpp">
+    <ClCompile Include="source_code\component\behavior\ui\flash_button_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\UI</Filter>
     </ClCompile>
-    <ClCompile Include="enemy_editor.cpp">
+    <ClCompile Include="source_code\component\behavior\ui\player_ui_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\ui\scroll_2d_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\other\windmill_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\editor\editor_controller.cpp">
       <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="enemy_ui_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    <ClCompile Include="source_code\component\behavior\editor\enemy_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="default_billboard_shader.cpp">
-      <Filter>ソース ファイル\Base\Shader\Billboard</Filter>
+    <ClCompile Include="source_code\component\behavior\editor\field_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="mesh_manager.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\editor\model_editor.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="material_manager.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\enemy_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="motion_manager.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\player_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="resource_manager.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\player_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State</Filter>
     </ClCompile>
-    <ClCompile Include="resources.cpp">
-      <Filter>ソース ファイル\Base\System\Resources</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_attack_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="scroll_2d_controller.cpp">
-      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_damaged_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="sound_system.cpp">
-      <Filter>ソース ファイル\Base\System\Sound</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_dying_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="wave_file.cpp">
-      <Filter>ソース ファイル\Base\System\Sound</Filter>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_follow_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_idle_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_walk_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_fall_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_idle_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_jump_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_land_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_light_attack_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_skill_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_strong_attack_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_walk_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_attack_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_damaged_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_fall_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_jump_attack_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_jump_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\collider\aabb_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\collider\collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\collider\field_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\renderer\mesh_renderer_3d_skin.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\renderer\mesh_renderer.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\renderer\mesh_renderer_2d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\renderer\mesh_renderer_3d.cpp">
+      <Filter>ソース ファイル\Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\rigidbody\rigidbody3D.cpp">
+      <Filter>ソース ファイル\Component\Rigidbody</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\transform\transform.cpp">
+      <Filter>ソース ファイル\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\2d\default_2d_texture_shader.cpp">
+      <Filter>ソース ファイル\Shader\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\2d\default_2d_shader.cpp">
+      <Filter>ソース ファイル\Shader\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\billboard\default_billboard_shader.cpp">
+      <Filter>ソース ファイル\Shader\Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\mesh\shadow_map_shader.cpp">
+      <Filter>ソース ファイル\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\mesh\cull_none_shader.cpp">
+      <Filter>ソース ファイル\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\mesh\default_shader.cpp">
+      <Filter>ソース ファイル\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\mesh\jugg_mesh_shader.cpp">
+      <Filter>ソース ファイル\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\mesh\no_light_no_fog_shader.cpp">
+      <Filter>ソース ファイル\Shader\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\skin\zombie_skin_shader.cpp">
+      <Filter>ソース ファイル\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\skin\default_skin_shader.cpp">
+      <Filter>ソース ファイル\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\skin\jugg_skin_shader.cpp">
+      <Filter>ソース ファイル\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\skin\skin_shadow_map_shader.cpp">
+      <Filter>ソース ファイル\Shader\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\shader_manager.cpp">
+      <Filter>ソース ファイル\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\shader\shader_directX9.cpp">
+      <Filter>ソース ファイル\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\camera\camera.cpp">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\camera\camera_manager.cpp">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\camera\editor_camera.cpp">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\camera\third_person_camera.cpp">
+      <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_object\game_object.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_object\game_object_actor.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_object\game_object_manager.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_object\game_object_spawner.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\kf_utility\kf_math.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\kf_utility\kf_utility.cpp">
+      <Filter>ソース ファイル\KF_Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\input\input_device_directX.cpp">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\input\input.cpp">
+      <Filter>ソース ファイル\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\light\light.cpp">
+      <Filter>ソース ファイル\System\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\mode\mode.cpp">
+      <Filter>ソース ファイル\System\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\mode\mode_demo.cpp">
+      <Filter>ソース ファイル\System\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\mode\mode_editor.cpp">
+      <Filter>ソース ファイル\System\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\mode\mode_result.cpp">
+      <Filter>ソース ファイル\System\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\mode\mode_title.cpp">
+      <Filter>ソース ファイル\System\Mode</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_damaged_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_death_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_idle_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_kicking_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_punching_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_running_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_scream_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_stand_up_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_walking_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\zombie\zombie_warning_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_angry_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_damaged_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_dying_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_fall_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_idle_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_idle_wake_up_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_jump_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_land_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_punch_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_run_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_skill_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_swiping_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\mutant\mutant_walk_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_attack_left_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_attack_right_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_death_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_flail_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_jump_attack_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_jump_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_neutral_look_around_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_neutral_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_spain_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_stun_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_ultra_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\animator\motion_state\juggernaut\jugg_walk_motion_state.cpp">
+      <Filter>ソース ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\physics\collision_detector.cpp">
+      <Filter>ソース ファイル\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\physics\collision_system.cpp">
+      <Filter>ソース ファイル\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\physics\physics_system.cpp">
+      <Filter>ソース ファイル\System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\render_system\render_system.cpp">
+      <Filter>ソース ファイル\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\render_system\render_system_directX9.cpp">
+      <Filter>ソース ファイル\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\render_system\renderer_manager.cpp">
+      <Filter>ソース ファイル\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\render_system\shadow_map_system.cpp">
+      <Filter>ソース ファイル\System\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\material_manager.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\mesh_manager.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\motion_manager.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\resource_manager.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\resources.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\resources\texture_manager.cpp">
+      <Filter>ソース ファイル\System\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_object\stage_spawner.cpp">
+      <Filter>ソース ファイル\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\sound\sound_system.cpp">
+      <Filter>ソース ファイル\System\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\sound\wave_file.cpp">
+      <Filter>ソース ファイル\System\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\observer\actor_observer.cpp">
+      <Filter>ソース ファイル\System\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\observer\debug_observer.cpp">
+      <Filter>ソース ファイル\System\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\time.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\fade_system.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\main_system.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mode.h">
-      <Filter>ヘッダー ファイル\Base\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>ヘッダー ファイル\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>ヘッダー ファイル\Base\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="transform.h">
-      <Filter>ヘッダー ファイル\Component\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="rigidbody.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="animator.h">
-      <Filter>ヘッダー ファイル\Component\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="behavior.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="kf_math.h">
-      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="common_setting.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="kf_utility.h">
-      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="main_system.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="render_system.h">
-      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="render_system_directX9.h">
-      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_manager.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_enum.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="light_manager.h">
-      <Filter>ヘッダー ファイル\Base\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>ヘッダー ファイル\Base\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="debug_observer.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="input_device_directX.h">
-      <Filter>ヘッダー ファイル\Base\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_data.h">
-      <Filter>ヘッダー ファイル\Base\Motion</Filter>
-    </ClInclude>
-    <ClInclude Include="camera_manager.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="editor_camera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="third_person_camera.h">
-      <Filter>ヘッダー ファイル\Base\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_parameter.h">
-      <Filter>ヘッダー ファイル\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_detector.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="collision_system.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_system.h">
-      <Filter>ヘッダー ファイル\Base\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="stage_spawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="game_object.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="game_object_actor.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="game_object_manager.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="game_object_spawner.h">
-      <Filter>ヘッダー ファイル\Base\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_renderer.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="rigidbody3d.h">
-      <Filter>ヘッダー ファイル\Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="sphere_collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="obb_collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="field_collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="box_collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="aabb_collider.h">
-      <Filter>ヘッダー ファイル\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="windmill_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="model_editor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="field_editor.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="editor_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="mode_demo.h">
-      <Filter>ヘッダー ファイル\Base\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="mode_editor.h">
-      <Filter>ヘッダー ファイル\Base\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="mode_result.h">
-      <Filter>ヘッダー ファイル\Base\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="mode_title.h">
-      <Filter>ヘッダー ファイル\Base\Mode</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_directX9.h">
-      <Filter>ヘッダー ファイル\Base\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_renderer_3d.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_renderer_2d.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_renderer_3d_skin.h">
-      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_map_system.h">
-      <Filter>ヘッダー ファイル\Base\System\RenderSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="cull_none_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="default_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_mesh_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="no_light_no_fog_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="default_skin_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
-    </ClInclude>
-    <ClInclude Include="jugg_skin_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_map_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="skin_shadow_map_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
-    </ClInclude>
     <ClInclude Include="library\ImGui\imconfig.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui_impl_dx9.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\imgui_internal.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_rect_pack.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_textedit.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="library\ImGui\stb_truetype.h">
-      <Filter>ヘッダー ファイル\Base\Imgui</Filter>
+      <Filter>ヘッダー ファイル\System\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="fade_system.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
+    <ClInclude Include="source_code\component\component.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
-    <ClInclude Include="default_2d_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
+    <ClInclude Include="source_code\component\animator\animator.h">
+      <Filter>ヘッダー ファイル\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="default_2d_texture_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\2d</Filter>
+    <ClInclude Include="source_code\component\behavior\behavior.h">
+      <Filter>ヘッダー ファイル\Component\Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="time.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="labels.h">
-      <Filter>ヘッダー ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_angry_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_damaged_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_dying_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_fall_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_idle_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_idle_wake_up_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_jump_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_land_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_punch_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_run_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_skill_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_swiping_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\mutant_walk_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Mutant</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_attack_left_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_attack_right_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_death_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_flail_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_jump_attack_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_jump_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_neutral_look_around_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_neutral_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_spain_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_stun_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_ultra_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\jugg_walk_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Jugg</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_state.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_dying_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_fall_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_jump_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_land_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_light_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_skill_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_strong_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_fall_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_jump_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_jump_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_land_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_neutral_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_jugg_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Jugg\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_damaged_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_death_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_idle_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_kicking_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_punching_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_running_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_scream_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_stand_up_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_walking_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="motion_state\zombie_warning_motion_state.h">
-      <Filter>ヘッダー ファイル\Base\Motion\MotionState\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="zombie_skin_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Skin</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_state.h">
-      <Filter>ヘッダー ファイル\Actor\State</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_idle_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="enemy_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="player_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_walk_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_follow_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_attack_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_damaged_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_enemy\enemy_zombie_dying_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Zombie\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_observer.h">
-      <Filter>ヘッダー ファイル\Base\System</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_state_player\player_mutant_idle_state.h">
-      <Filter>ヘッダー ファイル\Actor\State\Mutant\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="player_ui_controller.h">
+    <ClInclude Include="source_code\component\behavior\ui\scroll_2d_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="flash_button_controller.h">
+    <ClInclude Include="source_code\component\behavior\ui\enemy_ui_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
-    <ClInclude Include="enemy_editor.h">
+    <ClInclude Include="source_code\component\behavior\ui\flash_button_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\ui\player_ui_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\other\windmill_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\editor\editor.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="editor.h">
+    <ClInclude Include="source_code\component\behavior\editor\editor_controller.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="enemy_ui_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    <ClInclude Include="source_code\component\behavior\editor\enemy_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="default_billboard_shader.h">
-      <Filter>ヘッダー ファイル\Base\Shader\Billboard</Filter>
+    <ClInclude Include="source_code\component\behavior\editor\field_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="material_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\editor\model_editor.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="mesh_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_parameter.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="motion_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\enemy_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="resource_manager.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\player_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="resources.h">
-      <Filter>ヘッダー ファイル\Base\System\Resources</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\actor_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State</Filter>
     </ClInclude>
-    <ClInclude Include="scroll_2d_controller.h">
-      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\enemy_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State</Filter>
     </ClInclude>
-    <ClInclude Include="sound_system.h">
-      <Filter>ヘッダー ファイル\Base\System\Sound</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\player_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State</Filter>
     </ClInclude>
-    <ClInclude Include="wave_file.h">
-      <Filter>ヘッダー ファイル\Base\System\Sound</Filter>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_damaged_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_dying_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_follow_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_idle_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\zombie\enemy\enemy_zombie_walk_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Zombie\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_fall_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_idle_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_jump_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_land_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_light_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_skill_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_strong_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_walk_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Mutant\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_damaged_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_fall_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_jump_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_jump_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Jugg\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\sphere_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\aabb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\box_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\field_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\collider\obb_collider.h">
+      <Filter>ヘッダー ファイル\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\renderer\mesh_renderer_3d_skin.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\renderer\mesh_renderer.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\renderer\mesh_renderer_2d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\renderer\mesh_renderer_3d.h">
+      <Filter>ヘッダー ファイル\Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\rigidbody\rigidbody.h">
+      <Filter>ヘッダー ファイル\Component\Rigidbody</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\rigidbody\rigidbody3D.h">
+      <Filter>ヘッダー ファイル\Component\Rigidbody</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\transform\transform.h">
+      <Filter>ヘッダー ファイル\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\shader_directX9.h">
+      <Filter>ヘッダー ファイル\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\shader_enum.h">
+      <Filter>ヘッダー ファイル\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\shader_manager.h">
+      <Filter>ヘッダー ファイル\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\skin\default_skin_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\skin\jugg_skin_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\skin\skin_shadow_map_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\skin\zombie_skin_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\mesh\cull_none_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\mesh\default_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\mesh\jugg_mesh_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\mesh\no_light_no_fog_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\mesh\shadow_map_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\billboard\default_billboard_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\2d\default_2d_texture_shader.h">
+      <Filter>ヘッダー ファイル\Shader\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\2d\default_2d_shader.h">
+      <Filter>ヘッダー ファイル\Shader\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\camera\camera.h">
+      <Filter>ヘッダー ファイル\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\camera\camera_manager.h">
+      <Filter>ヘッダー ファイル\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\camera\editor_camera.h">
+      <Filter>ヘッダー ファイル\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\camera\third_person_camera.h">
+      <Filter>ヘッダー ファイル\System\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\game_object\game_object.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\game_object\game_object_actor.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\game_object\game_object_manager.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\game_object\game_object_spawner.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\kf_utility\kf_math.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\kf_utility\kf_utility.h">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\input\input_device_directX.h">
+      <Filter>ヘッダー ファイル\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\input\input.h">
+      <Filter>ヘッダー ファイル\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\light\light.h">
+      <Filter>ヘッダー ファイル\System\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\light\light_manager.h">
+      <Filter>ヘッダー ファイル\System\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\mode\mode.h">
+      <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\mode\mode_demo.h">
+      <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\mode\mode_editor.h">
+      <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\mode\mode_result.h">
+      <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\mode\mode_title.h">
+      <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\common_setting.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\labels.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_damaged_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_death_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_idle_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_kicking_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_punching_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_running_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_scream_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_stand_up_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_walking_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\zombie\zombie_warning_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_angry_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_damaged_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_dying_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_fall_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_idle_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_idle_wake_up_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_land_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_punch_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_run_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_skill_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\mutant\mutant_swiping_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Mutant</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_attack_left_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_attack_right_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_death_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_flail_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_jump_attack_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_jump_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_neutral_look_around_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_neutral_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_spain_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_stun_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_ultra_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\animator\motion_state\juggernaut\jugg_walk_motion_state.h">
+      <Filter>ヘッダー ファイル\Component\Animator\MotionState\Jugg</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\physics\collision_detector.h">
+      <Filter>ヘッダー ファイル\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\physics\collision_system.h">
+      <Filter>ヘッダー ファイル\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\physics\physics_system.h">
+      <Filter>ヘッダー ファイル\System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\render_system\render_system.h">
+      <Filter>ヘッダー ファイル\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\render_system\render_system_directX9.h">
+      <Filter>ヘッダー ファイル\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\render_system\renderer_manager.h">
+      <Filter>ヘッダー ファイル\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\render_system\shadow_map_system.h">
+      <Filter>ヘッダー ファイル\System\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\texture_manager.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\material_manager.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\mesh_manager.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\motion_data.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\motion_manager.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\resource_manager.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\resources\resources.h">
+      <Filter>ヘッダー ファイル\System\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\game_object\stage_spawner.h">
+      <Filter>ヘッダー ファイル\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\sound\wave_file.h">
+      <Filter>ヘッダー ファイル\System\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\sound\sound_system.h">
+      <Filter>ヘッダー ファイル\System\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\observer\actor_observer.h">
+      <Filter>ヘッダー ファイル\System\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\observer\debug_observer.h">
+      <Filter>ヘッダー ファイル\System\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\fade_system.h">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\main_system.h">
+      <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\time.h">
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="kf_math.inl">
-      <Filter>ヘッダー ファイル\Base\KF_Utility</Filter>
+    <None Include="source_code\kf_utility\kf_math.inl">
+      <Filter>ヘッダー ファイル\KF_Utility</Filter>
     </None>
   </ItemGroup>
 </Project>

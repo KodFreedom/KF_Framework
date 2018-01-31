@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "component.h"
-#include "kf_math.h"
+#include "../component.h"
+#include "../../KF_Math.h"
 using namespace kodfreedom;
-#include "motion_state\\motion_state.h"
+#include "../../motion_state/motion_state.h"
 
 //--------------------------------------------------------------------------------
 //  ëOï˚êÈåæ
