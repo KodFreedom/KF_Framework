@@ -35,7 +35,7 @@ PlayerUiController::PlayerUiController(GameObject& owner)
     , warning_gauge_(nullptr)
     , life_gauge_(nullptr)
     , warning_flash_speed_(2.0f)
-    , life_flash_speed_(0.2f)
+    , life_flash_speed_(0.4f)
 {}
 
 //--------------------------------------------------------------------------------
@@ -55,12 +55,6 @@ bool PlayerUiController::Init(void)
         0.0f,
         kLifeGaugeLeftTop + kLifeGaugeSize * 0.5f);
     warning_gauge_ = warning_gauge->GetTransform();
-    auto warning_gauge_material = material_manager.Get(L"warning_gauge");
-    if (warning_gauge_material)
-    {
-        warning_gauge_material->diffuse_ = Color(0.5f, 0.2f, 0.2f, 0.0f);
-    }
-    
 
     // Life Gauge
     auto life_gauge = GameObjectSpawner::CreateBasicPolygon2d(
@@ -72,11 +66,6 @@ bool PlayerUiController::Init(void)
         0.0f,
         kLifeGaugeLeftTop + kLifeGaugeSize * 0.5f);
     life_gauge_ = life_gauge->GetTransform();
-    auto life_gauge_material = material_manager.Get(L"life_gauge");
-    if (life_gauge_material)
-    {
-        life_gauge_material->diffuse_ = Color::kGreen;
-    }
     
     // Cover
     GameObjectSpawner::CreateBasicPolygon2d(
@@ -131,6 +120,7 @@ void PlayerUiController::UpdateWarningGauge(const ActorParameter& parameter)
 {
     auto warning_gauge_material = MainSystem::Instance().GetResources().GetMaterialManager().Get(L"warning_gauge");
     if (!warning_gauge_material) return;
+    warning_gauge_material->diffuse_ = Color(0.5f, 0.2f, 0.2f, warning_gauge_material->diffuse_.a_);
 
     if (parameter.GetCurrentLife() >= parameter.GetMaxLife() * 0.5f)
     {
@@ -175,9 +165,9 @@ void PlayerUiController::UpdateLifeGauge(const ActorParameter& parameter)
 
     // “_–Å‚·‚é
     life_gauge_material->diffuse_.r_ += life_flash_speed_ * Time::Instance()->DeltaTime();
-    if (life_gauge_material->diffuse_.r_ >= 0.3f)
+    if (life_gauge_material->diffuse_.r_ >= 0.5f)
     {
-        life_gauge_material->diffuse_.r_ = 0.3f;
+        life_gauge_material->diffuse_.r_ = 0.5f;
         life_flash_speed_ *= -1.0f;
     }
     else if (life_gauge_material->diffuse_.r_ <= 0.0f)
@@ -185,5 +175,6 @@ void PlayerUiController::UpdateLifeGauge(const ActorParameter& parameter)
         life_gauge_material->diffuse_.r_ = 0.0f;
         life_flash_speed_ *= -1.0f;
     }
+    life_gauge_material->diffuse_.g_ = 1.0f;
     life_gauge_material->diffuse_.b_ = life_gauge_material->diffuse_.r_;
 }
