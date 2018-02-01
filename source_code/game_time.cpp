@@ -2,29 +2,29 @@
 //　time.cpp
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "time.h"
+#include "game_time.h"
 #include "common_setting.h"
-#include "KF_Utility.h"
+#include "kf_utility.h"
 
 //--------------------------------------------------------------------------------
 //  静的メンバー変数宣言
 //--------------------------------------------------------------------------------
-Time* Time::instance_ = nullptr;
+GameTime* GameTime::instance_ = nullptr;
 
 //--------------------------------------------------------------------------------
 //  instance生成処理
 //--------------------------------------------------------------------------------
-Time* Time::Create(void)
+GameTime* GameTime::Create(void)
 {
     if (instance_) return instance_;
-    instance_ = MY_NEW Time;
+    instance_ = MY_NEW GameTime;
     return instance_;
 }
 
 //--------------------------------------------------------------------------------
 //  破棄処理
 //--------------------------------------------------------------------------------
-void Time::Release(void)
+void GameTime::Release(void)
 {
     SAFE_DELETE(instance_);
 }
@@ -32,7 +32,7 @@ void Time::Release(void)
 //--------------------------------------------------------------------------------
 //  フレーム実行出来るかをチェック
 //--------------------------------------------------------------------------------
-bool Time::CanUpdateFrame(void)
+bool GameTime::CanUpdateFrame(void)
 {
     QueryPerformanceFrequency(&frequency_);
     QueryPerformanceCounter(&current_time_);
@@ -54,11 +54,10 @@ bool Time::CanUpdateFrame(void)
     return false;
 }
 
-
 //--------------------------------------------------------------------------------
 //  今の時間を返す
 //--------------------------------------------------------------------------------
-String Time::GetCurrentLocalTime(void) const
+String GameTime::GetCurrentLocalTime(void) const
 {
     SYSTEMTIME local_time = { 0 };
     GetLocalTime(&local_time);

@@ -8,13 +8,13 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../collider.h"
-#include "../game_object.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "collider.h"
+#include "game_object.h"
 #ifdef _DEBUG
-#include "../main_system.h"
-#include "../debug_observer.h"
+#include "main_system.h"
+#include "debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ void EnemyZombieWalkState::Update(EnemyController& enemy)
     Vector3& me_to_next = enemy.GetNextPosition() - my_position;
     me_to_next.y_ = 0.0f;
     float square_distance = me_to_next.SquareMagnitude();
-    
+
     if (square_distance <= kArriveDistance * kArriveDistance)
     {// –Ú•WˆÊ’u‚É‚½‚Ç‚è’…‚¢‚½
         enemy.Change(MY_NEW EnemyZombieIdleState);

@@ -6,9 +6,9 @@
 #include "player_mutant_idle_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
-#include "../player_controller.h"
-#include "../animator.h"
-#include "../time.h"
+#include "player_controller.h"
+#include "animator.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -33,7 +33,7 @@ void PlayerMutantSkillState::Uninit(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerMutantSkillState::Update(PlayerController& player)
 {
-    time_counter_ -= Time::Instance()->ScaledDeltaTime();
+    time_counter_ -= GameTime::Instance().ScaledDeltaTime();
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();

@@ -5,11 +5,11 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_jump_attack_state.h"
 #include "player_jugg_neutral_state.h"
-#include "../player_controller.h"
-#include "../animator.h"
-#include "../collider.h"
-#include "../game_object.h"
-#include "../rigidbody3D.h"
+#include "player_controller.h"
+#include "animator.h"
+#include "collider.h"
+#include "game_object.h"
+#include "rigidbody3D.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

@@ -76,7 +76,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(ProjectDir)source_code;$(ProjectDir)source_code\camera;$(ProjectDir)source_code\component;$(ProjectDir)source_code\component\animator;$(ProjectDir)source_code\component\animator\motion_state;$(ProjectDir)source_code\component\behavior;$(ProjectDir)source_code\component\behavior\actor;$(ProjectDir)source_code\component\behavior\actor\actor_state;$(ProjectDir)source_code\component\behavior\editor;$(ProjectDir)source_code\component\behavior\other;$(ProjectDir)source_code\component\behavior\ui;$(ProjectDir)source_code\component\collider;$(ProjectDir)source_code\component\renderer;$(ProjectDir)source_code\component\rigidbody;$(ProjectDir)source_code\component\transform;$(ProjectDir)source_code\game_object;$(ProjectDir)source_code\input;$(ProjectDir)source_code\kf_utility;$(ProjectDir)source_code\light;$(ProjectDir)source_code\mode;$(ProjectDir)source_code\observer;$(ProjectDir)source_code\physics;$(ProjectDir)source_code\render_system;$(ProjectDir)source_code\resources;$(ProjectDir)source_code\shader;$(ProjectDir)source_code\sound;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,7 +86,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(IncludePath)</IncludePath>
+    <IncludePath>$(DXSDK_DIR)include;$(ProjectDir)library;$(ProjectDir)source_code;$(ProjectDir)source_code\camera;$(ProjectDir)source_code\component;$(ProjectDir)source_code\component\animator;$(ProjectDir)source_code\component\animator\motion_state;$(ProjectDir)source_code\component\behavior;$(ProjectDir)source_code\component\behavior\actor;$(ProjectDir)source_code\component\behavior\actor\actor_state;$(ProjectDir)source_code\component\behavior\editor;$(ProjectDir)source_code\component\behavior\other;$(ProjectDir)source_code\component\behavior\ui;$(ProjectDir)source_code\component\collider;$(ProjectDir)source_code\component\renderer;$(ProjectDir)source_code\component\rigidbody;$(ProjectDir)source_code\component\transform;$(ProjectDir)source_code\game_object;$(ProjectDir)source_code\input;$(ProjectDir)source_code\kf_utility;$(ProjectDir)source_code\light;$(ProjectDir)source_code\mode;$(ProjectDir)source_code\observer;$(ProjectDir)source_code\physics;$(ProjectDir)source_code\render_system;$(ProjectDir)source_code\resources;$(ProjectDir)source_code\shader;$(ProjectDir)source_code\sound;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -292,7 +292,7 @@
     <ClCompile Include="source_code\shader\skin\zombie_skin_shader.cpp" />
     <ClCompile Include="source_code\sound\sound_system.cpp" />
     <ClCompile Include="source_code\sound\wave_file.cpp" />
-    <ClCompile Include="source_code\time.cpp" />
+    <ClCompile Include="source_code\game_time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h" />
@@ -452,7 +452,7 @@
     <ClInclude Include="source_code\shader\skin\zombie_skin_shader.h" />
     <ClInclude Include="source_code\sound\sound_system.h" />
     <ClInclude Include="source_code\sound\wave_file.h" />
-    <ClInclude Include="source_code\time.h" />
+    <ClInclude Include="source_code\game_time.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source_code\kf_utility\kf_math.inl" />

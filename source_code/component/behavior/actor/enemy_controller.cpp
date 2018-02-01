@@ -4,7 +4,7 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_controller.h"
-#include "actor_state_enemy\enemy_state.h"
+#include "enemy_state.h"
 #include "sphere_collider.h"
 #include "game_object.h"
 #include "main_system.h"

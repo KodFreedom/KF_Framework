@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_dying_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../game_object.h"
-#include "../time.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "game_object.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -29,7 +29,7 @@ void EnemyZombieDyingState::Uninit(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieDyingState::Update(EnemyController& enemy)
 {
-    time_counter_ += Time::Instance()->DeltaTime();
+    time_counter_ += GameTime::Instance().DeltaTime();
     if (time_counter_ >= kWaitTime)
     {
         enemy.GetGameObject().SetAlive(false);

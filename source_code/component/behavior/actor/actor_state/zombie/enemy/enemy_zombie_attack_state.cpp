@@ -7,11 +7,11 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../game_object.h"
-#include "../time.h"
-#include "../player_controller.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "game_object.h"
+#include "game_time.h"
+#include "player_controller.h"
 
 //--------------------------------------------------------------------------------
 //  初期化処理
@@ -68,7 +68,7 @@ void EnemyZombieAttackState::Update(EnemyController& enemy)
             return;
         }
 
-        time_counter_ += Time::Instance()->DeltaTime();
+        time_counter_ += GameTime::Instance().DeltaTime();
 
         if (time_counter_ >= kWaitTime)
         {// ターゲットに追跡

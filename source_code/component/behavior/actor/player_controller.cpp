@@ -4,7 +4,7 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_controller.h"
-#include "actor_state_player\player_state.h"
+#include "player_state.h"
 #include "sphere_collider.h"
 #include "game_object.h"
 #include "main_system.h"

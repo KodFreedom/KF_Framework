@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_damaged_state.h"
 #include "player_jugg_neutral_state.h"
-#include "../player_controller.h"
-#include "../animator.h"
-#include "../time.h"
+#include "player_controller.h"
+#include "animator.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -32,7 +32,7 @@ void PlayerJuggDamagedState::Uninit(PlayerController& player)
 void PlayerJuggDamagedState::Update(PlayerController& player)
 {
     PlayerState::Update(player);
-    time_counter_ -= Time::Instance()->ScaledDeltaTime();
+    time_counter_ -= GameTime::Instance().ScaledDeltaTime();
     if (time_counter_ <= 0.0f 
         && player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {

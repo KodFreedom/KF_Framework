@@ -14,7 +14,7 @@
 #include "game_object_spawner.h"
 #include "game_object.h"
 #include "flash_button_controller.h"
-#include "time.h"
+#include "game_time.h"
 #include "sound_system.h"
 
 //--------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ void ModeResult::Update(void)
     auto& main_system = MainSystem::Instance();
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
-        time_counter_ -= Time::Instance()->ScaledDeltaTime();
+        time_counter_ -= GameTime::Instance().ScaledDeltaTime();
 
         if (time_counter_ <= 0.0f)
         {

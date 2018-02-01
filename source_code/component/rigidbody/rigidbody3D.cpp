@@ -6,7 +6,7 @@
 #include "game_object.h"
 #include "physics_system.h"
 #include "collider.h"
-#include "time.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -45,10 +45,10 @@ void Rigidbody3D::Update(void)
     acceleration_ += force_accum_ * inverse_mass_;
     
     //速度
-    velocity_ += acceleration_ * Time::Instance()->ScaledDeltaTime();
+    velocity_ += acceleration_ * GameTime::Instance().ScaledDeltaTime();
     
     //位置更新
-    movement_ += velocity_ * Time::Instance()->ScaledDeltaTime();
+    movement_ += velocity_ * GameTime::Instance().ScaledDeltaTime();
     transform->SetPosition(transform->GetPosition() + movement_);
 
     // TODO : 3D回転
@@ -71,7 +71,7 @@ void Rigidbody3D::LateUpdate(void)
     transform->SetPosition(transform->GetPosition() + fixed_movement_);
 
     //処理完了
-    velocity_ *= drag_ * Time::Instance()->TimeScale();
+    velocity_ *= drag_ * GameTime::Instance().TimeScale();
     movement_ = Vector3::kZero;
     fixed_movement_ = Vector3::kZero;
     force_accum_ = Vector3::kZero;

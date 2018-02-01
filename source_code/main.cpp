@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------
 #include "main_system.h"
 #include "input.h"
-#include "time.h"
+#include "game_time.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
@@ -112,7 +112,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
 #endif // _DEBUG
 
     //Timeの生成
-    Time* time = Time::Create();
+    GameTime* time = GameTime::Create();
     if (!time)
     {
         UnregisterClass(CLASS_NAME, wcex.hInstance);
@@ -123,7 +123,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     main_system_ = MainSystem::Create(instance, hwnd, is_window_mode);
     if (!main_system_)
     {
-        Time::Release();
+        GameTime::Release();
         UnregisterClass(CLASS_NAME, wcex.hInstance);
         return -1;
     }
@@ -160,7 +160,7 @@ int APIENTRY WinMain(HINSTANCE instance, HINSTANCE previous_instance, LPSTR cmd_
     // 終了処理
     MainSystem::Release();
     main_system_ = nullptr;
-    Time::Release();
+    GameTime::Release();
 
     //ウインドウクラスの登録お解除
     //第一引数：メクラス名

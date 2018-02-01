@@ -9,7 +9,7 @@
 #include "main_system.h"
 #include "resources.h"
 #include "material_manager.h"
-#include "time.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  
@@ -49,7 +49,7 @@ void FlashButtonController::Update(void)
     }
 
     // “_–Å‚·‚é
-    material_->diffuse_.a_ += flash_speed_ * Time::Instance()->DeltaTime();
+    material_->diffuse_.a_ += flash_speed_ * GameTime::Instance().DeltaTime();
     if (material_->diffuse_.a_ >= 1.0f)
     {
         material_->diffuse_.a_ = 1.0f;

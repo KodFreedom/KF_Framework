@@ -12,7 +12,7 @@
 #include "resources.h"
 #include "material_manager.h"
 #include "mesh_renderer_2d.h"
-#include "time.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  定数定義
@@ -129,7 +129,7 @@ void PlayerUiController::UpdateWarningGauge(const ActorParameter& parameter)
     }
 
     // 生命値が半分以下になったら点滅する
-    warning_gauge_material->diffuse_.a_ += warning_flash_speed_ * Time::Instance()->DeltaTime();
+    warning_gauge_material->diffuse_.a_ += warning_flash_speed_ * GameTime::Instance().DeltaTime();
     if (warning_gauge_material->diffuse_.a_ >= 0.5f)
     {
         warning_gauge_material->diffuse_.a_ = 0.5f;
@@ -164,7 +164,7 @@ void PlayerUiController::UpdateLifeGauge(const ActorParameter& parameter)
     ((MeshRenderer2d*)renderer)->SetUvScale(Vector2(life_rate, 1.0f));
 
     // 点滅する
-    life_gauge_material->diffuse_.r_ += life_flash_speed_ * Time::Instance()->DeltaTime();
+    life_gauge_material->diffuse_.r_ += life_flash_speed_ * GameTime::Instance().DeltaTime();
     if (life_gauge_material->diffuse_.r_ >= 0.5f)
     {
         life_gauge_material->diffuse_.r_ = 0.5f;

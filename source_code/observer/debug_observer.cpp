@@ -13,7 +13,7 @@
 #include "camera.h"
 #include "camera_manager.h"
 #include "kf_utility.h"
-#include "time.h"
+#include "game_time.h"
 
 // shadowmap
 #include "shadow_map_system.h"
@@ -71,7 +71,7 @@ void DebugObserver::Render(void)
 void DebugObserver::Display(const String& log)
 {
     if (log_.size() >= kMaxLogSize) { log_.clear(); }
-    log_.append(Time::Instance()->GetCurrentLocalTime() + L" : " + log + L"\n");
+    log_.append(GameTime::Instance().GetCurrentLocalTime() + L" : " + log + L"\n");
 }
 
 //--------------------------------------------------------------------------------

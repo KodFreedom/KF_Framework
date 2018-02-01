@@ -8,14 +8,14 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../collider.h"
-#include "../game_object.h"
-#include "../time.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "collider.h"
+#include "game_object.h"
+#include "game_time.h"
 #ifdef _DEBUG
-#include "../main_system.h"
-#include "../debug_observer.h"
+#include "main_system.h"
+#include "debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ void EnemyZombieIdleState::Init(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieIdleState::Update(EnemyController& enemy)
 {
-    time_counter_ += Time::Instance()->DeltaTime();
+    time_counter_ += GameTime::Instance().ScaledDeltaTime();
 
     if (time_counter_ >= kWaitTime)
     {// ŽŸ‚Ì–Ú“I’n‚ðƒ‰ƒ“ƒ_ƒ€‚ÅÝ’è

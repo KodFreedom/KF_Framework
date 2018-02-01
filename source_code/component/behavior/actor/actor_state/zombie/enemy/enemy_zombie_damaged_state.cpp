@@ -6,10 +6,10 @@
 #include "enemy_zombie_walk_state.h"
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../game_object.h"
-#include "../time.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "game_object.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -27,7 +27,7 @@ void EnemyZombieDamagedState::Init(EnemyController& enemy)
 //--------------------------------------------------------------------------------
 void EnemyZombieDamagedState::Update(EnemyController& enemy)
 {
-    time_counter_ += Time::Instance()->ScaledDeltaTime();
+    time_counter_ += GameTime::Instance().ScaledDeltaTime();
     if (time_counter_ < kWaitTime) return;
 
     auto& animator = enemy.GetAnimator();

@@ -25,10 +25,10 @@
 #include "flash_button_controller.h"
 #include "enemy_ui_controller.h"
 #include "scroll_2d_controller.h"
-#include "actor_state_player\player_mutant_idle_state.h"
-#include "actor_state_enemy\enemy_zombie_idle_state.h"
-#include "motion_state\mutant_idle_motion_state.h"
-#include "motion_state\zombie_idle_motion_state.h"
+#include "actor_state\mutant\player\player_mutant_idle_state.h"
+#include "actor_state\zombie\enemy\enemy_zombie_idle_state.h"
+#include "motion_state\mutant\mutant_idle_motion_state.h"
+#include "motion_state\zombie\zombie_idle_motion_state.h"
 
 #if defined(EDITOR)
 #include "field_editor.h"

@@ -6,10 +6,10 @@
 #include "player_jugg_jump_state.h"
 #include "player_jugg_land_state.h"
 #include "player_jugg_jump_attack_state.h"
-#include "../player_controller.h"
-#include "../animator.h"
-#include "../collider.h"
-#include "../game_object.h"
+#include "player_controller.h"
+#include "animator.h"
+#include "collider.h"
+#include "game_object.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

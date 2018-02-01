@@ -7,7 +7,7 @@
 #include "windmill_controller.h"
 #include "game_object.h"
 #include "transform.h"
-#include "time.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -24,5 +24,5 @@ bool WindmillController::Init(void)
 //--------------------------------------------------------------------------------
 void WindmillController::Update(void)
 {
-    fan_->RotateByRoll(rotate_speed_ * Time::Instance()->ScaledDeltaTime());
+    fan_->RotateByRoll(rotate_speed_ * GameTime::Instance().ScaledDeltaTime());
 }

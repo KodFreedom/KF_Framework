@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  タイムクラス
 //--------------------------------------------------------------------------------
-class Time
+class GameTime
 {
 public:
     //--------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ public:
     //  instance生成処理
     //  return：Time*
     //--------------------------------------------------------------------------------
-    static Time* Create(void);
+    static GameTime* Create(void);
 
     //--------------------------------------------------------------------------------
     //  破棄処理
@@ -32,7 +32,11 @@ public:
     //--------------------------------------------------------------------------------
     //  インスタンスを返す
     //--------------------------------------------------------------------------------
-    static Time* Instance(void) { return instance_; }
+    static GameTime& Instance(void)
+    {
+        assert(instance_);
+        return *instance_;
+    }
 
     //--------------------------------------------------------------------------------
     //  Delta timeの取得
@@ -68,7 +72,7 @@ private:
     //--------------------------------------------------------------------------------
     //  constructors for singleton / シングルトンのコンストラクタ
     //--------------------------------------------------------------------------------
-    Time() : delta_time_(0.0f), time_scale_(0.0f), scaled_delta_time_(0.0f)
+    GameTime()
     {
         memset(&frequency_, 0x00, sizeof frequency_);
         memset(&current_time_, 0x00, sizeof current_time_);
@@ -77,9 +81,9 @@ private:
         QueryPerformanceCounter(&exec_last_time_);
         fps_last_time_ = exec_last_time_;
     }
-    Time(const Time& value) {}
-    Time& operator=(const Time& value) {}
-    ~Time() {}
+    GameTime(const GameTime& value) {}
+    GameTime& operator=(const GameTime& value) {}
+    ~GameTime() {}
 
     //--------------------------------------------------------------------------------
     //  変数定義
@@ -88,8 +92,8 @@ private:
     LARGE_INTEGER current_time_;
     LARGE_INTEGER exec_last_time_;
     LARGE_INTEGER fps_last_time_;
-    float delta_time_;
-    float time_scale_;
-    float scaled_delta_time_;
-    static Time* instance_; // インスタンス
+    float delta_time_ = 0.0f;
+    float time_scale_ = 0.0f;
+    float scaled_delta_time_ = 0.0f;
+    static GameTime* instance_; // インスタンス
 };

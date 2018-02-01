@@ -10,10 +10,10 @@
 #include "main_system.h"
 #include "collision_detector.h"
 #include "collision_system.h"
-#include "time.h"
+#include "game_time.h"
 #ifdef _DEBUG
-#include "../main_system.h"
-#include "../debug_observer.h"
+#include "main_system.h"
+#include "debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -58,13 +58,13 @@ void ActorController::Move(void)
         turn_direction = transform->TransformDirectionToLocal(turn_direction).Normalized();
         float rotation_y = atan2f(turn_direction.x_, turn_direction.z_);
         float turn_speed = Math::Lerp(parameter_.GetMinTurnSpeed(), parameter_.GetMaxTurnSpeed(), move_amount);
-        transform->RotateByYaw(rotation_y * turn_speed * Time::Instance()->ScaledDeltaTime());
+        transform->RotateByYaw(rotation_y * turn_speed * GameTime::Instance().ScaledDeltaTime());
 
         //ˆÚ“®
         Vector3& move_direction = Vector3::kUp.Dot(current_ground_info_.normal) > CollisionDetector::kMaxFieldSlopeCos
             ? Vector3::ProjectOnPlane(transform->GetForward(), current_ground_info_.normal).Normalized()
             : transform->GetForward();
-        rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * Time::Instance()->ScaledDeltaTime());
+        rigidbody_.Move(move_direction * move_amount * parameter_.GetMoveSpeed() * GameTime::Instance().ScaledDeltaTime());
     }
     animator_.SetMovement(move_amount);
 }

@@ -669,13 +669,13 @@
     <ClCompile Include="source_code\observer\debug_observer.cpp">
       <Filter>ソース ファイル\System\Observer</Filter>
     </ClCompile>
-    <ClCompile Include="source_code\time.cpp">
-      <Filter>ソース ファイル\System</Filter>
-    </ClCompile>
     <ClCompile Include="source_code\fade_system.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="source_code\main_system.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\game_time.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1151,7 +1151,7 @@
     <ClInclude Include="source_code\main_system.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="source_code\time.h">
+    <ClInclude Include="source_code\game_time.h">
       <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>

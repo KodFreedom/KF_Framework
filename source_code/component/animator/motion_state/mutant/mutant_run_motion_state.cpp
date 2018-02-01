@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "mutant_run_motion_state.h"
-#include "../animator.h"
-#include "../motion_data.h"
+#include "animator.h"
+#include "motion_data.h"
 #include "mutant_walk_motion_state.h"
 #include "mutant_jump_motion_state.h"
 #include "mutant_punch_motion_state.h"

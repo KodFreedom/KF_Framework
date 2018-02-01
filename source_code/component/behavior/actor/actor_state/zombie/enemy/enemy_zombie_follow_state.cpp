@@ -8,13 +8,13 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "../enemy_controller.h"
-#include "../animator.h"
-#include "../collider.h"
-#include "../game_object.h"
+#include "enemy_controller.h"
+#include "animator.h"
+#include "collider.h"
+#include "game_object.h"
 #ifdef _DEBUG
-#include "../main_system.h"
-#include "../debug_observer.h"
+#include "main_system.h"
+#include "debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ void EnemyZombieFollowState::Update(EnemyController& enemy)
     Vector3& me_to_player = player_position - my_position;
     float square_distance = me_to_player.SquareMagnitude();
     float warning_range = enemy.GetWarningRange() * kWarningRangeMultiplier;
-    
+
     if (square_distance > warning_range * warning_range)
     {// ”ÍˆÍŠO‚É‚È‚é‚Ì‚Å’ÇÕ’†~
 #ifdef _DEBUG

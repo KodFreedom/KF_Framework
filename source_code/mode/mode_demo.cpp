@@ -13,7 +13,7 @@
 #include "actor_observer.h"
 #include "player_controller.h"
 #include "game_object.h"
-#include "time.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -74,7 +74,7 @@ void ModeDemo::LateUpdate(void)
 
     if (time_counter_ > 0.0f)
     {// リザルトにいくまでカウントする
-        time_counter_ -= Time::Instance()->ScaledDeltaTime();
+        time_counter_ -= GameTime::Instance().ScaledDeltaTime();
 
         if (time_counter_ <= 0.0f)
         {
@@ -93,7 +93,7 @@ void ModeDemo::LateUpdate(void)
 
     if (main_system.GetActorObserver().GetEnemys().empty())
     {// エネミーが死んだらリザルトにいく
-        time_counter_ = Time::kTimeInterval;
+        time_counter_ = GameTime::kTimeInterval;
         return;
     }
 
@@ -101,7 +101,7 @@ void ModeDemo::LateUpdate(void)
     if (main_system.GetInput().GetKeyTrigger(Key::kStart))
     {
         main_system.GetSoundSystem().Play(kSubmitSe);
-        time_counter_ = Time::kTimeInterval;
+        time_counter_ = GameTime::kTimeInterval;
         return;
     }
 #endif // _DEBUG

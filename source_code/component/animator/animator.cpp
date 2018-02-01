@@ -11,7 +11,7 @@
 #include "resources.h"
 #include "motion_manager.h"
 #include "texture_manager.h"
-#include "time.h"
+#include "game_time.h"
 #include "collision_detector.h"
 #include "collision_system.h"
 
@@ -91,7 +91,7 @@ void Animator::Update(void)
 {
     if (avatar_.empty()) return;
     state_->Update(*this);
-    time_counter_ += Time::Instance()->ScaledDeltaTime();
+    time_counter_ += GameTime::Instance().ScaledDeltaTime();
     UpdateIK();
 }
 
@@ -305,7 +305,7 @@ void Animator::ComputeIKGoal(const IKParts& goal_part, const IKGoals& ik_goal)
     }
 
     // Weight更新
-    ik_goals_[ik_goal].weight += ik_weight_change_speed * Time::Instance()->ScaledDeltaTime();
+    ik_goals_[ik_goal].weight += ik_weight_change_speed * GameTime::Instance().ScaledDeltaTime();
     ik_goals_[ik_goal].weight = Math::Clamp(ik_goals_[ik_goal].weight, 0.0f, 1.0f);
 }
 
