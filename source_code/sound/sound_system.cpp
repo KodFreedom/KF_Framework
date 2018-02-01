@@ -18,12 +18,16 @@
 SoundSystem::SoundInfo SoundSystem::se_infos_[kSeMax] =
 {
     { L"data/se/submit.wav", 0 }, // kSubmitSe
+    { L"data/se/zombie_beat.wav", 0 }, // kZombieBeat
+    { L"data/se/zombie_warning.wav", 0 }, // kZombieWarning
+    { L"data/se/zombie_death.wav", 0 }, // kZombieDeath
 };
 
 SoundSystem::SoundInfo SoundSystem::bgm_infos_[kBgmMax] =
 {
     { L"data/bgm/title.wav", -1 }, // kTitleBgm
     { L"data/bgm/game.wav", -1 }, // kGameBgm
+    { L"data/bgm/result.wav", -1 }, // kResultBgm
 };
 
 //--------------------------------------------------------------------------------

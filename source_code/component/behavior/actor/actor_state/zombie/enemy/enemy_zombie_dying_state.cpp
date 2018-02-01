@@ -8,6 +8,8 @@
 #include "animator.h"
 #include "game_object.h"
 #include "game_time.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -15,6 +17,7 @@
 void EnemyZombieDyingState::Init(EnemyController& enemy)
 {
     enemy.GetAnimator().SetDead(true);
+    MainSystem::Instance().GetSoundSystem().Play(kZombieDeathSe);
 }
 
 //--------------------------------------------------------------------------------

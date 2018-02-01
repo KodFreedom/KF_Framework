@@ -12,8 +12,9 @@
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
-#ifdef _DEBUG
 #include "main_system.h"
+#include "sound_system.h"
+#ifdef _DEBUG
 #include "debug_observer.h"
 #endif
 
@@ -23,6 +24,7 @@
 void EnemyZombieFollowState::Init(EnemyController& enemy)
 {
     enemy.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    MainSystem::Instance().GetSoundSystem().Play(kZombieWarningSe);
 }
 
 //--------------------------------------------------------------------------------

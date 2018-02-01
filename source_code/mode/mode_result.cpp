@@ -62,6 +62,7 @@ void ModeResult::Init(void)
 void ModeResult::Uninit(void)
 {
     MainSystem::Instance().GetResources().GetMaterialManager().Disuse(L"result");
+    MainSystem::Instance().GetSoundSystem().Stop(kResultBgm);
     Mode::Uninit();
 }
 
@@ -90,4 +91,12 @@ void ModeResult::Update(void)
         time_counter_ = kWaitTime;
         flash_button_controller_->SetFlashSpeed(15.0f);
     }
+}
+
+//--------------------------------------------------------------------------------
+//  ローディング終了の通知
+//--------------------------------------------------------------------------------
+void ModeResult::OnCompleteLoading(void)
+{
+    MainSystem::Instance().GetSoundSystem().Play(kResultBgm);
 }
