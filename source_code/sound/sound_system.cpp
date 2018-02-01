@@ -24,6 +24,7 @@ SoundSystem::SoundInfo SoundSystem::bgm_infos_[kBgmMax] =
 {
     { L"data/bgm/title.wav", -1 }, // kTitleBgm
     { L"data/bgm/game.wav", -1 }, // kGameBgm
+    { L"data/bgm/result.wav", -1 }, // kResultBgm
 };
 
 //--------------------------------------------------------------------------------

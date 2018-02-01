@@ -27,6 +27,7 @@ enum BackgroundMusicLabel
 {
     kTitleBgm,
     kGameBgm,
+    kResultBgm,
     kBgmMax
 };
 
