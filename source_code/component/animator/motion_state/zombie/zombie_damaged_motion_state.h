@@ -13,5 +13,5 @@ public:
 
 private:
     void ChangeMotion(Animator& animator) override;
-    const int frame_to_exit_ = 109;
+    const int frame_to_exit_ = 100;
 };
