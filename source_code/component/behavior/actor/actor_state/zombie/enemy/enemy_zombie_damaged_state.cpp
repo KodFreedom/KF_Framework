@@ -10,6 +10,8 @@
 #include "animator.h"
 #include "game_object.h"
 #include "game_time.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—
@@ -20,6 +22,7 @@ void EnemyZombieDamagedState::Init(EnemyController& enemy)
     animator.SetMovement(0.0f);
     animator.SetDamaged(true);
     enemy.SetMovement(Vector3::kZero);
+    MainSystem::Instance().GetSoundSystem().Play(kZombieBeatSe);
 }
 
 //--------------------------------------------------------------------------------

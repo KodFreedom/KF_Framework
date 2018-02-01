@@ -20,6 +20,9 @@ class WaveBgm;
 enum SoundEffectLabel
 {
     kSubmitSe,
+    kZombieBeatSe,
+    kZombieWarningSe,
+    kZombieDeathSe,
     kSeMax,
 };
 
