@@ -25,35 +25,7 @@
 //--------------------------------------------------------------------------------
 Animator::Animator(GameObject& owner)
     : Component(owner)
-    , state_(nullptr)
-    , is_grounded_(false)
-    , is_light_attack_(false)
-    , is_strong_attack_(false)
-    , is_jump_(false)
-    , is_damaged_(false)
-    , is_rise_up_(false)
-    , is_skill_(false)
-    , is_skill_over_(false)
-    , is_dead_(false)
-    , is_stun_(false)
-    , is_ultra_(false)
-    , enable_ik_(true)
-    , movement_(0.0f)
-    , time_counter_(0.0f)
-    , ik_ray_distance_(2.0f)
-    , ik_grounded_distance_(0.5f)
-    , ik_weight_increase_speed_(10.0f)
-    , ik_weight_decrease_speed_(-10.0f)
-    , ik_foot_position_offset_(Vector3(0.0f, 0.25f, 0.0f))
-    , ik_foot_rotation_offset_(Vector3(-0.25f, 0.0f, 0.0f))
-{
-    ZeroMemory(ik_controllers_, sizeof(IKController) * kIKMax);
-    ZeroMemory(ik_goals_, sizeof(IKGoal) * kIKGoalMax);
-    bone_texture_.size = 0;
-#if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-    bone_texture_.pointer = nullptr;
-#endif
-}
+{}
 
 //--------------------------------------------------------------------------------
 //  初期化

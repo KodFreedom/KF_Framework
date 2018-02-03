@@ -6,7 +6,7 @@
 #include "animator.h"
 #include "motion_data.h"
 #include "knight_idle_motion_state.h"
-#include "knight_light_attact_step2_motion_state.h"
+#include "knight_light_attack_step2_motion_state.h"
 #include "knight_impact_motion_state.h"
 #include "knight_death_motion_state.h"
 void KnightLightAttackStep1MotionState::ChangeMotion(Animator& animator)
@@ -17,10 +17,10 @@ void KnightLightAttackStep1MotionState::ChangeMotion(Animator& animator)
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightIdleMotionState(0), current_frame_counter_, 10));
 		return;
 	}
-	if(animator.GetFrameCounter() > 49.000000f
-	|| animator.GetIsLightAttack() == true)
+	if(current_frame_counter_ >= 49
+	&& animator.GetIsLightAttack() == true)
 	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightLightAttactStep2MotionState(0), current_frame_counter_, 1));
+		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightLightAttackStep2MotionState(0), current_frame_counter_, 1));
 		return;
 	}
 	if(animator.GetIsDamaged() == true)

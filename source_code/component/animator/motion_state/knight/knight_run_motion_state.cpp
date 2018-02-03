@@ -36,7 +36,7 @@ void KnightRunMotionState::ChangeMotion(Animator& animator)
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightMovingJumpMotionState(0), current_frame_counter_, 10));
 		return;
 	}
-	if(animator.GetIsRunningAttack() == true)
+	if(animator.GetIsDushAttack() == true)
 	{
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightRunningJumpAttackMotionState(0), current_frame_counter_, 5));
 		return;

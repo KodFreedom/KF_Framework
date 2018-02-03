@@ -10,7 +10,7 @@
 void KnightFallMotionState::ChangeMotion(Animator& animator)
 {
 	if(animator.GetTimeCounter() > 1.000000f
-	|| animator.GetIsGrounded() == true)
+	&& animator.GetIsGrounded() == true)
 	{
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightHardLandMotionState(0), current_frame_counter_, 5));
 		return;

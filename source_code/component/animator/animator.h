@@ -117,11 +117,13 @@ public:
     const bool&  GetIsRiseUp(void) const { return is_rise_up_; }
     const bool&  GetIsLightAttack(void) const { return is_light_attack_; }
     const bool&  GetIsStrongAttack(void) const { return is_strong_attack_; }
+    const bool&  GetIsDushAttack(void) const { return is_dush_attack_; }
     const bool&  GetIsSkill(void) const { return is_skill_; }
     const bool&  GetIsSkillOver(void) const { return is_skill_over_; }
     const bool&  GetIsStun(void) const { return is_stun_; }
     const bool&  GetIsUltra(void) const { return is_ultra_; }
     const bool&  GetIsAngry(void) const { return is_angry_; }
+    const bool&  GetIsDefence(void) const { return is_defence_; }
     const float& GetMovement(void) const { return movement_; }
     const float& GetTimeCounter(void) const { return time_counter_; }
     const int    GetCurrentFrame(void) const;
@@ -132,6 +134,7 @@ public:
     void SetAvatar(const String& file_name);
     void SetLightAttack(const bool& value) { is_light_attack_ = value; }
     void SetStrongAttack(const bool& value) { is_strong_attack_ = value; }
+    void SetDushAttack(const bool& value) { is_dush_attack_ = value; }
     void SetGrounded(const bool& value) { is_grounded_ = value; }
     void SetJump(const bool& value) { is_jump_ = value; }
     void SetDamaged(const bool& value) { is_damaged_ = value; }
@@ -141,6 +144,7 @@ public:
     void SetUltra(const bool& value) { is_ultra_ = value; }
     void SetAngry(const bool& value) { is_angry_ = value; }
     void SetDead(const bool& value) { is_dead_ = value; }
+    void SetDefence(const bool& value) { is_defence_ = value; }
     void SetEnableIK(const bool& value) { enable_ik_ = value; }
     void SetMovement(const float& value) { movement_ = value; }
 
@@ -234,29 +238,31 @@ private:
     //--------------------------------------------------------------------------------
     vector<Bone>   avatar_;
     vector<String> motion_names_;
-    MotionState*   state_;
-    bool           is_grounded_;
-    bool           is_light_attack_;
-    bool           is_strong_attack_;
-    bool           is_jump_;
-    bool           is_damaged_;
-    bool           is_dead_;
-    bool           is_rise_up_;
-    bool           is_skill_;
-    bool           is_skill_over_;
-    bool           is_stun_;
-    bool           is_ultra_;
-    bool           is_angry_;
-    float          movement_;
-    float          time_counter_;
-    BoneTexture    bone_texture_;
-    bool           enable_ik_;
-    float          ik_ray_distance_;
-    float          ik_grounded_distance_;
-    float          ik_weight_increase_speed_;
-    float          ik_weight_decrease_speed_;
-    Vector3        ik_foot_position_offset_;
-    Vector3        ik_foot_rotation_offset_;
-    IKController   ik_controllers_[kIKMax];
-    IKGoal         ik_goals_[kIKGoalMax];
+    MotionState*   state_ = nullptr;
+    bool           is_grounded_ = false;
+    bool           is_light_attack_ = false;
+    bool           is_strong_attack_ = false;
+    bool           is_dush_attack_ = false;
+    bool           is_jump_ = false;
+    bool           is_damaged_ = false;
+    bool           is_dead_ = false;
+    bool           is_rise_up_ = false;
+    bool           is_skill_ = false;
+    bool           is_skill_over_ = false;
+    bool           is_stun_ = false;
+    bool           is_ultra_ = false;
+    bool           is_angry_ = false;
+    bool           is_defence_ = false;
+    float          movement_ = 0.0f;
+    float          time_counter_ = 0.0f;
+    BoneTexture    bone_texture_ = { 0 };
+    bool           enable_ik_ = true;
+    float          ik_ray_distance_ = 2.0f;
+    float          ik_grounded_distance_ = 0.5f;
+    float          ik_weight_increase_speed_ = 10.0f;
+    float          ik_weight_decrease_speed_ = -10.0f;
+    Vector3        ik_foot_position_offset_ = Vector3(0.0f, 0.25f, 0.0f);
+    Vector3        ik_foot_rotation_offset_ = Vector3(-0.25f, 0.0f, 0.0f);
+    IKController   ik_controllers_[kIKMax] = { 0 };
+    IKGoal         ik_goals_[kIKGoalMax] = { 0 };
 };

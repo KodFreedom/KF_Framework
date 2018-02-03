@@ -12,7 +12,7 @@
 #include "knight_standing_jump_motion_state.h"
 #include "knight_light_attack_step1_motion_state.h"
 #include "knight_strong_attack_step1_motion_state.h"
-#include "knight_all_motion_state.h"
+#include "knight_fall_motion_state.h"
 #include "knight_begin_block_motion_state.h"
 void KnightIdleWatchSwordMotionState::ChangeMotion(Animator& animator)
 {
@@ -54,7 +54,7 @@ void KnightIdleWatchSwordMotionState::ChangeMotion(Animator& animator)
 	}
 	if(animator.GetIsGrounded() == false)
 	{
-		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightAllMotionState(0), current_frame_counter_, 10));
+		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightFallMotionState(0), current_frame_counter_, 10));
 		return;
 	}
 	if(animator.GetIsDefence() == true)

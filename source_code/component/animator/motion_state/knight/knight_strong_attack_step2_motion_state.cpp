@@ -17,8 +17,8 @@ void KnightStrongAttackStep2MotionState::ChangeMotion(Animator& animator)
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightIdleMotionState(0), current_frame_counter_, 10));
 		return;
 	}
-	if(animator.GetFrameCounter() > 34.000000f
-	|| animator.GetIsStrongAttack() == true)
+	if(current_frame_counter_ >= 34
+	&& animator.GetIsStrongAttack() == true)
 	{
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightStrongAttackStep3MotionState(0), current_frame_counter_, 1));
 		return;
