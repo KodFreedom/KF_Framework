@@ -33,6 +33,7 @@ bool PlayerController::Init(void)
         for (auto& collider : colliders)
         {
             collider->SetTag(L"Body");
+            collider->SetMode(ColliderMode::kDynamic);
             collider->Awake();
             collider->Register(this);
         }
@@ -61,6 +62,7 @@ void PlayerController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
+    ActorController::Uninit();
     MainSystem::Instance().GetActorObserver().Deregister(this);
 }
 
@@ -94,6 +96,14 @@ void PlayerController::OnTrigger(Collider& self, Collider& other)
 void PlayerController::OnCollision(CollisionInfo& info)
 {
     current_state_->OnCollision(*this, info);
+}
+
+//--------------------------------------------------------------------------------
+//  ƒ‚[ƒVƒ‡ƒ“I—¹‚ÌŽžŒÄ‚Î‚ê‚é
+//--------------------------------------------------------------------------------
+void PlayerController::OnAnimationOver(void)
+{
+    current_state_->OnAnimationOver(*this);
 }
 
 //--------------------------------------------------------------------------------

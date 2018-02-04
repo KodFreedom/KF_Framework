@@ -14,6 +14,7 @@
 #include "game_time.h"
 #include "collision_detector.h"
 #include "collision_system.h"
+#include "actor_controller.h"
 
 //--------------------------------------------------------------------------------
 //
@@ -112,6 +113,12 @@ void Animator::SetAvatar(const String& file_name)
 //--------------------------------------------------------------------------------
 void Animator::Change(MotionState* new_motion_state)
 {
+    assert(new_motion_state);
+    if (observer_ && new_motion_state->GetType() == kNormalMotionState)
+    {
+        observer_->OnAnimationOver();
+    }
+
     SAFE_DELETE(state_);
     state_ = new_motion_state;
     time_counter_ = 0.0f;

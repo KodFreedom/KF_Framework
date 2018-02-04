@@ -1,20 +1,20 @@
 //--------------------------------------------------------------------------------
-//  knight歩くステート
-//  player_knight_walk_state.cpp
+//  knight走るステート
+//  player_run_walk_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_knight_idle_state.h"
 #include "player_knight_walk_state.h"
 #include "player_knight_run_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerKnightWalkState::Init(PlayerController& player)
+void PlayerKnightRunState::Init(PlayerController& player)
 {
     auto& parameter = player.GetParameter();
     parameter.SetGroundCheckDistance(kGroundCheckDistance);
@@ -25,7 +25,7 @@ void PlayerKnightWalkState::Init(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerKnightWalkState::Uninit(PlayerController& player)
+void PlayerKnightRunState::Uninit(PlayerController& player)
 {
     //player.GetAnimator().SetEnableIK(true);
 }
@@ -33,24 +33,19 @@ void PlayerKnightWalkState::Uninit(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerKnightWalkState::Update(PlayerController& player)
+void PlayerKnightRunState::Update(PlayerController& player)
 {
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
 
+    time_counter_ += GameTime::Instance().ScaledDeltaTime();
+
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        float square_movement = player.GetMovement().SquareMagnitude();
-        if (square_movement == 0.0f)
+        if (player.GetMovement().SquareMagnitude() < 0.5f)
         {
-            player.Change(MY_NEW PlayerKnightIdleState);
-            return;
-        }
-
-        if (square_movement > 0.5f)
-        {
-            player.Change(MY_NEW PlayerKnightRunState);
+            player.Change(MY_NEW PlayerKnightWalkState);
             return;
         }
 
@@ -74,6 +69,11 @@ void PlayerKnightWalkState::Update(PlayerController& player)
 
         if (player.IsStrongAttack())
         {
+            if (time_counter_ >= kDushTime)
+            {
+
+            }
+
             //player.Change(MY_NEW PlayerMutantStrongAttackState);
             return;
         }
@@ -83,7 +83,7 @@ void PlayerKnightWalkState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 //  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerKnightWalkState::OnDamaged(PlayerController& player, const float& damage)
+void PlayerKnightRunState::OnDamaged(PlayerController& player, const float& damage)
 {
     player.ReceiveDamage(damage);
 

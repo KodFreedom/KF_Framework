@@ -123,8 +123,9 @@ void BlendMotionState::UpdateMotion(Animator& animator)
 
     if (++current_frame_counter_ == frame_number)
     {
-        if (!current_motion_data_->is_loop_) --current_frame_counter_;
-        else current_frame_counter_ = 0;
+        //if (!current_motion_data_->is_loop_) --current_frame_counter_;
+        //else current_frame_counter_ = 0;
+        --current_frame_counter_;
     }
 
     if (++next_frame_counter_ == next_frame_number)

@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_idle_state.h"
 #include "player_knight_walk_state.h"
+#include "player_knight_light_attack_step1_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -50,7 +51,7 @@ void PlayerKnightIdleState::Update(PlayerController& player)
 
         if (player.IsLightAttack())
         {
-            //player.Change(MY_NEW PlayerMutantLightAttackState);
+            player.Change(MY_NEW PlayerKnightLightAttackStep1State);
             return;
         }
 

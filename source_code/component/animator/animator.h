@@ -13,6 +13,7 @@ using namespace kodfreedom;
 //  前方宣言
 //--------------------------------------------------------------------------------
 class Transform;
+class ActorController;
 
 //--------------------------------------------------------------------------------
 //  列挙型定義
@@ -158,6 +159,21 @@ public:
     //--------------------------------------------------------------------------------
     const auto& GetBoneTexture(void) const { return bone_texture_; }
 
+    //--------------------------------------------------------------------------------
+    //  observer関数
+    //--------------------------------------------------------------------------------
+    void Register(ActorController* observer)
+    {
+        assert(!observer_);
+        assert(observer);
+        observer_ = observer;
+    }
+    void Deregister(ActorController* observer)
+    {
+        assert(observer == observer_);
+        observer_ = nullptr;
+    }
+
 private:
     //--------------------------------------------------------------------------------
     //  列挙型定義
@@ -236,33 +252,34 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    vector<Bone>   avatar_;
-    vector<String> motion_names_;
-    MotionState*   state_ = nullptr;
-    bool           is_grounded_ = false;
-    bool           is_light_attack_ = false;
-    bool           is_strong_attack_ = false;
-    bool           is_dush_attack_ = false;
-    bool           is_jump_ = false;
-    bool           is_damaged_ = false;
-    bool           is_dead_ = false;
-    bool           is_rise_up_ = false;
-    bool           is_skill_ = false;
-    bool           is_skill_over_ = false;
-    bool           is_stun_ = false;
-    bool           is_ultra_ = false;
-    bool           is_angry_ = false;
-    bool           is_defence_ = false;
-    float          movement_ = 0.0f;
-    float          time_counter_ = 0.0f;
-    BoneTexture    bone_texture_ = { 0 };
-    bool           enable_ik_ = true;
-    float          ik_ray_distance_ = 2.0f;
-    float          ik_grounded_distance_ = 0.5f;
-    float          ik_weight_increase_speed_ = 10.0f;
-    float          ik_weight_decrease_speed_ = -10.0f;
-    Vector3        ik_foot_position_offset_ = Vector3(0.0f, 0.25f, 0.0f);
-    Vector3        ik_foot_rotation_offset_ = Vector3(0.0f, 0.0f, 0.0f);
-    IKController   ik_controllers_[kIKMax] = { 0 };
-    IKGoal         ik_goals_[kIKGoalMax] = { 0 };
+    ActorController* observer_ = nullptr;
+    vector<Bone>     avatar_;
+    vector<String>   motion_names_;
+    MotionState*     state_ = nullptr;
+    bool             is_grounded_ = false;
+    bool             is_light_attack_ = false;
+    bool             is_strong_attack_ = false;
+    bool             is_dush_attack_ = false;
+    bool             is_jump_ = false;
+    bool             is_damaged_ = false;
+    bool             is_dead_ = false;
+    bool             is_rise_up_ = false;
+    bool             is_skill_ = false;
+    bool             is_skill_over_ = false;
+    bool             is_stun_ = false;
+    bool             is_ultra_ = false;
+    bool             is_angry_ = false;
+    bool             is_defence_ = false;
+    float            movement_ = 0.0f;
+    float            time_counter_ = 0.0f;
+    BoneTexture      bone_texture_ = { 0 };
+    bool             enable_ik_ = true;
+    float            ik_ray_distance_ = 2.0f;
+    float            ik_grounded_distance_ = 0.5f;
+    float            ik_weight_increase_speed_ = 10.0f;
+    float            ik_weight_decrease_speed_ = -10.0f;
+    Vector3          ik_foot_position_offset_ = Vector3(0.0f, 0.25f, 0.0f);
+    Vector3          ik_foot_rotation_offset_ = Vector3(0.0f, 0.0f, 0.0f);
+    IKController     ik_controllers_[kIKMax] = { 0 };
+    IKGoal           ik_goals_[kIKGoalMax] = { 0 };
 };
