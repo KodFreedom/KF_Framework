@@ -234,6 +234,7 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step1_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.cpp" />
@@ -421,6 +422,7 @@
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step1_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.h" />

@@ -6,6 +6,8 @@
 #include "player_knight_idle_state.h"
 #include "player_knight_walk_state.h"
 #include "player_knight_run_state.h"
+#include "player_knight_light_attack_step1_state.h"
+#include "player_knight_strong_attack_step1_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -68,13 +70,13 @@ void PlayerKnightWalkState::Update(PlayerController& player)
 
         if (player.IsLightAttack())
         {
-            //player.Change(MY_NEW PlayerMutantLightAttackState);
+            player.Change(MY_NEW PlayerKnightLightAttackStep1State);
             return;
         }
 
         if (player.IsStrongAttack())
         {
-            //player.Change(MY_NEW PlayerMutantStrongAttackState);
+            player.Change(MY_NEW PlayerKnightStrongAttackStep1State);
             return;
         }
     }

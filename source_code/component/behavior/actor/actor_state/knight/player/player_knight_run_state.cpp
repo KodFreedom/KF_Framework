@@ -5,6 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_walk_state.h"
 #include "player_knight_run_state.h"
+#include "player_knight_light_attack_step1_state.h"
+#include "player_knight_strong_attack_step1_state.h"
+#include "player_knight_dush_attack_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -63,7 +66,7 @@ void PlayerKnightRunState::Update(PlayerController& player)
 
         if (player.IsLightAttack())
         {
-            //player.Change(MY_NEW PlayerMutantLightAttackState);
+            player.Change(MY_NEW PlayerKnightLightAttackStep1State);
             return;
         }
 
@@ -71,10 +74,11 @@ void PlayerKnightRunState::Update(PlayerController& player)
         {
             if (time_counter_ >= kDushTime)
             {
-
+                player.Change(MY_NEW PlayerKnightDushAttackState);
+                return;
             }
 
-            //player.Change(MY_NEW PlayerMutantStrongAttackState);
+            player.Change(MY_NEW PlayerKnightStrongAttackStep1State);
             return;
         }
     }
