@@ -234,6 +234,8 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_fall_state.cpp" />
@@ -412,6 +414,8 @@
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_fall_state.h" />

@@ -259,6 +259,18 @@
     <Filter Include="ソース ファイル\Component\Animator\MotionState\Knight">
       <UniqueIdentifier>{f22a3dfe-f60d-420f-98aa-71372cac82e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Knight">
+      <UniqueIdentifier>{2baade74-d8d4-4d33-8e6d-86f5fd1c4556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player">
+      <UniqueIdentifier>{94aa3636-3abb-4df7-8eab-78088fc38959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Knight">
+      <UniqueIdentifier>{2119dbd0-b7ef-46d6-a2fd-8ec61f5698cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Component\Behavior\Actor\State\Knight\Player">
+      <UniqueIdentifier>{84e07b43-b7f7-440b-8664-5dc91e1dbec0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="library\ImGui\imgui_demo.cpp">
@@ -767,6 +779,12 @@
     </ClCompile>
     <ClCompile Include="source_code\component\animator\motion_state\knight\knight_walk_motion_state.cpp">
       <Filter>ソース ファイル\Component\Animator\MotionState\Knight</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1327,6 +1345,12 @@
     </ClInclude>
     <ClInclude Include="source_code\component\animator\motion_state\knight\knight_walk_motion_state.h">
       <Filter>ヘッダー ファイル\Component\Animator\MotionState\Knight</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

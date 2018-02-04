@@ -35,6 +35,8 @@ public:
     static GameObject* CreateFlashButton2d(const float flash_speed, const Vector3& scale, const Layer& layer = kDefaultLayer, const String& material_name = String(), const ShaderType& shader_type = kDefault2dShader, const RenderPriority& render_priority = k2d, const float& rotation = 0.0f, const Vector3& position = Vector3::kZero);
     static GameObject* CreateGauge3d(const String& material_name, const ShaderType& shader_type = kDefaultBillboardShader);
     static GameObject* CreateEnemyUiController(void);
+
+    // Actor
     static GameObjectActor* CreatePlayer(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
     static GameObjectActor* CreateEnemy(const String &name, const Vector3 &position, const Vector3 &rotation, const Vector3 &scale);
 
