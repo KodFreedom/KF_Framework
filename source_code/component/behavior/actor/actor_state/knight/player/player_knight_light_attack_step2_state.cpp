@@ -80,7 +80,7 @@ void PlayerKnightLightAttackStep2State::Update(PlayerController& player)
         animator.SetLightAttack(true);
     }
 
-    if (current_frame >= kBeginStep2Frame && animator.GetIsLightAttack() == true)
+    if (current_frame >= kBeginStep3Frame && animator.GetIsLightAttack() == true)
     {
         player.Change(MY_NEW PlayerKnightLightAttackStep3State);
         return;
@@ -92,7 +92,9 @@ void PlayerKnightLightAttackStep2State::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerKnightLightAttackStep2State::OnAnimationOver(PlayerController& player)
 {
-    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_light_attack_step2"))
+    auto& animator = player.GetAnimator();
+    if (animator.GetCurrentFrame() > kBeginStep3Frame
+        && animator.GetCurrentAnimationName()._Equal(L"knight_light_attack_step2"))
     {
         player.Change(MY_NEW PlayerKnightIdleState);
         return;

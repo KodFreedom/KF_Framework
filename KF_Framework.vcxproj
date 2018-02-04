@@ -239,6 +239,9 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_run_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step1_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step2_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step3_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.cpp" />
@@ -423,6 +426,9 @@
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_run_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step1_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step2_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step3_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_walk_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_damaged_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\mutant\player\player_mutant_dying_state.h" />

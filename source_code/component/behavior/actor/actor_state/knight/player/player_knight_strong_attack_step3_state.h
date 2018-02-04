@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  knight軽攻撃ステップ2ステート
-//　player_knight_light_attack_step2_state.h
+//  knight重攻撃ステップ3ステート
+//　player_knight_strong_attack_step3_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class PlayerKnightLightAttackStep2State : public PlayerState
+class PlayerKnightStrongAttackStep3State : public PlayerState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    PlayerKnightLightAttackStep2State() : PlayerState(L"PlayerKnightLightAttackStep2State") {}
-    ~PlayerKnightLightAttackStep2State() {}
+    PlayerKnightStrongAttackStep3State() : PlayerState(L"PlayerKnightStrongAttackStep3State") {}
+    ~PlayerKnightStrongAttackStep3State() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理
@@ -53,7 +53,6 @@ private:
     //  定数定義
     //--------------------------------------------------------------------------------
     static constexpr float kMovementMultiplier = 0.0f;
-    static constexpr int kBeginAttackFrame = 20;
-    static constexpr int kEndAttackFrame = 28;
-    static constexpr int kBeginStep3Frame = 28;
+    static constexpr int kBeginAttackFrame = 40;
+    static constexpr int kEndAttackFrame = 55;
 };

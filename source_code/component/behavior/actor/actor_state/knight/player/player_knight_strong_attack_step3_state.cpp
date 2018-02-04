@@ -1,10 +1,9 @@
 //--------------------------------------------------------------------------------
-//  knight軽攻撃ステップ1ステート
-//　player_knight_light_attack_step1_state.cpp
+//  knight重攻撃ステップ3ステート
+//　player_knight_strong_attack_step3_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_knight_light_attack_step1_state.h"
-#include "player_knight_light_attack_step2_state.h"
+#include "player_knight_strong_attack_step3_state.h"
 #include "player_knight_idle_state.h"
 #include "player_controller.h"
 #include "enemy_controller.h"
@@ -15,37 +14,31 @@
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::Init(PlayerController& player)
+void PlayerKnightStrongAttackStep3State::Init(PlayerController& player)
 {
     auto& parameter = player.GetParameter();
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    player.GetAnimator().SetLightAttack(true);
+    player.GetAnimator().SetStrongAttack(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::Uninit(PlayerController& player)
+void PlayerKnightStrongAttackStep3State::Uninit(PlayerController& player)
 {
+    player.GetAnimator().SetStrongAttack(false);
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::Update(PlayerController& player)
+void PlayerKnightStrongAttackStep3State::Update(PlayerController& player)
 {
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
 
-    auto& animator = player.GetAnimator();
-    if (animator.GetCurrentAnimationStateType() == kBlendMotionState)
-    {
-        animator.SetLightAttack(false);
-        return;
-    }
-
-    int current_frame = animator.GetCurrentFrame();
+    int current_frame = player.GetAnimator().GetCurrentFrame();
     if (current_frame == kBeginAttackFrame)
     {
         // 攻撃用ColliderをAwakeする
@@ -74,27 +67,14 @@ void PlayerKnightLightAttackStep1State::Update(PlayerController& player)
             }
         }
     }
-
-    if (player.IsLightAttack())
-    {
-        animator.SetLightAttack(true);
-    }
-    
-    if (current_frame >= kBeginStep2Frame && animator.GetIsLightAttack() == true)
-    {
-        player.Change(MY_NEW PlayerKnightLightAttackStep2State);
-        return;
-    }
 }
 
 //--------------------------------------------------------------------------------
 //  モーション終了の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::OnAnimationOver(PlayerController& player)
+void PlayerKnightStrongAttackStep3State::OnAnimationOver(PlayerController& player)
 {
-    auto& animator = player.GetAnimator();
-    if (animator.GetCurrentFrame() > kBeginStep2Frame
-        && animator.GetCurrentAnimationName()._Equal(L"knight_light_attack_step1"))
+    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_strong_attack_step3"))
     {
         player.Change(MY_NEW PlayerKnightIdleState);
         return;
@@ -104,7 +84,7 @@ void PlayerKnightLightAttackStep1State::OnAnimationOver(PlayerController& player
 //--------------------------------------------------------------------------------
 //  コライダートリガーの時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::OnTrigger(PlayerController& player, Collider& self, Collider& other)
+void PlayerKnightStrongAttackStep3State::OnTrigger(PlayerController& player, Collider& self, Collider& other)
 {
     if (self.GetTag()._Equal(L"Weapon"))
     {
@@ -123,7 +103,7 @@ void PlayerKnightLightAttackStep1State::OnTrigger(PlayerController& player, Coll
 //--------------------------------------------------------------------------------
 //  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerKnightLightAttackStep1State::OnDamaged(PlayerController& player, const float& damage)
+void PlayerKnightStrongAttackStep3State::OnDamaged(PlayerController& player, const float& damage)
 {
     player.ReceiveDamage(damage);
 

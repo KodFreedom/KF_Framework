@@ -798,6 +798,15 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step1_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step2_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step3_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h">
@@ -1374,6 +1383,15 @@
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step1_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step2_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_strong_attack_step3_state.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
   </ItemGroup>
