@@ -73,7 +73,10 @@ void TextureManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void TextureManager::LoadResource(void)
 {
-    const String& texture_name = load_tasks_.front();
+    lock_guard<mutex> lock(mutex_);
+    if (load_tasks_.empty()) return;
+    String texture_name = load_tasks_.front();
+    load_tasks_.pop();
     size_t key = hash<String>()(texture_name);
 
     //‚·‚Å‚É“Ç‚İ‚ñ‚¾‚çˆ—I—¹
@@ -104,7 +107,11 @@ void TextureManager::LoadResource(void)
 //--------------------------------------------------------------------------------
 void TextureManager::ReleaseResource(void)
 {
-    auto iterator = textures_.find(release_tasks_.front());
+    lock_guard<mutex> lock(mutex_);
+    if (release_tasks_.empty()) return;
+    size_t key = release_tasks_.front();
+    release_tasks_.pop();
+    auto iterator = textures_.find(key);
     if (textures_.end() == iterator) return;
 
     if (--iterator->second.user_number <= 0)

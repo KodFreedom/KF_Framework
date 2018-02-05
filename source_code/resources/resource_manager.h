@@ -70,4 +70,5 @@ protected:
     //--------------------------------------------------------------------------------
     queue<String> load_tasks_;   // 読込時名前が必要なのでStringで保存
     queue<size_t> release_tasks_;// 破棄時Hash値だけで十分なのでsize_tで保存
+    mutex         mutex_;        // 排他制御
 };

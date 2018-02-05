@@ -25,6 +25,7 @@ void ResourceManager::Release(void)
 void ResourceManager::Use(const String& resource_name)
 {
     if (resource_name.empty()) return;
+    lock_guard<mutex> lock(mutex_);
     load_tasks_.push(resource_name);
 }
 
@@ -34,6 +35,7 @@ void ResourceManager::Use(const String& resource_name)
 void ResourceManager::Disuse(const String& resource_name)
 {
     if (resource_name.empty()) return;
+    lock_guard<mutex> lock(mutex_);
     release_tasks_.push(hash<String>()(resource_name));
 }
 
@@ -47,15 +49,6 @@ void ResourceManager::Disuse(const String& resource_name)
 //--------------------------------------------------------------------------------
 void ResourceManager::Run(void)
 {
-    if (!load_tasks_.empty())
-    {
-        LoadResource();
-        load_tasks_.pop();
-    }
-    
-    if (!release_tasks_.empty())
-    {
-        ReleaseResource();
-        release_tasks_.pop();
-    }
+    LoadResource();
+    ReleaseResource();
 }

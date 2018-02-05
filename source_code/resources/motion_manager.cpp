@@ -57,7 +57,10 @@ void MotionManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void MotionManager::LoadResource(void)
 {
-    const String& motion_name = load_tasks_.front();
+    lock_guard<mutex> lock(mutex_);
+    if (load_tasks_.empty()) return;
+    String motion_name = load_tasks_.front();
+    load_tasks_.pop();
     size_t key = hash<String>()(motion_name);
 
     //Ç∑Ç≈Ç…ì«Ç›çûÇÒÇæÇÁèàóùèIóπ
@@ -79,7 +82,11 @@ void MotionManager::LoadResource(void)
 //--------------------------------------------------------------------------------
 void MotionManager::ReleaseResource(void)
 {
-    auto iterator = motions_.find(release_tasks_.front());
+    lock_guard<mutex> lock(mutex_);
+    if (release_tasks_.empty()) return;
+    size_t key = release_tasks_.front();
+    release_tasks_.pop();
+    auto iterator = motions_.find(key);
     if (iterator == motions_.end()) return;
     --iterator->second.user_number;
     if (iterator->second.user_number == 0)
