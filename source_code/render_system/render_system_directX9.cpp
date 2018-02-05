@@ -175,7 +175,7 @@ bool RenderSystemDirectX9::CreateDevice(HWND hwnd, BOOL is_window_mode)
     present_parameters.Windowed                   = is_window_mode;              // ウィンドウモード
     present_parameters.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;     // リフレッシュレート
     present_parameters.PresentationInterval       = D3DPRESENT_INTERVAL_DEFAULT; // インターバル
-    //present_parameters.MultiSampleType          = D3DMULTISAMPLE_8_SAMPLES;    // 抗劇歯アンチエイジングの使用
+    //present_parameters.MultiSampleType            = D3DMULTISAMPLE_2_SAMPLES;    // 抗劇歯アンチエイジングの使用
 
     // デバイスの生成
     // ディスプレイアダプタを表すためのデバイスを作成

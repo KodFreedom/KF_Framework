@@ -21,6 +21,7 @@ using namespace kodfreedom;
 #include "2d\default_2d_texture_shader.h"
 #include "skin\zombie_skin_shader.h"
 #include "billboard\default_billboard_shader.h"
+#include "skin\knight_skin_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------
@@ -119,6 +120,9 @@ void ShaderManager::Init(void)
     shaders_[kZombieSkinShader]->Init(device_);
     shaders_[kDefaultBillboardShader] = MY_NEW DefaultBillboardShader;
     shaders_[kDefaultBillboardShader]->Init(device_);
+    shaders_[kKnightSkinShader] = MY_NEW KnightSkinShader;
+    shaders_[kKnightSkinShader]->Init(device_);
+
     shadow_map_shaders_[kBasicShadowMapShader] = MY_NEW ShadowMapShader;
     shadow_map_shaders_[kBasicShadowMapShader]->Init(device_);
     shadow_map_shaders_[kBasicSkinShadowMapShader] = MY_NEW SkinShadowMapShader;
