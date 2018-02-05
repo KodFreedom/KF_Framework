@@ -810,6 +810,12 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_standing_jump_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_standing_land_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h">
@@ -1398,6 +1404,12 @@
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_standing_jump_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_standing_land_state.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
   </ItemGroup>

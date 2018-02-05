@@ -9,6 +9,7 @@
 #include "knight_death_motion_state.h"
 void KnightMovingJumpMotionState::ChangeMotion(Animator& animator)
 {
+    if (!current_motion_data_) return;
 	if (current_frame_counter_ >= static_cast<int>(current_motion_data_->frames_.size()))
 	{
 		--current_frame_counter_;

@@ -9,6 +9,12 @@
 #include "knight_idle_motion_state.h"
 void KnightFallMotionState::ChangeMotion(Animator& animator)
 {
+    if (!current_motion_data_) return;
+    if (current_frame_counter_ >= static_cast<int>(current_motion_data_->frames_.size()))
+    {
+        current_frame_counter_ = 0;
+    }
+
 	if(animator.GetTimeCounter() > 1.000000f
 	&& animator.GetIsGrounded() == true)
 	{

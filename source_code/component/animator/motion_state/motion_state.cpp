@@ -56,11 +56,12 @@ void NormalMotionState::UpdateMotion(Animator& animator)
         ++iterator;
     }
 
-    if (++current_frame_counter_ >= frame_number
-        && current_motion_data_->is_loop_)
-    {
-        current_frame_counter_ = 0;
-    }
+    ++current_frame_counter_;
+    //if (++current_frame_counter_ >= frame_number
+    //    && current_motion_data_->is_loop_)
+    //{
+    //    current_frame_counter_ = 0;
+    //}
 }
 
 //--------------------------------------------------------------------------------
