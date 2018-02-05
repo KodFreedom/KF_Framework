@@ -44,7 +44,7 @@ public:
     //--------------------------------------------------------------------------------
     //  終了処理
     //--------------------------------------------------------------------------------
-    virtual void Uninit(void) override = 0;
+    virtual void Uninit(void) override;
 
     //--------------------------------------------------------------------------------
     //  更新処理
@@ -65,6 +65,11 @@ public:
     //  コライダー衝突の時呼ばれる
     //--------------------------------------------------------------------------------
     virtual void OnCollision(CollisionInfo& info) override = 0;
+
+    //--------------------------------------------------------------------------------
+    //  モーション終了の時呼ばれる
+    //--------------------------------------------------------------------------------
+    virtual void OnAnimationOver(void) {}
 
     //--------------------------------------------------------------------------------
     //  移動処理
@@ -99,6 +104,7 @@ public:
     void SetIsLightAttack(const bool& value) { is_light_attack_ = value; }
     void SetIsStrongAttack(const bool& value) { is_strong_attack_ = value; }
     void SetIsSkill(const bool& value) { is_skill_ = value; }
+    void SetIsDefence(const bool& value) { is_defence_ = value; }
     void SetParameter(const ActorParameter& parameter) { parameter_ = parameter; }
 
     //--------------------------------------------------------------------------------
@@ -118,6 +124,7 @@ public:
     const bool& IsLightAttack(void) const { return is_light_attack_; }
     const bool& IsStrongAttack(void) const { return is_strong_attack_; }
     const bool& IsSkill(void) const { return is_skill_; }
+    const bool& IsDefence(void) const { return is_defence_; }
 
 protected:
     //--------------------------------------------------------------------------------
@@ -126,10 +133,11 @@ protected:
     Animator&      animator_;
     Rigidbody3D&   rigidbody_;
     ActorParameter parameter_;
-    Vector3        movement_;
-    bool           is_light_attack_;
-    bool           is_strong_attack_;
-    bool           is_skill_;
-    bool           is_jump_;
-    GroundInfo     current_ground_info_;
+    Vector3        movement_ = Vector3::kZero;
+    bool           is_light_attack_ = false;
+    bool           is_strong_attack_ = false;
+    bool           is_skill_ = false;
+    bool           is_jump_ = false;
+    bool           is_defence_ = false;
+    GroundInfo     current_ground_info_ = { 0 };
 };

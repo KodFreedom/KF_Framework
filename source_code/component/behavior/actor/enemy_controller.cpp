@@ -54,6 +54,7 @@ void EnemyController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
+    ActorController::Uninit();
     MainSystem::Instance().GetActorObserver().Deregister(this);
 }
 

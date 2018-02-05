@@ -170,6 +170,19 @@ Transform* Transform::FindChildBy(const String& name)
 }
 
 //--------------------------------------------------------------------------------
+//  ˆê”Ôã‚Ìe‚Ìæ“¾
+//--------------------------------------------------------------------------------
+const Transform* Transform::GetTopParent(void) const
+{
+    const Transform* top_parent = this;
+    while (top_parent->GetParent() != nullptr)
+    {
+        top_parent = top_parent->GetParent();
+    }
+    return top_parent;
+}
+
+//--------------------------------------------------------------------------------
 //
 //  private
 //

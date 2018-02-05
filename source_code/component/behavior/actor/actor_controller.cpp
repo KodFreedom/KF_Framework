@@ -11,6 +11,7 @@
 #include "collision_detector.h"
 #include "collision_system.h"
 #include "game_time.h"
+#include "animator.h"
 #ifdef _DEBUG
 #include "main_system.h"
 #include "debug_observer.h"
@@ -34,12 +35,21 @@ ActorController::ActorController(GameObject& owner, const String& name, Rigidbod
 //--------------------------------------------------------------------------------
 bool ActorController::Init(void)
 {
+    // observerÇ∆ÇµÇƒìoò^
+    animator_.Register(this);
     list<Collider*>& colliders = owner_.GetCollidersFromChildren();
     for (auto collider : colliders)
     {
         collider->Register(this);
     }
     return true;
+}
+
+//--------------------------------------------------------------------------------
+//  èIóπèàóù
+//--------------------------------------------------------------------------------
+void ActorController::Uninit(void)
+{
 }
 
 //--------------------------------------------------------------------------------

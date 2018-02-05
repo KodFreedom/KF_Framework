@@ -24,11 +24,27 @@ PlayerController::PlayerController(GameObject& owner, Rigidbody3D& rigidbody, An
 //--------------------------------------------------------------------------------
 bool PlayerController::Init(void)
 {
-    auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.2f);
-    collider->SetOffset(Vector3(0.0f, 1.5f, 0.0f));
-    collider->SetTag(L"Body");
-    collider->SetTrigger(true);
-    owner_.AddCollider(collider);
+    // HipsからBodyのコライダーを取得
+    // Todo : ModelAnalyzer側でタグを設定する
+    auto hips = owner_.GetTransform()->FindChildBy(L"Hips");
+    if (hips)
+    {
+        auto& colliders = hips->GetGameObject().GetColliders();
+        for (auto& collider : colliders)
+        {
+            collider->SetTag(L"Body");
+            collider->SetMode(ColliderMode::kDynamic);
+        }
+    }
+    else
+    {// Bodyが設定されてない場合改めて設定する
+        auto collider = MY_NEW SphereCollider(owner_, kDynamic, 1.2f);
+        collider->SetOffset(Vector3(0.0f, 1.5f, 0.0f));
+        collider->SetTag(L"Body");
+        collider->SetTrigger(true);
+        owner_.AddCollider(collider);
+    }
+
     ActorController::Init();
     MainSystem::Instance().GetActorObserver().Register(this);
     return true;
@@ -44,6 +60,7 @@ void PlayerController::Uninit(void)
         current_state_->Uninit(*this);
         MY_DELETE current_state_;
     }
+    ActorController::Uninit();
     MainSystem::Instance().GetActorObserver().Deregister(this);
 }
 
@@ -77,6 +94,14 @@ void PlayerController::OnTrigger(Collider& self, Collider& other)
 void PlayerController::OnCollision(CollisionInfo& info)
 {
     current_state_->OnCollision(*this, info);
+}
+
+//--------------------------------------------------------------------------------
+//  モーション終了の時呼ばれる
+//--------------------------------------------------------------------------------
+void PlayerController::OnAnimationOver(void)
+{
+    current_state_->OnAnimationOver(*this);
 }
 
 //--------------------------------------------------------------------------------

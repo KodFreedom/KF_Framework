@@ -26,8 +26,10 @@
 #include "enemy_ui_controller.h"
 #include "scroll_2d_controller.h"
 #include "actor_state\mutant\player\player_mutant_idle_state.h"
+#include "actor_state\knight\player\player_knight_idle_state.h"
 #include "actor_state\zombie\enemy\enemy_zombie_idle_state.h"
 #include "motion_state\mutant\mutant_idle_motion_state.h"
+#include "motion_state\knight\knight_idle_motion_state.h"
 #include "motion_state\zombie\zombie_idle_motion_state.h"
 
 #if defined(EDITOR)
@@ -305,7 +307,6 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
 
     //Animator
     animator->SetAvatar(name);
-    animator->Change(MY_NEW MutantIdleMotionState(0));
 
     //コンポネント
     auto rigidbody = MY_NEW Rigidbody3D(*result);
@@ -318,8 +319,19 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
     actor_controller->GetParameter().SetJumpSpeed(20.0f);
     actor_controller->GetParameter().SetMinTurnSpeed(kPi);
     actor_controller->GetParameter().SetMaxTurnSpeed(kPi * 2.0f);
-    actor_controller->Change(MY_NEW PlayerMutantIdleState);
     result->AddBehavior(actor_controller);
+
+    //Nameによって初期状態の生成
+    if (name._Equal(L"mutant"))
+    {
+        animator->Change(MY_NEW MutantIdleMotionState(0));
+        actor_controller->Change(MY_NEW PlayerMutantIdleState);
+    }
+    else if (name._Equal(L"knight"))
+    {
+        animator->Change(MY_NEW KnightIdleMotionState(0));
+        actor_controller->Change(MY_NEW PlayerKnightIdleState);
+    }
 
     //UI
     result->AddBehavior(MY_NEW PlayerUiController(*result));
@@ -331,7 +343,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
     
     //Name and Tag
     result->SetName(name);
-    result->SetTag(L"Player");
+    result->SetTagToAllChildren(L"Player");
 
     //パラメーター
     transform->SetPosition(position);
@@ -583,7 +595,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
             renderer->SetMesh(mesh_name + L".skin");
             renderer->SetMaterial(material_name);
             renderer->SetRenderPriority(priority);
-            renderer->SetShaderType(shader_type);
+            renderer->SetShaderType(kDefaultSkinShader);
             renderer->SetCastShadowFlag(is_cast_shadow);
             renderer->SetBoundingSpherePosition(bounding_sphere_position);
             renderer->SetBoundingSphereRadius(bounding_sphere_radius);

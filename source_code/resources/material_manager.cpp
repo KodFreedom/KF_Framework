@@ -44,7 +44,7 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
     , const String& translucency, const String& metalness_mask
     , const String& self_illum_mask, const String& fresnel_warp_color
     , const String& fresnel_warp_rim, const String& fresnel_warp_specular)
-{
+{;
     size_t key = hash<String>()(material_name);
     auto iterator = materials_.find(key);
     if (iterator != materials_.end())
@@ -108,7 +108,10 @@ void MaterialManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void MaterialManager::LoadResource(void)
 {
-    const String& material_name = load_tasks_.front();
+    lock_guard<mutex> lock(mutex_);
+    if (load_tasks_.empty()) return;
+    String material_name = load_tasks_.front();
+    load_tasks_.pop();
     size_t key = hash<String>()(material_name);
 
     auto iterator = materials_.find(key);
@@ -141,7 +144,11 @@ void MaterialManager::LoadResource(void)
 //--------------------------------------------------------------------------------
 void MaterialManager::ReleaseResource(void)
 {
-    auto iterator = materials_.find(release_tasks_.front());
+    lock_guard<mutex> lock(mutex_);
+    if (release_tasks_.empty()) return;
+    size_t key = release_tasks_.front();
+    release_tasks_.pop();
+    auto iterator = materials_.find(key);
     if (materials_.end() == iterator) return;
 
     if (--iterator->second.user_number <= 0)

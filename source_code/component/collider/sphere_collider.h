@@ -21,7 +21,7 @@ public:
     ~SphereCollider() {}
 
     //GetŠÖ”
-    const float& GetRadius(void) const { return radius_; }
+    float GetRadius(void) const;
 
 private:
     //--------------------------------------------------------------------------------

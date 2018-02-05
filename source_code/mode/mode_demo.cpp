@@ -112,5 +112,5 @@ void ModeDemo::LateUpdate(void)
 //--------------------------------------------------------------------------------
 void ModeDemo::OnCompleteLoading(void)
 {
-    MainSystem::Instance().GetSoundSystem().Play(kGameBgm);
+   // MainSystem::Instance().GetSoundSystem().Play(kGameBgm);
 }

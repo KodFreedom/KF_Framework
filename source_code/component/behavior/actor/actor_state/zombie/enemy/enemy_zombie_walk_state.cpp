@@ -66,11 +66,12 @@ void EnemyZombieWalkState::OnTrigger(EnemyController& enemy, Collider& self, Col
         if (other.GetTag()._Equal(L"Body")
             && other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲット発見
+            auto& target = other.GetGameObject().GetTransform()->GetTopParent()->GetGameObject();
+            enemy.SetTarget(&target);
 #ifdef _DEBUG
             MainSystem::Instance().GetDebugObserver().Display(
-                enemy.GetGameObject().GetName() + L" が" + other.GetGameObject().GetName() + L"を発見した！ ");
+                enemy.GetGameObject().GetName() + L" が" + target.GetName() + L"を発見した！ ");
 #endif
-            enemy.SetTarget(&other.GetGameObject());
         }
     }
 }

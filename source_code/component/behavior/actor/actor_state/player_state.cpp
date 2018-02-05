@@ -27,4 +27,5 @@ void PlayerState::UpdateInput(PlayerController& actor)
     actor.SetIsStrongAttack(input.GetKeyTrigger(Key::kStrongAttack));
     actor.SetIsSkill(input.GetKeyTrigger(Key::kSkill));
     actor.SetIsJump(input.GetKeyTrigger(Key::kJump));
+    actor.SetIsDefence(input.GetKeyPress(Key::kBlock));
 }

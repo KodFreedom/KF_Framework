@@ -150,7 +150,10 @@ void MeshManager::Uninit(void)
 //--------------------------------------------------------------------------------
 void MeshManager::LoadResource(void)
 {
-    const String& mesh_name = load_tasks_.front();
+    lock_guard<mutex> lock(mutex_);
+    if (load_tasks_.empty()) return;
+    String mesh_name = load_tasks_.front();
+    load_tasks_.pop();
     size_t key = hash<String>()(mesh_name);
 
     auto iterator = meshes_.find(key);
@@ -183,7 +186,11 @@ void MeshManager::LoadResource(void)
 //--------------------------------------------------------------------------------
 void MeshManager::ReleaseResource(void)
 {
-    auto iterator = meshes_.find(release_tasks_.front());
+    lock_guard<mutex> lock(mutex_);
+    if (release_tasks_.empty()) return;
+    size_t key = release_tasks_.front();
+    release_tasks_.pop();
+    auto iterator = meshes_.find(key);
     if (meshes_.end() == iterator) return;
 
     if (--iterator->second.user_number <= 0)
