@@ -70,6 +70,7 @@ enum ShaderType
     kDefault2dTextureShader,
     kZombieSkinShader,
     kDefaultBillboardShader,
+    kKnightSkinShader,
     kShaderMax
 };
 

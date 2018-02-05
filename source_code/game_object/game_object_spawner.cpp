@@ -595,7 +595,7 @@ GameObject* GameObjectSpawner::CreateChildNode(Transform* parent, BinaryInputArc
             renderer->SetMesh(mesh_name + L".skin");
             renderer->SetMaterial(material_name);
             renderer->SetRenderPriority(priority);
-            renderer->SetShaderType(kDefaultSkinShader);
+            renderer->SetShaderType(shader_type);
             renderer->SetCastShadowFlag(is_cast_shadow);
             renderer->SetBoundingSpherePosition(bounding_sphere_position);
             renderer->SetBoundingSphereRadius(bounding_sphere_radius);

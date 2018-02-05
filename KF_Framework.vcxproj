@@ -336,6 +336,7 @@
     <ClCompile Include="source_code\shader\shader_manager.cpp" />
     <ClCompile Include="source_code\shader\skin\default_skin_shader.cpp" />
     <ClCompile Include="source_code\shader\skin\jugg_skin_shader.cpp" />
+    <ClCompile Include="source_code\shader\skin\knight_skin_shader.cpp" />
     <ClCompile Include="source_code\shader\skin\skin_shadow_map_shader.cpp" />
     <ClCompile Include="source_code\shader\skin\zombie_skin_shader.cpp" />
     <ClCompile Include="source_code\sound\sound_system.cpp" />
@@ -543,6 +544,7 @@
     <ClInclude Include="source_code\shader\shader_manager.h" />
     <ClInclude Include="source_code\shader\skin\default_skin_shader.h" />
     <ClInclude Include="source_code\shader\skin\jugg_skin_shader.h" />
+    <ClInclude Include="source_code\shader\skin\knight_skin_shader.h" />
     <ClInclude Include="source_code\shader\skin\skin_shadow_map_shader.h" />
     <ClInclude Include="source_code\shader\skin\zombie_skin_shader.h" />
     <ClInclude Include="source_code\sound\sound_system.h" />

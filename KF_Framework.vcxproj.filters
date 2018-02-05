@@ -840,6 +840,9 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_block_state.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClCompile>
+    <ClCompile Include="source_code\shader\skin\knight_skin_shader.cpp">
+      <Filter>ソース ファイル\Shader\Skin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h">
@@ -1456,6 +1459,9 @@
     </ClInclude>
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_block_state.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\shader\skin\knight_skin_shader.h">
+      <Filter>ヘッダー ファイル\Shader\Skin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
