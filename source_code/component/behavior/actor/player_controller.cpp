@@ -34,8 +34,6 @@ bool PlayerController::Init(void)
         {
             collider->SetTag(L"Body");
             collider->SetMode(ColliderMode::kDynamic);
-            collider->Awake();
-            collider->Register(this);
         }
     }
     else

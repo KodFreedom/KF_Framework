@@ -88,7 +88,8 @@ void EnemyZombieAttackState::OnTrigger(EnemyController& enemy, Collider& self, C
         if (other.GetTag()._Equal(L"Body")
             && other.GetGameObject().GetTag()._Equal(L"Player"))
         {// ターゲットに当たった, player controllerを取得
-            auto player_controller = other.GetGameObject().GetBehaviorBy(L"PlayerController");
+            auto& player = other.GetGameObject().GetTransform()->GetTopParent()->GetGameObject();
+            auto player_controller = player.GetBehaviorBy(L"PlayerController");
             if (player_controller)
             {
                 static_cast<PlayerController*>(player_controller)->Hit(enemy.GetParameter().GetAttack());

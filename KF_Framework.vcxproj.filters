@@ -828,6 +828,15 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_hard_land_state.cpp">
       <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_death_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_impact_state.cpp">
+      <Filter>ソース ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="source_code\component\collider\sphere_collider.cpp">
+      <Filter>ソース ファイル\Component\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h">
@@ -1434,6 +1443,12 @@
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_hard_land_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_death_state.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_impact_state.h">
       <Filter>ヘッダー ファイル\Component\Behavior\Actor\State\Knight\Player</Filter>
     </ClInclude>
   </ItemGroup>

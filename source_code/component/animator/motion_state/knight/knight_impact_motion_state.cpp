@@ -6,6 +6,7 @@
 #include "animator.h"
 #include "motion_data.h"
 #include "knight_idle_motion_state.h"
+#include "knight_impact_motion_state.h"
 #include "knight_death_motion_state.h"
 void KnightImpactMotionState::ChangeMotion(Animator& animator)
 {
@@ -15,6 +16,11 @@ void KnightImpactMotionState::ChangeMotion(Animator& animator)
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightIdleMotionState(0), current_frame_counter_, 5));
 		return;
 	}
+    if (animator.GetIsDamaged() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightImpactMotionState(0), current_frame_counter_, 5));
+        return;
+    }
 	if(animator.GetIsDead() == true)
 	{
 		animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW KnightDeathMotionState(0), current_frame_counter_, 5));

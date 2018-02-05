@@ -234,10 +234,12 @@
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_death_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_fall_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_hard_land_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.cpp" />
+    <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_impact_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step1_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.cpp" />
     <ClCompile Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.cpp" />
@@ -281,6 +283,7 @@
     <ClCompile Include="source_code\component\collider\aabb_collider.cpp" />
     <ClCompile Include="source_code\component\collider\collider.cpp" />
     <ClCompile Include="source_code\component\collider\field_collider.cpp" />
+    <ClCompile Include="source_code\component\collider\sphere_collider.cpp" />
     <ClCompile Include="source_code\component\renderer\mesh_renderer.cpp" />
     <ClCompile Include="source_code\component\renderer\mesh_renderer_2d.cpp" />
     <ClCompile Include="source_code\component\renderer\mesh_renderer_3d.cpp" />
@@ -428,10 +431,12 @@
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_land_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_neutral_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\juggernaut\player\player_jugg_walk_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_death_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_dush_attack_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_fall_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_hard_land_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_idle_state.h" />
+    <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_impact_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step1_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step2_state.h" />
     <ClInclude Include="source_code\component\behavior\actor\actor_state\knight\player\player_knight_light_attack_step3_state.h" />

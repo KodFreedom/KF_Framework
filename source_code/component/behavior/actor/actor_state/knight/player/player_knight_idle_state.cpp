@@ -9,6 +9,8 @@
 #include "player_knight_strong_attack_step1_state.h"
 #include "player_knight_standing_jump_state.h"
 #include "player_knight_fall_state.h"
+#include "player_knight_impact_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -75,9 +77,9 @@ void PlayerKnightIdleState::OnDamaged(PlayerController& player, const float& dam
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 
-    //player.Change(MY_NEW PlayerMutantDamagedState);
+    player.Change(MY_NEW PlayerKnightImpactState);
 }

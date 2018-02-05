@@ -5,6 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_standing_jump_state.h"
 #include "player_knight_standing_land_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -54,7 +55,7 @@ void PlayerKnightStandingJumpState::Update(PlayerController& player)
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 }

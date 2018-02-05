@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_dush_attack_state.h"
 #include "player_knight_idle_state.h"
+#include "player_knight_impact_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "enemy_controller.h"
 #include "animator.h"
@@ -111,9 +113,9 @@ void PlayerKnightDushAttackState::OnDamaged(PlayerController& player, const floa
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 
-    //player.Change(MY_NEW PlayerMutantDamagedState);
+    player.Change(MY_NEW PlayerKnightImpactState);
 }

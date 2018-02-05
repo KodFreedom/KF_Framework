@@ -6,6 +6,8 @@
 #include "player_knight_light_attack_step1_state.h"
 #include "player_knight_light_attack_step2_state.h"
 #include "player_knight_idle_state.h"
+#include "player_knight_impact_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "enemy_controller.h"
 #include "animator.h"
@@ -129,9 +131,9 @@ void PlayerKnightLightAttackStep1State::OnDamaged(PlayerController& player, cons
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 
-    //player.Change(MY_NEW PlayerMutantDamagedState);
+    player.Change(MY_NEW PlayerKnightImpactState);
 }

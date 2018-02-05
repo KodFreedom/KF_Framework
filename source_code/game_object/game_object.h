@@ -110,6 +110,7 @@ public:
     void SetAlive(const bool& value);
     void SetName(const String& value) { name_ = value; }
     void SetTag(const String& value) { tag_ = value; }
+    void SetTagToAllChildren(const String& value);
 
     //--------------------------------------------------------------------------------
     //  ¶‚«‚éƒtƒ‰ƒO‚Ìæ“¾

@@ -1,47 +1,52 @@
 //--------------------------------------------------------------------------------
-//  knight着地ステート
-//  player_knight_moving_land_state.cpp
+//  knightダメージ受けたステート
+//  player_knight_impact_state.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "player_knight_run_state.h"
-#include "player_knight_moving_land_state.h"
+#include "player_knight_idle_state.h"
 #include "player_knight_impact_state.h"
 #include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
+#include "game_time.h"
 
 //--------------------------------------------------------------------------------
 //  初期化関数
 //--------------------------------------------------------------------------------
-void PlayerKnightMovingLandState::Init(PlayerController& player)
+void PlayerKnightImpactState::Init(PlayerController& player)
 {
-
+    player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
+    player.GetAnimator().SetDamaged(true);
 }
 
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void PlayerKnightMovingLandState::Uninit(PlayerController& player)
+void PlayerKnightImpactState::Uninit(PlayerController& player)
 {
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void PlayerKnightMovingLandState::Update(PlayerController& player)
+void PlayerKnightImpactState::Update(PlayerController& player)
 {
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
+    player.GetAnimator().SetDamaged(false);
+    time_counter_ += GameTime::Instance().ScaledDeltaTime();
 }
 
 //--------------------------------------------------------------------------------
 //  ダメージ受けた処理
 //--------------------------------------------------------------------------------
-void PlayerKnightMovingLandState::OnDamaged(PlayerController& player, const float& damage)
+void PlayerKnightImpactState::OnDamaged(PlayerController& player, const float& damage)
 {
+    if (time_counter_ <= kInvincibleTime) return;
+
     player.ReceiveDamage(damage);
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
@@ -56,11 +61,11 @@ void PlayerKnightMovingLandState::OnDamaged(PlayerController& player, const floa
 //--------------------------------------------------------------------------------
 //  モーション終了の時呼ばれる
 //--------------------------------------------------------------------------------
-void PlayerKnightMovingLandState::OnAnimationOver(PlayerController& player)
+void PlayerKnightImpactState::OnAnimationOver(PlayerController& player)
 {
-    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_moving_land"))
+    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_impact"))
     {
-        player.Change(MY_NEW PlayerKnightRunState);
+        player.Change(MY_NEW PlayerKnightIdleState);
         return;
     }
 }

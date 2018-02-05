@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_strong_attack_step3_state.h"
 #include "player_knight_idle_state.h"
+#include "player_knight_impact_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "enemy_controller.h"
 #include "animator.h"
@@ -109,9 +111,9 @@ void PlayerKnightStrongAttackStep3State::OnDamaged(PlayerController& player, con
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 
-    //player.Change(MY_NEW PlayerMutantDamagedState);
+    player.Change(MY_NEW PlayerKnightImpactState);
 }

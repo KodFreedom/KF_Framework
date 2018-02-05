@@ -5,6 +5,8 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_idle_state.h"
 #include "player_knight_standing_land_state.h"
+#include "player_knight_impact_state.h"
+#include "player_knight_death_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -44,11 +46,11 @@ void PlayerKnightStandingLandState::OnDamaged(PlayerController& player, const fl
 
     if (player.GetParameter().GetCurrentLife() <= 0.0f)
     {
-        //player.Change(MY_NEW PlayerMutantDyingState);
+        player.Change(MY_NEW PlayerKnightDeathState);
         return;
     }
 
-    //player.Change(MY_NEW PlayerMutantDamagedState);
+    player.Change(MY_NEW PlayerKnightImpactState);
 }
 
 //--------------------------------------------------------------------------------

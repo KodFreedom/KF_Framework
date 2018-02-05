@@ -101,3 +101,15 @@ void GameObject::SetAlive(const bool& value)
         pair.second->GetGameObject().SetAlive(value);
     }
 }
+
+//--------------------------------------------------------------------------------
+//  SetTagToAllChildren
+//--------------------------------------------------------------------------------
+void GameObject::SetTagToAllChildren(const String& value)
+{
+    tag_ = value;
+    for (auto& pair : transform_->GetChildren())
+    {
+        pair.second->GetGameObject().SetTagToAllChildren(value);
+    }
+}

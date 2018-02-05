@@ -343,7 +343,7 @@ GameObjectActor* GameObjectSpawner::CreatePlayer(const String &name, const Vecto
     
     //Name and Tag
     result->SetName(name);
-    result->SetTag(L"Player");
+    result->SetTagToAllChildren(L"Player");
 
     //パラメーター
     transform->SetPosition(position);
