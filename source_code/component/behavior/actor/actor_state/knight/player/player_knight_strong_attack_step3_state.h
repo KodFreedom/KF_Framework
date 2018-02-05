@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾
 //--------------------------------------------------------------------------------
-class PlayerKnightStrongAttackStep3State : public PlayerState
+class PlayerKnightStrongAttackStep3State final : public PlayerState
 {
 public:
     //--------------------------------------------------------------------------------

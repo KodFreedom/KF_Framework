@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------
-//  knight軽攻撃ステップ3ステート
-//　player_knight_light_attack_step3_state.h
+//  knight移動状態跳ぶステート
+//  player_knight_moving_jump_state.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
@@ -9,14 +9,14 @@
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class PlayerKnightLightAttackStep3State final : public PlayerState
+class PlayerKnightMovingJumpState final : public PlayerState
 {
 public:
     //--------------------------------------------------------------------------------
     //  constructors for singleton
     //--------------------------------------------------------------------------------
-    PlayerKnightLightAttackStep3State() : PlayerState(L"PlayerKnightLightAttackStep3State") {}
-    ~PlayerKnightLightAttackStep3State() {}
+    PlayerKnightMovingJumpState() : PlayerState(L"PlayerKnightMovingJumpState") {}
+    ~PlayerKnightMovingJumpState() {}
 
     //--------------------------------------------------------------------------------
     //  初期化処理
@@ -33,26 +33,9 @@ public:
     //--------------------------------------------------------------------------------
     void Update(PlayerController& player) override;
 
-    //--------------------------------------------------------------------------------
-    //  コライダートリガーの時呼ばれる
-    //--------------------------------------------------------------------------------
-    void OnTrigger(PlayerController& player, Collider& self, Collider& other) override;
-
-    //--------------------------------------------------------------------------------
-    //  ダメージ受けた処理
-    //--------------------------------------------------------------------------------
-    void OnDamaged(PlayerController& player, const float& damage) override;
-
-    //--------------------------------------------------------------------------------
-    //  モーション終了の時呼ばれる
-    //--------------------------------------------------------------------------------
-    void OnAnimationOver(PlayerController& player) override;
-
 private:
     //--------------------------------------------------------------------------------
     //  定数定義
     //--------------------------------------------------------------------------------
-    static constexpr float kMovementMultiplier = 0.0f;
-    static constexpr int kBeginAttackFrame = 54;
-    static constexpr int kEndAttackFrame = 84;
+    static constexpr float kGroundCheckDistance = 0.1f;
 };

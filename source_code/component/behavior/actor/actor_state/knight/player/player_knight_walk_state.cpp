@@ -8,6 +8,8 @@
 #include "player_knight_run_state.h"
 #include "player_knight_light_attack_step1_state.h"
 #include "player_knight_strong_attack_step1_state.h"
+#include "player_knight_moving_jump_state.h"
+#include "player_knight_fall_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -58,13 +60,13 @@ void PlayerKnightWalkState::Update(PlayerController& player)
 
         if (player.GetCurrentGroundInfo().is_grounded && player.IsJump())
         {
-            //player.Change(MY_NEW PlayerMutantJumpState);
+            player.Change(MY_NEW PlayerKnightMovingJumpState);
             return;
         }
 
         if (!player.GetCurrentGroundInfo().is_grounded)
         {
-            //player.Change(MY_NEW PlayerMutantFallState);
+            player.Change(MY_NEW PlayerKnightFallState);
             return;
         }
 
