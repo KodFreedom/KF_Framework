@@ -12,6 +12,7 @@
 #include "player_knight_fall_state.h"
 #include "player_knight_impact_state.h"
 #include "player_knight_death_state.h"
+#include "player_knight_block_state.h"
 #include "player_controller.h"
 #include "animator.h"
 #include "collider.h"
@@ -83,6 +84,12 @@ void PlayerKnightRunState::Update(PlayerController& player)
             }
 
             player.Change(MY_NEW PlayerKnightStrongAttackStep1State);
+            return;
+        }
+
+        if (player.IsDefence())
+        {
+            player.Change(MY_NEW PlayerKnightBlockState);
             return;
         }
     }

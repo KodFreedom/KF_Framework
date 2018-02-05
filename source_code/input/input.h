@@ -30,6 +30,7 @@ enum Key
     kLock,
     kStrongAttack,
     kSkill,
+    kBlock,
     kKeyMax,
 
     //èdÇÀÇÈÉLÅ[

@@ -182,6 +182,11 @@ void Input::UpdateInputInfo(void)
     trigger_flags[kSkill] = keyboard_->GetTrigger(DIK_L) | joystick_->GetButtonTrigger(kXboxY);
     release_flags[kSkill] = keyboard_->GetRelease(DIK_L) | joystick_->GetButtonRelease(kXboxY);
 
+    // Defence
+    press_flags[kBlock] = keyboard_->GetPress(DIK_LSHIFT) | joystick_->GetButtonPress(kXboxLB);
+    trigger_flags[kBlock] = keyboard_->GetTrigger(DIK_LSHIFT) | joystick_->GetButtonTrigger(kXboxLB);
+    release_flags[kBlock] = keyboard_->GetRelease(DIK_LSHIFT) | joystick_->GetButtonRelease(kXboxLB);
+
     // •Û‘¶
     press_state_ = 0;
     trigger_state_ = 0;
