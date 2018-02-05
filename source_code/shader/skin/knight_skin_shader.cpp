@@ -32,6 +32,7 @@ void KnightSkinShader::Init(const LPDIRECT3DDEVICE9 device)
 void KnightSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 {
     ShaderDirectX9::Set(device);
+    MainSystem::Instance().GetRenderSystem().SetRenderState(CullMode::KCullNone);
 }
 
 //--------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ void KnightSkinShader::Set(const LPDIRECT3DDEVICE9 device)
 //--------------------------------------------------------------------------------
 void KnightSkinShader::Reset(const LPDIRECT3DDEVICE9 device)
 {
-
+    MainSystem::Instance().GetRenderSystem().SetRenderState(CullMode::kCcw);
 }
 
 //--------------------------------------------------------------------------------
