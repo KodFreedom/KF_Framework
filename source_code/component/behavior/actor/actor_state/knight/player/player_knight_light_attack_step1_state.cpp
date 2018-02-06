@@ -13,6 +13,8 @@
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -29,6 +31,7 @@ void PlayerKnightLightAttackStep1State::Init(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerKnightLightAttackStep1State::Uninit(PlayerController& player)
 {
+    
 }
 
 //--------------------------------------------------------------------------------
@@ -62,6 +65,11 @@ void PlayerKnightLightAttackStep1State::Update(PlayerController& player)
                 collider->Awake();
             }
         }
+
+        // Se
+        auto& sound_system = MainSystem::Instance().GetSoundSystem();
+        sound_system.Play(kAttackVoice1Se);
+        sound_system.Play(kSordAttackSe);
     }
     else if (current_frame == kEndAttackFrame)
     {
@@ -99,6 +107,7 @@ void PlayerKnightLightAttackStep1State::OnAnimationOver(PlayerController& player
         && animator.GetCurrentAnimationName()._Equal(L"knight_light_attack_step1"))
     {
         player.Change(MY_NEW PlayerKnightIdleState);
+        player.GetAnimator().SetLightAttack(false);
         return;
     }
 }

@@ -23,6 +23,17 @@ enum SoundEffectLabel
     kZombieBeatSe,
     kZombieWarningSe,
     kZombieDeathSe,
+    kBlockSe,
+    kSordAttackSe,
+    kAttackVoice1Se,
+    kAttackVoice2Se,
+    kAttackVoice3Se,
+    kBeginVoiceSe,
+    kDamageVoice1Se,
+    kDamageVoice2Se,
+    kDeathVoiceSe,
+    kGuardVoiceSe,
+    kPinchVoiceSe,
     kSeMax,
 };
 
@@ -61,10 +72,12 @@ public:
     //--------------------------------------------------------------------------------
     void Play(const SoundEffectLabel label)
     {
+        lock_guard<mutex> lock(mutex_);
         se_play_tasks_.push(label);
     }
     void Play(const BackgroundMusicLabel label)
     {
+        lock_guard<mutex> lock(mutex_);
         bgm_play_tasks_.push(label);
     }
 
@@ -74,10 +87,12 @@ public:
     //--------------------------------------------------------------------------------
     void Stop(const SoundEffectLabel label)
     {
+        lock_guard<mutex> lock(mutex_);
         se_stop_tasks_.push(label);
     }
     void Stop(const BackgroundMusicLabel label)
     {
+        lock_guard<mutex> lock(mutex_);
         bgm_stop_tasks_.push(label);
     }
 
@@ -184,6 +199,7 @@ private:
     thread*                  thread_ = nullptr;
     IXAudio2*                xaudio2_instance_ = nullptr;
     IXAudio2MasteringVoice*  mastering_voice_ = nullptr;
+    mutex                    mutex_;        // îrëºêßå‰
 
     WaveSe*                  sound_effects_[kSeMax] = { 0 };
     queue<SoundEffectLabel>  se_play_tasks_;

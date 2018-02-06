@@ -12,6 +12,8 @@
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -55,6 +57,11 @@ void PlayerKnightDushAttackState::Update(PlayerController& player)
                 collider->Awake();
             }
         }
+
+        // Se
+        auto& sound_system = MainSystem::Instance().GetSoundSystem();
+        sound_system.Play(kAttackVoice1Se);
+        sound_system.Play(kSordAttackSe);
     }
     else if (current_frame == kEndAttackFrame)
     {

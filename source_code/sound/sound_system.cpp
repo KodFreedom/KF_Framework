@@ -21,6 +21,17 @@ SoundSystem::SoundInfo SoundSystem::se_infos_[kSeMax] =
     { L"data/se/zombie_beat.wav", 0 }, // kZombieBeat
     { L"data/se/zombie_warning.wav", 0 }, // kZombieWarning
     { L"data/se/zombie_death.wav", 0 }, // kZombieDeath
+    { L"data/se/block.wav", 0 }, // kBlockSe,
+    { L"data/se/sord_attack.wav", 0 }, // kSordAttackSe,
+    { L"data/se/attack_voice_1.wav", 0 }, // kAttackVoice1Se,
+    { L"data/se/attack_voice_2.wav", 0 }, // kAttackVoice2Se,
+    { L"data/se/attack_voice_3.wav", 0 }, // kAttackVoice3Se,
+    { L"data/se/begin_voice.wav", 0 }, // kBeginVoiceSe,
+    { L"data/se/damage_voice_1.wav", 0 }, // kDamageVoice1Se,
+    { L"data/se/damage_voice_2.wav", 0 }, // kDamageVoice2Se,
+    { L"data/se/death_voice.wav", 0 }, // kDeathVoiceSe,
+    { L"data/se/guard_voice.wav", 0 }, // kGuardVoiceSe,
+    { L"data/se/pinch_voice.wav", 0 }, // kPinchVoiceSe,
 };
 
 SoundSystem::SoundInfo SoundSystem::bgm_infos_[kBgmMax] =
@@ -208,6 +219,7 @@ void SoundSystem::Run(void)
 //--------------------------------------------------------------------------------
 void SoundSystem::PlaySe(void)
 {
+    lock_guard<mutex> lock(mutex_);
     if (se_play_tasks_.empty()) return;
 
     // 一番目のタスクを実行する
@@ -227,6 +239,7 @@ void SoundSystem::PlaySe(void)
 //--------------------------------------------------------------------------------
 void SoundSystem::StopSe(void)
 {
+    lock_guard<mutex> lock(mutex_);
     if (se_stop_tasks_.empty()) return;
 
     // 一番目のタスクを実行する
@@ -252,6 +265,7 @@ void SoundSystem::PlayBgm(void)
     }
 
     // bgmの切り替え
+    lock_guard<mutex> lock(mutex_);
     if (bgm_play_tasks_.empty()) return;
 
     // 一番目のタスクを実行する
@@ -276,6 +290,7 @@ void SoundSystem::PlayBgm(void)
 //--------------------------------------------------------------------------------
 void SoundSystem::StopBgm(void)
 {
+    lock_guard<mutex> lock(mutex_);
     if (bgm_stop_tasks_.empty()) return;
 
     // 一番目のタスクを実行する
