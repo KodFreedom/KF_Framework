@@ -12,6 +12,8 @@
 #include "animator.h"
 #include "collider.h"
 #include "game_object.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”
@@ -20,7 +22,7 @@ void PlayerKnightStrongAttackStep3State::Init(PlayerController& player)
 {
     auto& parameter = player.GetParameter();
     parameter.SetMovementMultiplier(kMovementMultiplier);
-    player.GetAnimator().SetStrongAttack(true);
+    player.GetAnimator().SetStrongAttack(true);  
 }
 
 //--------------------------------------------------------------------------------
@@ -55,6 +57,11 @@ void PlayerKnightStrongAttackStep3State::Update(PlayerController& player)
                 collider->Awake();
             }
         }
+
+        // Se
+        auto& sound_system = MainSystem::Instance().GetSoundSystem();
+        sound_system.Play(kAttackVoice3Se);
+        sound_system.Play(kSordAttackSe);
     }
     else if (current_frame == kEndAttackFrame)
     {

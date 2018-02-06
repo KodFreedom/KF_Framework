@@ -11,6 +11,8 @@
 #include "collider.h"
 #include "game_object.h"
 #include "game_time.h"
+#include "main_system.h"
+#include "sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  èâä˙âªä÷êî
@@ -19,6 +21,11 @@ void PlayerKnightImpactState::Init(PlayerController& player)
 {
     player.GetParameter().SetMovementMultiplier(kMovementMultiplier);
     player.GetAnimator().SetDamaged(true);
+
+    // Se
+    auto& sound_system = MainSystem::Instance().GetSoundSystem();
+    sound_system.Play(kZombieBeatSe);
+    sound_system.Play(static_cast<SoundEffectLabel>(kDamageVoice1Se + Random::Range(0, 2)));
 }
 
 //--------------------------------------------------------------------------------
