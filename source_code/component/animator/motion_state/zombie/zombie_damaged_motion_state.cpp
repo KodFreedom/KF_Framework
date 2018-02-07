@@ -20,4 +20,9 @@ void ZombieDamagedMotionState::ChangeMotion(Animator& animator)
         animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDeathMotionState(0), current_frame_counter_, 5));
         return;
     }
+    if (animator.GetIsDamaged() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDamagedMotionState(0), current_frame_counter_, 5));
+        return;
+    }
 }

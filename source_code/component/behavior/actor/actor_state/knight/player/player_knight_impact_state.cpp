@@ -45,6 +45,15 @@ void PlayerKnightImpactState::Update(PlayerController& player)
     player.Move();
     player.GetAnimator().SetDamaged(false);
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
+
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    {
+        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_impact"))
+        {
+            player.Change(MY_NEW PlayerKnightIdleState);
+            return;
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -70,9 +79,5 @@ void PlayerKnightImpactState::OnDamaged(PlayerController& player, const float& d
 //--------------------------------------------------------------------------------
 void PlayerKnightImpactState::OnAnimationOver(PlayerController& player)
 {
-    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_impact"))
-    {
-        player.Change(MY_NEW PlayerKnightIdleState);
-        return;
-    }
+    
 }
