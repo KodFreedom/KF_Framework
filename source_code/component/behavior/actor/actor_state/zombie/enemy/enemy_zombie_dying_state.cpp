@@ -17,6 +17,7 @@
 void EnemyZombieDyingState::Init(EnemyController& enemy)
 {
     enemy.GetAnimator().SetDead(true);
+    MainSystem::Instance().GetSoundSystem().Play(kZombieBeatSe);
     MainSystem::Instance().GetSoundSystem().Play(kZombieDeathSe);
 }
 

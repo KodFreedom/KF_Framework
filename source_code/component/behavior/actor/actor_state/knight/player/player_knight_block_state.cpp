@@ -44,16 +44,13 @@ void PlayerKnightBlockState::Update(PlayerController& player)
 //--------------------------------------------------------------------------------
 void PlayerKnightBlockState::OnAnimationOver(PlayerController& player)
 {
-    if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_block_impact"))
-    {
-        player.GetAnimator().SetDamaged(false);
-    }
-
     if (player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_end_block"))
     {
         player.Change(MY_NEW PlayerKnightIdleState);
         return;
     }
+
+    player.GetAnimator().SetDamaged(false);
 }
 
 //--------------------------------------------------------------------------------
@@ -68,6 +65,7 @@ void PlayerKnightBlockState::OnTrigger(PlayerController& player, Collider& self,
 //--------------------------------------------------------------------------------
 void PlayerKnightBlockState::OnDamaged(PlayerController& player, const float& damage)
 {
+    if (player.GetAnimator().GetIsDamaged()) return;
     player.GetAnimator().SetDamaged(true);
     
     // Se
