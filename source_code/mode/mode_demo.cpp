@@ -85,7 +85,7 @@ void ModeDemo::LateUpdate(void)
     }
    
     auto player = main_system.GetActorObserver().GetPlayer();
-    if (player && player->GetCurrentStateName().find(L"Dying") != String::npos)
+    if (player && player->GetCurrentStateName().find(L"Death") != String::npos)
     {// プレイヤーが死んだらリザルトにいく
         time_counter_ = kWaitTime;
         return;
