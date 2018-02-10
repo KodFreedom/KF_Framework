@@ -319,12 +319,23 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
     float start_to_joint_length = start_to_joint.Magnitude();
     float joint_to_end_length = joint_to_end.Magnitude();
 
+    // Jointの今の角度の算出
+    Vector3& joint_to_start_direction = start_to_joint.Normalized() * -1.0f;
+    Vector3& joint_to_end_direction = joint_to_end.Normalized();
+    float dot = joint_to_start_direction.Dot(joint_to_end_direction);
+    if (fabsf(dot) > 0.98f)
+    {// 角度が小さすぎると正しい外積が算出できないので計算しない
+        return;
+    }
+
+    float current_joint_radian = acosf(dot);
+
     // Jointを回転する(膝はx軸のみ回転できる)
     // Jointの目標角度の算出
     float wanted_joint_radian = 0.0f;
     if (start_to_goal_length >= start_to_joint_length + joint_to_end_length)
-    {// 届かない場合180度にする
-        wanted_joint_radian = kPi - 0.1f;
+    {// 届かない場合計算しない
+        wanted_joint_radian = kPi;
     }
     else
     {// C2 = A2 + B2 – 2ABcos(x) ==> cos(x) = (A2 + B2 - C2) / 2AB
@@ -335,44 +346,39 @@ void Animator::ComputeFootIK(const IKParts& end_part, const IKGoals& ik_goal)
         wanted_joint_radian = acosf(x);
     }
     
-    // Jointの今の角度の算出
-    Vector3& joint_to_start_direction = start_to_joint.Normalized() * -1.0f;
-    Vector3& joint_to_end_direction = joint_to_end.Normalized();
-    float dot = joint_to_start_direction.Dot(joint_to_end_direction);
-    float current_joint_radian = acosf(dot);
-    
     // 回転する(ウェイトをかける)
     float delta_joint_radian = (wanted_joint_radian - current_joint_radian) * ik_goals_[ik_goal].weight;
-    if (fabsf(dot) < 0.98f)
+
+    Vector3& rotate_axis = (joint_to_start_direction * joint_to_end_direction).Normalized();
+    joint_world.RemoveScale();
+    rotate_axis = Vector3::TransformNormal(rotate_axis, joint_world.Transpose()).Normalized();
+    Quaternion& joint_rotation = Quaternion::RotateAxis(rotate_axis, delta_joint_radian);
+    joint_transform->SetRotation(joint_transform->GetRotation() * joint_rotation);
+
+    // Startを回転する
+    // 新しいEndの算出
+    joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
+    end_world = end_transform->GetCurrentWorldMatrix(joint_world);
+    end_position = Vector3(end_world.rows_[3]);
+
+    // 回転の算出
+    Vector3& start_to_end = (end_position - start_position).Normalized();
+    start_to_goal.Normalize();
+    dot = start_to_end.Dot(start_to_goal);
+    if (fabsf(dot) > 0.98f)
     {// 角度が小さすぎると正しい外積が算出できないので計算しない
-        Vector3& joint_rotate_axis = (joint_to_start_direction * joint_to_end_direction).Normalized();
-        joint_rotate_axis = Vector3::TransformNormal(joint_rotate_axis, joint_world.Transpose()).Normalized();
-        Quaternion& joint_rotation = Quaternion::RotateAxis(joint_rotate_axis, delta_joint_radian);
-        joint_transform->SetRotation(joint_transform->GetRotation() * joint_rotation);
-
-        // Startを回転する
-        // 新しいEndの算出
-        joint_world = joint_transform->GetCurrentWorldMatrix(start_world);
-        end_world = end_transform->GetCurrentWorldMatrix(joint_world);
-        Vector3& new_end_position = Vector3(end_world.rows_[3]);
-
-        // 回転の算出
-        Matrix44& start_matrix_to_local = start_world.Inverse();
-        Vector3& start_to_new_end_local = Vector3::TransformCoord(new_end_position, start_matrix_to_local).Normalized();
-        Vector3& start_to_goal_local = Vector3::TransformCoord(ik_goals_[ik_goal].position, start_matrix_to_local).Normalized();
-        dot = start_to_new_end_local.Dot(start_to_goal_local);
-        if (fabsf(dot) < 0.98f)
-        {// 角度が小さすぎると正しい外積が算出できないので計算しない
-            Vector3& rotate_axis = (start_to_new_end_local * start_to_goal_local).Normalized();
-
-            // ウェイトをかける
-            float delta_start_radian = acosf(start_to_new_end_local.Dot(start_to_goal_local)) * ik_goals_[ik_goal].weight;
-
-            // 回転する
-            Quaternion& start_rotation = Quaternion::RotateAxis(rotate_axis, delta_start_radian);
-            start_transform->SetRotation(start_transform->GetRotation() * start_rotation);
-        }
+        return;
     }
+    rotate_axis = (start_to_end * start_to_goal).Normalized();
+    start_world.RemoveScale();
+    rotate_axis = Vector3::TransformNormal(rotate_axis, start_world.Transpose()).Normalized();
+
+    // ウェイトをかける
+    float delta_start_radian = acosf(dot) * ik_goals_[ik_goal].weight;
+
+    // 回転する
+    Quaternion& start_rotation = Quaternion::RotateAxis(rotate_axis, delta_start_radian);
+    start_transform->SetRotation(start_transform->GetRotation() * start_rotation);
 
     // 足元の回転
     start_world = start_transform->GetCurrentWorldMatrix();
