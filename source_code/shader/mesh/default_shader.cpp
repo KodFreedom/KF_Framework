@@ -68,8 +68,12 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
     auto material = main_system.GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
     if (material)
     {
-        UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-        device->SetTexture(color_texture_index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
+        UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetSamplerState(index, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        device->SetTexture(index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
         pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
         pixel_shader_constant_table_->SetValue(device, "material_emissive", &material->emissive_, sizeof(material->emissive_));
         pixel_shader_constant_table_->SetValue(device, "material_specular", &material->specular_, sizeof(material->specular_));
@@ -83,6 +87,11 @@ void DefaultShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const MeshR
     pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system.GetBias());
     pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system.GetFar());
     UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
+    device->SetSamplerState(shadow_map_index, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     device->SetTexture(shadow_map_index, shadow_map_system.GetShadowMap());
 }
 #endif

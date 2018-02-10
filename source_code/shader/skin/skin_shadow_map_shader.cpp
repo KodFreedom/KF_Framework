@@ -59,6 +59,11 @@ void SkinShadowMapShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const
     assert(bone_texture.size);
     vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
     UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 }
 #endif

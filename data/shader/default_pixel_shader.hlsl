@@ -10,25 +10,12 @@ float4 material_diffuse;
 float4 material_emissive;
 float4 material_specular;
 float  material_power;
-sampler color_texture = sampler_state
-{
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
+sampler color_texture;
 
 // shadowmap
 float bias;
 float light_far;
-sampler shadow_map = sampler_state
-{
-	MipFilter = NONE;
-	MinFilter = POINT;
-	MagFilter = POINT;
-	AddressU = BORDER;
-	AddressV = BORDER;
-};
+sampler shadow_map;
 
 //--------------------------------------------------------------------------------
 //  In/Out struct

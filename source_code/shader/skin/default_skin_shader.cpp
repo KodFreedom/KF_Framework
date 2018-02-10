@@ -68,6 +68,11 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
     assert(bone_texture.size);
     vertex_shader_constant_table_->SetFloat(device, "texture_size", static_cast<FLOAT>(bone_texture.size));
     UINT bone_texture_index = vertex_shader_constant_table_->GetSamplerIndex("bone_texture");
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+    device->SetSamplerState(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     device->SetTexture(D3DVERTEXTEXTURESAMPLER0 + bone_texture_index, bone_texture.pointer);
 
     // Material
@@ -76,8 +81,17 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
     {
         auto& texture_manager = main_system.GetResources().GetTextureManager();
         UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetSamplerState(index, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
         device->SetTexture(index, texture_manager.Get(material->color_texture_));
+
         index = pixel_shader_constant_table_->GetSamplerIndex("normal_texture");
+        device->SetSamplerState(index, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MAXANISOTROPY, 8);
         device->SetTexture(index, texture_manager.Get(material->normal_texture_));
     }
 
@@ -88,6 +102,11 @@ void DefaultSkinShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const M
     pixel_shader_constant_table_->SetFloat(device, "bias", shadow_map_system.GetBias());
     pixel_shader_constant_table_->SetFloat(device, "light_far", shadow_map_system.GetFar());
     UINT shadow_map_index = pixel_shader_constant_table_->GetSamplerIndex("shadow_map");
+    device->SetSamplerState(shadow_map_index, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+    device->SetSamplerState(shadow_map_index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     device->SetTexture(shadow_map_index, shadow_map_system.GetShadowMap());
 }
 #endif

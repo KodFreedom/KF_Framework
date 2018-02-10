@@ -3,25 +3,12 @@
 //--------------------------------------------------------------------------------
 // Material
 sampler color_texture;
-sampler normal_texture = sampler_state
-{
-	MipFilter = LINEAR;
-	MagFilter = LINEAR;
-	MinFilter = ANISOTROPIC;
-	MaxAnisotropy = 8;
-};
+sampler normal_texture;
 
 // shadowmap
 float bias;
 float light_far;
-sampler shadow_map = sampler_state
-{
-	MipFilter = NONE;
-	MinFilter = POINT;
-	MagFilter = POINT;
-	AddressU = BORDER;
-	AddressV = BORDER;
-};
+sampler shadow_map;
 
 //--------------------------------------------------------------------------------
 //  In/Out struct
