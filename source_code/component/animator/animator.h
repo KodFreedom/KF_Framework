@@ -278,7 +278,7 @@ private:
     float            ik_grounded_distance_ = 0.5f;
     float            ik_weight_increase_speed_ = 10.0f;
     float            ik_weight_decrease_speed_ = -10.0f;
-    Vector3          ik_foot_position_offset_ = Vector3(0.0f, 0.25f, 0.0f);
+    Vector3          ik_foot_position_offset_ = Vector3(0.0f, 0.3f, 0.0f);
     Vector3          ik_foot_rotation_offset_ = Vector3(0.0f, 0.0f, 0.0f);
     IKController     ik_controllers_[kIKMax] = { 0 };
     IKGoal           ik_goals_[kIKGoalMax] = { 0 };
