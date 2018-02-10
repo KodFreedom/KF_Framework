@@ -1,11 +1,5 @@
 // Constant table
-sampler color_texture = sampler_state
-{
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
+sampler color_texture;
 float4 material_diffuse;
 
 struct PixelIn

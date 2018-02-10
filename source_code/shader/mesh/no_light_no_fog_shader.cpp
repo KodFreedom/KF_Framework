@@ -54,8 +54,12 @@ void NoLightNoFogShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, const 
     auto material = main_system.GetResources().GetMaterialManager().Get(renderer.GetMaterialName());
     if (material)
     {
-        UINT color_texture_index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
-        device->SetTexture(color_texture_index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
+        UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
+        device->SetSamplerState(index, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        device->SetTexture(index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
         pixel_shader_constant_table_->SetValue(device, "material_diffuse", &material->diffuse_, sizeof(material->diffuse_));
     }
 }

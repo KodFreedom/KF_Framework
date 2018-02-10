@@ -1,14 +1,7 @@
 // constant table
 float4x4 view_light;
 float4x4 projection_light;
-sampler bone_texture = sampler_state
-{
-	MipFilter = NONE;
-	MagFilter = POINT;
-	MinFilter = POINT;
-	AddressU = Clamp;
-	AddressV = Clamp;
-};
+sampler bone_texture;
 float texture_size;
 
 struct VertexIn
@@ -53,7 +46,7 @@ VertexOut main(VertexIn vertex)
 {
 	VertexOut result;
 
-	// s—ñ‚ÌZo
+	// ï¿½sï¿½ï¿½ÌZï¿½o
 	float4x4 bone_world = (float4x4)0;
 	for (int count = 0; count < 2; ++count)
 	{
