@@ -98,6 +98,28 @@ void TextureManager::LoadResource(void)
 #endif // _DEBUG
         info.pointer = nullptr;
     }
+
+//    if (FAILED(D3DXCreateTextureFromFileEx(
+//        device_,
+//        path.c_str(),
+//        D3DX_DEFAULT,
+//        D3DX_DEFAULT,
+//        4,
+//        D3DUSAGE_DYNAMIC,
+//        D3DFMT_A8R8G8B8,
+//        D3DPOOL_DEFAULT,
+//        D3DX_DEFAULT,
+//        D3DX_DEFAULT,
+//        0,
+//        NULL,
+//        NULL,
+//        &info.pointer)))
+//    {
+//#ifdef _DEBUG
+//        MainSystem::Instance().GetDebugObserver().Display(L"TextureManager::LoadResource : " + path + L"Ç™å©Ç¬Ç©ÇÁÇ»Ç¢ÅIÅIÅI");
+//#endif // _DEBUG
+//        info.pointer = nullptr;
+//    }
 #endif
     textures_.emplace(key, info);
 }

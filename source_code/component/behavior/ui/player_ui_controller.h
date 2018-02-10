@@ -54,6 +54,16 @@ private:
     static const Vector3 kLifeGaugeLeftTop;
     static const Vector3 kCoverSize;
     static const Vector3 kCoverLeftTop;
+    static const Vector3 kButtonSize;
+    static const Vector3 kButtonALeftTop;
+    static const Vector3 kButtonBLeftTop;
+    static const Vector3 kButtonXLeftTop;
+    static const Vector3 kButtonLbLeftTop;
+    static const Vector3 kButtonTextSize;
+    static const Vector3 kButtonTextALeftTop;
+    static const Vector3 kButtonTextBLeftTop;
+    static const Vector3 kButtonTextXLeftTop;
+    static const Vector3 kButtonTextLbLeftTop;
 
     //--------------------------------------------------------------------------------
     //  ワーニングゲージの更新
