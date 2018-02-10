@@ -98,7 +98,8 @@ void ActorController::CheckGrounded(void)
     auto ray_hit_info = MainSystem::Instance().GetCollisionSystem().
         RayCast(Ray(position, Vector3::kDown), parameter_.GetGroundCheckDistance(), &owner_);
 
-    if (ray_hit_info)
+    if (ray_hit_info
+        && ray_hit_info->normal.Dot(Vector3::kUp) >= CollisionDetector::kMaxFieldSlopeCos)
     {
         current_ground_info_.is_grounded = true;
         current_ground_info_.normal = ray_hit_info->normal;
