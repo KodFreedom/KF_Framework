@@ -65,8 +65,8 @@ void Default2dTextureShader::SetConstantTable(const LPDIRECT3DDEVICE9 device, co
         UINT index = pixel_shader_constant_table_->GetSamplerIndex("color_texture");
         device->SetSamplerState(index, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
         device->SetSamplerState(index, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+        device->SetSamplerState(index, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+        device->SetSamplerState(index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
         device->SetTexture(index, main_system.GetResources().GetTextureManager().Get(material->color_texture_));
     }
 }

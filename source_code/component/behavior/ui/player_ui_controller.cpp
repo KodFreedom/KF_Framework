@@ -18,9 +18,19 @@
 //  ’è”’è‹`
 //--------------------------------------------------------------------------------
 const Vector3 PlayerUiController::kLifeGaugeSize = Vector3(540.0f, 33.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kLifeGaugeLeftTop = Vector3(-923.0f, 420.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kLifeGaugeLeftTop = Vector3(-923.0f, -500.0f, 0.0f) * SCREEN_RATE;
 const Vector3 PlayerUiController::kCoverSize = Vector3(562.0f, 113.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kCoverLeftTop = Vector3(-935.0f, 400.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kCoverLeftTop = Vector3(-935.0f, -520.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonSize = Vector3(40.0f, 40.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonALeftTop = Vector3(750.0f, 300.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonBLeftTop = Vector3(750.0f, 350.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonXLeftTop = Vector3(750.0f, 400.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonLbLeftTop = Vector3(750.0f, 450.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextSize = Vector3(320.0f, 40.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextALeftTop = Vector3(410.0f, 305.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextBLeftTop = Vector3(410.0f, 355.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextXLeftTop = Vector3(410.0f, 405.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextLbLeftTop = Vector3(410.0f, 455.0f, 0.0f) * SCREEN_RATE;
 
 //--------------------------------------------------------------------------------
 //
@@ -76,6 +86,123 @@ bool PlayerUiController::Init(void)
         k2d,
         0.0f,
         kCoverLeftTop + kCoverSize * 0.5f);
+
+    // Buttons
+    // A
+    auto ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonSize,
+        kDefaultLayer,
+        L"button",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonALeftTop + kButtonSize * 0.5f);
+    auto renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    auto renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(1.0f / 3.0f, 0.0f));
+    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonTextSize,
+        kDefaultLayer,
+        L"button_text",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonTextALeftTop + kButtonTextSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(0.0f, 0.0f));
+    renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
+
+    // B
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonSize,
+        kDefaultLayer,
+        L"button",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonBLeftTop + kButtonSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(2.0f / 3.0f, 0.0f));
+    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonTextSize,
+        kDefaultLayer,
+        L"button_text",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonTextBLeftTop + kButtonTextSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(0.0f, 0.25f));
+    renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
+
+    // X
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonSize,
+        kDefaultLayer,
+        L"button",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonXLeftTop + kButtonSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(0.0f, 0.25f));
+    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonTextSize,
+        kDefaultLayer,
+        L"button_text",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonTextXLeftTop + kButtonTextSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(0.0f, 0.5f));
+    renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
+
+    // LB
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonSize,
+        kDefaultLayer,
+        L"button",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonLbLeftTop + kButtonSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(1.0f / 3.0f, 0.75f));
+    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+
+    ui = GameObjectSpawner::CreateBasicPolygon2d(
+        kButtonTextSize,
+        kDefaultLayer,
+        L"button_text",
+        kDefault2dTextureShader,
+        k2d,
+        0.0f,
+        kButtonTextLbLeftTop + kButtonTextSize * 0.5f);
+    renderer = ui->GetRendererBy(kMeshRenderer2d);
+    assert(renderer);
+    renderer2d = (MeshRenderer2d*)renderer;
+    renderer2d->SetUvOffset(Vector2(0.0f, 0.75f));
+    renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
 
     return true;
 }
