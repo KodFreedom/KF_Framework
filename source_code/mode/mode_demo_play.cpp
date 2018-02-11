@@ -56,6 +56,7 @@ void ModeDemoPlay::Uninit(void)
 {
     MainSystem::Instance().GetSoundSystem().Stop(kGameBgm);
     MainSystem::Instance().GetInput().SetDemoPlayMode(false);
+    Mode::Uninit();
 }
 
 //--------------------------------------------------------------------------------

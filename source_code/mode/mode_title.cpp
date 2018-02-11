@@ -109,6 +109,7 @@ void ModeTitle::Update(void)
     auto& input = main_system.GetInput();
     if (input.GetKeyTrigger(Key::kLeft) || input.GetKeyTrigger(Key::kRight))
     {
+        main_system.GetSoundSystem().Play(kCursorSe);
         button_controllers_[next_mode_]->ChangeColor(Color::kGray);
         next_mode_ = static_cast<NextMode>(next_mode_ ^ 1);
         button_controllers_[next_mode_]->ChangeColor(Color::kWhite);
