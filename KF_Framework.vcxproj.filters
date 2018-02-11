@@ -846,6 +846,9 @@
     <ClCompile Include="source_code\mode\mode_demo_play.cpp">
       <Filter>ソース ファイル\System\Mode</Filter>
     </ClCompile>
+    <ClCompile Include="source_code\component\behavior\ui\button_controller.cpp">
+      <Filter>ソース ファイル\Component\Behavior\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\ImGui\imconfig.h">
@@ -1468,6 +1471,9 @@
     </ClInclude>
     <ClInclude Include="source_code\mode\mode_demo_play.h">
       <Filter>ヘッダー ファイル\System\Mode</Filter>
+    </ClInclude>
+    <ClInclude Include="source_code\component\behavior\ui\button_controller.h">
+      <Filter>ヘッダー ファイル\Component\Behavior\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

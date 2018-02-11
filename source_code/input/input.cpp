@@ -193,24 +193,24 @@ void Input::UpdateInputInfo(void)
     release_flags[kStart] = keyboard_->GetRelease(DIK_RETURN) | joystick_->GetButtonRelease(kXboxMenu);
 
     // Up
-    press_flags[kUp] = keyboard_->GetPress(DIK_UP);
-    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP);
-    release_flags[kUp] = keyboard_->GetRelease(DIK_UP);
+    press_flags[kUp] = keyboard_->GetPress(DIK_UP) | joystick_->GetCrossKeyPress(kXboxCrossKeyUp);
+    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyUp);
+    release_flags[kUp] = keyboard_->GetRelease(DIK_UP) | joystick_->GetCrossKeyRelease(kXboxCrossKeyUp);
 
     // Down
-    press_flags[kDown] = keyboard_->GetPress(DIK_DOWN);
-    trigger_flags[kDown] = keyboard_->GetTrigger(DIK_DOWN);
-    release_flags[kDown] = keyboard_->GetRelease(DIK_DOWN);
+    press_flags[kDown] = keyboard_->GetPress(DIK_DOWN) | joystick_->GetCrossKeyPress(kXboxCrossKeyDown);
+    trigger_flags[kDown] = keyboard_->GetTrigger(DIK_DOWN) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyDown);
+    release_flags[kDown] = keyboard_->GetRelease(DIK_DOWN) | joystick_->GetCrossKeyRelease(kXboxCrossKeyDown);
 
     // Left
-    press_flags[kLeft] = keyboard_->GetPress(DIK_LEFT);
-    trigger_flags[kLeft] = keyboard_->GetTrigger(DIK_LEFT);
-    release_flags[kLeft] = keyboard_->GetRelease(DIK_LEFT);
+    press_flags[kLeft] = keyboard_->GetPress(DIK_LEFT) | joystick_->GetCrossKeyPress(kXboxCrossKeyLeft);
+    trigger_flags[kLeft] = keyboard_->GetTrigger(DIK_LEFT) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyLeft);
+    release_flags[kLeft] = keyboard_->GetRelease(DIK_LEFT) | joystick_->GetCrossKeyRelease(kXboxCrossKeyLeft);
 
     // Right
-    press_flags[kRight] = keyboard_->GetPress(DIK_RIGHT);
-    trigger_flags[kRight] = keyboard_->GetTrigger(DIK_RIGHT);
-    release_flags[kRight] = keyboard_->GetRelease(DIK_RIGHT);
+    press_flags[kRight] = keyboard_->GetPress(DIK_RIGHT) | joystick_->GetCrossKeyPress(kXboxCrossKeyRight);
+    trigger_flags[kRight] = keyboard_->GetTrigger(DIK_RIGHT) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyRight);
+    release_flags[kRight] = keyboard_->GetRelease(DIK_RIGHT) | joystick_->GetCrossKeyRelease(kXboxCrossKeyRight);
 
     // Reset
     press_flags[kReset] = keyboard_->GetPress(DIK_R);

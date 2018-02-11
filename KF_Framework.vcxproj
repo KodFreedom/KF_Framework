@@ -277,6 +277,7 @@
     <ClCompile Include="source_code\component\behavior\editor\field_editor.cpp" />
     <ClCompile Include="source_code\component\behavior\editor\model_editor.cpp" />
     <ClCompile Include="source_code\component\behavior\other\windmill_controller.cpp" />
+    <ClCompile Include="source_code\component\behavior\ui\button_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\enemy_ui_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\flash_button_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\player_ui_controller.cpp" />
@@ -479,6 +480,7 @@
     <ClInclude Include="source_code\component\behavior\editor\field_editor.h" />
     <ClInclude Include="source_code\component\behavior\editor\model_editor.h" />
     <ClInclude Include="source_code\component\behavior\other\windmill_controller.h" />
+    <ClInclude Include="source_code\component\behavior\ui\button_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\enemy_ui_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\flash_button_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\player_ui_controller.h" />

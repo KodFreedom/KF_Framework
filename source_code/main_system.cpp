@@ -194,7 +194,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 
     //èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
-    Change(MY_NEW ModeDemoPlay);
+    Change(MY_NEW ModeTitle);
 #else
     Change(MY_NEW ModeTitle);
 #endif // EDITOR
