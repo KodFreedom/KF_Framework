@@ -130,6 +130,16 @@ public:
     void SetEditorMode(const bool& enable) { is_editor_mode_ = enable; }
 
     //--------------------------------------------------------------------------------
+    //  デモプレイモードの設定
+    //--------------------------------------------------------------------------------
+    void SetDemoPlayMode(const bool& enable);
+
+    //--------------------------------------------------------------------------------
+    //  デモプレイセーブの設定
+    //--------------------------------------------------------------------------------
+    void SetSaveDemoPlay(const bool& enable);
+
+    //--------------------------------------------------------------------------------
     //  キーボードの取得
     //--------------------------------------------------------------------------------
     const auto GetKeyboard(void) const { return keyboard_; }
@@ -164,6 +174,16 @@ private:
     void Uninit(void);
 
     //--------------------------------------------------------------------------------
+    //  入力情報の保存
+    //--------------------------------------------------------------------------------
+    void SaveInputInfo(void);
+
+    //--------------------------------------------------------------------------------
+    //  入力情報の読込
+    //--------------------------------------------------------------------------------
+    void LoadInputInfo(void);
+
+    //--------------------------------------------------------------------------------
     //  入力情報更新更新
     //--------------------------------------------------------------------------------
     void UpdateInputInfo(void);
@@ -171,16 +191,20 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    KeyboardDirectX* keyboard_; // キーボード
-    MouseDirectX*    mouse_; // マウス
-    JoystickDirectX* joystick_; // ジョイスティック
-    float            move_horizontal_; // 移動の水平量
-    float            move_vertical_; // 移動の垂直量
-    float            rotation_horizontal_; // 回転の水平量
-    float            rotation_vertical_; // 回転の垂直量
-    float            zoom_; // ズームの量
-    LONG             press_state_; // プレスの情報
-    LONG             trigger_state_; // トリガーの情報
-    LONG             release_state_; // リリースの情報
-    bool             is_editor_mode_; // エディタモーションフラグ
+    KeyboardDirectX* keyboard_ = nullptr; // キーボード
+    MouseDirectX*    mouse_ = nullptr; // マウス
+    JoystickDirectX* joystick_ = nullptr; // ジョイスティック
+    float            move_horizontal_ = 0.0f; // 移動の水平量
+    float            move_vertical_ = 0.0f; // 移動の垂直量
+    float            rotation_horizontal_ = 0.0f; // 回転の水平量
+    float            rotation_vertical_ = 0.0f; // 回転の垂直量
+    float            zoom_ = 0.0f; // ズームの量
+    LONG             press_state_ = 0; // プレスの情報
+    LONG             trigger_state_ = 0; // トリガーの情報
+    LONG             release_state_ = 0; // リリースの情報
+    bool             is_editor_mode_ = false; // エディタモーションフラグ
+    bool             is_demo_play_ = false;
+    bool             is_save_demo_play_ = false;
+    ofstream         file_for_save_;
+    ifstream         file_for_load_;
 };

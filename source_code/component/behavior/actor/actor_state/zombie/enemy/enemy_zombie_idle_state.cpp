@@ -13,8 +13,9 @@
 #include "collider.h"
 #include "game_object.h"
 #include "game_time.h"
-#ifdef _DEBUG
 #include "main_system.h"
+#include "mode.h"
+#ifdef _DEBUG
 #include "debug_observer.h"
 #endif
 
@@ -40,7 +41,8 @@ void EnemyZombieIdleState::Update(EnemyController& enemy)
 {
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
 
-    if (time_counter_ >= kWaitTime)
+    if (time_counter_ >= kWaitTime
+        && !MainSystem::Instance().GetCurrentMode().GetName()._Equal(L"DemoPlay"))
     {// Ÿ‚Ì–Ú“I’n‚ğƒ‰ƒ“ƒ_ƒ€‚Åİ’è
         const Vector3& born_position = enemy.GetBornPosition();
         const float& patrol_range = enemy.GetPatrolRange();

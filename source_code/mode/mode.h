@@ -17,15 +17,16 @@ public:
     Mode(const String& name) : name_(name) {}
     ~Mode() {}
 
-    virtual void Init(void) = 0;
-    virtual void Update(void) {}
-    virtual void LateUpdate(void) {}
-    virtual void OnCompleteLoading(void) {}
-    void         Release(void)
+    virtual void  Init(void) = 0;
+    virtual void  Update(void) {}
+    virtual void  LateUpdate(void) {}
+    virtual void  OnCompleteLoading(void) {}
+    void          Release(void)
     {
         Uninit();
         MY_DELETE this;
     }
+    const String& GetName(void) const { return name_; }
 
 protected:
     //--------------------------------------------------------------------------------
