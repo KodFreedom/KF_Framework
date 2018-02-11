@@ -32,6 +32,7 @@ SoundSystem::SoundInfo SoundSystem::se_infos_[kSeMax] =
     { L"data/se/death_voice.wav", 0 }, // kDeathVoiceSe,
     { L"data/se/guard_voice.wav", 0 }, // kGuardVoiceSe,
     { L"data/se/pinch_voice.wav", 0 }, // kPinchVoiceSe,
+    { L"data/se/cursor.wav", 0 }, // kCursorSe,
 };
 
 SoundSystem::SoundInfo SoundSystem::bgm_infos_[kBgmMax] =

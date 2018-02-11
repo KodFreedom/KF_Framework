@@ -6,6 +6,7 @@
 #include "main_system.h"
 #include "input.h"
 #include "mode_demo.h"
+#include "mode_demo_play.h"
 #include "camera.h"
 #include "fade_system.h"
 #include "light.h"
@@ -13,7 +14,7 @@
 #include "material_manager.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
-#include "flash_button_controller.h"
+#include "button_controller.h"
 #include "game_time.h"
 #include "sound_system.h"
 
@@ -42,18 +43,30 @@ void ModeTitle::Init(void)
         , kDefault2dTextureShader
         , k2d);
 
-    auto button = GameObjectSpawner::CreateFlashButton2d(
-        1.0f
-        , Vector3(475.0f, 73.0f, 0.0f)
+    auto button = GameObjectSpawner::CreateButton2d(
+        Vector3(400.0f, 70.0f, 0.0f) * 0.8f
+        , Vector3(-200.0f, SCREEN_HEIGHT * 0.25f, 0.0f)
+        , L"play_game.png"
         , kDefaultLayer
-        , L"press_space"
         , kDefault2dTextureShader
         , k2d
-        , 0.0f
-        , Vector3(0.0f, SCREEN_HEIGHT * 0.25f, 0.0f));
-    auto behavior = button->GetBehaviorBy(L"FlashButtonController");
+        , 0.0f);
+    auto behavior = button->GetBehaviorBy(L"ButtonController");
     assert(behavior);
-    flash_button_controller_ = static_cast<FlashButtonController*>(behavior);
+    button_controllers_[0] = static_cast<ButtonController*>(behavior);
+
+    button = GameObjectSpawner::CreateButton2d(
+        Vector3(400.0f, 70.0f, 0.0f) * 0.8f
+        , Vector3(200.0f, SCREEN_HEIGHT * 0.25f, 0.0f)
+        , L"demo_play.png"
+        , kDefaultLayer
+        , kDefault2dTextureShader
+        , k2d
+        , 0.0f);
+    behavior = button->GetBehaviorBy(L"ButtonController");
+    assert(behavior);
+    button_controllers_[1] = static_cast<ButtonController*>(behavior);
+    button_controllers_[1]->ChangeColor(Color::kGray, 0.1f);
 }
 
 //--------------------------------------------------------------------------------
@@ -80,16 +93,33 @@ void ModeTitle::Update(void)
 
         if (time_counter_ <= 0.0f)
         {
-            main_system.GetFadeSystem().FadeTo(MY_NEW ModeDemo);
+            if (next_mode_ == kGame)
+            {
+                main_system.GetFadeSystem().FadeTo(MY_NEW ModeDemo);
+            }
+            else
+            {
+                main_system.GetFadeSystem().FadeTo(MY_NEW ModeDemoPlay);
+            }
         }
         return;
     }
 
-    if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
+    // モード切り替え
+    auto& input = main_system.GetInput();
+    if (input.GetKeyTrigger(Key::kLeft) || input.GetKeyTrigger(Key::kRight))
+    {
+        main_system.GetSoundSystem().Play(kCursorSe);
+        button_controllers_[next_mode_]->ChangeColor(Color::kGray);
+        next_mode_ = static_cast<NextMode>(next_mode_ ^ 1);
+        button_controllers_[next_mode_]->ChangeColor(Color::kWhite);
+    }
+
+    // モード確定
+    if (input.GetKeyTrigger(Key::kSubmit))
     {
         main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = kWaitTime;
-        flash_button_controller_->SetFlashSpeed(15.0f);
     }
 }
 

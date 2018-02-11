@@ -1,41 +1,36 @@
 //--------------------------------------------------------------------------------
-//　mode.h
+//　mode_demo_play.h
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "mode.h"
 
 //--------------------------------------------------------------------------------
 //  クラス宣言
 //--------------------------------------------------------------------------------
-class Mode
+class ModeDemoPlay : public Mode
 {
 public:
     //--------------------------------------------------------------------------------
     //  関数宣言
     //--------------------------------------------------------------------------------
-    Mode(const String& name) : name_(name) {}
-    ~Mode() {}
+    ModeDemoPlay();
+    ~ModeDemoPlay();
 
-    virtual void  Init(void) = 0;
-    virtual void  Update(void) {}
-    virtual void  LateUpdate(void) {}
-    virtual void  OnCompleteLoading(void) {}
-    void          Release(void)
-    {
-        Uninit();
-        MY_DELETE this;
-    }
-    const String& GetName(void) const { return name_; }
+    void Init(void) override;
+    void Uninit(void) override;
+    void Update(void) override;
+    void LateUpdate(void) override;
+    void OnCompleteLoading(void) override;
 
-protected:
+private:
     //--------------------------------------------------------------------------------
-    //  関数宣言
+    //  定数宣言
     //--------------------------------------------------------------------------------
-    virtual void Uninit(void);
+    static constexpr float kWaitTime = 8.0f;
 
     //--------------------------------------------------------------------------------
-    //  変数定義
+    //  変数宣言
     //--------------------------------------------------------------------------------
-    const String name_;
+    float time_counter_;
 };

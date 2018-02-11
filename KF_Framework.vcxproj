@@ -277,6 +277,7 @@
     <ClCompile Include="source_code\component\behavior\editor\field_editor.cpp" />
     <ClCompile Include="source_code\component\behavior\editor\model_editor.cpp" />
     <ClCompile Include="source_code\component\behavior\other\windmill_controller.cpp" />
+    <ClCompile Include="source_code\component\behavior\ui\button_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\enemy_ui_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\flash_button_controller.cpp" />
     <ClCompile Include="source_code\component\behavior\ui\player_ui_controller.cpp" />
@@ -306,6 +307,7 @@
     <ClCompile Include="source_code\main_system.cpp" />
     <ClCompile Include="source_code\mode\mode.cpp" />
     <ClCompile Include="source_code\mode\mode_demo.cpp" />
+    <ClCompile Include="source_code\mode\mode_demo_play.cpp" />
     <ClCompile Include="source_code\mode\mode_editor.cpp" />
     <ClCompile Include="source_code\mode\mode_result.cpp" />
     <ClCompile Include="source_code\mode\mode_title.cpp" />
@@ -478,6 +480,7 @@
     <ClInclude Include="source_code\component\behavior\editor\field_editor.h" />
     <ClInclude Include="source_code\component\behavior\editor\model_editor.h" />
     <ClInclude Include="source_code\component\behavior\other\windmill_controller.h" />
+    <ClInclude Include="source_code\component\behavior\ui\button_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\enemy_ui_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\flash_button_controller.h" />
     <ClInclude Include="source_code\component\behavior\ui\player_ui_controller.h" />
@@ -512,6 +515,7 @@
     <ClInclude Include="source_code\main_system.h" />
     <ClInclude Include="source_code\mode\mode.h" />
     <ClInclude Include="source_code\mode\mode_demo.h" />
+    <ClInclude Include="source_code\mode\mode_demo_play.h" />
     <ClInclude Include="source_code\mode\mode_editor.h" />
     <ClInclude Include="source_code\mode\mode_result.h" />
     <ClInclude Include="source_code\mode\mode_title.h" />

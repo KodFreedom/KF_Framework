@@ -19,6 +19,7 @@
 #include "actor_observer.h"
 #include "mode_title.h"
 #include "mode_demo.h"
+#include "mode_demo_play.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
@@ -193,7 +194,7 @@ bool MainSystem::Init(HINSTANCE hinstance, HWND hwnd, BOOL is_window_mode)
 
     //èâä˙ÉÇÅ[Éhê›íË
 #ifdef EDITOR
-    Change(MY_NEW ModeDemo);
+    Change(MY_NEW ModeTitle);
 #else
     Change(MY_NEW ModeTitle);
 #endif // EDITOR

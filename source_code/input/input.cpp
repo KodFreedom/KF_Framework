@@ -8,6 +8,8 @@
 #include "kf_math.h"
 #include "kf_utility.h"
 using namespace kodfreedom;
+#include <cereal/archives/binary.hpp>
+using namespace cereal;
 
 //--------------------------------------------------------------------------------
 //
@@ -22,7 +24,20 @@ void Input::Update(void)
     keyboard_->Update();
     mouse_->Update();
     joystick_->Update();
-    UpdateInputInfo();
+
+    if (is_demo_play_)
+    {
+        LoadInputInfo();
+    }
+    else
+    {
+        UpdateInputInfo();
+        
+        if (is_save_demo_play_)
+        {
+            SaveInputInfo();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -46,6 +61,53 @@ void Input::Unacquire(void)
 }
 
 //--------------------------------------------------------------------------------
+//  デモプレイモードの設定
+//--------------------------------------------------------------------------------
+void Input::SetDemoPlayMode(const bool& enable)
+{
+    is_demo_play_ = enable;
+    if (is_demo_play_)
+    {
+        if (!file_for_load_.is_open())
+        {
+            file_for_load_.open(L"data/input/demo_play.log", ios::binary);
+            assert(file_for_load_.is_open());
+        }
+    }
+    else
+    {
+        if (file_for_load_.is_open())
+        {
+            file_for_load_.close();
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------
+//  デモプレイセーブの設定
+//--------------------------------------------------------------------------------
+void Input::SetSaveDemoPlay(const bool& enable)
+{
+    is_save_demo_play_ = enable;
+    if (is_save_demo_play_)
+    {
+        if (!file_for_save_.is_open())
+        {
+            file_for_save_.open(L"data/input/demo_play.log", ios::binary);
+            assert(file_for_save_.is_open());
+            file_for_save_.clear();
+        }
+    }
+    else
+    {
+        if (file_for_save_.is_open())
+        {
+            file_for_save_.close();
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------
 //
 //  Private
 //
@@ -54,18 +116,6 @@ void Input::Unacquire(void)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 Input::Input()
-    : keyboard_(nullptr)
-    , mouse_(nullptr)
-    , joystick_(nullptr)
-    , move_horizontal_(0.0f)
-    , move_vertical_(0.0f)
-    , rotation_horizontal_(0.0f)
-    , rotation_vertical_(0.0f)
-    , zoom_(0.0f)
-    , press_state_(0)
-    , trigger_state_(0)
-    , release_state_(0)
-    , is_editor_mode_(false)
 {}
 
 //--------------------------------------------------------------------------------
@@ -143,24 +193,24 @@ void Input::UpdateInputInfo(void)
     release_flags[kStart] = keyboard_->GetRelease(DIK_RETURN) | joystick_->GetButtonRelease(kXboxMenu);
 
     // Up
-    press_flags[kUp] = keyboard_->GetPress(DIK_UP);
-    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP);
-    release_flags[kUp] = keyboard_->GetRelease(DIK_UP);
+    press_flags[kUp] = keyboard_->GetPress(DIK_UP) | joystick_->GetCrossKeyPress(kXboxCrossKeyUp);
+    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyUp);
+    release_flags[kUp] = keyboard_->GetRelease(DIK_UP) | joystick_->GetCrossKeyRelease(kXboxCrossKeyUp);
 
     // Down
-    press_flags[kDown] = keyboard_->GetPress(DIK_DOWN);
-    trigger_flags[kDown] = keyboard_->GetTrigger(DIK_DOWN);
-    release_flags[kDown] = keyboard_->GetRelease(DIK_DOWN);
+    press_flags[kDown] = keyboard_->GetPress(DIK_DOWN) | joystick_->GetCrossKeyPress(kXboxCrossKeyDown);
+    trigger_flags[kDown] = keyboard_->GetTrigger(DIK_DOWN) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyDown);
+    release_flags[kDown] = keyboard_->GetRelease(DIK_DOWN) | joystick_->GetCrossKeyRelease(kXboxCrossKeyDown);
 
     // Left
-    press_flags[kLeft] = keyboard_->GetPress(DIK_LEFT);
-    trigger_flags[kLeft] = keyboard_->GetTrigger(DIK_LEFT);
-    release_flags[kLeft] = keyboard_->GetRelease(DIK_LEFT);
+    press_flags[kLeft] = keyboard_->GetPress(DIK_LEFT) | joystick_->GetCrossKeyPress(kXboxCrossKeyLeft);
+    trigger_flags[kLeft] = keyboard_->GetTrigger(DIK_LEFT) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyLeft);
+    release_flags[kLeft] = keyboard_->GetRelease(DIK_LEFT) | joystick_->GetCrossKeyRelease(kXboxCrossKeyLeft);
 
     // Right
-    press_flags[kRight] = keyboard_->GetPress(DIK_RIGHT);
-    trigger_flags[kRight] = keyboard_->GetTrigger(DIK_RIGHT);
-    release_flags[kRight] = keyboard_->GetRelease(DIK_RIGHT);
+    press_flags[kRight] = keyboard_->GetPress(DIK_RIGHT) | joystick_->GetCrossKeyPress(kXboxCrossKeyRight);
+    trigger_flags[kRight] = keyboard_->GetTrigger(DIK_RIGHT) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyRight);
+    release_flags[kRight] = keyboard_->GetRelease(DIK_RIGHT) | joystick_->GetCrossKeyRelease(kXboxCrossKeyRight);
 
     // Reset
     press_flags[kReset] = keyboard_->GetPress(DIK_R);
@@ -200,6 +250,61 @@ void Input::UpdateInputInfo(void)
 }
 
 //--------------------------------------------------------------------------------
+//  入力情報の保存
+//--------------------------------------------------------------------------------
+void Input::SaveInputInfo(void)
+{
+    if (!file_for_save_.is_open())
+    {// open file
+        file_for_save_.open(L"data/input/demo_play.log", ios::binary);
+        assert(file_for_save_.is_open());
+    }
+
+    BinaryOutputArchive archive(file_for_save_);
+    archive.saveBinary(&move_horizontal_, sizeof(move_horizontal_));
+    archive.saveBinary(&move_vertical_, sizeof(move_vertical_));
+    archive.saveBinary(&rotation_horizontal_, sizeof(rotation_horizontal_));
+    archive.saveBinary(&rotation_vertical_, sizeof(rotation_vertical_));
+    archive.saveBinary(&zoom_, sizeof(zoom_));
+    archive.saveBinary(&press_state_, sizeof(press_state_));
+    archive.saveBinary(&trigger_state_, sizeof(trigger_state_));
+    archive.saveBinary(&release_state_, sizeof(release_state_));
+}
+
+//--------------------------------------------------------------------------------
+//  入力情報の読込
+//--------------------------------------------------------------------------------
+void Input::LoadInputInfo(void)
+{
+    assert(file_for_load_.is_open());
+    if (file_for_load_.eof()) { return; }
+
+    BinaryInputArchive archive(file_for_load_);
+    archive.loadBinary(&move_horizontal_, sizeof(move_horizontal_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&move_vertical_, sizeof(move_vertical_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&rotation_horizontal_, sizeof(rotation_horizontal_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&rotation_vertical_, sizeof(rotation_vertical_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&zoom_, sizeof(zoom_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&press_state_, sizeof(press_state_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&trigger_state_, sizeof(trigger_state_));
+
+    if (file_for_load_.eof()) { return; }
+    archive.loadBinary(&release_state_, sizeof(release_state_));
+}
+
+//--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
 void Input::Uninit(void)
@@ -207,4 +312,14 @@ void Input::Uninit(void)
     SAFE_UNINIT(keyboard_);
     SAFE_UNINIT(mouse_);
     SAFE_UNINIT(joystick_);
+
+    if (file_for_save_.is_open())
+    {
+        file_for_save_.close();
+    }
+
+    if (file_for_load_.is_open())
+    {
+        file_for_load_.close();
+    }
 }

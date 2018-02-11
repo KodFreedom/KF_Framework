@@ -1,12 +1,13 @@
 //--------------------------------------------------------------------------------
-//　modeDemo.cpp
+//　mode_demo_play.cpp
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
-#include "mode_demo.h"
+#include "mode_demo_play.h"
 #include "main_system.h"
 #include "input.h"
+#include "input_device_directX.h"
 #include "sound_system.h"
-#include "mode_result.h"
+#include "mode_title.h"
 #include "fade_system.h"
 #include "shadow_map_system.h"
 #include "stage_spawner.h"
@@ -23,14 +24,14 @@
 //--------------------------------------------------------------------------------
 //  コンストラクタ
 //--------------------------------------------------------------------------------
-ModeDemo::ModeDemo() : Mode(L"Demo")
+ModeDemoPlay::ModeDemoPlay() : Mode(L"DemoPlay")
     , time_counter_(0.0f)
 {}
 
 //--------------------------------------------------------------------------------
 //  デストラクタ
 //--------------------------------------------------------------------------------
-ModeDemo::~ModeDemo()
+ModeDemoPlay::~ModeDemoPlay()
 {
 
 }
@@ -38,7 +39,7 @@ ModeDemo::~ModeDemo()
 //--------------------------------------------------------------------------------
 //  初期化処理
 //--------------------------------------------------------------------------------
-void ModeDemo::Init(void)
+void ModeDemoPlay::Init(void)
 {    
     StageSpawner::LoadStage(L"demo");
 
@@ -51,17 +52,17 @@ void ModeDemo::Init(void)
 //--------------------------------------------------------------------------------
 //  終了処理
 //--------------------------------------------------------------------------------
-void ModeDemo::Uninit(void)
+void ModeDemoPlay::Uninit(void)
 {
     MainSystem::Instance().GetSoundSystem().Stop(kGameBgm);
-    MainSystem::Instance().GetInput().SetSaveDemoPlay(false);
+    MainSystem::Instance().GetInput().SetDemoPlayMode(false);
     Mode::Uninit();
 }
 
 //--------------------------------------------------------------------------------
 //  更新処理
 //--------------------------------------------------------------------------------
-void ModeDemo::Update(void)
+void ModeDemoPlay::Update(void)
 {
     Mode::Update();
 }
@@ -69,7 +70,7 @@ void ModeDemo::Update(void)
 //--------------------------------------------------------------------------------
 //  更新処理(描画直前)
 //--------------------------------------------------------------------------------
-void ModeDemo::LateUpdate(void)
+void ModeDemoPlay::LateUpdate(void)
 {
     Mode::LateUpdate();
     auto& main_system = MainSystem::Instance();
@@ -81,7 +82,7 @@ void ModeDemo::LateUpdate(void)
         if (time_counter_ <= 0.0f)
         {
             main_system.GetShadowMapSystem().SetTarget(nullptr);
-            main_system.GetFadeSystem().FadeTo(MY_NEW ModeResult);
+            main_system.GetFadeSystem().FadeTo(MY_NEW ModeTitle);
         }
         return;
     }
@@ -99,21 +100,22 @@ void ModeDemo::LateUpdate(void)
         return;
     }
 
-#ifdef _DEBUG
-    if (main_system.GetInput().GetKeyTrigger(Key::kStart))
+    if (main_system.GetInput().GetJoystick()->GetButtonTrigger(XboxButton::kXboxMenu)
+        || main_system.GetInput().GetKeyboard()->GetTrigger(DIK_RETURN))
     {
+        if (time_counter_ != 0.0f) return;
+
         main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = GameTime::kTimeInterval;
         return;
     }
-#endif // _DEBUG
 }
 
 //--------------------------------------------------------------------------------
 //  ローディング終了の通知
 //--------------------------------------------------------------------------------
-void ModeDemo::OnCompleteLoading(void)
+void ModeDemoPlay::OnCompleteLoading(void)
 {
     MainSystem::Instance().GetSoundSystem().Play(kGameBgm);
-    MainSystem::Instance().GetInput().SetSaveDemoPlay(true);
+    MainSystem::Instance().GetInput().SetDemoPlayMode(true);
 }

@@ -20,6 +20,7 @@ void PlayerKnightMovingJumpState::Init(PlayerController& player)
     auto& animator = player.GetAnimator();
     animator.SetGrounded(false);
     animator.SetJump(true);
+    animator.SetEnableIK(false);
     player.Jump();
 }
 
@@ -31,6 +32,7 @@ void PlayerKnightMovingJumpState::Uninit(PlayerController& player)
     auto& animator = player.GetAnimator();
     animator.SetGrounded(true);
     animator.SetJump(false);
+    animator.SetEnableIK(true);
 }
 
 //--------------------------------------------------------------------------------

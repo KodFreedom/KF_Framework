@@ -34,6 +34,7 @@ enum SoundEffectLabel
     kDeathVoiceSe,
     kGuardVoiceSe,
     kPinchVoiceSe,
+    kCursorSe,
     kSeMax,
 };
 
