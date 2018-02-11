@@ -41,16 +41,16 @@ void EnemyZombieIdleState::Update(EnemyController& enemy)
 {
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
 
-    if (time_counter_ >= kWaitTime
-        && !MainSystem::Instance().GetCurrentMode().GetName()._Equal(L"DemoPlay"))
-    {// 次の目的地をランダムで設定
-        const Vector3& born_position = enemy.GetBornPosition();
-        const float& patrol_range = enemy.GetPatrolRange();
-        Vector3& next_position = Random::Range(born_position - Vector3(patrol_range), born_position + Vector3(patrol_range));
-        enemy.SetNextPosition(next_position);
-        enemy.Change(MY_NEW EnemyZombieWalkState);
-        return;
-    }
+    //if (time_counter_ >= kWaitTime
+    //    && !MainSystem::Instance().GetCurrentMode().GetName()._Equal(L"DemoPlay"))
+    //{// 次の目的地をランダムで設定
+    //    const Vector3& born_position = enemy.GetBornPosition();
+    //    const float& patrol_range = enemy.GetPatrolRange();
+    //    Vector3& next_position = Random::Range(born_position - Vector3(patrol_range), born_position + Vector3(patrol_range));
+    //    enemy.SetNextPosition(next_position);
+    //    enemy.Change(MY_NEW EnemyZombieWalkState);
+    //    return;
+    //}
 
     if (enemy.GetTarget() != nullptr)
     {// ターゲットに追跡

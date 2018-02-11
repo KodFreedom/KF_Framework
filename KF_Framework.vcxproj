@@ -306,6 +306,7 @@
     <ClCompile Include="source_code\main_system.cpp" />
     <ClCompile Include="source_code\mode\mode.cpp" />
     <ClCompile Include="source_code\mode\mode_demo.cpp" />
+    <ClCompile Include="source_code\mode\mode_demo_play.cpp" />
     <ClCompile Include="source_code\mode\mode_editor.cpp" />
     <ClCompile Include="source_code\mode\mode_result.cpp" />
     <ClCompile Include="source_code\mode\mode_title.cpp" />
@@ -512,6 +513,7 @@
     <ClInclude Include="source_code\main_system.h" />
     <ClInclude Include="source_code\mode\mode.h" />
     <ClInclude Include="source_code\mode\mode_demo.h" />
+    <ClInclude Include="source_code\mode\mode_demo_play.h" />
     <ClInclude Include="source_code\mode\mode_editor.h" />
     <ClInclude Include="source_code\mode\mode_result.h" />
     <ClInclude Include="source_code\mode\mode_title.h" />
