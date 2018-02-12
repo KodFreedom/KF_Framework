@@ -35,6 +35,15 @@ void PlayerKnightHardLandState::Update(PlayerController& player)
     PlayerState::Update(player);
     player.CheckGrounded();
     player.Move();
+
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    {
+        if (!player.GetAnimator().GetCurrentAnimationName()._Equal(L"knight_hard_land"))
+        {
+            player.Change(MY_NEW PlayerKnightIdleState);
+            return;
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------

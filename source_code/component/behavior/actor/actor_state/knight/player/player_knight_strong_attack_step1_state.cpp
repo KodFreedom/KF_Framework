@@ -124,7 +124,7 @@ void PlayerKnightStrongAttackStep1State::OnTrigger(PlayerController& player, Col
             auto enemy_controller = other.GetGameObject().GetBehaviorBy(L"EnemyController");
             if (enemy_controller)
             {
-                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack());
+                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack() * 1.4f);
             }
         }
     }

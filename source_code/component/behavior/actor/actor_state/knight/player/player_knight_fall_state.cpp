@@ -17,6 +17,7 @@
 //--------------------------------------------------------------------------------
 void PlayerKnightFallState::Init(PlayerController& player)
 {
+    player.GetParameter().SetGroundCheckDistance(kGroundCheckDistance);
     player.GetAnimator().SetGrounded(false);
 }
 
@@ -37,18 +38,15 @@ void PlayerKnightFallState::Update(PlayerController& player)
     player.CheckGrounded();
     player.Move();
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
-    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    if (player.GetCurrentGroundInfo().is_grounded)
     {
-        if (player.GetCurrentGroundInfo().is_grounded)
+        if (time_counter_ > kHardLandTime)
         {
-            if (time_counter_ > kHardLandTime)
-            {
-                player.Change(MY_NEW PlayerKnightHardLandState);
-                return;
-            }
-
-            player.Change(MY_NEW PlayerKnightIdleState);
+            player.Change(MY_NEW PlayerKnightHardLandState);
             return;
         }
+
+        player.Change(MY_NEW PlayerKnightIdleState);
+        return;
     }
 }

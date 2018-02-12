@@ -34,7 +34,7 @@ bool Collider::Init(void)
 {
     is_registered_ = true;
     MainSystem::Instance().GetCollisionSystem().Register(this);
-    world_ = offset_ * owner_.GetTransform()->GetWorldMatrix();
+    world_ = offset_ * owner_.GetTransform()->GetCurrentWorldMatrix();
     return true;
 }
 

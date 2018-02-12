@@ -87,42 +87,42 @@ public:
     //--------------------------------------------------------------------------------
     //  移動の水平量の取得
     //--------------------------------------------------------------------------------
-    float MoveHorizontal(void) const { return move_horizontal_; }
+    float MoveHorizontal(void) const { return key_info_.move_horizontal; }
 
     //--------------------------------------------------------------------------------
     //  移動の垂直量の取得
     //--------------------------------------------------------------------------------
-    float MoveVertical(void) const { return move_vertical_; }
+    float MoveVertical(void) const { return key_info_.move_vertical; }
 
     //--------------------------------------------------------------------------------
     //  回転の水平量の取得
     //--------------------------------------------------------------------------------
-    float RotationHorizontal(void) const { return rotation_horizontal_; }
+    float RotationHorizontal(void) const { return key_info_.rotation_horizontal; }
 
     //--------------------------------------------------------------------------------
     //  回転の垂直量の取得
     //--------------------------------------------------------------------------------
-    float RotationVertical(void) const { return rotation_vertical_; }
+    float RotationVertical(void) const { return key_info_.rotation_vertical; }
 
     //--------------------------------------------------------------------------------
     //  ズーム量の取得
     //--------------------------------------------------------------------------------
-    float Zoom(void) const { return zoom_; }
+    float Zoom(void) const { return key_info_.zoom; }
 
     //--------------------------------------------------------------------------------
     //  プレスの取得
     //--------------------------------------------------------------------------------
-    bool GetKeyPress(const Key& key) const { return press_state_ & (1 << static_cast<int>(key)); }
+    bool GetKeyPress(const Key& key) const { return key_info_.press_state & (1 << static_cast<int>(key)); }
 
     //--------------------------------------------------------------------------------
     //  トリガーの取得
     //--------------------------------------------------------------------------------
-    bool GetKeyTrigger(const Key& key) const { return trigger_state_ & (1 << static_cast<int>(key)); }
+    bool GetKeyTrigger(const Key& key) const { return key_info_.trigger_state & (1 << static_cast<int>(key)); }
 
     //--------------------------------------------------------------------------------
     //  リリースの取得
     //--------------------------------------------------------------------------------
-    bool GetKeyRelease(const Key& key) const { return release_state_ & (1 << static_cast<int>(key)); }
+    bool GetKeyRelease(const Key& key) const { return key_info_.release_state & (1 << static_cast<int>(key)); }
 
     //--------------------------------------------------------------------------------
     //  エディタモードの設定
@@ -155,6 +155,22 @@ public:
     const auto GetJoystick(void) const { return joystick_; }
 
 private:
+    //--------------------------------------------------------------------------------
+    //  構造体
+    //--------------------------------------------------------------------------------
+    struct KeyInfo
+    {
+        float move_horizontal; // 移動の水平量
+        float move_vertical; // 移動の垂直量
+        float rotation_horizontal; // 回転の水平量
+        float rotation_vertical; // 回転の垂直量
+        float zoom; // ズームの量
+        int   press_state; // プレスの情報
+        int   trigger_state; // トリガーの情報
+        int   release_state; // リリースの情報
+        short end_of_file; // binaryfileの終了フラグ
+    };
+
     //--------------------------------------------------------------------------------
     //  constructors and destructors
     //--------------------------------------------------------------------------------
@@ -194,17 +210,10 @@ private:
     KeyboardDirectX* keyboard_ = nullptr; // キーボード
     MouseDirectX*    mouse_ = nullptr; // マウス
     JoystickDirectX* joystick_ = nullptr; // ジョイスティック
-    float            move_horizontal_ = 0.0f; // 移動の水平量
-    float            move_vertical_ = 0.0f; // 移動の垂直量
-    float            rotation_horizontal_ = 0.0f; // 回転の水平量
-    float            rotation_vertical_ = 0.0f; // 回転の垂直量
-    float            zoom_ = 0.0f; // ズームの量
-    LONG             press_state_ = 0; // プレスの情報
-    LONG             trigger_state_ = 0; // トリガーの情報
-    LONG             release_state_ = 0; // リリースの情報
     bool             is_editor_mode_ = false; // エディタモーションフラグ
     bool             is_demo_play_ = false;
     bool             is_save_demo_play_ = false;
+    KeyInfo          key_info_ = { 0 };
     ofstream         file_for_save_;
     ifstream         file_for_load_;
 };

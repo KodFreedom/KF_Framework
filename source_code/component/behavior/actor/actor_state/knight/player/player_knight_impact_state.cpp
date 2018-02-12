@@ -45,6 +45,7 @@ void PlayerKnightImpactState::Update(PlayerController& player)
     player.Move();
     player.GetAnimator().SetDamaged(false);
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
+    if (time_counter_ <= kInvincibleTime) return;
 
     if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
     {

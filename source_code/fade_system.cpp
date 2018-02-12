@@ -122,14 +122,13 @@ void FadeSystem::Uninit(void)
 void FadeSystem::FadeIn(void)
 {
     time_counter_ -= GameTime::Instance().DeltaTime();
+    UpdateAlpha(L"fade", time_counter_ / fade_time_);
     if (time_counter_ <= 0.0f)
     {
         time_counter_ = 0.0f;
         current_state_ = kFadeNone;
         GameTime::Instance().SetTimeScale(1.0f);
     }
-    
-    UpdateAlpha(L"fade", time_counter_ / fade_time_);
 }
 
 //--------------------------------------------------------------------------------
@@ -137,7 +136,6 @@ void FadeSystem::FadeIn(void)
 //--------------------------------------------------------------------------------
 void FadeSystem::FadeOut(void)
 {
-    time_counter_ += GameTime::Instance().DeltaTime();
     if (time_counter_ >= fade_time_)
     {
         time_counter_ = fade_time_;
@@ -145,7 +143,7 @@ void FadeSystem::FadeOut(void)
         GameTime::Instance().SetTimeScale(0.0f);
         MainSystem::Instance().Change(next_mode_);
     }
-
+    time_counter_ += GameTime::Instance().DeltaTime();
     UpdateAlpha(L"fade", time_counter_ / fade_time_);
 }
 
@@ -167,13 +165,12 @@ void FadeSystem::FadeWait(void)
 void FadeSystem::FadeWaitIn(void)
 {
     wait_time_counter_ -= GameTime::Instance().DeltaTime();
+    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
     if (wait_time_counter_ <= 0.0f)
     {
         wait_time_counter_ = 0.0f;
         current_state_ = kFadeIn;
     }
-
-    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
 }
 
 //--------------------------------------------------------------------------------
@@ -182,13 +179,12 @@ void FadeSystem::FadeWaitIn(void)
 void FadeSystem::FadeWaitOut(void)
 {
     wait_time_counter_ += GameTime::Instance().DeltaTime();
+    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
     if (wait_time_counter_ >= wait_fade_time_)
     {
         wait_time_counter_ = wait_fade_time_;
         current_state_ = kFadeWait;
-    }
-
-    UpdateAlpha(L"loading", wait_time_counter_ / wait_fade_time_);
+    } 
 }
 
 //--------------------------------------------------------------------------------
