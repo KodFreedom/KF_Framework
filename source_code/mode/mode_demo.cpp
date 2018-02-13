@@ -5,6 +5,7 @@
 #include "mode_demo.h"
 #include "main_system.h"
 #include "input.h"
+#include "input_device_directX.h"
 #include "sound_system.h"
 #include "mode_result.h"
 #include "fade_system.h"
@@ -95,6 +96,14 @@ void ModeDemo::LateUpdate(void)
 
     if (main_system.GetActorObserver().GetEnemys().empty())
     {// エネミーが死んだらリザルトにいく
+        time_counter_ = GameTime::kTimeInterval;
+        return;
+    }
+
+    if (main_system.GetInput().GetJoystick()->GetButtonTrigger(XboxButton::kXboxMenu)
+        || main_system.GetInput().GetKeyboard()->GetTrigger(DIK_RETURN))
+    {
+        main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = GameTime::kTimeInterval;
         return;
     }

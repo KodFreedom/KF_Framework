@@ -103,8 +103,6 @@ void ModeDemoPlay::LateUpdate(void)
     if (main_system.GetInput().GetJoystick()->GetButtonTrigger(XboxButton::kXboxMenu)
         || main_system.GetInput().GetKeyboard()->GetTrigger(DIK_RETURN))
     {
-        if (time_counter_ != 0.0f) return;
-
         main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = GameTime::kTimeInterval;
         return;
