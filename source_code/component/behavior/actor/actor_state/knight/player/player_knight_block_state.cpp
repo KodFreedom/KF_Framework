@@ -37,6 +37,15 @@ void PlayerKnightBlockState::Update(PlayerController& player)
     player.CheckGrounded();
     player.Move();
     player.GetAnimator().SetDefence(player.IsDefence());
+
+    if (player.GetAnimator().GetCurrentAnimationStateType() == kNormalMotionState)
+    {
+        if (player.GetAnimator().GetCurrentAnimationName().find(L"block") == String::npos)
+        {
+            player.Change(MY_NEW PlayerKnightIdleState);
+            return;
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------

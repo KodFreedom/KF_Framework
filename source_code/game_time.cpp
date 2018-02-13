@@ -36,8 +36,9 @@ bool GameTime::CanUpdateFrame(void)
 {
     QueryPerformanceFrequency(&frequency_);
     QueryPerformanceCounter(&current_time_);
-    delta_time_ = static_cast<float>(current_time_.QuadPart - exec_last_time_.QuadPart)
-         / static_cast<float>(frequency_.QuadPart);
+    //delta_time_ = static_cast<float>(current_time_.QuadPart - exec_last_time_.QuadPart)
+    //     / static_cast<float>(frequency_.QuadPart);
+    delta_time_ = kTimeInterval;
 
 #ifdef _DEBUG
     // break point‚ÌŠÔ‚ª”ò‚ñ‚¶‚á‚¤‚Ì‚Å§ŒÀ‚·‚é•K—v‚ª‚ ‚é

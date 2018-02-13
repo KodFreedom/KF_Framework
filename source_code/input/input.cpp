@@ -70,6 +70,7 @@ void Input::SetDemoPlayMode(const bool& enable)
     {
         if (!file_for_load_.is_open())
         {
+            key_info_.end_of_file = 0;
             file_for_load_.open(L"data/input/demo_play.log", ios::binary);
             assert(file_for_load_.is_open());
         }
@@ -102,6 +103,9 @@ void Input::SetSaveDemoPlay(const bool& enable)
     {
         if (file_for_save_.is_open())
         {
+            key_info_.end_of_file = 1;
+            BinaryOutputArchive archive(file_for_save_);
+            archive.saveBinary(&key_info_, sizeof(key_info_));
             file_for_save_.close();
         }
     }
@@ -150,8 +154,8 @@ void Input::UpdateInputInfo(void)
     float joystick_left_axis_y = -static_cast<float>(joystick_->GetLStickAxisY()) / JoystickDirectX::kStickAxisMax;
     joystick_left_axis_x = fabsf(joystick_left_axis_x) > JoystickDirectX::kDead ? joystick_left_axis_x : 0.0f;
     joystick_left_axis_y = fabsf(joystick_left_axis_y) > JoystickDirectX::kDead ? joystick_left_axis_y : 0.0f;
-    move_horizontal_ = Math::AbsMax(keyboard_axis_x, joystick_left_axis_x);
-    move_vertical_ = Math::AbsMax(keyboard_axis_y, joystick_left_axis_y);
+    key_info_.move_horizontal = Math::AbsMax(keyboard_axis_x, joystick_left_axis_x);
+    key_info_.move_vertical = Math::AbsMax(keyboard_axis_y, joystick_left_axis_y);
 
     // Rotation
     float rotation_axis_x = 0.0f;
@@ -168,13 +172,13 @@ void Input::UpdateInputInfo(void)
     }
     float joystick_right_axis_x = static_cast<float>(joystick_->GetRStickAxisX()) / JoystickDirectX::kStickAxisMax;
     float joystick_right_axis_y = static_cast<float>(joystick_->GetRStickAxisY()) / JoystickDirectX::kStickAxisMax;
-    rotation_horizontal_ = Math::AbsMax(rotation_axis_x, joystick_right_axis_x);
-    rotation_vertical_ = Math::AbsMax(rotation_axis_y, joystick_right_axis_y);
+    key_info_.rotation_horizontal = Math::AbsMax(rotation_axis_x, joystick_right_axis_x);
+    key_info_.rotation_vertical = Math::AbsMax(rotation_axis_y, joystick_right_axis_y);
 
     // zoom_
     float mouse_axis_z = -static_cast<float>(mouse_->GetAxisZ()) / MouseDirectX::kAxisMax;
     float joystick_axis_z = static_cast<float>(joystick_->GetLTandRT()) / JoystickDirectX::kStickAxisMax;
-    zoom_ = Math::AbsMax(mouse_axis_z, joystick_axis_z);
+    key_info_.zoom = Math::AbsMax(mouse_axis_z, joystick_axis_z);
 
     // Key
     // Submit
@@ -193,9 +197,9 @@ void Input::UpdateInputInfo(void)
     release_flags[kStart] = keyboard_->GetRelease(DIK_RETURN) | joystick_->GetButtonRelease(kXboxMenu);
 
     // Up
-    press_flags[kUp] = keyboard_->GetPress(DIK_UP) | joystick_->GetCrossKeyPress(kXboxCrossKeyUp);
-    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP) | joystick_->GetCrossKeyTrigger(kXboxCrossKeyUp);
-    release_flags[kUp] = keyboard_->GetRelease(DIK_UP) | joystick_->GetCrossKeyRelease(kXboxCrossKeyUp);
+    press_flags[kUp] = keyboard_->GetPress(DIK_UP);// | joystick_->GetCrossKeyPress(kXboxCrossKeyUp);
+    trigger_flags[kUp] = keyboard_->GetTrigger(DIK_UP);// | joystick_->GetCrossKeyTrigger(kXboxCrossKeyUp);
+    release_flags[kUp] = keyboard_->GetRelease(DIK_UP);// | joystick_->GetCrossKeyRelease(kXboxCrossKeyUp);
 
     // Down
     press_flags[kDown] = keyboard_->GetPress(DIK_DOWN) | joystick_->GetCrossKeyPress(kXboxCrossKeyDown);
@@ -238,14 +242,14 @@ void Input::UpdateInputInfo(void)
     release_flags[kBlock] = keyboard_->GetRelease(DIK_LSHIFT) | joystick_->GetButtonRelease(kXboxLB);
 
     // •Û‘¶
-    press_state_ = 0;
-    trigger_state_ = 0;
-    release_state_ = 0;
+    key_info_.press_state = 0;
+    key_info_.trigger_state = 0;
+    key_info_.release_state = 0;
     for (int count = 0; count < kKeyMax; ++count)
     {
-        press_state_ |= press_flags[count] << count;
-        trigger_state_ |= trigger_flags[count] << count;
-        release_state_ |= release_flags[count] << count;
+        key_info_.press_state |= press_flags[count] << count;
+        key_info_.trigger_state |= trigger_flags[count] << count;
+        key_info_.release_state |= release_flags[count] << count;
     }
 }
 
@@ -261,14 +265,7 @@ void Input::SaveInputInfo(void)
     }
 
     BinaryOutputArchive archive(file_for_save_);
-    archive.saveBinary(&move_horizontal_, sizeof(move_horizontal_));
-    archive.saveBinary(&move_vertical_, sizeof(move_vertical_));
-    archive.saveBinary(&rotation_horizontal_, sizeof(rotation_horizontal_));
-    archive.saveBinary(&rotation_vertical_, sizeof(rotation_vertical_));
-    archive.saveBinary(&zoom_, sizeof(zoom_));
-    archive.saveBinary(&press_state_, sizeof(press_state_));
-    archive.saveBinary(&trigger_state_, sizeof(trigger_state_));
-    archive.saveBinary(&release_state_, sizeof(release_state_));
+    archive.saveBinary(&key_info_, sizeof(key_info_));
 }
 
 //--------------------------------------------------------------------------------
@@ -277,31 +274,10 @@ void Input::SaveInputInfo(void)
 void Input::LoadInputInfo(void)
 {
     assert(file_for_load_.is_open());
-    if (file_for_load_.eof()) { return; }
+    if (key_info_.end_of_file == 1) { return; }
 
     BinaryInputArchive archive(file_for_load_);
-    archive.loadBinary(&move_horizontal_, sizeof(move_horizontal_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&move_vertical_, sizeof(move_vertical_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&rotation_horizontal_, sizeof(rotation_horizontal_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&rotation_vertical_, sizeof(rotation_vertical_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&zoom_, sizeof(zoom_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&press_state_, sizeof(press_state_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&trigger_state_, sizeof(trigger_state_));
-
-    if (file_for_load_.eof()) { return; }
-    archive.loadBinary(&release_state_, sizeof(release_state_));
+    archive.loadBinary(&key_info_, sizeof(key_info_));
 }
 
 //--------------------------------------------------------------------------------
@@ -315,6 +291,9 @@ void Input::Uninit(void)
 
     if (file_for_save_.is_open())
     {
+        key_info_.end_of_file = 1;
+        BinaryOutputArchive archive(file_for_save_);
+        archive.saveBinary(&key_info_, sizeof(key_info_));
         file_for_save_.close();
     }
 

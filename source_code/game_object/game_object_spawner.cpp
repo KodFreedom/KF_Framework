@@ -82,7 +82,7 @@ GameObject* GameObjectSpawner::CreateField(const String& name)
     //コンポネント
     String& field_name = name + L"Field";
     auto renderer = MY_NEW MeshRenderer3d(*result);
-    renderer->SetMesh(field_name + L".mesh");
+    renderer->SetMesh(name + L".mesh");
     renderer->SetMaterial(field_name);
     renderer->SetBoundingSpherePosition(Vector3::kZero);
     renderer->SetBoundingSphereRadius(1000.0f);

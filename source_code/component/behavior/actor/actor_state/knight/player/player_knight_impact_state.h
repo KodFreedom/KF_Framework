@@ -48,7 +48,7 @@ private:
     //  ’è”’è‹`
     //--------------------------------------------------------------------------------
     static constexpr float kMovementMultiplier = 0.0f;
-    static constexpr float kInvincibleTime = 0.3f;
+    static constexpr float kInvincibleTime = 0.5f;
 
     //--------------------------------------------------------------------------------
     //  •Ï”’è‹`

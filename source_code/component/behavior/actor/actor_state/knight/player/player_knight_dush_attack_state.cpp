@@ -105,7 +105,7 @@ void PlayerKnightDushAttackState::OnTrigger(PlayerController& player, Collider& 
             auto enemy_controller = other.GetGameObject().GetBehaviorBy(L"EnemyController");
             if (enemy_controller)
             {
-                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack());
+                static_cast<EnemyController*>(enemy_controller)->Hit(player.GetParameter().GetAttack() * 2.8f);
             }
         }
     }

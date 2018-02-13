@@ -43,8 +43,8 @@ private:
     //  ’è”’è‹`
     //--------------------------------------------------------------------------------
     static constexpr float kWaitTime = 1.0f;
-    static constexpr int   kBeginAttackFrame = 60;
-    static constexpr int   kEndAttackFrame = 100;
+    static constexpr int   kBeginAttackFrame = 70;
+    static constexpr int   kEndAttackFrame = 80;
 
     //--------------------------------------------------------------------------------
     //  •Ï”’è‹`
