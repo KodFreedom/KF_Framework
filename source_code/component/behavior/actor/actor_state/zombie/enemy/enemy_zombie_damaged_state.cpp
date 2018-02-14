@@ -32,14 +32,18 @@ void EnemyZombieDamagedState::Init(EnemyController& enemy)
 void EnemyZombieDamagedState::Update(EnemyController& enemy)
 {
     auto& animator = enemy.GetAnimator();
-    animator.SetDamaged(false);
     time_counter_ += GameTime::Instance().ScaledDeltaTime();
-    if (time_counter_ < kInvincibleTime) return;
     
     if (animator.GetCurrentAnimationStateType() == kNormalMotionState)
     {
-        if (animator.GetCurrentAnimationName()._Equal(L"zombie_idle"))
+        if (animator.GetCurrentAnimationName()._Equal(L"zombie_damaged"))
         {
+            animator.SetDamaged(false);
+        }
+        else
+        {
+            if (time_counter_ < kInvincibleTime) return;
+
             if (enemy.GetTarget() != nullptr)
             {// ターゲットに追跡
                 enemy.Change(MY_NEW EnemyZombieFollowState);

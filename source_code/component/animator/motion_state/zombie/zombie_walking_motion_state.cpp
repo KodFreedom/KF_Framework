@@ -18,6 +18,16 @@ void ZombieWalkingMotionState::ChangeMotion(Animator& animator)
     {
         current_frame_counter_ = 0;
     }
+    if (animator.GetIsDamaged() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDamagedMotionState(0), current_frame_counter_, 5));
+        return;
+    }
+    if (animator.GetIsDead() == true)
+    {
+        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDeathMotionState(0), current_frame_counter_, 5));
+        return;
+    }
     if(animator.GetMovement() == 0.000000f)
     {
         animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieIdleMotionState(0), current_frame_counter_, 10));
@@ -36,16 +46,6 @@ void ZombieWalkingMotionState::ChangeMotion(Animator& animator)
     if(animator.GetIsStrongAttack() == true)
     {
         animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieKickingMotionState(0), current_frame_counter_, 10));
-        return;
-    }
-    if(animator.GetIsDamaged() == true)
-    {
-        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDamagedMotionState(0), current_frame_counter_, 5));
-        return;
-    }
-    if(animator.GetIsDead() == true)
-    {
-        animator.Change(MY_NEW BlendMotionState(current_motion_name_, MY_NEW ZombieDeathMotionState(0), current_frame_counter_, 5));
         return;
     }
 }
