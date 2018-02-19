@@ -66,13 +66,7 @@ void InputDeviceDirectX::Uninit(void)
 // コンストラスタ
 //--------------------------------------------------------------------------------
 KeyboardDirectX::KeyboardDirectX() : InputDeviceDirectX()
-{
-    ZeroMemory(current_states_, sizeof current_states_);
-    ZeroMemory(trigger_states_, sizeof trigger_states_);
-    ZeroMemory(release_states_, sizeof release_states_);
-    ZeroMemory(repeat_states_, sizeof repeat_states_);
-    ZeroMemory(repeat_counters_, sizeof repeat_counters_);
-}
+{}
 
 //--------------------------------------------------------------------------------
 // 初期化処理
@@ -128,6 +122,9 @@ void KeyboardDirectX::Update(void)
 
     if (SUCCEEDED(device_->GetDeviceState(sizeof(next_key_states), next_key_states)))
     {
+        // KANJIがずっと押されてる状態になっているので無視する
+        next_key_states[DIK_KANJI] = 0;
+
         for (int count = 0; count < kKeyNumber; ++count)
         {
             trigger_states_[count] = (current_states_[count] ^ next_key_states[count]) & next_key_states[count];
@@ -150,6 +147,7 @@ void KeyboardDirectX::Update(void)
             }
 
             current_states_[count] = next_key_states[count];
+
             is_pressed_any_key_ |= static_cast<bool>(current_states_[count]);
         }
     }
@@ -173,11 +171,7 @@ void KeyboardDirectX::Update(void)
 // コンストラスタ
 //--------------------------------------------------------------------------------
 MouseDirectX::MouseDirectX() : InputDeviceDirectX()
-{
-    ZeroMemory(&current_state_, sizeof current_state_);
-    ZeroMemory(&trigger_state_, sizeof trigger_state_);
-    ZeroMemory(&release_state_, sizeof release_state_);
-}
+{}
 
 //--------------------------------------------------------------------------------
 // 初期化処理
@@ -279,13 +273,7 @@ void MouseDirectX::Update(void)
 // コンストラスタ
 //--------------------------------------------------------------------------------
 JoystickDirectX::JoystickDirectX() : InputDeviceDirectX()
-    , hwnd_(nullptr), is_attached_(false)
-{
-    // 各ワークのクリア
-    ZeroMemory(&current_state_, sizeof DIJOYSTATE2);
-    ZeroMemory(&trigger_state_, sizeof DIJOYSTATE2);
-    ZeroMemory(&release_state_, sizeof DIJOYSTATE2);
-}
+{}
 
 //--------------------------------------------------------------------------------
 // 初期化処理

@@ -44,9 +44,9 @@ void ModeResult::Init(void)
 
     auto button = GameObjectSpawner::CreateFlashButton2d(
         1.0f
-        , Vector3(475.0f, 73.0f, 0.0f)
+        , Vector3(560.0f, 73.0f, 0.0f)
         , kDefaultLayer
-        , L"press_space"
+        , L"press_any_key"
         , kDefault2dTextureShader
         , k2d
         , 0.0f
@@ -85,7 +85,7 @@ void ModeResult::Update(void)
         return;
     }
 
-    if (main_system.GetInput().GetKeyTrigger(Key::kSubmit))
+    if (main_system.GetInput().IsPressedAnyKey())
     {
         main_system.GetSoundSystem().Play(kSubmitSe);
         time_counter_ = kWaitTime;

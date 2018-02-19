@@ -17,9 +17,10 @@
 #include "shader_manager.h"
 #include "shadow_map_system.h"
 #include "actor_observer.h"
-#include "mode_title.h"
-#include "mode_demo.h"
-#include "mode_demo_play.h"
+#include "mode\mode_title.h"
+#include "mode\mode_demo.h"
+#include "mode\mode_demo_play.h"
+#include "mode\mode_result.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)

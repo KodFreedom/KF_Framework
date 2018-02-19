@@ -13,6 +13,8 @@
 #include "material_manager.h"
 #include "mesh_renderer_2d.h"
 #include "game_time.h"
+#include "../../../input/input.h"
+#include "../../../input/input_device_directX.h"
 
 //--------------------------------------------------------------------------------
 //  ’è”’è‹`
@@ -21,16 +23,86 @@ const Vector3 PlayerUiController::kLifeGaugeSize = Vector3(540.0f, 33.0f, 0.0f) 
 const Vector3 PlayerUiController::kLifeGaugeLeftTop = Vector3(-923.0f, -500.0f, 0.0f) * SCREEN_RATE;
 const Vector3 PlayerUiController::kCoverSize = Vector3(562.0f, 113.0f, 0.0f) * SCREEN_RATE;
 const Vector3 PlayerUiController::kCoverLeftTop = Vector3(-935.0f, -520.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonSize = Vector3(40.0f, 40.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonALeftTop = Vector3(750.0f, 300.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonBLeftTop = Vector3(750.0f, 350.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonXLeftTop = Vector3(750.0f, 400.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonLbLeftTop = Vector3(750.0f, 450.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonSize[kButtonTypeMax] =
+{
+    Vector3(160.0f, 40.0f, 0.0f) * SCREEN_RATE,
+    Vector3(40.0f, 40.0f, 0.0f) * SCREEN_RATE,
+};
+
+// Jump
+const Vector3 PlayerUiController::kButtonJumpLeftTop[kButtonTypeMax] =
+{
+    Vector3(750.0f, 305.0f, 0.0f) * SCREEN_RATE,
+    Vector3(750.0f, 300.0f, 0.0f) * SCREEN_RATE,
+};
+const Vector2 PlayerUiController::kButtonJumpUvOffset[kButtonTypeMax] =
+{
+    Vector2(0.0f, 0.0f),
+    Vector2(1.0f / 3.0f, 0.0f),
+};
+const Vector2 PlayerUiController::kButtonJumpUvScale[kButtonTypeMax] =
+{
+    Vector2(1.0f, 0.25f),
+    Vector2(1.0f / 3.0f, 0.25f),
+};
+
+// LightAttack
+const Vector3 PlayerUiController::kButtonLightAttackLeftTop[kButtonTypeMax] =
+{
+    Vector3(750.0f, 355.0f, 0.0f) * SCREEN_RATE,
+    Vector3(750.0f, 350.0f, 0.0f) * SCREEN_RATE,
+};
+const Vector2 PlayerUiController::kButtonLightAttackUvOffset[kButtonTypeMax] =
+{
+    Vector2(0.0f, 0.25f),
+    Vector2(2.0f / 3.0f, 0.0f),
+};
+const Vector2 PlayerUiController::kButtonLightAttackUvScale[kButtonTypeMax] =
+{
+    Vector2(1.0f, 0.25f),
+    Vector2(1.0f / 3.0f, 0.25f),
+};
+
+// StrongAttack
+const Vector3 PlayerUiController::kButtonStrongAttackLeftTop[kButtonTypeMax] =
+{
+    Vector3(750.0f, 405.0f, 0.0f) * SCREEN_RATE,
+    Vector3(750.0f, 400.0f, 0.0f) * SCREEN_RATE,
+};
+const Vector2 PlayerUiController::kButtonStrongAttackUvOffset[kButtonTypeMax] =
+{
+    Vector2(0.0f, 0.5f),
+    Vector2(0.0f, 0.25f),
+};
+const Vector2 PlayerUiController::kButtonStrongAttackUvScale[kButtonTypeMax] =
+{
+    Vector2(1.0f, 0.25f),
+    Vector2(1.0f / 3.0f, 0.25f),
+};
+
+// Guard
+const Vector3 PlayerUiController::kButtonGuardLeftTop[kButtonTypeMax] =
+{
+    Vector3(750.0f, 455.0f, 0.0f) * SCREEN_RATE,
+    Vector3(750.0f, 450.0f, 0.0f) * SCREEN_RATE,
+};
+const Vector2 PlayerUiController::kButtonGuardUvOffset[kButtonTypeMax] =
+{
+    Vector2(0.0f, 0.75f),
+    Vector2(1.0f / 3.0f, 0.75f),
+};
+const Vector2 PlayerUiController::kButtonGuardUvScale[kButtonTypeMax] =
+{
+    Vector2(1.0f, 0.25f),
+    Vector2(1.0f / 3.0f, 0.25f),
+};
+
+// Texts
 const Vector3 PlayerUiController::kButtonTextSize = Vector3(320.0f, 40.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonTextALeftTop = Vector3(410.0f, 305.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonTextBLeftTop = Vector3(410.0f, 355.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonTextXLeftTop = Vector3(410.0f, 405.0f, 0.0f) * SCREEN_RATE;
-const Vector3 PlayerUiController::kButtonTextLbLeftTop = Vector3(410.0f, 455.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextJumpLeftTop = Vector3(410.0f, 305.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextLightAttackLeftTop = Vector3(410.0f, 355.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextStrongAttackLeftTop = Vector3(410.0f, 405.0f, 0.0f) * SCREEN_RATE;
+const Vector3 PlayerUiController::kButtonTextGuardLeftTop = Vector3(410.0f, 455.0f, 0.0f) * SCREEN_RATE;
 
 //--------------------------------------------------------------------------------
 //
@@ -42,10 +114,6 @@ const Vector3 PlayerUiController::kButtonTextLbLeftTop = Vector3(410.0f, 455.0f,
 //--------------------------------------------------------------------------------
 PlayerUiController::PlayerUiController(GameObject& owner)
     : Behavior(owner, L"PlayerUiController")
-    , warning_gauge_(nullptr)
-    , life_gauge_(nullptr)
-    , warning_flash_speed_(2.0f)
-    , life_flash_speed_(0.4f)
 {}
 
 //--------------------------------------------------------------------------------
@@ -88,20 +156,25 @@ bool PlayerUiController::Init(void)
         kCoverLeftTop + kCoverSize * 0.5f);
 
     // Buttons
-    // A
+    ButtonType current_type = MainSystem::Instance().GetInput().GetJoystick()->IsAttached() ? kJoystickButton : kKeyboardButton;
+    String button_texture[kButtonTypeMax] = {
+        L"button_keyboard",
+        L"button"};
+
+    // Jump
     auto ui = GameObjectSpawner::CreateBasicPolygon2d(
-        kButtonSize,
+        kButtonSize[current_type],
         kDefaultLayer,
-        L"button",
+        button_texture[current_type],
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonALeftTop + kButtonSize * 0.5f);
+        kButtonJumpLeftTop[current_type] + kButtonSize[current_type] * 0.5f);
     auto renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     auto renderer2d = (MeshRenderer2d*)renderer;
-    renderer2d->SetUvOffset(Vector2(1.0f / 3.0f, 0.0f));
-    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+    renderer2d->SetUvOffset(kButtonJumpUvOffset[current_type]);
+    renderer2d->SetUvScale(kButtonJumpUvScale[current_type]);
 
     ui = GameObjectSpawner::CreateBasicPolygon2d(
         kButtonTextSize,
@@ -110,27 +183,27 @@ bool PlayerUiController::Init(void)
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonTextALeftTop + kButtonTextSize * 0.5f);
+        kButtonTextJumpLeftTop + kButtonTextSize * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
     renderer2d->SetUvOffset(Vector2(0.0f, 0.0f));
     renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
 
-    // B
+    // LightAttack
     ui = GameObjectSpawner::CreateBasicPolygon2d(
-        kButtonSize,
+        kButtonSize[current_type],
         kDefaultLayer,
-        L"button",
+        button_texture[current_type],
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonBLeftTop + kButtonSize * 0.5f);
+        kButtonLightAttackLeftTop[current_type] + kButtonSize[current_type] * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
-    renderer2d->SetUvOffset(Vector2(2.0f / 3.0f, 0.0f));
-    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+    renderer2d->SetUvOffset(kButtonLightAttackUvOffset[current_type]);
+    renderer2d->SetUvScale(kButtonLightAttackUvScale[current_type]);
 
     ui = GameObjectSpawner::CreateBasicPolygon2d(
         kButtonTextSize,
@@ -139,27 +212,27 @@ bool PlayerUiController::Init(void)
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonTextBLeftTop + kButtonTextSize * 0.5f);
+        kButtonTextLightAttackLeftTop + kButtonTextSize * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
     renderer2d->SetUvOffset(Vector2(0.0f, 0.25f));
     renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
 
-    // X
+    // StrongAttack
     ui = GameObjectSpawner::CreateBasicPolygon2d(
-        kButtonSize,
+        kButtonSize[current_type],
         kDefaultLayer,
-        L"button",
+        button_texture[current_type],
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonXLeftTop + kButtonSize * 0.5f);
+        kButtonStrongAttackLeftTop[current_type] + kButtonSize[current_type] * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
-    renderer2d->SetUvOffset(Vector2(0.0f, 0.25f));
-    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+    renderer2d->SetUvOffset(kButtonStrongAttackUvOffset[current_type]);
+    renderer2d->SetUvScale(kButtonStrongAttackUvScale[current_type]);
 
     ui = GameObjectSpawner::CreateBasicPolygon2d(
         kButtonTextSize,
@@ -168,27 +241,27 @@ bool PlayerUiController::Init(void)
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonTextXLeftTop + kButtonTextSize * 0.5f);
+        kButtonTextStrongAttackLeftTop + kButtonTextSize * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
     renderer2d->SetUvOffset(Vector2(0.0f, 0.5f));
     renderer2d->SetUvScale(Vector2(1.0f, 0.25f));
 
-    // LB
+    // Guard
     ui = GameObjectSpawner::CreateBasicPolygon2d(
-        kButtonSize,
+        kButtonSize[current_type],
         kDefaultLayer,
-        L"button",
+        button_texture[current_type],
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonLbLeftTop + kButtonSize * 0.5f);
+        kButtonGuardLeftTop[current_type] + kButtonSize[current_type] * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
-    renderer2d->SetUvOffset(Vector2(1.0f / 3.0f, 0.75f));
-    renderer2d->SetUvScale(Vector2(1.0f / 3.0f, 0.25f));
+    renderer2d->SetUvOffset(kButtonGuardUvOffset[current_type]);
+    renderer2d->SetUvScale(kButtonGuardUvScale[current_type]);
 
     ui = GameObjectSpawner::CreateBasicPolygon2d(
         kButtonTextSize,
@@ -197,7 +270,7 @@ bool PlayerUiController::Init(void)
         kDefault2dTextureShader,
         k2d,
         0.0f,
-        kButtonTextLbLeftTop + kButtonTextSize * 0.5f);
+        kButtonTextGuardLeftTop + kButtonTextSize * 0.5f);
     renderer = ui->GetRendererBy(kMeshRenderer2d);
     assert(renderer);
     renderer2d = (MeshRenderer2d*)renderer;
