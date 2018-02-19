@@ -122,13 +122,18 @@ HRESULT KeyboardDirectX::Init(HINSTANCE hinstance, HWND hwnd)
 void KeyboardDirectX::Update(void)
 {
     if (!device_) return;
-    BYTE next_key_states[kKeyNumber];
+
+    BYTE next_key_states[kKeyNumber] = { 0 };
+    is_pressed_any_key_ = false;
+
     if (SUCCEEDED(device_->GetDeviceState(sizeof(next_key_states), next_key_states)))
     {
         for (int count = 0; count < kKeyNumber; ++count)
         {
             trigger_states_[count] = (current_states_[count] ^ next_key_states[count]) & next_key_states[count];
             release_states_[count] = (current_states_[count] ^ next_key_states[count]) & ~next_key_states[count];
+
+            // repeate
             repeat_states_[count] = trigger_states_[count];
             if (next_key_states[count])
             {
@@ -143,7 +148,9 @@ void KeyboardDirectX::Update(void)
                 repeat_counters_[count] = 0;
                 repeat_states_[count] = 0;
             }
+
             current_states_[count] = next_key_states[count];
+            is_pressed_any_key_ |= static_cast<bool>(current_states_[count]);
         }
     }
     else
@@ -227,15 +234,19 @@ HRESULT MouseDirectX::Init(HINSTANCE hinstance, HWND hwnd)
 void MouseDirectX::Update(void)
 {
     if (!device_) return;
-    DIMOUSESTATE2 next_state;
+    is_pressed_any_key_ = false;
+
+    DIMOUSESTATE2 next_state = { 0 };
+
     HRESULT hr = device_->GetDeviceState(sizeof(DIMOUSESTATE2), &next_state);
     if (SUCCEEDED(hr))
     {
         //Button更新
-        for (int counter = 0; counter < sizeof(next_state.rgbButtons); counter++)
+        for (int count = 0; count < sizeof(next_state.rgbButtons); count++)
         {
-            trigger_state_.rgbButtons[counter] = (current_state_.rgbButtons[counter] ^ next_state.rgbButtons[counter]) & next_state.rgbButtons[counter];
-            release_state_.rgbButtons[counter] = (current_state_.rgbButtons[counter] ^ next_state.rgbButtons[counter]) & ~next_state.rgbButtons[counter];
+            trigger_state_.rgbButtons[count] = (current_state_.rgbButtons[count] ^ next_state.rgbButtons[count]) & next_state.rgbButtons[count];
+            release_state_.rgbButtons[count] = (current_state_.rgbButtons[count] ^ next_state.rgbButtons[count]) & ~next_state.rgbButtons[count];
+            is_pressed_any_key_ |= static_cast<bool>(next_state.rgbButtons[count]);
         }
 
         //マウス位置更新
@@ -281,11 +292,10 @@ JoystickDirectX::JoystickDirectX() : InputDeviceDirectX()
 //--------------------------------------------------------------------------------
 HRESULT JoystickDirectX::Init(HINSTANCE hinstance, HWND hwnd)
 {
-    HRESULT hr;
     hwnd_ = hwnd;
 
     // 入力処理の初期化
-    hr = InputDeviceDirectX::Init(hinstance, hwnd);
+    HRESULT hr = InputDeviceDirectX::Init(hinstance, hwnd);
     if (FAILED(hr))
     {
         MessageBox(NULL, L"Inputデバイスが生成に失敗！", L"警告！", MB_ICONWARNING);
@@ -308,11 +318,11 @@ void JoystickDirectX::Update(void)
     //    if (FAILED(hr) || !device_) { return; }
     //}
 
-    HRESULT hr;
-    DIJOYSTATE2 next_state;
+    is_pressed_any_key_ = false;
+    DIJOYSTATE2 next_state = { 0 };
 
     // 状態を取得する前にデータをポーリング
-    hr = device_->Poll();
+    HRESULT hr = device_->Poll();
     if (FAILED(hr))
     {
         is_attached_ = false;
@@ -330,6 +340,7 @@ void JoystickDirectX::Update(void)
         {
             trigger_state_.rgbButtons[count] = (current_state_.rgbButtons[count] ^ next_state.rgbButtons[count]) & next_state.rgbButtons[count];
             release_state_.rgbButtons[count] = (current_state_.rgbButtons[count] ^ next_state.rgbButtons[count]) & ~next_state.rgbButtons[count];
+            is_pressed_any_key_ |= static_cast<bool>(next_state.rgbButtons[count]);
         }
 
         //LStick更新
@@ -382,10 +393,8 @@ void JoystickDirectX::Update(void)
 //--------------------------------------------------------------------------------
 HRESULT JoystickDirectX::Attach(void)
 {
-    HRESULT hr;
-
     // Joystickデバイスを列挙して作成
-    hr = instance_->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoyCallback, &device_, DIEDFL_ATTACHEDONLY);
+    HRESULT hr = instance_->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumJoyCallback, &device_, DIEDFL_ATTACHEDONLY);
     if (FAILED(hr) || device_ == NULL)
     {
         is_attached_ = false;
@@ -430,7 +439,7 @@ HRESULT JoystickDirectX::Attach(void)
 //--------------------------------------------------------------------------------
 BOOL CALLBACK JoystickDirectX::EnumJoyCallback(const DIDEVICEINSTANCE* instance, VOID *context)
 {
-    DIDEVCAPS didevcaps; // Joystickの能力情報
+    DIDEVCAPS didevcaps = { 0 }; // Joystickの能力情報
     auto device_pointer = static_cast<LPDIRECTINPUTDEVICE8*>(context);
 
     //列挙されたJoystickへのインターフェイスを取得する
@@ -461,9 +470,8 @@ BOOL CALLBACK JoystickDirectX::EnumJoyCallback(const DIDEVICEINSTANCE* instance,
 //--------------------------------------------------------------------------------
 BOOL CALLBACK JoystickDirectX::EnumAxesCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi, LPVOID pvRef)
 {
-    DIPROPRANGE diprg;
     auto device_pointer = static_cast<LPDIRECTINPUTDEVICE8*>(pvRef);
-    ZeroMemory(&diprg, sizeof(diprg));
+    DIPROPRANGE diprg = { 0 };
     diprg.diph.dwSize = sizeof(diprg);
     diprg.diph.dwHeaderSize = sizeof(diprg.diph);
     diprg.diph.dwObj = lpddoi->dwType;
