@@ -48,22 +48,41 @@ public:
 
 private:
     //--------------------------------------------------------------------------------
+    //  列挙型定義
+    //--------------------------------------------------------------------------------
+    enum ButtonType
+    {
+        kKeyboardButton = 0,
+        kJoystickButton,
+        kButtonTypeMax
+    };
+
+    //--------------------------------------------------------------------------------
     //  定数定義
     //--------------------------------------------------------------------------------
     static const Vector3 kLifeGaugeSize;
     static const Vector3 kLifeGaugeLeftTop;
     static const Vector3 kCoverSize;
     static const Vector3 kCoverLeftTop;
-    static const Vector3 kButtonSize;
-    static const Vector3 kButtonALeftTop;
-    static const Vector3 kButtonBLeftTop;
-    static const Vector3 kButtonXLeftTop;
-    static const Vector3 kButtonLbLeftTop;
+    static const Vector3 kButtonSize[kButtonTypeMax];
+    static const Vector3 kButtonJumpLeftTop[kButtonTypeMax];
+    static const Vector2 kButtonJumpUvOffset[kButtonTypeMax];
+    static const Vector2 kButtonJumpUvScale[kButtonTypeMax];
+    static const Vector3 kButtonLightAttackLeftTop[kButtonTypeMax];
+    static const Vector2 kButtonLightAttackUvOffset[kButtonTypeMax];
+    static const Vector2 kButtonLightAttackUvScale[kButtonTypeMax];
+    static const Vector3 kButtonStrongAttackLeftTop[kButtonTypeMax];
+    static const Vector2 kButtonStrongAttackUvOffset[kButtonTypeMax];
+    static const Vector2 kButtonStrongAttackUvScale[kButtonTypeMax];
+    static const Vector3 kButtonGuardLeftTop[kButtonTypeMax];
+    static const Vector2 kButtonGuardUvOffset[kButtonTypeMax];
+    static const Vector2 kButtonGuardUvScale[kButtonTypeMax];
     static const Vector3 kButtonTextSize;
-    static const Vector3 kButtonTextALeftTop;
-    static const Vector3 kButtonTextBLeftTop;
-    static const Vector3 kButtonTextXLeftTop;
-    static const Vector3 kButtonTextLbLeftTop;
+    static const Vector3 kButtonTextJumpLeftTop;
+    static const Vector3 kButtonTextLightAttackLeftTop;
+    static const Vector3 kButtonTextStrongAttackLeftTop;
+    static const Vector3 kButtonTextGuardLeftTop;
+    static constexpr int kButtonNumber = 4;
 
     //--------------------------------------------------------------------------------
     //  ワーニングゲージの更新
@@ -78,8 +97,8 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    Transform* warning_gauge_;
-    Transform* life_gauge_;
-    float      warning_flash_speed_;
-    float      life_flash_speed_;
+    Transform*      warning_gauge_ = nullptr;
+    Transform*      life_gauge_ = nullptr;
+    float           warning_flash_speed_ = 2.0f;
+    float           life_flash_speed_ = 0.4f;
 };

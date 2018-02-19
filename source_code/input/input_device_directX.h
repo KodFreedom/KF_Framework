@@ -158,16 +158,16 @@ private:
     //--------------------------------------------------------------------------------
     //  定数定義
     //--------------------------------------------------------------------------------
-    static constexpr int kKeyNumber = 88; // f12まで
+    static constexpr int kKeyNumber = 256;
 
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    BYTE current_states_[kKeyNumber];
-    BYTE trigger_states_[kKeyNumber];
-    BYTE release_states_[kKeyNumber];
-    BYTE repeat_states_[kKeyNumber];
-    int  repeat_counters_[kKeyNumber];
+    BYTE current_states_[kKeyNumber] = { 0 };
+    BYTE trigger_states_[kKeyNumber] = { 0 };
+    BYTE release_states_[kKeyNumber] = { 0 };
+    BYTE repeat_states_[kKeyNumber] = { 0 };
+    int  repeat_counters_[kKeyNumber] = { 0 };
 };
 
 //--------------------------------------------------------------------------------
@@ -232,9 +232,9 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    DIMOUSESTATE2 current_state_;
-    DIMOUSESTATE2 trigger_state_;
-    DIMOUSESTATE2 release_state_;
+    DIMOUSESTATE2 current_state_ = { 0 };
+    DIMOUSESTATE2 trigger_state_ = { 0 };
+    DIMOUSESTATE2 release_state_ = { 0 };
 };
 
 //--------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ private:
     //--------------------------------------------------------------------------------
     // ジョイスティックと連結する、成功したらデバイスを作る
     //--------------------------------------------------------------------------------
-    HRESULT    Attach(void);
+    HRESULT Attach(void);
 
     //--------------------------------------------------------------------------------
     //  列挙されたデバイスごとに呼び出されるコールバック関数
@@ -349,9 +349,9 @@ private:
     //--------------------------------------------------------------------------------
     //  変数定義
     //--------------------------------------------------------------------------------
-    DIJOYSTATE2 current_state_;
-    DIJOYSTATE2 trigger_state_;
-    DIJOYSTATE2 release_state_;
-    HWND        hwnd_;
-    bool        is_attached_;
+    DIJOYSTATE2 current_state_ = { 0 };
+    DIJOYSTATE2 trigger_state_ = { 0 };
+    DIJOYSTATE2 release_state_ = { 0 };
+    HWND        hwnd_ = nullptr;
+    bool        is_attached_ = false;
 };
