@@ -1,4 +1,5 @@
 # KF_Framework
+説明動画：https://youtu.be/HiC-yiXApsY<br />
 コンポネント指向のフレームワーク<br />
 実装した技術：<br />
 ※デカップリングパターン（コンポネント）<br />
