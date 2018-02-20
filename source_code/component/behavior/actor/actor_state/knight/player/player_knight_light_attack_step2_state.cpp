@@ -52,6 +52,9 @@ void PlayerKnightLightAttackStep2State::Update(PlayerController& player)
     int current_frame = animator.GetCurrentFrame();
     if (current_frame == kBeginAttackFrame)
     {
+        // ˆÚ“®‘¬“x‚ð0‚É‚·‚é
+        player.GetParameter().SetMovementMultiplier(0.0f);
+
         // UŒ‚—pCollider‚ðAwake‚·‚é
         auto right_hand = player.GetGameObject().GetTransform()->FindChildBy(L"RightHand");
         if (right_hand)

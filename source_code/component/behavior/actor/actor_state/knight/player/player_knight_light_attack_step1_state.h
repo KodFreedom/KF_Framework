@@ -52,7 +52,7 @@ private:
     //--------------------------------------------------------------------------------
     //  ’è”’è‹`
     //--------------------------------------------------------------------------------
-    static constexpr float kMovementMultiplier = 0.0f;
+    static constexpr float kMovementMultiplier = 0.25f;  
     static constexpr int kBeginAttackFrame = 35;
     static constexpr int kEndAttackFrame = 48;
     static constexpr int kBeginStep2Frame = 48;
