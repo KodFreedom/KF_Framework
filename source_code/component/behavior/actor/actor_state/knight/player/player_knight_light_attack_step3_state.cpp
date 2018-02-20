@@ -63,6 +63,11 @@ void PlayerKnightLightAttackStep3State::Update(PlayerController& player)
         sound_system.Play(kAttackVoice3Se);
         sound_system.Play(kSordAttackSe);
     }
+    else if (current_frame == 74)
+    {
+        // ˆÚ“®‘¬“x‚ğ0‚É‚·‚é
+        player.GetParameter().SetMovementMultiplier(0.0f);
+    }
     else if (current_frame == kEndAttackFrame)
     {
         // UŒ‚—pCollider‚ğSleep‚·‚é
