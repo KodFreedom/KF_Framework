@@ -3,18 +3,18 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "animator.h"
-#include "game_object.h"
-#include "game_object_spawner.h"
-#include "transform.h"
-#include "motion_data.h"
-#include "main_system.h"
-#include "resources.h"
-#include "motion_manager.h"
-#include "texture_manager.h"
-#include "game_time.h"
-#include "collision_detector.h"
-#include "collision_system.h"
-#include "actor_controller.h"
+#include "../../game_object/game_object.h"
+#include "../../game_object/game_object_spawner.h"
+#include "../transform/transform.h"
+#include "../../resources/motion_data.h"
+#include "../../main_system.h"
+#include "../../resources/resources.h"
+#include "../../resources/motion_manager.h"
+#include "../../resources/texture_manager.h"
+#include "../../game_time.h"
+#include "../../physics/collision_detector.h"
+#include "../../physics/collision_system.h"
+#include "../behavior/actor/actor_controller.h"
 
 //--------------------------------------------------------------------------------
 //

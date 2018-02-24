@@ -6,9 +6,9 @@
 #include "player_mutant_idle_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "game_time.h"
+#include "../../../../../../game_time.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

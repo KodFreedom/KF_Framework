@@ -4,17 +4,16 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "actor_controller.h"
-#include "game_object.h"
-#include "animator.h"
-#include "rigidbody3d.h"
-#include "main_system.h"
-#include "collision_detector.h"
-#include "collision_system.h"
-#include "game_time.h"
-#include "animator.h"
+#include "../../../game_object/game_object.h"
+#include "../../animator/animator.h"
+#include "../../rigidbody/rigidbody3D.h"
+#include "../../../main_system.h"
+#include "../../../physics/collision_detector.h"
+#include "../../../physics/collision_system.h"
+#include "../../../game_time.h"
+#include "../../animator/animator.h"
 #ifdef _DEBUG
-#include "main_system.h"
-#include "debug_observer.h"
+#include "../../../observer/debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------

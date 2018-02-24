@@ -5,12 +5,12 @@
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "motion_state.h"
-#include "main_system.h"
-#include "resources.h"
-#include "motion_manager.h"
-#include "animator.h"
-#include "motion_data.h"
-#include "game_object.h"
+#include "../../../main_system.h"
+#include "../../../resources/resources.h"
+#include "../../../resources/motion_manager.h"
+#include "../animator.h"
+#include "../../../resources/motion_data.h"
+#include "../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //

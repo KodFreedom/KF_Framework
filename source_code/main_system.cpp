@@ -121,7 +121,6 @@ void MainSystem::Render(void)
     {
         renderer_manager_->Render();
 #ifdef _DEBUG
-        collision_system_->Render();
         debug_observer_->Render();
 #endif
 #if defined(_DEBUG) || defined(EDITOR)

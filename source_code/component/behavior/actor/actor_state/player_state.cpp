@@ -4,11 +4,11 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_state.h"
-#include "main_system.h"
-#include "input.h"
-#include "camera_manager.h"
-#include "camera.h"
-#include "player_controller.h"
+#include "../../../../main_system.h"
+#include "../../../../input/input.h"
+#include "../../../../camera/camera_manager.h"
+#include "../../../../camera/camera.h"
+#include "../player_controller.h"
 
 //--------------------------------------------------------------------------------
 //  ëÄçÏçXêV

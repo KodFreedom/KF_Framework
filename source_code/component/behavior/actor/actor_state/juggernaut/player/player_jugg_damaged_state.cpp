@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "player_jugg_damaged_state.h"
 #include "player_jugg_neutral_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "game_time.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../../game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

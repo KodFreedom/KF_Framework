@@ -5,11 +5,11 @@
 //--------------------------------------------------------------------------------
 #include "player_knight_block_state.h"
 #include "player_knight_idle_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "collider.h"
-#include "main_system.h"
-#include "sound_system.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../collider/collider.h"
+#include "../../../../../../main_system.h"
+#include "../../../../../../sound/sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

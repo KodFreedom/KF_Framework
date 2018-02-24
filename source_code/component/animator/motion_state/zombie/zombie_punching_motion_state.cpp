@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "zombie_punching_motion_state.h"
-#include "animator.h"
-#include "motion_data.h"
+#include "../../animator.h"
+#include "../../../../resources/motion_data.h"
 #include "zombie_idle_motion_state.h"
 #include "zombie_damaged_motion_state.h"
 #include "zombie_death_motion_state.h"

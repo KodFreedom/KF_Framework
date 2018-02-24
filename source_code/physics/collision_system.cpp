@@ -161,115 +161,6 @@ RayHitInfo* CollisionSystem::RayCast(const Ray& ray, const float& distance, cons
     return real_result;
 }
 
-#if defined(_DEBUG) || defined(EDITOR)
-//--------------------------------------------------------------------------------
-//  DrawCollider
-//--------------------------------------------------------------------------------
-void CollisionSystem::Render(void)
-{
-    //if (!m_bDrawCollider) { return; }
-
-    //auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-    //LPDIRECT3DTEXTURE9 texturePointer = Main::GetManager()->GetTextureManager()->GetTexture("polygon.png");
-    //pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-    //pDevice->SetTexture(0, texturePointer);
-
-    ////sphere
-    //for (auto pCol : colliders[kDynamic][Sphere])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    D3DXVECTOR3 Position = pCol->GetNextWorldPosition();
-    //    float fRadius = ((SphereCollider*)pCol)->GetRadius();
-    //    D3DXMATRIX mtx,mtxPos,mtxScale;
-    //    D3DXMatrixIdentity(&mtx);
-    //    D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
-    //    mtx *= mtxScale;
-    //    D3DXMatrixTranslation(&mtxPos, Position.x, Position.y, Position.z);
-    //    mtx *= mtxPos;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshSphere->DrawSubset(0);
-    //}
-
-    //for (auto pCol : colliders[Static][Sphere])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    auto Position = pCol->GetNextWorldPosition();
-    //    float fRadius = ((SphereCollider*)pCol)->GetRadius();
-    //    D3DXMATRIX mtx, mtxPos, mtxScale;
-    //    D3DXMatrixIdentity(&mtx);
-    //    D3DXMatrixScaling(&mtxScale, fRadius, fRadius, fRadius);
-    //    mtx *= mtxScale;
-    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-    //    mtx *= mtxPos;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshSphere->DrawSubset(0);
-    //}
-
-    ////AABB
-    //for (auto pCol : colliders[kDynamic][AABB])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    auto Position = pCol->GetNextWorldPosition();
-    //    auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
-    //    D3DXMATRIX mtx, mtxPos, mtxScale;
-    //    D3DXMatrixIdentity(&mtx);
-    //    D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-    //    mtx *= mtxScale;
-    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-    //    mtx *= mtxPos;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshCube->DrawSubset(0);
-    //}
-
-    //for (auto pCol : colliders[Static][AABB])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    auto Position = pCol->GetNextWorldPosition();
-    //    auto vHalfSize = ((AabbCollider*)pCol)->GetHalfSize();
-    //    D3DXMATRIX mtx, mtxPos, mtxScale;
-    //    D3DXMatrixIdentity(&mtx);
-    //    D3DXMatrixScaling(&mtxScale, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-    //    mtx *= mtxScale;
-    //    D3DXMatrixTranslation(&mtxPos, Position.X, Position.Y, Position.Z);
-    //    mtx *= mtxPos;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshCube->DrawSubset(0);
-    //}
-
-    ////OBB
-    //for (auto pCol : colliders[kDynamic][OBB])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
-    //    D3DXMATRIX mtx;
-    //    D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-    //    D3DXMATRIX mtxOff = pCol->GetOffset();
-    //    mtx *= mtxOff;
-    //    D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
-    //    mtx *= mtxObj;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshCube->DrawSubset(0);
-    //}
-
-    //for (auto pCol : colliders[Static][OBB])
-    //{
-    //    if (!pCol->GetGameObject().IsActive()) continue;
-    //    auto& vHalfSize = ((ObbCollider*)pCol)->GetHalfSize();
-    //    D3DXMATRIX mtx;
-    //    D3DXMatrixScaling(&mtx, vHalfSize.X * 2.0f, vHalfSize.Y * 2.0f, vHalfSize.Z * 2.0f);
-    //    D3DXMATRIX mtxOff = pCol->GetOffset();
-    //    mtx *= mtxOff;
-    //    D3DXMATRIX mtxObj = pCol->GetGameObject()->GetTransform()->GetMatrix();
-    //    mtx *= mtxObj;
-    //    pDevice->SetTransform(D3DTS_WORLD, &mtx);
-    //    m_meshCube->DrawSubset(0);
-    //}
-
-
-    //pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-}
-#endif
-
 //--------------------------------------------------------------------------------
 //
 //  private
@@ -279,11 +170,6 @@ void CollisionSystem::Render(void)
 //  コンストラクタ
 //--------------------------------------------------------------------------------
 CollisionSystem::CollisionSystem()
-#if defined(_DEBUG) || defined(EDITOR)
-//: m_meshSphere(nullptr)
-//, m_meshCube(nullptr)
-//, m_bDrawCollider(false)
-#endif
 {}
 
 //--------------------------------------------------------------------------------
@@ -291,12 +177,6 @@ CollisionSystem::CollisionSystem()
 //--------------------------------------------------------------------------------
 void CollisionSystem::Init(void)
 {
-#if defined(_DEBUG) || defined(EDITOR)
-    //auto pDevice = Main::GetManager()->GetRenderer()->GetDevice();
-    //Main::GetManager()->GetTextureManager()->UseTexture("polygon.png");
-    //D3DXCreateSphere(pDevice, 1.0f, 10, 10, &m_meshSphere, nullptr);
-    //D3DXCreateBox(pDevice, 1.0f, 1.0f, 1.0f, &m_meshCube, nullptr);
-#endif
 }
 
 //--------------------------------------------------------------------------------
@@ -305,12 +185,6 @@ void CollisionSystem::Init(void)
 void CollisionSystem::Uninit(void)
 {
     Clear();
-
-#if defined(_DEBUG) || defined(EDITOR)
-    //SAFE_RELEASE(m_meshSphere);
-    //SAFE_RELEASE(m_meshCube);
-    //Main::GetManager()->GetTextureManager()->DisuseTexture("polygon.png");
-#endif
 }
 
 //--------------------------------------------------------------------------------
