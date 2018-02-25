@@ -4,17 +4,17 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_ui_controller.h"
-#include "main_system.h"
-#include "actor_observer.h"
-#include "game_object.h"
-#include "player_controller.h"
-#include "enemy_controller.h"
-#include "transform.h"
-#include "camera_manager.h"
-#include "camera.h"
-#include "game_object_spawner.h"
-#include "resources.h"
-#include "material_manager.h"
+#include "../../../main_system.h"
+#include "../../../observer/actor_observer.h"
+#include "../../../game_object/game_object.h"
+#include "../actor/player_controller.h"
+#include "../actor/enemy_controller.h"
+#include "../../transform/transform.h"
+#include "../../../camera/camera_manager.h"
+#include "../../../camera/camera.h"
+#include "../../../game_object/game_object_spawner.h"
+#include "../../../resources/resources.h"
+#include "../../../resources/material_manager.h"
 
 //--------------------------------------------------------------------------------
 //  íËêîíËã`
