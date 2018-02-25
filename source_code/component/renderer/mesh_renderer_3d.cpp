@@ -4,9 +4,9 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mesh_renderer_3d.h"
-#include "render_system.h"
-#include "main_system.h"
-#include "shadow_map_system.h"
+#include "../../render_system/render_system.h"
+#include "../../main_system.h"
+#include "../../render_system/shadow_map_system.h"
 
 //--------------------------------------------------------------------------------
 //  XVˆ—

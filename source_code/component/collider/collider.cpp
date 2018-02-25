@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "collider.h"
-#include "game_object.h"
-#include "main_system.h"
-#include "camera_manager.h"
-#include "camera.h"
+#include "../../game_object/game_object.h"
+#include "../../main_system.h"
+#include "../../camera/camera_manager.h"
+#include "../../camera/camera.h"
 
 //--------------------------------------------------------------------------------
 //

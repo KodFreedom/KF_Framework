@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mesh_renderer_3d_skin.h"
-#include "render_system.h"
-#include "animator.h"
-#include "main_system.h"
-#include "shadow_map_system.h"
+#include "../../render_system/render_system.h"
+#include "../../render_system/shadow_map_system.h"
+#include "../../main_system.h"
+#include "../animator/animator.h"
 
 //--------------------------------------------------------------------------------
 //  XVˆ—
