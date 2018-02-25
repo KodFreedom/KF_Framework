@@ -3,14 +3,14 @@
 //　レンダーシステム(directx9)
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include "common_setting.h"
+#include "../common_setting.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include "render_system_directX9.h"
-#include "main_system.h"
-#include "resources.h"
-#include "mesh_manager.h"
+#include "../main_system.h"
+#include "../resources/resources.h"
+#include "../resources/mesh_manager.h"
 #if defined(_DEBUG) || defined(EDITOR)
-#include "ImGui\imgui_impl_dx9.h"
+#include "../../library/ImGui/imgui_impl_dx9.h"
 #endif
 
 //--------------------------------------------------------------------------------

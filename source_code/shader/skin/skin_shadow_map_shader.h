@@ -4,7 +4,7 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "shader_directX9.h"
+#include "../shader_directX9.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------
 //  ÉNÉâÉX

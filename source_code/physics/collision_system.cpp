@@ -4,20 +4,15 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "collision_system.h"
-#include "rigidbody3D.h"
-#include "behavior.h"
-#include "transform.h"
-#include "sphere_collider.h"
-#include "aabb_collider.h"
-#include "obb_collider.h"
-#include "field_collider.h"
-#include "game_object.h"
-#include "collision_detector.h"
-
-#if defined(_DEBUG) || defined(EDITOR)
-//#include "rendererDX.h"
-//#include "textureManager.h"
-#endif
+#include "../component/rigidbody/rigidbody3D.h"
+#include "../component/behavior/behavior.h"
+#include "../component/transform/transform.h"
+#include "../component/collider/sphere_collider.h"
+#include "../component/collider/aabb_collider.h"
+#include "../component/collider/obb_collider.h"
+#include "../component/collider/field_collider.h"
+#include "../game_object/game_object.h"
+#include "../physics/collision_detector.h"
 
 //--------------------------------------------------------------------------------
 //

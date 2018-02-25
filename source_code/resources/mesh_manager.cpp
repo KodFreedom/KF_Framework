@@ -5,12 +5,12 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mesh_manager.h"
-#include "kf_utility.h"
-#include "main_system.h"
-#include "renderer_manager.h"
-#include "camera.h"
-#include "camera_manager.h"
-#include <cereal/archives/binary.hpp>
+#include "../kf_utility/kf_utility.h"
+#include "../main_system.h"
+#include "../render_system/renderer_manager.h"
+#include "../camera/camera.h"
+#include "../camera/camera_manager.h"
+#include "../../library/cereal/archives/binary.hpp"
 using namespace cereal;
 
 //--------------------------------------------------------------------------------

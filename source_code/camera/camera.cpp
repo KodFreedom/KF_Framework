@@ -4,7 +4,7 @@
 //  Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "camera.h"
-#include "main_system.h"
+#include "../main_system.h"
 #include "camera_manager.h"
 
 //--------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ void Camera::Set(void)
 //  ƒJƒƒ‰‚Ì”ÍˆÍ“à‚É“ü‚Á‚Ä‚é‚©‚Ç‚¤‚©(‹‘äƒJƒŠƒ“ƒO)
 //--------------------------------------------------------------------------------
 bool Camera::FrustumCulling(const Vector3& position, const float& radius)
-{ 
+{
     for (int count = 0; count < kCameraPlaneMax; ++count)
     {
         if (planes_[count].PlaneDotCoord(position) < -radius)
@@ -86,7 +86,7 @@ void Camera::UpdateParameter(void)
     world_forward_ = Vector3::TransformNormal(Vector3::kForward, world_pivot).Normalized();
     world_right_ = (Vector3::kUp * world_forward_).Normalized();
     world_up_ = (world_forward_ * world_right_).Normalized();
-    
+
     world_eye_position_ = Vector3::TransformCoord(local_eye_position_, world_pivot);
     world_at_position_ = world_eye_position_ + world_forward_ * distance_;
 

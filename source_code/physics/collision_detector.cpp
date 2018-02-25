@@ -4,18 +4,18 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "collision_detector.h"
-#include "main_system.h"
+#include "../main_system.h"
 #include "physics_system.h"
-#include "sphere_collider.h"
-#include "field_collider.h"
-#include "aabb_collider.h"
-#include "obb_collider.h"
-#include "game_object.h"
-#include "rigidbody3d.h"
-#include "transform.h"
+#include "../component/collider/sphere_collider.h"
+#include "../component/collider/field_collider.h"
+#include "../component/collider/aabb_collider.h"
+#include "../component/collider/obb_collider.h"
+#include "../game_object/game_object.h"
+#include "../component/rigidbody/rigidbody3D.h"
+#include "../component/transform/transform.h"
 
 #ifdef _DEBUG
-#include "debug_observer.h"
+#include "../observer/debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------

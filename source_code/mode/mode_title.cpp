@@ -3,20 +3,20 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode_title.h"
-#include "main_system.h"
-#include "input.h"
+#include "../main_system.h"
+#include "../input/input.h"
 #include "mode_demo.h"
 #include "mode_demo_play.h"
-#include "camera.h"
-#include "fade_system.h"
-#include "light.h"
-#include "resources.h"
-#include "material_manager.h"
-#include "game_object_spawner.h"
-#include "game_object.h"
-#include "button_controller.h"
-#include "game_time.h"
-#include "sound_system.h"
+#include "../camera/camera.h"
+#include "../fade_system.h"
+#include "../light/light.h"
+#include "../resources/resources.h"
+#include "../resources/material_manager.h"
+#include "../game_object/game_object_spawner.h"
+#include "../game_object/game_object.h"
+#include "../component/behavior/ui/button_controller.h"
+#include "../game_time.h"
+#include "../sound/sound_system.h"
 
 //--------------------------------------------------------------------------------
 //

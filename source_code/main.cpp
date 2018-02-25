@@ -5,12 +5,12 @@
 //  Date   : 2017-04-19
 //--------------------------------------------------------------------------------
 #include "main_system.h"
-#include "input.h"
+#include "input/input.h"
 #include "game_time.h"
 
 #if defined(_DEBUG) || defined(EDITOR)
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include "ImGui\imgui_impl_dx9.h"
+#include "../library/ImGui/imgui_impl_dx9.h"
 #endif
 #endif
 

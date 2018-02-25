@@ -5,12 +5,12 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "renderer_manager.h"
-#include "main_system.h"
+#include "../main_system.h"
 #include "render_system.h"
-#include "mesh_renderer.h"
-#include "game_object.h"
-#include "transform.h"
-#include "shader_manager.h"
+#include "../component/renderer/mesh_renderer.h"
+#include "../game_object/game_object.h"
+#include "../component/transform/transform.h"
+#include "../shader/shader_manager.h"
 
 //--------------------------------------------------------------------------------
 //

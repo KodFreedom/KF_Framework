@@ -3,13 +3,13 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode.h"
-#include "main_system.h"
-#include "game_object_manager.h"
-#include "physics_system.h"
-#include "renderer_manager.h"
-#include "light_manager.h"
-#include "camera_manager.h"
-#include "shadow_map_system.h"
+#include "../main_system.h"
+#include "../game_object/game_object_manager.h"
+#include "../physics/physics_system.h"
+#include "../render_system/renderer_manager.h"
+#include "../light/light_manager.h"
+#include "../camera/camera_manager.h"
+#include "../render_system/shadow_map_system.h"
 
 //--------------------------------------------------------------------------------
 //  èIóπèàóù

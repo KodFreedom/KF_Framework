@@ -4,13 +4,13 @@
 //--------------------------------------------------------------------------------
 #include "mode_editor.h"
 #if defined(EDITOR)
-#include "main_system.h"
-#include "light.h"
-#include "input.h"
-#include "editor_camera.h"
+#include "../main_system.h"
+#include "../light/light.h"
+#include "../input/input.h"
+#include "../camera/editor_camera.h"
 
 //gameobject
-#include "game_object_spawner.h"
+#include "../game_object/game_object_spawner.h"
 
 //--------------------------------------------------------------------------------
 //

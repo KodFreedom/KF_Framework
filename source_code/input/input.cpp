@@ -5,10 +5,10 @@
 //--------------------------------------------------------------------------------
 #include "input.h"
 #include "input_device_directX.h"
-#include "kf_math.h"
-#include "kf_utility.h"
+#include "../kf_utility/kf_math.h"
+#include "../kf_utility/kf_utility.h"
 using namespace kodfreedom;
-#include <cereal/archives/binary.hpp>
+#include "../../library/cereal/archives/binary.hpp"
 using namespace cereal;
 
 //--------------------------------------------------------------------------------
