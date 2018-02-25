@@ -5,12 +5,12 @@
 //--------------------------------------------------------------------------------
 #include "model_editor.h"
 #if defined(EDITOR)
-#include "game_object.h"
-#include "game_object_spawner.h"
-#include "transform.h"
-#include "ImGui\imgui.h"
-#include "main_system.h"
-#include "labels.h"
+#include "../../../game_object/game_object.h"
+#include "../../../game_object/game_object_spawner.h"
+#include "../../transform/transform.h"
+#include "../../../../library/ImGui/imgui.h"
+#include "../../../main_system.h"
+#include "../../../labels.h"
 
 namespace ImGui
 {

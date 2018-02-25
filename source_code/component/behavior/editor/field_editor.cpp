@@ -5,15 +5,15 @@
 //--------------------------------------------------------------------------------
 #include "field_editor.h"
 #if defined(_DEBUG) || defined(EDITOR)
-#include "main_system.h"
-#include "resources.h"
-#include "mesh_manager.h"
-#include "input.h"
-#include "mode.h"
-#include "camera.h"
-#include "ImGui\imgui.h"
-#include "labels.h"
-#include <cereal/archives/binary.hpp>
+#include "../../../main_system.h"
+#include "../../../resources/resources.h"
+#include "../../../resources/mesh_manager.h"
+#include "../../../input/input.h"
+#include "../../../mode/mode.h"
+#include "../../../camera/camera.h"
+#include "../../../../library/ImGui/imgui.h"
+#include "../../../labels.h"
+#include "../../../../library/cereal/archives/binary.hpp"
 using namespace cereal;
 
 //--------------------------------------------------------------------------------

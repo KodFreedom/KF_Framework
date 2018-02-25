@@ -5,9 +5,9 @@
 //--------------------------------------------------------------------------------
 #include "enemy_editor.h"
 #if defined(EDITOR)
-#include "ImGui\imgui.h"
-#include "game_object_spawner.h"
-#include "game_object.h"
+#include "../../../../library/ImGui/imgui.h"
+#include "../../../game_object/game_object_spawner.h"
+#include "../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //
