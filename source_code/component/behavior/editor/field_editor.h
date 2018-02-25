@@ -6,7 +6,7 @@
 #pragma once
 #include "editor.h"
 #if defined(EDITOR)
-#include "render_system.h"
+#include "../../../render_system/render_system.h"
 
 //--------------------------------------------------------------------------------
 //  ƒNƒ‰ƒXéŒ¾

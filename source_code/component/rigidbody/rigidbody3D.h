@@ -4,7 +4,7 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "rigidbody.h"
-#include "kf_math.h"
+#include "../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

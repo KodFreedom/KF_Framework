@@ -4,13 +4,13 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_2d_texture_shader.h"
-#include "main_system.h"
-#include "resources.h"
-#include "material_manager.h"
-#include "texture_manager.h"
-#include "game_object.h"
-#include "render_system.h"
-#include "mesh_renderer_2d.h"
+#include "../../main_system.h"
+#include "../../resources/resources.h"
+#include "../../resources/material_manager.h"
+#include "../../resources/texture_manager.h"
+#include "../../game_object/game_object.h"
+#include "../../render_system/render_system.h"
+#include "../../component/renderer/mesh_renderer_2d.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------

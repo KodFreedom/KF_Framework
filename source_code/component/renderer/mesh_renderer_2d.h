@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "mesh_renderer.h"
-#include "KF_Math.h"
+#include "../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

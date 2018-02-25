@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "resource_manager.h"
-#include "kf_math.h"
+#include "../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

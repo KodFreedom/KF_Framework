@@ -4,8 +4,8 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "component.h"
-#include "kf_math.h"
+#include "../component.h"
+#include "../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

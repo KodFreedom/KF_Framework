@@ -4,7 +4,7 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "../common_setting.h"
 #include "shader_enum.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>

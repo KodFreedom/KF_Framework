@@ -4,9 +4,9 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "component.h"
-#include "collision_system.h"
-#include "kf_math.h"
+#include "../component.h"
+#include "../../physics/collision_system.h"
+#include "../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

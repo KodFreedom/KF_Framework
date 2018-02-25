@@ -5,8 +5,8 @@
 //  Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
-#include "shader_enum.h"
+#include "../common_setting.h"
+#include "../shader/shader_enum.h"
 
 //--------------------------------------------------------------------------------
 //  —ñ‹“Œ^’è‹`
