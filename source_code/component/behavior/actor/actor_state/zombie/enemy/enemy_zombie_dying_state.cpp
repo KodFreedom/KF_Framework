@@ -4,12 +4,12 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_zombie_dying_state.h"
-#include "enemy_controller.h"
-#include "animator.h"
-#include "game_object.h"
-#include "game_time.h"
-#include "main_system.h"
-#include "sound_system.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../../main_system.h"
+#include "../../../../../../sound/sound_system.h"
+#include "../../../enemy_controller.h"
+#include "../../../../../../game_object/game_object.h"
+#include "../../../../../../game_time.h"
 
 //--------------------------------------------------------------------------------
 //  èâä˙âªèàóù

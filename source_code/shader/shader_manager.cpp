@@ -4,24 +4,24 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "shader_manager.h"
-#include "mesh_renderer.h"
-#include "kf_utility.h"
+#include "../component/renderer/mesh_renderer.h"
+#include "../kf_utility/kf_utility.h"
 using namespace kodfreedom;
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include "mesh\default_shader.h"
-#include "mesh\no_light_no_fog_shader.h"
-#include "mesh\cull_none_shader.h"
-#include "skin\default_skin_shader.h"
-#include "mesh\shadow_map_shader.h"
-#include "mesh\jugg_mesh_shader.h"
-#include "skin\jugg_skin_shader.h"
-#include "skin\skin_shadow_map_shader.h"
-#include "2d\default_2d_shader.h"
-#include "2d\default_2d_texture_shader.h"
-#include "skin\zombie_skin_shader.h"
-#include "billboard\default_billboard_shader.h"
-#include "skin\knight_skin_shader.h"
+#include "mesh/default_shader.h"
+#include "mesh/no_light_no_fog_shader.h"
+#include "mesh/cull_none_shader.h"
+#include "skin/default_skin_shader.h"
+#include "mesh/shadow_map_shader.h"
+#include "mesh/jugg_mesh_shader.h"
+#include "skin/jugg_skin_shader.h"
+#include "skin/skin_shadow_map_shader.h"
+#include "2d/default_2d_shader.h"
+#include "2d/default_2d_texture_shader.h"
+#include "skin/zombie_skin_shader.h"
+#include "billboard/default_billboard_shader.h"
+#include "skin/knight_skin_shader.h"
 #endif
 
 //--------------------------------------------------------------------------------

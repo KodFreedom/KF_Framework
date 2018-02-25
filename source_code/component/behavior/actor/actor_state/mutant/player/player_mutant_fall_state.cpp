@@ -5,8 +5,8 @@
 //--------------------------------------------------------------------------------
 #include "player_mutant_fall_state.h"
 #include "player_mutant_land_state.h"
-#include "player_controller.h"
-#include "animator.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

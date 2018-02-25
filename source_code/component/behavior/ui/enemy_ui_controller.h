@@ -4,8 +4,8 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "behavior.h"
-#include "KF_Math.h"
+#include "../behavior.h"
+#include "../../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

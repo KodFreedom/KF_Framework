@@ -4,9 +4,9 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "component.h"
-#include "renderer_manager.h"
-#include "kf_math.h"
+#include "../component.h"
+#include "../../render_system/renderer_manager.h"
+#include "../../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

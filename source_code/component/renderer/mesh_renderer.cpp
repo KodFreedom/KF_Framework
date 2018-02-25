@@ -4,13 +4,13 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mesh_renderer.h"
-#include "game_object.h"
-#include "main_system.h"
-#include "resources.h"
-#include "mesh_manager.h"
-#include "material_manager.h"
-#include "camera.h"
-#include "camera_manager.h"
+#include "../../game_object/game_object.h"
+#include "../../main_system.h"
+#include "../../resources/resources.h"
+#include "../../resources/mesh_manager.h"
+#include "../../resources/material_manager.h"
+#include "../../camera/camera.h"
+#include "../../camera/camera_manager.h"
 
 //--------------------------------------------------------------------------------
 //

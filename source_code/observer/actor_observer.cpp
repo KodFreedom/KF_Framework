@@ -4,9 +4,9 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "actor_observer.h"
-#include "player_controller.h"
-#include "enemy_controller.h"
-#include "game_object.h"
+#include "../component/behavior/actor/player_controller.h"
+#include "../component/behavior/actor/enemy_controller.h"
+#include "../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //

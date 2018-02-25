@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "zombie_death_motion_state.h"
-#include "animator.h"
-#include "motion_data.h"
+#include "../../animator.h"
+#include "../../../../resources/motion_data.h"
 void ZombieDeathMotionState::ChangeMotion(Animator& animator)
 {
     if (!current_motion_data_) return;

@@ -4,8 +4,8 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "scroll_2d_controller.h"
-#include "game_object.h"
-#include "mesh_renderer_2d.h"
+#include "../../../game_object/game_object.h"
+#include "../../renderer/mesh_renderer_2d.h"
 
 //--------------------------------------------------------------------------------
 //

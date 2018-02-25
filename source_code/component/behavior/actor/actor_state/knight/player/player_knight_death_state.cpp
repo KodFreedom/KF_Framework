@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_knight_death_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "main_system.h"
-#include "sound_system.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../../main_system.h"
+#include "../../../../../../sound/sound_system.h"
 
 //--------------------------------------------------------------------------------
 //  èâä˙âªä÷êî

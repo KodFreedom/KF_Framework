@@ -5,7 +5,7 @@
 //  Author : ™•¶ž^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "../common_setting.h"
 
 #define SAFE_RELEASE(p) if(p){ p->Release(); p = nullptr; }
 #define SAFE_UNINIT(p)  if(p){ p->Uninit(); MY_DELETE p; p = nullptr; }

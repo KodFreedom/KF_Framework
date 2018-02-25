@@ -3,10 +3,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "rigidbody3d.h"
-#include "game_object.h"
-#include "physics_system.h"
-#include "collider.h"
-#include "game_time.h"
+#include "../../game_object/game_object.h"
+#include "../../physics/physics_system.h"
+#include "../collider/collider.h"
+#include "../../game_time.h"
 
 //--------------------------------------------------------------------------------
 //

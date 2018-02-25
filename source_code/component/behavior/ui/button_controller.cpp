@@ -4,12 +4,12 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "button_controller.h"
-#include "mesh_renderer_2d.h"
-#include "game_object.h"
-#include "main_system.h"
-#include "resources.h"
-#include "material_manager.h"
-#include "game_time.h"
+#include "../../renderer/mesh_renderer_2d.h"
+#include "../../../game_object/game_object.h"
+#include "../../../main_system.h"
+#include "../../../resources/resources.h"
+#include "../../../resources/material_manager.h"
+#include "../../../game_time.h"
 
 //--------------------------------------------------------------------------------
 //  

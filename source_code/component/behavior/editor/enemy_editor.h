@@ -6,7 +6,7 @@
 #pragma once
 #include "editor.h"
 #if defined(EDITOR)
-#include "actor_parameter.h"
+#include "../actor/actor_parameter.h"
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾

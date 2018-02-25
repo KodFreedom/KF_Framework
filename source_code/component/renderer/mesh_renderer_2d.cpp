@@ -4,8 +4,9 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mesh_renderer_2d.h"
-#include "render_system.h"
-#include "main_system.h"
+#include "../../render_system/render_system.h"
+#include "../../render_system/renderer_manager.h"
+#include "../../main_system.h"
 
 //--------------------------------------------------------------------------------
 //  XVˆ—

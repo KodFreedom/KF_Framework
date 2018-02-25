@@ -5,9 +5,9 @@
 //  Date   : 2017-09-12
 //--------------------------------------------------------------------------------
 #include "windmill_controller.h"
-#include "game_object.h"
-#include "transform.h"
-#include "game_time.h"
+#include "../../../game_object/game_object.h"
+#include "../../transform/transform.h"
+#include "../../../game_time.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—

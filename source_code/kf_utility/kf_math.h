@@ -7,7 +7,7 @@
 #pragma once
 #include <time.h>
 #include <math.h>
-#include "common_setting.h"
+#include "../common_setting.h"
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 #include <d3dx9.h>
 #endif

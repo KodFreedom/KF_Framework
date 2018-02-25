@@ -6,8 +6,8 @@
 //--------------------------------------------------------------------------------
 #include "motion_manager.h"
 #include "motion_data.h"
-#include "kf_utility.h"
-#include <cereal/archives/binary.hpp>
+#include "../kf_utility/kf_utility.h"
+#include "../../library/cereal/archives/binary.hpp"
 using namespace cereal;
 
 //--------------------------------------------------------------------------------

@@ -12,10 +12,10 @@
 #include "player_mutant_strong_attack_state.h"
 #include "player_mutant_skill_state.h"
 #include "player_mutant_dying_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "collider.h"
-#include "game_object.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../collider/collider.h"
+#include "../../../../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

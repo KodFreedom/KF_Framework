@@ -4,39 +4,39 @@
 //  Author : ™•¶ž^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "main_system.h"
-#include "resources.h"
-#include "light_manager.h"
-#include "sound_system.h"
-#include "renderer_manager.h"
-#include "input.h"
+#include "resources/resources.h"
+#include "light/light_manager.h"
+#include "sound/sound_system.h"
+#include "render_system/renderer_manager.h"
+#include "input/input.h"
 #include "fade_system.h"
-#include "camera_manager.h"
-#include "collision_system.h"
-#include "physics_system.h"
-#include "game_object_manager.h"
-#include "shader_manager.h"
-#include "shadow_map_system.h"
-#include "actor_observer.h"
-#include "mode\mode_title.h"
-#include "mode\mode_demo.h"
-#include "mode\mode_demo_play.h"
-#include "mode\mode_result.h"
+#include "camera/camera_manager.h"
+#include "physics/collision_system.h"
+#include "physics/physics_system.h"
+#include "game_object/game_object_manager.h"
+#include "shader/shader_manager.h"
+#include "render_system/shadow_map_system.h"
+#include "observer/actor_observer.h"
+#include "mode/mode_title.h"
+#include "mode/mode_demo.h"
+#include "mode/mode_demo_play.h"
+#include "mode/mode_result.h"
 
 #if defined(USING_DIRECTX)
 #if (DIRECTX_VERSION == 9)
-#include "render_system_directX9.h"
+#include "render_system/render_system_directX9.h"
 #if defined(_DEBUG) || defined(EDITOR)
-#include "ImGui\imgui_impl_dx9.h"
+#include "../library/ImGui/imgui_impl_dx9.h"
 #endif
 #endif
 #endif
 
 #ifdef EDITOR
-#include "mode_editor.h"
+#include "mode/mode_editor.h"
 #endif // EDITOR
 
 #ifdef _DEBUG
-#include "debug_observer.h"
+#include "observer/debug_observer.h"
 #endif // _DEBUG
 
 //--------------------------------------------------------------------------------
@@ -121,7 +121,6 @@ void MainSystem::Render(void)
     {
         renderer_manager_->Render();
 #ifdef _DEBUG
-        collision_system_->Render();
         debug_observer_->Render();
 #endif
 #if defined(_DEBUG) || defined(EDITOR)

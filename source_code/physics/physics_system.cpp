@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------
 #include "physics_system.h"
 #include "collision_detector.h"
-#include "rigidbody3d.h"
+#include "../component/rigidbody/rigidbody3D.h"
 
 //--------------------------------------------------------------------------------
 //  Ã“Iƒƒ“ƒo•Ï”

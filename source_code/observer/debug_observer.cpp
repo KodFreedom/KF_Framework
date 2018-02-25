@@ -5,31 +5,31 @@
 //--------------------------------------------------------------------------------
 #ifdef _DEBUG
 #include "debug_observer.h"
-#include "ImGui\imgui.h"
-#include "main_system.h"
-#include "render_system.h"
-#include "collision_system.h"
-#include "mode.h"
-#include "camera.h"
-#include "camera_manager.h"
-#include "kf_utility.h"
-#include "game_time.h"
+#include "../../library/ImGui/imgui.h"
+#include "../main_system.h"
+#include "../render_system/render_system.h"
+#include "../physics/collision_system.h"
+#include "../mode/mode.h"
+#include "../camera/camera.h"
+#include "../camera/camera_manager.h"
+#include "../kf_utility/kf_utility.h"
+#include "../game_time.h"
 
 // shadowmap
-#include "shadow_map_system.h"
-#include "light_manager.h"
-#include "light.h"
+#include "../render_system/shadow_map_system.h"
+#include "../light/light.h"
+#include "../light/light_manager.h"
 
 // player
 #include "actor_observer.h"
-#include "game_object.h"
-#include "transform.h"
-#include "player_controller.h"
-#include "rigidbody3D.h"
-#include "animator.h"
+#include "../game_object/game_object.h"
+#include "../component/transform/transform.h"
+#include "../component/behavior/actor/player_controller.h"
+#include "../component/rigidbody/rigidbody3D.h"
+#include "../component/animator/animator.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
-#include "ImGui\imgui_impl_dx9.h"
+#include "../../library/ImGui/imgui_impl_dx9.h"
 #endif
 
 //--------------------------------------------------------------------------------

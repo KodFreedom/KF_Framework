@@ -3,19 +3,19 @@
 //  ステージ生成処理
 //  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
-#include <cereal/archives/binary.hpp>
+#include "../../library/cereal/archives/binary.hpp"
 using namespace cereal;
-#include "kf_math.h"
+#include "../kf_utility/kf_math.h"
 using namespace kodfreedom;
 #include "stage_spawner.h"
 #include "game_object_spawner.h"
 #include "game_object.h"
 #include "game_object_actor.h"
-#include "windmill_controller.h"
-#include "main_system.h"
-#include "third_person_camera.h"
-#include "light.h"
-#include "enemy_controller.h"
+#include "../component/behavior/other/windmill_controller.h"
+#include "../main_system.h"
+#include "../camera/third_person_camera.h"
+#include "../light/light.h"
+#include "../component/behavior/actor/enemy_controller.h"
 
 //--------------------------------------------------------------------------------
 //

@@ -8,13 +8,13 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "enemy_controller.h"
-#include "animator.h"
-#include "collider.h"
-#include "game_object.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../collider/collider.h"
+#include "../../../enemy_controller.h"
+#include "../../../../../../game_object/game_object.h"
 #ifdef _DEBUG
-#include "main_system.h"
-#include "debug_observer.h"
+#include "../../../../../../main_system.h"
+#include "../../../../../../observer/debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------

@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "jugg_jump_attack_motion_state.h"
-#include "animator.h"
-#include "motion_data.h"
+#include "../../animator.h"
+#include "../../../../resources/motion_data.h"
 #include "jugg_neutral_motion_state.h"
 #include "jugg_death_motion_state.h"
 void JuggJumpAttackMotionState::ChangeMotion(Animator& animator)

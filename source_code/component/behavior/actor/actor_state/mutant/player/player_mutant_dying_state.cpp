@@ -4,8 +4,8 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "player_mutant_dying_state.h"
-#include "player_controller.h"
-#include "animator.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

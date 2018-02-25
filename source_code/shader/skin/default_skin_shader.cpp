@@ -4,18 +4,18 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_skin_shader.h"
-#include "main_system.h"
-#include "render_system.h"
-#include "camera.h"
-#include "camera_manager.h"
-#include "resources.h"
-#include "material_manager.h"
-#include "texture_manager.h"
-#include "game_object.h"
-#include "mesh_renderer_3d_skin.h"
-#include "animator.h"
-#include "light_manager.h"
-#include "shadow_map_system.h"
+#include "../../main_system.h"
+#include "../../render_system/render_system.h"
+#include "../../camera/camera.h"
+#include "../../camera/camera_manager.h"
+#include "../../resources/resources.h"
+#include "../../resources/material_manager.h"
+#include "../../resources/texture_manager.h"
+#include "../../game_object/game_object.h"
+#include "../../component/renderer/mesh_renderer_3d_skin.h"
+#include "../../component/animator/animator.h"
+#include "../../light/light_manager.h"
+#include "../../render_system/shadow_map_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------

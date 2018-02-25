@@ -6,10 +6,10 @@
 //--------------------------------------------------------------------------------
 #include "sound_system.h"
 #include "wave_file.h"
-#include "kf_utility.h"
+#include "../kf_utility/kf_utility.h"
 #ifdef _DEBUG
-#include "main_system.h"
-#include "debug_observer.h"
+#include "../main_system.h"
+#include "../observer/debug_observer.h"
 #endif
 
 //--------------------------------------------------------------------------------

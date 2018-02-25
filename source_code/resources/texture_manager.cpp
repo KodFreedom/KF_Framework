@@ -5,10 +5,10 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "texture_manager.h"
-#include "kf_utility.h"
+#include "../kf_utility/kf_utility.h"
 #ifdef _DEBUG
-#include "main_system.h"
-#include "debug_observer.h"
+#include "../main_system.h"
+#include "../observer/debug_observer.h"
 #endif // _DEBUG
 
 //--------------------------------------------------------------------------------

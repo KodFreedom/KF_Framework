@@ -5,8 +5,8 @@
 //--------------------------------------------------------------------------------
 #include "editor_camera.h"
 #if defined(EDITOR)
-#include "main_system.h"
-#include "input.h"
+#include "../main_system.h"
+#include "../input/input.h"
 
 //--------------------------------------------------------------------------------
 //

@@ -4,11 +4,11 @@
 //--------------------------------------------------------------------------------
 #include "fade_system.h"
 #include "main_system.h"
-#include "mode.h"
-#include "game_object_spawner.h"
-#include "game_object.h"
-#include "resources.h"
-#include "material_manager.h"
+#include "mode/mode.h"
+#include "game_object/game_object_spawner.h"
+#include "game_object/game_object.h"
+#include "resources/resources.h"
+#include "resources/material_manager.h"
 #include "game_time.h"
 
 //--------------------------------------------------------------------------------

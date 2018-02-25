@@ -3,7 +3,7 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #pragma once
-#include "motion_state.h"
+#include "../motion_state.h"
 
 class KnightFallMotionState : public NormalMotionState
 {

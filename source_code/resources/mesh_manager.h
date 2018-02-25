@@ -5,8 +5,8 @@
 //--------------------------------------------------------------------------------
 #pragma once
 #include "resource_manager.h"
-#include "render_system.h"
-#include "kf_utility.h"
+#include "../render_system/render_system.h"
+#include "../kf_utility/kf_utility.h"
 
 //--------------------------------------------------------------------------------
 //  —ñ‹“Œ^’è‹`

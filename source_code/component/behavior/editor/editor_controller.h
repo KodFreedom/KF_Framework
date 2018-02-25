@@ -4,10 +4,10 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
+#include "../../../common_setting.h"
 #if defined(EDITOR)
-#include "behavior.h"
-#include "labels.h"
+#include "../behavior.h"
+#include "../../../labels.h"
 
 //--------------------------------------------------------------------------------
 //  ‘O•ûéŒ¾

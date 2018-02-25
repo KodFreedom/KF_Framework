@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------
 //　shadow_map_system.h
 //  render objects to shadow map
-//    シャドウマップをレンダリングするシステム
-//    Author : 徐文杰(KodFreedom)
+//  シャドウマップをレンダリングするシステム
+//  Author : 徐文杰(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "common_setting.h"
-#include "shader_enum.h"
-#include "kf_math.h"
+#include "../common_setting.h"
+#include "../shader/shader_enum.h"
+#include "../kf_utility/kf_math.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

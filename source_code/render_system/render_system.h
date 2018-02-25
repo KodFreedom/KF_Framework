@@ -4,9 +4,9 @@
 //  Author : ™•¶^(KodFreedom)
 //--------------------------------------------------------------------------------
 #pragma once
-#include "kf_math.h"
+#include "../kf_utility/kf_math.h"
 using namespace kodfreedom;
-#include "shader_enum.h"
+#include "../shader/shader_enum.h"
 
 //--------------------------------------------------------------------------------
 //  \‘¢‘Ì’è‹`

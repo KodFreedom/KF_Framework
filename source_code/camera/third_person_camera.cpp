@@ -4,11 +4,11 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "third_person_camera.h"
-#include "main_system.h"
-#include "input.h"
-#include "game_object.h"
-#include "actor_observer.h"
-#include "player_controller.h"
+#include "../main_system.h"
+#include "../input/input.h"
+#include "../game_object/game_object.h"
+#include "../observer/actor_observer.h"
+#include "../component/behavior/actor/player_controller.h"
 
 //--------------------------------------------------------------------------------
 //

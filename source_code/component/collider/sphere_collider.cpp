@@ -4,8 +4,8 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "sphere_collider.h"
-#include "game_object.h"
-#include "transform.h"
+#include "../../game_object/game_object.h"
+#include "../transform/transform.h"
 
 //--------------------------------------------------------------------------------
 //  XVˆ—

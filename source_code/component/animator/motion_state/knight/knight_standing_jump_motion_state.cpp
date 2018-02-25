@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "knight_standing_jump_motion_state.h"
-#include "animator.h"
-#include "motion_data.h"
+#include "../../animator.h"
+#include "../../../../resources/motion_data.h"
 #include "knight_standing_land_motion_state.h"
 #include "knight_death_motion_state.h"
 void KnightStandingJumpMotionState::ChangeMotion(Animator& animator)

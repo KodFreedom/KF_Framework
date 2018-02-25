@@ -4,13 +4,13 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #pragma once
-#include "transform.h"
-#include "behavior.h"
-#include "mesh_renderer.h"
-#include "rigidbody.h"
-#include "collider.h"
+#include "../component/transform/transform.h"
+#include "../component/behavior/behavior.h"
+#include "../component/renderer/mesh_renderer.h"
+#include "../component/rigidbody/rigidbody.h"
+#include "../component/collider/collider.h"
 #include "game_object_manager.h"
-#include "kf_utility.h"
+#include "../kf_utility/kf_utility.h"
 using namespace kodfreedom;
 
 //--------------------------------------------------------------------------------

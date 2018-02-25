@@ -7,10 +7,10 @@
 #include "player_knight_moving_land_state.h"
 #include "player_knight_impact_state.h"
 #include "player_knight_death_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "collider.h"
-#include "game_object.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../collider/collider.h"
+#include "../../../../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

@@ -4,11 +4,11 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "enemy_controller.h"
-#include "enemy_state.h"
-#include "sphere_collider.h"
-#include "game_object.h"
-#include "main_system.h"
-#include "actor_observer.h"
+#include "actor_state\enemy_state.h"
+#include "../../collider/sphere_collider.h"
+#include "../../../game_object/game_object.h"
+#include "../../../main_system.h"
+#include "../../../observer/actor_observer.h"
 
 //--------------------------------------------------------------------------------
 //  コンストラクタ

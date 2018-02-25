@@ -4,15 +4,14 @@
 //  É}ÉeÉäÉAÉãä«óùé“
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
-#include <cereal/archives/binary.hpp>
-using namespace cereal;
 #include "material_manager.h"
 #include "texture_manager.h"
-#include "main_system.h"
+#include "../main_system.h"
 #include "resources.h"
+#include "../../library/cereal/archives/binary.hpp"
+using namespace cereal;
 #ifdef _DEBUG
-#include "main_system.h"
-#include "debug_observer.h"
+#include "../observer/debug_observer.h"
 #endif // _DEBUG
 
 //--------------------------------------------------------------------------------
@@ -44,7 +43,8 @@ void MaterialManager::Use(const String& material_name, const Color& diffuse
     , const String& translucency, const String& metalness_mask
     , const String& self_illum_mask, const String& fresnel_warp_color
     , const String& fresnel_warp_rim, const String& fresnel_warp_specular)
-{;
+{
+    ;
     size_t key = hash<String>()(material_name);
     auto iterator = materials_.find(key);
     if (iterator != materials_.end())

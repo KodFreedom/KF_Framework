@@ -3,18 +3,18 @@
 //  Author : Xu Wenjie
 //--------------------------------------------------------------------------------
 #include "mode_demo_play.h"
-#include "main_system.h"
-#include "input.h"
-#include "input_device_directX.h"
-#include "sound_system.h"
+#include "../main_system.h"
+#include "../input/input.h"
+#include "../input/input_device_directX.h"
+#include "../sound/sound_system.h"
 #include "mode_title.h"
-#include "fade_system.h"
-#include "shadow_map_system.h"
-#include "stage_spawner.h"
-#include "actor_observer.h"
-#include "player_controller.h"
-#include "game_object.h"
-#include "game_time.h"
+#include "../fade_system.h"
+#include "../render_system/shadow_map_system.h"
+#include "../game_object/stage_spawner.h"
+#include "../observer/actor_observer.h"
+#include "../component/behavior/actor/player_controller.h"
+#include "../game_object/game_object.h"
+#include "../game_time.h"
 
 //--------------------------------------------------------------------------------
 //

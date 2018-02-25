@@ -7,11 +7,11 @@
 #include "enemy_zombie_follow_state.h"
 #include "enemy_zombie_damaged_state.h"
 #include "enemy_zombie_dying_state.h"
-#include "enemy_controller.h"
-#include "animator.h"
-#include "game_object.h"
-#include "game_time.h"
-#include "player_controller.h"
+#include "../../../../../../game_time.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../enemy_controller.h"
+#include "../../../../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ˆ—

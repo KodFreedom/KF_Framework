@@ -4,11 +4,11 @@
 //  Author : èôï∂û^(KodFreedom)
 //--------------------------------------------------------------------------------
 #include "default_2d_shader.h"
-#include "main_system.h"
-#include "resources.h"
-#include "material_manager.h"
-#include "game_object.h"
-#include "render_system.h"
+#include "../../main_system.h"
+#include "../../resources/resources.h"
+#include "../../resources/material_manager.h"
+#include "../../game_object/game_object.h"
+#include "../../render_system/render_system.h"
 
 #if defined(USING_DIRECTX) && (DIRECTX_VERSION == 9)
 //--------------------------------------------------------------------------------

@@ -5,18 +5,18 @@
 //--------------------------------------------------------------------------------
 #include "editor_controller.h"
 #if defined(EDITOR)
-#include "main_system.h"
-#include "input.h"
-#include "mode.h"
-#include "camera.h"
-#include "camera_manager.h"
-#include "game_object.h"
-#include "field_editor.h"
-#include "Model_editor.h"
-#include "enemy_editor.h"
-#include "transform.h"
-#include "ImGui\imgui.h"
-#include "game_object_spawner.h"
+#include "../../../main_system.h"
+#include "../../../input/input.h"
+#include "../../../mode/mode.h"
+#include "../../../camera/camera.h"
+#include "../../../camera/camera_manager.h"
+#include "../../../game_object/game_object.h"
+#include "../../../game_object/game_object_spawner.h"
+#include "../../behavior/editor/field_editor.h"
+#include "../../behavior/editor/model_editor.h"
+#include "../../behavior/editor/enemy_editor.h"
+#include "../../transform/transform.h"
+#include "../../../../library/ImGui/imgui.h"
 
 //--------------------------------------------------------------------------------
 //

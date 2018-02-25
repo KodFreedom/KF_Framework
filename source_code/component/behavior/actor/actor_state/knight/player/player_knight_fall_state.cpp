@@ -6,11 +6,11 @@
 #include "player_knight_fall_state.h"
 #include "player_knight_idle_state.h"
 #include "player_knight_hard_land_state.h"
-#include "player_controller.h"
-#include "animator.h"
-#include "collider.h"
-#include "game_object.h"
-#include "game_time.h"
+#include "../../../../../../game_time.h"
+#include "../../../player_controller.h"
+#include "../../../../../animator/animator.h"
+#include "../../../../../collider/collider.h"
+#include "../../../../../../game_object/game_object.h"
 
 //--------------------------------------------------------------------------------
 //  ‰Šú‰»ŠÖ”

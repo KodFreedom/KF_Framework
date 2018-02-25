@@ -3,8 +3,8 @@
 //  this is a motion state class which is auto-created by KF_ModelAnalyzer
 //--------------------------------------------------------------------------------
 #include "knight_strong_attack_step1_motion_state.h"
-#include "animator.h"
-#include "motion_data.h"
+#include "../../animator.h"
+#include "../../../../resources/motion_data.h"
 #include "knight_idle_motion_state.h"
 #include "knight_strong_attack_step2_motion_state.h"
 #include "knight_death_motion_state.h"
