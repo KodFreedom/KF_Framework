@@ -55,7 +55,7 @@ void ModeDemo::Init(void)
 void ModeDemo::Uninit(void)
 {
     MainSystem::Instance().GetSoundSystem().Stop(kGameBgm);
-    //MainSystem::Instance().GetInput().SetSaveDemoPlay(false);
+    MainSystem::Instance().GetInput().SetSaveDemoPlay(false);
     Mode::Uninit();
 }
 
@@ -124,5 +124,5 @@ void ModeDemo::LateUpdate(void)
 void ModeDemo::OnCompleteLoading(void)
 {
     MainSystem::Instance().GetSoundSystem().Play(kGameBgm);
-    //MainSystem::Instance().GetInput().SetSaveDemoPlay(true);
+    MainSystem::Instance().GetInput().SetSaveDemoPlay(true);
 }
